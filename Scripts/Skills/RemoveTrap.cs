@@ -1,0 +1,198 @@
+using System;
+using Server.Targeting;
+using Server.Items;
+using Server.Network;
+using Server.Factions;
+using Server.Custom;
+
+namespace Server.SkillHandlers
+{
+	public class RemoveTrap
+	{
+		public static void Initialize()
+		{
+			SkillInfo.Table[(int)SkillName.RemoveTrap].Callback = new SkillUseCallback( OnUse );
+		}
+
+		public static TimeSpan OnUse( Mobile m )
+		{
+            if (m.Region is UOACZRegion)
+            {
+                m.Target = new InternalTarget();
+                m.SendMessage("What will you search for traps?");
+
+                m.Target = new InternalTarget();
+
+                return TimeSpan.FromSeconds(3.0);
+            }
+
+			if ( m.Skills[SkillName.Lockpicking].Value < 50 )			
+				m.SendLocalizedMessage( 502366 ); // You do not know enough about locks.  Become better at picking locks.
+						
+			else
+			{
+				m.Target = new InternalTarget();
+				m.SendLocalizedMessage( 502368 ); // Wich trap will you attempt to disarm?
+			}
+
+			return TimeSpan.FromSeconds( 3.0 );
+		}
+
+		private class InternalTarget : Target
+		{
+			public InternalTarget() :  base ( 2, false, TargetFlags.None )
+			{
+			}
+
+            private void RemoveTrap(Mobile from, TrapableContainer targ)
+            {
+                targ.TrapPower = 0;
+                targ.TrapLevel = 0;
+                targ.TrapType = TrapType.None;
+                targ.Trapper = null;
+
+                from.PlaySound(0x5AC);
+
+                from.SendLocalizedMessage(502377); // You successfully render the trap harmless
+            }
+
+			protected override void OnTarget( Mobile from, object targeted )
+			{
+                if (from.Region is UOACZRegion)
+                {
+                    if (targeted is UOACZScavengeContainer || targeted is UOACZScavengeDebris)
+                    {
+                        UOACZBaseScavengeObject scavengeObject = targeted as UOACZBaseScavengeObject;
+
+                        scavengeObject.RemoveTrap(from);                       
+                    }
+
+                    else                    
+                        from.SendMessage("That cannot be trapped.");
+
+                    return;
+                }
+
+				if ( targeted is Mobile )				
+					from.SendLocalizedMessage( 502816 ); // You feel that such an action would be inappropriate
+				
+				else if ( targeted is TrapableContainer )
+				{
+					TrapableContainer targ = (TrapableContainer)targeted;
+
+					from.Direction = from.GetDirectionTo( targ );
+
+					if ( targ.TrapType == TrapType.None )
+					{
+						from.SendLocalizedMessage( 502373 ); // That doesn't appear to be trapped
+						return;
+					}
+
+                    from.PlaySound(0x4D3); //0x241
+
+                    if (targ is BaseTreasureChest)
+                    {
+                        BaseTreasureChest tchest = targ as BaseTreasureChest;
+
+                        double minSkill = 35.0 + ((int)tchest.Level * 10.0); // 45, 55, 65, 75, 85, 95
+                        double maxSkill = 60.0 + ((int)tchest.Level * 10.0); // 70, 80, 90, 100, 110, 120
+
+                        // chance to open l5 at gm: 60%
+                        // chance to open l6 at gm: 20%
+
+                        if (from.Skills.RemoveTrap.Value < minSkill && (int)tchest.Level == 1)
+                        {
+                            from.CheckTargetSkill(SkillName.RemoveTrap, targ, 0, 100);
+                            from.SendMessage("You fail to safely remove the trap.");
+
+                            return;
+                        }
+                        
+                        else if (from.Skills.RemoveTrap.Value < minSkill)
+                        {
+                            from.SendMessage("You do not have sufficient skill to attempt the removal of that trap.");
+                            return;
+                        }
+
+                        if (from.CheckTargetSkill(SkillName.RemoveTrap, targ, minSkill, maxSkill))                        
+                            RemoveTrap(from, targ);                        
+                        else                 
+						    from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off					
+                    }
+
+
+                    else if (targ is TreasureMapChest)
+                    {
+                        TreasureMapChest tchest = targ as TreasureMapChest;
+
+                        double minSkill = TreasureMapChest.RemoveTrapSkillRequiredPerLevel[tchest.Level];
+                        double maxSkill = TreasureMapChest.RemoveTrapSkillMaxPerLevel[tchest.Level];
+
+                        if (from.Skills.RemoveTrap.Value < minSkill)
+                        {
+                            from.SendMessage("You do not have sufficient skill to attempt the removal of that trap.");
+                            return;
+                        }
+
+                        if (from.CheckTargetSkill(SkillName.RemoveTrap, targ, minSkill, maxSkill))                        
+                            RemoveTrap(from, targ);                        
+                        else                 
+						    from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off		
+                    }
+
+					else if ( from.CheckTargetSkill( SkillName.RemoveTrap, targ, targ.TrapPower, targ.TrapPower + 40 ) )					
+                        RemoveTrap(from, targ);
+					
+					else					
+						from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off					
+				}
+
+				else if ( targeted is BaseFactionTrap )
+				{
+					BaseFactionTrap trap = (BaseFactionTrap) targeted;
+					Faction faction = Faction.Find( from );
+
+					FactionTrapRemovalKit kit = ( from.Backpack == null ? null : from.Backpack.FindItemByType( typeof( FactionTrapRemovalKit ) ) as FactionTrapRemovalKit );
+
+					bool isOwner = ( trap.Placer == from || ( trap.Faction != null && trap.Faction.IsCommander( from ) ) );
+
+					if ( faction == null )					
+						from.SendLocalizedMessage( 1010538 ); // You may not disarm faction traps unless you are in an opposing faction
+					
+					else if ( faction == trap.Faction && trap.Faction != null && !isOwner )					
+						from.SendLocalizedMessage( 1010537 ); // You may not disarm traps set by your own faction!
+					
+					else if ( !isOwner && kit == null )					
+						from.SendLocalizedMessage( 1042530 ); // You must have a trap removal kit at the base level of your pack to disarm a faction trap.
+					
+					else
+					{
+						if ( (Core.ML && isOwner) || (from.CheckTargetSkill( SkillName.RemoveTrap, trap, 80.0, 100.0 ) && from.CheckTargetSkill( SkillName.Tinkering, trap, 80.0, 100.0 )) )
+						{
+							from.PrivateOverheadMessage( MessageType.Regular, trap.MessageHue, trap.DisarmMessage, from.NetState );
+
+							if ( !isOwner )
+							{
+								int silver = faction.AwardSilver( from, trap.SilverFromDisarm );
+
+								if ( silver > 0 )
+									from.SendLocalizedMessage( 1008113, true, silver.ToString( "N0" ) ); // You have been granted faction silver for removing the enemy trap :
+							}
+
+							trap.Delete();
+						}
+
+						else						
+							from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off						
+
+						if ( !isOwner && kit != null )
+							kit.ConsumeCharge( from );
+					}
+				}
+
+				else				
+					from.SendLocalizedMessage( 502373 ); // That does'nt appear to be trapped				
+			}
+		}
+	}
+}

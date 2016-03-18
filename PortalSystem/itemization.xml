@@ -1,0 +1,813 @@
+<?xml version="1.0"?>
+<itemization>
+  <entries>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Water" name="Anim Water Floor">
+      <vendor cost="100" quantity="5"/>
+      <intervals/>
+      <singles>
+        <single gid="0x346E"/>
+        <single gid="0x3490"/>
+        <single gid="0x3494"/>
+        <single gid="0x34BD"/>
+        <single gid="0x34C2"/>
+        <single gid="0x34C7"/>
+        <single gid="0x34D1"/>
+      </singles>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Lava" name="Anim Lava Floor">
+      <vendor cost="100" quantity="5"/>
+      <intervals/>
+      <singles>
+        <single gid="0x343B"/>
+        <single gid="0x3447"/>
+        <single gid="0x344E"/>
+        <single gid="0x3462"/>
+        <single gid="0x3468"/>
+      </singles>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Swamp" name="Anim Swamp Floor">
+      <vendor cost="100" quantity="5"/>
+      <intervals/>
+      <singles>
+        <single gid="0x320D"/>
+        <single gid="0x3213"/>
+        <single gid="0x321A"/>
+        <single gid="0x3220"/>
+        <single gid="0x3226"/>
+        <single gid="0x3236"/>
+        <single gid="0x3241"/>
+      </singles>
+    </entry>
+    <!--Doors-->
+    <!--EDoorType_IronGateShort-->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Short Iron Gates" name="Short Iron Gate">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x84c"/>
+        <single gid="0x84e"/>
+        <single gid="0x850"/>
+        <single gid="0x852"/>
+        <single gid="0x854"/>
+        <single gid="0x856"/>
+        <single gid="0x858"/>
+        <single gid="0x85A"/>
+      </singles>
+    </entry>
+    <!--EDoorType_IronGate-->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Iron Gates" name="Iron Gate">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x824"/>
+        <single gid="0x826"/>
+        <single gid="0x828"/>
+        <single gid="0x82A"/>
+        <single gid="0x82C"/>
+        <single gid="0x82E"/>
+        <single gid="0x830"/>
+        <single gid="0x832"/>
+      </singles>
+    </entry>
+    <!--EDoorType_MetalDoor-->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Metal Doors" name="Metal Door">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x675"/>
+        <single gid="0x677"/>
+        <single gid="0x679"/>
+        <single gid="0x67B"/>
+        <single gid="0x67D"/>
+        <single gid="0x67F"/>
+        <single gid="0x681"/>
+        <single gid="0x683"/>
+      </singles>
+    </entry>
+    <!-- EDoorType_MetalDoor2-->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Metal Doors 2" name="Metal Door">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x6C5"/>
+        <single gid="0x6C7"/>
+        <single gid="0x6C9"/>
+        <single gid="0x6CB"/>
+        <single gid="0x6CD"/>
+        <single gid="0x6CF"/>
+        <single gid="0x6D1"/>
+        <single gid="0x6D3"/>
+      </singles>
+    </entry>
+    <!-- EDoorType_BarredMetalDoor -->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Barred Metal Doors" name="Barred Metal Door">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x685"/>
+        <single gid="0x687"/>
+        <single gid="0x689"/>
+        <single gid="0x68B"/>
+        <single gid="0x68D"/>
+        <single gid="0x68F"/>
+        <single gid="0x691"/>
+        <single gid="0x693"/>
+      </singles>
+    </entry>
+    <!--  EDoorType_BarredMetalDoor2 -->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Barred Metal Doors 2" name="Barred Metal Door">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x1FED"/>
+        <single gid="0x1FEF"/>
+        <single gid="0x1FF1"/>
+        <single gid="0x1FF3"/>
+        <single gid="0x1FF5"/>
+        <single gid="0x1FF7"/>
+        <single gid="0x1FF9"/>
+        <single gid="0x1FFB"/>
+      </singles>
+    </entry>
+    <!--  EDoorType_LightWoodGate -->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Light Wood Gates" name="Light Wood Gate">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x839"/>
+        <single gid="0x83B"/>
+        <single gid="0x83D"/>
+        <single gid="0x83F"/>
+        <single gid="0x841"/>
+        <single gid="0x843"/>
+        <single gid="0x845"/>
+        <single gid="0x847"/>
+      </singles>
+    </entry>
+    <!--  EDoorType_DarkWoodGate -->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Dark Wood Gates" name="Dark Wood Gate">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x866"/>
+        <single gid="0x868"/>
+        <single gid="0x86A"/>
+        <single gid="0x86C"/>
+        <single gid="0x86E"/>
+        <single gid="0x870"/>
+        <single gid="0x872"/>
+        <single gid="0x874"/>
+      </singles>
+    </entry>
+    <!--  EDoorType_RattanDoor -->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Rattan Doors" name="Rattan Door">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x695"/>
+        <single gid="0x697"/>
+        <single gid="0x699"/>
+        <single gid="0x69B"/>
+        <single gid="0x69D"/>
+        <single gid="0x69F"/>
+        <single gid="0x6A1"/>
+        <single gid="0x6A3"/>
+      </singles>
+    </entry>
+    <!--  EDoorType_DarkWoodDoor -->
+    <!--  EDoorType_RattanDoor -->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Dark Wood Doors" name="Dark Wood Doors">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x6A5"/>
+        <single gid="0x6A7"/>
+        <single gid="0x6A9"/>
+        <single gid="0x6AB"/>
+        <single gid="0x6AD"/>
+        <single gid="0x6AF"/>
+        <single gid="0x6B1"/>
+        <single gid="0x6B3"/>
+      </singles>
+    </entry>
+    <!--  EDoorType_MediumWoodDoor -->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Medium Wood Doors" name="Medium Wood Door">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x6B5"/>
+        <single gid="0x6B7"/>
+        <single gid="0x6B9"/>
+        <single gid="0x6BB"/>
+        <single gid="0x6BD"/>
+        <single gid="0x6BF"/>
+        <single gid="0x6C1"/>
+        <single gid="0x6C3"/>
+      </singles>
+    </entry>
+    <!--  EDoorType_LightWoodDoor -->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Light Wood Doors" name="Light Wood Door">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x6D5"/>
+        <single gid="0x6D7"/>
+        <single gid="0x6D9"/>
+        <single gid="0x6DB"/>
+        <single gid="0x6DD"/>
+        <single gid="0x6DF"/>
+        <single gid="0x6E1"/>
+        <single gid="0x6E3"/>
+      </singles>
+    </entry>
+    <!--  EDoorType_StrongWoodDoor -->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Strong Wood Doors" name="Strong Wood Door">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x6E5"/>
+        <single gid="0x6E7"/>
+        <single gid="0x6E9"/>
+        <single gid="0x6EB"/>
+        <single gid="0x6ED"/>
+        <single gid="0x6EF"/>
+        <single gid="0x6F1"/>
+        <single gid="0x6F3"/>
+      </singles>
+    </entry>
+    <!--  EDoorType_SecretDungeonDoor-->
+    <entry rarity="0" behavior="door" category="Doors" subcategory="Secret Dungeon Doors" name="Dungeon Wall">
+      <vendor cost="100" quantity="2"/>
+      <singles>
+        <single gid="0x314"/>
+        <single gid="0x316"/>
+        <single gid="0x318"/>
+        <single gid="0x31A"/>
+        <single gid="0x31C"/>
+        <single gid="0x31E"/>
+        <single gid="0x320"/>
+        <single gid="0x322"/>
+      </singles>
+    </entry>
+    <!-- Walls -->
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Wooden Walls" name="Wooden Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0019" start="0x0006"/>
+        <interval end="0x00C2" start="0x00A6"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Stone Walls" name="Stone Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0032" start="0x001A"/>
+        <interval end="0x0079" start="0x0057"/>
+        <interval end="0x008F" start="0x007A"/>
+        <interval end="0x00F7" start="0x00C5"/>
+        <interval end="0x03E2" start="0x03BE"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Brick Walls" name="Brick Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0056" start="0x0033"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Log Walls" name="Log Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x00A5" start="0x0090"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="s" name="Marble Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0126" start="0x00F8"/>
+        <interval end="0x02AE" start="0x0291"/>
+        <interval end="0x02C0" start="0x02B0"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Sandstone Walls" name="Sandstone Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x019A" start="0x0158"/>
+        <interval end="0x025B" start="0x024C"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Plaster Walls" name="Plaster Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x03A0" start="0x037F"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Dungeon Walls" name="Dungeon Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x024A" start="0x0241"/>
+        <interval end="0x0300" start="0x02F9"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Ruined Walls" name="Ruined Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x027C" start="0x0277"/>
+        <interval end="0x0282" start="0x0281"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Palasade Walls" name="Palasade Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0223" start="0x021D"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Jungle Walls" name="Jungle Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x3F06" start="0x3EF2"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Walls" subcategory="Goldstone Walls" name="Goldstone Wall">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x4127" start="0x4114"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <!--Stairs-->
+    <entry rarity="0" behavior="static" category="Stairs" subcategory="Stone Stairs" name="Stone Stair">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0402" start="0x03EE"/>
+        <interval end="0x0737" start="0x0736"/>
+        <interval end="0x074F" start="0x0749"/>
+        <interval end="0x0768" start="0x0750"/>
+        <interval end="0x079C" start="0x0784"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Stairs" subcategory="Marble Stairs" name="Marble Stair">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x071D" start="0x0709"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Stairs" subcategory="Wood Stairs" name="Wood Stair">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0735" start="0x0720"/>
+        <interval end="0x0748" start="0x0738"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Stairs" subcategory="Sandstone Stairs" name="Sandstone Stair">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0781" start="0x0769"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Stairs" subcategory="Dungeon Ramps" name="Dungeon Ramp">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x11BF" start="0x11BC"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <!--Floors-->
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Dirt Floors" name="Dirt Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x041E" start="0x040B"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Sandstone Pavers" name="Sandstone Paver">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x04A0" start="0x049D"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Wooden Planks" name="Wooden Plank">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x04A4" start="0x04A1"/>
+        <interval end="0x04E1" start="0x04C6"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Wooden Boards" name="Wooden Board">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x04C0" start="0x04A5"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Wooden Logs" name="Wooden Log">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x04C5" start="0x04C1"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Brick Floors" name="Brick Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x04E9" start="0x04E2"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Blue Floors" name="Blue Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x04F2" start="0x04EA"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Red Floors" name="Red Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x04FB" start="0x04F3"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Flagstones" name="Flagstones">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x04FF" start="0x04FC"/>
+        <interval end="0x0503" start="0x0500"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Wooden Logs" name="Wooden Log">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x04C5" start="0x04C1"/> 
+        <interval end="0x050A" start="0x0504"/>
+        <interval end="0x050C" start="0x050B"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Old Wooden Logs" name="Old Wooden Logs">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x050C" start="0x050B"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Marble Floors" name="Marble Floor">
+      <vendor cost="250" quantity="20"/>
+        <intervals>
+          <interval end="0x050E" start="0x050D"/>
+          <interval end="0x0510" start="0x050F"/>
+          <interval end="0x0514" start="0x0511"/>
+        </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Cobblestone Floors" name="Cobblestone Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0518" start="0x0515"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Stone Pavers" name="Stone Paver">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0524" start="0x0521"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Sandstone Floors (v2)" name="Sandstone Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x052C" start="0x0525"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Sandstone Floors (v3)" name="Sandstone Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0536" start="0x052F"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Brick Floors (v2)" name="Brick Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x053A" start="0x0537"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Cave Floors" name="Cave Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x054F" start="0x053B"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Stone Floors" name="Stone Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0560" start="0x055C"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Stone Floors (v2)" name="Stone Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0578" start="0x0573"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Stone Floors (v3)" name="Stone Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x057E" start="0x0579"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Stone Floors (v4)" name="Stone Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0585" start="0x057F"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Alchemy Floors (v4)" name="Alchemy Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x1828" start="0x181D"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Symbol Floors (v4)" name="Symbol Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x40BB" start="0x40A3"/>
+      </intervals>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Marble Floors (v5)" name="Marble Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x41B2" start="0x41AF"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Marble Floors (v6)" name="Marble Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x41BC" start="0x41B5"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Marble Floors (v7)" name="Marble Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x41E4" start="0x41DC"/>
+      </intervals>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Marble Floors (v8)" name="Marble Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x41FB" start="0x41E8"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Medusa Floors" name="Medusa Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x483A" start="0x47EA"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Trimmed Floors" name="Trimmed Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x4F79" start="0x4F68"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Trimmed Floors (v2)" name="Trimmed Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x50F7" start="0x50DE"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Swamp Floors" name="Swamp Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x3AF8" start="0x3AF0"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Swamp Floors (v2)" name="Swamp Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x3268" start="0x324B"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Swamp Floors (v3)" name="Swamp Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x3285" start="0x326A"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Lava Floors" name="Lava Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x32B1" start="0x3286"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Floors" subcategory="Acid Floors" name="Acid Floor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x2E3B" start="0x2E02"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <!--Decoration-->
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Misc" name="Elven stand">
+      <vendor cost="100" quantity="5"/>
+      <intervals/>
+      <singles>
+        <single gid="0x2DDE"/>
+      </singles>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Misc" name="Armored Statue">
+      <vendor cost="100" quantity="5"/>
+      <intervals/>
+      <singles>
+        <single gid="0x1508"/>
+        <single gid="0x151A"/>
+      </singles>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Misc" name="Serpents Crest">
+      <vendor cost="100" quantity="5"/>
+      <intervals/>
+      <singles>
+        <single gid="0x1514"/>
+      </singles>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Cavern" name="Cavern">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x08EA" start="0x08E0"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Wall Fixtures" name="Wall Fixture">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0A0E" start="0x09FB"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Seating" name="Seat">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0B5E" start="0x0B4E"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Flora" name="Flora">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0C94" start="0x0C83"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Flora (v2)" name="Flora">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0CC1" start="0x0C97"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Graveyard" name="Graveyard">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x1184" start="0x1165"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Skeletons" name="Skeleton">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0EDE" start="0x0ECA"/>
+        <interval end="0x1A0E" start="0x1A01"/>
+        <interval end="0x1B1E" start="0x1B09"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Spiders" name="Spiders">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x10DD" start="0x10C1"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Banners" name="Banner">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x15F5" start="0x15AE"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Rocks" name="Rock">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x177C" start="0x1771"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Resources" name="Resource">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x1BFF" start="0x1BD1"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Blood" name="Blood">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x1D12" start="0x1CC7"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Crystals" name="Crystal">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x2249" start="0x223A"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Weapons" name="Weapon">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x257F" start="0x256B"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Mangled Armor" name="Mangled Armor">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x3181" start="0x3156"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Clock" name="Clock">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x44E4" start="0x44D5"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Runes" name="Rune">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x4885" start="0x483B"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Signs" name="Sign">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0C0E" start="0x0B95"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Benches" name="Bench">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x045C" start="0x0459"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Benches (v2)" name="Bench">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0B6A" start="0x0B5F"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Tables" name="Table">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x0B90" start="0x0B6B"/>
+        <interval end="0x1DC6" start="0x1DBB"/>
+      </intervals>
+      <singles/>
+    </entry>
+    <entry rarity="0" behavior="static" category="Decor" subcategory="Platform" name="Platform">
+      <vendor cost="250" quantity="20"/>
+      <intervals>
+        <interval end="0x14E6" start="0x14E3"/>
+      </intervals>
+      <singles/>
+    </entry>
+  </entries>
+</itemization>

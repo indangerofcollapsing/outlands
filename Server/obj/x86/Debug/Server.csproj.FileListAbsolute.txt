@@ -1,0 +1,5 @@
+C:\Games\Ultima Online Development\An Corp\Server\obj\x86\Debug\Server.csprojResolveAssemblyReference.cache
+C:\Games\Ultima Online Development\An Corp\Server\obj\x86\Debug\Server.exe
+C:\Games\Ultima Online Development\An Corp\Server\obj\x86\Debug\Server.pdb
+C:\Games\Ultima Online Development\An Corp\Server.exe
+C:\Games\Ultima Online Development\An Corp\Server.pdb

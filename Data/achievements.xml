@@ -1,0 +1,1294 @@
+<Root>
+	<Achievements>
+		<!-- Kill ancient wyrms -->
+		<achievementTrigger id="0" category="PvE" description="Kill Ancient Wyrms">
+			<achievement triggercount="1" item_graphics="0F8E" gfxoffset="48 40" reward_onclickdesc="heart of the wyrm" itemhue="1779" achievement_name="Ancient Wyrm" />
+			<achievement triggercount="10" item_graphics="41BF" gfxoffset="48 40" reward_onclickdesc="wyrm egg" itemhue="2075" achievement_name="Catacomb Stalker" />
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET"  itemhue="0" reward_title_prefix="Wyrmslayer" achievement_name="Wyrmslayer" />
+		</achievementTrigger>
+		
+		<!-- Bank money -->
+		<achievementTrigger id="1" category="Wealth" description="Store at least 50k gold in the bank">
+			<achievement triggercount="1" item_graphics="14EF" gfxoffset="48 40" reward_onclickdesc="Bronze Bank Receipt" itemhue="2418" achievement_name="It's A Living" />
+		</achievementTrigger>
+		
+		<!-- Bank money -->
+		<achievementTrigger id="2" category="Wealth" description="Store at least 100k gold in the bank">
+			<achievement triggercount="1" item_graphics="14EF" gfxoffset="48 40" reward_onclickdesc="Silver Bank Receipt" itemhue="2101" achievement_name="It's A Living 2" />
+		</achievementTrigger>
+		
+		<!-- Bank money -->
+		<achievementTrigger id="3" category="Wealth" description="Store at least 250k gold in the bank">
+			<achievement triggercount="1" item_graphics="14EF" gfxoffset="48 40" reward_onclickdesc="Golden Bank Receipt" itemhue="2213" achievement_name="Movin' On Up" />
+		</achievementTrigger>
+		
+		<!-- Bank money -->
+		<achievementTrigger id="4" category="Wealth" description="Store at least 500k gold in the bank">
+			<achievement triggercount="1" item_graphics="14EF" gfxoffset="48 40" reward_onclickdesc="Verite Bank Receipt" itemhue="2207" achievement_name="Have It All, Hog" />
+		</achievementTrigger>
+		
+		<!-- Bank money -->
+		<achievementTrigger id="5" category="Wealth" description="Store at least 1 million gold in the bank">
+			<achievement triggercount="1" item_graphics="14EF" gfxoffset="48 40" reward_onclickdesc="Valorite Bank Receipt" itemhue="2219" achievement_name="Ballin'" />
+		</achievementTrigger>
+		
+		<!-- Kill defenseless player -->
+		<achievementTrigger id="6" category="PvP" description="Kill defenseless players">
+			<achievement triggercount="1" item_graphics="1CE1" gfxoffset="48 40" reward_onclickdesc="Shameful..." itemhue="21" achievement_name="Newbie Killer" />
+			<achievement triggercount="10" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Serially Shameful" />
+			<achievement triggercount="25" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Serially Shameful 2" />
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 5" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Lord of shame" />
+		</achievementTrigger>
+
+		<!-- Cut the corpse of a murderer (player) -->
+		<achievementTrigger id="7" category="PvP" description="Cut the corpse of a red player">
+			<achievement triggercount="50" must_be_discovered="true" item_graphics="0A0D" gfxoffset="48 40" reward_onclickdesc="A wall torch" itemhue="0" achievement_name="Dexter Morgan" />
+		</achievementTrigger>
+		
+		<!-- EXPLORATION ACHIEVEMENT-->
+		<achievementTrigger id="8" category="Exploration" description="Explore the Hedge Maze">
+			<achievement triggercount="1" item_graphics="1EBF" gfxoffset="48 40" reward_onclickdesc="Hedge Maze Clippings" itemhue="0" achievement_name="A-Maze-Ing" />
+		</achievementTrigger>
+		<achievementTrigger id="9" category="Exploration" description="Explore Wind">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="Marbled Scroll of Welcome" reward_window_shortdesc="Marbled Scroll" itemhue="2953" achievement_name="Wind" />
+		</achievementTrigger>
+		<achievementTrigger id="10" category="Exploration" description="Travel To Britain">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Compassion" />
+		</achievementTrigger>
+		<achievementTrigger id="11" category="Exploration" description="Travel To Buccaneer's Den">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="Buccaneer's Welcome" itemhue="2117" achievement_name="Den of Pirates and Thieves" />
+		</achievementTrigger>
+		<achievementTrigger id="12" category="Exploration" description="Travel to Cove">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Love" />
+		</achievementTrigger>		
+		<achievementTrigger id="13" category="Exploration" description="Travel to Jhelom">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Valor" />
+		</achievementTrigger>		
+		<achievementTrigger id="14" category="Exploration" description="Travel to Magincia">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Pride" />
+		</achievementTrigger>		
+		<achievementTrigger id="15" category="Exploration" description="Travel to Minoc">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Sacrifice" />
+		</achievementTrigger>		
+		<achievementTrigger id="16" category="Exploration" description="Travel to Moonglow">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Honesty" />
+		</achievementTrigger>		
+		<achievementTrigger id="17" category="Exploration" description="Travel to Nujel'm">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Pleasure" />
+		</achievementTrigger>		
+		<achievementTrigger id="18" category="Exploration" description="Travel to Ocllo">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Island City" />
+		</achievementTrigger>		
+		<achievementTrigger id="19" category="Exploration" description="Travel to Serpent's Hold">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Order of the Silver Serpent" />
+		</achievementTrigger>		
+		<achievementTrigger id="20" category="Exploration" description="Travel to Skara Brae">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Spirituality" />
+		</achievementTrigger>		
+		<achievementTrigger id="21" category="Exploration" description="Travel to Trinsic">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Honor" />
+		</achievementTrigger>				
+		<achievementTrigger id="22" category="Exploration" description="Travel to Vesper">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Vesper" />
+		</achievementTrigger>		
+		<achievementTrigger id="23" category="Exploration" description="Travel to Yew">
+			<achievement triggercount="1" item_name="gold" item_amount="30" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="City of Justice" />
+		</achievementTrigger>		
+		<achievementTrigger id="24" category="Exploration" description="Explore Despise">
+			<achievement triggercount="1" item_name="gold" item_amount="75" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Despise" />
+		</achievementTrigger>		
+		<achievementTrigger id="25" category="Exploration" description="Explore Deceit">
+			<achievement triggercount="1" item_graphics="14EB" gfxoffset="48 40" reward_onclickdesc="Cold, Tattered Map" itemhue="2101" achievement_name="Deceit" />
+		</achievementTrigger>		
+		<achievementTrigger id="26" category="Exploration" description="Explore Destard">
+			<achievement triggercount="1" item_name="gold" item_amount="75" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Destard" />
+		</achievementTrigger>		
+		<achievementTrigger id="27" category="Exploration" description="Explore Wrong">
+			<achievement triggercount="1" item_name="gold" item_amount="75" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Wrong" />
+		</achievementTrigger>		
+		<achievementTrigger id="28" category="Exploration" description="Explore Covetous">
+			<achievement triggercount="1" item_name="gold" item_amount="75" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Covetous" />
+		</achievementTrigger>		
+		<achievementTrigger id="29" category="Exploration" description="Explore Shame">
+			<achievement triggercount="1" item_name="gold" item_amount="75" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Shame" />
+		</achievementTrigger>		
+		<achievementTrigger id="30" category="Exploration" description="Explore Hythloth">
+			<achievement triggercount="1" item_graphics="14EB" gfxoffset="48 40" reward_onclickdesc="Tattered Burning Map" itemhue="2117" achievement_name="Hythloth" />
+		</achievementTrigger>		
+		<achievementTrigger id="31" category="Exploration" description="Explore Fire Dungeon">
+			<achievement triggercount="1" item_graphics="14EB" gfxoffset="48 40" reward_onclickdesc="Fiery Map" itemhue="2118" achievement_name="Fire" />
+		</achievementTrigger>		
+		
+		<achievementTrigger id="32" category="Exploration" description="Explore Ice Dungeon">
+			<achievement triggercount="1" item_graphics="14EB" gfxoffset="48 40" reward_onclickdesc="Icey Map" itemhue="1366" achievement_name="Ice" />
+		</achievementTrigger>		
+		<!--
+		<achievementTrigger id="33" category="Exploration" description="Explore Terathan Keep">
+			<achievement triggercount="1" item_graphics="14EB" gfxoffset="48 40" reward_onclickdesc="Reptilian Map" itemhue="2208" achievement_name="Terathan Keep" />
+		</achievementTrigger>
+		-->
+		
+		<achievementTrigger id="34" category="Mastery" description="Complete all city and dungeon exploration achievements">
+			<achievement triggercount="1" item_graphics="0FB6" gfxoffset="48 40" reward_onclickdesc="Worn Horseshoes" itemhue="2213" reward_title_suffix="Master Of Britannia" achievement_name="Master of Britannia" />
+		</achievementTrigger>
+		<achievementTrigger id="35" category="Mastery" description="Travel to every city in Britannia">
+			<achievement triggercount="1" item_name="strawhat" item_graphics="1717" gfxoffset="48 40" reward_onclickdesc="well worn hat" itemhue="1154" achievement_name="City Traveller" />
+		</achievementTrigger>
+		<achievementTrigger id="36" category="Mastery" description="Travel to every dungeon in the old world">
+			<achievement triggercount="1" item_graphics="0A15" gfxoffset="43 40" reward_onclickdesc="Fearless lantern" itemhue="1801" achievement_name="Spelunking" />
+		</achievementTrigger>
+		
+		<achievementTrigger id="37" category="PvP" description="Get reported as a murderer">
+			<achievement triggercount="1" item_graphics="1CE1" gfxoffset="48 40" reward_onclickdesc="My First Murder" itemhue="138" achievement_name="My First Murder" />
+			<achievement triggercount="10" item_graphics="240F" gfxoffset="48 40" reward_onclickdesc="a wanted poster" itemhue="0" achievement_name="Serial Killer" />
+			<achievement triggercount="100" item_name="gold" item_amount="1000" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" reward_window_shortdesc="pocket change" itemhue="0" achievement_name="Maniac" />
+			<achievement triggercount="500" item_graphics="0E23" gfxoffset="48 45" reward_onclickdesc="the blood of many innocent victims" reward_window_shortdesc="bloody bowl" itemhue="0" achievement_name="Ted Bundy" />
+		</achievementTrigger>
+	
+		<!-- Kill Air Elementals -->
+		<achievementTrigger id="38" category="PvE" description="Kill Air Elementals">
+			<achievement triggercount="1" item_name="blackpearl" item_amount="5" item_graphics="0F7A" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Woosh!" />
+			<achievement triggercount="10" item_name="blackpearl" item_amount="20" item_graphics="0F7A" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="How do you even hit them?" />
+			<achievement triggercount="100" item_name="cloak" item_graphics="1515" gfxoffset="48 40" reward_onclickdesc="Windy Cape" itemhue="2958" achievement_name="Hot Air" />
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET"  itemhue="0" reward_title_suffix="Sylphid's Disciple" achievement_name="Airy Reward" />
+			<achievement triggercount="10000" item_name="wisplantern" item_graphics="0A15" reward_onclickdesc="Sylphid" gfxoffset="48 40" itemhue="16385" achievement_name="Sylphid's Calling" />
+		</achievementTrigger>
+
+		<!-- Kill Earth Elementals -->
+		<achievementTrigger id="39" category="PvE" description="Kill Earth Elementals">
+			<achievement triggercount="1" item_name="mandrakeroot" item_amount="5" item_graphics="0F86" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Digging For Treasure" />
+			<achievement triggercount="10" item_name="mandrakeroot" item_amount="20" item_graphics="0F86" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Getting Your Hands Dirty" />
+			<achievement triggercount="100" item_name="boots" item_graphics="170B" gfxoffset="48 40" reward_onclickdesc="Earth Kickers" itemhue="2112" achievement_name="Mountains Of Treasure" />
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET"  itemhue="0" reward_title_suffix="Gnome's Disciple" achievement_name="Earthy Reward" />
+			<achievement triggercount="10000" item_name="wisplantern" item_graphics="0A15" gfxoffset="48 40" reward_onclickdesc="Gnome" itemhue="2112" achievement_name="Gnome's Calling" />
+		</achievementTrigger>
+
+		<!-- Kill Rabbit Dog or Cat -->
+		<achievementTrigger id="40" category="PvE" description="Kill a Rabbit, a dog or a cat">
+			<achievement triggercount="1" item_graphics="19B7" gfxoffset="48 40" reward_onclickdesc="coal" itemhue="2019" achievement_name="Despicable" />
+		</achievementTrigger>
+		
+		<!-- Kill a tamed Rabbit, Dog, Cat or bird-->
+		<achievementTrigger id="41" category="PvE" description="Kill a tamed Rabbit, dog, cat or bird.">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_prefix="The Shameful" achievement_name="Oh Come On" />
+		</achievementTrigger>
+		
+		<!-- Kill Ogres -->
+		<achievementTrigger id="42" category="PvE" description="Kill Ogres">
+			<achievement triggercount="1" item_name="gold" item_amount="75" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="That's Okay, He Would've Eaten Your Bones" />
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_prefix="Ogre Slayer" achievement_name="Ogre Slayer" />
+			<achievement triggercount="1000" item_graphics="2559" gfxoffset="35 40" reward_onclickdesc="ogre's club" itemhue="0" achievement_name="Ogre Clubber" />
+		</achievementTrigger>
+
+		<!-- Kill Orcs -->
+		<achievementTrigger id="43" category="PvE" description="Kill Orcs">
+			<achievement triggercount="1" item_name="gold" item_amount="75" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Orcs!" />
+			<achievement triggercount="100" item_graphics="255C" gfxoffset="48 40" reward_onclickdesc="orc club" itemhue="0" achievement_name="Seeing Green" />
+			<achievement triggercount="5000" item_name="orcishkinmask" item_graphics="141B" gfxoffset="48 40" reward_onclickdesc="blood tinged orcish kin mask" itemhue="1636" achievement_name="It Ain't Easy Being Green (Anymore)" />
+		</achievementTrigger>
+
+		<!-- Kill Poison elementals -->
+		<achievementTrigger id="44" category="PvE" description="Kill Poison Elementals">
+			<achievement triggercount="1" item_name="nightshade" item_amount="25" item_graphics="0F88" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Shouldn't Your Weapon Be Poisoned By Now?" />
+			<achievement triggercount="10" item_name="emptyvial" item_graphics="0E24" gfxoffset="48 40" reward_onclickdesc="vial of elemental poison" itemhue="2126" achievement_name="Corrosion" />
+			<achievement triggercount="100" item_graphics="20ED" gfxoffset="48 40" reward_onclickdesc="poison elemental" itemhue="2006" achievement_name="Cesspool" />
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_prefix="The Impure" achievement_name="Impure" />
+		</achievementTrigger>
+
+		<!-- Kill Daemons -->
+		<achievementTrigger id="45" category="PvE" description="Kill Daemons">
+			<achievement triggercount="1" item_graphics="1B09" gfxoffset="48 40" reward_onclickdesc="demonic bone pile" itemhue="2117" achievement_name="Demonic" />
+			<achievement triggercount="100" item_graphics="20D3" gfxoffset="48 40" reward_onclickdesc="demon statue" itemhue="0" achievement_name="Angelic" />
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_prefix="Demonslayer" achievement_name="Holy Warrior!" />
+		</achievementTrigger>
+
+		<!-- Kill Balrons -->
+		<achievementTrigger id="46" category="PvE" description="Kill Balrons">
+			<achievement triggercount="1" item_graphics="1B09" gfxoffset="48 40" reward_onclickdesc="balron bone pile" itemhue="2707" achievement_name="You Shall Not Pass!" />
+			<achievement triggercount="10" item_graphics="0B46" gfxoffset="48 40" reward_onclickdesc="vase of swirling evil" itemhue="2707" achievement_name="Better Than Gandalf" />
+			<achievement triggercount="250" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_prefix="Demonhunter" achievement_name="Gandalf the WHAT?" />
+		</achievementTrigger>
+		
+		<!-- Kill JWilson  -->
+		<achievementTrigger id="47" category="PvE" description="Kill JWilsons">
+			<achievement triggercount="200" item_graphics="0C16" gfxoffset="48 40" reward_onclickdesc="dusty old bad reviews" itemhue="2101" achievement_name="Review That, Slimeball!" />
+		</achievementTrigger>
+		
+		<!-- Kill Blood Elemental  -->
+		<achievementTrigger id="48" category="PvE" description="Kill Blood Elementals">
+			<achievement triggercount="1" item_graphics="099A" gfxoffset="48 40" reward_onclickdesc="bloody goblet" itemhue="2118" achievement_name="Bloodlust" />
+			<achievement triggercount="10" item_name="emptyvial" item_graphics="0E24" gfxoffset="48 40" reward_onclickdesc="vial of blood" itemhue="2118" achievement_name="Rivers Of Blood" />
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="2006" reward_title_prefix="Blood Drinker" achievement_name="Sea Of Blood" />
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="1636" reward_title_prefix="Blood Burner" achievement_name="Bloody Mess" />
+		</achievementTrigger>
+		
+		<!-- Kill Gargoyle  -->
+		<achievementTrigger id="49" category="PvE" description="Kill Gargoyles">
+			<achievement triggercount="1" item_name="gold" item_amount="100" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Gargoyle" />
+			<achievement triggercount="10" item_graphics="20D9" gfxoffset="48 40" reward_onclickdesc="gargoyle statue" itemhue="0" achievement_name="Gargoyle Boil" />
+			<achievement triggercount="100" item_name="emptyvial" item_graphics="0E24" gfxoffset="48 40" reward_onclickdesc="pulverised gargoyle" itemhue="2105" achievement_name="Kiss This Stygian Abyss" />
+		</achievementTrigger>
+		
+		
+		<!-- Kill Lich -->
+		<achievementTrigger id="50" category="PvE" description="Kill Liches">
+			<achievement triggercount="1" item_name="blackpearl" item_amount="15" item_graphics="0F7A" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="No Laughing Matter" />
+			<achievement triggercount="100" item_graphics="0F21" gfxoffset="48 40" reward_onclickdesc="liche's heart" itemhue="2105" achievement_name="Cleaning Up Deceit" />
+			<achievement triggercount="1000" item_graphics="403D" gfxoffset="48 40" reward_onclickdesc="antique painting" itemhue="0" achievement_name="It's An Honest Living" />
+		</achievementTrigger>
+		
+		<!-- Kill Ancient Lich -->
+		<achievementTrigger id="51" category="PvE" description="Kill Ancient Liches">
+			<achievement triggercount="1" item_graphics="4295" gfxoffset="48 40" reward_onclickdesc="heart of the ancient lich" reward_window_shortdesc="lich heart" itemhue="2105" achievement_name="Big Game Hunter" />
+			<achievement triggercount="50" item_name="gnarledstaff" item_graphics="13F8" gfxoffset="15 35" reward_onclickdesc="ancient staff" itemhue="2101" achievement_name="Silver Works" />
+			<achievement triggercount="250" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_prefix="Pharaoh Killer" achievement_name="Pharaoh Killer" />
+		</achievementTrigger>
+		
+		
+		<!-- Kill Dragons -->
+		<achievementTrigger id="52" category="PvE" description="Kill Dragons">
+			<achievement triggercount="1" item_graphics="5747" gfxoffset="48 40" reward_onclickdesc="dragon tooth" itemhue="0" achievement_name="For Thou Art Tasty..." />
+			<achievement triggercount="100" item_name="candleshort" item_graphics="142C" gfxoffset="53 40" reward_onclickdesc="jeweled short candle" reward_window_shortdesc="candle" itemhue="2607" achievement_name="Charred" />
+			<achievement triggercount="500" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_prefix="Dragonhunter" achievement_name="Crispy" />
+		</achievementTrigger>
+		
+		<!-- Kill Brigands -->
+		<achievementTrigger id="53" category="PvE" description="Kill Brigands">
+			<achievement triggercount="1"  item_name="bandana" item_graphics="1540" gfxoffset="48 40" reward_onclickdesc="bloody bandana" itemhue="38" achievement_name="Justice!" />
+			<achievement triggercount="250" item_graphics="0F3C" gfxoffset="48 40" reward_onclickdesc="horse dung" itemhue="0" achievement_name="Justified?" />
+		</achievementTrigger>
+		
+		<!-- Kill Water Elemental  -->
+		<achievementTrigger id="54" category="PvE" description="Kill Water Elementals">
+			<achievement triggercount="1" item_name="gold" item_amount="100" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Splash!" />
+			<achievement triggercount="10" item_graphics="0DC3" gfxoffset="48 40" reward_onclickdesc="water lilly" itemhue="0" achievement_name="I Can't Swim!" />
+			<achievement triggercount="100" item_graphics="210B" gfxoffset="35 25" reward_onclickdesc="water elemental statue" itemhue="0" achievement_name="Wet Work" />
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_suffix="Disciple of Undine" achievement_name="Undine's Call" />
+			<achievement triggercount="10000" item_name="wisplantern" item_graphics="0A15" gfxoffset="43 40" reward_onclickdesc="Undine" itemhue="1266" achievement_name="Watery Reward" />
+		</achievementTrigger>
+		
+		<!-- Kill Fire Elemental  -->
+		<achievementTrigger id="55" category="PvE" description="Kill Fire Elementals">
+			<achievement triggercount="1" item_name="gold" item_amount="100" item_graphics="0EEF" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Embers!" />
+			<achievement triggercount="10" item_name="sulfurousash" item_amount="50" item_graphics="0F8C" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Red Hot" />
+			<achievement triggercount="100" item_name="goldring" item_graphics="108A" gfxoffset="48 40" reward_onclickdesc="ring of fire" itemhue="1359" achievement_name="Tempered Sword" />
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_suffix="Disciple of Salamando" achievement_name="Salamando's Call" />
+			<achievement triggercount="10000" item_name="wisplantern" item_graphics="0A15" gfxoffset="43 40" reward_onclickdesc="Salamando" itemhue="1357" achievement_name="Fiery Reward" />
+		</achievementTrigger>
+		
+		<!-- Rare Mobs -->
+		<achievementTrigger id="56" category="PvE" description="Kill A Rare Ratman">
+			<achievement triggercount="1" item_graphics="5742" gfxoffset="48 40" reward_onclickdesc="Rare Ratman Pelt" itemhue="2101" achievement_name="Rare Ratman" />
+		</achievementTrigger>	
+		<achievementTrigger id="57" category="PvE" description="Kill A Rare Ogre">
+			<achievement triggercount="1" item_graphics="255C" gfxoffset="48 40" reward_onclickdesc="Rare Ogre Club" itemhue="2101" achievement_name="Rare Ogre" />
+		</achievementTrigger>		
+		<achievementTrigger id="58" category="PvE" description="Kill A Rare Orc Captain">
+			<achievement triggercount="1" item_name="boots" item_graphics="170B" gfxoffset="48 40" reward_onclickdesc="Rare Orc Boots" itemhue="2101" achievement_name="Rare Orc" />
+		</achievementTrigger>		
+		<achievementTrigger id="59" category="PvE" description="Kill A Rare Demon">
+			<achievement triggercount="1" item_graphics="1B0A" gfxoffset="48 40" reward_onclickdesc="Rare Demon Bones" itemhue="2101" achievement_name="Rare Demon" />
+		</achievementTrigger>		
+		<achievementTrigger id="60" category="PvE" description="Kill A Rare Troll">
+			<achievement triggercount="1" item_graphics="1E6D" gfxoffset="48 40" reward_onclickdesc="Rare Troll Skin" itemhue="2101" achievement_name="Rare Troll" />
+		</achievementTrigger>		
+		<achievementTrigger id="61" category="PvE" description="Kill A Rare Silver Serpent">
+			<achievement triggercount="1" item_graphics="1852" gfxoffset="48 40" reward_onclickdesc="Rare Scales" itemhue="2101" achievement_name="Rare Silver Serpent" />
+		</achievementTrigger>		
+		<achievementTrigger id="62" category="PvE" description="Kill A Rare Snake">
+			<achievement triggercount="1" item_graphics="5742" gfxoffset="48 40" reward_onclickdesc="Rare Snake Skin" itemhue="2101" achievement_name="Rare Snake" />
+		</achievementTrigger>		
+		<achievementTrigger id="63" category="PvE" description="Kill A Rare Harpy">
+			<achievement triggercount="1" item_graphics="1BD2" gfxoffset="48 40" reward_onclickdesc="Rare Harpy Feathers" itemhue="2101" achievement_name="Rare Harpy" />
+		</achievementTrigger>		
+		<achievementTrigger id="64" category="PvE" description="Kill A Rare Wolf">
+			<achievement triggercount="1" item_graphics="5742" gfxoffset="48 40" reward_onclickdesc="Rare Wolf Pelt" itemhue="2101" achievement_name="Rare Wolf" />
+		</achievementTrigger>		
+		<achievementTrigger id="65" category="PvE" description="Kill A Rare Skeleton">
+			<achievement triggercount="1" item_graphics="1B09" gfxoffset="48 40" reward_onclickdesc="Rare Skeleton Bones" itemhue="2101" achievement_name="Rare Skeleton" />
+		</achievementTrigger>		
+		<achievementTrigger id="66" category="PvE" description="Kill A Rare Zombie">
+			<achievement triggercount="1" item_graphics="1CE5" gfxoffset="48 40" reward_onclickdesc="Rare Zombie Arm" itemhue="2101" achievement_name="Rare Zombie" />
+		</achievementTrigger>			
+
+		
+		<!-- Craft Armor -->
+		<achievementTrigger id="67" category="Crafting" description="Craft Armor">
+			<achievement triggercount="20" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="20 Armor Certificate" reward_window_shortdesc="A Certificate" itemhue="0" achievement_name="Craft 20 Armor" />
+			<achievement triggercount="99" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="99 Armor Certificate" reward_window_shortdesc="A Certificate" itemhue="0" achievement_name="Craft 99 Armor" />
+			<achievement triggercount="1000" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="1000 Armor Certificate" reward_window_shortdesc="A Certificate" itemhue="1759" achievement_name="Craft 1000 Armor" />
+			<achievement triggercount="10000" item_graphics="" gfxoffset="48 40" reward_onclickdesc=" " itemhue="0" reward_title_prefix="Armorsmith" achievement_name="ArmorSmith" />
+		</achievementTrigger>
+		
+		<!-- Craft Weaopns -->
+		<achievementTrigger id="68" category="Crafting" description="Craft Weapons">
+			<achievement triggercount="20" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="20 Weapons Certificate" reward_window_shortdesc="A Certificate" itemhue="0" achievement_name="Craft 20 Weapons" />
+			<achievement triggercount="99" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="99 Weapons Certificate" reward_window_shortdesc="A Certificate" itemhue="0" achievement_name="Craft 99 Weapons" />
+			<achievement triggercount="1000" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="1000 Weapons Certificate" reward_window_shortdesc="A Certificate" itemhue="1759" achievement_name="Craft 1000 Weapons" />
+			<achievement triggercount="10000" item_graphics="" gfxoffset="48 40" reward_onclickdesc=" " itemhue="0" reward_title_prefix="Weaponsmith" achievement_name="WeaponSmith" />
+		</achievementTrigger>
+
+		<!-- Mark Items -->
+		<achievementTrigger id="69" category="Crafting" description="Put Your Name Out There">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="An old note written by Brian Wilson Kernighan" reward_window_shortdesc="An old note" itemhue="0" achievement_name="hello, world" />
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc=" " itemhue="0" reward_title_suffix="The Craftsman" achievement_name="Maker's Mark" />
+		</achievementTrigger>
+		
+		<!-- Smelt Items -->
+		<achievementTrigger id="70" category="Crafting" description="Recycle, recycle, recycle">
+			<achievement triggercount="100" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="Recycling Certificate" itemhue="0" achievement_name="Recycle" />
+			<achievement triggercount="500" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="A thank you note from the Groundskeepers of Britannia" reward_window_shortdesc="A note of appreciation" itemhue="0" achievement_name="Blue Box" />
+			<achievement triggercount="1000" item_name="tongs" item_graphics="0FBB" gfxoffset="48 40" reward_onclickdesc="Smoldering Tongs" itemhue="1359" achievement_name="Meltdown" />
+		</achievementTrigger>
+		
+		<!-- Tools Breaking -->
+		<achievementTrigger id="71" category="Crafting" description="Work Hard, Break Your Tools">
+			<achievement triggercount="100" item_name="smithhammer" item_graphics="13E3" gfxoffset="48 40" reward_onclickdesc="Reinforced Hammer" itemhue="2104" achievement_name="If I Had A Hammer" />
+		</achievementTrigger>
+		<achievementTrigger id="72" category="Gathering" description="Work Hard, Break Your Tools">
+			<achievement triggercount="100" item_name="pickaxe" item_graphics="0E86" gfxoffset="48 40" reward_onclickdesc="Reinforced pick" itemhue="2104" achievement_name="Pick... Pick... Pow!" />
+		</achievementTrigger>
+		<achievementTrigger id="73" category="Crafting" description="Work Hard, Break Your Tools">
+			<achievement triggercount="100" item_name="tongs" item_graphics="0FBB" gfxoffset="48 40" reward_onclickdesc="Steel Tongs" itemhue="2104" achievement_name="It's All Gone, Pete Tong" />
+		</achievementTrigger>		
+		<!-- 
+		<achievementTrigger id="74" category="Crafting" description="Work Hard, Break Your Tools">
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="TEMP - BREAK SEWING KITS" />
+		</achievementTrigger>
+		<achievementTrigger id="75" category="Crafting" description="Work Hard, Break Your Tools">
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="TEMP - BREAK MORTAR AND PESTLE" />
+		</achievementTrigger>
+		<achievementTrigger id="76" category="Crafting" description="Work Hard, Break Your Tools">
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="TEMP - BREAK SCRIBES PEN" />
+		</achievementTrigger>
+		<achievementTrigger id="77" category="Crafting" description="Work Hard, Break Your Tools">
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="TEMP - BREAK TINKER TOOLS" />
+		</achievementTrigger>
+		-->
+
+		
+		<!-- Mine Ore  -->
+		<achievementTrigger id="78" category="Gathering" description="Mine Dull Copper Ore">
+			<achievement triggercount="1" item_graphics="19B7" gfxoffset="48 40" reward_onclickdesc="Dull Copper Stones" itemhue="2419" achievement_name="Striking Dull Copper" />
+			<achievement triggercount="10000" item_name="pickaxe" item_graphics="0E86" gfxoffset="48 40" reward_onclickdesc="Dull Copper Pick" itemhue="2419" achievement_name="Dull Copper Master" />
+		</achievementTrigger>
+		<achievementTrigger id="79" category="Gathering" description="Mine Copper Ore">
+			<achievement triggercount="1" item_graphics="19B7" gfxoffset="48 40" reward_onclickdesc="Copper Stones" itemhue="2413" achievement_name="Striking Copper" />
+			<achievement triggercount="10000" item_name="pickaxe" item_graphics="0E86" gfxoffset="48 40" reward_onclickdesc="Copper Pick" itemhue="2413" achievement_name="Copper Master" />
+		</achievementTrigger>
+		<achievementTrigger id="80" category="Gathering" description="Mine Bronze Ore">
+			<achievement triggercount="1" item_graphics="19B7" gfxoffset="48 40" reward_onclickdesc="Bronze Stones" itemhue="2418" achievement_name="Striking Bronze" />
+			<achievement triggercount="10000" item_name="pickaxe" item_graphics="0E86" gfxoffset="48 40" reward_onclickdesc="Bronze Pick" itemhue="2418" achievement_name="Bronzed Master" />
+		</achievementTrigger>
+		<achievementTrigger id="81" category="Gathering" description="Mine Shadow Iron Ore">
+			<achievement triggercount="1" item_graphics="19B7" gfxoffset="48 40" reward_onclickdesc="Shadow Stones" itemhue="2406" achievement_name="Striking Shadow" />
+			<achievement triggercount="10000" item_name="pickaxe" item_graphics="0E86" gfxoffset="48 40" reward_onclickdesc="Shadow Pick" itemhue="2406" achievement_name="Shadow Master" />
+		</achievementTrigger>
+		<achievementTrigger id="82" category="Gathering" description="Mine Gold Ore">
+			<achievement triggercount="1" item_graphics="19B7" gfxoffset="48 40" reward_onclickdesc="Gold Stones" itemhue="2213" achievement_name="Striking Gold" />
+			<achievement triggercount="10000" item_name="pickaxe" item_graphics="0E86" gfxoffset="48 40" reward_onclickdesc="Gold Pick" itemhue="2213" achievement_name="Golden Master" />
+		</achievementTrigger>
+		<achievementTrigger id="83" category="Gathering" description="Mine Agapite Ore">
+			<achievement triggercount="1" item_graphics="19B7" gfxoffset="48 40" reward_onclickdesc="Agapite Stones" itemhue="2425" achievement_name="Striking Agapite" />
+			<achievement triggercount="10000" item_name="pickaxe" item_graphics="0E86" gfxoffset="48 40" reward_onclickdesc="Agapite Pick" itemhue="2425" achievement_name="Agapite Master" />
+		</achievementTrigger>
+		<achievementTrigger id="84" category="Gathering" description="Mine Verite Ore">
+			<achievement triggercount="1" item_graphics="19B7" gfxoffset="48 40" reward_onclickdesc="Verite Stones" itemhue="2207" achievement_name="Striking Verite" />
+			<achievement triggercount="10000" item_name="pickaxe" item_graphics="0E86" gfxoffset="48 40" reward_onclickdesc="Verite Pick" itemhue="2207" achievement_name="Verite Master" />
+		</achievementTrigger>
+		<achievementTrigger id="85" category="Gathering" description="Mine Valorite Ore">
+			<achievement triggercount="1" item_graphics="19B7" gfxoffset="48 40" reward_onclickdesc="Valorite Stones" itemhue="2219" achievement_name="Striking Valorite" />
+			<achievement triggercount="10000" item_name="pickaxe" item_graphics="0E86" gfxoffset="48 40" reward_onclickdesc="Valorite Pick" itemhue="2219" achievement_name="Valorite Master" />
+		</achievementTrigger>
+		<achievementTrigger id="86" category="Gathering" description="Mine Iron Ore">
+			<achievement triggercount="100" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="Miner's Guild Note" itemhue="2101" achievement_name="Ore Master" />
+			<achievement triggercount="1000" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="Miner's Guild Diploma" itemhue="2213" achievement_name="Piles and Piles" />
+			<achievement triggercount="10000" item_graphics="19B8" gfxoffset="48 40" reward_onclickdesc="Lost Ore" itemhue="0" achievement_name="Piles and Piles and Piles" />
+			<achievement triggercount="250000" item_graphics="1BF0" gfxoffset="48 40" reward_onclickdesc="Stacked Ingots" itemhue="0" achievement_name="I Can Go For Piles and Piles and Piles and Piles and Piles" />
+		</achievementTrigger>		
+		
+		<!-- Smelt Ore  -->		
+		<achievementTrigger id="87" category="Gathering" description="Smelt Dull Copper Bars">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Dull Copper Bars!" />
+			<achievement triggercount="10000" item_name="smithhammer" item_graphics="13E3" gfxoffset="48 40" reward_onclickdesc="Dull Copper Hammer" itemhue="2419" achievement_name="Dull Copper Bonanza" />
+		</achievementTrigger>
+		<achievementTrigger id="88" category="Gathering" description="Smelt Copper Bars">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Copper Bars!" />
+			<achievement triggercount="10000" item_name="smithhammer" item_graphics="13E3" gfxoffset="48 40" reward_onclickdesc="Copper Hammer" itemhue="2413" achievement_name="Quick Copper?" />
+		</achievementTrigger>
+		<achievementTrigger id="89" category="Gathering" description="Smelt Bronze Bars">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Bronze Bars!" />
+			<achievement triggercount="10000" item_name="smithhammer" item_graphics="13E3" gfxoffset="48 40" reward_onclickdesc="Shadow Hammer" itemhue="2418" achievement_name="Stacking Shadow" />
+		</achievementTrigger>
+		<achievementTrigger id="90" category="Gathering" description="Smelt Shadow Iron Bars">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Shadow Bars!" />
+			<achievement triggercount="10000" item_name="smithhammer" item_graphics="13E3" gfxoffset="48 40" reward_onclickdesc="Bronze Hammer" itemhue="2406" achievement_name="Brilliant Bronze" />
+		</achievementTrigger>
+		<achievementTrigger id="91" category="Gathering" description="Smelt Gold Bars">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Gold Bars!" />
+			<achievement triggercount="10000" item_name="smithhammer" item_graphics="13E3" gfxoffset="48 40" reward_onclickdesc="Gold Hammer" itemhue="2213" achievement_name="Fort Knox" />
+		</achievementTrigger>
+		<achievementTrigger id="92" category="Gathering" description="Smelt Agapite Bars">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Agapite Bars!" />
+			<achievement triggercount="10000" item_name="smithhammer" item_graphics="13E3" gfxoffset="48 40" reward_onclickdesc="Agapite Hammer" itemhue="2425" achievement_name="Purple Power" />
+		</achievementTrigger>
+		<achievementTrigger id="93" category="Gathering" description="Smelt Verite Bars">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Verite Bars!" />
+			<achievement triggercount="10000" item_name="smithhammer" item_graphics="13E3" gfxoffset="48 40" reward_onclickdesc="Verite Hammer" itemhue="2207" achievement_name="Green Machine" />
+		</achievementTrigger>
+		<achievementTrigger id="94" category="Gathering" description="Smelt Valorite Bars">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Valorite Bars!" />
+			<achievement triggercount="10000" item_name="smithhammer" item_graphics="13E3" gfxoffset="48 40" reward_onclickdesc="Valorite Hammer" itemhue="2219" achievement_name="Brew Bars" />
+		</achievementTrigger>
+
+
+		<!-- Failed mining  -->		
+		<achievementTrigger id="95" category="Gathering" description="Failure can also be rewarding">
+			<achievement triggercount="100" item_name="feather" item_graphics="1BD1" gfxoffset="48 40" reward_onclickdesc="Lucky Feather" itemhue="2101" achievement_name="It's More Tiring To Swing And Miss" />
+			<achievement triggercount="2500" item_graphics="2125" gfxoffset="48 40" reward_onclickdesc="Lucky Rabbit" itemhue="0" achievement_name="It Seemed Like You Needed The Whole Thing" />
+		</achievementTrigger>
+
+		<!-- Fishing -->		
+		<achievementTrigger id="96" category="Gathering" description="Gone fishing">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Prized Fish" />
+		</achievementTrigger>
+		<achievementTrigger id="97" category="Gathering" description="Gone fishing">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Wondrous Fish" />
+		</achievementTrigger>
+		<achievementTrigger id="98" category="Gathering" description="Gone fishing">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Truly Rare Fish" />
+		</achievementTrigger>
+		<achievementTrigger id="99" category="Gathering" description="Gone fishing">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Highly Peculiar Fish" />
+		</achievementTrigger>
+		<achievementTrigger id="100" category="Gathering" description="Gone fishing">
+			<achievement triggercount="1" item_graphics="099F" gfxoffset="48 40" reward_onclickdesc="empty bottle" itemhue="0" achievement_name="Message In A Bottle" />
+			<achievement triggercount="100" item_graphics="09A2" gfxoffset="48 40" reward_onclickdesc="empty bottles" itemhue="0" achievement_name="Shipwrecked" />
+			<achievement triggercount="250" item_graphics="20ED" gfxoffset="48 40" reward_onclickdesc="a smoke monster" itemhue="902" achievement_name="Lost" />
+		</achievementTrigger>
+		<achievementTrigger id="101" category="Gathering" description="Gone fishing">
+			<achievement triggercount="1" item_name="boots" item_graphics="170B" gfxoffset="48 40" reward_onclickdesc="muddy boots" itemhue="637" achievement_name="They're Good For Something Now" />
+		</achievementTrigger>
+
+		<!-- Alchemy  1 of each base type of potions -->		
+		<achievementTrigger id="102" category="Crafting" description="Create a healing potion">
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Yellow Potion" />
+		</achievementTrigger>
+		<achievementTrigger id="103" category="Crafting" description="Create a cure potion">
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Antidote" />
+		</achievementTrigger>
+		<achievementTrigger id="104" category="Crafting" description="Create a poison potion">
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Don't Eat The Bread!" />
+		</achievementTrigger>
+		<achievementTrigger id="105" category="Crafting" description="Create a refresh potion">
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Refreshing" />
+		</achievementTrigger>
+		<achievementTrigger id="106" category="Crafting" description="Create a strength potion">
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="White Potion" />
+		</achievementTrigger>
+		<achievementTrigger id="107" category="Crafting" description="Create a blue potion">
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Blue Potion" />
+		</achievementTrigger>
+		
+		<!-- Alchemy, deadly poison  -->	
+		<achievementTrigger id="108" category="Crafting" description="Create a deadly poison potion">
+			<achievement triggercount="1000" item_name="potionkeg" item_graphics="1940" gfxoffset="48 40" reward_onclickdesc="discolored keg" itemhue="1272" achievement_name="Sudden death" />
+		</achievementTrigger>
+
+		<!-- Skin Animals  -->	
+		<achievementTrigger id="109" category="PvE" description="Skin Animals">
+			<achievement triggercount="1" item_name="hides" item_amount="3" item_graphics="1079" gfxoffset="48 40" reward_onclickdesc="" itemhue="0" achievement_name="Skin-Tastic" />
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_prefix="Woodsman" achievement_name="Here's The Skinny" />
+			<achievement triggercount="1000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_suffix="Coureur des bois" achievement_name="Coureur des bois" />
+		</achievementTrigger>
+
+		<!-- Use portals  -->	
+		<achievementTrigger id="110" category="Exploration" description="Gate travel">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" reward_title_prefix="Portal Explorer" itemhue="0" achievement_name="Portal Master" />
+			<achievement triggercount="100" item_graphics="14EB" gfxoffset="48 40" reward_onclickdesc="a map of the universe" itemhue="700" achievement_name="Portalarium" />
+			<achievement triggercount="10000" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" reward_title_prefix="Dimension Shifter" itemhue="0" achievement_name="Dizzy" />
+		</achievementTrigger>
+
+		<!-- Resurrect an animal -->	
+		<achievementTrigger id="111" category="Taming" description="Resurrect an animal">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Best Friends Forever" />
+		</achievementTrigger>
+		
+		<!-- Cure an animal using bandages -->	
+		<achievementTrigger id="112" category="Taming" description="Cure an animal using bandages">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Vet Bill" />
+		</achievementTrigger>
+		
+		<!-- Heal an animal using bandages -->	
+		<achievementTrigger id="113" category="Taming" description="Heal an animal using bandages">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="The Tender" />
+		</achievementTrigger>
+
+		<!-- Kill any tamed animal -->	
+		<achievementTrigger id="114" category="PvP" description="Kill any tamed animal (except your own!)">
+			<achievement triggercount="1" item_name="necklace" item_graphics="1085" gfxoffset="48 40" reward_onclickdesc="a torn collar" itemhue="2019" achievement_name="The Collar Says..." />
+		</achievementTrigger>
+		
+		<!-- Play instruments -->	
+		<achievementTrigger id="115" category="Positive" description="Play a lute">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Lute'in Tootin'" />
+			<achievement triggercount="1000" item_name="lute" item_graphics="0EB3" gfxoffset="48 40" reward_onclickdesc="silver lute" itemhue="2101" must_be_discovered="true" achievement_name="Sa-Lute!" />
+			<achievement triggercount="50000" item_name="lute" item_graphics="0EB3" gfxoffset="48 40" reward_onclickdesc="a golden lute" itemhue="2213" must_be_discovered="true" achievement_name="King's Court Superstar" />
+		</achievementTrigger>
+		<achievementTrigger id="116" category="Positive" description="Play a drum">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Drumming Up Some Points" />
+			<achievement triggercount="1000" item_name="drums" item_graphics="0E9C" gfxoffset="48 40" reward_onclickdesc="silver drums" itemhue="2101" must_be_discovered="true" achievement_name="Drumming Up Some More Points" />
+		</achievementTrigger>
+		<achievementTrigger id="117" category="Positive" description="Play the tambourine">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Tambourine Man" />
+			<achievement triggercount="1000" item_name="tambourine" item_graphics="0E9D" gfxoffset="48 40" reward_onclickdesc="silver tambourine" itemhue="2101" must_be_discovered="true" achievement_name="Hey, Mister Tambourine Man..." />
+		</achievementTrigger>
+		<achievementTrigger id="118" category="Positive" description="Play a harp">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" achievement_name="Not To Harp, But.." />
+		</achievementTrigger>
+		
+		<!-- Tame lame animals for statues -->	
+		<achievementTrigger id="119" category="Taming" description="Tame chickens">
+			<achievement triggercount="100" item_graphics="20D1" gfxoffset="48 40" reward_onclickdesc="a chicken statue" itemhue="0" must_be_discovered="true" achievement_name="Cluck!" />
+		</achievementTrigger>
+		<achievementTrigger id="120" category="Taming" description="Tame bears">
+			<achievement triggercount="100" item_graphics="20CF" gfxoffset="48 40" reward_onclickdesc="a bear statue" itemhue="0" must_be_discovered="true" achievement_name="Furry!" />
+		</achievementTrigger>
+		<achievementTrigger id="121" category="Taming" description="Tame dogs">
+			<achievement triggercount="100" item_graphics="20D5" gfxoffset="48 40" reward_onclickdesc="a dog statue" itemhue="0" must_be_discovered="true" achievement_name="Man's Best Friend" />
+		</achievementTrigger>
+		<achievementTrigger id="122" category="Taming" description="Tame timber wolves">
+			<achievement triggercount="100" item_graphics="20EA" gfxoffset="48 40" reward_onclickdesc="a wolf statue" itemhue="0" must_be_discovered="true" achievement_name="You'll Need Meat" />
+		</achievementTrigger>
+		<achievementTrigger id="123" category="Taming" description="Tame hinds">
+			<achievement triggercount="100" item_graphics="20D4" gfxoffset="48 40" reward_onclickdesc="a deer statue" itemhue="0" must_be_discovered="true" achievement_name="Hello, Deer" />
+		</achievementTrigger>
+		<achievementTrigger id="124" category="Taming" description="Tame cats">
+			<achievement triggercount="100" item_graphics="211B" gfxoffset="48 40" reward_onclickdesc="a cat statue" itemhue="0" must_be_discovered="true" achievement_name="Where's The Catnip?" />
+		</achievementTrigger>
+		<achievementTrigger id="125" category="Taming" description="Tame giant toads">
+			<achievement triggercount="100" item_graphics="212F" gfxoffset="48 40" reward_onclickdesc="a giant toad statue" itemhue="0" must_be_discovered="true" achievement_name="A Face Only A Mother Could Love" />
+		</achievementTrigger>
+		<achievementTrigger id="126" category="Taming" description="Tame jackrabbits">
+			<achievement triggercount="100" item_graphics="20E2" gfxoffset="48 40" reward_onclickdesc="a jackrabbit statue" itemhue="0" must_be_discovered="true" achievement_name="They Call Me Jack" />
+		</achievementTrigger>
+		<achievementTrigger id="127" category="Taming" description="Tame rabbits">
+			<achievement triggercount="100" item_graphics="20E2" gfxoffset="48 40" reward_onclickdesc="a rabbit statue" itemhue="0" must_be_discovered="true" achievement_name="Hopalong" />
+		</achievementTrigger>
+		<achievementTrigger id="128" category="Taming" description="Tame rats">
+			<achievement triggercount="100" item_graphics="2123" gfxoffset="48 40" reward_onclickdesc="a rat statue" itemhue="0" must_be_discovered="true" achievement_name="He's The Cleanest Rat In The World" />
+		</achievementTrigger>		
+		<achievementTrigger id="129" category="Taming" description="Tame Gorillas">
+			<achievement triggercount="100" item_graphics="20C9" gfxoffset="30 40" reward_onclickdesc="a gorilla statue" itemhue="0" must_be_discovered="true" achievement_name="Monkey News" />
+		</achievementTrigger>		
+		<achievementTrigger id="130" category="Taming" description="Tame Walruses">
+			<achievement triggercount="100" item_graphics="20FF" gfxoffset="30 40" reward_onclickdesc="a walrus statue" itemhue="0" must_be_discovered="true" achievement_name="HE Is The Walrus" />
+		</achievementTrigger>		
+		<achievementTrigger id="131" category="Taming" description="Tame Polar Bears">
+			<achievement triggercount="100" item_graphics="20E1" gfxoffset="48 40" reward_onclickdesc="a polar bear statue" itemhue="0" must_be_discovered="true" achievement_name="Polar Expedition" />
+		</achievementTrigger>		
+		
+		<!-- Donate gold to NPC -->	
+		<achievementTrigger id="132" category="Positive" description="Donate between 80 and 249 gold to an NPC">
+			<achievement triggercount="1" item_graphics="0E35" gfxoffset="48 40" reward_onclickdesc="Charitable Receipt" itemhue="2418" achievement_name="Doing Your Part" />
+		</achievementTrigger>		
+		<achievementTrigger id="133" category="Positive" description="Donate between 250 and 500 gold to an NPC">
+			<achievement triggercount="1" item_graphics="0E35" gfxoffset="48 40" reward_onclickdesc="Charitable Receipt" itemhue="2101" achievement_name="Charitable" />
+		</achievementTrigger>		
+		<achievementTrigger id="134" category="Positive" description="Donate a lot of gold to an NPC">
+			<achievement triggercount="1" item_graphics="0E35" gfxoffset="48 40" reward_onclickdesc="Charitable Receipt" itemhue="2213" achievement_name="Not Scroogeing Around" />
+		</achievementTrigger>		
+		
+		<!-- Train crafting skill from NPC -->	
+		<achievementTrigger id="135" category="Crafting" description="Train a crafting skill from an NPC">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET" itemhue="0" reward_title_prefix="Trainee" achievement_name="Crafter In Training" />
+		</achievementTrigger>			
+		
+		<!-- Healing/curing/helping newbies under 300 skill -->	
+		<achievementTrigger id="136" category="Positive" description="Heal a player with under 300 total skills">
+			<achievement triggercount="1" item_name="emerald" item_graphics="0F10" gfxoffset="58 40" reward_onclickdesc="sky emerald" itemhue="45" must_be_discovered="true" achievement_name="Helper" />
+		</achievementTrigger>	
+		<achievementTrigger id="137" category="Positive" description="Cure a player with under 300 total skills">
+			<achievement triggercount="1" item_graphics="18E2" gfxoffset="48 40" reward_onclickdesc="planted garlic" itemhue="0" must_be_discovered="true" achievement_name="Doing My Part" />
+		</achievementTrigger>
+		<achievementTrigger id="138" category="Positive" description="Bless a player with under 300 total skills">
+			<achievement triggercount="1" item_graphics="0FCA" gfxoffset="48 40" reward_onclickdesc="golden shells" itemhue="2213" must_be_discovered="true" achievement_name="That's Very Nice Of You" />
+		</achievementTrigger>			
+
+		<!-- Create/join a guild -->	
+		<achievementTrigger id="139" category="Positive" description="Create a guild">
+			<achievement triggercount="1" item_name="goldring" item_graphics="108A" gfxoffset="48 40" reward_onclickdesc="brass ring" itemhue="2218" achievement_name="Guild Master!" />
+		</achievementTrigger>	
+		<achievementTrigger id="140" category="Positive" description="Join a guild">
+			<achievement triggercount="1" item_graphics="14EE" gfxoffset="48 40" reward_onclickdesc="map to the guildhouse" itemhue="0" achievement_name="Guilded!" />
+		</achievementTrigger>	
+
+		<!-- Get drunk -->	
+		<achievementTrigger id="141" category="Positive" description="Get drunk">
+			<achievement triggercount="1" item_graphics="0999" gfxoffset="48 40" reward_onclickdesc="a mug of coffee" itemhue="2704" must_be_discovered="true" achievement_name="Where's The Party?" />
+		</achievementTrigger>			
+		
+		<!-- Complete all smithing achievements -->	
+		<achievementTrigger id="142" category="Mastery" description="Complete all blacksmith achievements">
+			<achievement triggercount="1" item_graphics="0BC7" gfxoffset="48 40" reward_onclickdesc="a sign" itemhue="0" achievement_name="Legendary Smithing" />
+		</achievementTrigger>			
+		
+		<!-- Reach 100.0 skill in animal taming -->
+		<achievementTrigger id="178" category="Taming" description="Reach 100.0 skill in Animal Taming">
+			<achievement triggercount="1" item_graphics="14EE" gfxoffset="48 40" reward_onclickdesc="an offer of employment from the royal zoo" reward_window_shortdesc="an official note" itemhue="0" achievement_name="Grandmaster Tamer" />
+		</achievementTrigger>				
+
+
+		<!-- Complete all animal taming achievements -->
+		<achievementTrigger id="192" category="Mastery" description="Complete all taming related achievements">
+			<achievement triggercount="1" item_graphics="0BB7" gfxoffset="48 40" reward_onclickdesc="a sign" itemhue="0" achievement_name="Legendary Taming" />
+		</achievementTrigger>
+		
+		<!-- Tame any animal -->
+		<achievementTrigger id="193" category="Taming" description="Tame an animal">
+			<achievement triggercount="1" item_name="necklace" item_graphics="1085" gfxoffset="48 40" reward_onclickdesc="a collar" itemhue="901" achievement_name="Follow me!" />
+		</achievementTrigger>
+		
+		<!-- Tame a hellhound -->
+		<achievementTrigger id="194" category="Taming" description="Tame a Hellhound">
+			<achievement triggercount="1" item_graphics="20EA" gfxoffset="48 40" reward_onclickdesc="hell hound statue" itemhue="1777" achievement_name="Evil Tamer" />
+		</achievementTrigger>	
+
+		<!-- Escort NPCs -->
+		<achievementTrigger id="195" category="Positive" description="Escort an NPC">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="a note of thanks" itemhue="2595" achievement_name="Not That Kind Of Escort" />
+			<achievement triggercount="10" item_graphics="1E03" gfxoffset="48 40" reward_onclickdesc="footprints" itemhue="0" achievement_name="Bus Driver" />
+			<achievement triggercount="100" item_graphics="14EB" gfxoffset="48 40" reward_onclickdesc="a well used map" itemhue="2712" achievement_name="Britannian Tour Guide" />
+		</achievementTrigger>
+		
+		<!-- Kill Escorted NPC -->
+		<achievementTrigger id="196" category="Positive" description="Kill an escortable NPC ">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="a bloody, half-written note of thanks" reward_window_shortdesc="a bloody note" must_be_discovered="true" itemhue="2707" achievement_name="That Wasn't Part Of The Deal" />
+		</achievementTrigger>
+		
+		<!-- Place a small house -->
+		<achievementTrigger id="197" category="Wealth" description="Place a small house">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="A voided Small House Deed" itemhue="2418" achievement_name="Home Sweet Home" />
+		</achievementTrigger>
+		
+		<!-- Place a medium house -->
+		<achievementTrigger id="198" category="Wealth" description="Place a Large Brick, Large Smithy, Villa, or Two-Story home">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="A voided Large House Deed" itemhue="2418" achievement_name="Home SWEET! Home!" />
+		</achievementTrigger>
+		
+		<!-- Place a tower -->
+		<achievementTrigger id="199" category="Wealth" description="Place a tower">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="A voided Tower Deed" itemhue="2418" achievement_name="Towering Above You" />
+		</achievementTrigger>
+		
+		<!-- Place a keep -->
+		<achievementTrigger id="200" category="Wealth" description="Place a keep">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="A voided Keep Deed" itemhue="2418" achievement_name="Keeping Ahead" />
+		</achievementTrigger>
+		
+		<!-- Place a castle -->
+		<achievementTrigger id="201" category="Wealth" description="Place a castle">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="A voided castle Deed" itemhue="2418" achievement_name="Stay Out Of My Courtyard" />
+		</achievementTrigger>		
+
+		<!-- Make X total potions  -->
+		<achievementTrigger id="202" category="Crafting" description="Make potions">
+			<achievement triggercount="1000" item_graphics="0E2C" gfxoffset="48 40" reward_onclickdesc="a failed experiment" itemhue="0" achievement_name="Amateur Mixologist" />
+			<achievement triggercount="20000" item_graphics="185D" gfxoffset="48 40" reward_window_shortdesc="experimental cocktail" reward_onclickdesc="rack of experimental cocktails" itemhue="0" achievement_name="The Apothecary" />
+			<achievement triggercount="30000" item_graphics="" gfxoffset="48 40" reward_title_suffix="The Apothecary" itemhue="0" achievement_name="Acknowledged pharmacist" />
+		</achievementTrigger>		
+		
+		<!-- Complete all alchemy achievements -->
+		<achievementTrigger id="203" category="Mastery" description="Complete all alchemy achievements">
+			<achievement triggercount="1" item_graphics="0BC5" gfxoffset="48 40" reward_onclickdesc="a sign" itemhue="0" achievement_name="Master Mixologist" />
+		</achievementTrigger>		
+		
+		
+		<!-- Sell items to NPCs -->
+		<achievementTrigger id="204" category="Wealth" description="Sell an item, to a vendor, for between 1 and 9 gold">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="1 Gold Receipt" itemhue="0" achievement_name="It's Dinner" />
+		</achievementTrigger>
+		<achievementTrigger id="205" category="Wealth" description="Sell an item, to a vendor, for between 10 and 99 gold">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="10 Gold Receipt" itemhue="0" achievement_name=".. And Drinks" />
+		</achievementTrigger>
+		<achievementTrigger id="206" category="Wealth" description="Sell an item, to a vendor, for between 100 and 199 gold">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="100 Gold Receipt" itemhue="0" achievement_name="Shiny!" />
+		</achievementTrigger>
+		<achievementTrigger id="207" category="Wealth" description="Sell an item, to a vendor, for 200 gold or more">
+			<achievement triggercount="1" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="200 Gold Receipt" itemhue="0" achievement_name="Super Seller" />
+		</achievementTrigger>		
+
+		<!-- Catch X fish and fishing mastery -->
+		<achievementTrigger id="208" category="Mastery" description="Complete all fishing achievements">
+			<achievement triggercount="1" item_graphics="0BB5" gfxoffset="48 40" reward_onclickdesc="a sign" itemhue="0" achievement_name="Deadly Catch" />
+		</achievementTrigger>
+		<achievementTrigger id="209" category="Gathering" description="Catch fish">
+			<achievement triggercount="50000" item_graphics="0DCA" gfxoffset="48 40" reward_onclickdesc="a worn fishing net" itemhue="601" achievement_name="Did you see that coming?" />
+			<achievement triggercount="250000" item_graphics="44E7" gfxoffset="48 40" reward_onclickdesc="a trophy" itemhue="0" achievement_name="How about this one?" />
+		</achievementTrigger>
+		
+		<!-- Veteran rewards - Account Age -->
+		<achievementTrigger id="210" category="Veteran" description="Account older than 1 day">
+			<achievement triggercount="1" item_name="bluebook" item_graphics="0FF2" gfxoffset="48 40" reward_onclickdesc="In Por Ylem Diary" reward_window_shortdesc="A diary" itemhue="2213" achievement_name="The Day Of My UO Life" />
+		</achievementTrigger>
+		<achievementTrigger id="211" category="Veteran" description="Account older than 1 week">
+			<achievement triggercount="1" item_name="" item_graphics="139A" gfxoffset="48 40" reward_onclickdesc="7 Day statue" itemhue="0" achievement_name="One Week!" />
+		</achievementTrigger>
+		<achievementTrigger id="212" category="Veteran" description="Account older than 1 month">
+			<achievement triggercount="1" item_name="" item_graphics="139A" gfxoffset="48 40" reward_onclickdesc="30 Day statue" itemhue="1053" achievement_name="One Month!" />
+		</achievementTrigger>
+		<achievementTrigger id="213" category="Veteran" description="Account older than 3 months">
+			<achievement triggercount="1" item_name="BasehatBlessDeed" item_graphics="139A" gfxoffset="48 40" reward_onclickdesc="a hat bless deed" itemhue="0" achievement_name="Three Months!" />
+		</achievementTrigger>
+		<achievementTrigger id="214" category="Veteran" description="Account older than 6 months">
+			<achievement triggercount="1" item_name="spellbook" item_graphics="0EFA" gfxoffset="48 40" reward_onclickdesc="Veteran Bronzed Spellbook" itemhue="2967" achievement_name="Six Months!" />
+		</achievementTrigger>
+		<achievementTrigger id="215" category="Veteran" description="Account older than 1 year">
+			<achievement triggercount="1" item_graphics="20BA" gfxoffset="48 40" reward_onclickdesc="One Year Account" itemhue="0" achievement_name="One Year Veteran" />
+		</achievementTrigger>
+
+		
+		<!-- Kill gargoyles, time based -->
+		<achievementTrigger id="216" category="Time Challenges" description="Kill gargoyles - 5 minutes timelimit">
+			<achievement triggercount="5" time_limit="300" item_name="" item_graphics="20D9" gfxoffset="48 40" reward_window_shortdesc="Bloody Statue" reward_onclickdesc="Commemorative Bloody Statue" itemhue="1778" achievement_name="Kiss My Stygian Abyss" />
+		</achievementTrigger>
+		
+		<!-- Kill hellhounds, time based -->
+		<achievementTrigger id="217" category="Time Challenges" description="Kill hellhounds - 10 minutes timelimit">
+			<achievement triggercount="10" time_limit="600" item_name="goldnecklace" item_graphics="1089" gfxoffset="48 40" reward_onclickdesc="smoldering collar" reward_window_shortdesc="smoldering collar" itemhue="2949" achievement_name="The Baskervilles Will Be Angry" />
+		</achievementTrigger>
+		
+		<!-- Kill chickens, time based -->
+		<achievementTrigger id="218" category="Time Challenges" description="Kill chickens - 1 minute timelimit">
+			<achievement triggercount="10" time_limit="60" item_graphics="1E8B" gfxoffset="48 40" reward_onclickdesc="Plucked Chicken" itemhue="0" achievement_name="Running Around Like..." />
+		</achievementTrigger>
+		
+		<!-- Shear sheeps, time based -->
+		<achievementTrigger id="219" category="Time Challenges" description="Shear Sheeps - 10 minutes timelimit">
+			<achievement triggercount="50" time_limit="600" item_graphics="0DFD" gfxoffset="48 40" reward_onclickdesc="Golden Shears" reward_window_shortdesc="Golden Shears" itemhue="2213" achievement_name="Shear Excellence" />
+		</achievementTrigger>
+
+		<!-- Kill mongbats, time based -->
+		<achievementTrigger id="220" category="Time Challenges" description="Kill Mongbats - 5 minutes timelimit">
+			<achievement triggercount="20" time_limit="300" item_graphics="20F9" gfxoffset="48 40" reward_onclickdesc="Commemorative Bloody Statue" reward_window_shortdesc="Bloody Statue" itemhue="1778" achievement_name="Mongbat Roundup" />
+		</achievementTrigger>
+		
+		<!-- Kill snakes with a club, time based -->
+		<achievementTrigger id="221" category="Time Challenges" description="Kill snakes with a club - 60 minutes timelimit">
+			<achievement triggercount="100" time_limit="3600" item_graphics="20FE" gfxoffset="48 40" reward_onclickdesc="whacked snake" reward_window_shortdesc="whacked snake" itemhue="2005" achievement_name="Whacking Day" />
+		</achievementTrigger>
+		
+		<!-- Complete all timebased achievements -->
+		<achievementTrigger id="222" category="Mastery" description="Complete all Time Challenges">
+			<achievement triggercount="1" item_graphics="1819" gfxoffset="48 40" reward_onclickdesc="hourglass" reward_window_shortdesc="hourglass" itemhue="0" achievement_name="Rush Hour" />
+		</achievementTrigger>
+		
+		
+		<!--Arena wins 1v1 -->
+		<achievementTrigger id="223" category="PvP" description="Win 1v1 arena matches">
+			<achievement triggercount="1" item_graphics="0FBD" gfxoffset="48 40" reward_onclickdesc="a tale of victory" reward_window_shortdesc="a tale" itemhue="2218" achievement_name="Duelist (1v1)" />
+			<achievement triggercount="10" item_graphics="0FBD" gfxoffset="48 40" reward_onclickdesc="a tale of many skirmishes" reward_window_shortdesc="a tale" itemhue="2213" achievement_name="Duel Master (1v1)" />
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET"  itemhue="0" reward_title_prefix="Gladiator" achievement_name="Grandmaster Duelist (1v1)" />
+		</achievementTrigger>
+
+		<!--Arena wins 2v2 -->
+		<achievementTrigger id="224" category="PvP" description="Win 2v2 arena matches">
+			<achievement triggercount="1" item_graphics="0FBD" gfxoffset="48 40" reward_onclickdesc="a tale of victory" reward_window_shortdesc="a tale" itemhue="2218" achievement_name="Duelist (2v2)" />
+			<achievement triggercount="10" item_graphics="0FBD" gfxoffset="48 40" reward_onclickdesc="a tale of many battles" reward_window_shortdesc="a tale" itemhue="2213" achievement_name="Duel Master (2v2)" />
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET"  itemhue="0" reward_title_prefix="Dragoon" achievement_name="Grandmaster Duelist (2v2)" />
+		</achievementTrigger>
+
+		<!--Arena wins 3v3 -->
+		<achievementTrigger id="225" category="PvP" description="Win 3v3 arena matches">
+			<achievement triggercount="1" item_graphics="0FBD" gfxoffset="48 40" reward_onclickdesc="a tale of three friends" reward_window_shortdesc="a tale" itemhue="2218" achievement_name="Duelist (3v3)" />
+			<achievement triggercount="10" item_graphics="0FBD" gfxoffset="48 40" reward_onclickdesc="a tale of many glorious battles" reward_window_shortdesc="a tale" itemhue="2213" achievement_name="Duel Master (3v3)" />
+			<achievement triggercount="100" item_graphics="" gfxoffset="48 40" reward_onclickdesc="NOT SET YET"  itemhue="0" reward_title_prefix="Musketeer" achievement_name="Grandmaster Duelist (3v3)" />
+		</achievementTrigger>
+		
+		<!--Win an 1v1 arena season -->		
+		<achievementTrigger id="226" category="PvP" description="Win an entire 1v1 arena season">
+			<achievement triggercount="1" item_graphics="13CA" gfxoffset="48 40" reward_onclickdesc="leather tunic" reward_window_shortdesc="hanging armor" itemhue="0" achievement_name="Arena Champion (1v1)" />
+		</achievementTrigger>
+		<!--Win an 2v2 arena season -->		
+		<achievementTrigger id="232" category="PvP" description="Win an entire 1v1 arena season">
+			<achievement triggercount="1" item_graphics="13E7" gfxoffset="48 40" reward_onclickdesc="ringmail armor" reward_window_shortdesc="hanging armor" itemhue="0" achievement_name="Arena Champion (2v2)" />
+		</achievementTrigger>
+		<!--Win an 3v3 arena season -->		
+		<achievementTrigger id="233" category="PvP" description="Win an entire 1v1 arena season">
+			<achievement triggercount="1" item_graphics="13D9" gfxoffset="48 40" reward_onclickdesc="studded tunic" reward_window_shortdesc="hanging armor" itemhue="0" achievement_name="Arena Champion (3v3)" />
+		</achievementTrigger>
+		
+		<!--Reach 1750 arena ranking -->		
+		<achievementTrigger id="227" category="PvP" description="Reach 1750 arena ranking in any league">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="" reward_title_prefix="The Fearsome" reward_window_shortdesc="" itemhue="0" achievement_name="Bloodied Sword" />
+		</achievementTrigger>
+
+		<!--Reach 2000 arena ranking -->		
+		<achievementTrigger id="228" category="PvP" description="Reach 2000 arena ranking in any league">
+			<achievement triggercount="1" item_graphics="" gfxoffset="48 40" reward_onclickdesc="" reward_title_prefix="Manslayer" itemhue="0" achievement_name="Manslayer" />
+		</achievementTrigger>
+
+		<!-- Arena loss 1v1 -->		
+		<achievementTrigger id="229" category="PvP" description="Loose 1v1 arena fights">
+			<achievement triggercount="1" item_graphics="0FF3" gfxoffset="48 40" reward_onclickdesc="a tale of humiliating defeat" reward_window_shortdesc="a sad tale" itemhue="0" achievement_name="Pwned" />
+		</achievementTrigger>	
+
+		<!-- Arena loss 2v2 -->		
+		<achievementTrigger id="230" category="PvP" description="Loose 2v2 arena fights">
+			<achievement triggercount="1" item_graphics="0FF3" gfxoffset="48 40" reward_onclickdesc="a tale of humiliating defeat" reward_window_shortdesc="a sad tale" itemhue="0" achievement_name="Double Owned" />
+		</achievementTrigger>	
+
+		<!-- Arena loss 3v3 -->		
+		<achievementTrigger id="231" category="PvP" description="Loose 3v3 arena fights">
+			<achievement triggercount="1" item_graphics="0FF3" gfxoffset="48 40" reward_onclickdesc="a tale of humiliating defeat" reward_window_shortdesc="a sad tale" itemhue="0" achievement_name="Triple Owned" />
+		</achievementTrigger>
+		
+		<!--Complete all arena achievements -->
+		<achievementTrigger id="234" category="Mastery" description="Complete all arena achievements">
+			<achievement triggercount="1" item_graphics="1508" gfxoffset="48 40" reward_onclickdesc="decorative armor" reward_window_shortdesc="decorative armor" itemhue="0" achievement_name="Spartacus" />
+		</achievementTrigger>
+		
+		<!-- Capture enemy town braziers -->
+		<achievementTrigger id="235" category="PvP" description="Capture Town Braziers ">
+			<achievement triggercount="1" item_name="candleshort" item_graphics="142C" gfxoffset="53 40" reward_onclickdesc="orange candle" reward_window_shortdesc="orange candle" itemhue="2116" achievement_name="Faction Capper" />
+			<achievement triggercount="10" item_graphics="3184" gfxoffset="53 40" reward_onclickdesc="flower of hope" itemhue="2610" achievement_name="Capper Master" />
+			<achievement triggercount="100" item_name="torch" item_graphics="0F6B" gfxoffset="53 40" reward_onclickdesc="the orange torch" itemhue="2116" achievement_name="Dusty" />
+			<achievement triggercount="500" item_graphics="" gfxoffset="48 40" reward_onclickdesc="" reward_title_prefix="Firestarter" itemhue="0" achievement_name="Capping King" />
+		</achievementTrigger>
+		
+		<!-- Douse town braziers -->
+		<achievementTrigger id="236" category="PvP" description="Douse Town Braziers ">
+			<achievement triggercount="1" item_graphics="" gfxoffset="53 40" reward_onclickdesc="" reward_window_shortdesc="" itemhue="0" achievement_name="Faction Defender" />
+			<achievement triggercount="10" item_graphics="0FFA" gfxoffset="53 40" reward_onclickdesc="singed bucket" itemhue="2673" achievement_name="Defensive Specialist" />
+			<achievement triggercount="100" item_graphics="1572" gfxoffset="53 40" reward_onclickdesc="decorative shield" itemhue="0" achievement_name="Home Land Defense" />
+			<achievement triggercount="500" item_graphics="" gfxoffset="48 40" reward_onclickdesc="" reward_title_prefix="Firefighter" itemhue="0" achievement_name="Defensive Master" />
+		</achievementTrigger>	
+		
+		<!-- Steal enemy treasury -->
+		<achievementTrigger id="237" category="PvP" description="Steal OCB Treasury Chests">
+			<achievement triggercount="1" item_graphics="5721" gfxoffset="53 40" reward_onclickdesc="demon claw" itemhue="0" achievement_name="Faction Thief" />
+			<achievement triggercount="5" item_graphics="5721" gfxoffset="53 40" reward_onclickdesc="le golden claw" itemhue="2213" achievement_name="Faction Infiltrator" />
+		</achievementTrigger>	
+		
+		<!-- Kill enemies town militia -->
+		<achievementTrigger id="240" category="PvP" description="Kill Enemy Militia Members">
+			<achievement triggercount="1" item_graphics="1AE1" gfxoffset="53 40" reward_onclickdesc="decorated enemy skull" reward_window_shortdesc="a skull" itemhue="2117" achievement_name="Miltiia Warrior" />
+			<achievement triggercount="10" item_graphics="157B" gfxoffset="53 40" reward_onclickdesc="chaos decoration" itemhue="2117" achievement_name="Militia Knight" />
+			<achievement triggercount="100" item_graphics="42CB" gfxoffset="45 10" reward_onclickdesc="chaos banner" itemhue="0" achievement_name="Militia Grandmaster" />
+		</achievementTrigger>
+
+		<achievementTrigger id="241" category="Wealth" description="Play at the casino">
+			<achievement item_graphics="2AAA" gfxoffset="53 40" reward_onclickdesc="a casino chip" triggercount="500" achievement_name="High Roller" itemhue="0" /> <!-- casino chip -->
+			<achievement item_graphics="0E15" gfxoffset="53 40" reward_onclickdesc="a hand of cards" triggercount="5000" achievement_name="High Roller 2" itemhue="1153" /> <!-- cards? -->
+			<achievement item_graphics="0E19" gfxoffset="53 40" reward_onclickdesc="a hand of cards" triggercount="50000" achievement_name="High Roller 3" itemhue="1" /> <!-- casino card -->
+			<achievement triggercount="500000" achievement_name="Vegas Baby" reward_title_prefix="High Roller" itemhue="0" />
+		</achievementTrigger>
+
+		<!-- Fire Dungeon -->
+		<achievementTrigger id="242" category="Fire Dungeon" description="Defeat the evil forces in Fire">
+			<achievement item_graphics="2642" gfxoffset="20 20" reward_onclickdesc="Baron's Breastplate" triggercount="1" achievement_name="Baron von Geddon" itemhue="0" />
+		</achievementTrigger>
+		<achievementTrigger id="243" category="Fire Dungeon" description="Defeat the evil forces in Fire">
+			<achievement item_graphics="2559" gfxoffset="20 20" reward_onclickdesc="Clomp'ur's Club" triggercount="1" achievement_name="Ogres" itemhue="33" />
+		</achievementTrigger>
+		<achievementTrigger id="244" category="Fire Dungeon" description="Defeat the evil forces in Fire">
+			<achievement item_graphics="2DB4" gfxoffset="20 20" reward_onclickdesc="Ruby Dragon's Head" triggercount="1" achievement_name="Ruby Dragon" itemhue="0" />
+		</achievementTrigger>
+		<achievementTrigger id="245" category="Fire Dungeon" description="Defeat the evil forces in Fire">
+			<achievement item_graphics="194D" gfxoffset="20 20" reward_onclickdesc="The Immortal Flame" triggercount="1" achievement_name="Immortal Flame" itemhue="0" />
+		</achievementTrigger>
+
+		<!--Complete all fire achievements -->
+		<achievementTrigger id="246" category="Mastery" description="Defeat Fire Dungeon">
+			<achievement triggercount="1" item_graphics="2634" gfxoffset="20 20" reward_onclickdesc="Fire Dungeon Master" reward_window_shortdesc="Fire Dungeon Master" itemhue="0" achievement_name="Fire Dungeon" />
+		</achievementTrigger>
+		
+
+		<!-- Dungeon Armor -->
+		<achievementTrigger id="247" category="Dungeon Armor" description="Collect Dungeon Armor">
+			<achievement item_graphics="151A" gfxoffset="20 20" reward_onclickdesc="decorative hythloth armor" triggercount="1" achievement_name="Hythloth Armor" itemhue="1769" />
+		</achievementTrigger>
+		<achievementTrigger id="248" category="Dungeon Armor" description="Collect Dungeon Armor">
+			<achievement item_graphics="1508" gfxoffset="20 20" reward_onclickdesc="decorative shame armor" triggercount="1" achievement_name="Shame Armor" itemhue="1763" />
+		</achievementTrigger>
+		<achievementTrigger id="249" category="Dungeon Armor" description="Collect Dungeon Armor">
+			<achievement item_graphics="151A" gfxoffset="20 20" reward_onclickdesc="decorative destard armor" triggercount="1" achievement_name="Destard Armor" itemhue="2116" />
+		</achievementTrigger>
+		<achievementTrigger id="250" category="Dungeon Armor" description="Collect Dungeon Armor">
+			<achievement item_graphics="1508" gfxoffset="20 20" reward_onclickdesc="decorative deceit armor" triggercount="1" achievement_name="Deceit Armor" itemhue="1908" />
+		</achievementTrigger>
+
+		<!--Complete all slayer armor achievements -->
+		<achievementTrigger id="251" category="Mastery" description="Collect all slayer armor">
+			<achievement triggercount="1" item_graphics="18DB" gfxoffset="20 20" reward_onclickdesc="Armor Master" reward_window_shortdesc="Armor Master" itemhue="0" achievement_name="Dungeon Armor" />
+		</achievementTrigger>
+
+		<!--Daily achievement completion -->
+		<achievementTrigger id="252" category="Mastery" description="Complete daily achievements">
+			<achievement item_graphics="13d1" gfxoffset="53 40" reward_onclickdesc="Hanging Armor" triggercount="10" achievement_name="Daily Completion 1" itemhue="0" /> 
+			<achievement item_graphics="155d" gfxoffset="20 20" reward_onclickdesc="Decorative Weapons" triggercount="30" achievement_name="Daily Completion 2" itemhue="0" /> 
+			<achievement item_graphics="2852" gfxoffset="20 0" reward_onclickdesc="Sword Display" triggercount="60" achievement_name="Daily Completion 3" itemhue="0" /> 
+			<achievement triggercount="100" achievement_name="Daily Master" reward_title_prefix="Daily Master" itemhue="0" />
+		</achievementTrigger>
+
+		<!-- Cove Battleground Completion -->
+		<achievementTrigger id="253" category="Battlegrounds" description="Win battlegrounds">
+			<achievement item_graphics="24C1" gfxoffset="20 20" reward_onclickdesc="Paper Lantern" triggercount="1" achievement_name="Cove Dominator" itemhue="0" />
+			<achievement item_graphics="2853" gfxoffset="20 20" reward_onclickdesc="Sword Display" triggercount="10" achievement_name="Cove Hunter" itemhue="0" />
+			<achievement item_graphics="42CB" gfxoffset="20 20" reward_onclickdesc="Dread Banner" triggercount="50" achievement_name="Cove Executioner" itemhue="0" />
+			<achievement triggercount="100" achievement_name="Champion of the Cove" reward_title_prefix="Champion of the Cove" itemhue="0" />
+		</achievementTrigger>
+
+		<!-- Throne Battleground Completion -->
+		<achievementTrigger id="254" category="Battlegrounds" description="Win battlegrounds">
+			<achievement item_graphics="24C3" gfxoffset="20 20" reward_onclickdesc="Paper Lantern" triggercount="1" achievement_name="Throne Dominator" itemhue="0" />
+			<achievement item_graphics="2854" gfxoffset="20 20" reward_onclickdesc="Sword Display" triggercount="10" achievement_name="Throne Hunter" itemhue="0" />
+			<achievement item_graphics="42CD" gfxoffset="20 20" reward_onclickdesc="Serpentine Banner" triggercount="50" achievement_name="Throne Executioner" itemhue="0" />
+			<achievement triggercount="100" achievement_name="Champion of the Throne" reward_title_prefix="Champion of the Throne" itemhue="0" />
+		</achievementTrigger>
+
+		<!-- Volcano Completion -->
+		<achievementTrigger id="255" category="Battlegrounds" description="Win battlegrounds">
+			<achievement item_graphics="24C3" gfxoffset="20 20" reward_onclickdesc="Paper Lantern" triggercount="1" achievement_name="Volcano Dominator" itemhue="2118" />
+			<achievement item_graphics="2854" gfxoffset="20 20" reward_onclickdesc="Sword Display" triggercount="10" achievement_name="Volcano Hunter" itemhue="2118" />
+			<achievement item_graphics="42CD" gfxoffset="20 20" reward_onclickdesc="Serpentine Banner" triggercount="50" achievement_name="Volcano Executioner" itemhue="2118" />
+			<achievement triggercount="100" achievement_name="Champion of the Volcano" reward_title_prefix="Champion of the Volcano" itemhue="0" />
+		</achievementTrigger>
+		<!-- Starry Expanse -->
+		<achievementTrigger id="256" category="Battlegrounds" description="Win battlegrounds">
+			<achievement item_graphics="24C1" gfxoffset="20 20" reward_onclickdesc="Paper Lantern" triggercount="1" achievement_name="Starry Expanse Dominator" itemhue="2124" />
+			<achievement item_graphics="2853" gfxoffset="20 20" reward_onclickdesc="Sword Display" triggercount="10" achievement_name="Starry Expanse Hunter" itemhue="2124" />
+			<achievement item_graphics="42CB" gfxoffset="20 20" reward_onclickdesc="Dread Banner" triggercount="50" achievement_name="Starry Expanse Executioner" itemhue="2124" />
+			<achievement triggercount="100" achievement_name="Champion of the Starry Expanse" reward_title_prefix="Champion of the Starry Expanse" itemhue="0" />
+		</achievementTrigger>
+		<!-- Fungal Fancies -->
+		<achievementTrigger id="257" category="Battlegrounds" description="Win battlegrounds">
+			<achievement item_graphics="24C3" gfxoffset="20 20" reward_onclickdesc="Paper Lantern" triggercount="1" achievement_name="Fungal Fancies Dominator" itemhue="1367" />
+			<achievement item_graphics="2854" gfxoffset="20 20" reward_onclickdesc="Sword Display" triggercount="10" achievement_name="Fungal Fancies Hunter" itemhue="1367" />
+			<achievement item_graphics="42CD" gfxoffset="20 20" reward_onclickdesc="Serpentine Banner" triggercount="50" achievement_name="Fungal Fancies Executioner" itemhue="1367" />
+			<achievement triggercount="100" achievement_name="Champion of Fungal Fancies" reward_title_prefix="Champion of Fungal Fancies" itemhue="0" />
+		</achievementTrigger>
+		<!-- Oasis -->
+		<achievementTrigger id="258" category="Battlegrounds" description="Win battlegrounds">
+			<achievement item_graphics="24C1" gfxoffset="20 20" reward_onclickdesc="Paper Lantern" triggercount="1" achievement_name="Oasis Dominator" itemhue="2125" />
+			<achievement item_graphics="2853" gfxoffset="20 20" reward_onclickdesc="Sword Display" triggercount="10" achievement_name="Oasis Hunter" itemhue="2125" />
+			<achievement item_graphics="42CB" gfxoffset="20 20" reward_onclickdesc="Dread Banner" triggercount="50" achievement_name="Oasis Executioner" itemhue="2125" />
+			<achievement triggercount="100" achievement_name="Champion of the Oasis" reward_title_prefix="Champion of the Oasis" itemhue="0" />
+		</achievementTrigger>
+		<!-- Sanctuary -->
+		<achievementTrigger id="259" category="Battlegrounds" description="Win battlegrounds">
+			<achievement item_graphics="24C1" gfxoffset="20 20" reward_onclickdesc="Paper Lantern" triggercount="1" achievement_name="Sanctuary Dominator" itemhue="2631" />
+			<achievement item_graphics="2853" gfxoffset="20 20" reward_onclickdesc="Sword Display" triggercount="10" achievement_name="Sanctuary Hunter" itemhue="2631" />
+			<achievement item_graphics="42CB" gfxoffset="20 20" reward_onclickdesc="Dread Banner" triggercount="50" achievement_name="Sanctuary Executioner" itemhue="2631" />
+			<achievement triggercount="100" achievement_name="Champion of the Sanctuary" reward_title_prefix="Champion of the Sanctuary" itemhue="0" />
+		</achievementTrigger>
+		
+		<!-- Expansion Dungeon Armor -->
+		<achievementTrigger id="260" category="Dungeon Armor" description="Collect Dungeon Armor">
+			<achievement item_graphics="151A" gfxoffset="20 20" reward_onclickdesc="decorative covetous armor" triggercount="1" achievement_name="Covetous Armor" itemhue="2212" />
+		</achievementTrigger>
+		<achievementTrigger id="261" category="Dungeon Armor" description="Collect Dungeon Armor">
+			<achievement item_graphics="1508" gfxoffset="20 20" reward_onclickdesc="decorative wrong armor" triggercount="1" achievement_name="Wrong Armor" itemhue="2675" />
+		</achievementTrigger>
+		<achievementTrigger id="262" category="Dungeon Armor" description="Collect Dungeon Armor">
+			<achievement item_graphics="151A" gfxoffset="20 20" reward_onclickdesc="decorative despise armor" triggercount="1" achievement_name="Despise Armor" itemhue="2516" />
+		</achievementTrigger>
+		<achievementTrigger id="263" category="Dungeon Armor" description="Collect Dungeon Armor">
+			<achievement item_graphics="1508" gfxoffset="20 20" reward_onclickdesc="decorative ice armor" triggercount="1" achievement_name="Ice Armor" itemhue="2579" />
+		</achievementTrigger>
+		<achievementTrigger id="264" category="Dungeon Armor" description="Collect Dungeon Armor">
+			<achievement item_graphics="1508" gfxoffset="20 20" reward_onclickdesc="decorative fire armor" triggercount="1" achievement_name="Fire Armor" itemhue="2635" />
+		</achievementTrigger>
+		
+		<!-- Lumberjacking -->
+		<achievementTrigger id="265" category="Gathering" description="Harvest Plain Wood">
+			<achievement triggercount="100" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="Lumberjack's Guild Note" itemhue="2101" achievement_name="Lumberjack Master" />
+			<achievement triggercount="1000" item_graphics="0E34" gfxoffset="48 40" reward_onclickdesc="Lumberjack's Guild Diploma" itemhue="2213" achievement_name="Stacks and Stacks" />
+			<achievement triggercount="10000" item_graphics="1BE1" gfxoffset="48 40" reward_onclickdesc="Stacked Logs" itemhue="968" achievement_name="Stacks and Stacks and Stacks" />
+			<achievement triggercount="250000" item_graphics="1BE2" gfxoffset="48 40" reward_onclickdesc="Huge Stacked Logs" itemhue="968" achievement_name="I Can Go For Stacks and Stacks and Stacks and Stacks and Stacks" />
+		</achievementTrigger>
+		<achievementTrigger id="266" category="Gathering" description="Harvest Oak">
+			<achievement triggercount="1" item_graphics="0F90" gfxoffset="48 40" reward_onclickdesc="an oak twig" itemhue="2010" achievement_name="Chopping Oak" />
+			<achievement triggercount="10000" item_name="hatchet" item_graphics="0F43" gfxoffset="48 40" reward_onclickdesc="Oak Hatchet" itemhue="2010" achievement_name="Oak Master" />
+		</achievementTrigger>		
+		<achievementTrigger id="267" category="Gathering" description="Harvest Ash">
+			<achievement triggercount="1" item_graphics="0F90" gfxoffset="48 40" reward_onclickdesc="an ash twig" itemhue="1191" achievement_name="Chopping Ash" />
+			<achievement triggercount="10000" item_name="hatchet" item_graphics="0F43" gfxoffset="48 40" reward_onclickdesc="Ash Hatchet" itemhue="1191" achievement_name="Ash Master" />
+		</achievementTrigger>		
+		<achievementTrigger id="268" category="Gathering" description="Harvest Yew">
+			<achievement triggercount="1" item_graphics="0F90" gfxoffset="48 40" reward_onclickdesc="a yew twig" itemhue="1192" achievement_name="Chopping Yew" />
+			<achievement triggercount="10000" item_name="hatchet" item_graphics="0F43" gfxoffset="48 40" reward_onclickdesc="Yew Hatchet" itemhue="1192" achievement_name="Yew Master" />
+		</achievementTrigger>		
+		<achievementTrigger id="269" category="Gathering" description="Harvest Bloodwood">
+			<achievement triggercount="1" item_graphics="0F90" gfxoffset="48 40" reward_onclickdesc="a bloodwood twig" itemhue="1194" achievement_name="Chopping Bloodwood" />
+			<achievement triggercount="10000" item_name="hatchet" item_graphics="0F43" gfxoffset="48 40" reward_onclickdesc="Bloodwood Hatchet" itemhue="1194" achievement_name="Bloodwood Master" />
+		</achievementTrigger>		
+		<achievementTrigger id="270" category="Gathering" description="Harvest Heartwood">
+			<achievement triggercount="1" item_graphics="0F90" gfxoffset="48 40" reward_onclickdesc="a heartwood twig" itemhue="1193" achievement_name="Chopping Heartwood" />
+			<achievement triggercount="10000" item_name="hatchet" item_graphics="0F43" gfxoffset="48 40" reward_onclickdesc="Heartwood Hatchet" itemhue="1193" achievement_name="Heartwood Master" />
+		</achievementTrigger>				
+		<achievementTrigger id="271" category="Gathering" description="Harvest Frostwood">
+			<achievement triggercount="1" item_graphics="0F90" gfxoffset="48 40" reward_onclickdesc="a frostwood twig" itemhue="1151" achievement_name="Chopping Frostwood" />
+			<achievement triggercount="10000" item_name="hatchet" item_graphics="0F43" gfxoffset="48 40" reward_onclickdesc="Frostwood Hatchet" itemhue="1151" achievement_name="Frostwood Master" />
+		</achievementTrigger>		
+		
+		<!-- Pirate -->
+		<achievementTrigger id="272" category="PvE" description="Sink NPC Ships">
+			<achievement triggercount="1" item_graphics="1544" gfxoffset="48 40" reward_onclickdesc="a worn skullcap" itemhue="0" achievement_name="Wanna be a pirate?" />
+			<achievement triggercount="10" item_graphics="172A" gfxoffset="48 40" reward_onclickdesc="Limes" itemhue="0" achievement_name="I'm a pirate!" />
+			<achievement triggercount="50" item_graphics="1F81" gfxoffset="48 40" reward_onclickdesc="Glass of Ale" itemhue="0" achievement_name="Arrrr wheres ma booteh!" />
+			<achievement triggercount="100" item_graphics="26B8" gfxoffset="48 40" reward_onclickdesc="Gun Powder" itemhue="1175" achievement_name="Tingle meh some cannonballs" />
+			<achievement triggercount="250" item_graphics="13B6" gfxoffset="48 40" reward_onclickdesc="Stolen Naval Saber" itemhue="0" achievement_name="British Navy got nothing on meh!" />
+			<achievement triggercount="500" item_graphics="0E43" gfxoffset="48 40" reward_onclickdesc="Pirate's Booty" itemhue="1175" achievement_name="Pirate King!" />
+		</achievementTrigger>
+		<achievementTrigger id="273" category="PvP" description="Sink Player Ships">
+			<achievement triggercount="1" item_graphics="171B" gfxoffset="48 40" reward_onclickdesc="a worn tricorn hat" itemhue="0" achievement_name="Captin' on da bridge!" />
+			<achievement triggercount="10" item_graphics="1010" gfxoffset="48 40" reward_onclickdesc="Lost Skeleton Key" itemhue="666" achievement_name="Me pirate rules here" />
+			<achievement triggercount="25" item_graphics="0E43" gfxoffset="48 40" reward_onclickdesc="Stolen Goods" itemhue="1194" achievement_name="Abandon hope all ye who see meh" />
+		</achievementTrigger>		
+		<achievementTrigger id="274" category="PvE" description="Sink Orc Ships">
+			<achievement triggercount="25" item_graphics="141B" gfxoffset="48 40" reward_onclickdesc="Drowned Orc Skin Mask" itemhue="0" achievement_name="Orktominator" />
+		</achievementTrigger>	
+		<achievementTrigger id="275" category="PvE" description="Sink Orghereim Ships">
+			<achievement triggercount="25" item_graphics="099A" gfxoffset="48 40" reward_onclickdesc="Spoils of war" itemhue="0" achievement_name="Ice Ice Melty!" />
+		</achievementTrigger>	
+		<achievementTrigger id="276" category="PvE" description="Sink Pirate Ships">
+			<achievement triggercount="50" item_graphics="14ED" gfxoffset="48 40" reward_onclickdesc="Hand drawn treasure map" itemhue="666" achievement_name="Pirate begone!" />
+		</achievementTrigger>	
+		<achievementTrigger id="277" category="PvE" description="Sink Undead Ships">
+			<achievement triggercount="25" item_graphics="1AE3" gfxoffset="48 40" reward_onclickdesc="Waterlogged Skull" itemhue="1155" achievement_name="I ain't afraid of no ghost" />
+		</achievementTrigger>	
+		<achievementTrigger id="278" category="PvE" description="Sink Britain Navy Ships">
+			<achievement triggercount="50" item_graphics="14ED" gfxoffset="48 40" reward_onclickdesc="Letter of Marque" itemhue="0" achievement_name="I'm better than Nelson!" />
+		</achievementTrigger>
+		<achievementTrigger id="279" category="PvE" description="Sink Fishing Ships">
+			<achievement triggercount="25" item_graphics="09CC" gfxoffset="48 40" reward_onclickdesc="Fish trophy" itemhue="0" achievement_name="Let's fish some fishers" />
+		</achievementTrigger>
+		<achievementTrigger id="280" category="PvP" description="Sink Small Ships">
+			<achievement triggercount="25" item_graphics="171F" gfxoffset="48 40" reward_onclickdesc="banana" itemhue="0" achievement_name="Too small for the sea." />
+		</achievementTrigger>		
+		<achievementTrigger id="281" category="PvP" description="Sink Medium Ships">
+			<achievement triggercount="25" item_graphics="0DC0" gfxoffset="48 40" reward_onclickdesc="Broken Fishing Pole" itemhue="0" achievement_name="Medium for booteh?" />
+		</achievementTrigger>			
+		<achievementTrigger id="282" category="PvP" description="Sink Large Ships">
+			<achievement triggercount="25" item_graphics="1CE1" gfxoffset="48 40" reward_onclickdesc="Head of a Privateer" itemhue="666" achievement_name="Too large for the sea" />
+		</achievementTrigger>	
+		<achievementTrigger id="283" category="PvP" description="Sink Carracks">
+			<achievement triggercount="25" item_graphics="1766" gfxoffset="48 40" reward_onclickdesc="Folded Sails" itemhue="666" achievement_name="Cracking Carracking" />
+		</achievementTrigger>	
+		<achievementTrigger id="284" category="PvP" description="Sink Galleons">
+			<achievement triggercount="25" item_graphics="0E74" gfxoffset="48 40" reward_onclickdesc="Rust Cannon balls" itemhue="2707" achievement_name="Galleons in the water" />
+		</achievementTrigger>	
+		<achievementTrigger id="285" category="PvE" description="Kill the Deep One">
+			<achievement triggercount="1" item_graphics="44D3" gfxoffset="48 40" reward_onclickdesc="a spawn of the Deep One" itemhue="0" achievement_name="I just went deep. Maybe too deep" />
+		</achievementTrigger>
+		
+		<!-- UOACZ -->
+		<achievementTrigger id="286" category="UOACZ" description="[As Human Player] Kill Zombies">
+			<achievement triggercount="50" item_graphics="0ECE" gfxoffset="48 40" reward_onclickdesc="UOACZ: Zombie Killer [Bronze]" itemhue="2428" achievement_name="Zombie Killer: Bronze" />
+			<achievement triggercount="500" item_graphics="0ECE" gfxoffset="48 40" reward_onclickdesc="UOACZ: Zombie Killer [Silver]" itemhue="2409" achievement_name="Zombie Killer: Silver" />
+			<achievement triggercount="2500" item_graphics="0ECE" gfxoffset="48 40" reward_onclickdesc="UOACZ: Zombie Killer [Gold]" itemhue="2213" achievement_name="Zombie Killer: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="287" category="UOACZ" description="[As Undead Player] Corrupt Wildlife">
+			<achievement triggercount="50" item_graphics="2123" gfxoffset="48 40" reward_onclickdesc="UOACZ: Corruptor [Bronze]" itemhue="2208" achievement_name="Corruptor: Bronze" />
+			<achievement triggercount="500" item_graphics="20D1" gfxoffset="48 40" reward_onclickdesc="UOACZ: Corruptor [Silver]" itemhue="2208" achievement_name="Corruptor: Silver" />
+			<achievement triggercount="2500" item_graphics="2101" gfxoffset="48 40" reward_onclickdesc="UOACZ: Corruptor [Gold]" itemhue="2208" achievement_name="Corruptor: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="288" category="UOACZ" description="[As Human Player] Earn Score From Killing Undead NPCs (non-followers)">
+			<achievement triggercount="200" item_graphics="0ED8" gfxoffset="48 40" reward_onclickdesc="UOACZ: Grave Digger [Bronze]" itemhue="2428" achievement_name="Grave Digger: Bronze" />
+			<achievement triggercount="2000" item_graphics="0ED8" gfxoffset="48 40" reward_onclickdesc="UOACZ: Grave Digger [Silver]" itemhue="2409" achievement_name="Grave Digger: Silver" />
+			<achievement triggercount="10000" item_graphics="0ED8" gfxoffset="48 40" reward_onclickdesc="UOACZ: Grave Digger [Gold]" itemhue="2213" achievement_name="Grave Digger: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="289" category="UOACZ" description="[As Undead Player] Earn Score From Killing Human NPCs">
+			<achievement triggercount="200" item_graphics="1CE0" gfxoffset="48 40" reward_onclickdesc="UOACZ: Scourge [Bronze]" itemhue="2428" achievement_name="Scourge: Bronze" />
+			<achievement triggercount="2000" item_graphics="1CE0" gfxoffset="48 40" reward_onclickdesc="UOACZ: Scourge [Silver]" itemhue="2409" achievement_name="Scourge: Silver" />
+			<achievement triggercount="10000" item_graphics="1CE0" gfxoffset="48 40" reward_onclickdesc="UOACZ: Scourge [Gold]" itemhue="2213" achievement_name="Scourge: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="290" category="UOACZ" description="[As Undead Player] Use Gift of Corruption or Creep Ability">
+			<achievement triggercount="50" item_graphics="1E8C" gfxoffset="48 40" reward_onclickdesc="UOACZ: Creeper [Bronze]" itemhue="2208" achievement_name="Creeper: Bronze" />
+			<achievement triggercount="500" item_graphics="1607" gfxoffset="48 40" reward_onclickdesc="UOACZ: Creeper [Silver]" itemhue="2208" achievement_name="Creeper: Silver" />
+			<achievement triggercount="2500" item_graphics="09D3" gfxoffset="48 40" reward_onclickdesc="UOACZ: Creeper [Gold]" itemhue="2208" achievement_name="Creeper: Gold" />
+		</achievementTrigger>		
+		<achievementTrigger id="291" category="UOACZ" description="[As Human Player] Kill the Undead Champion">
+			<achievement triggercount="5" item_graphics="21FC" gfxoffset="48 40" reward_onclickdesc="UOACZ: Brave" itemhue="0" achievement_name="Brave" />
+		</achievementTrigger>	
+		<achievementTrigger id="292" category="UOACZ" description="[As Human Player] Kill the Undead Boss">
+			<achievement triggercount="5" item_graphics="1D9E" gfxoffset="48 40" reward_onclickdesc="UOACZ: Legendary" itemhue="0" achievement_name="Legendary" />
+		</achievementTrigger>
+		<achievementTrigger id="293" category="UOACZ" description="[As Undead Player] Kill the Human Champion">
+			<achievement triggercount="5" item_graphics="2D2A" gfxoffset="48 40" reward_onclickdesc="UOACZ: Evil" itemhue="2408" achievement_name="Evil" />
+		</achievementTrigger>	
+		<achievementTrigger id="294" category="UOACZ" description="[As Undead Player] Kill the Human Boss">
+			<achievement triggercount="5" item_graphics="2B01" gfxoffset="48 40" reward_onclickdesc="UOACZ: Diabolic" itemhue="2410" achievement_name="Diabolic" />
+		</achievementTrigger>	
+		<achievementTrigger id="295" category="UOACZ" description="[As Human or Undead] Use Tunnels">
+			<achievement triggercount="100" item_graphics="1B71" gfxoffset="48 40" reward_onclickdesc="UOACZ: Tunnel Vision" itemhue="2405" achievement_name="Tunnel Vision" />
+		</achievementTrigger>
+		<achievementTrigger id="296" category="UOACZ" description="[As Human Player] Murder Another Human">
+			<achievement triggercount="10" item_graphics="1CED" gfxoffset="48 40" reward_onclickdesc="UOACZ: Cold-Hearted Bastard" itemhue="1154" achievement_name="Cold-Hearted Bastard" />
+		</achievementTrigger>
+		<achievementTrigger id="297" category="UOACZ" description="[As Human Player] Kill Undead Players">
+			<achievement triggercount="20" item_graphics="1CDF" gfxoffset="48 40" reward_onclickdesc="UOACZ: Lightbringer [Bronze]" itemhue="2428" achievement_name="Lightbringer: Bronze" />
+			<achievement triggercount="200" item_graphics="1CDF" gfxoffset="48 40" reward_onclickdesc="UOACZ: Lightbringer [Silver]" itemhue="2409" achievement_name="Lightbringer: Silver" />
+			<achievement triggercount="1000" item_graphics="1CDF" gfxoffset="48 40" reward_onclickdesc="UOACZ: Lightbringer [Gold]" itemhue="2213" achievement_name="Lightbringer: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="298" category="UOACZ" description="[As Undead Player] Kill Human Players">
+			<achievement triggercount="20" item_graphics="1D9F" gfxoffset="48 40" reward_onclickdesc="UOACZ: Deathbringer [Bronze]" itemhue="2428" achievement_name="Deathbringer: Bronze" />
+			<achievement triggercount="200" item_graphics="1D9F" gfxoffset="48 40" reward_onclickdesc="UOACZ: Deathbringer [Silver]" itemhue="2409" achievement_name="Deathbringer: Silver" />
+			<achievement triggercount="1000" item_graphics="1D9F" gfxoffset="48 40" reward_onclickdesc="UOACZ: Deathbringer [Gold]" itemhue="2213" achievement_name="Deathbringer: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="299" category="UOACZ" description="[As Human Player] Repair Hammer Usage">
+			<achievement triggercount="500" item_graphics="0FB4" gfxoffset="48 40" reward_onclickdesc="UOACZ: Builder [Bronze]" itemhue="2428" achievement_name="Builder: Bronze" />
+			<achievement triggercount="5000" item_graphics="0FB4" gfxoffset="48 40" reward_onclickdesc="UOACZ: Builder [Silver]" itemhue="2409" achievement_name="Builder: Silver" />
+			<achievement triggercount="25000" item_graphics="0FB4" gfxoffset="48 40" reward_onclickdesc="UOACZ: Builder [Gold]" itemhue="2213" achievement_name="Builder: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="300" category="UOACZ" description="[As Human Player] Earn At Least 25 Human Score in a Single Session That Ends With a Human Victory">
+			<achievement triggercount="1" item_graphics="0B1A" gfxoffset="48 40" reward_onclickdesc="UOACZ: Perseverance [Bronze]" itemhue="2428" achievement_name="Perseverance: Bronze" />
+			<achievement triggercount="10" item_graphics="0B1A" gfxoffset="48 40" reward_onclickdesc="UOACZ: Perseverance [Silver]" itemhue="2409" achievement_name="Perseverance: Silver" />
+			<achievement triggercount="25" item_graphics="0B1A" gfxoffset="48 40" reward_onclickdesc="UOACZ: Perseverance [Gold]" itemhue="2213" achievement_name="Perseverance: Gold" />
+		</achievementTrigger>	
+		<achievementTrigger id="301" category="UOACZ" description="[As Undead Player] Earn At Least 25 Undead Score in a Single Session That Ends With an Undead Victory">
+			<achievement triggercount="1" item_graphics="1854" gfxoffset="48 40" reward_onclickdesc="UOACZ: Conqueror [Bronze]" itemhue="2428" achievement_name="Conqueror: Bronze" />
+			<achievement triggercount="10" item_graphics="1854" gfxoffset="48 40" reward_onclickdesc="UOACZ: Conqueror [Silver]" itemhue="2409" achievement_name="Conqueror: Silver" />
+			<achievement triggercount="25" item_graphics="1854" gfxoffset="48 40" reward_onclickdesc="UOACZ: Conqueror [Gold]" itemhue="2213" achievement_name="Conqueror: Gold" />
+		</achievementTrigger>			
+		<achievementTrigger id="302" category="UOACZ" description="[As Human or Undead] Use Hiding Abilities">
+			<achievement triggercount="100" item_graphics="1E03" gfxoffset="48 40" reward_onclickdesc="UOACZ: Nightwalker" itemhue="2499" achievement_name="Nightwalker" />			
+		</achievementTrigger>		
+		<achievementTrigger id="303" category="UOACZ" description="[As Undead Player] Reach Monster Tier Level 5 in a Session">
+			<achievement triggercount="1" item_graphics="1B0B" gfxoffset="48 40" reward_onclickdesc="UOACZ: Nightmare [Bronze]" itemhue="2428" achievement_name="Nightmare: Bronze" />	
+			<achievement triggercount="5" item_graphics="1B0B" gfxoffset="48 40" reward_onclickdesc="UOACZ: Nightmare [Silver]" itemhue="2409" achievement_name="Nightmare: Silver" />
+			<achievement triggercount="15" item_graphics="1B0B" gfxoffet="48 40" reward_onclickdesc="UOACZ: Nightmare [Gold]" itemhue="2213" achievement_name="Nightmare: Gold" />			
+		</achievementTrigger>
+		<achievementTrigger id="304" category="UOACZ" description="[As Undead Player] Consume Brains">
+			<achievement triggercount="50" item_graphics="1CF0" gfxoffset="48 40" reward_onclickdesc="UOACZ: Brain Food [Bronze]" itemhue="2428" achievement_name="Brain Food: Bronze" />
+			<achievement triggercount="500" item_graphics="1CF0" gfxoffset="48 40" reward_onclickdesc="UOACZ: Brain Food [Silver]" itemhue="2409" achievement_name="Brain Food: Silver" />
+			<achievement triggercount="2500" item_graphics="1CF0" gfxoffset="48 40" reward_onclickdesc="UOACZ: Brain Food [Gold]" itemhue="2213" achievement_name="Brain Food: Gold" />			
+		</achievementTrigger>
+		<achievementTrigger id="305" category="UOACZ" description="[Any Human Player] Purchase 25 Upgrades Without Using Any Shuffles in a Single Session">
+			<achievement triggercount="1" item_graphics="0FBD" gfxoffset="48 40" reward_onclickdesc="UOACZ: Roulette" itemhue="2565" achievement_name="Roulette" />			
+		</achievementTrigger>
+		<achievementTrigger id="306" category="UOACZ" description="[As Human Player] Purchase 25 Unique Upgrades in a Single Session">
+			<achievement triggercount="1" item_graphics="0FBD" gfxoffset="48 40" reward_onclickdesc="UOACZ: Jack of All Trades" itemhue="2524" achievement_name="Jack of All Trades" />			
+		</achievementTrigger>
+		<achievementTrigger id="307" category="UOACZ" description="[As Human or Undead] Earn The Highest Total Score In a Session">
+			<achievement triggercount="1" item_graphics="2E3B" gfxoffset="48 40" reward_onclickdesc="UOACZ: Master of Death [Bronze]" itemhue="2428" achievement_name="Master of Death: Bronze" />
+			<achievement triggercount="5" item_graphics="2E3B" gfxoffset="48 40" reward_onclickdesc="UOACZ: Master of Death [Silver]" itemhue="2409" achievement_name="Master of Death: Silver" />
+			<achievement triggercount="15" item_graphics="2E3B" gfxoffset="48 40" reward_onclickdesc="UOACZ: Master of Death [Gold]" itemhue="2213" achievement_name="Master of Death: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="308" category="UOACZ" description="[As Undead Player] Damage Objects">
+			<achievement triggercount="500" item_graphics="03C5" gfxoffset="48 40" reward_onclickdesc="UOACZ: Demolisher [Bronze]" itemhue="2428" achievement_name="Demolisher: Bronze" />
+			<achievement triggercount="5000" item_graphics="03C5" gfxoffset="48 40" reward_onclickdesc="UOACZ: Demolisher [Silver]" itemhue="2409" achievement_name="Demolisher: Silver" />
+			<achievement triggercount="25000" item_graphics="03C5" gfxoffset="48 40" reward_onclickdesc="UOACZ: Demolisher [Gold]" itemhue="2213" achievement_name="Demolisher: Gold" />
+		</achievementTrigger>	
+		<achievementTrigger id="309" category="UOACZ" description="[As Human Player] Reach 100 Skill Points in a Crafting Skill">
+			<achievement triggercount="1" item_graphics="1EB8" gfxoffset="48 40" reward_onclickdesc="UOACZ: Craftsman [Bronze]" itemhue="2428" achievement_name="Craftsman: Bronze" />			
+			<achievement triggercount="5" item_graphics="1EB8" gfxoffset="48 40" reward_onclickdesc="UOACZ: Craftsman [Silver]" itemhue="2409" achievement_name="Craftsman: Silver" />
+			<achievement triggercount="15" item_graphics="1EB8" gfxoffset="48 40" reward_onclickdesc="UOACZ: Craftsman [Gold]" itemhue="2213" achievement_name="Craftsman: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="310" category="UOACZ" description="[As Human Player] Gather Fish, Vegetation, Cotton, or Iron Ore">
+			<achievement triggercount="100" item_graphics="0C4F" gfxoffset="48 40" reward_onclickdesc="UOACZ: Harvester [Bronze]" itemhue="2428" achievement_name="Harvester: Bronze" />
+			<achievement triggercount="1000" item_graphics="0C4F" gfxoffset="48 40" reward_onclickdesc="UOACZ: Harvester [Silver]" itemhue="2409" achievement_name="Harvester: Silver" />
+			<achievement triggercount="5000" item_graphics="0C4F" gfxoffset="48 40" reward_onclickdesc="UOACZ: Harvester [Gold]" itemhue="2213" achievement_name="Harvester: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="311" category="UOACZ" description="[As Human Player] Scavenge Debris or Containers">
+			<achievement triggercount="100" item_graphics="0FAE" gfxoffset="48 40" reward_onclickdesc="UOACZ: Scavenger [Bronze]" itemhue="2428" achievement_name="Scavenger: Bronze" />
+			<achievement triggercount="1000" item_graphics="0FAE" gfxoffset="48 40" reward_onclickdesc="UOACZ: Scavenger [Silver]" itemhue="2409" achievement_name="Scavenger: Silver" />
+			<achievement triggercount="5000" item_graphics="0FAE" gfxoffset="48 40" reward_onclickdesc="UOACZ: Scavenger [Gold]" itemhue="2213" achievement_name="Scavenger: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="312" category="UOACZ" description="[As Human Player] Die by Hitting 0 Hunger">
+			<achievement triggercount="1" item_graphics="1E1F" gfxoffset="48 40" reward_onclickdesc="UOACZ: Hunger Game" itemhue="2213" achievement_name="Hunger Game" />			
+		</achievementTrigger>
+		<achievementTrigger id="313" category="UOACZ" description="[Human Player] Die by Hitting 0 Thirst">
+			<achievement triggercount="1" item_graphics="099B" gfxoffset="48 40" reward_onclickdesc="UOACZ: Dry, Dry Again" itemhue="2657" achievement_name="Dry, Dry Again" />			
+		</achievementTrigger>
+		<achievementTrigger id="314" category="UOACZ" description="[As Human Player] Kill Undead Creatures with Ignited Oil and Firefields">
+			<achievement triggercount="100" item_graphics="1C18" gfxoffset="48 40" reward_onclickdesc="UOACZ: Burn Notice" itemhue="2213" achievement_name="Burn Notice" />			
+		</achievementTrigger>
+		<achievementTrigger id="315" category="UOACZ" description="[As Undead Player] Kill a Human Player and Cause Them to Transform Into Undead By Hitting 0 Humanity">
+			<achievement triggercount="5" item_graphics="2203" gfxoffset="48 40" reward_onclickdesc="UOACZ: Transformer" itemhue="2213" achievement_name="Transformer" />			
+		</achievementTrigger>
+		<achievementTrigger id="316" category="UOACZ" description="[As Human Player] Build and Place Fortifications">
+			<achievement triggercount="1" item_graphics="09ED" gfxoffset="48 40" reward_onclickdesc="UOACZ: Siege Engineer [Bronze]" itemhue="2428" achievement_name="Siege Engineer: Bronze" />
+			<achievement triggercount="10" item_graphics="09ED" gfxoffset="48 40" reward_onclickdesc="UOACZ: Siege Engineer [Silver]" itemhue="2409" achievement_name="Siege Engineer: Silver" />
+			<achievement triggercount="50" item_graphics="09ED" gfxoffset="48 40" reward_onclickdesc="UOACZ: Siege Engineer [Gold]" itemhue="2213" achievement_name="Siege Engineer: Gold" />			
+		</achievementTrigger>
+		<achievementTrigger id="317" category="UOACZ" description="[As Human Player] Survive 2 Hours in a Single Session Without a Single Death">
+			<achievement triggercount="5" item_graphics="1810" gfxoffset="48 40" reward_onclickdesc="UOACZ: Survivor [Bronze]" itemhue="2428" achievement_name="Survivor: Bronze" />			
+		</achievementTrigger>
+		<achievementTrigger id="318" category="UOACZ" description="[As Human Player] Survive 4 Hours in a Single Session Without a Single Death">
+			<achievement triggercount="3" item_graphics="1810" gfxoffset="48 40" reward_onclickdesc="UOACZ: Survivor [Silver]" itemhue="2409" achievement_name="Survivor: Silver" />			
+		</achievementTrigger>
+		<achievementTrigger id="319" category="UOACZ" description="[As Human Player] Survive 6 Hours in a Single Session Without a Single Death">
+			<achievement triggercount="1" item_graphics="1810" gfxoffset="48 40" reward_onclickdesc="UOACZ: Survivor [Gold]" itemhue="2213" achievement_name="Survivor: Gold" />			
+		</achievementTrigger>	
+		<achievementTrigger id="320" category="UOACZ" description="[As Undead Player] Gather a Swarm of 15 Followers in a Single Session">
+			<achievement triggercount="1" item_graphics="0E81" gfxoffset="48 40" reward_onclickdesc="UOACZ: Shepherd" itemhue="2498" achievement_name="Shepherd" />			
+		</achievementTrigger>
+		<achievementTrigger id="321" category="UOACZ" description="[As Undead Player] Add Creature to Your Swarm">
+			<achievement triggercount="100" item_graphics="2622" gfxoffset="48 40" reward_onclickdesc="UOACZ: Survivor [Bronze]" itemhue="2428" achievement_name="Horde: Bronze" />			
+			<achievement triggercount="1000" item_graphics="2622" gfxoffset="48 40" reward_onclickdesc="UOACZ: Survivor [Silver]" itemhue="2409" achievement_name="Horde: Silver" />
+			<achievement triggercount="5000" item_graphics="2622" gfxoffset="48 40" reward_onclickdesc="UOACZ: Survivor [Gold]" itemhue="2213" achievement_name="Horde: Gold" />
+		</achievementTrigger>
+		<achievementTrigger id="322" category="UOACZ" description="[As Human Player] Place Traps, Hunting Snares, and Use Throwing Nets">
+			<achievement triggercount="10" item_graphics="1F1B" gfxoffset="48 40" reward_onclickdesc="UOACZ: Trapper [Bronze]" itemhue="2428" achievement_name="Trapper: Bronze" />	
+			<achievement triggercount="100" item_graphics="1F1B" gfxoffset="48 40" reward_onclickdesc="UOACZ: Trapper [Silver]" itemhue="2409" achievement_name="Trapper: Silver" />
+			<achievement triggercount="500" item_graphics="1F1B" gfxoffset="48 40" reward_onclickdesc="UOACZ: Trapper [Gold]" itemhue="2213" achievement_name="Trapper: Gold" />			
+		</achievementTrigger>	
+		<achievementTrigger id="323" category="UOACZ" description="[As Undead Player] Kill Human NPCs With 8 Different Monster Forms in a Single Session">
+			<achievement triggercount="5" item_graphics="2DB8" gfxoffset="48 40" reward_onclickdesc="UOACZ: Evolution [Bronze]" itemhue="2428" achievement_name="Evolution: Bronze" />			
+		</achievementTrigger>
+		<achievementTrigger id="324" category="UOACZ" description="[As Undead Player] Kill Human NPCs With 12 Different Monster Forms in a Single Session">
+			<achievement triggercount="3" item_graphics="2DB8" gfxoffset="48 40" reward_onclickdesc="UOACZ: Evolution [Silver]" itemhue="2409" achievement_name="Evolution: Silver" />			
+		</achievementTrigger>	
+		<achievementTrigger id="325" category="UOACZ" description="[As Undead Player] Kill Human NPCs With 16 Different Monster Forms in a Single Session">
+			<achievement triggercount="1" item_graphics="2DB8" gfxoffset="48 40" reward_onclickdesc="UOACZ: Evolution [Gold]" itemhue="2213" achievement_name="Evolution: Gold" />			
+		</achievementTrigger>		
+	</Achievements>
+
+	<!-- 
+			Achievements for completing several normal achievements
+			When all achievements tied to all in triggers are completed, the outtrigger will fire 
+	-->	
+	<CompositeAchievements>
+		<!-- Explore every dungeon, city and the hedge maze -->
+		<compositetrigger intriggers="8 35 36" outtrigger="34" />
+	
+		<!-- Explore every city of britannia -->
+		<compositetrigger intriggers="9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" outtrigger="35" />
+	
+		<!-- Explore every dungeon of brittania -->
+		<compositetrigger intriggers="24 25 26 27 28 29 30 31 32 33" outtrigger="36" />
+		<!--<compositetrigger intriggers="24 25 26 27 28 29 30 31 32 33" outtrigger="36" /> -->
+
+		<!-- Complete smith achievements -->
+		<compositetrigger intriggers="67 68 69 70 71 73" outtrigger="142" />
+
+		<!-- Complete all taming achievements -->
+		<compositetrigger intriggers="111 112 113 119 120 121 122 123 124 125 126 127 128 129 130 131 178 193 194" outtrigger="192" />
+
+		<!-- Complete all alchemy achievements -->
+		<compositetrigger intriggers="202 102 103 104 105 106 107 108" outtrigger="203" />
+		
+		<!-- Complete all fishing achievements -->
+		<compositetrigger intriggers="96 97 98 99 100 101 209" outtrigger="208" />
+
+		<!-- Complete all timebased achievements -->
+		<compositetrigger intriggers="216 217 218 219 220 221" outtrigger="222" />
+		
+		<!-- Complete all arena achievements -->
+		<compositetrigger intriggers="223 224 225 226 227 228 229 230 231 232 233" outtrigger="234" />
+
+		<!-- Complete all Fire Bosses -->
+		<compositetrigger intriggers="242 243 244 245" outtrigger="246" />
+
+		<!-- Complete all dungeon armors -->
+		<compositetrigger intriggers="247 248 249 250 260 261 262 263 264" outtrigger="251" />		
+	</CompositeAchievements>	
+	
+	<SystemTweaks>
+		<tracker_title string="ACHIEVEMENT TRACKER" />
+		<award_message string='Achievement "{0}" COMPLETED!' color="44" sound_id="1F7"/>
+		<progress_msg string="Achievement progress started!" color="4ea" />		
+	</SystemTweaks>
+</Root>
