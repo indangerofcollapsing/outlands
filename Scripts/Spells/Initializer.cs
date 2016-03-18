@@ -1,8 +1,6 @@
 using System;
 using Server;
 
-using Server.PortalSystem;
-
 namespace Server.Spells
 {
 	public class Initializer
@@ -89,7 +87,6 @@ namespace Server.Spells
 			Register( 62, typeof( Eighth.FireElementalSpell ) );
 			Register( 63, typeof( Eighth.WaterElementalSpell ) );
 
-            Register(64, typeof(PortalSystem.PortalTransportSpell));
 
 			if ( Core.AOS )
 			{

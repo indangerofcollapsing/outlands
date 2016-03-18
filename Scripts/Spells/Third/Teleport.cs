@@ -135,11 +135,6 @@ namespace Server.Spells.Third
 				Caster.SendLocalizedMessage( 501942 ); // That location is blocked.
 			}
 
-			else if (Caster.Map == Map.Ilshenar && !CheckPortalTeleport(pP))
-            {
-                Caster.SendMessage("You can not teleport between portals.");
-            }
-
 			else if (Server.Custom.Townsystem.TreasuryChest.TreasuryRegionContains(Server.Custom.Townsystem.Town.FromRegion(Region.Find(pP, map)), pP))
 			{
 				Caster.SendMessage("You can not teleport into the Kings treasury.");
@@ -220,18 +215,6 @@ namespace Server.Spells.Third
 			FinishSequence();
 		}
 
-        private bool CheckPortalTeleport(Point3D p)
-        {
-            PortalSystem.PortalPartition partitionAtLoc = PortalSystem.PortalsSystem.GetPartitionAtPoint(Caster.Location);
-            if (partitionAtLoc == null)
-                return false;
-            PortalSystem.PortalPartition partitionAtTarget = PortalSystem.PortalsSystem.GetPartitionAtPoint(new Point3D(p));
-            if (partitionAtTarget == null)
-                return false;
-            if (partitionAtLoc != partitionAtTarget)
-                return false;
-            return true;
-        }
 		public class InternalTarget : Target
 		{
 			private TeleportSpell m_Owner;

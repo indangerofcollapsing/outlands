@@ -6,7 +6,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Custom.Items;
 using Server.Custom.Ubercrafting;
-using Server.PortalSystem;
 using Server.Custom.Donations.Items;
 
 namespace Server
@@ -68,12 +67,7 @@ namespace Server
                 }
             }
         }
-
-        public static readonly LootPackItem[] PortalInjectors = new LootPackItem[] 
-        {
-            new LootPackItem(typeof(PortalInjector), 1),
-        };
-
+        
         public static readonly LootPackItem[] PetBattleTokens = new LootPackItem[] {
             new LootPackItem(typeof(PetBattleHellHoundToken), 1),
         };
@@ -220,11 +214,7 @@ namespace Server
         public static readonly LootPack PetBattleToken = new LootPack(new LootPackEntry[] {
             new LootPackEntry(false, PetBattleTokens, 5, 1),
         });
-
-        public static readonly LootPack PortalInjector = new LootPack(new LootPackEntry[] {
-            new LootPackEntry(false, PortalInjectors, 2, 1),
-        });
-
+        
         public static readonly LootPackItem[] WeaponDamageEnhancers = new LootPackItem[] {
             new LootPackItem(typeof(WeaponDamageEnhancer), 1),
         };
@@ -653,9 +643,7 @@ namespace Server
                 else if (m_Type == typeof(SummonAirElementalScroll)) // master scroll
                     item = RandomMasterScroll();
                 else if (m_Type == typeof(EnhancedSpellbook)) // enhanced spellbook
-                    item = RandomEnhancedSpellbook();
-                else if (m_Type == typeof(PortalInjector))
-                    item = PortalInjector.CreateRandom();
+                    item = RandomEnhancedSpellbook();               
                 else if (m_Type == typeof(MaskDye))
                     item = MaskDye.RandomDye();
                 else

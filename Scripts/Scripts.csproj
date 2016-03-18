@@ -1756,8 +1756,6 @@
     <Compile Include="Custom\Pirates\PirateVendor.cs" />
     <Compile Include="Custom\Pirates\ShipRepairTool.cs" />
     <Compile Include="Custom\Targets\ItemReforgingTarget.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonItemization.cs" />
-    <Compile Include="DungeonMiningSystem\IntervalTree.cs" />
     <Compile Include="Gumps\ConfirmReleaseAllGump.cs" />
     <Compile Include="Context Menus\EatEntry.cs" />
     <Compile Include="Context Menus\EjectPlayer.cs" />
@@ -2745,18 +2743,6 @@
     <Compile Include="Custom\Zombie Arena\Items\YellowZombieBrains.cs" />
     <Compile Include="Custom\Zombie Arena\Items\ZombieQuestStone.cs" />
     <Compile Include="Custom\Zombie Arena\Regions\ZombieQuestRegion.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonPortalsRegion.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonTesting.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonControl.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonGhostTrap.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonGumps.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonItems.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonMiningSystem.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonMiningVendor.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonRegionPortalManager.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonTargets.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonUndoRedo.cs" />
-    <Compile Include="DungeonMiningSystem\DungeonUtility.cs" />
     <Compile Include="Engines\AI\AI\AnimalAI.cs" />
     <Compile Include="Engines\AI\AI\ArcherAI.cs" />
     <Compile Include="Engines\AI\AI\GenericAI.cs" />

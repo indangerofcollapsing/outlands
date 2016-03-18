@@ -13,7 +13,6 @@ using Server.Multis;
 using Server.Network;
 using Server.Achievements;
 using Server.Commands;
-using Server.PortalSystem;
 
 namespace Server.Accounting
 {
@@ -50,12 +49,6 @@ namespace Server.Accounting
         /// </summary>
         public void Delete()
         {
-            var portal = PortalsSystem.GetPartitionByUsername(Username);
-            if (portal != null)
-            {
-                PortalSystem.PortalsSystem.DestroyPartition(portal.m_partitionId);
-            }
-
             for (int i = 0; i < this.Length; ++i)
             {
                 Mobile m = this[i];

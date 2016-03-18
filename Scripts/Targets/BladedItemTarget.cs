@@ -7,8 +7,6 @@ using Server.Mobiles;
 using Server.Engines.Quests;
 using Server.Engines.Quests.Hag;
 
-using Server.PortalSystem;
-
 namespace Server.Targets
 {
 	public class BladedItemTarget : Target
@@ -48,15 +46,10 @@ namespace Server.Targets
                     Corpse target = ((Corpse)targeted);
                     targetMap = target.Map;
                 }
-
-                if (targetMap == PortalSystem.PortalsSystem.s_map)
-                {
-                    from.SendMessage("Carving is not permitted in a portal.");
-                    return;
-                }
-
+                
 				((ICarvable)targeted).Carve( from, m_Item );
 			}
+
 			else if ( targeted is SwampDragon && ((SwampDragon)targeted).HasBarding )
 			{
 				SwampDragon pet = (SwampDragon)targeted;

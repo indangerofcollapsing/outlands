@@ -2,7 +2,6 @@
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
-using Server.PortalSystem;
 using Server.Regions;
 using System;
 using System.Collections.Generic;
@@ -95,12 +94,6 @@ namespace Server.Custom.Battlegrounds.Gumps
             if (m_From.Region is BattlegroundRegion)
             {
                 m_From.SendMessage("You cannot do that while in a battleground.");
-                return false;
-            }
-
-            if (m_From.Region is DungeonPortalsRegion)
-            {
-                m_From.SendMessage("You cannot do that while in a dungeon portal.");
                 return false;
             }
 

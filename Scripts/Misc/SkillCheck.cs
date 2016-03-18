@@ -8,7 +8,6 @@ using Server.Custom.Townsystem;
 using Server.Achievements;
 using Server.Custom.Battlegrounds;
 using Server.Custom.Battlegrounds.Regions;
-using Server.PortalSystem;
 using Server.Regions;
 
 namespace Server.Misc
@@ -561,7 +560,7 @@ namespace Server.Misc
 
         private static bool AllowGain(Mobile from, Skill skill, object obj)
         {
-            if (from.Region is BattlegroundRegion || from.Region is DungeonPortalsRegion)
+            if (from.Region is BattlegroundRegion)
                 return false;
 
             if (from.Region is NewbieDungeonRegion)

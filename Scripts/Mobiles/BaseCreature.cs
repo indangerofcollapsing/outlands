@@ -21,7 +21,6 @@ using Server.SkillHandlers;
 using Server.Spells.Bushido;
 using Server.Spells.Spellweaving;
 using Server.Spells.Necromancy;
-using Server.PortalSystem;
 using Server.Achievements;
 using Server.Guilds;
 using Server.Commands;
@@ -182,8 +181,7 @@ namespace Server.Mobiles
         #region IPY
         
         public delegate void OnBeforeDeathCB();
-        public OnBeforeDeathCB m_OnBeforeDeathCallback;
-        public GhostTrap m_trap;
+        public OnBeforeDeathCB m_OnBeforeDeathCallback;        
 
         public virtual bool DropsGold { get { return true; } }
 
@@ -3850,48 +3848,6 @@ namespace Server.Mobiles
 
         public virtual bool IsEnemy(Mobile m)
         {
-            // DMS: A trap creature can not aggress a dungeon owner, or a player standing on a dungeon platform, unless they
-            // have been aggressed first.
-            if (this.m_trap != null)
-            {
-                if (m is BaseCreature && ((BaseCreature)m).m_trap != null)
-                {
-                    // This is a fellow trapped creature. To avoid using traps to kill
-                    // other traps, these creatures never fight.
-                    return false;
-                }
-
-                bool playerAggressed = false;
-                foreach (AggressorInfo info in base.Aggressors)
-                {
-                    if (info.Attacker == m)
-                    {
-                        playerAggressed = true;
-                    }
-                }
-
-                if (!playerAggressed)
-                {
-                    // Locate the partition this creature is located in.
-                    PortalPartition partition = PortalSystem.PortalsSystem.GetPartitionAtPoint(this.Location);
-                    if (partition != null)
-                    {
-                        // If the mobile is the partition owner, or a mobile on the platform, it is protected.
-                        if ((m is PlayerMobile && partition.m_username == m.Account.Username) ||
-                            partition.OccupiedByPlatform(m.Location))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        // This is an error case. The creature shouldn't exist outside of a partition if it is a "ghost trap" creature.
-                        return false;
-                    }
-                }
-            }
-            // ~DMS
-
             OppositionGroup g = this.OppositionGroup;
 
             if (g != null && g.IsEnemy(this, m))
@@ -5143,14 +5099,7 @@ namespace Server.Mobiles
                     scales = (int)(scales * 1.1);
                 }
             }
-
-            // Portals - To prevent resource exploitation, creatures can not be carved in a portal.
-            if (corpse.Map == PortalSystem.PortalsSystem.s_map)
-            {
-                from.SendMessage("Carving is not permitted in a portal.");
-                return;
-            }
-
+            
             if ((feathers == 0 && wool == 0 && meat == 0 && hides == 0 && scales == 0) || Summoned || IsBonded)
             {
                 from.SendLocalizedMessage(500485); // You see nothing useful to carve from the corpse.
@@ -5414,12 +5363,7 @@ namespace Server.Mobiles
             // Version 14
             writer.Write((bool)m_RemoveIfUntamed);
             writer.Write((int)m_RemoveStep);
-
-            // DMS - IPY
-            // Version 19
-            writer.Write(m_trap);
-            // ~DMS
-
+            
             // Version 20
             writer.Write(BardImmune);
 
@@ -5850,12 +5794,9 @@ namespace Server.Mobiles
                 m_RemoveStep = reader.ReadInt();
             }
 
-            // DMS
             if (version > 18)
-            {
-                m_trap = reader.ReadItem() as GhostTrap;
+            {               
             }
-            // ~DMS
 
             // VERSION 20
             if (version >= 20)
@@ -8726,12 +8667,6 @@ namespace Server.Mobiles
 
         public void PackScroll(int minCircle, int maxCircle)
         {
-            // DMS: Spawns from GhostTraps have their chance for loot doubled.
-            if (m_trap != null)
-            {
-                // Pack an additional scroll.
-                PackScroll(Utility.RandomMinMax(minCircle, maxCircle));
-            }
             PackScroll(Utility.RandomMinMax(minCircle, maxCircle));
         }
 
@@ -8743,11 +8678,11 @@ namespace Server.Mobiles
         }
 
         public void PackMagicItems(int minLevel, int maxLevel)
-        {
-            // DMS: Spawns from GhostTraps have their chance for loot doubled.
-            float increaseChance = m_trap != null ? 2.0f : 1.0f;
+        {           
+            float increaseChance = 1.0f;
             float armorChance = .30f * increaseChance;
             float weaponChance = .15f * increaseChance;
+
             PackMagicItems(minLevel, maxLevel, armorChance, weaponChance);
         }
 
@@ -8798,13 +8733,7 @@ namespace Server.Mobiles
                 double regionMod = 1 + Server.Commands.RegionGoldMod.GetModifier(Region);
                                 
                 gold = (int)Math.Ceiling(((double)gold * regionMod));                
-
-                // DMS: Augment the loot of a creature released by a GhostTrap
-                if (m_trap != null)
-                {
-                    gold *= 2;
-                }
-
+                
                 if (Region is NewbieDungeonRegion)
                 {
                     gold /= 2;
@@ -9374,17 +9303,11 @@ namespace Server.Mobiles
 
         public void PackGem()
         {
-            PackGem(Spawner is PortalSystem.GhostTrap ? 2 : 1);
+            PackGem(1);
         }
 
         public void PackGem(int min, int max)
         {
-            // DMS: Spawns from GhostTraps have their chance for loot doubled.
-            if (m_trap != null)
-            {
-                min *= 2;
-                max *= 2;
-            }
             PackGem(Utility.RandomMinMax(min, max));
         }
 
@@ -9402,11 +9325,6 @@ namespace Server.Mobiles
 
         public void PackReg(int min, int max)
         {
-            if (Spawner is PortalSystem.GhostTrap)
-            {
-                min *= 2;
-                max *= 2;
-            }
             PackReg(Utility.RandomMinMax(min, max));
         }
 
@@ -9811,112 +9729,6 @@ namespace Server.Mobiles
                     }
 
                     bc_Killer.Hunger = 20;
-                }
-            }
-
-            ////////////////////////////// DMS /////////////////////////////////
-            string creatureType = GetType().Name;
-
-            // Notify the portal manager.
-            PortalSystem.PortalsSystem.AccessManager.OnCreatureKilled(creatureType, this.Region.Name);
-
-            // Creature death notification is required by ghost trap
-            if (m_trap != null)            
-                m_trap.OnDeath();
-            
-            else if (GhostTrap.CanTrapType(GetType()) && !IsParagon && m_IPYLootTag == EIPYLootTag.NONE && m_CanBeGhostTrapped && !DiedByShipSinking && !(Region is UOACZRegion))
-            {
-                // DMS: Parse the damage sources to find a player with a ghost trap.
-                // Mobiles should be considered in the order of highest damage provider.
-                List<DamageEntry> descendingDamagerList = new List<DamageEntry>(DamageEntries);
-                descendingDamagerList.OrderByDescending(x => x.DamageGiven);
-
-                foreach (DamageEntry entry in descendingDamagerList)
-                {
-                    if (m_consumedByGhostTrap)
-                    {
-                        // This creature was trapped in a previous iteration.
-                        break;
-                    }
-
-                    if (entry.Damager == null || entry.Damager.Backpack == null)
-                    {
-                        continue;
-                    }
-
-                    // Maintain a list of traps that are eligible to be used.
-                    List<PortalSystem.GhostTrap> availableTraps = new List<PortalSystem.GhostTrap>();
-                    // All traps in the inventory of the player.
-                    List<Item> traps = entry.Damager.Backpack.Items.FindAll(x => x is PortalSystem.GhostTrap);
-
-                    foreach (Item i in traps)
-                    {
-                        PortalSystem.GhostTrap trap = i as PortalSystem.GhostTrap;
-                        if (trap.m_activated)
-                        {
-                            // 2/10/14 Simplified the traps to eliminate the weirdness with Demons.
-                            // There are 2 cases.
-                            // 1. The trap type name is an unused constant, it's available to be used.
-                            // 2. The trap type name is a specific creature
-
-                            if (trap.m_trapType == PortalSystem.GhostTrap.ETrapType.eTT_Unused)
-                            {
-                                // This is an unused trap, consider this if an appropriate trap isn't found.
-                                availableTraps.Add(trap);
-                                continue;
-                            }
-                            else
-                            {
-                                // require at least 25% damage
-                                int required = HitsMax / 4;
-                                if (trap.CanTrapCreature(creatureType) && entry.DamageGiven >= required)
-                                //if (trap.CanTrapCreature(creatureType) || trap.CanTrapDemon(creatureType))
-                                {
-                                    trap.Add(GetType().Name);
-                                    m_consumedByGhostTrap = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    // If a specific trap couldn't be found, use an available trap if one exists.
-                    if (!m_consumedByGhostTrap && availableTraps.Count > 0)
-                    {
-                        PortalSystem.GhostTrap trap = availableTraps[0];
-                        trap.Add(creatureType);
-                        m_consumedByGhostTrap = true;
-                    }
-
-                    if (m_consumedByGhostTrap)
-                    {
-                        entry.Damager.SendMessage(String.Format("The {0} has been trapped!", creatureType));
-
-                        Container pack = entry.Damager.Backpack;
-                        if (pack == null)
-                        {
-                            pack = entry.Damager.BankBox;
-                        }
-
-                        Random rand = new Random();
-                        int chance = rand.Next(0, 100);
-                        int chanceRequired;
-
-                        if (HitsMax < 20)
-                            chanceRequired = 95;
-                        else if (HitsMax < 50)
-                            chanceRequired = 90;
-                        else if (HitsMax < 100)
-                            chanceRequired = 85;
-                        else
-                            chanceRequired = 80;
-
-                        // The corpse is going to pop, provide an effect.
-                        Effects.SendLocationParticles(EffectItem.Create(new Point3D(Location.X, Location.Y, Location.Z), Map, EffectItem.DefaultDuration), 0x376A, 9, 10, 9502);
-                        Effects.SendLocationParticles(EffectItem.Create(new Point3D(entry.Damager.Location.X, entry.Damager.Location.Y, entry.Damager.Location.Z), Map, EffectItem.DefaultDuration), 0x377A, 9, 15, 9502);
-
-                        break;
-                    }
                 }
             }
 

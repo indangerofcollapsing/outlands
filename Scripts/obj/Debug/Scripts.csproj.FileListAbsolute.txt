@@ -5,3 +5,10 @@ C:\Games\Ultima Online Development\An Corp\Scripts\bin\Debug\Server.exe
 C:\Games\Ultima Online Development\An Corp\Scripts\bin\Debug\Server.pdb
 C:\Games\Ultima Online Development\An Corp\Scripts\obj\Debug\Scripts.dll
 C:\Games\Ultima Online Development\An Corp\Scripts\obj\Debug\Scripts.pdb
+C:\Games\Ultima Online Development\Outlands\Scripts\bin\Debug\Scripts.dll
+C:\Games\Ultima Online Development\Outlands\Scripts\bin\Debug\Scripts.pdb
+C:\Games\Ultima Online Development\Outlands\Scripts\bin\Debug\Server.exe
+C:\Games\Ultima Online Development\Outlands\Scripts\bin\Debug\Server.pdb
+C:\Games\Ultima Online Development\Outlands\Scripts\obj\Debug\Scripts.csprojResolveAssemblyReference.cache
+C:\Games\Ultima Online Development\Outlands\Scripts\obj\Debug\Scripts.dll
+C:\Games\Ultima Online Development\Outlands\Scripts\obj\Debug\Scripts.pdb

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Server;
-using Server.PortalSystem;
 
 namespace Server.Mobiles
 {
@@ -20,10 +19,6 @@ namespace Server.Mobiles
 		public override void InitSBInfo()
 		{
 			m_SBInfos.Add( new SBProvisioner() );
-            m_SBInfos.Add( new SBPortalSupplies() );
-
-			if ( IsTokunoVendor )
-				m_SBInfos.Add( new SBSEHats() );
 		}
 
 		public Provisioner( Serial serial ) : base( serial )

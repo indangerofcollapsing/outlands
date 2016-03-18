@@ -70,11 +70,11 @@ namespace Server
                 mob.AddLoot(LootPack.RareCrafting, amount);
                 mob.AddLoot(LootPack.RareCloth, amount);
                 mob.AddLoot(LootPack.TownCloth, amount);
+
                 if (Utility.RandomDouble() < 0.05)
                     mob.AddToBackpack(new SpringfairTicket());
             }
-
-            mob.AddLoot(LootPack.PortalInjector, amount);
+            
             mob.AddLoot(LootPack.EnhancedTome, amount);
         }
 

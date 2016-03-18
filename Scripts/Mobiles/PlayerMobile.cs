@@ -32,8 +32,6 @@ using Server.Achievements;
 using Server.Custom;
 using Server.SkillHandlers;
 using Server.ArenaSystem;
-// DungeonMiningSystem: Modifications to CanSee()
-using Server.PortalSystem;
 using Server.Custom.Battlegrounds;
 using Server.Custom.Battlegrounds.Regions;
 using Server.Guilds;
@@ -5286,24 +5284,9 @@ namespace Server.Mobiles
 
         protected override void OnMapChange(Map oldMap)
         {
-            // DMS: Provide nightsight for dungeon owners when they enter their dungeon, and strip it from them when
-            // they leave their dungeon.
-            if (this.Map == Map.Ilshenar)
-            {
-                PortalPartition partition = PortalSystem.PortalsSystem.GetPartitionByUsername(this.Account.Username);
-                if (partition != null && partition.InteriorContainsPoint(this.Location))
-                {
-                    this.LightLevel = 25;
-                }
-            }
-            else if (oldMap == Map.Ilshenar)
-            {
-                // Leaving Ilshenar
+            if (oldMap == Map.Ilshenar)              
                 this.LightLevel = 0;
-            }
-            //~DMS
-
-            // Ensure players are dismounted on map change.
+           
             if (AccessLevel == AccessLevel.Player)
                 if (Mount != null)
                     Mount.Rider = null;
@@ -9252,12 +9235,6 @@ namespace Server.Mobiles
             if (m_DesignContext != null && m_DesignContext.Foundation.IsHiddenToCustomizer(item))
                 return false;
 
-            // DungeonMiningSystem
-            if (item is IDungeonItem)
-            {
-                IDungeonItem dungeonItem = item as IDungeonItem;
-                return dungeonItem.IsVisibleTo(this);
-            }
             return base.CanSee(item);
         }
 
