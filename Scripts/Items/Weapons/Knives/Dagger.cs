@@ -22,7 +22,7 @@ namespace Server.Items
         public override int OldMaxDamage { get { return 2; } }
         public override int OldSpeed { get { return 50; } }
 
-		public override int InitMinHits{ get{ return 31; } }
+		public override int InitMinHits{ get{ return 30; } }
 		public override int InitMaxHits{ get{ return 40; } }
 
         public override int IconItemId { get { return 3922; } }
