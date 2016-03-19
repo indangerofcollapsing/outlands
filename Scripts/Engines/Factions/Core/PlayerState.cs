@@ -172,8 +172,8 @@ namespace Server.Factions
 			if ( m_Mobile is PlayerMobile )
 			{
 				PlayerMobile pm = (PlayerMobile)m_Mobile;
-				pm.InvalidateProperties();
-				pm.InvalidateMyRunUO();
+
+				pm.InvalidateProperties();				
 			}
 		}
 

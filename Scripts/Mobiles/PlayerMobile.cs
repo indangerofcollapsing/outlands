@@ -2546,14 +2546,7 @@ namespace Server.Mobiles
             get { return GetFlag(PlayerFlag.UseOwnFilter); }
             set { SetFlag(PlayerFlag.UseOwnFilter, value); }
         }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool PublicMyRunUO
-        {
-            get { return GetFlag(PlayerFlag.PublicMyRunUO); }
-            set { SetFlag(PlayerFlag.PublicMyRunUO, value); InvalidateMyRunUO(); }
-        }
-
+        
         [CommandProperty(AccessLevel.GameMaster)]
         public bool AcceptGuildInvites
         {
@@ -3696,10 +3689,7 @@ namespace Server.Mobiles
             base.Delta(flag);
 
             if ((flag & MobileDelta.Stat) != 0)
-                ValidateEquipment();
-
-            if ((flag & (MobileDelta.Name | MobileDelta.Hue)) != 0)
-                InvalidateMyRunUO();
+                ValidateEquipment();           
         }
 
         private static void Disconnect(object state)
@@ -4024,8 +4014,6 @@ namespace Server.Mobiles
                         veteranTalisman.HueItem(i);
                 }
             }
-
-            InvalidateMyRunUO();
         }
 
         public override void OnItemRemoved(Item item)
@@ -4043,8 +4031,6 @@ namespace Server.Mobiles
             // IPY ARENA ONLY HUES
             item.Hue = item.OriginalHue;
             // IPY ARENA ONLY HUES
-
-            InvalidateMyRunUO();
         }
 
         public override double ArmorRating
@@ -6914,9 +6900,7 @@ namespace Server.Mobiles
             m_UserOptHideFameTitles = true;
 
             TitleColorState = new PlayerTitleColors();
-
-            InvalidateMyRunUO();
-
+            
             Timer.DelayCall(TimeSpan.FromSeconds(1), delegate
             {
                 if (CheckAccountForPenance(this) && IsInTempStatLoss && (Murderer || Paladin))
@@ -7437,12 +7421,10 @@ namespace Server.Mobiles
 
         #endregion
 
-        public PlayerMobile(Serial s)
-            : base(s)
+        public PlayerMobile(Serial s): base(s)
         {
             m_VisList = new List<Mobile>();
-            m_AntiMacroTable = new Hashtable();
-            InvalidateMyRunUO();
+            m_AntiMacroTable = new Hashtable();           
         }
 
         public List<Mobile> VisibilityList
@@ -9734,24 +9716,8 @@ namespace Server.Mobiles
         }
         #endregion
 
-        #region MyRunUO Invalidation
-        private bool m_ChangedMyRunUO;
-
-        public bool ChangedMyRunUO
-        {
-            get { return m_ChangedMyRunUO; }
-            set { m_ChangedMyRunUO = value; }
-        }
-
-        public void InvalidateMyRunUO()
-        {
-            if (!Deleted && !m_ChangedMyRunUO)
-            {
-                m_ChangedMyRunUO = true;
-                Engines.MyRunUO.MyRunUO.QueueMobileUpdate(this);
-            }
-        }
-
+        #region MyRunUO Invalidation       
+        
         public override void OnKillsChange(int oldValue)
         {
             if (this.Young && this.ShortTermMurders > oldValue)
@@ -9761,33 +9727,26 @@ namespace Server.Mobiles
                 if (acc != null)
                     acc.RemoveYoungStatus(0);
             }
-
-            InvalidateMyRunUO();
         }
 
         public override void OnGenderChanged(bool oldFemale)
-        {
-            InvalidateMyRunUO();
+        {           
         }
 
         public override void OnGuildChange(Server.Guilds.BaseGuild oldGuild)
-        {
-            InvalidateMyRunUO();
+        {           
         }
 
         public override void OnGuildTitleChange(string oldTitle)
-        {
-            InvalidateMyRunUO();
+        {           
         }
 
         public override void OnKarmaChange(int oldValue)
-        {
-            InvalidateMyRunUO();
+        {          
         }
 
         public override void OnFameChange(int oldValue)
-        {
-            InvalidateMyRunUO();
+        {          
         }
 
         public override void OnSkillChange(SkillName skill, double oldBase)
@@ -9799,11 +9758,6 @@ namespace Server.Mobiles
                 if (acc != null)
                     acc.RemoveYoungStatus(1019036); // You have successfully obtained a respectable skill level, and have outgrown your status as a young player!
             }
-
-            //if ( MLQuestSystem.Enabled )
-            //    MLQuestSystem.HandleSkillGain( this, skill );
-
-            InvalidateMyRunUO();
         }
 
         public override void OnAccessLevelChanged(AccessLevel oldLevel)
@@ -9812,13 +9766,10 @@ namespace Server.Mobiles
                 IgnoreMobiles = false;
             else
                 IgnoreMobiles = true;
-
-            InvalidateMyRunUO();
         }
 
         public override void OnRawStatChange(StatType stat, int oldValue)
         {
-            InvalidateMyRunUO();
         }
 
         public void ReleaseAllFollowers()
@@ -9853,12 +9804,8 @@ namespace Server.Mobiles
 
             ArenaSystem.ArenaSystem.OnCharacterDeleted(this);
 
-            if (Citizenship != null)
-            {
+            if (Citizenship != null)            
                 Town.RemoveCitizen(this, true);
-            }
-
-            InvalidateMyRunUO();
 
             #region UOACZ
 

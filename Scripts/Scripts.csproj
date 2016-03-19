@@ -3033,11 +3033,6 @@
     <Compile Include="Engines\Khaldun\PuzzleChest.cs" />
     <Compile Include="Engines\Khaldun\RaisableItem.cs" />
     <Compile Include="Engines\Khaldun\RaiseSwitch.cs" />
-    <Compile Include="Engines\MyRunUO\Config.cs" />
-    <Compile Include="Engines\MyRunUO\DatabaseCommandQueue.cs" />
-    <Compile Include="Engines\MyRunUO\LayerComparer.cs" />
-    <Compile Include="Engines\MyRunUO\MyRunUO.cs" />
-    <Compile Include="Engines\MyRunUO\MyRunUOStatus.cs" />
     <Compile Include="Engines\Party\AddPartyTarget.cs" />
     <Compile Include="Engines\Party\DeclineTimer.cs" />
     <Compile Include="Engines\Party\Packets.cs" />
@@ -5737,7 +5732,6 @@
     <None Include="Custom\XmlSpawner Extras\XmlQuestNPC\winthrop.npc" />
     <None Include="Custom\XmlSpawner Support\Container.cs.2.4" />
     <None Include="Custom\XmlSpawner Support\Stealing.cs.2.4" />
-    <None Include="Engines\MyRunUO\dbinit.md" />
     <None Include="Output\Scripts.CS.hash" />
   </ItemGroup>
   <ItemGroup>
