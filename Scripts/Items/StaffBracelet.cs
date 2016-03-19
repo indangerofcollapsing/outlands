@@ -11,6 +11,7 @@ namespace Server.Items
         [Constructable]
         public StaffBracelet(): base()
         {
+            Name = "staff bracelet";
             Hue = 2587;
         }
 
