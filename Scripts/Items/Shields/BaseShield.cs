@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Server;
 using Server.Network;
-using Server.Custom.Townsystem;
 using Server.Mobiles;
 
 namespace Server.Items

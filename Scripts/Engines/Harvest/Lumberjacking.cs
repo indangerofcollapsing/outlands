@@ -2,7 +2,7 @@ using System;
 using Server;
 using Server.Items;
 using Server.Network;
-using Server.Custom.Townsystem;
+
 
 namespace Server.Engines.Harvest
 {
@@ -202,10 +202,6 @@ namespace Server.Engines.Harvest
         {
             if (item is BaseLog)
                 item.Amount = Utility.Random(6, 5);
-
-            Town town = Town.CheckCitizenship(m);
-            if (item is BaseLog && town != null && town.HasActiveBuff(CitizenshipBuffs.Gather) && Utility.RandomBool())
-                item.Amount += 2;
 
             return base.Give(m, item, placeAtFeet);
         }

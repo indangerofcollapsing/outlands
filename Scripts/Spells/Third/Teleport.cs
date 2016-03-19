@@ -50,12 +50,6 @@ namespace Server.Spells.Third
                 return false;
             }
 
-            if ( Caster.Backpack != null && Caster.Backpack.FindItemByType<WindFragment>() != null)
-            {
-                Caster.SendMessage("You cannot teleport while carrying the wind fragment.");
-                return false;
-            }
-
 			if ( Server.Misc.WeightOverloading.IsOverloaded( Caster ) )
 			{
 				Caster.SendLocalizedMessage( 502359, "", 0x22 ); // Thou art too encumbered to move.
@@ -105,11 +99,6 @@ namespace Server.Spells.Third
                 Caster.SendMessage("You cannot teleport while carrying a flag.");
             }
 
-            else if ( Caster.Backpack != null && Caster.Backpack.FindItemByType<WindFragment>() != null)
-            {
-                Caster.SendMessage("You cannot teleport while carrying the wind fragment.");
-            }
-
             else if ( Server.Misc.WeightOverloading.IsOverloaded( Caster ) )
 			{
 				Caster.SendLocalizedMessage( 502359, "", 0x22 ); // Thou art too encumbered to move.
@@ -133,11 +122,6 @@ namespace Server.Spells.Third
 			else if (SpellHelper.CheckMulti(pP, map))
 			{
 				Caster.SendLocalizedMessage( 501942 ); // That location is blocked.
-			}
-
-			else if (Server.Custom.Townsystem.TreasuryChest.TreasuryRegionContains(Server.Custom.Townsystem.Town.FromRegion(Region.Find(pP, map)), pP))
-			{
-				Caster.SendMessage("You can not teleport into the Kings treasury.");
 			}
 
 			else

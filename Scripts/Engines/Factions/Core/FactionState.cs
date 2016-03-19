@@ -11,8 +11,7 @@ namespace Server.Factions
 		private int m_Silver;
 		private List<PlayerState> m_Members;
 		private Election m_Election;
-		private List<FactionItem> m_FactionItems;
-		private List<BaseFactionTrap> m_FactionTraps;
+		private List<FactionItem> m_FactionItems;		
 		private DateTime m_LastAtrophy;
 
 		private const int BroadcastsPerPeriod = 2;
@@ -85,13 +84,7 @@ namespace Server.Factions
 			get{ return m_FactionItems; }
 			set{ m_FactionItems = value; }
 		}
-
-		public List<BaseFactionTrap> Traps
-		{
-			get{ return m_FactionTraps; }
-			set{ m_FactionTraps = value; }
-		}
-
+        
 		public Election Election
 		{
 			get{ return m_Election; }
@@ -149,8 +142,7 @@ namespace Server.Factions
 			m_Tithe = 50;
 			m_Members = new List<PlayerState>();
 			m_Election = new Election( faction );
-			m_FactionItems = new List<FactionItem>();
-			m_FactionTraps = new List<BaseFactionTrap>();
+			m_FactionItems = new List<FactionItem>();			
 		}
 
 		public FactionState( GenericReader reader )
@@ -244,22 +236,7 @@ namespace Server.Factions
 
 							Timer.DelayCall( TimeSpan.Zero, new TimerCallback( factionItem.CheckAttach ) ); // sandbox attachment
 						}
-					}
-
-					m_FactionTraps = new List<BaseFactionTrap>();
-
-					if ( version >= 3 )
-					{
-						int factionTrapCount = reader.ReadEncodedInt();
-
-						for ( int i = 0; i < factionTrapCount; ++i )
-						{
-							BaseFactionTrap trap = reader.ReadItem() as BaseFactionTrap;
-
-							if ( trap != null && !trap.CheckDecay() )
-								m_FactionTraps.Add( trap );
-						}
-					}
+					}					
 
 					break;
 				}
@@ -301,12 +278,7 @@ namespace Server.Factions
 			writer.WriteEncodedInt( (int) m_FactionItems.Count );
 
 			for ( int i = 0; i < m_FactionItems.Count; ++i )
-				m_FactionItems[i].Serialize( writer );
-
-			writer.WriteEncodedInt( (int) m_FactionTraps.Count );
-
-			for ( int i = 0; i < m_FactionTraps.Count; ++i )
-				writer.Write( (Item) m_FactionTraps[i] );
+				m_FactionItems[i].Serialize( writer );			
 		}
 	}
 }

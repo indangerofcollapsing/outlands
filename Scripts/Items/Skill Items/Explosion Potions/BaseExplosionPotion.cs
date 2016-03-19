@@ -312,7 +312,7 @@ namespace Server.Items
 
                         damage += alchemyBonus;
 
-                        if (m is PlayerMobile || m is Server.Custom.Townsystem.BaseFactionGuard)
+                        if (m is PlayerMobile)
                         {
                             if (m.InRange(loc, 0))
                                 divisor = 1;

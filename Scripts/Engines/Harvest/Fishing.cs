@@ -6,7 +6,7 @@ using Server.Network;
 using Server.Engines.Quests;
 using Server.Engines.Quests.Collector;
 using System.Collections.Generic;
-using Server.Custom.Townsystem;
+
 using Server.Multis;
 
 
@@ -542,10 +542,7 @@ namespace Server.Engines.Harvest
                                 ownerBoat.MIBsRecovered++;
 
                                 double doubloonValue = Utility.RandomMinMax(25, 50);
-
-                                double playerClassGearBonus = 1 + (PlayerClassPersistance.PlayerClassCurrencyBonusPerItem * (double)PlayerClassPersistance.GetPlayerClassArmorItemCount(player, PlayerClass.Pirate));
-                                doubloonValue *= playerClassGearBonus;
-
+                                
                                 int finalDoubloonAmount = (int)doubloonValue;                                
 
                                 bool shipOwner = ownerBoat.IsOwner(player);
@@ -610,10 +607,6 @@ namespace Server.Engines.Harvest
 
         public override bool Give(Mobile m, Item item, bool placeAtFeet)
         {
-            Town town = Town.CheckCitizenship(m);
-            if (item is Fish && town != null && town.HasActiveBuff(CitizenshipBuffs.Gather) && Utility.RandomDouble() < 0.1)
-                item.Amount = 2;
-
             if (item is TreasureMap || item is MessageInABottle || item is SpecialFishingNet)
             {
                 BaseCreature serp;
@@ -749,6 +742,7 @@ namespace Server.Engines.Harvest
 
             if (GetHarvestDetails(from, tool, toHarvest, out tileID, out map, out loc))
             {
+                /*
                 if (tool is OceansBountyFishingPole)
                 {
                     Timer.DelayCall(TimeSpan.FromSeconds(.5), delegate
@@ -776,17 +770,20 @@ namespace Server.Engines.Harvest
                         });
                     });
                 }
+                */
 
                 Timer.DelayCall(TimeSpan.FromSeconds(1.5),delegate
                 {
                     from.RevealingAction();
                     from.NextSkillTime = Core.TickCount + 10000;
 
+                    /*
                     if (!(tool is OceansBountyFishingPole))
                     {
                         Effects.SendLocationEffect(loc, map, 0x352D, 16, 4);
                         Effects.PlaySound(loc, map, 0x364);
-                    }                    
+                    } 
+                    */
                 });
             }
         }

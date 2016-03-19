@@ -9,7 +9,7 @@ using Server.Spells.Ninjitsu;
 using System.Collections.Generic;
 using Server.Spells.Spellweaving;
 using Server.Spells.Bushido;
-using Server.Custom.Townsystem;
+
 
 namespace Server.Spells
 {
@@ -593,8 +593,7 @@ namespace Server.Spells
 
             bool no_LOS_check = m_Caster.Player && ((PlayerMobile)m_Caster).IsInArenaFight; // allow arena spectators to see spell mantras
 
-            //Added last comparison that it was on IPY
-            if (m_Info.Mantra != null && m_Info.Mantra.Length > 0 && (m_Caster.Player || m_Caster is Server.Custom.Townsystem.BaseFactionGuard))
+            if (m_Info.Mantra != null && m_Info.Mantra.Length > 0 && (m_Caster.Player))
                 m_Caster.PublicOverheadMessage(MessageType.Spell, m_Caster.SpeechHue, true, m_Info.Mantra, no_LOS_check);
         }
 
@@ -1076,7 +1075,7 @@ namespace Server.Spells
                 int karma = ComputeKarmaAward();
 
                 if (karma != 0)
-                    Misc.Titles.AwardKarma(Caster, karma, true);
+                    Misc.FameKarmaTitles.AwardKarma(Caster, karma, true);
 
                 if (TransformationSpellHelper.UnderTransformation(m_Caster, typeof(VampiricEmbraceSpell)))
                 {
@@ -1236,19 +1235,5 @@ namespace Server.Spells
                 OnTick();
             }
         }
-    }
-
-    public class SpellEntry
-    {
-        public String m_SpellName;
-        public Mobile m_From;
-        public DateTime m_Expiration;
-
-        public SpellEntry(String spellName, Mobile from, DateTime expiration)
-        {
-            m_SpellName = spellName;
-            m_From = from;
-            m_Expiration = expiration;
-        }
-    }
+    }    
 }

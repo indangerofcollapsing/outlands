@@ -6,7 +6,7 @@ using Server;
 using Server.Commands;
 using Server.Mobiles;
 using Server.Spells;
-using Server.Custom.Townsystem;
+
 
 namespace Server.Regions
 {
@@ -103,10 +103,11 @@ namespace Server.Regions
 			return reg;
 		}
 
-		public virtual bool AllowReds{ 
-            get {
-                Town town = Town.FromRegion(this);
-                return (town != null && town.GuardState == GuardStates.None ); 
+		public virtual bool AllowReds
+        { 
+            get
+            {
+                return false;
             } 
         }
 

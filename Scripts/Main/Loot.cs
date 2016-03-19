@@ -7,7 +7,7 @@ using Server;
 using Server.Items;
 using Server.Mobiles;
 using Server.Regions;
-using Server.Custom.Townsystem;
+
 using Server.Custom.Items;
 
 namespace Server
@@ -140,9 +140,6 @@ namespace Server
 
             if (mob.Hybrid)
                 AddHybridLoot(mob);
-
-            if (MasterHuntersIronRing.IsEquipedOn(mob.LastPlayerKiller))
-                AddMilitiaRingLoot(mob);
 
             if (mob.LootTier >= Loot.LootTier.Three)
                 mob.AddLoot(LootPack.WeaponDamageEnhancer);
@@ -298,35 +295,7 @@ namespace Server
         {
             if (Utility.RandomBool())
                 AddSpellCasterLoot(mob);
-        }
-
-        private static void AddMilitiaRingLoot(BaseCreature mob)
-        {
-            if (mob.LootTier >= LootTier.Three)
-                mob.LastPlayerKiller.SendMessage(1282, "Your hunters ring emits a faint glow");
-
-            switch(mob.LootTier)
-            {
-                case LootTier.Three:
-                    if (Utility.Random(200) == 0)
-                        mob.AddItem(new FireworksRing());
-                        break;
-                case LootTier.Four:
-                    if (Utility.Random(300) == 0)
-                        mob.AddItem(new HairRestylingDeed() { LootType = LootType.Regular });
-                    if (Utility.Random(150) == 0)
-                        mob.AddItem(new FireworksWand() { LootType = LootType.Regular });
-                    break;
-                case LootTier.Five:
-                    if (Utility.Random(300) == 0)
-                        mob.AddItem(new BeardRestylingDeed() { LootType = LootType.Regular });
-                    break;
-                case LootTier.Six:
-                    if (Utility.Random(300) == 0)
-                        mob.AddItem(new LeatherDyeTub() { UsesRemaining = Utility.Random(20, 60) });
-                    break;
-            }
-        }
+        }        
 
         private static void AddSpellCasterLoot(BaseCreature mob)
         {

@@ -165,9 +165,6 @@ namespace Server.Items
 
                         double doubloonValue = Utility.RandomMinMax(5, 10);
 
-                        double playerClassGearBonus = 1 + (PlayerClassPersistance.PlayerClassCurrencyBonusPerItem * (double)PlayerClassPersistance.GetPlayerClassArmorItemCount(player, PlayerClass.Pirate));
-                        doubloonValue *= playerClassGearBonus;
-
                         int finalDoubloonAmount = (int)doubloonValue;
 
                         bool shipOwner = ownerBoat.IsOwner(player);

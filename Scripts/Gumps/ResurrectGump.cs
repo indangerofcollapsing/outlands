@@ -224,7 +224,7 @@ namespace Server.Gumps
                 if (from.Fame > 0)
                 {
                     int amount = from.Fame / 10;
-                    Misc.Titles.AwardFame(from, -amount, true);
+                    Misc.FameKarmaTitles.AwardFame(from, -amount, true);
                 }
 
                 if (from.Alive && m_HitsScalar > 0)

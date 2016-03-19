@@ -720,21 +720,7 @@ namespace Server.Items
 
             if (item != this && IsCriminalAction(from))
                 from.CriminalAction(true);
-
-            //Check for OCB corpse looting by blue
-            if (item != this && this.Owner is PlayerMobile && from is PlayerMobile)
-            {
-                var looter = from as PlayerMobile;
-                var corpseOwner = this.Owner as PlayerMobile;
-
-                //If they are from the same guild then orange (otherwise the person will turn grey from criminal action, no need to turn orange).
-                if (!looter.IsInMilitia && corpseOwner.IsInMilitia && looter.Guild != null && this.Owner.Guild != null && looter.Guild.Name == this.Owner.Guild.Name)
-                {
-                    looter.AssistedOwnMilitia = true;
-                }
-
-            }
-
+            
             if (from.AccessLevel == AccessLevel.Player && !m_Looters.Contains(from))
                 m_Looters.Add(from);
 

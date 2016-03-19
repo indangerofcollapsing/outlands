@@ -152,7 +152,7 @@ namespace Server.SkillHandlers
                             if (m_From.Player)
                                 DailyAchievement.TickProgress(Category.Crafter, (PlayerMobile)m_From, CrafterCategory.PoisonWeapons);
 
-							Misc.Titles.AwardKarma( m_From, -20, true );
+							Misc.FameKarmaTitles.AwardKarma( m_From, -20, true );
 						}
 
 						else // Failed

@@ -69,12 +69,6 @@ namespace Server.Multis
 			if ( noHousingRegion != null )
 				return HousePlacementResult.BadRegion;
 
-            if (!Server.Custom.Townsystem.Town.ValidHousePlacement(from, center))
-            {
-                from.SendMessage("You must be a citizen of this town to place a house here.");
-                return HousePlacementResult.BadRegion;
-            }
-
 			// This holds data describing the internal structure of the house
 			MultiComponentList mcl = MultiData.GetComponents( multiID );
 

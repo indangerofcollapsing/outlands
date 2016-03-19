@@ -91,7 +91,7 @@ namespace Server.Spells.Sixth
                 if (mobile is BaseCreature) 
                 {
                     var bc = mobile as BaseCreature;
-                    if (!bc.Controlled && !bc.Summoned && (!bc.InitialInnocent || bc.AlwaysAttackable || bc.IsMurderer()) && !(mobile is Server.Custom.Townsystem.BaseFactionGuard))
+                    if (!bc.Controlled && !bc.Summoned && (!bc.InitialInnocent || bc.AlwaysAttackable || bc.IsMurderer()))
                         Caster.CriminalAction(false);
                 }                                
 

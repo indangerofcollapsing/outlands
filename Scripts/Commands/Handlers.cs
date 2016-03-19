@@ -109,6 +109,7 @@ namespace Server.Commands
 					from.Send( SpeedControl.Disable );
 					from.SendMessage( "Speed boost has been disabled." );
 				}
+
 				else
 				{
 					from.Send( SpeedControl.MountSpeed );
@@ -1314,10 +1315,7 @@ namespace Server.Commands
 			foreach ( NetState state in NetState.Instances )
 			{
 				Mobile m = state.Mobile;
-
-                if (m != null && ignoreDeathcam && m is PlayerMobile && ((PlayerMobile)m).IsDeathCam) // don't broadcast to deathcam
-                    continue;
-
+                
 				if ( m != null && m.AccessLevel >= ac )
 					m.SendMessage( hue, message );
 			}

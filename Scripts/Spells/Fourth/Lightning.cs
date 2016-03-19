@@ -68,7 +68,7 @@ namespace Server.Spells.Fourth
                                 
                 damage = Utility.Random(7, 9);
 
-                if (Caster is PlayerMobile && !(m is PlayerMobile) && !(m is Server.Custom.Townsystem.BaseFactionGuard))
+                if (Caster is PlayerMobile && !(m is PlayerMobile))
                     damage += 6;
 
                 if (m.Region is UOACZRegion)

@@ -19,7 +19,7 @@ namespace Server.Misc
 			Mobile beholder = e.Beholder;
 			Mobile beheld = e.Beheld;
 
-			beholder.Send( new DisplayPaperdoll( beheld, Titles.ComputeTitle( beholder, beheld, false ), beheld.AllowEquipFrom( beholder ) ) );
+			beholder.Send( new DisplayPaperdoll( beheld, FameKarmaTitles.ComputeTitle( beholder, beheld, false ), beheld.AllowEquipFrom( beholder ) ) );
 
 			if ( ObjectPropertyList.Enabled )
 			{

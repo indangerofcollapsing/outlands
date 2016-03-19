@@ -331,20 +331,10 @@ namespace Server.Items
                         }
                         else
                         {
-                            if (item is BaseArmoredHat)
-                            {
-                                if (((IDyable)item).Dye(from, m_Tub))
-                                {
-                                    m_Tub.UseCharge(from);
-                                    from.PlaySound(0x23E);
-                                }
-                            }
-                            else
-                            {
-                                m_Tub.UseCharge(from);
-                                item.Hue = m_Tub.DyedHue;
-                                from.PlaySound(0x23E);
-                            }
+                            m_Tub.UseCharge(from);
+                            item.Hue = m_Tub.DyedHue;
+                            from.PlaySound(0x23E);
+                            
                         }
                     }
                     else

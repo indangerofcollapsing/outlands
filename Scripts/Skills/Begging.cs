@@ -199,7 +199,7 @@ namespace Server.SkillHandlers
                                     if (toLose > 40)
                                         toLose = 40;
 
-                                    Titles.AwardKarma(m_From, -toLose, true);
+                                    FameKarmaTitles.AwardKarma(m_From, -toLose, true);
                                 }
                             }
 

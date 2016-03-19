@@ -61,14 +61,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            switch (Utility.Random(500))
-            {
-                case 0: c.AddItem(new SeaScaleChest()); break;
-                case 1: c.AddItem(new SeaScaleCoif()); break;
-                case 2: c.AddItem(new SeaScaleLegs()); break;
-            }
-
         }
 
 		public SeaSerpent( Serial serial ) : base( serial )

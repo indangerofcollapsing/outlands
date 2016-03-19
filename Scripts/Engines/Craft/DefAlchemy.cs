@@ -191,9 +191,6 @@ namespace Server.Engines.Craft
 			index = AddCraft( typeof( GreaterExplosionPotion ), 1044537, 1044557, 65.0, 115.0, typeof( SulfurousAsh ), 1044359, 10, 1044367 );
 			AddRes( index, typeof ( Bottle ), 1044529, 1, 500315 );
 
-            //Other
-            index = AddCraft(typeof(TransmutationStone), "Other", "transmutation stone", 80.0, 120.0, typeof(TransmutationEssence), "Transmutation Stone", 1, "You do not have the neccessary transmutation stone needed to craft this.");            
-
 			/* IPY
 			if( Core.SE )
 			{

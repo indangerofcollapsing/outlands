@@ -11,7 +11,7 @@ using Server.Targeting;
 using Server.Misc;
 using Server.Multis;
 using Server.ContextMenus;
-using Server.Custom.Townsystem;
+
 
 namespace Server.Mobiles
 {
@@ -38,17 +38,8 @@ namespace Server.Mobiles
         public int NonCitizenPrice { get { return m_NonCitizenPrice == -1 ? m_Price : m_NonCitizenPrice; } }
 
         public int GetPrice(Mobile m, PlayerVendor v)
-        {
-            if (v.Citizenship == null)
-            {
-                return m_Price;
-            }
-            else if (Custom.Townsystem.Town.CheckCitizenship(m) == v.Citizenship)
-            {
-                return (int)((double)m_Price * (1+v.Citizenship.SalesTax));
-            }
-            else
-                return (int)((double)m_NonCitizenPrice * (1+v.Citizenship.SalesTax));
+        {          
+            return m_Price;
         }
 
 		public string FormattedPrice
@@ -218,11 +209,9 @@ namespace Server.Mobiles
                 return;
 
             double tax = 0;
+
 			VendorItem vi = pv.GetVendorItem( item );
             
-            if (pv.Citizenship != null)
-                tax = pv.Citizenship.SalesTax;
-
 			if ( vi == null )
 				return;
 
@@ -256,8 +245,8 @@ namespace Server.Mobiles
 				PlayerVendor vendor = (PlayerVendor)RootParent;
 
 				VendorItem vi = vendor.GetVendorItem( item );
-                
-                double tax = vendor.Citizenship == null ? 0.0 : vendor.Citizenship.SalesTax;
+
+                double tax = 0.0;
 
 				if ( vi != null )
 				{
@@ -318,9 +307,6 @@ namespace Server.Mobiles
 		private DateTime m_NextPayTime;
         private Timer m_EndTimer;
         private DateTime m_End;
-        private Town m_Town;
-
-        public Town Citizenship { get { return m_Town; } }
 
 		private PlayerVendorPlaceholder m_Placeholder;
 
@@ -358,16 +344,7 @@ namespace Server.Mobiles
             m_PayTimer = new PayTimer(this, delay);
             m_PayTimer.Start();
 
-            m_NextPayTime = DateTime.UtcNow + delay;
-
-            Custom.Townsystem.Town town = Custom.Townsystem.Town.FromLocation(owner.Location, owner.Map);
-            if (town != null)
-            {
-                m_Town = town;
-                m_End = DateTime.UtcNow + Town.VendorContractLength;
-                m_EndTimer = Timer.DelayCall(m_End - DateTime.UtcNow, new TimerCallback(RentTimeOver));
-            }
-            
+            m_NextPayTime = DateTime.UtcNow + delay;            
         }
 
         private void RentTimeOver()
@@ -384,8 +361,6 @@ namespace Server.Mobiles
 			base.Serialize( writer );
 
 			writer.Write( (int) 3 ); // version
-
-            Town.WriteReference(writer, m_Town);
 
             writer.Write((DateTime)m_End);
 
@@ -421,18 +396,12 @@ namespace Server.Mobiles
 			switch ( version )
 			{
                 case 3:
-                    {
-                        m_Town = Town.ReadReference(reader);
+                    {                       
                         goto case 2;
                     }
                 case 2:
                 {
                     m_End = reader.ReadDateTime();
-                    if (m_Town != null && m_End > DateTime.MinValue)
-                    {
-                        TimeSpan t = m_End - DateTime.UtcNow;
-                        m_EndTimer = Timer.DelayCall(t, new TimerCallback(RentTimeOver));
-                    }
                     goto case 1;
                 }
                 
@@ -778,10 +747,7 @@ namespace Server.Mobiles
 						backpack.DropItem( item );
 					}
 
-                    if (m_Town != null && m_Owner != null && m_Owner.BankBox.TryDropItem(m_Owner, backpack, false))
-                        m_Owner.SendMessage("The contents of your vendor backpack have been deposited in your bank box.");
-                    else
-                        backpack.MoveToWorld(this.Location, this.Map);                     
+                    backpack.MoveToWorld(this.Location, this.Map);                     
 				}
 			}
 
@@ -1049,17 +1015,9 @@ namespace Server.Mobiles
 					name = item.Name;
 				else
 					name = "#" + item.LabelNumber.ToString();
-
-                if (m_Town == null)
-                {
-                    from.SendLocalizedMessage(1043303, name); // Type in a price and description for ~1_ITEM~ (ESC=not for sale)
-                    from.Prompt = new VendorPricePrompt(this, vi);
-                }
-                else
-                {
-                    from.SendMessage("Type in a price for citizens, a price for noncitizens, and a description for your item. Example: \"50 100 Leather Gorget\". (ESC=not for sale)");
-                    from.Prompt = new VendorPricePrompt2(this, vi);
-                }
+               
+                from.SendMessage("Type in a price for citizens, a price for noncitizens, and a description for your item. Example: \"50 100 Leather Gorget\". (ESC=not for sale)");
+                from.Prompt = new VendorPricePrompt2(this, vi);                
 			}
 		}
 

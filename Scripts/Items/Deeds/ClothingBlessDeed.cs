@@ -3,7 +3,7 @@ using Server.Network;
 using Server.Prompts;
 using Server.Items;
 using Server.Targeting;
-using Server.Custom.Townsystem.Items;
+
 
 namespace Server.Items
 {
@@ -29,7 +29,7 @@ namespace Server.Items
                 return;
             }
             
-            if (item.DecorativeEquipment || item is BaseClothing || item is BaseArmoredHat || item is PirateMageHat || item is PaladinMageHat || item is DreadMageHat)
+            if (item.DecorativeEquipment || item is BaseClothing)
 			{
 				if (item.LootType == LootType.Blessed || item.BlessedFor == from || (Mobile.InsuranceEnabled && item.Insured) ) // Check if its already newbied (blessed)
 				    from.SendLocalizedMessage( 1045113 ); // That item is already blessed

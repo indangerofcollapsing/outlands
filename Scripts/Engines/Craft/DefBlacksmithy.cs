@@ -714,9 +714,6 @@ namespace Server.Engines.Craft
 			#endregion
 
             //Other Items
-            index = AddCraft(typeof(DungeonArmorRepairDeed), "Other", "dungeon armor repair deed", 90.0, 105, typeof(IronIngot), 1044036, 40, 1044037);
-            AddRes(index, typeof(RepairDeed), "Repair Deed", 1, "You require a repair deed to craft this item.");
-
             index = AddCraft(typeof(BlacksmithyDungeonMould), "Other", "blacksmithing dungeon mould", 90, 105, typeof(IronIngot), "Iron Ingot", 200, 1044037);
             AddRes(index, typeof(FireEssence), "Fire Essence", 3, "You do not have the crafting components required to make this.");
             AddRes(index, typeof(Quartzstone), "Quartzstone", 3, "You do not have the crafting components required to make this.");

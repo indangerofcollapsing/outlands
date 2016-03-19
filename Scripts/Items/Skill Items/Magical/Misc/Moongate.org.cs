@@ -6,7 +6,7 @@ using Server.Network;
 using Server.Gumps;
 using Server.Regions;
 using Server.Spells;
-using Server.Custom.Townsystem;
+
 
 namespace Server.Items
 {
@@ -117,11 +117,7 @@ namespace Server.Items
         public virtual void UseGate(Mobile m)
         {
             ClientFlags flags = m.NetState == null ? 0 : m.NetState.Flags;
-            Town targetTown = Town.FromLocation(m_Target, m_TargetMap);
-
-            bool militia = ((PlayerMobile)m).IsInMilitia;
-
-            PlayerMobile player = m as PlayerMobile;
+           PlayerMobile player = m as PlayerMobile;
 
             if (player != null)
             {
@@ -176,20 +172,6 @@ namespace Server.Items
 
             else if (m_TargetMap != null && m_TargetMap != Map.Internal)
             {
-                if (m_bDispellable && militia && OCTimeSlots.IsActiveTown(targetTown))
-                {
-                    var dust = m.Backpack.FindItemByType(typeof(InfiltrationDust)) as InfiltrationDust;
-
-                    if (dust == null)
-                    {
-                        m.SendMessage("You cannot travel to a town under siege without infiltration dust.");
-                        return;
-                    }
-
-                    else
-                        dust.Consume();
-                }
-
                 BaseCreature.TeleportPets(m, m_Target, m_TargetMap);
 
                 m.MoveToWorld(m_Target, m_TargetMap);

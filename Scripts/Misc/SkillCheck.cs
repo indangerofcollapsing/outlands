@@ -4,7 +4,7 @@ using Server.Mobiles;
 using Server.Items;
 using Server.Multis;
 using Server.Spells;
-using Server.Custom.Townsystem;
+
 using Server.Achievements;
 using Server.Custom.Battlegrounds;
 using Server.Custom.Battlegrounds.Regions;
@@ -403,11 +403,7 @@ namespace Server.Misc
 
             gc += (1.0 - chance) * (success ? 0.5 : 0.2);
             gc /= 2;
-
-
-            //if( gc < 0.01 )
-            //    gc = 0.01
-
+            
             gc *= skill.Info.GainFactor;
 
             // The following are tweaks for IPY.
@@ -416,16 +412,13 @@ namespace Server.Misc
 
             gc *= GetSkillChanceMultiplier(skill, from);
 
-
             // IPY
             if (from.Player)
             {
                 HouseModifier(from, ref gc); // -50% skill gain in houses unless you're in a militia
 
                 gc *= GetPowerhourModifier(from); // +100% boost modifier if in power hour
-
-                TownBuffModifier(from, skill, ref gc);
-
+                
                 Items.TownSquare.TownSquareModifier(from, skill, ref gc); // +30% bonus to crafting skills if in range of town square item
 
                 Items.BritainTownSquare.BritainTownSquareModifier(from, skill, ref gc); // +50% bonus at WBB
@@ -460,21 +453,7 @@ namespace Server.Misc
             SkillName.Tailoring,
             SkillName.Inscribe,
             SkillName.Alchemy,
-        };
-
-        public static void TownBuffModifier(Mobile from, Skill skill, ref double gc)
-        {
-            for (int i = 0; i < BuffBoostedSkills.Length; i++ )
-            {
-                if (BuffBoostedSkills[i] == skill.SkillName)
-                {
-                    Town town = Town.CheckCitizenship(from);
-                    if (town != null && town.Region.Contains(from.Location) && town.HasActiveBuff(CitizenshipBuffs.Crafting))
-                        gc *= 1.65;
-                    return;
-                }
-            }
-        }
+        };        
 
         public static void HouseModifier(Mobile from, ref double gc)
         {
@@ -482,8 +461,9 @@ namespace Server.Misc
                 return;
 
             PlayerMobile pm = from as PlayerMobile;
-            if (pm == null || pm.IsInMilitia)
-                return; // no penalty
+            
+            if (pm == null)
+                return;
 
             Sector sector = from.Map.GetSector(from.X, from.Y);
 
@@ -601,15 +581,6 @@ namespace Server.Misc
             {
                 if (pm.IsInTempStatLoss || pm.Region is UOACZRegion)
                     return;
-            }
-
-            if (pm != null && pm.IsInMilitia)
-            {
-                if (skill.SkillName == SkillName.AnimalTaming || skill.SkillName == SkillName.Begging)
-                {
-                    pm.SendMessage(0x22, "Militia members may not pursue a career in animal taming or begging");
-                    return;
-                }
             }
 
             if (from.Player)

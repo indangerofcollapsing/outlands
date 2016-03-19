@@ -237,6 +237,7 @@ namespace Server.Mobiles
 
 		private void ShoutNews_Callback( object state )
 		{
+            /*
 			object[] states = (object[])state;
 			TownCrierEntry tce = (TownCrierEntry)states[0];
 			int index = (int)states[1];
@@ -248,11 +249,13 @@ namespace Server.Mobiles
 
 				m_NewsTimer = null;
 			}
+
 			else
 			{
 				PublicOverheadMessage( MessageType.Regular, 0x3B2, false, tce.Lines[index] );
 				states[1] = index + 1;
 			}
+            */
 		}
 
 		public override void OnAfterDelete()
@@ -282,19 +285,7 @@ namespace Server.Mobiles
 			if ( !e.Handled && InRange( e.Mobile, 3 ) )
 			{
 				if ( m_NewsTimer == null && e.HasKeyword( 0x30 ) ) // *news*
-				{
-					TownCrierEntry tce = GlobalTownCrierEntryList.Instance.GetRandomEntry();
-
-					if ( tce == null )
-					{
-						PublicOverheadMessage( MessageType.Regular, 0x3B2, 1005643 ); // I have no news at this time.
-					}
-					else
-					{
-						m_NewsTimer = Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ), TimeSpan.FromSeconds( 3.0 ), new TimerStateCallback( ShoutNews_Callback ), new object[]{ tce, 0 } );
-
-						PublicOverheadMessage( MessageType.Regular, 0x3B2, 502978 ); // Some of the latest news!
-					}
+				{					
 				}
 
 				for ( int i = 0; i < m_Rumors.Length; ++i )

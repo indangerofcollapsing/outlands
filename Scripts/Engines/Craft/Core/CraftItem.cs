@@ -6,7 +6,7 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Commands;
 using Server.Custom.Pirates;
-using Server.Custom.Townsystem;
+
 using Server.Multis;
 using Server.Achievements;
 using Server.Factions;
@@ -97,23 +97,6 @@ namespace Server.Engines.Craft
 
             if (!_itemIds.TryGetValue(type, out itemId))
             {
-                if (type == typeof(FactionExplosionTrap))
-                {
-                    itemId = 14034;
-                }
-                else if (type == typeof(FactionGasTrap))
-                {
-                    itemId = 4523;
-                }
-                else if (type == typeof(FactionSawTrap))
-                {
-                    itemId = 4359;
-                }
-                else if (type == typeof(FactionSpikeTrap))
-                {
-                    itemId = 4517;
-                }
-
                 if (itemId == 0)
                 {
                     object[] attrs = type.GetCustomAttributes(typeof(CraftItemIDAttribute), false);

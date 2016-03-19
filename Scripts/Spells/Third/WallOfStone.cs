@@ -3,7 +3,7 @@ using Server.Targeting;
 using Server.Network;
 using Server.Misc;
 using Server.Mobiles;
-using Server.Custom.Townsystem;
+
 using Server.Multis;
 using Server.Items;
 using Server.Custom;
@@ -31,12 +31,6 @@ namespace Server.Spells.Third
 
         public override bool CheckCast()
         {
-            if (PlayerMobile.CheckAccountForStatloss(Caster))
-            {
-                Caster.SendMessage("You are not allowed to cast that spell while there is a character with temporary statloss active on your account.");
-                return false;
-            }
-
             if (!Caster.CanBeginAction(typeof(WallOfStoneSpell)))
             {
                 Caster.SendMessage("You cannot cast that spell again so soon.");
@@ -59,19 +53,15 @@ namespace Server.Spells.Third
 
         public void Target(IPoint3D p)
         {
-            Point3D point = new Point3D(p.X, p.Y, p.Z);
-            Town town = Town.FromLocation(point, Map.Felucca);
-            bool allowedInTown = town == null || (OCTimeSlots.IsActiveTown(town)&& ((PlayerMobile)Caster).IsInMilitia);
+            Point3D point = new Point3D(p.X, p.Y, p.Z);            
 
-            if (!Caster.CanSee(p))
-            {
-                Caster.SendLocalizedMessage(500237); // Target can not be seen.
-            }
+            if (!Caster.CanSee(p))            
+                Caster.SendLocalizedMessage(500237); // Target can not be seen.            
 
             else if (BaseBoat.FindBoatAt(p, Caster.Map) != null)
                 Caster.SendMessage("That location is blocked.");
 
-            else if (SpellHelper.CheckTown(point, Caster, allowedInTown) && CheckSequence())
+            else if (SpellHelper.CheckTown(point, Caster) && CheckSequence())
             {
                 SpellHelper.Turn(Caster, p);
 

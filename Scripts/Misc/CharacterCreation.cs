@@ -4,7 +4,7 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using Server.Accounting;
-using Server.Custom.Townsystem;
+
 
 namespace Server.Misc
 {
@@ -658,8 +658,7 @@ namespace Server.Misc
                 newChar.Race = args.Race;	//Sets body
             else
                 newChar.Race = Race.DefaultRace;
-
-            //newChar.Hue = Utility.ClipSkinHue( args.Hue & 0x3FFF ) | 0x8000;
+           
             newChar.Hue = newChar.Race.ClipSkinHue(args.Hue & 0x3FFF) | 0x8000;
 
             newChar.Hunger = 20;
@@ -676,12 +675,6 @@ namespace Server.Misc
 
                 if (pm.AccessLevel == AccessLevel.Player && account.Young)
                     young = pm.Young = true;
-
-                if (young && pm.Account.Count == 1 && account.Created.Date == DateTime.UtcNow.Date)
-                {
-                    pm.Citizenship = Town.Parse("Britain");
-                    pm.CitizenshipPlayerState.StartDate = DateTime.MinValue;
-                }
             }   
 
             SetName(newChar, args.Name);
@@ -745,33 +738,7 @@ namespace Server.Misc
             CityInfo city = ci[cityIndex];
 
             newChar.MoveToWorld(city.Location, city.Map);
-
-            //IPY: Citizenship
-            Server.Custom.Townsystem.Town town = Server.Custom.Townsystem.Town.CheckAccountCitizenship(newChar);
-            if (town == null)
-                Timer.DelayCall(TimeSpan.FromSeconds(1), delegate
-                {
-                    newChar.SendGump(new Gumps.CitizenshipGump(Server.Custom.Townsystem.Town.FromRegion(Region.Find(city.Location, city.Map))));
-                });
-            else
-                Server.Custom.Townsystem.Town.AddCitizen(newChar, town);
-            //IPY: Citizenship
-
-            //Console.WriteLine( "Login: {0}: New character being created (account={1})", args.State, args.Account.Username );
-            //Console.WriteLine( " - Character: {0} (serial={1})", newChar.Name, newChar.Serial );
-            //Console.WriteLine( " - Started: {0} {1} in {2}", city.City, city.Location, city.Map.ToString() );
-
-            //////////////////////////////////////////////////////////////////////////
-            // UOAC special end-of-beta-eastereggs
-            if (newChar.Name.Equals("dubar", StringComparison.OrdinalIgnoreCase) || newChar.Name.Equals("scrubbolator", StringComparison.OrdinalIgnoreCase) ||
-                newChar.Name.Equals("mnky", StringComparison.OrdinalIgnoreCase) || newChar.Name.Equals("Xenocide", StringComparison.OrdinalIgnoreCase) ||
-                newChar.Name.Equals("trey", StringComparison.OrdinalIgnoreCase) || newChar.Name.Equals("african", StringComparison.OrdinalIgnoreCase))
-            {
-                newChar.AddToBackpack(new Bananas(2));
-            }
-            //////////////////////////////////////////////////////////////////////////
-
-
+            
             new WelcomeTimer(newChar).Start();
         }
 

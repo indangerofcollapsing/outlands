@@ -30,12 +30,6 @@ namespace Server.Spells.Sixth
 
         public override void OnCast()
         {
-            if (PlayerMobile.CheckAccountForStatloss(Caster))
-            {
-                Caster.SendMessage("You are not allowed to cast that spell while there is a character with temporary statloss active on your account.");
-                return;
-            }
-
             BaseCreature casterCreature = Caster as BaseCreature;
 
             if (casterCreature != null)

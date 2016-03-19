@@ -6,7 +6,7 @@ using Server.Network;
 using Server.Targeting;
 using Server.Regions;
 using Server.Spells.Necromancy;
-using Server.Custom.Townsystem;
+
 using Server.Custom.Items;
 using System.Collections;
 using System.Linq;
@@ -30,20 +30,10 @@ namespace Server.Spells.Fourth
 
 		private RunebookEntry m_Entry;
 		private Runebook m_Book;
-
-		//-- Spell Delays  by RixuS
+		
 		public override TimeSpan GetCastDelay() 
 		{
-            if (Caster is PlayerMobile)
-            {
-                var player = Caster as PlayerMobile;
-                if (player.IsInMilitia || player.Paladin || player.Murderer)
-                    return TimeSpan.FromSeconds(2.25);
-                else
-                    return TimeSpan.FromSeconds(1.75);
-            }
-            else
-                return TimeSpan.FromSeconds(1.75);
+            return TimeSpan.FromSeconds(1.75);
 		}
 
 		public RecallSpell( Mobile caster, Item scroll ) : this( caster, scroll, null, null )
@@ -183,11 +173,6 @@ namespace Server.Spells.Fourth
                 Caster.SendLocalizedMessage(502359, "", 0x22); // Thou art too encumbered to move.
             }
 
-            else if (WindFragment.ExistsOn(Caster))
-            {
-                Caster.SendMessage("You can't do that while carrying a Wind Fragment!");
-            }
-
             else if (map != Map.Felucca)
             {
                 Caster.SendLocalizedMessage(1019004); // You are not allowed to travel there.
@@ -228,16 +213,6 @@ namespace Server.Spells.Fourth
                 Caster.SendLocalizedMessage(1019004); // You are not allowed to travel there.
             }
 
-            else if (Server.Custom.Townsystem.TreasuryChest.TreasuryRegionContains(Town.FromRegion(Region.Find(loc, map)), loc))
-            {
-                Caster.SendLocalizedMessage(1019004); // You are not allowed to travel there.
-            }
-
-            else if (!CheckFactionRecall(Caster, loc, map) && Caster.Backpack.FindItemByType(typeof(InfiltrationDust)) == null)
-            {
-                Caster.SendMessage("You need infiltration dust to recall into a town under siege.");
-            }
-
             else if (m_Book != null && m_Book.CurCharges <= 0)
             {
                 Caster.SendLocalizedMessage(502412); // There are no charges left on that item.
@@ -245,22 +220,6 @@ namespace Server.Spells.Fourth
 
             else if (CheckSequence())
             {
-                if (!CheckFactionRecall(Caster, loc, map))
-                {
-                    var item = Caster.Backpack.FindItemByType(typeof(InfiltrationDust)) as InfiltrationDust;
-                   
-                    if (item != null)
-                    {
-                        item.Consume();
-                    }
-
-                    else
-                    {
-                        Caster.SendMessage("You need infiltration dust to recall into a town under siege.");
-                        return;
-                    }
-                }
-
                 if (m_Book != null)
                     --m_Book.CurCharges;
 
@@ -301,16 +260,6 @@ namespace Server.Spells.Fourth
 
 			FinishSequence();
 		}
-
-        private static bool CheckFactionRecall(Mobile from, Point3D p, Map m)
-        {
-            Faction fac = Faction.Find(from);
-            Town town = Town.FromLocation(p, m);
-			if (fac == null || town == null)
-                return true;
-            else // prevent recall into vulnerable town
-				return !OCTimeSlots.IsActiveTown(town);
-        }
 
 		private class InternalTarget : Target
 		{

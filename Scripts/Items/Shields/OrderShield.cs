@@ -1,7 +1,6 @@
 using System;
 using Server;
 using Server.Guilds;
-using Server.Custom.Townsystem;
 using Server.Gumps;
 
 namespace Server.Items
@@ -34,13 +33,7 @@ namespace Server.Items
 		public OrderShield( Serial serial ) : base(serial)
 		{
 		}
-
-        public override void OnDoubleClick(Mobile from)
-        {
-            if (!from.HasGump(typeof(TownControlGump)))
-                from.SendGump(new TownControlGump());
-        }
-
+        
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
@@ -89,18 +82,6 @@ namespace Server.Items
 
         public virtual bool Validate(Mobile m)
         {
-            if (m == null || !m.Player || m.AccessLevel != AccessLevel.Player || Core.AOS)
-                return true;
-
-            Faction f = Faction.Find(m);
-            if (f == null || f.Alliance == null || f.Alliance.Name != "Order")
-            {
-                m.FixedEffect(0x3728, 10, 13);
-                Delete();
-
-                return false;
-            }
-
             return true;
         }
 	}

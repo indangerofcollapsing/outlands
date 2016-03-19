@@ -91,7 +91,7 @@ namespace Server.SkillHandlers
 				}
 
 				if ( from.AccessLevel == AccessLevel.Player )
-					Titles.AwardKarma( from, -4, true );
+					FameKarmaTitles.AwardKarma( from, -4, true );
 
 				if ( from.AccessLevel > AccessLevel.Player || from.CheckTargetSkill( SkillName.Snooping, cont, 0.0, 100.0 ) )
 				{

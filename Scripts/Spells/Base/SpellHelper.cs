@@ -14,7 +14,7 @@ using Server.Spells.Ninjitsu;
 using System.Collections.Generic;
 using Server.Spells.Seventh;
 using Server.Spells.Fifth;
-using Server.Custom.Townsystem;
+
 using Server.Commands;
 using Server.Network;
 using Server.ArenaSystem;
@@ -1652,17 +1652,6 @@ namespace Server.Spells
 
             if (delay == TimeSpan.Zero || delay == null)
             {
-                //Spell Tolerance
-                if (target != null && from != null && spell != null)
-                {
-                    if (pm_Target != null)
-                    {
-                        pm_Target.AddToSpellTolerance(spell.Name, from);
-
-                        iDamage = (int)((double)iDamage * GetSpellToleranceScalar(spell.Name, from, pm_Target));
-                    }
-                }
-
                 if (from is BaseCreature)
                     ((BaseCreature)from).AlterSpellDamageTo(target, ref iDamage);
 
@@ -1787,17 +1776,6 @@ namespace Server.Spells
                         new SpellDamageNoDisturbTimer(spell, target, from, amount, ts).Start();
                     else
                     {
-                        //Spell Tolerance
-                        if (target != null)
-                        {
-                            if (pm_Target != null)
-                            {
-                                pm_Target.AddToSpellTolerance(spell.Name, from);
-
-                                amount = (int)((double)amount * GetSpellToleranceScalar(spell.Name, from, pm_Target));
-                            }
-                        }
-
                         if (from is BaseCreature)
                             ((BaseCreature)from).AlterSpellDamageTo(target, ref amount);
 
@@ -1914,16 +1892,6 @@ namespace Server.Spells
 
             else
             {
-                //Spell Tolerance
-                if (target != null)
-                {
-                    if (pm_Target != null)
-                    {
-                        pm_Target.AddToSpellTolerance(spell.Name, from);
-                        damage = (int)((double)damage * GetSpellToleranceScalar(spell.Name, from, pm_Target));
-                    }
-                }
-
                 adjustedDamageDisplayed = (int)damage;
 
                 if (bc_Target != null)
@@ -2003,66 +1971,7 @@ namespace Server.Spells
         {
             //TODO: All Healing *spells* go through ArcaneEmpowerment
             target.Heal(amount, from, message);
-        }
-
-        public static double GetSpellToleranceScalar(String spellName, Mobile from, PlayerMobile player)
-        {
-            double scalar = 1;
-            double minScalar = 0.25;
-
-            if (!SpellToleranceEnabled)
-                return scalar;
-
-            if (spellName == null || from == null || player == null)
-                return scalar;
-
-            if (player.m_SpellEntries == null)
-                return scalar;
-
-            if (player.m_SpellEntries.Count == 0)
-                return scalar;
-
-            int totalSpells = 0;
-            int ignoreCount = 1; //Ignore the First Spell
-
-            bool spellFromPlayer = from is PlayerMobile;
-
-            if (spellFromPlayer)
-                ignoreCount += 5; //Extra Spells to Ignore From Players
-
-            for (int a = 0; a < player.m_SpellEntries.Count; a++)
-            {
-                SpellEntry entry = player.m_SpellEntries[a];
-
-                //Spell is Coming From Player and Entry is from Player
-                if (spellFromPlayer)
-                {
-                    if (entry.m_From is PlayerMobile)
-                        totalSpells++;
-                }
-
-                //Spell is Coming From Creature and Entry is from Creature
-                else
-                {
-                    if (entry.m_From is BaseCreature)
-                        totalSpells++;
-                }
-            }
-
-            totalSpells -= ignoreCount;
-
-            if (totalSpells < 0)
-                totalSpells = 0;
-
-            double totalReduction = ((double)totalSpells * .10);
-
-            scalar -= totalReduction;
-
-            if (scalar < minScalar)
-                scalar = minScalar;
-
-            return scalar;
-        }
+        }        
 
         private class SpellDamageTimer : Timer
         {
@@ -2114,18 +2023,7 @@ namespace Server.Spells
 
                 BaseCreature bc_Target = m_Target as BaseCreature;
                 PlayerMobile pm_Target = m_Target as PlayerMobile;
-
-                //Spell Tolerance
-                if (m_Target != null)
-                {
-                    if (pm_Target != null)
-                    {
-                        pm_Target.AddToSpellTolerance(m_Spell.Name, m_From);
-
-                        m_Damage = (int)((double)m_Damage * GetSpellToleranceScalar(m_Spell.Name, m_From, pm_Target));
-                    }
-                }
-
+                
                 if (m_From is BaseCreature)
                     ((BaseCreature)m_From).AlterSpellDamageTo(m_Target, ref m_Damage);
 
@@ -2273,18 +2171,7 @@ namespace Server.Spells
 
                 PlayerMobile pm_Target = m_Target as PlayerMobile;
                 BaseCreature bc_Target = m_Target as BaseCreature;
-
-                //Spell Tolerance
-                if (m_Target != null)
-                {
-                    if (pm_Target != null && m_Spell != null)
-                    {
-                        pm_Target.AddToSpellTolerance(m_Spell.Name, m_From);
-
-                        m_Damage = (int)((double)m_Damage * GetSpellToleranceScalar(m_Spell.Name, m_From, pm_Target));
-                    }
-                }
-
+                
                 if (m_From is BaseCreature && m_Target != null)
                     ((BaseCreature)m_From).AlterSpellDamageTo(m_Target, ref m_Damage);
 

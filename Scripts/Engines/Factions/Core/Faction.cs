@@ -684,11 +684,6 @@ namespace Server.Factions
 					else
 						fi.Detach();
 				}
-
-				List<BaseFactionTrap> factionTrapList = new List<BaseFactionTrap>( f.Traps );
-
-				for( int j = 0; j < factionTrapList.Count; ++j )
-					factionTrapList[j].Delete();
 			}
 		}
 
@@ -967,12 +962,6 @@ namespace Server.Factions
 		}
 
 		public virtual int MaximumTraps{ get{ return 15; } }
-
-		public List<BaseFactionTrap> Traps
-		{
-			get{ return m_State.Traps; }
-			set{ m_State.Traps = value; }
-		}
 
 		public const int StabilityFactor = 300; // 300% greater (3 times) than smallest faction
 		public const int StabilityActivation = 200; // Stablity code goes into effect when largest faction has > 200 people

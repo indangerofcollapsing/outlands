@@ -67,7 +67,7 @@ namespace Server.Spells.Second
 
 				damage = Utility.Random( 3, 5 );
 
-                if (Caster is PlayerMobile && !(m is PlayerMobile) && !(m is Server.Custom.Townsystem.BaseFactionGuard))
+                if (Caster is PlayerMobile && !(m is PlayerMobile))
                     damage += 4;
 
                 if (m.Region is UOACZRegion)

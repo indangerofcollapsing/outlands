@@ -60,13 +60,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {            
             base.OnDeath(c);
-
-            switch (Utility.Random(400))
-            {
-                case 0: c.AddItem(new SeaScaleChest()); break;
-                case 1: c.AddItem(new SeaScaleCoif()); break;
-                case 2: c.AddItem(new SeaScaleLegs()); break;
-            }
         }
 
 		public override bool OnBeforeDeath()

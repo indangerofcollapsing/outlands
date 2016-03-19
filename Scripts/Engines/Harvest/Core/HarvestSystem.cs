@@ -6,7 +6,7 @@ using Server.Items;
 using Server.Targeting;
 using Server.Achievements;
 using Server.Multis;
-using Server.Custom.Townsystem;
+
 using Server.Engines.BulkOrders;
 
 namespace Server.Engines.Harvest
@@ -365,18 +365,18 @@ namespace Server.Engines.Harvest
                     m.SendGump(new LargeBODAcceptGump(m, (LargeBOD)item));
                 else if (item is SmallBOD)
                     m.SendGump(new SmallBODAcceptGump(m, (SmallBOD)item));
+
                 return false;
             }
             
             if (item is BaseLog)
                 Custom.HarvestTracker.PlayerHarvest(m, Custom.HarvestType.Lumberjacking, item.Amount);
+
             else if (item is IronOre)
-            {
-                Town town = Town.CheckCitizenship(m);
-                if (town != null && town.HasActiveBuff(CitizenshipBuffs.Gather))
-                    item.Amount = (int)Math.Ceiling(item.Amount * 1.2);
+            {              
                 Custom.HarvestTracker.PlayerHarvest(m, Custom.HarvestType.Mining, item.Amount);
             }
+
             else if (!(item is Container))
                 Custom.HarvestTracker.PlayerHarvest(m, Custom.HarvestType.Fishing, item.Amount);
 

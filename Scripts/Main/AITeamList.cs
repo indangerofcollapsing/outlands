@@ -79,19 +79,15 @@ namespace Server
             //Undead
 			new AITeamList(new Type[]
 			{
-				typeof( Zombie ),
-                typeof( rZombie ),     
+				typeof( Zombie ),                    
                 typeof( ZombieMagi ),
                 typeof( Mummy ),
                 typeof( RottingCorpse ),                
                 typeof( InterredGrizzle),
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestSkeleton ),
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestBoneKnight ),
                 typeof( UndeadKnight ), 
                 typeof( BoneKnight ),	
                 typeof( Ghoul ),
                 typeof( Skeleton ),
-                typeof( rSkeleton ),   
 	            typeof( RestlessSoul ),
                 typeof( KhaldunRevenant ), 
                 typeof( SpectralArmour ),	
@@ -105,14 +101,12 @@ namespace Server
                 typeof( Shade ),
                 typeof( Wraith ),
                 typeof( Spectre ),
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestBoneMagi ),
                 typeof( BoneMagi ),	
                 typeof( SkeletalMage ),
                 typeof( SkeletalDragon ),
                 typeof( ShadowWyrm ),
                 typeof( BoneDemon ),
                 typeof( Lich ),
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestLich ),  
                 typeof( RevenantLion ),
                 typeof( DemonKnight ),
                 typeof( LichLord ),	
@@ -140,16 +134,13 @@ namespace Server
             //Ogres, Trolls, Ettins
 			new AITeamList(new Type[]
 			{
-                typeof( Ogre ),
-				typeof( rOgre ),
-		        typeof( SuperOgreLord ),		
+                typeof( Ogre ),	
                 typeof( OgreLord ),	
                 typeof( ArcticOgreLord ),
                 typeof( Ettin ),
 	            typeof( FrostTroll ),
                 typeof( Troll ),
                 typeof( BloodTroll ),
-                typeof( rTroll ),
                 typeof( SlimeTroll ),
                 typeof( GrayTroll ),
                 typeof( OgreMage ),
@@ -159,7 +150,6 @@ namespace Server
 			new AITeamList(new Type[]
 			{
                 typeof( SpawnedOrcishLord ),
-                typeof( rOrcCaptain ),
                 typeof( BlackOrc ),
                 typeof( Orc ),
 			    typeof( OrcBomber ),		
@@ -307,8 +297,7 @@ namespace Server
                 typeof( FrostSpider ),	
                 typeof( GiantSpider ),
 		        typeof( GiantBlackWidow ),                    	
-		        typeof( DreadSpider ),
-                typeof( rGiantSpider ),               
+		        typeof( DreadSpider ),         
             } ),
 
             //Gargoyles
@@ -320,7 +309,6 @@ namespace Server
                 typeof( StoneGargoyle ),
                 typeof( GargoyleDestroyer ),
                 typeof( GargoyleEnforcer ),
-                typeof( rGargoyle ),
             } ),
 
             //Snakes
@@ -332,8 +320,6 @@ namespace Server
 	            typeof( LavaSerpent ),
                 typeof( LavaSnake ),
                 typeof( Snake ),
-                typeof( rSnake ),
-                typeof( rSilverSerpent ),
                 typeof( SilverSerpent ), 
                 typeof( SeaSerpent ),
                 typeof( DeepSeaSerpent ),
@@ -350,7 +336,6 @@ namespace Server
             new AITeamList(new Type[]
 			{
                 typeof( Ratman ),
-			    typeof( rRatman ),
                 typeof( RatmanArcher ),		
                 typeof( RatmanMage ),
                 typeof( Rat ),
@@ -377,7 +362,6 @@ namespace Server
 	            typeof( Balron ),
                 typeof( ArcaneDaemon ),
                 typeof( Moloch ), 
-                typeof( rDaemon ), 
                 typeof( SilverDaemon ),
                 typeof( SilverDaemonLord ), 
                 typeof( GoldenBalron ),
@@ -397,15 +381,9 @@ namespace Server
                 typeof( WhiteWyrm ),
                 typeof( AncientWinterWyrm ),
                 typeof( AncientWyrm ), 
-                typeof( AbyssDragon ),
-                typeof( ChaosDragon ),
-                typeof( DragonHandler ),                
+                typeof( AbyssDragon ),            
                 typeof( GreaterDragon ),
-                typeof( OrderDragon ),	
-                typeof( RubyDragon ),	
-                typeof( TankDragon ),	
                 typeof( EtherealSwampDragon ),
-                typeof( RaidDrake ),
             } ),
 
             //Terathans
@@ -437,22 +415,18 @@ namespace Server
 	            typeof( GreaterMongbat ),
                 typeof( CapturedHordeMinion ),
                 typeof( MongbatLord ),
-                typeof( Mobiles.Belial.ImpAdds ),
-                typeof( Belial ),
             } ),
 
             //Air Elemental
             new AITeamList(new Type[]
 			{
-                typeof( AirElemental ),	
-                typeof( RAirElemental ),	
+                typeof( AirElemental ),		
             } ),
 
             //Fire Elemental
             new AITeamList(new Type[]
 			{
                 typeof( FireElemental ),
-                typeof( RaidFireElemental ),
             } ),
 
             //Water Elemental
@@ -500,7 +474,6 @@ namespace Server
             new AITeamList(new Type[]
 			{
               	typeof( Harpy ),
-	            typeof( rHarpy ),
                 typeof( StoneHarpy ),
             } ),
 
@@ -542,8 +515,6 @@ namespace Server
             //Guard
             new AITeamList(new Type[]
 			{
-                //typeof( DungeonGuardMelee ),
-                //typeof( DungeonGuardRanged ),
             } ),
 
             //Sanguin
@@ -738,7 +709,7 @@ namespace Server
 
             Item headItem = pm_Target.FindItemOnLayer(Layer.Helm);
             {
-                if (headItem is OrcishKinMask || headItem is Custom.Items.ArmoredOrcishKinMask)                
+                if (headItem is OrcishKinMask)                
                     orcMaskEquipped = true;                
             }
 
@@ -779,8 +750,7 @@ namespace Server
             {
                 typeof( Orc ),			    
                 typeof( OrcCaptain ),
-			    typeof( OrcishLord ),
-		        typeof( rOrcCaptain ),		
+			    typeof( OrcishLord ),	
                 typeof( OrcishMage ),
                 typeof( FrostOrc ),
 			    typeof( FrostOrcLord ),		

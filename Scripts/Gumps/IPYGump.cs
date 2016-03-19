@@ -125,18 +125,9 @@ namespace Server.Gumps
 
 			// Events
 			this.AddLabel(cat_r_x, 326, label_hue, @"Events");
-                this.AddLabel(lab_r_x, 347, sublabel_hue, @"Battlegrounds");
-                this.AddButton(but_r_x, 352, 2103, 2104, (int)Buttons.Battlegrounds, GumpButtonType.Reply, 0);
-
-			if (Server.Misc.PvPDungeonBell.LastPvPBellName != "" && Server.Misc.PvPDungeonBell.NextAllowedRinging > DateTime.UtcNow )
-			{
-				this.AddButton(but_r_x, 372, 2103, 2104, (int)0, GumpButtonType.Reply, 0);
-				this.AddLabel(lab_r_x, 367, sublabel_hue, "Militia War At: ");
-				this.AddLabel(lab_r_x+5, 387, 0x22, Server.Misc.PvPDungeonBell.LastPvPBellName);
-			}
+            this.AddLabel(lab_r_x, 347, sublabel_hue, @"Battlegrounds");
+            this.AddButton(but_r_x, 352, 2103, 2104, (int)Buttons.Battlegrounds, GumpButtonType.Reply, 0);
 		}
-
-
 
 		public override void OnResponse(NetState sender, RelayInfo info)
 		{
@@ -152,9 +143,11 @@ namespace Server.Gumps
 				case (int)Buttons.OCBControl:
 					CommandSystem.Handle(sender.Mobile, "[Controlmap");
 					break;
-				case (int)Buttons.OCBTreasuryRewards:
-					sender.Mobile.SendGump(new Server.Custom.Townsystem.TreasuryKeyGump(sender.Mobile));
-					break;
+
+				//case (int)Buttons.OCBTreasuryRewards:
+				//sender.Mobile.SendGump(new Server.Custom.Townsystem.TreasuryKeyGump(sender.Mobile));
+				//break;
+
 				case (int)Buttons.OCBCalendar:
 					CommandSystem.Handle(sender.Mobile, "[VulnMap");
 					break;

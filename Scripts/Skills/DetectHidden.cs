@@ -7,7 +7,7 @@ using Server.Regions;
 using Server.Custom;
 using System.Collections;
 using System.Collections.Generic;
-using Server.Custom.Townsystem;
+
 
 namespace Server.SkillHandlers
 {
@@ -28,18 +28,11 @@ namespace Server.SkillHandlers
 
         public static bool ValidTarget(Mobile from, Mobile target)
         {
-            var town = Custom.Townsystem.Town.FromRegion(target.Region);
-            if (town == null) return true;
-            if (!OCTimeSlots.IsActiveTown(town)) return true;
-
             var playerFrom = from as PlayerMobile;
             var playerTarget = target as PlayerMobile;
 
             if (playerFrom == null || playerTarget == null)
                 return true;
-
-            if (playerTarget.IsInMilitia)
-                return playerFrom.IsInMilitia;
 
             return true;
         }

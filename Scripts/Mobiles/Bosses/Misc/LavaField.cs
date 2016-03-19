@@ -110,10 +110,7 @@ namespace Server.Items
             if (bc_Target != null)
             {
                 validTarget = m_HitMonsters;
-
-                if (bc_Target is Custom.Townsystem.BaseFactionGuard)
-                    validTarget = false;
-
+                
                 if (bc_Target.Controlled && bc_Target.ControlMaster is PlayerMobile)
                     validTarget = m_HitPlayers;
             }

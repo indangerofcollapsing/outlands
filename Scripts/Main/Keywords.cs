@@ -64,11 +64,7 @@ namespace Server.Mobiles
                         {   
                             foreach (NetState state in NetState.Instances)
                             {
-                                Mobile m = state.Mobile;
-
-                                if (m != null && m is PlayerMobile && ((PlayerMobile)m).IsDeathCam) // don't broadcast to deathcam
-                                    continue;
-
+                                Mobile m = state.Mobile;                                
                                 PlayerMobile player = m as PlayerMobile;
                                 
                                 if (player != null)
@@ -85,17 +81,6 @@ namespace Server.Mobiles
             }           
 
             //Custom Speech Handling
-            if (text.IndexOf("i seek vengeance") != -1)
-            {
-                if (pm != null)
-                {
-                    pm.CloseGump(typeof(VengeanceEntry.VengeanceGump));
-                    pm.SendGump(new VengeanceEntry.VengeanceGump(VengeanceGumpMode.PlayerOnly, pm, new VengeanceFilter(), 0));
-
-                    return;
-                }
-            }
-
             if (text.IndexOf("all patrol") != -1)
             {
                 if (pm != null)

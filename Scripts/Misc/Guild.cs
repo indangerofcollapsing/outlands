@@ -1476,14 +1476,6 @@ namespace Server.Guilds
                 Server.Multis.BaseGuildDock.m_GuildDockDictionary.Remove(this);
             }
 
-            Server.Custom.Pirates.PirateStone ps;
-            Server.Custom.Pirates.PirateStone.m_PirateStoneDictionary.TryGetValue(this, out ps);
-            if (ps != null)
-            {
-                ps.Delete();
-                Server.Custom.Pirates.PirateStone.m_PirateStoneDictionary.Remove(this);
-            }
-
             m_Guildstone = null;
 
             CheckExpiredWars();

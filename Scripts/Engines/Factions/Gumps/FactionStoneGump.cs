@@ -36,10 +36,7 @@ namespace Server.Factions
 			if ( faction.Tithe >= 0 && faction.Tithe <= 100 && (faction.Tithe % 10) == 0 )
 				AddHtmlLocalized( 125, 80, 350, 20, 1011480 + (faction.Tithe / 10), false, false );
 			else
-				AddHtml( 125, 80, 350, 20, faction.Tithe + "%", false, false );
-
-			AddHtmlLocalized( 20, 100, 100, 20, 1011458, false, false ); // Traps placed : 
-			AddHtml( 125, 100, 50, 20, faction.Traps.Count.ToString(), false, false );
+				AddHtml( 125, 80, 350, 20, faction.Tithe + "%", false, false );			
 
 			AddHtmlLocalized( 55, 225, 200, 20, 1011428, false, false ); // VOTE FOR LEADERSHIP
 			AddButton( 20, 225, 4005, 4007, ToButtonID( 0, 0 ), GumpButtonType.Reply, 0 );

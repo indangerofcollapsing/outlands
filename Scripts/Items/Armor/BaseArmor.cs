@@ -1247,11 +1247,6 @@ namespace Server.Items
                     return false;
                 }
 
-                else if (PlayerClassPersistance.PlayerClassCanEquip(from, this) == false)
-                {
-                    return false;
-                }
-
                 else
                 {
                     int strBonus = ComputeStatBonus(StatType.Str), strReq = ComputeStatReq(StatType.Str);
@@ -1684,9 +1679,7 @@ namespace Server.Items
 
             EquipmentInfo eqInfo = new EquipmentInfo(number, m_Crafter, false, attrs.ToArray());
 
-            from.Send(new DisplayEquipmentInfo(this, eqInfo));
-
-            PlayerClassPersistance.PlayerClassSingleClick(this, from);            
+            from.Send(new DisplayEquipmentInfo(this, eqInfo));           
         }
 
         #region ICraftable Members

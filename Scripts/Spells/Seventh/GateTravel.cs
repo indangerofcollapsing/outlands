@@ -6,7 +6,7 @@ using Server.Targeting;
 using Server.Misc;
 using Server.Regions;
 using Server.Mobiles;
-using Server.Custom.Townsystem;
+
 using Server.Achievements;
 using Server.Multis;
 using Server.Custom;
@@ -63,12 +63,6 @@ namespace Server.Spells.Seventh
                 else
                     Caster.SendMessage(WarpBlockerTotem.DefaultGateInResponse);
 
-                return false;
-            }
-
-            else if (WindFragment.ExistsOn(Caster))
-            {
-                Caster.SendMessage("You cannot do that while carrying the Wind Fragment."); // You can't do that while carrying the sigil.
                 return false;
             }
 
@@ -177,22 +171,8 @@ namespace Server.Spells.Seventh
             else if (BaseBoat.FindBoatAt(loc, map) != null)            
                 Caster.SendLocalizedMessage(501802); // Thy spell doth not appear to work...            
 
-            else if (Server.Custom.Townsystem.TreasuryChest.TreasuryRegionContains(Server.Custom.Townsystem.Town.FromRegion(Region.Find(loc, map)), loc))            
-                Caster.SendLocalizedMessage(501802); // Thy spell doth not appear to work...            
-
 			else if ( CheckSequence() && CheckCast() )
 			{
-                if (!CheckFactionRecall(Caster, loc, map))
-                {
-                    var item = Caster.Backpack.FindItemByType(typeof(InfiltrationDust)) as InfiltrationDust;
-
-                    if (item == null)
-                    {
-                        Caster.SendMessage("You need infiltration dust to gate into a town under siege.");
-                        return;
-                    }
-                }
-
 				Caster.SendLocalizedMessage( 501024 ); // You open a magical gate to another location
 
                 //Player Enhancement Customization: Traveler
@@ -248,18 +228,7 @@ namespace Server.Spells.Seventh
 
 			FinishSequence();
 		}
-
-        // returns true if town is does not allow recall/gate
-        private static bool CheckFactionRecall(Mobile from, Point3D p, Map m)
-        {
-            Faction fac = Faction.Find(from);
-            Town town = Town.FromLocation(p, m);
-            if (fac == null || town == null)
-                return true;
-            else // prevent recall into vulnerable town
-                return !OCTimeSlots.IsActiveTown(town);
-        }
-
+        
 		[DispellableField]
 		private class InternalItem : Moongate
 		{

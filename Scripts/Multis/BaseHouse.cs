@@ -14,7 +14,7 @@ using Server.ContextMenus;
 using Server.Gumps;
 using Server.Guilds;
 using Server.Engines.BulkOrders;
-using Server.Custom.Townsystem;
+
 using Server.Engines.Plants;
 using Server.Custom.Items;
 
@@ -1213,9 +1213,7 @@ namespace Server.Multis
             else if (item is VendorRentalContract)
                 return true;
             else if (item is RewardBrazier)
-                return true;
-            else if (item is ClothFoldingContraption)
-                return true;
+                return true;          
 
 			return false;
 		}
@@ -1680,7 +1678,7 @@ namespace Server.Multis
 			if ( !locked )
 				i.SetLastMoved();
 
-			if ( (i is Container) && (!locked || !(i is BaseBoard || i is Aquarium || i is FishBowl)) )
+			if ( (i is Container) && (!locked || !(i is BaseBoard || i is Aquarium)) )
 			{
 				foreach ( Item c in i.Items )
 					SetLockdown( c, locked, checkContains );
@@ -1962,15 +1960,7 @@ namespace Server.Multis
 		{
 			if ( Deleted || !from.CheckAlive() || !IsOwner( from ) )
 				return;
-
-			// IPY
-            if (!Town.ValidHousePlacement(to,Location))
-            {
-                from.SendMessage("That player cannot own a house in this location due to his citizenship.");
-                return;
-            }
-			// IPY
-
+            
 			if ( NewVendorSystem && HasPersonalVendors )
 			{
 				from.SendLocalizedMessage( 1062467 ); // You cannot trade this house while you still have personal vendors inside.
@@ -2633,7 +2623,7 @@ namespace Server.Multis
 			{
 				Item item = (Item)m_LockDowns[i];
 
-				if ( item is Container && !(item is BaseBoard || item is Aquarium || item is FishBowl) )
+				if ( item is Container && !(item is BaseBoard || item is Aquarium) )
 				{
 					Container cont = (Container)item;
 					List<Item> children = cont.Items;
@@ -3602,30 +3592,7 @@ namespace Server.Multis
 				contains = ( ((SecureInfo)m_Secures[i]).Item == item );
 
 			return contains;
-		}
-
-        public virtual FakeGuildstone FindFakeGuildstone()
-        {
-            Map map = this.Map;
-
-            if (map == null)
-                return null;
-
-            MultiComponentList mcl = Components;
-            IPooledEnumerable eable = map.GetItemsInBounds(new Rectangle2D(X + mcl.Min.X, Y + mcl.Min.Y, mcl.Width, mcl.Height));
-
-            foreach (Item item in eable)
-            {
-                if (item is FakeGuildstone && Contains(item))
-                {
-                    eable.Free();
-                    return (FakeGuildstone)item;
-                }
-            }
-
-            eable.Free();
-            return null;
-        }
+		}        
 
 		public virtual Guildstone FindGuildstone()
 		{

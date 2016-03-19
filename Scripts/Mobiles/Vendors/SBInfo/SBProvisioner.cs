@@ -25,7 +25,6 @@ namespace Server.Mobiles
 				Add( new GenericBuyInfo( typeof( Arrow ), 6, 20, 0xF3F, 0 ) );
 				Add( new GenericBuyInfo( typeof( Bolt ), 6, 20, 0x1BFB, 0 ) );
 				Add( new GenericBuyInfo( "1060834", typeof( Engines.Plants.PlantBowl ), 2, 20, 0x15FD, 0 ) );
-                Add( new GenericBuyInfo( typeof( DissolveDust), 1, 50, 16954, 2635));
 				Add( new GenericBuyInfo( typeof( Backpack ), 15, 20, 0x9B2, 0 ) );
 				Add( new GenericBuyInfo( typeof( Pouch ), 6, 20, 0xE79, 0 ) );
 				Add( new GenericBuyInfo( typeof( Bag ), 6, 20, 0xE76, 0 ) );
@@ -33,8 +32,7 @@ namespace Server.Mobiles
 				Add( new GenericBuyInfo( typeof( Torch ), 7, 20, 0xF6B, 0 ) );
 				Add( new GenericBuyInfo( typeof( Lantern ), 2, 20, 0xA25, 0 ) );
 				Add( new GenericBuyInfo( typeof( Lockpick ), 12, 20, 0x14FC, 0 ) );
-                Add(new GenericBuyInfo("1044567", typeof(Skillet), 6, 20, 0x97F, 0));
-				// TODO: Array of hats, randomly colored
+                Add(new GenericBuyInfo("1044567", typeof(Skillet), 6, 20, 0x97F, 0));				
 				Add( new GenericBuyInfo( typeof( BreadLoaf ), 7, 20, 0x103B, 0 ) );
 				Add( new GenericBuyInfo( typeof( LambLeg ), 8, 20, 0x160A, 0 ) );
 				Add( new GenericBuyInfo( typeof( ChickenLeg ), 6, 20, 0x1608, 0 ) );

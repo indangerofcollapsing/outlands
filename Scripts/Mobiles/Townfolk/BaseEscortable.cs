@@ -343,7 +343,7 @@ namespace Server.Mobiles
 		        m_EscortTable.Remove(escorter);
 		        BeginDelete();
 
-		        Misc.Titles.AwardFame(escorter, 10, true);
+		        Misc.FameKarmaTitles.AwardFame(escorter, 10, true);
 
 		        bool gainedPath = false;
 
@@ -549,7 +549,7 @@ namespace Server.Mobiles
 		        if (r.Name == null)
 			        continue;
 
-		        if (r is Regions.DungeonRegion || r is Regions.TownRegion)
+		        if (r is Regions.DungeonRegion)
 			        m_Table[r.Name] = new EscortDestinationInfo(r.Name, r);
 		    }
 	    }

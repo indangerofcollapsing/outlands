@@ -118,8 +118,6 @@ namespace Server
                 typeof( Slime7 ),
                 typeof( Slime8 ),
                 typeof( CorrosiveSlime ),
-                //typeof( Custom.RushChallenge.RushChallengeOgreLord.SpecialOgreLord),
-                //typeof( Custom.RushChallenge.RushChallengeTroll.SpecialTroll),
                 typeof( CorruptedSoul ),
                 typeof( FerelTreefellow ),
                 typeof( PestilentBandage ),
@@ -149,13 +147,11 @@ namespace Server
                 typeof( Jwilson ),
                 typeof( Juggernaut ),
                 typeof( Ogre ),
-                typeof( rOgre ),
                 typeof( OgreLord ),
                 typeof( PlagueBeast ),
                 typeof( Quagmire ),
                 typeof( Slime ),
                 typeof( Troll ),
-                typeof( rTroll ),
                 typeof( AgapiteElemental ),
                 typeof( BronzeElemental ),
                 typeof( CopperElemental ),
@@ -184,9 +180,7 @@ namespace Server
                 typeof( DrakeWhelp),
                 typeof( FrostSpider ),
                 typeof( GiantSpider ),
-                typeof( rGiantSpider ),
                 typeof( Harpy ),
-                typeof( rHarpy ),
                 typeof( HordeMinion ),
                 typeof( Kraken ),
                 typeof( Lizardman ),
@@ -197,12 +191,10 @@ namespace Server
                 typeof( OrcBrute ),
                 typeof( ArmoredTitan ),
                 typeof( OrcCaptain ),
-                typeof( rOrcCaptain ),
                 typeof( OrcishLord ),
                 typeof( FrostOrcLord ),
                 typeof( FrostOrc ),
                 typeof( Ratman ),
-                typeof( rRatman ),
                 typeof( RedSolenInfiltratorQueen ),
                 typeof( RedSolenInfiltratorWarrior ),
                 typeof( RedSolenQueen ),
@@ -252,11 +244,9 @@ namespace Server
                 typeof( Rikktor ),
                 typeof( VorpalBunny ),
                 typeof( TsukiWolf ),
-                typeof( SuperOgreLord ),
                 typeof( Meraktus ),
                 typeof( Twaulo ),
                 typeof( ServantOfSemidar ),
-                typeof( RaidDrake ),
                 typeof( DespiseOrc ),
                 typeof( ForestSpider ),
                 typeof( RockSpider ),
@@ -338,7 +328,6 @@ namespace Server
                 typeof( DreadSpider ),
                 typeof( Efreet ),
                 typeof( Dragon ),
-                typeof( TankDragon ),
                 typeof( BloodBoiler ),
                 typeof( GrayTroll ),
                 typeof( MongbatLord ),
@@ -357,15 +346,10 @@ namespace Server
             new AICreatureList(AIGroup.EvilMonster, AISubgroup.MeleeMage3, new Type[]
             {
                 typeof( PoisonElemental ),
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestDaemon ),
-                typeof( chaosElemental ),
-                typeof( orderElemental ),
                 typeof( BloodElemental ),
                 typeof( Daemon ),
-                typeof( rDaemon ),
                 typeof( FireElemental ),
                 typeof( Gargoyle ),
-                typeof( rGargoyle ),
                 typeof( IceFiend ),
                 typeof( WaterElemental ),
                 typeof( ArcaneDaemon ),
@@ -380,7 +364,6 @@ namespace Server
                 typeof( CoreHound ),
                 typeof( LavaSurger ),
                 typeof( FetidEssence ),
-                typeof( RaidFireElemental ),
                 typeof( LadyOfTheSnow ),
                 typeof( BloodTroll ),
                 typeof( DriderHarbinger ),
@@ -393,7 +376,6 @@ namespace Server
                 typeof( ShadowDrake ),
                 typeof( ElderAcidElemental ),
                 typeof( AirElemental ),
-                typeof( RAirElemental ),
                 typeof( OgreMage ),
                 typeof( Devourer ),
                 typeof( ElderFireElemental ),
@@ -416,7 +398,6 @@ namespace Server
                 typeof( Harrower ),
                 typeof( Semidar ),
                 typeof( Ilhenir ),
-                typeof( Mobiles.Belial.ImpAdds ),
                 typeof( FountainOfEvil ),
                 typeof( PitBeast ),
                 typeof( ElderBloodElemental ),
@@ -435,15 +416,8 @@ namespace Server
 
             new AICreatureList(AIGroup.EvilMonster, AISubgroup.MeleeMage5, new Type[]
             {
-                //typeof( Custom.RushChallenge.RushChallengeBalron.SpecialBalron ),
-                //typeof( Custom.RushChallenge.RushChallengeBloodEle.SpecialBloodEle),
-                //typeof( Custom.RushChallenge.RushChallengeDragon.SpecialDragon),
-                typeof( BaronVonGeddon ),
-                typeof( RubyDragon ),
                 typeof( GoldenBalron ),
                 typeof( AncientRedWyrm ),
-                typeof( ImmortalFlameBoss ),
-                typeof( Belial ),
                 typeof( SilverDaemonLord ),
                 typeof( AncientFlame),
                 typeof( ShadowOfPeradun),
@@ -595,16 +569,13 @@ namespace Server
                 typeof( GiantSerpent ),
                 typeof( IceSnake ),
                 typeof( Snake ),
-                typeof( rSnake ),
                 typeof( LavaSerpent ),
                 typeof( CrimsonRecluse ),
                 typeof( LavaSnake ),
                 typeof( Scorpion ),
-                typeof( rScorpion ),
                 typeof( ChromaticCrawler ),
                 typeof( SkeletalMount ),
                 typeof( SilverSerpent ),
-                typeof( rSilverSerpent ),
                 typeof( VampireBat ),
                 typeof( BakeKitsune ),
                 typeof( DeathwatchBeetle ),
@@ -629,7 +600,6 @@ namespace Server
             {
                 typeof( RagingGrizzlyBear ),
                 typeof( DireWolf ),
-                typeof( rDireWolf ),
                 typeof( LavaLizard ),
                 typeof( IceLizard ),
                 typeof( GreaterLizard ),
@@ -638,7 +608,6 @@ namespace Server
                 typeof( HellHound ),
                 typeof( HellCat ),
                 typeof( Alligator ),
-                typeof( rAlligator ),
                 typeof( Bullvore ),
                 typeof( WhiteStag ),
                 typeof( BayingHound ),
@@ -671,7 +640,6 @@ namespace Server
                 typeof( Walrus ),
                 typeof( Bull ),
                 typeof( Bison ),
-                typeof( rBull ),
                 typeof( GiantToad ),
                 typeof( Dolphin ),
                 typeof( DesertOstard ),
@@ -707,10 +675,8 @@ namespace Server
                 typeof( GreyWolf ),
                 typeof( Panther ),
                 typeof( TimberWolf ),
-                typeof( rTimberWolf ),
                 typeof( SnowLeopard ),
                 typeof( GrizzlyBear ),
-                typeof( rGrizzlyBear ),
                 typeof( PolarBear ),
             } ),
 
@@ -796,7 +762,6 @@ namespace Server
                 typeof( Merchant ),
                 typeof( EscortableMage ),
                 typeof( BrideGroom ),
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestCivilian ),
                 typeof( BaseCannonGuard ),
                 typeof( DoubloonDockGuard ),
                 typeof( TurnableCannonGuard ),
@@ -825,14 +790,6 @@ namespace Server
 
             new AICreatureList(AIGroup.FactionHuman, AISubgroup.None, new Type[]
             {
-                typeof( Custom.Townsystem.FactionHenchman ),
-                typeof( Custom.Townsystem.FactionMercenary ),
-                typeof( Custom.Townsystem.FactionKnight ),
-                typeof( Custom.Townsystem.FactionPaladin ),
-                typeof( Custom.Townsystem.FactionDragoon ),
-                typeof( Custom.Townsystem.FactionBerserker ),
-                typeof( OrderGuard ),
-                typeof( ChaosGuard ),
                 typeof( ArcherGuard ),
                 typeof( WarriorGuard ),
             } ) ,
@@ -853,17 +810,13 @@ namespace Server
             new AICreatureList( AIGroup.Undead, AISubgroup.None, new Type[]
             {
                 typeof( Zombie ),
-                typeof( rZombie ),
                 typeof( Mummy ),
                 typeof( RottingCorpse ),
                 typeof( InterredGrizzle),
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestSkeleton ),
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestBoneKnight ),
                 typeof( UndeadKnight ),
                 typeof( BoneKnight ),
                 typeof( Ghoul ),
                 typeof( Skeleton ),
-                typeof( rSkeleton ),
                 typeof( RestlessSoul ),
                 typeof( KhaldunRevenant ),
                 typeof( SpectralArmour ),
@@ -898,7 +851,6 @@ namespace Server
 
             new AICreatureList(AIGroup.Undead, AISubgroup.MeleeMage2, new Type[]
             {
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestBoneMagi ),
                 typeof( SkeletalDragon ),
             } ) ,
 
@@ -936,7 +888,6 @@ namespace Server
             new AICreatureList(AIGroup.Undead, AISubgroup.Mage3, new Type[]
             {
                 typeof( Lich ),
-                typeof( Server.Engines.Quests.Paladin.PaladinQuestLich ),
                 typeof( CorruptRunecaster ),
                 typeof( SkeletalMage ),
             } ) ,
@@ -1046,21 +997,15 @@ namespace Server
 
             new AICreatureList(AIGroup.FactionMonster, AISubgroup.MeleeMage3, new Type[]
             {
-                typeof( ChaosDragon ),
-                typeof( OrderDragon ),
             }),
 
             new AICreatureList( AIGroup.FactionHuman, AISubgroup.MeleeMage4, new Type[]
             {
-                typeof( Custom.Townsystem.FactionSorceress ),
-                typeof( Custom.Townsystem.FactionNecromancer ),
-                typeof( Custom.Townsystem.RaidMage ),
                 typeof( HalloweenMummy )
             } ) ,
 
             new AICreatureList( AIGroup.FactionHuman, AISubgroup.MeleeMage5, new Type[]
             {
-                typeof( Custom.Townsystem.FactionWizard ),
             } ) ,
 
             new AICreatureList( AIGroup.Summoned, AISubgroup.MeleeMage1, new Type[]
@@ -1102,7 +1047,6 @@ namespace Server
                 typeof( KhaldunZealot ),
                 typeof( Doppleganger ),
                 typeof( SavageRider ),
-                typeof( DragonHandler ),
                 typeof( EliteNinja ),
                 typeof( FanDancer ),
                 typeof( GrimmochDrummel ),

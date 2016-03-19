@@ -1363,9 +1363,10 @@ namespace Server.Engines.ConPVP
                 m_AutomatedInstance.Tournament.Participants.Clear();
                 m_AutomatedInstance.Tournament.Pyramid.Levels.Clear();
                 m_AutomatedInstance.Tournament.Alert("Hear ye! Hear ye!", "Tournament signup has opened. You can enter by signing up with the registrar.");
+
                 OpenTournamentGates();
-                World.Broadcast(0x35, true, "Tournament sign ups are now open! Gates have opened at WBB and Bucs");
-                Server.Custom.Townsystem.Town.GlobalTownCrierBroadcast(new string[] { "Tournament sign ups are now open! Gates have opened at WBB and Bucs" }, TimeSpan.FromMinutes(15));
+
+                World.Broadcast(0x35, true, "Tournament sign ups are now open! Gates have opened at WBB and Bucs");                
             }
         }
 

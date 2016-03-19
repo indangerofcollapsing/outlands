@@ -4139,14 +4139,6 @@ namespace Server.Mobiles
 
             int oldHits = this.Hits;
 
-            if (from is PlayerMobile)
-            {
-                var pm = from as PlayerMobile;
-
-                if (pm.Citizenship != null && pm.Citizenship.HasActiveBuff(Custom.Townsystem.CitizenshipBuffs.Hunter))
-                    damage = (double)amount * 1.05;
-            }
-
             if (damage < 1)
                 damage = 1;
 
@@ -5086,19 +5078,6 @@ namespace Server.Mobiles
             int meat = Meat;
             int hides = Hides;
             int scales = Scales;
-
-            if (from is PlayerMobile)
-            {
-                var pm = from as PlayerMobile;
-                if (pm.Citizenship != null && pm.Citizenship.HasActiveBuff(Custom.Townsystem.CitizenshipBuffs.Gather))
-                {
-                    feathers = (int)(feathers * 1.1);
-                    wool = (int)(wool * 1.1);
-                    meat = (int)(meat * 1.1);
-                    hides = (int)(hides * 1.1);
-                    scales = (int)(scales * 1.1);
-                }
-            }
             
             if ((feathers == 0 && wool == 0 && meat == 0 && hides == 0 && scales == 0) || Summoned || IsBonded)
             {
@@ -7543,14 +7522,7 @@ namespace Server.Mobiles
             maxPointsToLearn *= 3;
 
             TeachResult res = CheckTeachSkills(skill, m, maxPointsToLearn, ref pointsToLearn, doTeach);
-
-            if (m is PlayerMobile)
-                if (skill == SkillName.AnimalTaming && ((PlayerMobile)m).IsInMilitia)
-                {
-                    Say("Shouldn't you be on patrol?");
-                    return false;
-                }
-
+            
             switch (res)
             {
                 case TeachResult.KnowsMoreThanMe:
@@ -7652,7 +7624,7 @@ namespace Server.Mobiles
 
                     Item headItem = pm_Aggresor.FindItemOnLayer(Layer.Helm);
                     {
-                        if (headItem is OrcishKinMask || headItem is Custom.Items.ArmoredOrcishKinMask)
+                        if (headItem is OrcishKinMask)
                             orcMaskEquipped = true;
                     }
 
@@ -8739,31 +8711,9 @@ namespace Server.Mobiles
                     gold /= 2;
                 }
 
-                // Hunters ring (OCB/Treasury reward Item)
-                if (Region is DungeonRegion && LastKiller != null)
-                {
-                    foreach (Item i in LastKiller.Items)
-                    {
-                        if (i is Server.Custom.Townsystem.TreasuryReward)
-                        {
-                            gold = (int)(gold * (i as Server.Custom.Townsystem.TreasuryReward).GetAdditionalGoldDropMultiplier());
-                            break; // effect does not stack
-                        }
-                    }
-                }
-
-                if (LastKiller != null && LastKiller is PlayerMobile)
-                {
-                    var town = Custom.Townsystem.Town.CheckCitizenship(LastKiller);
-
-                    if (town != null && town.HasActiveBuff(Custom.Townsystem.CitizenshipBuffs.Adventurer))
-                        gold = (int)(gold * 1.10);
-                    if (town != null)
-                        town.AdventurerTreasuryDeposit((int)(gold * 0.01));
-                }
-
                 return gold;
             }
+
             else
             {
                 return GoldWorth;
@@ -8777,10 +8727,7 @@ namespace Server.Mobiles
             if (!spawning)
             {
                 int gold = ModifiedGoldWorth();
-
-                if (IsParagon)
-                    PackSkillManual();
-
+                
                 if (gold > 0)
                 {
                     PackGold(gold);
@@ -8848,18 +8795,6 @@ namespace Server.Mobiles
             return m_KillersLuck;
         }
 
-        public virtual void PackSkillManual()
-        {
-            int maxSkill = Math.Min(500 + (int)LootTier * 75, 999);
-            var pool = new List<SkillName>() { SkillName.AnimalTaming };
-            pool.AddRange(PlayerMobile.SkillPool);
-
-            var skill = pool[Utility.RandomMinMax(0, pool.Count - 1)];
-
-            string level = Titles.GetSkillLevelName(maxSkill).ToLower();
-            PackItem(new SkillManual((int)skill, Utility.Random(3), level));
-        }
-
         public virtual SkillScroll GenerateSkillScroll(PlayerMobile player, double max, bool dropFlag = false)
         {
             if (player == null)
@@ -8870,7 +8805,7 @@ namespace Server.Mobiles
             if (skill == null)
                 return null;
 
-            string skillname = Titles.GetSkillLevelName(skill);
+            string skillname = FameKarmaTitles.GetSkillLevelName(skill);
 
             /*
                 Roll through matching skill level strings so the chance to drop can be assigned
@@ -8894,17 +8829,7 @@ namespace Server.Mobiles
 
             drop /= baselineBonus;
             drop /= regionMod;
-
-            #region Baron's Rings
-            
-            var ring = player.FindItemOnLayer(Layer.Ring) as BaronsRing;
-            var ring2 = player.FindItemOnLayer(Layer.Ring) as FlimsyBaronsRing;
-
-            if (ring != null || ring2 != null)
-                drop /= 1.2;
-            
-            #endregion
-            
+                        
             var party = Engines.PartySystem.Party.Get(player);
 
             if (party != null && party.Members.Count > 2)
@@ -9575,14 +9500,7 @@ namespace Server.Mobiles
                 double dungeonArmorChance = 1;
                 double dungeonArmorUpgradeHammerChance = 1;
                 double powerScrollChance = 1;
-
-                if (Region is FireDungeonRegion)
-                {
-                    dungeonArmorChance = .33;
-                    dungeonArmorUpgradeHammerChance = .33;
-                    powerScrollChance = .33;
-                }
-
+                
                 if (m_AncientMysteryCreature)
                 {
                     powerScrollChance = 0;
@@ -9694,9 +9612,7 @@ namespace Server.Mobiles
 
             if (m_ReceivedHonorContext != null)
                 m_ReceivedHonorContext.OnTargetKilled();
-
-            Server.Custom.Townsystem.CitizenshipState.UpdateMonsterKill(this.LastKiller);
-
+            
             if (IsLoHBoss() && m_OnBeforeDeathCallback != null)
                 m_OnBeforeDeathCallback();
 
@@ -10067,20 +9983,6 @@ namespace Server.Mobiles
                 }
             }
             
-            foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
-            {
-                PlayerMobile playerDamager = pair.Key;
-
-                if (playerDamager == null) continue;
-                if (playerDamager.Deleted) continue;
-                
-                //Vengeance
-                int controlSlotPoints = this.ControlSlots * Vengeance.CreatureDeathPointsPerControlSlot;
-
-                if (Vengeance.HasVengeanceAgainstTarget(playerDamager, this))
-                    playerDamager.DecreaseVengeanceEntryPoints(this, controlSlotPoints);
-            }
-
             if (IsBonded)
             {
                 // Pet Dye
@@ -10164,8 +10066,8 @@ namespace Server.Mobiles
                             }
                         }
 
-                        Titles.AwardFame(ds.m_Mobile, totalFame, true);
-                        Titles.AwardKarma(ds.m_Mobile, totalKarma, true);
+                        FameKarmaTitles.AwardFame(ds.m_Mobile, totalFame, true);
+                        FameKarmaTitles.AwardKarma(ds.m_Mobile, totalKarma, true);
                         // modification to support XmlQuest Killtasks
                         XmlQuest.RegisterKill(this, ds.m_Mobile);
 
@@ -10315,14 +10217,7 @@ namespace Server.Mobiles
                             {
                                 if (doubloonAmount < 1)
                                     doubloonAmount = 1;
-
-                                double playerClassGearBonus = 1 + (PlayerClassPersistance.PlayerClassCurrencyBonusPerItem * (double)PlayerClassPersistance.GetPlayerClassArmorItemCount(playerDamager, PlayerClass.Pirate));
-
-                                doubloonAmount *= playerClassGearBonus;
-
-                                if (playerDamager.Citizenship != null && playerDamager.Citizenship.HasActiveBuff(Custom.Townsystem.CitizenshipBuffs.Greed))
-                                    doubloonAmount *= 1.1;
-
+                                
                                 int finalDoubloonValue = (int)doubloonAmount;
 
                                 if (finalDoubloonValue < 1)
@@ -10478,7 +10373,7 @@ namespace Server.Mobiles
             if (target is BaseFactionGuard || target is BaseCannonGuard)
                 return false;
 
-            if ((target is BaseCreature && ((BaseCreature)target).IsInvulnerable) || target is PlayerVendor || target is TownCrier)
+            if ((target is BaseCreature && ((BaseCreature)target).IsInvulnerable) || target is PlayerVendor)
             {
                 if (message)
                 {
@@ -11105,13 +11000,6 @@ namespace Server.Mobiles
             //Put Creature In Trance
             if (Controlled && ControlMaster != null)
             {
-                if (pm_Master != null)
-                {
-                    //Vengeance
-                    if (Vengeance.HasVengeanceAgainstTarget(pm_Master, this))
-                        pm_Master.DecreaseVengeanceEntryPoints(this, Vengeance.PeacemakingPoints);
-                }
-
                 if (AIObject != null)
                 {
                     this.ControlOrder = OrderType.Stop;
@@ -11157,19 +11045,7 @@ namespace Server.Mobiles
                 if (highestDifficulty >= HighDifficultyThreshold)
                     duration *= ProvocationHighDifficultyDurationScalar;
 
-                //Controlled Creature                     
-                if (Controlled && ControlMaster != null)
-                {
-                    duration = BaseCreature.ProvocationFollowerDuration;
-
-                    if (pm_Master != null)
-                    {
-                        //Vengeance
-                        if (Vengeance.HasVengeanceAgainstTarget(pm_Master, this))
-                            pm_Master.DecreaseVengeanceEntryPoints(this, Vengeance.ProvocationPoints);
-                    }
-                }
-
+                
                 //Provocation via [Provoke command
                 if (admin)
                     duration = 1800;
@@ -11209,12 +11085,6 @@ namespace Server.Mobiles
                         //Controlled Creature
                         if (bc_Target.Controlled && bc_Target.ControlMaster != null)
                         {
-                            if (pm_Master != null)
-                            {
-                                if (Vengeance.HasVengeanceAgainstTarget(pm_Master, bc_Target))
-                                    pm_Master.DecreaseVengeanceEntryPoints(bc_Target, Vengeance.ProvocationPoints);
-                            }
-
                             bc_Target.ControlTarget = this;
                             bc_Target.ControlOrder = OrderType.Attack;
                             bc_Target.AIObject.DoOrderAttack();

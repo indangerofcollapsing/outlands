@@ -539,30 +539,7 @@ namespace Server.Mobiles
             CheckBardPacified();
             CheckBardProvoked();
 
-            Custom.Townsystem.BaseFactionGuard factionGuard = bc_Creature as Custom.Townsystem.BaseFactionGuard;
-
-            if (factionGuard != null)
-            {
-                if (bc_Creature.ControlOrder == OrderType.Follow)
-                    DoOrderFollow();
-
-                else if (bc_Creature.ControlOrder == OrderType.Patrol)
-                {
-                    switch (Action)
-                    {
-                        case ActionType.Combat: DoCombatAction(); break;
-                        case ActionType.Guard: DoGuardAction(); break;
-                        case ActionType.Wander: DoWanderAction(); break;
-
-                        default: DoOrderStop(); break;
-                    }
-                }
-
-                else if (bc_Creature.ControlOrder == OrderType.Stop)
-                    DoOrderStop();
-            }
-            
-            else if (!bc_Creature.Controlled)
+            if (!bc_Creature.Controlled)
             {
                 switch (Action)
                 {
@@ -869,23 +846,7 @@ namespace Server.Mobiles
 
             double manaAmount = bc_Creature.Mana;
             double manaPercent = (manaAmount / bc_Creature.ManaMax) * 100;
-
-            Custom.Townsystem.BaseFactionGuard factionGuard = bc_Creature as Custom.Townsystem.BaseFactionGuard;
-
-            //Faction Guard: Return Home if Out of Allowed Range
-            if (factionGuard != null)
-            {
-                double distanceFromHome = factionGuard.GetDistanceToSqrt(factionGuard.Home);
-
-                if (distanceFromHome > factionGuard.MaxDistanceAllowedFromHome)
-                {
-                    Effects.SendLocationParticles(EffectItem.Create(factionGuard.Location, factionGuard.Map, TimeSpan.FromSeconds(5.0)), 0x3728, 10, 10, 2023);
-
-                    factionGuard.Location = factionGuard.Home;
-                    WalkRandom(2, 2, 1);
-                }
-            }
-
+            
             if (bc_Creature.BardPacified)
             {
                 if (CheckBardPacified())
@@ -1073,27 +1034,6 @@ namespace Server.Mobiles
 
             if (!CheckMove() || bc_Creature.DisallowAllMoves)
                 return false;
-
-            if (factionGuard != null)
-            {
-                if (factionGuard.Town != null)
-                {
-                    Region region = Region.Find(factionGuard.Location, factionGuard.Map);
-
-                    if (factionGuard.Town.Region != null)
-                    {
-                        if (region != factionGuard.Town.Region)
-                        {
-                            Effects.SendLocationParticles(EffectItem.Create(bc_Creature.Location, bc_Creature.Map, TimeSpan.FromSeconds(5.0)), 0x3728, 10, 10, 2023);
-
-                            bc_Creature.Location = bc_Creature.Home;
-                            WalkRandom(2, 2, 1);
-
-                            validMovement = false;
-                        }
-                    }
-                }
-            }
 
             if (validCombatant && bc_Creature.Spell == null && !bandagingOther)
             {
@@ -1783,36 +1723,12 @@ namespace Server.Mobiles
                     {
                         if (bc_Creature.ReturnsHome && !pacified)
                         {
-                            double distanceFromHome = bc_Creature.GetDistanceToSqrt(bc_Creature.Home);
-                            
-                            Custom.Townsystem.BaseFactionGuard factionGuard = bc_Creature as Custom.Townsystem.BaseFactionGuard;
+                            double distanceFromHome = bc_Creature.GetDistanceToSqrt(bc_Creature.Home);                            
 
-                            bool factionGuardOutsideOfTown = false;
-
-                            if (factionGuard != null)
-                            {
-                                if (factionGuard.Town != null)
-                                {
-                                    Region region = Region.Find(factionGuard.Location, factionGuard.Map);
-
-                                    if (factionGuard.Town.Region != null)
-                                    {
-                                        if (region != factionGuard.Town.Region)                                        
-                                            factionGuardOutsideOfTown = true;                                        
-                                    }
-                                }
-                            }
-
-                            if ((distanceFromHome <= (double)bc_Creature.RangeHome) || factionGuardOutsideOfTown)
+                            if ((distanceFromHome <= (double)bc_Creature.RangeHome))
                             {
                                 int adjustedWalkOutsideHomeLimit = bc_Creature.WalkRandomOutsideHomeLimit;
                                 int adjustedWalkTowardsHomeLimit = bc_Creature.WalkTowardsHomeLimit;
-
-                                if (bc_Creature is Custom.Townsystem.BaseFactionGuard)
-                                {
-                                    adjustedWalkOutsideHomeLimit = 5;
-                                    adjustedWalkTowardsHomeLimit = 10;
-                                }
 
                                 m_WalkRandomOutsideHome = DateTime.UtcNow + TimeSpan.FromSeconds(adjustedWalkOutsideHomeLimit);
                                 m_WalkTowardsHome = DateTime.UtcNow + TimeSpan.FromSeconds(adjustedWalkOutsideHomeLimit + adjustedWalkTowardsHomeLimit);
@@ -3019,19 +2935,6 @@ namespace Server.Mobiles
         {
             if (bc_Creature.Combatant != null)
                 bc_Creature.Combatant = null;
-
-            Custom.Townsystem.BaseFactionGuard factionGuard = bc_Creature as Custom.Townsystem.BaseFactionGuard;
-
-            if (factionGuard != null && factionGuard.Town != null && bc_Creature.ControlTarget != null)
-            {
-                Region region = Region.Find(bc_Creature.ControlTarget.Location, bc_Creature.ControlTarget.Map);
-
-                if (factionGuard.Town.Region != null)
-                {
-                    if (region != factionGuard.Town.Region)
-                        return true;
-                }
-            }
 
             if (bc_Creature.ControlTarget != null && !bc_Creature.ControlTarget.Deleted && bc_Creature.ControlTarget != bc_Creature)
             {
@@ -4690,27 +4593,6 @@ namespace Server.Mobiles
             //None: Doesn't Want To Acquire Targets or Fightback
             if (bc_Creature.DictCombatTargeting[CombatTargeting.None] > 0)
                 return 0;
-                       
-            //Opposing Faction
-            bool opposingTown = false;
-
-            Custom.Townsystem.BaseFactionGuard factionGuard = bc_Creature as Custom.Townsystem.BaseFactionGuard;
-
-            if (factionGuard != null)
-            {
-                if (factionGuard.IsEnemy(target))
-                    opposingTown = true;
-            }
-
-            //Faction Guards
-            if (bc_Creature.DictCombatTargeting[CombatTargeting.OpposingFaction] > 0)
-            {
-                if (opposingTown)
-                {
-                    if (bc_Creature.DictCombatTargeting[CombatTargeting.OpposingFaction] > BestTargetValue)
-                        BestTargetValue = bc_Creature.DictCombatTargeting[CombatTargeting.OpposingFaction];
-                }
-            }
 
             //PlayerGood
             if (bc_Creature.DictCombatTargeting[CombatTargeting.PlayerGood] > 0)

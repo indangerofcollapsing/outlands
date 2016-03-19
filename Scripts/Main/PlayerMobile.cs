@@ -35,12 +35,10 @@ using Server.ArenaSystem;
 using Server.Custom.Battlegrounds;
 using Server.Custom.Battlegrounds.Regions;
 using Server.Guilds;
-using Server.Custom.Items.Totem;
-using Server.Custom.Townsystem;
-using Server.Custom.Regions;
+
+using Server.Regions;
 using Server.Poker;
 using System.Text;
-// ~DungeonMiningSystem
 
 namespace Server.Mobiles
 {
@@ -197,7 +195,8 @@ namespace Server.Mobiles
                         corpseInDungeon = region is DungeonRegion;
                     }
 
-                    if (corpseInDungeon || (m_Player.Region is FireDungeonRegion) || ExcludedDungeons.Contains(m_Player.Region.Name)) return;
+                    if (corpseInDungeon || ExcludedDungeons.Contains(m_Player.Region.Name)) 
+                        return;
 
                     var dungeon = m_Player.Region as DungeonRegion;
 
@@ -678,13 +677,7 @@ namespace Server.Mobiles
 
         public int ItemsNotCraftedBySold = 0;
         public DateTime ResetItemsNotCraftedByDateTime;
-
-        public List<PlayerClassItemRansomEntry> m_PlayerClassRansomedItemsAvailable = new List<PlayerClassItemRansomEntry>();
-
-        // UOAC deathcam
-        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
-        public bool IsDeathCam { get; set; }
-
+        
         public DamageDisplayMode m_ShowMeleeDamage = DamageDisplayMode.None;
         public DamageDisplayMode m_ShowSpellDamage = DamageDisplayMode.None;
         public DamageDisplayMode m_ShowFollowerDamage = DamageDisplayMode.None;
@@ -1344,11 +1337,7 @@ namespace Server.Mobiles
         private DateTime m_Created;
         public DateTime CreatedOn { set { m_Created = value; } get { return m_Created; } }
         public Boolean CloseBankRunebookGump;
-
-        public List<VengeanceEntry> m_VengeanceEntries = new List<VengeanceEntry>();
-
-        public List<SpellEntry> m_SpellEntries = new List<SpellEntry>();
-              
+                      
         public List<Mobile> m_ShortTermMurders;
         public List<Mobile> m_PaladinsKilled;
 
@@ -1460,196 +1449,8 @@ namespace Server.Mobiles
         }
 
         public void EnterContestedRegion(bool ressingHere)
-        {
-            if ((Murderer || Paladin) && Alive && CheckAccountForPenance(this) && m_IsInTempStatLoss == false)
-            {
-                //All Murderers and Paladins on Account are now in Temporary Statloss
-                Account acc = Account as Account;
-
-                for (int i = 0; i < (acc.Length - 1); i++)
-                {
-                    Mobile m = acc.accountMobiles[i] as Mobile;
-
-                    if (m != null)
-                    {
-                        PlayerMobile player = m as PlayerMobile;
-
-                        if (player != null)
-                        {
-                            if (player.Paladin || player.Murderer)
-                                player.IsInTempStatLoss = true;
-
-                            break;
-                        }
-                    }
-                }
-
-                ApplyTempSkillLoss();
-
-                if (ressingHere)
-                    SendMessage("You are now in a restricted region while in a state of penance. All murderers and paladins on your account will now be under the effect of temporary statloss until all penance timers on your account have expired.");
-                else
-                    SendMessage("You have entered a restricted region while in a state of penance. All murderers and paladins on your account will now be under the effect of temporary statloss until all penance timers on your account have expired.");
-            }
-        }
-
-        public static bool CheckAccountForPenance(Mobile from)
-        {
-            bool penanceRemaining = false;
-
-            PlayerMobile pm_From = from as PlayerMobile;
-
-            if (pm_From == null)
-                return false;
-
-            Account acc = pm_From.Account as Account;
-
-            if (acc == null)
-            {
-                Console.WriteLine(string.Format("{0} does not have an account, deleting.", pm_From.Name));
-                pm_From.Delete();
-                return false;
-            }
-
-            for (int i = 0; i < (acc.Length - 1); i++)
-            {
-                Mobile m = acc.accountMobiles[i] as Mobile;
-
-                if (m != null)
-                {
-                    PlayerMobile player = m as PlayerMobile;
-
-                    if (player != null)
-                    {
-                        if (player.m_PenanceExpiration > DateTime.UtcNow && !player.Deleted)
-                            return true;
-
-                        break;
-                    }
-                }
-            }
-
-            return penanceRemaining;
-        }
-
-        public static bool CheckAccountForStatloss(Mobile from)
-        {
-            bool tempStatLoss = false;
-
-            PlayerMobile pm_From = from as PlayerMobile;
-
-            if (pm_From == null)
-                return false;
-
-            Account acc = pm_From.Account as Account;
-
-            for (int i = 0; i < (acc.Length - 1); i++)
-            {
-                Mobile m = acc.accountMobiles[i] as Mobile;
-
-                if (m != null)
-                {
-                    PlayerMobile player = m as PlayerMobile;
-
-                    if (player != null)
-                    {
-                        if (player.IsInTempStatLoss)
-                            tempStatLoss = true;
-
-                        break;
-                    }
-                }
-            }
-
-            return tempStatLoss;
-        }
-
-        public TempStatLossTimer m_TempStatLossTimer;
-        public ArrayList m_TempStatLossSkillMods = new ArrayList();
-
-        public class TempStatLossTimer : Timer
-        {
-            private PlayerMobile m_Player;
-
-            public TempStatLossTimer(PlayerMobile player)
-                : base(TimeSpan.Zero, TimeSpan.FromSeconds(5))
-            {
-                m_Player = player;
-                Priority = TimerPriority.OneSecond;
-            }
-
-            protected override void OnTick()
-            {
-                //Player is in Statloss and Penance is Now Expired for All Characters on this Account
-                if (m_Player.IsInTempStatLoss && !CheckAccountForPenance(m_Player))
-                {
-                    m_Player.IsInTempStatLoss = false;
-                    m_Player.RemoveTempStatLoss();
-
-                    m_Player.SendMessage("You are now longer under the effects of temporary statloss.");
-
-                    this.Stop();
-                }
-            }
-        }
-
-        public void ApplyPermanentSkillLoss(double skillLossAmount)
-        {
-            for (int a = 0; a < Skills.Length; ++a)
-            {
-                Skill skill = Skills[a];
-
-                if (skill.Base > 0)
-                {
-                   double oldValue = skill.Base;
-                   double newValue = Math.Floor(oldValue * (1 - skillLossAmount) * 10) / 10;
-
-                   skill.Base = newValue;
-                }
-            }
-        }
-
-        public void ApplyTempSkillLoss()
-        {
-            for (int a = 0; a < Skills.Length; ++a)
-            {
-                Skill skill = Skills[a];
-
-                double baseValue = skill.Base;
-
-                if (baseValue > 0)
-                {
-                    SkillMod skillMod = new DefaultSkillMod(skill.SkillName, true, -(baseValue * PaladinEvents.StatLossSkillScalar));
-
-                    m_TempStatLossSkillMods.Add(skillMod);
-                    AddSkillMod(skillMod);
-                }
-            }
-
-            if (m_TempStatLossTimer == null)
-            {
-                m_TempStatLossTimer = new TempStatLossTimer(this);
-                m_TempStatLossTimer.Start();
-            }
-
-            else
-                m_TempStatLossTimer.Start();
-        }
-
-        public void RemoveTempStatLoss()
-        {
-            int skillMods = m_TempStatLossSkillMods.Count;
-
-            for (int a = 0; a < m_TempStatLossSkillMods.Count; a++)
-            {
-                RemoveSkillMod((SkillMod)m_TempStatLossSkillMods[a]);
-            }
-
-            m_TempStatLossSkillMods.Clear();
-
-            if (m_TempStatLossTimer != null)
-                m_TempStatLossTimer.Stop();
-        }
+        {            
+        }      
 
         private DateTime m_HideRestrictionExpiration = DateTime.MinValue;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -1825,19 +1626,6 @@ namespace Server.Mobiles
                     bg.CurrentScoreboard.UpdateScore(from as PlayerMobile, Categories.Healing, scoredAmount);
                 }
             }
-
-            //IPY OC LEADERBOARD
-            var fromPlayer = from as PlayerMobile;
-            if (fromPlayer != null && fromPlayer.IsInMilitia && this.IsInMilitia && this.Citizenship == fromPlayer.Citizenship)
-            {
-                Custom.Townsystem.Town town = Custom.Townsystem.Town.FromRegion(from.Region);
-                if (town != null && Custom.Townsystem.OCTimeSlots.IsActiveTown(town))
-                {
-                    int diff = HitsMax - Hits;
-                    int scoredAmount = amount > diff ? diff : amount;
-                    Custom.Townsystem.OCLeaderboard.RegisterHealing(from, scoredAmount);
-                }
-            }
         }
 
         private DateTime m_T2AAccess;
@@ -1914,52 +1702,7 @@ namespace Server.Mobiles
             get { return m_LastDeathByPlayer; }
             set { m_LastDeathByPlayer = value; }
         }
-
-        #region PlayerClass Scores
-        //PlayerClass Scores
-
-        private int m_PreviousPaladinScore = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int PreviousPaladinScore
-        {
-            get { return m_PreviousPaladinScore; }
-            set { m_PreviousPaladinScore = value; }
-        }
-
-        private int m_PaladinScore = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int PaladinScore
-        {
-            get { return m_PaladinScore; }
-            set
-            {
-                int previousScore = m_PaladinScore;
-
-                m_PaladinScore = value;
-
-                int scoreChange = m_PaladinScore - previousScore;
-
-                PlayerClassPersistance.UpdatePlayerScore(PlayerClassPersistance.PlayerClassScoreType.Paladin, this, scoreChange);
-            }
-        }
-
-        private int m_MurdererScore = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int MurdererScore
-        {
-            get { return m_MurdererScore; }
-            set
-            {
-                int previousScore = m_MurdererScore;
-
-                m_MurdererScore = value;
-
-                int scoreChange = m_MurdererScore - previousScore;
-
-                PlayerClassPersistance.UpdatePlayerScore(PlayerClassPersistance.PlayerClassScoreType.Murderer, this, scoreChange);
-            }
-        }
-
+      
         private int m_PirateScore = 0;
         [CommandProperty(AccessLevel.GameMaster)]
         public int PirateScore
@@ -1967,17 +1710,9 @@ namespace Server.Mobiles
             get { return m_PirateScore; }
             set
             {
-                int previousScore = m_PirateScore;
-
                 m_PirateScore = value;
-
-                int scoreChange = m_PirateScore - previousScore;
-
-                PlayerClassPersistance.UpdatePlayerScore(PlayerClassPersistance.PlayerClassScoreType.Pirate, this, scoreChange);
             }
         }
-
-        #endregion
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string AddPrefixTitle
@@ -1999,8 +1734,7 @@ namespace Server.Mobiles
             }
         }
 
-        public Server.Custom.DonationState DonationPlayerState { get; set; }
-        public Scripts.Custom.FireDungeonPlayerState FireDungeonState { get; set; }
+        public Server.Custom.DonationState DonationPlayerState { get; set; }        
 
         private SlayerEntry m_RepelGroupEntry;
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
@@ -2050,9 +1784,7 @@ namespace Server.Mobiles
             set { m_CurrentPrefix = value; }
         }
         #endregion
-
-        // IPY - Townsystem / factions
-        #region Townsystem
+   
         private DateTime m_LastTownSquareNotification = DateTime.MinValue;
         public DateTime LastTownSquareNotification
         {
@@ -2061,50 +1793,7 @@ namespace Server.Mobiles
         }
 
         public bool SquelchCitizenship;
-        private Custom.Townsystem.PlayerState m_TownsystemPlayerState;
-        public Custom.Townsystem.PlayerState TownsystemPlayerState
-        {
-            get { return m_TownsystemPlayerState; }
-            set { m_TownsystemPlayerState = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int OCBAllianceScore
-        {
-            get { return m_TownsystemPlayerState != null ? m_TownsystemPlayerState.AllianceScore : 0; }
-            set { if (m_TownsystemPlayerState != null) m_TownsystemPlayerState.AllianceScore = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int MilitiaVendorCredits
-        {
-            get { return m_TownsystemPlayerState == null ? 0 : m_TownsystemPlayerState.VendorCredit; }
-            set { if (m_TownsystemPlayerState != null) m_TownsystemPlayerState.VendorCredit = value; }
-        }
-
-        //Citizenship
-        private Custom.Townsystem.CitizenshipState m_CitizenshipPlayerState;
-        public Custom.Townsystem.CitizenshipState CitizenshipPlayerState
-        {
-            get { return m_CitizenshipPlayerState == null ? null : m_CitizenshipPlayerState; }
-            set { m_CitizenshipPlayerState = value; }
-        }
-
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public Custom.Townsystem.Town Citizenship
-        {
-            get { return CitizenshipPlayerState == null ? null : CitizenshipPlayerState.Town; }
-            set
-            {
-                if (value == null || (Citizenship != null && Citizenship == value))
-                    return;
-
-                if (Citizenship != null)
-                    Custom.Townsystem.Town.RemoveCitizen(this, false);
-
-                Custom.Townsystem.Town.AddCitizen(this, value);
-            }
-        }
+               
         private bool m_IsInStatLoss = false;
         [CommandProperty(AccessLevel.Counselor, AccessLevel.Counselor)]
         public bool IsInStatLoss
@@ -2112,39 +1801,6 @@ namespace Server.Mobiles
             get { return m_IsInStatLoss; }
             set { m_IsInStatLoss = value; }
         }
-
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public bool IsInMilitia
-        {
-            get { return (TownsystemPlayerState != null); }
-            set
-            {
-                if (Citizenship == null || IsInMilitia == value)
-                    return;
-
-                if (value)
-                    Citizenship.HomeFaction.OnJoinAccepted(this);
-                else
-                    TownsystemPlayerState.Faction.RemoveMember(this);
-            }
-        }
-
-        // Scoring
-        private int m_TotalTreasuryKeys;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int TreasuryKeys
-        {
-            get { return m_TotalTreasuryKeys; }
-            set { m_TotalTreasuryKeys = value; }
-        }
-
-        private int m_TotalAccumulatedTreasuryKeys; // total lifetime
-        public int TotalAccumulatedTreasuryKeys
-        {
-            get { return m_TotalAccumulatedTreasuryKeys; }
-            set { m_TotalAccumulatedTreasuryKeys = value; }
-        }
-        #endregion
 
         //Parry Special Ability
         #region ParrySpecialAbility
@@ -2257,23 +1913,7 @@ namespace Server.Mobiles
             get { return m_LastLocation; }
             set { m_LastLocation = value; }
         }
-
-        private SpyglassAction m_SpyglassAction = SpyglassAction.None;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public SpyglassAction SpyglassAction
-        {
-            get { return m_SpyglassAction; }
-            set { m_SpyglassAction = value; }
-        }
-
-        private DateTime m_NextSpyglassActionAllowed = DateTime.UtcNow;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime NextSpyglassActionAllowed
-        {
-            get { return m_NextSpyglassActionAllowed; }
-            set { m_NextSpyglassActionAllowed = value; }
-        }
-
+        
         private bool m_PetBattleUnlocked = true;
         [CommandProperty(AccessLevel.GameMaster)]
         public bool PetBattleUnlocked
@@ -3344,42 +2984,10 @@ namespace Server.Mobiles
                 Timer.DelayCall(TimeSpan.FromSeconds(5), new TimerStateCallback(CheckAccountAgeAchievements), from as object);
                 pm_From.ClaimAutoStabledPets();
 
-                // Re-hue items if talisman is equiped
-                Item ocbtalisman = pm_From.FindItemOnLayer(Layer.Talisman);
-                HerosTalisman heroTalisman = ocbtalisman as HerosTalisman;
-                VeteranKnightsTalisman veteranTalisman = ocbtalisman as VeteranKnightsTalisman;
-
-                if (heroTalisman != null || veteranTalisman != null)
-                {
-                    foreach (Item i in pm_From.Items)
-                    {
-                        if (heroTalisman != null)
-                            heroTalisman.HueItem(i);
-                        if (veteranTalisman != null)
-                            veteranTalisman.HueItem(i);
-                    }
-                }
-
                 if (pm_From.AccessLevel > AccessLevel.Player)
                     pm_From.Send(SpeedControl.MountSpeed);
             }            
-
-            //Player is Murderer And Needs To Resolve The Murderer Ress Gump (Pick From Discount Options)
-            if (pm_From.MurdererDeathGumpNeeded)
-            {
-                if (pm_From.ShortTermMurders <= 5)
-                    PaladinEvents.MurdererPunishmentResolved(pm_From);
-
-                else
-                    pm_From.SendGump(new Custom.Paladin.MurdererDeathGump(pm_From, 1));
-            }
-
-            Timer.DelayCall(TimeSpan.FromSeconds(2), delegate
-            {
-                if (CheckAccountForPenance(pm_From) && pm_From.IsInTempStatLoss && (pm_From.Murderer || pm_From.Paladin))
-                    pm_From.SendMessage("You and all other murderers and paladins on your account are currently under the effects of temporary statloss until all penance timers on your account have expired.");
-            });
-
+                        
             //Player Enhancements
             if (pm_From.m_PlayerEnhancementAccountEntry == null)
                 PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
@@ -3393,9 +3001,6 @@ namespace Server.Mobiles
             pm_From.m_PlayerEnhancementAccountEntry.AuditCustomizationEntries();
             pm_From.m_PlayerEnhancementAccountEntry.AuditSpellHueEntries();
 
-            //Influence System 
-            //TEST 
-            //InfluencePersistance.CheckCreateInfluenceAccountEntry(pm_From);   
             InfluencePersistance.OnLogin(pm_From);
             
             //UOACZ
@@ -3808,39 +3413,17 @@ namespace Server.Mobiles
                 pm.m_GameTime += gameTime;
                 pm.m_BankGameTime += gameTime;
 
-                Custom.Townsystem.CitizenshipState.RegisterGameTime(from, gameTime);
-
                 if (pm.m_Quest != null)
                     pm.m_Quest.StopTimer();
-
-                RemoveWindFragment(pm);
 
                 pm.m_SpeechLog = null;
                 pm.LastOnline = DateTime.UtcNow;
                 pm.SetSallos(false);
-
-                if (pm.m_SpellToleranceTimer != null)
-                {
-                    pm.m_SpellToleranceTimer.Stop();
-                    pm.m_SpellToleranceTimer = null;
-                }
             }
 
             DisguiseTimers.StopTimer(from);
         }
-
-        // Wind Battleground, return fragment home if player disconnects
-        private static void RemoveWindFragment(Mobile player)
-        {
-            if (WindFragment.ExistsOn(player))
-            {
-                Container pack = player.Backpack;
-                Item fragment;
-                if (pack != null && (fragment = pack.FindItemByType(typeof(WindFragment))) != null)
-                    ((WindFragment)fragment).ReturnHome();
-            }
-        }
-
+        
         #region Sallos
         private bool _Sallos;
 
@@ -3882,12 +3465,6 @@ namespace Server.Mobiles
             }
             set
             {
-                if (value && WindFragment.ExistsOn(this))
-                {
-                    SendMessage("You may not hide with the Wind Fragment.");
-                    return;
-                }
-
                 if (value && Custom.Battlegrounds.Items.CTFFlag.ExistsOn(this))
                 {
                     SendMessage("You may not hide with a CTF flag.");
@@ -3935,12 +3512,13 @@ namespace Server.Mobiles
             if (m_DesignContext != null || (target is PlayerMobile && ((PlayerMobile)target).m_DesignContext != null))
                 return false;
 
-            if ((target is BaseCreature && ((BaseCreature)target).IsInvulnerable) || target is PlayerVendor || target is TownCrier || target is BaseCannonGuard)
+            if ((target is BaseCreature && ((BaseCreature)target).IsInvulnerable) || target is PlayerVendor)
             {
                 if (message)
                 {
                     if (target.Title == null)
                         SendMessage("{0} cannot be harmed.", target.Name);
+
                     else
                         SendMessage("{0} {1} cannot be harmed.", target.Name, target.Title);
                 }
@@ -3976,36 +3554,17 @@ namespace Server.Mobiles
             if (this.NetState != null)
                 CheckLightLevels(false);
 
-            // IPY HUE TALISMANS
-            // This is a little messy but the OnItemAdded needs to be checked to give a fairly smooth user experience.
-
-            // arena talismans
             if (Region is ArenaSystem.ArenaCombatRegion)
             {
                 Item italisman = FindItemOnLayer(Layer.Talisman);
                 ArenaRewardTotem arena_talisman = italisman as ArenaRewardTotem;
+
                 if (arena_talisman != null)
                 {
                     foreach (Item i in Items)
                         arena_talisman.HueItem(i);
                 }
-            }
-
-            // OCB talismans
-            Item ocbtalisman = FindItemOnLayer(Layer.Talisman);
-            HerosTalisman heroTalisman = ocbtalisman as HerosTalisman;
-            VeteranKnightsTalisman veteranTalisman = ocbtalisman as VeteranKnightsTalisman;
-
-            if (heroTalisman != null || veteranTalisman != null)
-            {
-                foreach (Item i in Items)
-                {
-                    if (heroTalisman != null)
-                        heroTalisman.HueItem(i);
-                    if (veteranTalisman != null)
-                        veteranTalisman.HueItem(i);
-                }
-            }
+            }            
         }
 
         public override void OnItemRemoved(Item item)
@@ -4147,13 +3706,11 @@ namespace Server.Mobiles
 
             if (ns != null)
             {
-                if (HasGump(typeof(ResurrectGump)) || HasGump(typeof(Server.Custom.Paladin.MurdererDeathGump)))
+                if (HasGump(typeof(ResurrectGump)) )
                 {
-                    if (Alive)
-                    {
-                        CloseGump(typeof(ResurrectGump));
-                        CloseGump(typeof(Server.Custom.Paladin.MurdererDeathGump));
-                    }
+                    if (Alive)                    
+                        CloseGump(typeof(ResurrectGump));   
+
                     else
                     {
                         SendLocalizedMessage(500111); // You are frozen and cannot move.
@@ -5303,62 +4860,12 @@ namespace Server.Mobiles
             if (m_SentHonorContext != null)
                 m_SentHonorContext.OnSourceBeneficialAction(target);
 
-            if (!(this.Region is BattlegroundRegion))
-            {
-                PlayerMobile pm_Target = target as PlayerMobile;
-
-                if (Paladin && pm_Target != null)
-                {
-                    if (pm_Target.Murderer)
-                    {
-                        SendMessage(PaladinEvents.paladinDismissalTextHue, "Your aiding of a murderer is counterproductive towards the goal of The Order. You are no longer a Paladin of Trinsic, but may seek reinstatement in " + PaladinEvents.PaladinAidingMurdererDays .ToString() + " days time.");
-
-                        if (PaladinEvents.RemoveAllPaladinsOnAccount(this, PaladinEvents.PaladinAidingMurdererDays))
-                            SendMessage(PaladinEvents.paladinDismissalTextHue, "All of your paladin associates have been dismissed from the guild.");
-                    }                    
-                }
-
-                if (target is BaseFactionGuard)
-                {
-                    var guard = target as BaseFactionGuard;
-                    if (CitizenshipPlayerState != null && guard.Town != null)
-                    {
-                        if (Citizenship == guard.Town)
-                            AssistedOwnMilitia = true;
-                    }
-                }
-
-                if (pm_Target != null)
-                {
-                    Town targetTown = pm_Target.Citizenship;
-                    bool militia = pm_Target.IsInMilitia;
-
-                    if (Citizenship != null && targetTown != null && (militia || pm_Target.AssistedOwnMilitia))
-                    {
-                        if (Citizenship == targetTown)
-                            AssistedOwnMilitia = true;
-                    }
-                }
-
-            }
-
             base.OnBeneficialAction(target, isCriminal);
         }
 
         public override void CriminalAction(bool message)
         {
             base.CriminalAction(message);
-
-            //Not Currently on Paladin Probation
-            if (Paladin && m_PaladinProbationExpiration < DateTime.UtcNow && !(Region is UOACZRegion))
-            {
-                PlaySound(0x5CE);                
-                Effects.SendLocationParticles(EffectItem.Create(Location, Map, TimeSpan.FromSeconds(0.25)), 0x3709, 10, 30, 2051, 0, 5029, 0);
-
-                SendMessage(PaladinEvents.paladinDismissalTextHue, "Your criminal act is counterproductive towards the goal of The Order and you are now on probation for the next " + PaladinEvents.PaladinCriminalPunishmentHours + " hours.");
-
-                m_PaladinProbationExpiration = DateTime.UtcNow + TimeSpan.FromHours(PaladinEvents.PaladinCriminalPunishmentHours);
-            }
         }
 
         public override bool CheckDisrupt(int damage, Mobile from)
@@ -5414,10 +4921,7 @@ namespace Server.Mobiles
 
             if (willKill && from is PlayerMobile)
                 Timer.DelayCall(TimeSpan.FromSeconds(10), new TimerCallback(((PlayerMobile)from).RecoverAmmo));
-
-            if (Paladin == true)
-                PaladinEvents.PaladinOnHit(amount, from, this, willKill);
-
+            
             if (this.Region is BattlegroundRegion && from is PlayerMobile)
             {
                 Battleground bg = ((BattlegroundRegion)this.Region).Battleground;
@@ -5425,47 +4929,9 @@ namespace Server.Mobiles
                     bg.CurrentScoreboard.UpdateScore(from as PlayerMobile, Categories.Damage, amount);
             }
 
-            //IPY OC LEADERBOARD (Sean)
-            var fromPlayer = from as PlayerMobile;
-            if (fromPlayer != null && fromPlayer.IsInMilitia && this.IsInMilitia && this.Citizenship != fromPlayer.Citizenship)
-            {
-                Custom.Townsystem.Town town = Custom.Townsystem.Town.FromRegion(from.Region);
-                if (town != null && Custom.Townsystem.OCTimeSlots.IsActiveTown(town))
-                {
-                    Server.Custom.Townsystem.OCLeaderboard.RegisterDamage(from, amount);
-                }
-            }
-
             base.OnDamage(amount, from, willKill);
         }
-
-        public virtual void AddToSpellTolerance(String spellName, Mobile from)
-        {
-            double expirationDuration = creatureSpellExpiration;
-
-            //Ignore Self Damage
-            if (from == this)
-                return;
-
-            if (from is PlayerMobile)
-                expirationDuration = playerSpellExpiration;
-
-            SpellEntry spellEntry = new SpellEntry(spellName, from, DateTime.UtcNow + TimeSpan.FromSeconds(expirationDuration));
-
-            m_SpellEntries.Add(spellEntry);
-
-            if (m_SpellToleranceTimer == null)
-                m_SpellToleranceTimer = new SpellToleranceTimer(this);
-
-            if (!m_SpellToleranceTimer.Running)
-                m_SpellToleranceTimer.Start();
-        }
-
-        public const double playerSpellExpiration = 1; //Length in seconds a Player Spell Exists in Spell Tolerance List
-        public const double creatureSpellExpiration = 1; //Length in seconds a Creature Spell Exists in Spell Tolerance List
-
-        public SpellToleranceTimer m_SpellToleranceTimer;
-
+                
         public PlayerCombatTimer m_PlayerCombatTimer;
 
         public class PlayerCombatTimer : Timer
@@ -5490,51 +4956,6 @@ namespace Server.Mobiles
                 {
                     BaseDungeonArmor.CheckForAndUpdateDungeonArmorProperties(m_Player);
                     Stop();
-                }
-            }
-        }
-
-        public class SpellToleranceTimer : Timer
-        {
-            private PlayerMobile m_Owner;
-
-            public SpellToleranceTimer(PlayerMobile player): base(TimeSpan.Zero, TimeSpan.FromSeconds(1))
-            {
-                m_Owner = player;
-                Priority = TimerPriority.TwoFiftyMS;
-            }
-
-            protected override void OnTick()
-            {
-                //Entries to Remove
-                List<SpellEntry> entriesToRemove = new List<SpellEntry>();
-
-                if (m_Owner.m_SpellEntries != null)
-                {
-                    for (int a = 0; a < m_Owner.m_SpellEntries.Count; a++)
-                    {
-                        SpellEntry entry = m_Owner.m_SpellEntries[a];
-
-                        //Spell Expired
-                        if (entry.m_Expiration <= DateTime.UtcNow)
-                        {
-                            entriesToRemove.Add(entry);
-                        }
-                    }
-
-                    //Spell Expired: Remove From Entries List
-                    int entriesCount = entriesToRemove.Count;
-
-                    for (int a = 0; a < entriesCount; a++)
-                    {
-                        m_Owner.m_SpellEntries.Remove(entriesToRemove[a]);
-                    }
-
-                    //No Active Spells Left: Stop Timer
-                    if (m_Owner.m_SpellEntries.Count == 0)
-                    {
-                        this.Stop();
-                    }
                 }
             }
         }
@@ -5765,9 +5186,7 @@ namespace Server.Mobiles
 
             RecoverAmmo();
 
-            Custom.Townsystem.Faction.HandleDeath(this, base.FindMostRecentDamager(true));
-
-            DropHolding(); // IPY : After townsystem handle death
+            DropHolding();
 
             return base.OnBeforeDeath();
         }
@@ -5968,8 +5387,8 @@ namespace Server.Mobiles
                 else if (criminal)
                     karmaAward = 50;
 
-                Server.Misc.Titles.AwardFame(g, fameAward, false);
-                Server.Misc.Titles.AwardKarma(g, karmaAward, true);
+                Server.Misc.FameKarmaTitles.AwardFame(g, fameAward, false);
+                Server.Misc.FameKarmaTitles.AwardKarma(g, karmaAward, true);
             }
 
             if (NpcGuild == NpcGuild.ThievesGuild)
@@ -5978,16 +5397,6 @@ namespace Server.Mobiles
             bool justiceDisabledZone = IsInArenaFight || (Region is BattlegroundRegion) || DuelContext != null ||
                                         SpellHelper.InBuccs(Map, Location) || SpellHelper.InYewOrcFort(Map, Location) || SpellHelper.InYewCrypts(Map, Location) ||
                                         GreyZoneTotem.InGreyZoneTotemArea(Location, Map) || Hotspot.InHotspotArea(Location, Map, true);
-            //Has Valid Killer
-            if (killers.Count > 0)
-            {
-                //Justice-Enabled Zone
-                if (!justiceDisabledZone && !(Region is UOACZRegion))
-                {
-                    Point3D randomLocation = BaseOrb.GetOrbWildernessRandomLocation(Location, Map);
-                    new ReportMurdererGump.GumpTimer(this, DeathEventType.Player, killers, DateTime.UtcNow, Location, randomLocation, Map).Start();
-                }
-            }
 
             #region UOACZ
            
@@ -6148,11 +5557,7 @@ namespace Server.Mobiles
                 if (playerDamager == null) continue;
                 if (playerDamager.Deleted) continue;
 
-                int damageAmount = pair.Value;                
-
-                //Vengeance 
-                if (Vengeance.HasVengeanceAgainstTarget(playerDamager, this) && !(playerDamager.Region is UOACZRegion))
-                    playerDamager.DecreaseVengeanceEntryPoints(this, Vengeance.DeathPoints);
+                int damageAmount = pair.Value;     
 
                 //Determine Claims
                 totalDamage += damageAmount;
@@ -6283,182 +5688,6 @@ namespace Server.Mobiles
                     killedByMurderer = true;
             }
 
-            //Player is Murderer
-            if (Murderer && !justiceDisabledZone && !(Region is UOACZRegion))
-            {
-                //Count as Killed By Paladin
-                if (killedByPaladin)
-                {
-                    int punishableCounts = (ShortTermMurders - 5);
-
-                    //Has New Punishable Murder Counts
-                    if (punishableCounts >= 1)
-                    {
-                        m_MurdererDeathGumpNeeded = true;
-
-                        Timer.DelayCall(TimeSpan.FromSeconds(2), delegate { this.SendMessage("You have been slain by a Paladin!"); });
-
-                        int penanceDurationMinutes = PaladinEvents.minimumPaladinPenanceDuration + (int)((double)punishableCounts * (double)PaladinEvents.penancePerMurderCount);
-
-                        if (Citizenship != null && Citizenship.HasActiveBuff(Custom.Townsystem.CitizenshipBuffs.Reprieve))
-                            penanceDurationMinutes = (int)((double)penanceDurationMinutes * 0.90);
-
-                        if (penanceDurationMinutes > PaladinEvents.maximumPenanceDuration)
-                            penanceDurationMinutes = PaladinEvents.maximumPenanceDuration;
-
-                        //Already in Penance
-                        if (PenanceExpiration > DateTime.UtcNow)
-                            PenanceExpiration = PenanceExpiration + TimeSpan.FromMinutes(penanceDurationMinutes);
-                        else
-                            PenanceExpiration = DateTime.UtcNow + TimeSpan.FromMinutes(penanceDurationMinutes);
-                                                
-                        List<Mobile> m_Killers = new List<Mobile>();
-                        
-                        //Paladin Rewards: Highest Damaging Paladin 
-                        PaladinEvents.PaladinKillMurdererResult(highestPaladinDamager, this, true, Location, Map);
-
-                        //Whom to Assign Credit
-                        KilledByPaladin = true;
-                        m_LastPlayerKilledBy = highestPaladinDamager;
-
-                        m_Killers.Add(highestPaladinDamager);
-
-                        //Send Murderer Death Gump: Final Selections for Discounts
-                        Timer.DelayCall(TimeSpan.FromSeconds(1), delegate { CloseAllGumps(); });
-                        Timer.DelayCall(TimeSpan.FromSeconds(1.5), delegate
-                        {
-                            SendGump(new Custom.Paladin.MurdererDeathGump(this, 1));
-                        });
-
-                        //Paladin Rewards: Other Paladin Damagers
-                        foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
-                        {
-                            if (pair.Key == null) continue;
-
-                            PlayerMobile otherPlayer = pair.Key;
-
-                            if (otherPlayer == null)
-                                continue;
-
-                            int damageAmount = pair.Value;
-
-                            if (otherPlayer.Paladin && damageAmount < MinIndividualDamageRequiredForDeathClaim)                            
-                                otherPlayer.SendMessage("You assist in the apprehension of the murderer, however your individual contribution was not significant enough to warrant a reward from The Order.");
-                            
-                            else if (otherPlayer != highestPaladinDamager && otherPlayer.Paladin && otherPlayer.PaladinProbationExpiration < DateTime.UtcNow)
-                            {
-                                PaladinEvents.PaladinKillMurdererResult(otherPlayer, this, false, Location, Map);
-                                m_Killers.Add(otherPlayer);
-                            }
-                        }
-
-                        Point3D randomLocation = BaseOrb.GetOrbWildernessRandomLocation(Location, Map);
-                        DeathEventEntry deathEventEntry = new DeathEventEntry(this, DeathEventType.Murderer, m_Killers, DateTime.UtcNow, Location, randomLocation, Map);
-
-                        PaladinEvents.AddDeathEventEntry(deathEventEntry);                        
-                    }
-
-                    else
-                    {
-                        Timer.DelayCall(TimeSpan.FromSeconds(2), delegate { this.SendMessage("You have been slain by a Paladin, however you have not commited any recent crimes, and therefore receive no punishment."); });
-
-                        highestPaladinDamager.SendMessage("You slay the murderer, however they have recently paid restitution for their crimes and are of no further interest to the Order of the Silver Serpent.");
-
-                        foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
-                        {
-                            if (pair.Key == null) continue;
-
-                            PlayerMobile otherPlayer = pair.Key;
-                            int damageAmount = pair.Value;
-
-                            if (otherPlayer != highestPaladinDamager && otherPlayer.Paladin && otherPlayer.PaladinProbationExpiration < DateTime.UtcNow)
-                                otherPlayer.SendMessage("You assist in the apprehension of the murderer, however they have recently paid restitution for their crimes and are of no further interest to the Order of the Silver Serpent.");
-                        }
-                    }
-                }
-
-                //Not Enough Paladin Damage to Qualify as Paladin Killed
-                else
-                {
-                    foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
-                    {
-                        PlayerMobile player = pair.Key;
-
-                        if (player.Paladin && player.PaladinProbationExpiration < DateTime.UtcNow)
-                            player.SendMessage("The vile murderer is slain, however, Paladins of the Order did not contribute enough in their actions to claim responsibility towards their death.");
-                    }
-                }
-            }
-
-            //Player is Paladin
-            if (Paladin && !justiceDisabledZone && !(Region is UOACZRegion))
-            {
-                //Killed By a Murderer
-                if (killedByMurderer)
-                {
-                    Timer.DelayCall(TimeSpan.FromSeconds(2), delegate { this.SendMessage("You have been slain by a Murderer!"); });
-
-                    int dishonor = PaladinEvents.dishonorDuration;
-
-                    if (Citizenship != null && Citizenship.HasActiveBuff(Custom.Townsystem.CitizenshipBuffs.Reprieve))
-                        dishonor = (int)((double)dishonor * 0.9);
-
-                    //Already in Penance
-                    if (PenanceExpiration > DateTime.UtcNow)
-                        PenanceExpiration = PenanceExpiration + TimeSpan.FromMinutes(dishonor);
-                    else
-                        PenanceExpiration = DateTime.UtcNow + TimeSpan.FromMinutes(dishonor);
-
-                    List<Mobile> m_Killers = new List<Mobile>();
-
-                    //Highest Damaging Murderer 
-                    MurdererEvents.MurdererKillPaladinResult(highestMurdererDamager, this, true);
-
-                    highestMurdererDamager.m_PaladinsKilled.Add(this);
-
-                    //Whom to Assign Credit
-                    m_LastPlayerKilledBy = highestMurdererDamager;
-
-                    m_Killers.Add(highestMurdererDamager);
-
-                    //Other Murderer Damagers
-                    foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
-                    {
-                        if (pair.Key == null) continue;
-
-                        PlayerMobile otherPlayer = pair.Key;
-
-                        int damageAmount = pair.Value;
-
-                        if (damageAmount < MinIndividualDamageRequiredForDeathClaim)
-                            continue;
-
-                        if (otherPlayer.Murderer && otherPlayer != highestMurdererDamager)
-                        {
-                            MurdererEvents.MurdererKillPaladinResult(otherPlayer, this, false);
-
-                            m_Killers.Add(otherPlayer);
-                            otherPlayer.m_PaladinsKilled.Add(this);
-                        }
-                    }
-
-                    Point3D randomLocation = BaseOrb.GetOrbWildernessRandomLocation(Location, Map);
-                    DeathEventEntry deathEventEntry = new DeathEventEntry(this, DeathEventType.Paladin, m_Killers, DateTime.UtcNow, Location, randomLocation, Map);
-                    PaladinEvents.AddDeathEventEntry(deathEventEntry);
-                }
-
-                else
-                {
-                    foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
-                    {
-                        PlayerMobile player = pair.Key;
-
-                        if (player.Murderer)
-                            player.SendMessage("The cowardly paladin is slain, however, you do not feel that you can rightly claim responsibility for their well-deserved death.");
-                    }
-                }
-            }
-            
             //Last Mobile to Damage Player
             Mobile killer = FindMostRecentDamager(true);
 
@@ -6472,17 +5701,6 @@ namespace Server.Mobiles
 
                 if (master != null)
                     killer = master;
-            }
-
-            if (highestPlayerDamager != null)
-            {
-                // check for totem on killer
-                Item finisher = highestPlayerDamager.FindItemOnLayer(Layer.Talisman);
-
-                if (finisher != null && finisher is FinisherTotem && !(Region is UOACZRegion))
-                {
-                    ((FinisherTotem)finisher).PerformFinisher(Location, Map);
-                }                
             }
 
             //Player Enhancement Customization: Carnage and Violent Death
@@ -6890,12 +6108,6 @@ namespace Server.Mobiles
 
             TitleColorState = new PlayerTitleColors();
             
-            Timer.DelayCall(TimeSpan.FromSeconds(1), delegate
-            {
-                if (CheckAccountForPenance(this) && IsInTempStatLoss && (Murderer || Paladin))
-                    ApplyTempSkillLoss();
-            });
-
             m_SpecialAbilityEffectEntries = new List<SpecialAbilityEffectEntry>();
             m_SpecialAbilityEffectEntriesToAdd = new List<SpecialAbilityEffectEntry>();
             m_SpecialAbilityEffectEntriesToRemove = new List<SpecialAbilityEffectEntry>();
@@ -6939,16 +6151,7 @@ namespace Server.Mobiles
             }
 
             else if (type == MessageType.Alliance)
-            {
-
-                if (Citizenship != null && ShowTownChat)
-                {
-                    Citizenship.AllianceChat(this, hue, text);
-                    SendToStaffMessage(this, "[Alliance]: {0}", text);
-                }
-
-                else
-                    SendLocalizedMessage(1071020); // You are not in an alliance!                
+            {               
             }
 
             else            
@@ -7432,13 +6635,7 @@ namespace Server.Mobiles
             get
             {
                 int luck = 0;
-                if (Citizenship != null && Citizenship.HasActiveBuff(Custom.Townsystem.CitizenshipBuffs.Luck))
-                    luck += 5;
-                if (Guild != null && Guild is Guild)
-                {
-                    var pguild = Guild as Guild;
-                    luck += (int)pguild.Level;
-                }
+
                 return luck;
             }
         }
@@ -7454,12 +6651,7 @@ namespace Server.Mobiles
 
                 return false;
             }
-
-            //EXILES LIST
-            Custom.Townsystem.Town t = Custom.Townsystem.Town.FromLocation(target.Location, target.Map);
-            if (t != null && t.Exiles.Contains(target))
-                return false;
-
+            
             if (target is BaseCreature && ((BaseCreature)target).InitialInnocent && !((BaseCreature)target).Controlled)
                 return false;
 
@@ -7514,907 +6706,7 @@ namespace Server.Mobiles
         public Engines.BulkOrders.BOBFilter BOBFilter
         {
             get { return m_BOBFilter; }
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            CreatedOn = DateTime.UtcNow;
-
-            m_SpecialAbilityEffectEntries = new List<SpecialAbilityEffectEntry>();
-            m_SpecialAbilityEffectEntriesToAdd = new List<SpecialAbilityEffectEntry>();
-            m_SpecialAbilityEffectEntriesToRemove = new List<SpecialAbilityEffectEntry>();
-
-            m_PlayerClassRansomedItemsAvailable = new List<PlayerClassItemRansomEntry>();
-
-            //Safety Measures
-            Squelched = false;
-            Frozen = false;
-            CantWalk = false;
-
-            if (version < 69)
-                ShowTownChat = true;            
-
-            //---------------------------
-
-            m_PaladinsKilled = new List<Mobile>();
-
-            if (version >= 88)
-            {
-                m_EventCalendarAccount = (EventCalendarAccount)reader.ReadItem() as EventCalendarAccount;
-                m_BonusSkillCap = reader.ReadInt();
-                m_MHSPlayerEntry = (MHSPlayerEntry)reader.ReadItem() as MHSPlayerEntry;
-            }
-
-            if (version >= 87)
-            {
-                m_ShowHealing = (DamageDisplayMode)reader.ReadInt();
-            }
-
-            if (version >= 86)
-            {
-                m_WorldChatAccountEntry = (WorldChatAccountEntry)reader.ReadItem() as WorldChatAccountEntry;
-            }
-
-            if (version >= 85)
-            {
-                m_UOACZAccountEntry = (UOACZAccountEntry)reader.ReadItem() as UOACZAccountEntry;
-            }
-
-            if (version >= 84)
-            {
-                m_HideRestrictionExpiration = reader.ReadDateTime();
-            }
-
-            m_peacemakingMode = PeacemakingModeEnum.Combat; //Default value
-            if (version >= 83)
-            {
-                m_peacemakingMode = (PeacemakingModeEnum)reader.ReadInt();
-            }
-
-            if (version >= 82)
-            {
-                m_HenchmenSpeechDisplayMode = (HenchmenSpeechDisplayMode)reader.ReadInt();
-            }
-
-            if (version >= 81)
-            {   
-                m_PowerHourBonus = reader.ReadTimeSpan();
-                m_BankGameTime = reader.ReadTimeSpan();                
-            }
-
-            if (version >= 80)
-            {
-                m_StealthStepsDisplayMode = (StealthStepsDisplayMode)reader.ReadInt();
-                m_ShowAdminFilterText = reader.ReadBool();
-            }
-
-            if (version >= 79)
-            {
-                m_TinkerTrapPlacementWindow = reader.ReadDateTime();
-                m_TinkerTrapsPlaced = reader.ReadInt();
-            }
-
-            if (version >= 78)
-            {
-                m_PlayerEnhancementAccountEntry = (PlayerEnhancementAccountEntry)reader.ReadItem() as PlayerEnhancementAccountEntry;
-                m_InfluenceAccountEntry = reader.ReadItem() as InfluenceAccountEntry;
-            }            
-
-            if (version >= 77)
-            {
-                m_ShowFollowerDamageTaken = (DamageDisplayMode)reader.ReadInt();
-            }
-
-            if (version >= 76)
-            {
-                m_PaladinsKilled = reader.ReadStrongMobileList();
-                m_MurdererDeathGumpNeeded = reader.ReadBool();
-            }
-
-            if (version >= 75)
-            {
-            }
-
-            if (version >= 74)
-            {
-                m_RestitutionFeesToDistribute = reader.ReadInt();
-                m_LastPlayerKilledBy = (PlayerMobile)reader.ReadMobile();
-            }
-
-            if (version >= 73)
-            {
-                m_PaladinRejoinAllowed = reader.ReadDateTime();
-                m_PaladinProbationExpiration = reader.ReadDateTime();
-            }
-
-            if (version >= 72)
-            {
-                m_LastInstrument = (BaseInstrument)reader.ReadItem();
-            }
-
-            if (version >= 71)
-            {
-                m_ShowDamageTaken = (DamageDisplayMode)reader.ReadInt();
-            }
-
-            if (version >= 70)
-            {
-                m_ShowProvocationDamage = (DamageDisplayMode)reader.ReadInt();
-                m_ShowPoisonDamage = (DamageDisplayMode)reader.ReadInt();
-                m_AutoStealth = reader.ReadBool();
-                m_BoatOccupied = (BaseBoat)reader.ReadItem();
-            }
-
-            if (version >= 69)
-            {
-                ShowTownChat = reader.ReadBool();
-            }
-
-            if (version >= 68)
-            {
-                int ransomEntries = reader.ReadInt();
-
-                for (int a = 0; a < ransomEntries; a++)
-                {
-                    Mobile m_Ransomer = reader.ReadMobile();
-
-                    string str = reader.ReadString();
-                    Type itemType = Type.GetType(str);
-
-                    int m_RansomCost = reader.ReadInt();
-
-                    PlayerClassItemRansomEntry ransomEntry = new PlayerClassItemRansomEntry(m_Ransomer, itemType, m_RansomCost);
-
-                    m_PlayerClassRansomedItemsAvailable.Add(ransomEntry);
-                }
-            }
-
-            if (version >= 67)
-            {
-                KinPaintHue = reader.ReadInt();
-                KinPaintExpiration = reader.ReadDateTime();
-            }
-
-            if (version >= 66)
-            {
-                int specialAbilityEntries = reader.ReadInt();
-
-                for (int a = 0; a < specialAbilityEntries; a++)
-                {
-                    SpecialAbilityEffect effect = (SpecialAbilityEffect)reader.ReadInt();
-                    Mobile owner = reader.ReadMobile();
-                    double value = reader.ReadDouble();
-                    DateTime expiration = reader.ReadDateTime();
-
-                    SpecialAbilityEffectEntry entry = new SpecialAbilityEffectEntry(effect, owner, value, expiration);
-
-                    m_SpecialAbilityEffectEntries.Add(entry);
-                }
-            }
-
-            if (version >= 65)
-            {
-                m_ShowMeleeDamage = (DamageDisplayMode)reader.ReadInt();
-                m_ShowSpellDamage = (DamageDisplayMode)reader.ReadInt();
-                m_ShowFollowerDamage = (DamageDisplayMode)reader.ReadInt();
-
-                m_IsInTempStatLoss = reader.ReadBool();
-                m_RecallRestrictionExpiration = reader.ReadDateTime();
-            }
-
-            if (version >= 64)
-            {
-                m_LastLocation = reader.ReadPoint3D();
-            }
-
-            if (version >= 63)
-            {
-                m_SpyglassAction = (SpyglassAction)reader.ReadInt();
-                m_NextSpyglassActionAllowed = reader.ReadDateTime();
-
-                m_SpyglassAction = Server.Items.SpyglassAction.None;
-            }
-
-            if (version >= 62)
-            {
-                m_PreviousPaladinScore = reader.ReadInt();
-            }
-
-            if (version >= 61)
-            {
-                m_PaladinScore = reader.ReadInt();
-                m_MurdererScore = reader.ReadInt();
-                m_PirateScore = reader.ReadInt();
-            }
-
-            if (version >= 60)
-            {
-                m_UniqueMurders = reader.ReadInt();
-
-                int murderEntriesCount = reader.ReadInt();
-                for (int i = 0; i < murderEntriesCount; ++i)
-                {
-                    PlayerMobile pm_Victim = reader.ReadMobile() as PlayerMobile;
-                    DateTime murderDate = reader.ReadDateTime();
-
-                    if (pm_Victim != null)
-                        DictUniqueMurderEntries.Add(pm_Victim, murderDate);
-                }
-            }
-
-            if (version >= 59)
-            {
-                m_PetBattleUnlocked = reader.ReadBool();
-                LastPetBattleActivity = reader.ReadDateTime();
-            }
-
-            if (version >= 58)
-            {
-                m_SpellEntries = new List<SpellEntry>();
-
-                int spellEntriesCount = reader.ReadInt();
-
-                for (int i = 0; i < spellEntriesCount; ++i)
-                {
-                    String spellName = (String)reader.ReadString();
-                    Mobile from = reader.ReadMobile() as Mobile;
-                    DateTime expiration = (DateTime)reader.ReadDateTime();
-
-                    SpellEntry entry = new SpellEntry(spellName, from, expiration);
-
-                    m_SpellEntries.Add(entry);
-                }
-
-                m_SpellToleranceTimer = new SpellToleranceTimer(this);
-
-                if (m_SpellEntries.Count > 0)
-                {
-                    m_SpellToleranceTimer.Start();
-                }
-            }
-
-            if (version >= 57)
-            {
-                m_VengeanceEntries = new List<VengeanceEntry>();
-
-                int entriesCount = reader.ReadInt();
-
-                for (int i = 0; i < entriesCount; ++i)
-                {
-                    PlayerMobile pm_Owner = reader.ReadMobile() as PlayerMobile;
-                    PlayerMobile pm_Offender = reader.ReadMobile() as PlayerMobile;
-
-                    bool m_Purchasable = reader.ReadBool();
-                    int m_GoldCost = reader.ReadInt();
-                    string m_Message = reader.ReadString();
-
-                    DateTime m_CreationDate = DateTime.UtcNow;
-                    int m_PointsRemaining = VengeanceEntry.PointsRemainingDefault;
-
-                    if (version >= 75)
-                    {
-                        m_CreationDate = reader.ReadDateTime();
-                        m_PointsRemaining = reader.ReadInt();
-                    }
-
-                    bool allowEntry = true;
-                    bool forceCreationDate = false;
-
-                    if (m_CreationDate == DateTime.MinValue)
-                    {
-                        m_CreationDate = DateTime.UtcNow;
-                        forceCreationDate = true;
-                    }                    
-
-                    if (pm_Owner == null)
-                        allowEntry = false;
-
-                    else
-                    {
-                        if (pm_Owner.Deleted)
-                            allowEntry = false;
-                    }
-
-                    if (pm_Offender == null)
-                        allowEntry = false;
-
-                    else
-                    {
-                        if (pm_Offender.Deleted)
-                            allowEntry = false;
-                    }
-
-                    //Contract Has Expired
-                    if (m_CreationDate != DateTime.MinValue && m_CreationDate + VengeanceEntry.ExpirationDuration <= DateTime.UtcNow)
-                        allowEntry = false;
-
-                    if (allowEntry)
-                    {
-                        VengeanceEntry entry = new VengeanceEntry(pm_Owner, pm_Offender, m_Purchasable, m_GoldCost, m_Message, m_CreationDate, m_PointsRemaining);
-                        
-                        m_VengeanceEntries.Add(entry);  
-                      
-                        Timer.DelayCall(TimeSpan.FromMilliseconds(1000), delegate
-                        {
-                            if (this != null && entry != null && forceCreationDate)
-                            {
-                                if (entry.m_Purchasable)
-                                    Vengeance.UpdatePublicVengeanceEntry(entry, false);
-                            }
-                        }); 
-                    }
-                }
-
-                m_RestitutionFee = reader.ReadInt();
-                m_PenanceExpiration = reader.ReadDateTime();
-            }
-
-            if (version >= 56)
-            {
-                m_ParrySpecialAbilityActivated = reader.ReadDateTime();
-            }
-
-            if (version >= 55)
-            {
-                m_NextFireAttempt = reader.ReadDateTime();
-            }
-
-            if (version >= 54)
-            {
-                m_CompanionLastLocation = reader.ReadPoint3D();
-            }
-
-            if (version >= 53)
-            {
-                m_Companion = reader.ReadBool();
-            }
-
-            if (version >= 52)
-            {
-                m_NumGoldCoinsGenerated = reader.ReadInt();
-            }
-
-            if (version >= 51)
-            {
-                m_PowerHourReset = reader.ReadDateTime();
-            }
-
-            if (version >= 50)
-            {
-                m_PeacedUntil = reader.ReadDateTime();
-            }
-
-            if (version >= 49)
-            {
-                CreatedOn = reader.ReadDateTime();
-            }
-
-            if (version >= 48)
-            {
-                TreasuryKeys = (int)reader.ReadUShort();
-                TotalAccumulatedTreasuryKeys = (int)reader.ReadUShort();
-            }
-
-            if (version >= 47)
-            {
-                SelectedTitleColorIndex = (int)reader.ReadByte();
-                SelectedTitleColorRarity = (EColorRarity)reader.ReadByte();
-            }
-
-            if (version >= 46)
-            {
-                TitleColorState = new PlayerTitleColors();
-                TitleColorState.Deserialize(reader);
-            }
-
-            if (version >= 45)
-            {
-                m_UserOptHideFameTitles = reader.ReadBool();
-            }
-
-            if (version >= 44)
-            {
-                int count = reader.ReadInt();
-                if (count > 0)
-                {
-                    PreviousNames = new List<string>();
-                    for (int i = 0; i < count; i++)
-                    {
-                        PreviousNames.Add(reader.ReadString());
-                    }
-                }
-            }
-
-            if (version >= 43)
-            {
-                LoginElapsedTime = reader.ReadTimeSpan();
-            }
-
-            if (version >= 42)
-            {
-                FireDungeonState = Scripts.Custom.FireDungeonPlayerState.Deserialize(reader);
-            }
-
-            if (version >= 41)
-            {
-                DonationPlayerState = Server.Custom.DonationState.Deserialize(reader);
-            }
-
-            if (version >= 40)
-            {
-                m_T2AAccess = reader.ReadDateTime();
-            }
-
-            if (version >= 39)
-            {
-                //Removed
-            }
-
-            if (version >= 38)
-            {
-                m_DateTimeDied = reader.ReadDateTime();
-            }
-
-            if (version >= 37)
-            {
-                SquelchCitizenship = reader.ReadBool();
-            }
-
-            if (version >= 36)
-            {
-                m_PaladinPoints = reader.ReadInt();
-                m_PaladinPointsDecayed = reader.ReadDateTime();
-            }
-
-            if (version >= 35)
-            {
-                int count = reader.ReadInt();
-                for (int i = 0; i < count; ++i)
-                {
-                    string title = reader.ReadString();
-                    m_TitlesPrefix.Add(title);
-                }
-
-                int count2 = reader.ReadInt();
-                for (int i = 0; i < count2; ++i)
-                {
-                    string dummy = reader.ReadString();
-                }
-
-                m_CurrentPrefix = reader.ReadString();
-            }
-
-            if (version >= 34)
-            {               
-            }
-
-            if (version >= 33)
-            {
-                m_minOrderJoinTime = reader.ReadTimeSpan();
-                m_ShortTermMurders = reader.ReadStrongMobileList();
-                m_TimeSpanDied = reader.ReadTimeSpan();
-                m_TimeSpanResurrected = reader.ReadTimeSpan();
-            }
-
-            if (version >= 32)
-            {               
-                m_ActiveSetBonuses = (SetBonus)reader.ReadInt();
-            }
-
-            if (version >= 31)
-            {
-                //Removed: Stat Gains
-                if (51 > version)
-                {
-                    reader.ReadDateTime();
-                    reader.ReadInt();
-                }
-            }
-
-            if (version >= 30)
-            {
-                if (51 > version)
-                {
-                    //Removed: Skill Gain Timers
-                    int count = reader.ReadInt();
-                    for (int i = 0; i < count; ++i)
-                    {
-                        reader.ReadInt();
-                        reader.ReadDateTime();
-                    }
-                }
-
-                if (51 > version)
-                {
-                    //Removed: Skill Gains
-                    int count = reader.ReadInt();
-                    for (int i = 0; i < count; ++i)
-                    {
-                        reader.ReadInt();
-                        reader.ReadInt();
-                    }
-                }
-            }
-
-            if (version >= 29)
-            {
-                //SkillScroll Decay timer for LastSkillGain deserialize
-
-                int count = reader.ReadInt();
-                if (count != 0)
-                {
-                    for (int n = 0; n < count; n++)
-                    {
-                        _StartedLastSkillGain[n] = reader.ReadDateTime();
-
-                        DateTime now = DateTime.UtcNow;
-                        TimeSpan newDelay = now.Subtract(_StartedLastSkillGain[n]);
-
-                        if (newDelay > DecayLastSkillGain)                        
-                            newDelay = TimeSpan.Zero;                        
-
-                        _TimerLastSkillGain[n] = Timer.DelayCall(newDelay, new TimerCallback(deleteLastSkillGain));
-                    }
-                }             
-            }
-
-            if (version >= 28)
-            {
-                //SkillScroll LastSkillGain Deserialize
-                
-                int count = reader.ReadInt();
-                if (count != 0)
-                {
-                    int skillNum;
-                    for (int n = 0; n < count; n++)
-                    {
-                        skillNum = reader.ReadInt();
-                        LastSkillGain[n] = Skills[skillNum];
-                    }
-
-                    // if no timer delete skill
-                    DateTime badDate = DateTime.Parse("1/1/0001 12:00:00 AM");
-
-                    for (int n = 0; n < count; n++)
-                    {
-                        if (_StartedLastSkillGain[n] == null || _StartedLastSkillGain[n].Equals(badDate))
-                        
-                            deleteLastSkillGain();                        
-                    }
-                }
-            }
-
-            if (version >= 27)
-            {
-                m_AnkhNextUse = reader.ReadDateTime();
-            }
-
-            if (version >= 26)
-            {
-                m_AutoStabled = reader.ReadStrongMobileList();
-            }
-
-            if (version >= 25)
-            {
-                int recipeCount = reader.ReadInt();
-
-                if (recipeCount > 0)
-                {
-                    m_AcquiredRecipes = new Dictionary<int, bool>();
-
-                    for (int i = 0; i < recipeCount; i++)
-                    {
-                        int r = reader.ReadInt();
-                        if (reader.ReadBool())	//Don't add in recipies which we haven't gotten or have been removed
-                            m_AcquiredRecipes.Add(r, true);
-                    }
-                }
-            }
-
-            if (version >= 24)
-            {
-                m_LastHonorLoss = reader.ReadDeltaTime();
-            }
-
-            if (version >= 23)
-            {
-                m_ChampionTitles = new ChampionTitleInfo(reader);
-            }
-
-            if (version >= 22)
-            {
-                m_LastValorLoss = reader.ReadDateTime();
-                m_Step = (QuestStep)reader.ReadInt();
-            }
-
-            if (version >= 21)
-            {
-                m_ToTItemsTurnedIn = reader.ReadEncodedInt();
-                m_ToTTotalMonsterFame = reader.ReadInt();
-                m_LastTarget = (Serial)reader.ReadInt();
-            }
-
-            if (version >= 20)
-            {
-                m_AllianceMessageHue = reader.ReadEncodedInt();
-                m_GuildMessageHue = reader.ReadEncodedInt();
-               
-                if (CanReprieveBool)
-                {
-                    m_CanReprieve = 0;
-                    reader.ReadInt();
-                }
-
-                else
-                    m_CanReprieve = reader.ReadInt();
-
-                m_LastDeathByPlayer = reader.ReadDateTime();
-            }
-
-            if (version >= 19)
-            {
-                int rank = reader.ReadEncodedInt();
-                int maxRank = Guilds.RankDefinition.Ranks.Length - 1;
-
-                if (rank > maxRank)
-                    rank = maxRank;
-
-                m_GuildRank = Guilds.RankDefinition.Ranks[rank];
-                m_LastOnline = reader.ReadDateTime();
-            }
-
-            if (version >= 18)
-            {
-                m_SolenFriendship = (SolenFriendship)reader.ReadEncodedInt();
-            }
-
-            if (version >= 17)
-            {
-                //Removed
-            }
-
-            if (version >= 16)
-            {
-                m_Quest = QuestSerializer.DeserializeQuest(reader);
-
-                if (m_Quest != null)
-                    m_Quest.From = this;
-
-                int count = reader.ReadEncodedInt();
-
-                if (count > 0)
-                {
-                    m_DoneQuests = new List<QuestRestartInfo>();
-
-                    for (int i = 0; i < count; ++i)
-                    {
-                        Type questType = QuestSerializer.ReadType(QuestSystem.QuestTypes, reader);
-                        DateTime restartTime;
-
-                        if (version < 17)
-                            restartTime = DateTime.MaxValue;
-
-                        else
-                            restartTime = reader.ReadDateTime();
-
-                        m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
-                    }
-                }
-
-                m_Profession = reader.ReadEncodedInt();
-            }
-
-            if (version >= 15)
-            {
-                m_LastCompassionLoss = reader.ReadDeltaTime();
-                m_NoNewTimer = reader.ReadBool();
-            }
-
-            if (version >= 14)
-            {
-                m_CompassionGains = reader.ReadEncodedInt();
-
-                if (m_CompassionGains > 0)
-                    m_NextCompassionDay = reader.ReadDeltaTime();
-
-                NextBountyNote = reader.ReadTimeSpan();
-            }
-
-            if (version >= 13)
-            {
-                //Removed
-            }
-
-            if (version >= 12)
-            {
-                m_BOBFilter = new Engines.BulkOrders.BOBFilter(reader);
-            }
-
-            if (version >= 11)
-            {
-                if (version < 13)
-                {
-                    List<Item> payed = reader.ReadStrongItemList();
-
-                    for (int i = 0; i < payed.Count; ++i)
-                        payed[i].PayedInsurance = true;
-                }
-            }
-
-            if (version >= 10)
-            {
-                if (reader.ReadBool())
-                {
-                    m_HairModID = reader.ReadInt();
-                    m_HairModHue = reader.ReadInt();
-                    m_BeardModID = reader.ReadInt();
-                    m_BeardModHue = reader.ReadInt();
-                }
-            }
-
-            if (version >= 9)
-            {
-                SavagePaintExpiration = reader.ReadTimeSpan();
-            }
-
-            if (version >= 8)
-            {
-                m_NpcGuild = (NpcGuild)reader.ReadInt();
-                m_NpcGuildJoinTime = reader.ReadDateTime();
-                m_NpcGuildGameTime = reader.ReadTimeSpan();
-            }
-
-            if (version >= 7)
-            {
-                m_PermaFlags = reader.ReadStrongMobileList();
-            }
-
-            if (version >= 6)
-            {
-                NextTailorBulkOrder = reader.ReadTimeSpan();
-            }
-
-            if (version >= 5)
-            {
-                NextSmithBulkOrder = reader.ReadTimeSpan();
-            }
-
-            if (version >= 4)
-            {
-                m_LastJusticeLoss = reader.ReadDeltaTime();
-                m_JusticeProtectors = reader.ReadStrongMobileList();
-            }
-
-            if (version >= 3)
-            {
-                m_LastSacrificeGain = reader.ReadDeltaTime();
-                m_LastSacrificeLoss = reader.ReadDeltaTime();
-                m_AvailableResurrects = reader.ReadInt();
-            }
-
-            if (version >= 2)
-            {
-                m_Flags = (PlayerFlag)reader.ReadInt();
-            }
-
-            if (version >= 1)
-            {
-                m_LongTermElapse = reader.ReadTimeSpan();
-                m_ShortTermElapse = reader.ReadTimeSpan();
-                m_GameTime = reader.ReadTimeSpan();
-            }
-
-            if (version >= 0)
-            {
-                m_AutoStabled = new List<Mobile>();
-            }
-
-            //----------------
-
-            PetBattleCreatureCollection = new PetBattleCreatureCollection();
-
-            // Professions weren't verified on 1.0 RC0
-            if (!CharacterCreation.VerifyProfession(m_Profession))
-                m_Profession = 0;
-
-            if (m_PermaFlags == null)
-                m_PermaFlags = new List<Mobile>();
-
-            if (m_JusticeProtectors == null)
-                m_JusticeProtectors = new List<Mobile>();
-
-            if (m_BOBFilter == null)
-                m_BOBFilter = new Engines.BulkOrders.BOBFilter();
-
-            if (m_GuildRank == null)
-                m_GuildRank = Guilds.RankDefinition.Member;	//Default to member if going from older version to new version (only time it should be null)
-
-            if (m_LastOnline == DateTime.MinValue && Account != null)
-                m_LastOnline = ((Account)Account).LastLogin;
-
-            if (m_ChampionTitles == null)
-                m_ChampionTitles = new ChampionTitleInfo();
-
-            if (AccessLevel > AccessLevel.Player)
-                m_IgnoreMobiles = true;
-
-            if (TitleColorState == null)
-                TitleColorState = new PlayerTitleColors();
-
-            List<Mobile> list = this.Stabled;
-
-            m_LastPassiveTamingSkillGain = DateTime.MinValue;
-
-            for (int i = 0; i < list.Count; ++i)
-            {
-                BaseCreature bc = list[i] as BaseCreature;
-
-                if (bc != null)
-                {
-                    bc.IsStabled = true;
-                    bc.StabledBy = this;
-
-                    bc.OwnerAbandonTime = DateTime.MaxValue;
-                }
-            }
-
-            CheckAtrophies(this);
-
-            if (Hidden)	//Hiding is the only buff where it has an effect that's serialized.
-                AddBuff(new BuffInfo(BuffIcon.HidingAndOrStealth, 1075655));
-
-            //Reapply Kin Paint
-            if (KinPaintHue != -1 && KinPaintExpiration > DateTime.UtcNow)
-            {
-                HueMod = KinPaintHue;
-            }
-
-            Timer.DelayCall(TimeSpan.FromSeconds(2), delegate
-            {
-                if (CheckAccountForPenance(this) && IsInTempStatLoss && (Murderer || Paladin))
-                    ApplyTempSkillLoss();
-
-                else if (!CheckAccountForPenance(this) && IsInTempStatLoss)
-                    IsInTempStatLoss = false;
-            });
-
-            if (Spectating)
-            {
-                if (Region is BattlegroundRegion)
-                {
-                    SpectatingTimer = new SpectatorTimer(this);
-                    SpectatingTimer.Start();
-                }
-                else
-                {
-                    Spectating = false;
-                }
-            }
-
-            if (!Alive)
-            {
-                StartGhostScoutTimer();
-            }
-
-            if (!(Region.Find(LogoutLocation, LogoutMap) is GuardedRegion))
-            {
-                // crash protection
-                Hidden = true;
-                Poison = null;
-            }
-
-            if (Region.Find(LogoutLocation, LogoutMap) is UOACZRegion)
-                Hidden = false;
-
-            if (LastPlayerCombatTime + PlayerCombatExpirationDelay > DateTime.UtcNow)
-            {
-                m_PlayerCombatTimer = new PlayerCombatTimer(this);
-                m_PlayerCombatTimer.Start();
-            }            
-        }
+        }        
 
         private GhostScoutingTimer m_GhostScoutTimer;
 
@@ -8462,9 +6754,10 @@ namespace Server.Mobiles
             CheckAtrophies(this);
 
             base.Serialize(writer);
-
+                        
             writer.Write((int)88); //Version
             
+            /*
             //Version 88
             writer.Write(m_EventCalendarAccount);
             writer.Write(m_BonusSkillCap);
@@ -8537,15 +6830,6 @@ namespace Server.Mobiles
             writer.Write(ShowTownChat);
 
             //Version 68
-            int playerClassRansomedItemsAvailable = m_PlayerClassRansomedItemsAvailable.Count;
-            writer.Write(playerClassRansomedItemsAvailable);
-
-            for (int a = 0; a < playerClassRansomedItemsAvailable; a++)
-            {
-                writer.Write(m_PlayerClassRansomedItemsAvailable[a].m_Ransomer);
-                writer.Write((string)m_PlayerClassRansomedItemsAvailable[a].m_ItemType.ToString());
-                writer.Write(m_PlayerClassRansomedItemsAvailable[a].m_GoldCost);
-            }
 
             //Version 67
             writer.Write(KinPaintHue);
@@ -8574,16 +6858,11 @@ namespace Server.Mobiles
             //Version 64
             writer.Write(m_LastLocation);
 
-            //Version 63
-            writer.Write((int)m_SpyglassAction);
-            writer.Write(m_NextSpyglassActionAllowed);
+            //Version 63          
 
             //Version 62
-            writer.Write(m_PreviousPaladinScore);
 
             //Version 61
-            writer.Write(m_PaladinScore);
-            writer.Write(m_MurdererScore);
             writer.Write(m_PirateScore);
 
             //Version 60
@@ -8601,31 +6880,8 @@ namespace Server.Mobiles
             writer.Write(LastPetBattleActivity);
 
             //Version 58
-            writer.Write((int)m_SpellEntries.Count);
 
-            foreach (SpellEntry entry in m_SpellEntries)
-            {
-                writer.Write(entry.m_SpellName);
-                writer.Write(entry.m_From);
-                writer.Write(entry.m_Expiration);
-            }
-
-            //Version 57
-            writer.Write((int)m_VengeanceEntries.Count);
-
-            foreach (VengeanceEntry entry in m_VengeanceEntries)
-            {
-                writer.Write(entry.m_Owner);
-                writer.Write(entry.m_Offender);
-
-                writer.Write(entry.m_Purchasable);
-                writer.Write(entry.m_GoldCost);
-                writer.Write(entry.m_Message);
-
-                //Version 75
-                writer.Write(entry.m_CreationDate);
-                writer.Write(entry.m_PointsRemaining);
-            }
+            //Version 57           
 
             writer.Write(m_RestitutionFee);
             writer.Write(m_PenanceExpiration);
@@ -8655,9 +6911,7 @@ namespace Server.Mobiles
             writer.Write(CreatedOn);
 
             // version 48
-            writer.Write((ushort)TreasuryKeys);
-            writer.Write((ushort)TotalAccumulatedTreasuryKeys);
-
+           
             // version 47
             writer.Write((byte)SelectedTitleColorIndex);
             writer.Write((byte)SelectedTitleColorRarity);
@@ -8684,10 +6938,7 @@ namespace Server.Mobiles
 
             //version 43
             writer.Write(LoginElapsedTime);
-
-            //version 42
-            Scripts.Custom.FireDungeonPlayerState.Serialize(writer, this);
-
+            
             //version 41
             Server.Custom.DonationState.Serialize(writer, this);
 
@@ -8887,6 +7138,780 @@ namespace Server.Mobiles
             writer.Write(m_LongTermElapse);
             writer.Write(m_ShortTermElapse);
             writer.Write(this.GameTime);
+            */
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            int version = reader.ReadInt();
+
+            CreatedOn = DateTime.UtcNow;
+
+            m_SpecialAbilityEffectEntries = new List<SpecialAbilityEffectEntry>();
+            m_SpecialAbilityEffectEntriesToAdd = new List<SpecialAbilityEffectEntry>();
+            m_SpecialAbilityEffectEntriesToRemove = new List<SpecialAbilityEffectEntry>();
+
+            //Safety Measures
+            Squelched = false;
+            Frozen = false;
+            CantWalk = false;
+
+            if (version < 69)
+                ShowTownChat = true;
+
+            //---------------------------
+
+            m_PaladinsKilled = new List<Mobile>();
+
+            /*
+            if (version >= 88)
+            {
+                m_EventCalendarAccount = (EventCalendarAccount)reader.ReadItem() as EventCalendarAccount;
+                m_BonusSkillCap = reader.ReadInt();
+                m_MHSPlayerEntry = (MHSPlayerEntry)reader.ReadItem() as MHSPlayerEntry;
+            }
+
+            if (version >= 87)
+            {
+                m_ShowHealing = (DamageDisplayMode)reader.ReadInt();
+            }
+
+            if (version >= 86)
+            {
+                m_WorldChatAccountEntry = (WorldChatAccountEntry)reader.ReadItem() as WorldChatAccountEntry;
+            }
+
+            if (version >= 85)
+            {
+                m_UOACZAccountEntry = (UOACZAccountEntry)reader.ReadItem() as UOACZAccountEntry;
+            }
+
+            if (version >= 84)
+            {
+                m_HideRestrictionExpiration = reader.ReadDateTime();
+            }
+
+            m_peacemakingMode = PeacemakingModeEnum.Combat; //Default value
+            if (version >= 83)
+            {
+                m_peacemakingMode = (PeacemakingModeEnum)reader.ReadInt();
+            }
+
+            if (version >= 82)
+            {
+                m_HenchmenSpeechDisplayMode = (HenchmenSpeechDisplayMode)reader.ReadInt();
+            }
+
+            if (version >= 81)
+            {
+                m_PowerHourBonus = reader.ReadTimeSpan();
+                m_BankGameTime = reader.ReadTimeSpan();
+            }
+
+            if (version >= 80)
+            {
+                m_StealthStepsDisplayMode = (StealthStepsDisplayMode)reader.ReadInt();
+                m_ShowAdminFilterText = reader.ReadBool();
+            }
+
+            if (version >= 79)
+            {
+                m_TinkerTrapPlacementWindow = reader.ReadDateTime();
+                m_TinkerTrapsPlaced = reader.ReadInt();
+            }
+
+            if (version >= 78)
+            {
+                m_PlayerEnhancementAccountEntry = (PlayerEnhancementAccountEntry)reader.ReadItem() as PlayerEnhancementAccountEntry;
+                m_InfluenceAccountEntry = reader.ReadItem() as InfluenceAccountEntry;
+            }
+
+            if (version >= 77)
+            {
+                m_ShowFollowerDamageTaken = (DamageDisplayMode)reader.ReadInt();
+            }
+
+            if (version >= 76)
+            {
+                m_PaladinsKilled = reader.ReadStrongMobileList();
+                m_MurdererDeathGumpNeeded = reader.ReadBool();
+            }
+
+            if (version >= 75)
+            {
+            }
+
+            if (version >= 74)
+            {
+                m_RestitutionFeesToDistribute = reader.ReadInt();
+                m_LastPlayerKilledBy = (PlayerMobile)reader.ReadMobile();
+            }
+
+            if (version >= 73)
+            {
+                m_PaladinRejoinAllowed = reader.ReadDateTime();
+                m_PaladinProbationExpiration = reader.ReadDateTime();
+            }
+
+            if (version >= 72)
+            {
+                m_LastInstrument = (BaseInstrument)reader.ReadItem();
+            }
+
+            if (version >= 71)
+            {
+                m_ShowDamageTaken = (DamageDisplayMode)reader.ReadInt();
+            }
+
+            if (version >= 70)
+            {
+                m_ShowProvocationDamage = (DamageDisplayMode)reader.ReadInt();
+                m_ShowPoisonDamage = (DamageDisplayMode)reader.ReadInt();
+                m_AutoStealth = reader.ReadBool();
+                m_BoatOccupied = (BaseBoat)reader.ReadItem();
+            }
+
+            if (version >= 69)
+            {
+                ShowTownChat = reader.ReadBool();
+            }
+
+            if (version >= 68)
+            {
+            }
+
+            if (version >= 67)
+            {
+                KinPaintHue = reader.ReadInt();
+                KinPaintExpiration = reader.ReadDateTime();
+            }
+
+            if (version >= 66)
+            {
+                int specialAbilityEntries = reader.ReadInt();
+
+                for (int a = 0; a < specialAbilityEntries; a++)
+                {
+                    SpecialAbilityEffect effect = (SpecialAbilityEffect)reader.ReadInt();
+                    Mobile owner = reader.ReadMobile();
+                    double value = reader.ReadDouble();
+                    DateTime expiration = reader.ReadDateTime();
+
+                    SpecialAbilityEffectEntry entry = new SpecialAbilityEffectEntry(effect, owner, value, expiration);
+
+                    m_SpecialAbilityEffectEntries.Add(entry);
+                }
+            }
+
+            if (version >= 65)
+            {
+                m_ShowMeleeDamage = (DamageDisplayMode)reader.ReadInt();
+                m_ShowSpellDamage = (DamageDisplayMode)reader.ReadInt();
+                m_ShowFollowerDamage = (DamageDisplayMode)reader.ReadInt();
+
+                m_IsInTempStatLoss = reader.ReadBool();
+                m_RecallRestrictionExpiration = reader.ReadDateTime();
+            }
+
+            if (version >= 64)
+            {
+                m_LastLocation = reader.ReadPoint3D();
+            }
+
+            if (version >= 63)
+            {
+            }
+
+            if (version >= 62)
+            {
+            }
+
+            if (version >= 61)
+            {
+                m_PirateScore = reader.ReadInt();
+            }
+
+            if (version >= 60)
+            {
+                m_UniqueMurders = reader.ReadInt();
+
+                int murderEntriesCount = reader.ReadInt();
+                for (int i = 0; i < murderEntriesCount; ++i)
+                {
+                    PlayerMobile pm_Victim = reader.ReadMobile() as PlayerMobile;
+                    DateTime murderDate = reader.ReadDateTime();
+
+                    if (pm_Victim != null)
+                        DictUniqueMurderEntries.Add(pm_Victim, murderDate);
+                }
+            }
+
+            if (version >= 59)
+            {
+                m_PetBattleUnlocked = reader.ReadBool();
+                LastPetBattleActivity = reader.ReadDateTime();
+            }
+
+            if (version >= 58)
+            {
+            }
+
+            if (version >= 57)
+            {
+            }
+
+            if (version >= 56)
+            {
+                m_ParrySpecialAbilityActivated = reader.ReadDateTime();
+            }
+
+            if (version >= 55)
+            {
+                m_NextFireAttempt = reader.ReadDateTime();
+            }
+
+            if (version >= 54)
+            {
+                m_CompanionLastLocation = reader.ReadPoint3D();
+            }
+
+            if (version >= 53)
+            {
+                m_Companion = reader.ReadBool();
+            }
+
+            if (version >= 52)
+            {
+                m_NumGoldCoinsGenerated = reader.ReadInt();
+            }
+
+            if (version >= 51)
+            {
+                m_PowerHourReset = reader.ReadDateTime();
+            }
+
+            if (version >= 50)
+            {
+                m_PeacedUntil = reader.ReadDateTime();
+            }
+
+            if (version >= 49)
+            {
+                CreatedOn = reader.ReadDateTime();
+            }
+
+            if (version >= 48)
+            {
+            }
+
+            if (version >= 47)
+            {
+                SelectedTitleColorIndex = (int)reader.ReadByte();
+                SelectedTitleColorRarity = (EColorRarity)reader.ReadByte();
+            }
+
+            if (version >= 46)
+            {
+                TitleColorState = new PlayerTitleColors();
+                TitleColorState.Deserialize(reader);
+            }
+
+            if (version >= 45)
+            {
+                m_UserOptHideFameTitles = reader.ReadBool();
+            }
+
+            if (version >= 44)
+            {
+                int count = reader.ReadInt();
+                if (count > 0)
+                {
+                    PreviousNames = new List<string>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        PreviousNames.Add(reader.ReadString());
+                    }
+                }
+            }
+
+            if (version >= 43)
+            {
+                LoginElapsedTime = reader.ReadTimeSpan();
+            }
+
+            if (version >= 42)
+            {
+            }
+
+            if (version >= 41)
+            {
+                DonationPlayerState = Server.Custom.DonationState.Deserialize(reader);
+            }
+
+            if (version >= 40)
+            {
+                m_T2AAccess = reader.ReadDateTime();
+            }
+
+            if (version >= 39)
+            {
+                //Removed
+            }
+
+            if (version >= 38)
+            {
+                m_DateTimeDied = reader.ReadDateTime();
+            }
+
+            if (version >= 37)
+            {
+                SquelchCitizenship = reader.ReadBool();
+            }
+
+            if (version >= 36)
+            {
+                m_PaladinPoints = reader.ReadInt();
+                m_PaladinPointsDecayed = reader.ReadDateTime();
+            }
+
+            if (version >= 35)
+            {
+                int count = reader.ReadInt();
+                for (int i = 0; i < count; ++i)
+                {
+                    string title = reader.ReadString();
+                    m_TitlesPrefix.Add(title);
+                }
+
+                int count2 = reader.ReadInt();
+                for (int i = 0; i < count2; ++i)
+                {
+                    string dummy = reader.ReadString();
+                }
+
+                m_CurrentPrefix = reader.ReadString();
+            }
+
+            if (version >= 34)
+            {
+            }
+
+            if (version >= 33)
+            {
+                m_minOrderJoinTime = reader.ReadTimeSpan();
+                m_ShortTermMurders = reader.ReadStrongMobileList();
+                m_TimeSpanDied = reader.ReadTimeSpan();
+                m_TimeSpanResurrected = reader.ReadTimeSpan();
+            }
+
+            if (version >= 32)
+            {
+                m_ActiveSetBonuses = (SetBonus)reader.ReadInt();
+            }
+
+            if (version >= 31)
+            {
+                //Removed: Stat Gains
+                if (51 > version)
+                {
+                    reader.ReadDateTime();
+                    reader.ReadInt();
+                }
+            }
+
+            if (version >= 30)
+            {
+                if (51 > version)
+                {
+                    //Removed: Skill Gain Timers
+                    int count = reader.ReadInt();
+                    for (int i = 0; i < count; ++i)
+                    {
+                        reader.ReadInt();
+                        reader.ReadDateTime();
+                    }
+                }
+
+                if (51 > version)
+                {
+                    //Removed: Skill Gains
+                    int count = reader.ReadInt();
+                    for (int i = 0; i < count; ++i)
+                    {
+                        reader.ReadInt();
+                        reader.ReadInt();
+                    }
+                }
+            }
+
+            if (version >= 29)
+            {
+                //SkillScroll Decay timer for LastSkillGain deserialize
+
+                int count = reader.ReadInt();
+                if (count != 0)
+                {
+                    for (int n = 0; n < count; n++)
+                    {
+                        _StartedLastSkillGain[n] = reader.ReadDateTime();
+
+                        DateTime now = DateTime.UtcNow;
+                        TimeSpan newDelay = now.Subtract(_StartedLastSkillGain[n]);
+
+                        if (newDelay > DecayLastSkillGain)
+                            newDelay = TimeSpan.Zero;
+
+                        _TimerLastSkillGain[n] = Timer.DelayCall(newDelay, new TimerCallback(deleteLastSkillGain));
+                    }
+                }
+            }
+
+            if (version >= 28)
+            {
+                //SkillScroll LastSkillGain Deserialize
+
+                int count = reader.ReadInt();
+                if (count != 0)
+                {
+                    int skillNum;
+                    for (int n = 0; n < count; n++)
+                    {
+                        skillNum = reader.ReadInt();
+                        LastSkillGain[n] = Skills[skillNum];
+                    }
+
+                    // if no timer delete skill
+                    DateTime badDate = DateTime.Parse("1/1/0001 12:00:00 AM");
+
+                    for (int n = 0; n < count; n++)
+                    {
+                        if (_StartedLastSkillGain[n] == null || _StartedLastSkillGain[n].Equals(badDate))
+
+                            deleteLastSkillGain();
+                    }
+                }
+            }
+
+            if (version >= 27)
+            {
+                m_AnkhNextUse = reader.ReadDateTime();
+            }
+
+            if (version >= 26)
+            {
+                m_AutoStabled = reader.ReadStrongMobileList();
+            }
+
+            if (version >= 25)
+            {
+                int recipeCount = reader.ReadInt();
+
+                if (recipeCount > 0)
+                {
+                    m_AcquiredRecipes = new Dictionary<int, bool>();
+
+                    for (int i = 0; i < recipeCount; i++)
+                    {
+                        int r = reader.ReadInt();
+                        if (reader.ReadBool())	//Don't add in recipies which we haven't gotten or have been removed
+                            m_AcquiredRecipes.Add(r, true);
+                    }
+                }
+            }
+
+            if (version >= 24)
+            {
+                m_LastHonorLoss = reader.ReadDeltaTime();
+            }
+
+            if (version >= 23)
+            {
+                m_ChampionTitles = new ChampionTitleInfo(reader);
+            }
+
+            if (version >= 22)
+            {
+                m_LastValorLoss = reader.ReadDateTime();
+                m_Step = (QuestStep)reader.ReadInt();
+            }
+
+            if (version >= 21)
+            {
+                m_ToTItemsTurnedIn = reader.ReadEncodedInt();
+                m_ToTTotalMonsterFame = reader.ReadInt();
+                m_LastTarget = (Serial)reader.ReadInt();
+            }
+
+            if (version >= 20)
+            {
+                m_AllianceMessageHue = reader.ReadEncodedInt();
+                m_GuildMessageHue = reader.ReadEncodedInt();
+
+                if (CanReprieveBool)
+                {
+                    m_CanReprieve = 0;
+                    reader.ReadInt();
+                }
+
+                else
+                    m_CanReprieve = reader.ReadInt();
+
+                m_LastDeathByPlayer = reader.ReadDateTime();
+            }
+
+            if (version >= 19)
+            {
+                int rank = reader.ReadEncodedInt();
+                int maxRank = Guilds.RankDefinition.Ranks.Length - 1;
+
+                if (rank > maxRank)
+                    rank = maxRank;
+
+                m_GuildRank = Guilds.RankDefinition.Ranks[rank];
+                m_LastOnline = reader.ReadDateTime();
+            }
+
+            if (version >= 18)
+            {
+                m_SolenFriendship = (SolenFriendship)reader.ReadEncodedInt();
+            }
+
+            if (version >= 17)
+            {
+                //Removed
+            }
+
+            if (version >= 16)
+            {
+                m_Quest = QuestSerializer.DeserializeQuest(reader);
+
+                if (m_Quest != null)
+                    m_Quest.From = this;
+
+                int count = reader.ReadEncodedInt();
+
+                if (count > 0)
+                {
+                    m_DoneQuests = new List<QuestRestartInfo>();
+
+                    for (int i = 0; i < count; ++i)
+                    {
+                        Type questType = QuestSerializer.ReadType(QuestSystem.QuestTypes, reader);
+                        DateTime restartTime;
+
+                        if (version < 17)
+                            restartTime = DateTime.MaxValue;
+
+                        else
+                            restartTime = reader.ReadDateTime();
+
+                        m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
+                    }
+                }
+
+                m_Profession = reader.ReadEncodedInt();
+            }
+
+            if (version >= 15)
+            {
+                m_LastCompassionLoss = reader.ReadDeltaTime();
+                m_NoNewTimer = reader.ReadBool();
+            }
+
+            if (version >= 14)
+            {
+                m_CompassionGains = reader.ReadEncodedInt();
+
+                if (m_CompassionGains > 0)
+                    m_NextCompassionDay = reader.ReadDeltaTime();
+
+                NextBountyNote = reader.ReadTimeSpan();
+            }
+
+            if (version >= 13)
+            {
+                //Removed
+            }
+
+            if (version >= 12)
+            {
+                m_BOBFilter = new Engines.BulkOrders.BOBFilter(reader);
+            }
+
+            if (version >= 11)
+            {
+                if (version < 13)
+                {
+                    List<Item> payed = reader.ReadStrongItemList();
+
+                    for (int i = 0; i < payed.Count; ++i)
+                        payed[i].PayedInsurance = true;
+                }
+            }
+
+            if (version >= 10)
+            {
+                if (reader.ReadBool())
+                {
+                    m_HairModID = reader.ReadInt();
+                    m_HairModHue = reader.ReadInt();
+                    m_BeardModID = reader.ReadInt();
+                    m_BeardModHue = reader.ReadInt();
+                }
+            }
+
+            if (version >= 9)
+            {
+                SavagePaintExpiration = reader.ReadTimeSpan();
+            }
+
+            if (version >= 8)
+            {
+                m_NpcGuild = (NpcGuild)reader.ReadInt();
+                m_NpcGuildJoinTime = reader.ReadDateTime();
+                m_NpcGuildGameTime = reader.ReadTimeSpan();
+            }
+
+            if (version >= 7)
+            {
+                m_PermaFlags = reader.ReadStrongMobileList();
+            }
+
+            if (version >= 6)
+            {
+                NextTailorBulkOrder = reader.ReadTimeSpan();
+            }
+
+            if (version >= 5)
+            {
+                NextSmithBulkOrder = reader.ReadTimeSpan();
+            }
+
+            if (version >= 4)
+            {
+                m_LastJusticeLoss = reader.ReadDeltaTime();
+                m_JusticeProtectors = reader.ReadStrongMobileList();
+            }
+
+            if (version >= 3)
+            {
+                m_LastSacrificeGain = reader.ReadDeltaTime();
+                m_LastSacrificeLoss = reader.ReadDeltaTime();
+                m_AvailableResurrects = reader.ReadInt();
+            }
+
+            if (version >= 2)
+            {
+                m_Flags = (PlayerFlag)reader.ReadInt();
+            }
+
+            if (version >= 1)
+            {
+                m_LongTermElapse = reader.ReadTimeSpan();
+                m_ShortTermElapse = reader.ReadTimeSpan();
+                m_GameTime = reader.ReadTimeSpan();
+            }
+
+            if (version >= 0)
+            {
+                m_AutoStabled = new List<Mobile>();
+            }
+            */
+
+            //----------------
+
+            PetBattleCreatureCollection = new PetBattleCreatureCollection();
+
+            // Professions weren't verified on 1.0 RC0
+            if (!CharacterCreation.VerifyProfession(m_Profession))
+                m_Profession = 0;
+
+            if (m_PermaFlags == null)
+                m_PermaFlags = new List<Mobile>();
+
+            if (m_JusticeProtectors == null)
+                m_JusticeProtectors = new List<Mobile>();
+
+            if (m_BOBFilter == null)
+                m_BOBFilter = new Engines.BulkOrders.BOBFilter();
+
+            if (m_GuildRank == null)
+                m_GuildRank = Guilds.RankDefinition.Member;	//Default to member if going from older version to new version (only time it should be null)
+
+            if (m_LastOnline == DateTime.MinValue && Account != null)
+                m_LastOnline = ((Account)Account).LastLogin;
+
+            if (m_ChampionTitles == null)
+                m_ChampionTitles = new ChampionTitleInfo();
+
+            if (AccessLevel > AccessLevel.Player)
+                m_IgnoreMobiles = true;
+
+            if (TitleColorState == null)
+                TitleColorState = new PlayerTitleColors();
+
+            List<Mobile> list = this.Stabled;
+
+            m_LastPassiveTamingSkillGain = DateTime.MinValue;
+
+            for (int i = 0; i < list.Count; ++i)
+            {
+                BaseCreature bc = list[i] as BaseCreature;
+
+                if (bc != null)
+                {
+                    bc.IsStabled = true;
+                    bc.StabledBy = this;
+
+                    bc.OwnerAbandonTime = DateTime.MaxValue;
+                }
+            }
+
+            CheckAtrophies(this);
+
+            if (Hidden)	//Hiding is the only buff where it has an effect that's serialized.
+                AddBuff(new BuffInfo(BuffIcon.HidingAndOrStealth, 1075655));
+
+            //Reapply Kin Paint
+            if (KinPaintHue != -1 && KinPaintExpiration > DateTime.UtcNow)
+            {
+                HueMod = KinPaintHue;
+            }
+
+            if (Spectating)
+            {
+                if (Region is BattlegroundRegion)
+                {
+                    SpectatingTimer = new SpectatorTimer(this);
+                    SpectatingTimer.Start();
+                }
+                else
+                {
+                    Spectating = false;
+                }
+            }
+
+            if (!Alive)
+            {
+                StartGhostScoutTimer();
+            }
+
+            if (!(Region.Find(LogoutLocation, LogoutMap) is GuardedRegion))
+            {
+                // crash protection
+                Hidden = true;
+                Poison = null;
+            }
+
+            if (Region.Find(LogoutLocation, LogoutMap) is UOACZRegion)
+                Hidden = false;
+
+            if (LastPlayerCombatTime + PlayerCombatExpirationDelay > DateTime.UtcNow)
+            {
+                m_PlayerCombatTimer = new PlayerCombatTimer(this);
+                m_PlayerCombatTimer.Start();
+            }
         }
 
         public static void CheckAtrophies(Mobile m)
@@ -8915,13 +7940,8 @@ namespace Server.Mobiles
                 {
                     --ShortTermMurders;
 
-                    if (wasMurderer)
-                    {
-                        SendMessage("You are no longer a murderer.");
-
-                        PlayerClassPersistance.RemoveTitles(this, PlayerClassPersistance.MurdererTitles);
-                        PlayerClassPersistance.RemovePlayerClassEquipment(this, PlayerClass.Murderer);
-                    }
+                    if (wasMurderer)                    
+                        SendMessage("You are no longer a murderer.");                    
                 }
             }
         }
@@ -8930,182 +7950,7 @@ namespace Server.Mobiles
         {
             m_ShortTermElapse = this.GameTime + TimeSpan.FromHours(MurderCountDecayHours);
         }
-
-        public bool FindVengeanceEntry(PlayerMobile offender)
-        {
-            foreach (VengeanceEntry entry in m_VengeanceEntries)
-            {
-                if (entry.m_Offender == offender && entry.m_PointsRemaining > 0 && entry.m_CreationDate + VengeanceEntry.ExpirationDuration > DateTime.UtcNow)
-                    return true;
-            }
-
-            return false;
-        }
-
-        public VengeanceEntry GetVengeanceEntry(PlayerMobile offender)
-        {
-            foreach (VengeanceEntry entry in m_VengeanceEntries)
-            {
-                if (entry.m_Offender == offender)
-                    return entry;
-            }
-
-            return null;
-        }
-
-        public bool AddVengeanceEntry(PlayerMobile offender, DateTime creationDate, int pointsRemaining)
-        {
-            VengeanceEntry entryOffender = null;
-
-            foreach (VengeanceEntry entry in m_VengeanceEntries)
-            {
-                if (entry.m_Offender == offender)
-                    entryOffender = entry;
-            }
-
-            //No Existing Entry Found
-            if (entryOffender == null)
-            {
-                VengeanceEntry newEntry = new VengeanceEntry(this, offender, false, 0, "", creationDate, pointsRemaining);
-                m_VengeanceEntries.Add(newEntry);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool UpdateVengeanceEntry(VengeanceEntry entryToUpdate, bool createNewEntry)
-        {
-            if (m_VengeanceEntries == null || entryToUpdate == null)
-                return false;
-
-            if (entryToUpdate.m_Owner == null || entryToUpdate.m_Offender == null)
-                return false;
-
-            if (entryToUpdate.m_Owner.Deleted || entryToUpdate.m_Offender.Deleted)
-                return false;
-
-            VengeanceEntry targetEntry = null;
-
-            foreach (VengeanceEntry entry in m_VengeanceEntries)
-            {
-                if (entry.m_Owner == entryToUpdate.m_Owner && entry.m_Offender == entryToUpdate.m_Offender)
-                    targetEntry = entry;
-            }
-
-            //New Entry
-            if (targetEntry == null)
-            {
-                if (createNewEntry)
-                    m_VengeanceEntries.Add(entryToUpdate);
-
-                return true;
-            }
-
-            //Updating Old Entry
-            else
-            {
-                targetEntry.m_Purchasable = entryToUpdate.m_Purchasable;
-                targetEntry.m_GoldCost = entryToUpdate.m_GoldCost;
-                targetEntry.m_Message = entryToUpdate.m_Message;
-
-                targetEntry.m_CreationDate = entryToUpdate.m_CreationDate;
-                targetEntry.m_PointsRemaining = entryToUpdate.m_PointsRemaining;
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool DecreaseVengeanceEntryPoints(Mobile offender, int pointsReduced)
-        {
-            if (offender == null)
-                return false;
-
-            PlayerMobile pm_Offender = offender as PlayerMobile;
-            BaseCreature bc_Offender = offender as BaseCreature;
-
-            if (bc_Offender != null)
-            {
-                if (bc_Offender.Controlled && bc_Offender.ControlMaster is PlayerMobile)
-                    pm_Offender = bc_Offender.ControlMaster as PlayerMobile;
-            }
-
-            if (pm_Offender == null)
-                return false;
-
-            VengeanceEntry entryToRemove = null;
-
-            bool foundEntry = false;
-
-            foreach (VengeanceEntry entry in m_VengeanceEntries)
-            {
-                if (entry.m_Offender == pm_Offender)
-                {
-                    foundEntry = true;
-                    entry.m_PointsRemaining -= pointsReduced;
-
-                    if (entry.m_Purchasable)
-                        Vengeance.UpdatePublicVengeanceEntry(entry, false);
-
-                    string pointsReducedText = "points";
-
-                    if (pointsReduced == 1)
-                        pointsReducedText = "point";
-
-                    string pointsRemainingText = "points";
-
-                    if (entry.m_PointsRemaining == 1)
-                        pointsRemainingText = "point";
-
-                    if (entry.m_PointsRemaining <= 0)
-                         entryToRemove = entry;
-                    else
-                        SendMessage("Vengeance against " + pm_Offender.RawName + " reduced by " + pointsReduced.ToString() + " " + pointsReducedText + " (" + entry.m_PointsRemaining.ToString() + " " + pointsRemainingText + " remaining)");
-
-                    break;
-                }
-            }
-
-            if (entryToRemove != null)
-            {
-                SendMessage("Vengeance has been fulfilled against " + pm_Offender.RawName + ".");
-
-                m_VengeanceEntries.Remove(entryToRemove);
-
-                return true;
-            }
-
-            if (foundEntry)
-                return true;
-
-            return false;
-        }
-
-        public bool RemoveVengeanceEntry(PlayerMobile offender)
-        {
-            VengeanceEntry entryToRemove = null;
-
-            foreach (VengeanceEntry entry in m_VengeanceEntries)
-            {
-                if (entry.m_Offender == offender)
-                {
-                    entryToRemove = entry;
-                    break;
-                }
-            }
-
-            if (entryToRemove != null)
-            {
-                m_VengeanceEntries.Remove(entryToRemove);
-                return true;
-            }
-
-            return false;
-        }
-
+        
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.Developer)]
         public DateTime SessionStart
         {
@@ -9215,23 +8060,9 @@ namespace Server.Mobiles
             if (faction != null)
                 faction.RemoveMember(this);
 
-            //MLQuestSystem.HandleDeletion( this );
-
             BaseHouse.HandleDeletion(this);
 
             DisguiseTimers.RemoveTimer(this);
-
-            if (m_SpellToleranceTimer != null)
-            {
-                m_SpellToleranceTimer.Stop();
-                m_SpellToleranceTimer = null;
-            }
-
-            if (m_TempStatLossTimer != null)
-            {
-                m_TempStatLossTimer.Stop();
-                m_TempStatLossTimer = null;
-            }
         }
 
         public override bool NewGuildDisplay { get { return Server.Guilds.Guild.NewGuildSystem; } }
@@ -9309,15 +8140,13 @@ namespace Server.Mobiles
                 return;
 
             try
-            {
-                bool show_faction = IsInMilitia;
+            {                
                 bool show_guild = GuildClickMessage && Guild != null && (DisplayGuildTitle || (Player && Guild.Type != Guilds.GuildType.Regular));
                 bool show_custom_ipy_title = CurrentPrefix != null && CurrentPrefix.Length > 0;
                 bool show_other_titles = true;
 
                 if (from.Region is UOACZRegion)
-                {
-                    show_faction = false;
+                { 
                     show_guild = false;
                     show_custom_ipy_title = false;
                     show_other_titles = false;
@@ -9337,28 +8166,7 @@ namespace Server.Mobiles
                 else
                     newhue = Notoriety.GetHue(Notoriety.Compute(from, this));
 
-                if (show_guild && show_faction) // FACTION AND GUILD
-                {
-                    // sorry about this one whoever else has to understand it in the future...
-                    // [GuildTitle, Abbrev][O,C,B] OR [Abbrev][Order] if not guildtitle...
-                    // Selected Title
-                    // Lord Puppz
-                    // Jimmy - updated to just say [Militia] or [M] for town based militias
-                    string guild_str = GuildTitle == null ? Guild.Abbreviation : GuildTitle + ", " + Guild.Abbreviation;
-                    string alliance_title = "Militia";
-                    string ally_title = GuildTitle == null ? alliance_title : alliance_title[0].ToString();
-                    string line_one = String.Concat("[", guild_str, "][", ally_title, "]");
-
-                    PrivateOverheadMessage(MessageType.Label, Citizenship.HomeFaction.Definition.HuePrimary, true, line_one, from.NetState);
-                }
-
-                else if (show_faction) // FACTION NO GUILD
-                {
-                    string text = String.Concat("[", Citizenship.Definition.FriendlyName, "][Militia]");
-                    PrivateOverheadMessage(MessageType.Label, Citizenship.HomeFaction.Definition.HuePrimary, true, text, from.NetState);
-                }
-
-                else if (show_guild) // GUILD NO FACTION
+                if (show_guild) // GUILD NO FACTION
                 {
                     string title = GuildTitle;
                     string type;
@@ -9389,10 +8197,7 @@ namespace Server.Mobiles
 
                     fullname_line += Name == null ? String.Empty : Name;
                     fullname_line = ApplyNameSuffix(fullname_line); // (Young) for example
-
-                    if (AssistedOwnMilitia && !IsInMilitia)
-                        fullname_line += " [Militia Flagged]";
-
+                    
                     PrivateOverheadMessage(MessageType.Label, newhue, AsciiClickMessage, fullname_line, from.NetState);
                 }
 
@@ -9789,10 +8594,7 @@ namespace Server.Mobiles
             ReleaseAllFollowers();
 
             ArenaSystem.ArenaSystem.OnCharacterDeleted(this);
-
-            if (Citizenship != null)            
-                Town.RemoveCitizen(this, true);
-
+            
             #region UOACZ
 
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
@@ -9831,7 +8633,7 @@ namespace Server.Mobiles
         private long m_NextMovementTime;
         private bool m_HasMoved;
 
-        public virtual bool UsesFastwalkPrevention { get { return (AccessLevel < AccessLevel.Counselor) && !(Region is HorseLandRegion); } }
+        public virtual bool UsesFastwalkPrevention { get { return (AccessLevel < AccessLevel.Counselor); } }
 
         public override int ComputeMovementSpeed(Direction dir, bool checkTurning)
         {

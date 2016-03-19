@@ -46,18 +46,7 @@ namespace Server.SkillHandlers
 					}
 
 					else					
-						from.SendLocalizedMessage( 501001 );//You cannot determain anything useful.					
-                                     
-                    PlayerMobile pm = from as PlayerMobile;
-                    PlayerMobile pm_Target = target as PlayerMobile;
-
-                    if (pm != null && pm_Target != null)
-                    {   
-                        bool inVengeanceList = pm.FindVengeanceEntry(pm_Target);
-                        
-                        if (inVengeanceList)
-                            pm.SendMessage("You may take vengeance against this player.");
-                    }
+						from.SendLocalizedMessage( 501001 );//You cannot determain anything useful.	
 				}
 
                 else if (target is Head)

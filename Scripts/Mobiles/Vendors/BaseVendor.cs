@@ -9,7 +9,7 @@ using Server.Misc;
 using Server.Engines.BulkOrders;
 using Server.Regions;
 using Server.Factions;
-using Server.Custom.Townsystem;
+
 using Server.Achievements;
 using Server.Engines.Craft;
 using Server;
@@ -121,6 +121,7 @@ namespace Server.Mobiles
         //IPY TOWNSYSTEM CHANGE: SEAN
 		public virtual int GetPriceScalar(Mobile from)
 		{
+            /*
             Server.Custom.Townsystem.Town fromTown = Server.Custom.Townsystem.Town.CheckCitizenship(from);
             Server.Custom.Townsystem.Town town = Server.Custom.Townsystem.Town.FromRegion(Region.Find(Location, Map));
             var britain = Server.Custom.Townsystem.Town.Parse("Britain");
@@ -131,8 +132,9 @@ namespace Server.Mobiles
             }
             if (town != null && town == fromTown)
                 return (int)(town.SalesTax * 100.0 + 100.0);
+            */
 
-			return 300;
+			return 100;
 		}
 
 		public void UpdateBuyInfo(Mobile from)
@@ -938,7 +940,7 @@ namespace Server.Mobiles
 				else if ( gold > 0 )
 					from.AddToBackpack( new Gold( gold ) );
 
-				Titles.AwardFame( from, fame, true );
+				FameKarmaTitles.AwardFame( from, fame, true );
 
 				OnSuccessfulBulkOrderReceive( from );
 
@@ -1291,22 +1293,7 @@ namespace Server.Mobiles
 					SayTo( buyer, true, "The total of thy purchase is {0} gold, which has been withdrawn from your bank account.  My thanks for the patronage.", totalCost );
 				else
 					SayTo( buyer, true, "The total of thy purchase is {0} gold.  My thanks for the patronage.", totalCost );
-
-                //IPY Townsystem TAXES: Sean
-                Server.Custom.Townsystem.Town town = Server.Custom.Townsystem.Town.FromRegion(this.Region);
-
-                if (town != null)
-                {
-                    double ps = GetPriceScalar(buyer)/100.0;
-                    // If they're purchasing in Britain, treasuy goes to home town (defaults to brit if they're not a citizen)
-                    if (town == Server.Custom.Townsystem.Town.Parse("Britain"))
-                    	town = Server.Custom.Townsystem.Town.CheckCitizenship(buyer) ?? town;
-
-                    town.Treasury += totalCost * (ps - 1)/ps;
-                }
-
-                CitizenshipState.UpdateVendorInteraction(buyer);
-			}
+            }
 
 			else
 			{

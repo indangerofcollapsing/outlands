@@ -34,10 +34,6 @@ namespace Server.SkillHandlers
 				{
 					from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 500910 ); // Hmm, that person looks really silly.
 				}
-				else if ( targeted is TownCrier )
-				{
-					((TownCrier)targeted).PrivateOverheadMessage( MessageType.Regular, 0x3B2, 500907, from.NetState ); // He looks smart enough to remember the news.  Ask him about it.
-				}
 				else if ( targeted is BaseVendor && ((BaseVendor)targeted).IsInvulnerable )
 				{
 					((BaseVendor)targeted).PrivateOverheadMessage( MessageType.Regular, 0x3B2, 500909, from.NetState ); // That person could probably calculate the cost of what you buy from them.

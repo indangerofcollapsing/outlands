@@ -435,13 +435,7 @@ namespace Server.ArenaSystem
 				Caster.SendMessage("That can only be used in guarded regions or from a friendly house");
 				return false;
 			}
-
-			if (WindFragment.ExistsOn(Caster))
-			{
-				Caster.SendMessage("You cannot do that while carrying the Wind Fragment."); // You can't do that while carrying the sigil.
-				return false;
-			}
-			else if (Caster.Criminal)
+            if (Caster.Criminal)
 			{
 				Caster.SendLocalizedMessage(1005561, "", 0x22); // Thou'rt a criminal and cannot escape so easily.
 				return false;

@@ -12,7 +12,7 @@ using Server.Spells.Ninjitsu;
 using Server.Spells;
 using Server.Bounty;
 using Server.ArenaSystem;
-using Server.Custom.Townsystem;
+
 using Server.Custom.Battlegrounds;
 using Server.Custom.Battlegrounds.Regions;
 using Server.Network;
@@ -132,25 +132,7 @@ namespace Server.Misc
             if (sz != null /*&& sz.IsDisabled()*/ )
                 return false;
             #endregion
-
-            #region Factions
-            //Remove regular factions
-            /*
-      Faction targetFaction = Faction.Find( target, true );
-
-      if( (!Core.ML || map == Faction.Facet) && targetFaction != null )
-      {
-        if( Faction.Find( from, true ) != targetFaction )
-          return false;
-      }
-            */
-            var targetTown = Town.Find(target, true);
-            if (targetTown != null)
-            {
-                return pmFrom != null && pmFrom.Citizenship == targetTown; // allow citizen to heal militia. this will temporary flag citizen orange
-            }
-            #endregion
-
+            
             //Young Player Handling
             bool fromYoung = from is PlayerMobile && ((PlayerMobile)from).Young;
 
@@ -164,41 +146,10 @@ namespace Server.Misc
 
                 if (self || youngPet || targetIsYoung)
                     return true;
+
                 else
                     return false; // Young players cannot perform beneficial actions towards older players
-            }
-
-            //Account Currently Has a Character in Temp Statloss
-            if (PlayerMobile.CheckAccountForStatloss(from) && from != pm_Target)
-            {
-                //Can't Help Another Murderer, Criminal, or Paladin
-                if (pm_Target != null)
-                {
-                    if (pm_Target.Murderer || pm_Target.Criminal || pm_Target.Paladin)
-                    {
-                        from.SendMessage("You are unable to perform beneficial actions on paladins and criminals while there is a character with temporary statloss active on your account.");
-                        return false;
-                    }
-                }
-
-                //Can't Help a Murderer, Criminal, or Paladin's Pet
-                if (bc_Target != null)
-                {
-                    if (bc_Target.Controlled && bc_Target.ControlMaster != null)
-                    {
-                        if (bc_Target.ControlMaster is PlayerMobile)
-                        {
-                            PlayerMobile bc_Controller = bc_Target.ControlMaster as PlayerMobile;
-
-                            if (bc_Controller.Murderer || bc_Controller.Criminal || bc_Controller.Paladin)
-                            {
-                                from.SendMessage("You are unable to perform beneficial actions on paladins and criminals while there is a character with temporary statloss active on your account.");
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
+            }            
 
             if (map != null && (map.Rules & MapRules.BeneficialRestrictions) == 0)
                 return true; // In felucca, anything goes
@@ -382,11 +333,6 @@ namespace Server.Misc
                         return actual;
                 }
 
-                Custom.Townsystem.Town town = Custom.Townsystem.Town.FromLocation(target.Location, target.Map);
-
-                if (town != null && town.Exiles.Contains(target.Owner))
-                    return Notoriety.CanBeAttacked;
-
                 return Notoriety.Innocent;
             }
 
@@ -397,16 +343,7 @@ namespace Server.Misc
 
                 if (target.Criminal)
                     return Notoriety.Criminal;
-
-                //Freely loot enemy town militia corpses
-                if (source is PlayerMobile && target.Owner is PlayerMobile)
-                {
-                    var sourcePm = source as PlayerMobile;
-                    var targPm = target.Owner as PlayerMobile;
-                    if (sourcePm.IsInMilitia && targPm.IsInMilitia && sourcePm.Citizenship != targPm.Citizenship)
-                        return Notoriety.Enemy;
-                }
-
+                
                 Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
                 Guild targetGuild = GetGuildFor(target.Guild as Guild, target.Owner);
 
@@ -434,11 +371,6 @@ namespace Server.Misc
                     if (list[i] == source)
                         return Notoriety.CanBeAttacked;
                 }
-
-                Custom.Townsystem.Town town = Custom.Townsystem.Town.FromLocation(target.Location, target.Map);
-
-                if (town != null && town.Exiles.Contains(target.Owner))
-                    return Notoriety.CanBeAttacked;
 
                 if (SpellHelper.InBuccs(target.Map, target.Location) || SpellHelper.InYewOrcFort(target.Map, target.Location) || SpellHelper.InYewCrypts(target.Map, target.Location))
                     return Notoriety.CanBeAttacked;
@@ -644,46 +576,7 @@ namespace Server.Misc
                 if (!bc_Target.Summoned && !bc_Target.Controlled && pm_Source.EnemyOfOneType == target.GetType())
                     return Notoriety.Enemy;
             }
-
-            //Town System
-            var targetTown = Town.Find(target, true);
-            var sourceTown = Town.Find(source, true);
-
-            //Opposing Town
-            if (sourceTown != null && targetTown != null && sourceTown != targetTown)
-                return Notoriety.Enemy;
-
-            //Player vs Player
-            if (pm_Source != null && pm_Target != null)
-            {
-                //Assisted Militia
-                if (pm_Source.IsInMilitia && pm_Target.AssistedOwnMilitia)
-                {
-                    if (pm_Target.Citizenship != null && pm_Target.Citizenship != pm_Source.Citizenship)
-                        return Notoriety.Enemy;
-                }
-            }
-
-            //Town System: Exiles
-            var town = Custom.Townsystem.Town.FromLocation(target.Location, target.Map);
-
-            if (town != null)
-            {
-                //Player is Exiled
-                if (pm_Target != null)
-                {
-                    if (town.Exiles.Contains(pm_Target) && !pm_Target.HideExiledStatus && !pm_Target.IsInMilitia)
-                        return Notoriety.CanBeAttacked;
-                }
-
-                //Creature's Controller is Exiled
-                if (pm_TargetController != null)
-                {
-                    if (town.Exiles.Contains(pm_TargetController) && !pm_TargetController.HideExiledStatus && !pm_TargetController.IsInMilitia)
-                        return Notoriety.CanBeAttacked;
-                }
-            }
-
+            
             //Justice Free Zone
             if (SpellHelper.InBuccs(target.Map, target.Location) || SpellHelper.InYewOrcFort(target.Map, target.Location) || SpellHelper.InYewCrypts(target.Map, target.Location))
                 return Notoriety.CanBeAttacked;
@@ -738,24 +631,6 @@ namespace Server.Misc
                     {
                         //Source Creature's Controller is Murderer
                         if (pm_SourceController.Murderer)                        
-                            return Notoriety.CanBeAttacked;                        
-                    }
-                }
-
-                //Vengeance
-                if (useVengeance)
-                {
-                    if (pm_Source != null)
-                    {
-                        //Player Has Vengance Against Target
-                        if (pm_Source.FindVengeanceEntry(pm_Target))                        
-                            return Notoriety.CanBeAttacked;                        
-                    }
-
-                    if (pm_SourceController != null)
-                    {
-                        //Source Creature's Controller has Vengeance Against Target
-                        if (pm_SourceController.FindVengeanceEntry(pm_Target))                        
                             return Notoriety.CanBeAttacked;                        
                     }
                 }
@@ -856,28 +731,7 @@ namespace Server.Misc
                                 return Notoriety.CanBeAttacked;                            
                         }
                     }
-                }
-
-                //Vengeance
-                if (useVengeance)
-                {
-                    if (pm_TargetController != null)
-                    {
-                        if (pm_Source != null)
-                        {
-                            //Player Has Vengeance Against Target Creature's Owner
-                            if (pm_Source.FindVengeanceEntry(pm_TargetController))                            
-                                return Notoriety.CanBeAttacked;                            
-                        }
-
-                        if (pm_SourceController != null)
-                        {
-                            //Creature's Owner has Vengeance Against Target Creature's Owner
-                            if (pm_SourceController.FindVengeanceEntry(pm_TargetController))                            
-                                return Notoriety.CanBeAttacked;                            
-                        }
-                    }
-                }
+                }                
             }
 
             //Housing

@@ -50,11 +50,7 @@ namespace Server.Misc
                 {
                     if (Notoriety.Compute(pm_From, pm_Target) == Notoriety.Innocent)                    
                         UOACZSystem.ChangeStat(pm_From, UOACZSystem.UOACZStatType.Honor, UOACZSystem.HumanAttackPlayerHonorLoss, true);                    
-                }
-
-                //Vengeance
-                if (Vengeance.HasVengeanceAgainstTarget(pm_From, pm_Target) && !(pm_Target.Region is UOACZRegion))
-                    pm_From.DecreaseVengeanceEntryPoints(pm_Target, Vengeance.AttackingPoints);
+                }               
 			}           
 		}
 

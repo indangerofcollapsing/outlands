@@ -41,13 +41,7 @@ namespace Server.Spells.Eighth
         {
             if (!base.CheckCast())
                 return false;
-
-            if (PlayerMobile.CheckAccountForStatloss(Caster))
-            {
-                Caster.SendMessage("You are not allowed to cast that spell while there is a character with temporary statloss active on your account.");
-                return false;
-            }
-
+            
             if ((Caster.Followers + 1) > Caster.FollowersMax)
             {
                 Caster.SendLocalizedMessage(1049645); // You have too many followers to summon that creature.

@@ -1170,9 +1170,6 @@ namespace Server.Multis
                 else if ((multiLocation && !guildDockLocation) || boatLocation)
                     from.SendLocalizedMessage(501942); // That location is blocked.    
 
-                else if (Server.Custom.Townsystem.TreasuryChest.TreasuryRegionContains(Server.Custom.Townsystem.Town.FromRegion(Region.Find(pP, map)), pP))
-                    from.SendMessage("You can not teleport into the Kings treasury.");
-
                 else
                 {
                     //Disembark Followers
@@ -3371,10 +3368,7 @@ namespace Server.Multis
                 if (shipDoubloonValue > 0 || shipPlayerHoldDoubloonAmount > 0)
                 {
                     int shipDoubloonValueAdjusted = (int)((double)shipDoubloonValue * damagePercent);
-
-                    double playerClassGearBonus = 1 + (PlayerClassPersistance.PlayerClassCurrencyBonusPerItem * (double)PlayerClassPersistance.GetPlayerClassArmorItemCount(attackingBoatPlayerOwner, PlayerClass.Pirate));
-                    shipDoubloonValueAdjusted = (int)((double)shipDoubloonValueAdjusted * playerClassGearBonus);
-
+                    
                     int finalDoubloonAmount = shipDoubloonValueAdjusted + shipPlayerHoldDoubloonAmount;
 
                     if (finalDoubloonAmount < 1)

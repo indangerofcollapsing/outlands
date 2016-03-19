@@ -260,20 +260,7 @@ namespace Server.SkillHandlers
                             }
 
                             double duration = BaseCreature.DiscordanceCreatureDuration;
-
-                            //Controlled Creature                                 
-                            if (bc_Target.Controlled && bc_Target.ControlMaster != null)
-                            {
-                                duration = BaseCreature.DiscordanceFollowerDurationLimit;
-
-                                if (pm_From != null && bc_Target.ControlMaster is PlayerMobile)
-                                {
-                                    //Vengeance
-                                    if (Vengeance.HasVengeanceAgainstTarget(pm_From, bc_Target))
-                                        pm_From.DecreaseVengeanceEntryPoints(bc_Target, Vengeance.DiscordancePoints);
-                                }
-                            }
-
+                            
                             DiscordanceInfo info = new DiscordanceInfo(from, bc_Target, Math.Abs(effect), mods);
                             info.m_EndTime = DateTime.UtcNow + TimeSpan.FromSeconds(duration);
                             info.m_Timer = Timer.DelayCall<DiscordanceInfo>(TimeSpan.Zero, TimeSpan.FromSeconds(1), new TimerStateCallback<DiscordanceInfo>(ProcessDiscordance), info);

@@ -2,7 +2,6 @@ using System;
 using Server;
 using Server.Mobiles;
 using Server.Multis;
-using Server.Custom.Townsystem;
 using Server.Regions;
 
 namespace Server.Items
@@ -72,51 +71,7 @@ namespace Server.Items
 
 				if ( house == null )
 				{
-                    if (CheckExistance(from.Location, from.Map, typeof(MarketFloor)))
-                    {
-                        BankBox b = from.BankBox;
-                        bool vendor, contract;
-					    BaseHouse.IsThereVendor( from.Location, from.Map, out vendor, out contract );
-                        Town town = Town.FromRegion(Region.Find(from.Location, from.Map));
-
-                        if (b.TotalGold < 5000)
-                        {
-                            from.SendMessage("You must have at least 5000 gold in your bank account to place a vendor in the town market.");
-                        }
-                        else if (town == null)
-                        {
-                            from.SendMessage("Vendors can only be placed in houses or in designated town markets.");
-                        }
-                        else if (town != Town.CheckCitizenship(from))
-                        {
-                            from.SendMessage(String.Format("You are not a citizen of {0}!", town.Definition.FriendlyName));
-                        }
-                        else if (vendor)
-                        {
-                            from.SendLocalizedMessage(1062677); // You cannot place a vendor or barkeep at this location.
-                        }
-                        else if (contract)
-                        {
-                            from.SendLocalizedMessage(1062678); // You cannot place a vendor or barkeep on top of a rental contract!
-                        }
-                        else
-                        {
-                            b.ConsumeUpTo(typeof(Gold), 5000);
-                            from.SendMessage("5000 gold has been removed from your bank box.");
-
-                            Mobile v = new PlayerVendor(from, house);
-                            v.Direction = from.Direction & Direction.Mask;
-                            v.MoveToWorld(from.Location, from.Map);
-
-                            v.SayTo(from, 503246); // Ah! it feels good to be working again.
-
-                            this.Delete();
-                        }
-                    }
-                    else
-                    {
-                        from.SendMessage("Vendors can only be placed in houses or in designated town markets.");//from.SendLocalizedMessage( 503240 ); // Vendors can only be placed in houses.	
-                    }
+                    from.SendMessage("Vendors can only be placed in houses.");//from.SendLocalizedMessage( 503240 ); // Vendors can only be placed in houses.	                    
 				}
 				else if ( !BaseHouse.NewVendorSystem && !house.IsFriend( from ) )
 				{

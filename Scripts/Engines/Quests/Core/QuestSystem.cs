@@ -27,8 +27,6 @@ namespace Server.Engines.Quests
 				typeof( Ninja.EminosUndertakingQuest ),
 				typeof( Samurai.HaochisTrialsQuest ),
 				typeof( Zento.TerribleHatchlingsQuest ),
-                //CUSTOM
-                typeof(Paladin.PaladinInitiationQuest),
 			};
 
 		public abstract object Name{ get; }

@@ -61,7 +61,7 @@ namespace Server.Spells.Third
 
 				damage = Utility.Random( 5, 5 );
 
-                if (Caster is PlayerMobile && !(m is PlayerMobile) && !(m is Server.Custom.Townsystem.BaseFactionGuard))
+                if (Caster is PlayerMobile && !(m is PlayerMobile))
                     damage += 6;
 
                 if (m.Region is UOACZRegion)

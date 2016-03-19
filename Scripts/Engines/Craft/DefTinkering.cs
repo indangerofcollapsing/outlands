@@ -1,7 +1,6 @@
 using System;
 using Server;
 using Server.Items;
-using Server.Custom.Townsystem;
 using Server.Targeting;
 using Server.Custom;
 
@@ -126,9 +125,6 @@ namespace Server.Engines.Craft
 
         public override bool ConsumeOnFailure(Mobile from, Type resourceType, CraftItem craftItem)
         {
-            if (resourceType == typeof(TreasuryBombPlans))
-                return false;
-
             return base.ConsumeOnFailure(from, resourceType, craftItem);
         }
 
@@ -190,10 +186,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(Hammer), 1044046, 1024138, 30.0, 80.0, typeof(IronIngot), 1044036, 1, 1044037);
             AddCraft(typeof(Tongs), 1044046, 1024028, 35.0, 85.0, typeof(IronIngot), 1044036, 1, 1044037);
             AddCraft(typeof(SmithHammer), 1044046, 1025091, 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
-            index = AddCraft(typeof(ArcaneHammer), 1044046, "arcane hammer", 75.0, 100.0, typeof(IronIngot), 1044036, 25, 1044037);
-            AddSkill(index, SkillName.Blacksmith, 75.0, 100.0);
-            index = AddCraft(typeof(LargeArcaneHammer), 1044046, "large arcane hammer", 85.0, 100.0, typeof(IronIngot), 1044036, 100, 1044037);
-            AddSkill(index, SkillName.Blacksmith, 85.0, 100.0);
             AddCraft(typeof(SledgeHammer), 1044046, 1024021, 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(Inshave), 1044046, 1024326, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(Pickaxe), 1044046, 1023718, 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
@@ -377,10 +369,6 @@ namespace Server.Engines.Craft
             AddRes( index, typeof( IronIngot ), 1044036, 10, 1044037 );
             
              */
-            index = AddCraft(typeof(TreasuryBomb), "Traps and Bombs", "treasury bomb", 88.0, 115.0, typeof(TreasuryBombPlans), "Treasury Bomb Plans", 1, "You do not have the treasury bomb plans needed to make that.");
-            AddRes(index, typeof(IronIngot), 1044036, 10, 1044037);
-            AddRes(index, typeof(BaseExplosionPotion), 1044569, 1, 1044253);
-
             // Dart Trap
             index = AddCraft(typeof(DartTrapCraft), "Traps and Bombs", 1024396, 30.0, 80.0, typeof(IronIngot), 1044036, 1, 1044037);
             AddRes(index, typeof(Bolt), 1044570, 1, 1044253);

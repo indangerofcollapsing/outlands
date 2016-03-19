@@ -5,18 +5,15 @@ using Server.Gumps;
 
 namespace Server.Misc
 {
-	/// <summary>
-	/// This timer spouts some welcome messages to a user at a set interval. It is used on character creation and login.
-	/// </summary>
 	public class WelcomeTimer : Timer
 	{
 		private Mobile m_Mobile;
 		private int m_State, m_Count;
 
 		private static string[] m_Messages = new string[]
-				{
-					"Welcome to UO An Corp!",
-				};
+		{
+			"",
+		};
 
 		public WelcomeTimer( Mobile m ) : this( m, m_Messages.Length )
 		{

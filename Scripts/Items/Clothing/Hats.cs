@@ -573,7 +573,7 @@ namespace Server.Items
 			base.OnAdded( parent );
 
 			if ( parent is Mobile )
-				Titles.AwardKarma( (Mobile)parent, -20, true );
+				FameKarmaTitles.AwardKarma( (Mobile)parent, -20, true );
 		}
 
 		public OrcishKinMask( Serial serial ) : base( serial )

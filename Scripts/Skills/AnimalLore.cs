@@ -42,12 +42,6 @@ namespace Server.SkillHandlers
                         return;
                     }
 
-                    if (bc_Creature is TankDragon)
-                    {
-                        from.SendMessage("That seems like a good tank for Fire Dungeon.");
-                        return;
-                    }
-
                     bool gumpSuccess = false;
 
                     if (bc_Creature.Controlled && bc_Creature.ControlMaster == from)

@@ -201,24 +201,10 @@ namespace Server.SkillHandlers
                             m_Thief.SendLocalizedMessage(502723); // You fail to steal the item.
                         }
 
-
                         int townModifier = 0;
-                        var town = Server.Custom.Townsystem.Town.FromLocation(m_Thief.Location, m_Thief.Map);
-                        if (town != null)
-                        {
-                            switch ((int)town.GuardState)
-                            {
-                                case ((int)Server.Custom.Townsystem.GuardStates.None): townModifier = -15; break;
-                                case ((int)Server.Custom.Townsystem.GuardStates.Lax): townModifier = -8; break;
-                                case ((int)Server.Custom.Townsystem.GuardStates.Strong): townModifier = 8; break;
-                                case ((int)Server.Custom.Townsystem.GuardStates.Exceptional): townModifier = 15; break;
-                            }
-                        }
-
                         int caught_chance = 150 + townModifier;
                         caught = (m_Thief.Skills[SkillName.Stealing].Value < Utility.Random(caught_chance));
 
-                        //Regardless of result, this will turn the thief permagrey if skill check happens
                         turnPermaGrey = true;
                     }
                 }
@@ -264,17 +250,7 @@ namespace Server.SkillHandlers
                     if (!(stolen is Container || stolen.Stackable))
                     { // do not return stolen containers or stackable items
                         StolenItem.Add(stolen, m_Thief, root as Mobile);
-                    }
-
-                    //Vengeance
-                    PlayerMobile pm_From = from as PlayerMobile;
-                    Mobile m_Target = root as Mobile;
-
-                    if (pm_From != null && m_Target != null)
-                    {
-                        if (Vengeance.HasVengeanceAgainstTarget(pm_From, m_Target))
-                            pm_From.DecreaseVengeanceEntryPoints(m_Target, Vengeance.StealingPoints);
-                    }                        
+                    }                     
                 }
 
                 if (caught)

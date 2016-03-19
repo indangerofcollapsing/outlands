@@ -271,9 +271,7 @@ namespace Server.SkillHandlers
                         successChance = (m_Tamer.Skills[SkillName.AnimalTaming].Value - m_Creature.MinTameSkill) * .04;
 
                         var pmTamer = m_Tamer as PlayerMobile;
-                        if (pmTamer != null && pmTamer.Citizenship != null && pmTamer.Citizenship.HasActiveBuff(Custom.Townsystem.CitizenshipBuffs.Taming))
-                            successChance += 0.05;
-
+                        
                         if (alreadyOwned || chanceResult <= successChance)
                         {
                             if (alreadyOwned)

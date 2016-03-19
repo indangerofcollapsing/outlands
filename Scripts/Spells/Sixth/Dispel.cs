@@ -30,12 +30,6 @@ namespace Server.Spells.Sixth
 
         public override void OnCast()
         {
-            if (PlayerMobile.CheckAccountForStatloss(Caster))
-            {
-                Caster.SendMessage("You are not allowed to cast that spell while there is a character with temporary statloss active on your account.");
-                return;
-            }
-
             BaseCreature casterCreature = Caster as BaseCreature;
 
             if (casterCreature != null)
@@ -61,23 +55,7 @@ namespace Server.Spells.Sixth
             else if (CheckHSequence(mobile))
             {
                 SpellHelper.Turn(Caster, mobile);
-
-                //This check will make Blue turn orange if he/she tries to attack/dispel enemy OCB player's summoned creature, except EV and BS.
-                if (Caster is PlayerMobile && bc_Creature.SummonMaster != null && bc_Creature.SummonMaster is PlayerMobile && !(bc_Creature is EnergyVortex) && !(bc_Creature is BladeSpirits))
-                {
-                    var caster = Caster as PlayerMobile;
-                    var summonMaster = bc_Creature.SummonMaster as PlayerMobile;
-
-                    if (!caster.Aggressors.Select(x => x.Attacker).Contains(summonMaster)//Make sure that this is not an act of self-defense (check if summonmaster is in caster aggressor list)
-                        && !caster.IsInMilitia //The blue player is not in the militita
-                        && summonMaster.IsInMilitia //This player is an OCB
-                        && (caster.Citizenship == null || caster.Citizenship != summonMaster.Citizenship) // and they are from different faction (enemies)
-                        )
-                    {
-                        caster.AssistedOwnMilitia = true;
-                    }
-                }
-
+                
                 int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Dispel);
 
                 Caster.DoHarmful(bc_Creature);

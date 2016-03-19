@@ -31,21 +31,8 @@ namespace Server.SkillHandlers
 			protected override void OnTarget( Mobile from, object targeted )
 			{
 				if ( from == targeted )
-				{
-                    //Use [powerhour command instead
-                    //if (!(from is PlayerMobile))
-                    //    return;
-
-                    //if (from.HasGump(typeof(Gumps.RestedStateGump)))
-                    //    from.CloseGump(typeof(Gumps.RestedStateGump));
-
-                    //from.SendGump(new Gumps.RestedStateGump((PlayerMobile)from));
+				{                  
                     from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 500324); // You know yourself quite well enough already.
-				}
-
-				else if ( targeted is TownCrier )
-				{
-					((TownCrier)targeted).PrivateOverheadMessage( MessageType.Regular, 0x3B2, 500322, from.NetState ); // This person looks fine to me, though he may have some news...
 				}
 
 				else if ( targeted is BaseVendor && ((BaseVendor)targeted).IsInvulnerable )

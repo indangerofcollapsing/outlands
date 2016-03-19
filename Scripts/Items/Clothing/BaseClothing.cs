@@ -244,12 +244,7 @@ namespace Server.Items
 
                     return false;
                 }
-
-                else if (PlayerClassPersistance.PlayerClassCanEquip(from, this) == false)
-                {                   
-                    return false;
-                }
-
+                    
                 else
                 {
                     int strBonus = ComputeStatBonus(StatType.Str);
@@ -740,9 +735,7 @@ namespace Server.Items
 
             EquipmentInfo eqInfo = new EquipmentInfo(number, m_Crafter, false, attrs.ToArray());
 
-            from.Send(new DisplayEquipmentInfo(this, eqInfo));
-
-            PlayerClassPersistance.PlayerClassSingleClick(this, from);            
+            from.Send(new DisplayEquipmentInfo(this, eqInfo));        
         }
 
         public virtual void AddEquipInfoAttributes(Mobile from, List<EquipInfoAttribute> attrs)

@@ -1,7 +1,6 @@
 using System;
 using Server.Targeting;
 using Server.Network;
-using Server.Custom.Townsystem;
 using Server.Mobiles;
 using Server.Items;
 using Server.Custom;
@@ -61,7 +60,7 @@ namespace Server.Spells.Seventh
 				
 				damage = Utility.Random( 28, 12 );
 
-                if (Caster is PlayerMobile && !(m is PlayerMobile) && !(m is Server.Custom.Townsystem.BaseFactionGuard))
+                if (Caster is PlayerMobile && !(m is PlayerMobile))
                     damage += 10;
 
                 if (m.Region is UOACZRegion)
@@ -114,21 +113,6 @@ namespace Server.Spells.Seventh
 
 			FinishSequence();
 		}
-
-        public void Target(Server.Custom.Townsystem.WindBrazier brazier) {
-            if (!Caster.CanSee(brazier)) {
-                Caster.SendLocalizedMessage(500237); // Target can not be seen.
-            }
-
-            if (CheckSequence()) {
-                SpellHelper.Turn(Caster, brazier);
-                Items.EffectItem i = Items.EffectItem.Create(new Point3D(brazier.X, brazier.Y, brazier.Z + 5), brazier.Map, Items.EffectItem.DefaultDuration);
-                Effects.SendLocationParticles(i, 0x3709, 10, 30, 5052, (int)EffectLayer.LeftFoot);
-                Effects.PlaySound(brazier.Location, brazier.Map, 0x208);
-                brazier.OnLight(Caster);
-            }
-            FinishSequence();
-        }
 
 		private class InternalTarget : Target
 		{

@@ -290,28 +290,10 @@ namespace Server.Menus.Questions
 					m_Mobile.Frozen = false;
 					Stop();
 
-					/*if ( Factions.Sigil.ExistsOn( m_Mobile ) )
-					{
-						m_Mobile.SendLocalizedMessage( 1061632 ); // You can't do that while carrying the sigil.
-						return;
-					}*/
-					if (Server.Items.WindFragment.ExistsOn(m_Mobile)) 
-                    {
-                        m_Mobile.SendMessage("You can't do that while carrying a Wind Fragment.");
-                        return;
-                    }
-
 					int idx = Utility.Random( m_Destination.Locations.Length );
 					Point3D dest = m_Destination.Locations[idx];
 
 					Map destMap = Map.Felucca;
-
-					/*if ( m_Mobile.Map == Map.Trammel )
-						destMap = Map.Trammel;
-					else if ( m_Mobile.Map == Map.Felucca )
-						destMap = Map.Felucca;
-					else
-						destMap = m_Mobile.Kills >= 5 ? Map.Felucca : Map.Trammel;*/
 
 					Mobiles.BaseCreature.TeleportPets( m_Mobile, dest, destMap );
 					m_Mobile.MoveToWorld( dest, destMap );

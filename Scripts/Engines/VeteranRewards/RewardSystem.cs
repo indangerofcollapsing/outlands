@@ -366,8 +366,7 @@ namespace Server.Engines.VeteranRewards
 						new RewardEntry( cloaksAndRobes, 1006016, typeof( RewardCloak ), Golden, 1041292 ),
 						new RewardEntry( cloaksAndRobes, 1006017, typeof( RewardRobe ), Golden, 1041293 ),
 						new RewardEntry( cloaksAndRobes, 1080368, typeof( RewardDress ), Expansion.ML, Golden, 1080368 ),
-						new RewardEntry( houseAddOns,    1006048, typeof( BannerDeed ) ),
-						new RewardEntry( houseAddOns, 	 1006049, typeof( FlamingHeadDeed ) ),
+						new RewardEntry( houseAddOns,    1006048, typeof( BannerDeed ) ),						
 						new RewardEntry( houseAddOns, 	 1080409, typeof( MinotaurStatueDeed ), Expansion.ML )
 					} ),
 					new RewardList( RewardInterval, 3, new RewardEntry[]

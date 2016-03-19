@@ -37,7 +37,7 @@ namespace Server.Misc
             if (beholder.Map != beheld.Map || !beholder.InRange(beheld, 12) || !beholder.CanSee(beheld))
                 return;
 
-            string header = Titles.ComputeTitle(beholder, beheld, false);
+            string header = FameKarmaTitles.ComputeTitle(beholder, beheld, false);
 
             string footer = "";
 

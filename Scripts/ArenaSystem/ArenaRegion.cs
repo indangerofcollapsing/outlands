@@ -154,12 +154,7 @@ namespace Server.ArenaSystem
             if (player == null)
                 return true;
 
-            if (WindFragment.ExistsOn(player))
-            {
-                player.SendMessage(0x22, "You cannot enter this region while carrying the Wind Fragment.");
-                return false;
-            }
-            else if (player.Criminal)
+            if (player.Criminal)
             {
                 player.SendMessage(0x22, "Thou'rt a criminal and are not allowed into the arena area at the moment.");
                 return false;

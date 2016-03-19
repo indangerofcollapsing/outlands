@@ -32,12 +32,6 @@ namespace Server.Spells.Seventh
 
         public override bool CheckCast()
         {
-            if (PlayerMobile.CheckAccountForStatloss(Caster))
-            {
-                Caster.SendMessage("You are not allowed to cast that spell while there is a character with temporary statloss active on your account.");
-                return false;
-            }
-
             if (Caster.Region is NewbieDungeonRegion)
             {
                 Caster.SendMessage("You cannot cast that here.");
