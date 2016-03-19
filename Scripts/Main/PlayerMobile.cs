@@ -261,25 +261,7 @@ namespace Server.Mobiles
                 m_BankGameTime = TimeSpan.Zero;
             }
         }
-
-        [Usage("ShowTownChat")]
-        [Description("Toggles Town Chat On and Off")]
-        public static void ShowTownChatCommand(CommandEventArgs e)
-        {
-            PlayerMobile player = e.Mobile as PlayerMobile;
-
-            if (player.ShowTownChat)
-            {
-                player.ShowTownChat = false;
-                player.SendMessage("You will no longer see town alliance chat.");
-            }
-            else
-            {
-                player.ShowTownChat = true;
-                player.SendMessage("You will now see town alliance chat.");
-            }
-        }
-
+        
         [Usage("ShowMeleeDamage")]
         [Description("Cycles between Display Modes of Player Melee Damage")]
         public static void ShowMeleeDamage(CommandEventArgs e)
@@ -1857,14 +1839,6 @@ namespace Server.Mobiles
         private int m_NonAutoreinsuredItems; // number of items that could not be automatically reinsured because gold in bank was not enough
         private bool m_NinjaWepCooldown;
 
-        private bool m_ShowTownChat = true;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool ShowTownChat { get { return m_ShowTownChat; } set { m_ShowTownChat = value; } }
-
-        /*
-         * a value of zero means, that the mobile is not executing the spell. Otherwise,
-         * the value should match the BaseMana required
-        */
         private int m_ExecutesLightningStrike; // move to Server.Mobiles??
 
         private DateTime m_LastOnline;
@@ -2576,7 +2550,6 @@ namespace Server.Mobiles
             CommandSystem.Register("Tame", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.AdminTame));
             CommandSystem.Register("GotoCurrentWaypoint", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.GotoCurrentWaypoint));
 
-            CommandSystem.Register("ShowTownChat", AccessLevel.Player, new CommandEventHandler(ShowTownChatCommand));
             CommandSystem.Register("gotoentrance", AccessLevel.Administrator, new CommandEventHandler(GoToEntranceCommand));
             CommandSystem.Register("playercount", AccessLevel.Administrator, new CommandEventHandler(PlayerCountCommand));
             CommandSystem.Register("setthreshold", AccessLevel.Administrator, new CommandEventHandler(SetThresholdCommand));
@@ -7156,10 +7129,7 @@ namespace Server.Mobiles
             Squelched = false;
             Frozen = false;
             CantWalk = false;
-
-            if (version < 69)
-                ShowTownChat = true;
-
+            
             //---------------------------
 
             m_PaladinsKilled = new List<Mobile>();
