@@ -35,19 +35,6 @@ namespace Server.Items
                 from.SendLocalizedMessage(1042553); //You must have the object in your backpack to use it.
                 return;
             }
-
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (accepted)
-            {
-                from.SendMessage("You have now gained access to T2A for a period of two weeks!");
-				pm.T2AAccess = DateTime.UtcNow + TimeSpan.FromDays(14);
-                Delete();
-            }
-            else
-            {
-                from.SendMessage("If you change your mind at a later date, please use this ticket again.");
-            }
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -179,7 +166,7 @@ namespace Server.Items
             if (!(m is PlayerMobile))
                 return true;
 
-			return m.AccessLevel >= AccessLevel.GameMaster || ((PlayerMobile)m).T2AAccess > DateTime.UtcNow;
+			return m.AccessLevel >= AccessLevel.GameMaster;
         }
 
         public static bool IsT2A(Point3D p, Map m)

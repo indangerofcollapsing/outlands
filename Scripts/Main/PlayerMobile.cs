@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
 using Server;
 using Server.Misc;
 using Server.Items;
@@ -31,18 +30,13 @@ using Server.Commands;
 using Server.Achievements;
 using Server.Custom;
 using Server.SkillHandlers;
-using Server.ArenaSystem;
-using Server.Custom.Battlegrounds;
-using Server.Custom.Battlegrounds.Regions;
 using Server.Guilds;
-
 using Server.Regions;
 using Server.Poker;
 using System.Text;
 
 namespace Server.Mobiles
 {
-    #region Enums
     [Flags]
     public enum PlayerFlag // First 16 bits are reserved for default-distro use, start custom flags at 0x00010000
     {
@@ -85,14 +79,7 @@ namespace Server.Mobiles
         BlacksmithsGuild,
         DetectivesGuild
     }
-
-    public enum SolenFriendship
-    {
-        None,
-        Red,
-        Black
-    }
-
+    
     public enum BlockMountType
     {
         None = -1,
@@ -100,32 +87,7 @@ namespace Server.Mobiles
         BolaRecovery = 1062910,
         DismountRecovery = 1070859
     }
-
-    // Set Bonuses
-    [Flags]
-    public enum SetBonus
-    {
-        None = 0,
-        Mage = 1,
-        Warrior = 1 << 1,
-        HythlothTier1 = 1 << 2,
-        HythlothTier2 = 1 << 3,
-        HythlothTier3 = 1 << 4,
-        HythlothTier4 = 1 << 5,
-        DestardTier1 = 1 << 6,
-        DestardTier2 = 1 << 7,
-        DestardTier3 = 1 << 8,
-        DestardTier4 = 1 << 9,
-        DeceitTier1 = 1 << 10,
-        DeceitTier2 = 1 << 11,
-        DeceitTier3 = 1 << 12,
-        DeceitTier4 = 1 << 13,
-        ShameTier1 = 1 << 14,
-        ShameTier2 = 1 << 15,
-        ShameTier3 = 1 << 16,
-        ShameTier4 = 1 << 17,
-    }
-
+    
     public enum DamageDisplayMode
     {
         None,
@@ -151,72 +113,8 @@ namespace Server.Mobiles
         None
     }
 
-    public enum PeacemakingModeEnum
+    public partial class PlayerMobile : Mobile
     {
-        Combat,
-        CrowdControl
-    }
-
-    #endregion
-
-    public partial class PlayerMobile : Mobile, IHonorTarget
-    {
-        private class GhostScoutingTimer : Timer
-        {
-            private PlayerMobile m_Player;
-            private static List<string> ExcludedDungeons = new List<string>() {
-                "Khaldun",
-                "The Painted Caves",
-                "Terathan Keep",
-            };
-
-            public GhostScoutingTimer(PlayerMobile player) : base(TimeSpan.Zero, TimeSpan.FromMinutes(1))
-            {
-                Priority = TimerPriority.OneMinute;
-                m_Player = player;
-            }
-
-            protected override void OnTick()
-            {
-                base.OnTick();
-                if (m_Player == null || m_Player.Deleted || m_Player.Alive)
-                {
-                    Stop();
-                    return;
-                }
-
-                if (m_Player.Region is DungeonRegion)
-                {
-                    bool corpseInDungeon = false;
-                    if (m_Player.Corpse != null && !m_Player.Corpse.Deleted)
-                    {
-                        // check if corpse in dungeon
-                        var region = Region.Find(m_Player.Corpse.Location, m_Player.Corpse.Map);
-                        corpseInDungeon = region is DungeonRegion;
-                    }
-
-                    if (corpseInDungeon || ExcludedDungeons.Contains(m_Player.Region.Name)) 
-                        return;
-
-                    var dungeon = m_Player.Region as DungeonRegion;
-
-                    if (dungeon.EntranceLocation != Point3D.Zero)
-                    {
-                        m_Player.MoveToWorld(dungeon.EntranceLocation, Map.Felucca);
-                    }
-                    else
-                    {
-                        m_Player.MoveToWorld(new Point3D(1484, 1612, 20), Map.Felucca); // britain healer
-                    }
-                    m_Player.SendMessage("You have been ejected from the dungeon.");
-                }
-            }
-        }
-
-        ///////////////////////////////////////////////
-        // IPY ADDITIONS 
-        ///////////////////////////////////////////////
-
         public static void PlayerCountCommand(CommandEventArgs e)
         {
             e.Mobile.SendMessage(string.Format("{0} online", Server.RemoteAdmin.ServerInfo.NetStateCount()));
@@ -226,6 +124,7 @@ namespace Server.Mobiles
         {
             double multip = Server.RemoteAdmin.ServerInfo.Multiplier;
             double.TryParse(e.ArgString, out multip);
+
             Server.RemoteAdmin.ServerInfo.Multiplier = multip;
             e.Mobile.SendMessage(string.Format("Multiplier has been set to {0}", multip));
         }
@@ -247,21 +146,52 @@ namespace Server.Mobiles
             }
         }
 
-        public TimeSpan PowerHourDuration { get { return TimeSpan.FromHours(1) + PowerHourBonus; } }
+        #region Commands
 
-        private TimeSpan m_PowerHourBonus = TimeSpan.Zero;
-        public TimeSpan PowerHourBonus { get { return m_PowerHourBonus; } set { m_PowerHourBonus = value; } }
-
-        public void BoostPowerHourDuration()
+        public static void Initialize()
         {
-            if (NetState != null)
-            {
-                var timeOnline = m_BankGameTime + (DateTime.UtcNow - SessionStart);
-                m_PowerHourBonus = TimeSpan.FromMinutes(Math.Min(5 * timeOnline.TotalHours, 120));
-                m_BankGameTime = TimeSpan.Zero;
-            }
+            if (FastwalkPrevention)
+                PacketHandlers.RegisterThrottler(0x02, new ThrottlePacketCallback(MovementThrottle_Callback));
+
+            EventSink.Login += new LoginEventHandler(OnLogin);
+            EventSink.Logout += new LogoutEventHandler(OnLogout);
+            EventSink.Connected += new ConnectedEventHandler(EventSink_Connected);
+            EventSink.Disconnected += new DisconnectedEventHandler(EventSink_Disconnected);
+
+            CommandSystem.Register("WipePlayerMobiles", AccessLevel.Administrator, new CommandEventHandler(WipeAllPlayerMobiles_OnCommand));
+            CommandSystem.Register("UseTrapPouch", AccessLevel.Player, new CommandEventHandler(UseTrappedPouch_OnCommand));
+
+            CommandSystem.Register("ShowMeleeDamage", AccessLevel.Player, new CommandEventHandler(ShowMeleeDamage));
+            CommandSystem.Register("ShowSpellDamage", AccessLevel.Player, new CommandEventHandler(ShowSpellDamage));
+            CommandSystem.Register("ShowFollowerDamage", AccessLevel.Player, new CommandEventHandler(ShowFollowerDamage));
+            CommandSystem.Register("ShowProvocationDamage", AccessLevel.Player, new CommandEventHandler(ShowProvocationDamage));
+            CommandSystem.Register("ShowPoisonDamage", AccessLevel.Player, new CommandEventHandler(ShowPoisonDamage));
+            CommandSystem.Register("ShowDamageTaken", AccessLevel.Player, new CommandEventHandler(ShowDamageTaken));
+            CommandSystem.Register("ShowFollowerDamageTaken", AccessLevel.Player, new CommandEventHandler(ShowFollowerDamageTaken));
+            CommandSystem.Register("ShowHealing", AccessLevel.Player, new CommandEventHandler(ShowHealing));
+
+            CommandSystem.Register("ShowStealthSteps", AccessLevel.Player, new CommandEventHandler(ShowStealthSteps));
+            CommandSystem.Register("ShowHenchmenSpeech", AccessLevel.Player, new CommandEventHandler(ShowHenchmenSpeech));
+            CommandSystem.Register("ShowAdminTextFilter", AccessLevel.Counselor, new CommandEventHandler(ShowAdminTextFilter));
+
+            CommandSystem.Register("AutoStealth", AccessLevel.Player, new CommandEventHandler(ToggleAutoStealth));
+
+            CommandSystem.Register("GetDifficulty", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.GetDifficulty));
+            CommandSystem.Register("Provoke", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.AdminProvoke));
+            CommandSystem.Register("Tame", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.AdminTame));
+            CommandSystem.Register("GotoCurrentWaypoint", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.GotoCurrentWaypoint));
+
+            CommandSystem.Register("gotoentrance", AccessLevel.Administrator, new CommandEventHandler(GoToEntranceCommand));
+            CommandSystem.Register("playercount", AccessLevel.Administrator, new CommandEventHandler(PlayerCountCommand));
+            CommandSystem.Register("setthreshold", AccessLevel.Administrator, new CommandEventHandler(SetThresholdCommand));
+            CommandSystem.Register("togglethreshold", AccessLevel.Administrator, new CommandEventHandler(ToggleThresholdCommand));
+
+            //Used for Locally Testing Content
+            CommandSystem.Register("CreateTestLoadout", AccessLevel.GameMaster, new CommandEventHandler(CreateTestLoadout));
+            CommandSystem.Register("Anim", AccessLevel.GameMaster, new CommandEventHandler(Anim));
+            CommandSystem.Register("AnimationTest", AccessLevel.GameMaster, new CommandEventHandler(AnimationTest));
         }
-        
+
         [Usage("ShowMeleeDamage")]
         [Description("Cycles between Display Modes of Player Melee Damage")]
         public static void ShowMeleeDamage(CommandEventArgs e)
@@ -569,15 +499,7 @@ namespace Server.Mobiles
                 pm.m_AutoStealth = true;
             }
         }
-
-        [Usage("FireDungeonTimer")]
-        [Description("Displays the time until the player can attempt fire again.")]
-        public static void FireDungeonTimer_OnCommand(CommandEventArgs e)
-        {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-            pm.Say(String.Format("{0}", pm.NextFireAttempt));
-        }
-
+        
         [Usage("WipePlayerMobiles")]
         [Description("Changes the password of the commanding players account. Requires the same C-class IP address as the account's creator.")]
         public static void WipeAllPlayerMobiles_OnCommand(CommandEventArgs e)
@@ -591,27 +513,28 @@ namespace Server.Mobiles
                     to_delete.Add(pm);
                 }
             }
+
             foreach (PlayerMobile p in to_delete)
             {
                 p.Delete();
             }
         }
 
-        DateTime m_LastTrapPouchUse = DateTime.UtcNow;
         [Usage("UseTrappedPouch")]
         [Description("Uses a trapped pouch in your backpack")]
         public static void UseTrappedPouch_OnCommand(CommandEventArgs e)
         {
             PlayerMobile pm = e.Mobile as PlayerMobile;
+
             if (pm != null && pm.Backpack != null)
             {
-                if (pm.m_LastTrapPouchUse + TimeSpan.FromSeconds(0.75) > DateTime.UtcNow)
-                {
-                    pm.SendMessage("You must wait 0.75 seconds between each use of this command");
-                }
+                if (pm.m_LastTrapPouchUse + TimeSpan.FromSeconds(0.75) > DateTime.UtcNow)                
+                    pm.SendMessage("You must wait 0.75 seconds between each use of this command");                
+
                 else
                 {
                     List<TrapableContainer> tcs = pm.Backpack.FindItemsByType<TrapableContainer>();
+
                     foreach (TrapableContainer tc in tcs)
                     {
                         if (tc != null && tc.TrapType == TrapType.MagicTrap)
@@ -619,6 +542,7 @@ namespace Server.Mobiles
                             tc.Open(pm);
                             Target.Cancel(pm);
                             pm.m_LastTrapPouchUse = DateTime.UtcNow;
+
                             return;
                         }
                     }
@@ -626,24 +550,411 @@ namespace Server.Mobiles
             }
         }
 
-        public enum ArenaPreferenceKeys
+
+        [Usage("CreateTestLoadout")]
+        [Description("Sets Character Stats, Skills, and Equipment for TESting")]
+        public static void CreateTestLoadout(CommandEventArgs arg)
         {
-            TeamSelection,
-            EraSelection,
-            RulesetSelection,
-            OptionsSelection,
+            PlayerMobile player = arg.Mobile as PlayerMobile;
+
+            if (player == null)
+                return;
+
+            player.SendMessage("Target the character to put in testing mode");
+            player.Target = new CreateTestLoadoutTarget(player);
         }
 
-        public Dictionary<ArenaPreferenceKeys, int> ArenaPreferences = new Dictionary<ArenaPreferenceKeys, int>()
+        private class CreateTestLoadoutTarget : Target
         {
-            { ArenaPreferenceKeys.TeamSelection, 0 },
-            { ArenaPreferenceKeys.EraSelection, 0 },
-            { ArenaPreferenceKeys.RulesetSelection, 0 },
-            { ArenaPreferenceKeys.OptionsSelection, 0 },
-        };
+            public CreateTestLoadoutTarget(Mobile from)
+                : base(100, false, TargetFlags.None)
+            {
+            }
 
+            protected override void OnTarget(Mobile from, object target)
+            {
+                if (target is PlayerMobile)
+                {
+                    PlayerMobile pm_Target = target as PlayerMobile;
 
-        // Passive taming skill gains - when your pet attacks a monster you have a chance of gaining animal taming.
+                    if (!pm_Target.Alive)
+                        return;
+
+                    pm_Target.RawStr = 10000;
+                    pm_Target.Hits = pm_Target.HitsMax;
+
+                    pm_Target.RawDex = 200;
+                    pm_Target.Stam = pm_Target.StamMax;
+
+                    pm_Target.RawInt = 1000;
+                    pm_Target.Mana = pm_Target.ManaMax;
+
+                    pm_Target.Young = false;
+
+                    foreach (Skill skill in pm_Target.Skills)
+                    {
+                        skill.Base = 100;
+                    }
+
+                    pm_Target.DeleteAllEquipment();
+
+                    pm_Target.Backpack.DropItem(new Arrow(2000));
+                    pm_Target.AddItem(new Bow());
+
+                    TotalRefreshPotion potion = new TotalRefreshPotion();
+                    potion.Amount = 50;
+                    pm_Target.Backpack.DropItem(potion);
+
+                    Bandage bandage = new Bandage();
+                    bandage.Amount = 200;
+                    pm_Target.Backpack.DropItem(bandage);
+
+                    BagOfReagents bagOfReagents = new BagOfReagents();
+                    pm_Target.Backpack.DropItem(bagOfReagents);
+
+                    bagOfReagents = new BagOfReagents();
+                    pm_Target.Backpack.DropItem(bagOfReagents);
+
+                    Spellbook spellbook = new Spellbook();
+                    if (spellbook.BookCount == 64)
+                        spellbook.Content = ulong.MaxValue;
+                    else
+                        spellbook.Content = (1ul << spellbook.BookCount) - 1;
+
+                    pm_Target.Backpack.DropItem(spellbook);
+
+                    int dungeonCount = Enum.GetNames(typeof(BaseDungeonArmor.DungeonEnum)).Length;
+
+                    BaseDungeonArmor.DungeonEnum dungeon = (BaseDungeonArmor.DungeonEnum)Utility.RandomMinMax(1, dungeonCount - 1);
+
+                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Helmet));
+                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Gorget));
+                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Arms));
+                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Gloves));
+                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Chest));
+                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Legs));
+
+                    BaseDungeonArmor.DungeonArmorDetail dungeonArmorDetail = new BaseDungeonArmor.DungeonArmorDetail(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
+
+                    pm_Target.AddItem(new Cloak(dungeonArmorDetail.Hue));
+                }
+
+                else
+                {
+                    from.SendMessage("That is not a player.");
+                    return;
+                }
+            }
+        }
+
+        public void DeleteAllEquipment()
+        {
+            //Clean Out Backpack
+            if (Backpack != null)
+            {
+                if (!Backpack.Deleted)
+                {
+                    Backpack.Delete();
+                    AddItem(new Backpack());
+                }
+            }
+
+            List<Layer> m_Layers = new List<Layer>();
+
+            m_Layers.Add(Layer.Arms);
+            m_Layers.Add(Layer.Bracelet);
+            m_Layers.Add(Layer.Cloak);
+            m_Layers.Add(Layer.Earrings);
+            m_Layers.Add(Layer.FirstValid);
+            m_Layers.Add(Layer.Gloves);
+            m_Layers.Add(Layer.Helm);
+            m_Layers.Add(Layer.InnerLegs);
+            m_Layers.Add(Layer.InnerTorso);
+            m_Layers.Add(Layer.MiddleTorso);
+            m_Layers.Add(Layer.Neck);
+            m_Layers.Add(Layer.OneHanded);
+            m_Layers.Add(Layer.OuterLegs);
+            m_Layers.Add(Layer.OuterTorso);
+            m_Layers.Add(Layer.Pants);
+            m_Layers.Add(Layer.Ring);
+            m_Layers.Add(Layer.Shirt);
+            m_Layers.Add(Layer.Shoes);
+            m_Layers.Add(Layer.Talisman);
+            m_Layers.Add(Layer.TwoHanded);
+            m_Layers.Add(Layer.Waist);
+
+            foreach (Layer layer in m_Layers)
+            {
+                Item item = FindItemOnLayer(layer);
+
+                if (item != null)
+                {
+                    if (!item.Deleted)
+                        item.Delete();
+                }
+            }
+        }
+
+        [Usage("Anim <action> <frameCount>")]
+        [Description("Makes your character do a specified animation.")]
+        public static void Anim(CommandEventArgs e)
+        {
+            if (e.Length == 2)
+                e.Mobile.Animate(e.GetInt32(0), e.GetInt32(1), 1, true, false, 0);
+        }
+
+        [Usage("Animation Test")]
+        [Description("Loop through all animations of a Bodyvalue")]
+        public static void AnimationTest(CommandEventArgs arg)
+        {
+            PlayerMobile player = arg.Mobile as PlayerMobile;
+
+            if (player == null)
+                return;
+
+            int animations = 32;
+            int frameCount = 15;
+            int delayBetween = 10;
+
+            Point3D location = player.Location;
+            Map map = player.Map;
+
+            for (int a = 1; a < animations + 1; a++)
+            {
+                int animation = a;
+
+                Timer.DelayCall(TimeSpan.FromSeconds((animation - 1) * delayBetween), delegate
+                {
+                    if (player == null) return;
+                    if (player.Location != location) return;
+
+                    player.Say("Animation: " + animation.ToString());
+                    player.Animate(animation, frameCount, 1, true, false, 0);
+                });
+            }
+        }
+
+        #endregion
+
+        private static void OnLogin(LoginEventArgs e)
+        {
+            Mobile from = e.Mobile;
+
+            CheckAtrophies(from);
+
+            from.FollowersMax = 5;
+
+            PlayerMobile pm_From = from as PlayerMobile;
+
+            if (pm_From != null)
+                pm_From.m_SessionStart = DateTime.UtcNow;
+
+            if (AccountHandler.LockdownLevel > AccessLevel.Player)
+            {
+                string notice;
+
+                Accounting.Account acct = from.Account as Accounting.Account;
+
+                if (acct == null || !acct.HasAccess(from.NetState))
+                {
+                    if (from.AccessLevel == AccessLevel.Player)
+                        notice = "The server is currently under lockdown. No players are allowed to log in at this time.";
+
+                    else
+                        notice = "The server is currently under lockdown. You do not have sufficient access level to connect.";
+
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(Disconnect), from);
+                }
+
+                else if (from.AccessLevel >= AccessLevel.Administrator)
+                    notice = "The server is currently under lockdown. As you are an administrator, you may change this from the [Admin gump.";
+
+                else
+                    notice = "The server is currently under lockdown. You have sufficient access level to connect.";
+
+                from.SendGump(new NoticeGump(1060637, 30720, notice, 0xFFC000, 300, 140, null, null));
+                return;
+            }
+
+            if (pm_From != null)
+            {
+                if ((pm_From.Young || pm_From.Companion) && !YoungChatListeners.Contains(pm_From))
+                    YoungChatListeners.Add(pm_From);
+
+                Timer.DelayCall(TimeSpan.FromSeconds(5), new TimerStateCallback(CheckAccountAgeAchievements), from as object);
+                pm_From.ClaimAutoStabledPets();
+
+                if (pm_From.AccessLevel > AccessLevel.Player)
+                    pm_From.Send(SpeedControl.MountSpeed);
+            }
+
+            //Player Enhancements
+            if (pm_From.m_PlayerEnhancementAccountEntry == null)
+                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
+
+            if (pm_From.m_PlayerEnhancementAccountEntry.Deleted)
+                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
+
+            PlayerCustomization.OnLoginAudit(pm_From);
+
+            //Audit Enhancements For New Entries Available
+            pm_From.m_PlayerEnhancementAccountEntry.AuditCustomizationEntries();
+            pm_From.m_PlayerEnhancementAccountEntry.AuditSpellHueEntries();
+
+            InfluencePersistance.OnLogin(pm_From);
+
+            //UOACZ
+            UOACZSystem.OnLogin(pm_From);
+
+            //World Chat
+            ChatPersistance.OnLogin(pm_From);
+
+            //Monster Hunter Society
+            MHSPersistance.CheckAndCreateMHSAccountEntry(pm_From);
+
+            //Event Calendar Account
+            EventCalendarPersistance.CheckAndCreateEventCalendarAccount(pm_From);
+
+            //Dungeon Armor
+            BaseDungeonArmor.CheckForAndUpdateDungeonArmorProperties(pm_From);
+
+            //OverloadProtectionSystem
+            pm_From.SystemOverloadActions = 0;
+        }
+
+        private static void Disconnect(object state)
+        {
+            NetState ns = ((Mobile)state).NetState;
+
+            if (ns != null)
+                ns.Dispose();
+        }
+
+        private static void OnLogout(LogoutEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            if (player == null)
+                return;
+
+            player.AutoStablePets();
+        }
+
+        private static void EventSink_Connected(ConnectedEventArgs e)
+        {
+            PlayerMobile pm = e.Mobile as PlayerMobile;
+
+            if (pm != null)
+            {
+                pm.m_SessionStart = DateTime.UtcNow;
+
+                if (pm.m_Quest != null)
+                    pm.m_Quest.StartTimer();
+
+                pm.BedrollLogout = false;
+                pm.LastOnline = DateTime.UtcNow;
+            }
+
+            DisguiseTimers.StartTimer(e.Mobile);
+
+            Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(ClearSpecialMovesCallback), e.Mobile);
+        }
+
+        private static void ClearSpecialMovesCallback(object state)
+        {
+            Mobile from = (Mobile)state;
+
+            SpecialMove.ClearAllMoves(from);
+        }
+
+        private static void EventSink_Disconnected(DisconnectedEventArgs e)
+        {
+            Mobile from = e.Mobile;
+            DesignContext context = DesignContext.Find(from);
+
+            if (context != null)
+            {
+                // Remove design context
+                DesignContext.Remove(from);
+
+                // Eject all from house
+                from.RevealingAction();
+
+                foreach (Item item in context.Foundation.GetItems())
+                    item.Location = context.Foundation.BanLocation;
+
+                foreach (Mobile mobile in context.Foundation.GetMobiles())
+                    mobile.Location = context.Foundation.BanLocation;
+
+                // Restore relocated entities
+                context.Foundation.RestoreRelocatedEntities();
+            }
+
+            PlayerMobile pm = e.Mobile as PlayerMobile;
+
+            if (pm != null)
+            {
+                if (pm.m_PokerGame != null)
+                {
+                    PokerPlayer player = pm.m_PokerGame.GetPlayer(pm);
+                    if (player != null)
+                    {
+                        if (pm.m_PokerGame.Players != null && pm.m_PokerGame.Players.Contains(player))
+                            pm.m_PokerGame.RemovePlayer(player);
+                    }
+                }
+
+                if (YoungChatListeners.Contains(pm))
+                    YoungChatListeners.Remove(pm);
+
+                TimeSpan gameTime = DateTime.UtcNow - pm.m_SessionStart;
+
+                pm.m_GameTime += gameTime;
+
+                if (pm.m_Quest != null)
+                    pm.m_Quest.StopTimer();
+
+                pm.m_SpeechLog = null;
+                pm.LastOnline = DateTime.UtcNow;
+                pm.SetSallos(false);
+            }
+
+            DisguiseTimers.StopTimer(from);
+        }
+
+        public void ResetRegenTimers()
+        {
+            //Reset Regen Timers
+            if (m_HitsTimer != null)
+            {
+                m_HitsTimer.Stop();
+                m_HitsTimer = null;
+
+                m_HitsTimer = new Mobile.HitsTimer(this);
+                m_HitsTimer.Start();
+            }
+
+            if (m_StamTimer != null)
+            {
+                m_StamTimer.Stop();
+                m_StamTimer = null;
+
+                m_StamTimer = new Mobile.StamTimer(this);
+                m_StamTimer.Start();
+            }
+
+            if (m_ManaTimer != null)
+            {
+                m_ManaTimer.Stop();
+                m_ManaTimer = null;
+
+                m_ManaTimer = new Mobile.ManaTimer(this);
+                m_ManaTimer.Start();
+            }
+        }
+
+        public DateTime m_LastTrapPouchUse = DateTime.UtcNow;
+        
         public DateTime m_LastPassiveTamingSkillGain = DateTime.MinValue;
         public BaseCreature m_LastPassiveTamingSkillAttacked; // the controlled pets last target
         public BaseCreature m_LastPassiveExpAttacked; // the controlled pets last target for XP Gain Purposes
@@ -669,29 +980,26 @@ namespace Server.Mobiles
         public DamageDisplayMode m_ShowFollowerDamageTaken = DamageDisplayMode.None;
         public DamageDisplayMode m_ShowHealing = DamageDisplayMode.None;
 
+        public int PlayerMeleeDamageTextHue = 0x022;
+        public int PlayerSpellDamageTextHue = 0x075;
+        public int PlayerFollowerDamageTextHue = 0x59;
+        public int PlayerProvocationDamageTextHue = 0x90;
+        public int PlayerPoisonDamageTextHue = 0x03F;
+        public int PlayerDamageTakenTextHue = 0;
+        public int PlayerFollowerDamageTakenTextHue = 0;
+        public int PlayerHealingTextHue = 2213;
+
         public StealthStepsDisplayMode m_StealthStepsDisplayMode = StealthStepsDisplayMode.PrivateMessage;
         public HenchmenSpeechDisplayMode m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.Normal;
+
         public bool m_ShowAdminFilterText = true; 
 
         public bool m_AutoStealth = true;
 
         private BaseBoat m_BoatOccupied = null;
         [CommandProperty(AccessLevel.GameMaster)]
-        public BaseBoat BoatOccupied { get { return m_BoatOccupied; } set { m_BoatOccupied = value; } }
-
-        public int PlayerMeleeDamageTextHue = 0x022; //Red
-        public int PlayerSpellDamageTextHue = 0x075; //Purple
-        public int PlayerFollowerDamageTextHue = 0x59; //Blue  
-        public int PlayerProvocationDamageTextHue = 0x90; //Orange
-        public int PlayerPoisonDamageTextHue = 0x03F; //Green
-        public int PlayerDamageTakenTextHue = 0; //White
-        public int PlayerFollowerDamageTakenTextHue = 0; //White
-        public int PlayerHealingTextHue = 2213; //Yellow
-
-        private bool m_DamageVulnerable = false;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool DamageVulnerable { get { return m_DamageVulnerable; } set { m_DamageVulnerable = value; } }
-
+        public BaseBoat BoatOccupied { get { return m_BoatOccupied; } set { m_BoatOccupied = value; } }        
+        
         public PlayerEnhancementAccountEntry m_PlayerEnhancementAccountEntry = null;
         public InfluenceAccountEntry m_InfluenceAccountEntry = null;
         public UOACZAccountEntry m_UOACZAccountEntry = null;
@@ -724,308 +1032,30 @@ namespace Server.Mobiles
                 SkillCap = SkillCap + m_BonusSkillCap;
             }
         }
-
-        private DateTime m_TinkerTrapPlacementWindow = DateTime.MinValue;
-        [CommandProperty(AccessLevel.Counselor)]
-        public DateTime TinkerTrapPlacementWindow
-        {
-            get { return m_TinkerTrapPlacementWindow; }
-            set { m_TinkerTrapPlacementWindow = value; }
-        }
-
-        private int m_TinkerTrapsPlaced = 0;
-        [CommandProperty(AccessLevel.Counselor)]
-        public int TinkerTrapsPlaced
-        {
-            get { return m_TinkerTrapsPlaced; }
-            set { m_TinkerTrapsPlaced = value; }
-        }
-
-        //Overload Protection: Track Player "Spammable Actions" That Might Overload Server if Done Too Frequently
+               
         public int SystemOverloadActions = 0;       
         public static int SystemOverloadActionThreshold = 180; //Player flagged if attacking a single target this many times over the SystemOverloadInterval
         public static TimeSpan SystemOverloadInterval = TimeSpan.FromSeconds(60); 
-
-        // UOAC siege BGs
-        private bool m_IsDragging = false;
-        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
-        public bool IsDragging 
-        { 
-            get { return m_IsDragging; } 
-            set 
-            { 
-                m_IsDragging = value;
-                if (value)
-                    Send(SpeedControl.WalkSpeed);
-                else
-                    Send(SpeedControl.Disable);
-            } 
-        }
-
-        public override bool AllowTrades { get { return !(Region is ArenaSpectatorRegion); } }
-
+                       
         public DateTime LastTeamSwitch = DateTime.MinValue;
-
-        public class SpectatorTimer : Timer
-        {
-            PlayerMobile m_From;
-            public SpectatorTimer(PlayerMobile from)
-                : base(TimeSpan.FromSeconds(0), TimeSpan.FromMinutes(1))
-            {
-                Priority = TimerPriority.FiveSeconds;
-                m_From = from;
-            }
-
-            protected override void OnTick()
-            {
-                base.OnTick();
-                if (m_From != null && !m_From.Deleted && m_From.Spectating)
-                {
-                    m_From.SendMessage(33, "You are spectating, you can type [leave to quit at any time.");
-                }
-                else
-                {
-                    Stop();
-                }
-            }
-        }
-
-        public SpectatorTimer SpectatingTimer { get; set; }
-
-        // IPY - Skillscrolls
-        #region Skillscrolls
-        public Skill[] LastSkillGain = new Skill[5];
-        public static TimeSpan DecayLastSkillGain = TimeSpan.FromHours(2);
-        public DateTime[] _StartedLastSkillGain = new DateTime[5]; // Start point of timer
-        private Timer[] _TimerLastSkillGain = new Timer[5]; // Timer itself
-        public void startLastSkillGainDecay(TimeSpan delay, int position)
-        {
-            if (this._TimerLastSkillGain[position] != null)
-            {
-                if (this._TimerLastSkillGain[position].Running)
-                {
-                    this._TimerLastSkillGain[position].Stop();
-                }
-
-                this._TimerLastSkillGain[position] = null;
-            }
-
-            this._TimerLastSkillGain[position] = Timer.DelayCall(delay, new TimerCallback(deleteLastSkillGain));
-            this._StartedLastSkillGain[position] = DateTime.UtcNow;
-        }
-
-        private PokerGame m_PokerGame; //Edit for Poker System
+        
+        private PokerGame m_PokerGame;
         public PokerGame PokerGame
         {
             get { return m_PokerGame; }
             set { m_PokerGame = value; }
         }
 
-        // print out array debug test to console
-        public void printLastSkillGain()
-        {
-            DateTime now = DateTime.UtcNow;
-            for (int n = 0; n <= this.LastSkillGain.Length - 1; n++)
-            {
-                if (this.LastSkillGain[n] == null)
-                {
-                    this.SendMessage("LastSkillGain[" + n + "] = null");
-                }
-                else
-                {
-                    this.SendMessage("LastSkillGain[" + n + "] = " + this.LastSkillGain[n].SkillName + " / Decay: " + now.Subtract(_StartedLastSkillGain[n]).ToString());
-                }
-            }
-        }
-
-        // Size of the array minus nulls
-        public int countLastSkillGain()
-        {
-            int currentSize = 0;
-            while (currentSize <= (this.LastSkillGain.Length - 1) && this.LastSkillGain[currentSize] != null)
-            {
-                currentSize++;
-            }
-            currentSize--;
-            return currentSize;
-        }
-
-        // Timer delete lastskill item and resort
-        public void deleteLastSkillGain()
-        {
-            int currentSize = this.countLastSkillGain();
-            for (int n = 0; n <= currentSize; n++)
-            {
-                if (n != currentSize)
-                {
-                    this.LastSkillGain[n] = this.LastSkillGain[n + 1];
-                }
-                else
-                {
-                    this.LastSkillGain[n] = null;
-                }
-            }
-        }
-
-        public static List<SkillName> SkillPool = new List<SkillName>
-        {
-            SkillName.Magery,
-            SkillName.Fencing,
-            SkillName.Archery,
-            SkillName.Wrestling,
-            SkillName.Parry,
-            SkillName.Swords,
-            SkillName.Macing,
-            SkillName.Tactics,
-            SkillName.MagicResist,
-            SkillName.Musicianship,
-            SkillName.Provocation,
-            SkillName.EvalInt,
-            SkillName.Anatomy,
-            SkillName.Meditation,
-            SkillName.Peacemaking,
-            SkillName.Healing,
-            SkillName.Discordance,
-            SkillName.SpiritSpeak,
-            SkillName.ArmsLore,
-        };
-
-        public void addLastSkillGain(Skill skill)
-        {
-            //Accepted skills (Also change in SkillCheck.cs and BestCombatSkill() PlayMobile.cs)
-            int currentSize = 0;
-            int dupeLocation = 0;
-            bool dupe = false;
-
-            if (this.LastSkillGain[0] == null)
-            {
-                //First Entry made no sort/delete/duplication check needed
-                this.LastSkillGain[0] = skill;
-                startLastSkillGainDecay(DecayLastSkillGain, 0);
-            }
-            else
-            {
-                //Not the first entry so duplication check/deletion check/sort/add
-                //Duplication check
-                while (currentSize <= (this.LastSkillGain.Length - 1) && this.LastSkillGain[currentSize] != null)
-                {
-                    if (this.LastSkillGain[currentSize] == skill)
-                    {
-                        dupeLocation = currentSize;
-                        dupe = true;
-                    }
-                    currentSize++; ;
-                }
-
-                currentSize--;
-
-                if (dupe == true)
-                {
-                    for (int n = dupeLocation; n <= currentSize; n++)
-                    {
-                        if ((n + 1) <= currentSize)
-                        {
-                            this.LastSkillGain[n] = this.LastSkillGain[n + 1];
-
-                            //if not the last record as the duplication needs to be refreshed in the else{}
-                            if (n == currentSize)
-                            {
-                                //Reset timer due to duplication but only on the duped skill gain
-                                startLastSkillGainDecay(DecayLastSkillGain, n);
-                            }
-                        }
-                        else
-                        {
-                            this.LastSkillGain[n] = skill;
-                            startLastSkillGainDecay(DecayLastSkillGain, n);
-                        }
-                    }
-                }
-                else
-                {
-                    //sort everything to add new
-                    for (int n = 0; n <= (this.LastSkillGain.Length - 1); n++)
-                    {
-                        if (currentSize == (this.LastSkillGain.Length - 1))
-                        {
-                            // check to make sure the array is full or not
-                            if (this.LastSkillGain[n] != null)
-                            {
-                                // check to make sure we are not at the end of the array as we can't n+1
-                                if (n != (this.LastSkillGain.Length - 1) && (this.LastSkillGain[n + 1] != null))
-                                {
-                                    this.LastSkillGain[n] = this.LastSkillGain[n + 1];
-                                    startLastSkillGainDecay(DecayLastSkillGain, n);
-                                }
-                                else
-                                {
-                                    // add new skill as this is the end of the array
-                                    this.LastSkillGain[n] = skill;
-                                    startLastSkillGainDecay(DecayLastSkillGain, 0);
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                this.LastSkillGain[n] = skill;
-                                startLastSkillGainDecay(DecayLastSkillGain, 0);
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            this.LastSkillGain[currentSize + 1] = skill;
-                            startLastSkillGainDecay(DecayLastSkillGain, (currentSize + 1));
-                        }
-                    }
-                }
-            }
-        }
-
-        // Picks the best combat skill.
-        public Skill BestCombatSkill(double maxSkill)
-        {
-            int length = LastSkillGain.Length;
-            int start = Utility.Random(length);
-
-            for (int i = 0; i < length; i++)
-            {
-                int index = (start + i) % length;
-                if (LastSkillGain[index] != null && LastSkillGain[index].Base < maxSkill && LastSkillGain[index].Lock == SkillLock.Up)
-                    return LastSkillGain[index];
-            }
-
-            List<Skill> choices = new List<Skill>();
-
-            foreach (var s in SkillPool)
-            {
-                var skill = Skills[s];
-                if (skill.Lock != SkillLock.Up)
-                    continue;
-                if (skill.BaseFixedPoint >= skill.CapFixedPoint || skill.Base > maxSkill || skill.BaseFixedPoint <= 150)
-                    continue;
-
-                choices.Add(skill);
-            }
-
-            return choices.Count > 0 ? choices[Utility.Random(choices.Count)] : null;
-        }
-        #endregion
-
-        // IPY - Power hour / boost mode
-        #region IPY Resources Over Time
-        private DateTime m_PowerHourReset;
+        private int m_NumGoldCoinsGenerated;
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime PowerHourReset
+        public int NumGoldCoinsGenerated
         {
-            get { return m_PowerHourReset; }
-            set { m_PowerHourReset = value; }
+            get { return m_NumGoldCoinsGenerated; }
+            set { m_NumGoldCoinsGenerated = value; }
         }
+        
+        #region Insta-Hit
 
-        #endregion // Resources Over Time
-
-        // IPY - Instahit	
-        #region IPY Instahit
         private DateTime m_NextInstahit;
         public BaseWeapon m_LastWeaponHeld;
         private BaseWeapon instahitDefault;
@@ -1034,11 +1064,13 @@ namespace Server.Mobiles
         public bool m_HasTimerRunning;
         private bool m_NoNewTimer;
         private DateTime m_LastSwing;
+
         public DateTime LastSwing
         {
             get { return m_LastSwing; }
             set { m_LastSwing = value; }
         }
+
         [CommandProperty(AccessLevel.Administrator)]
         public bool NoNewTimer
         {
@@ -1051,125 +1083,6 @@ namespace Server.Mobiles
             get { return instahitDefault; }
         }
 
-
-
-        // PvE Metrics/tracking
-        private int m_NumGoldCoinsGenerated;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int NumGoldCoinsGenerated
-        {
-            get { return m_NumGoldCoinsGenerated; }
-            set { m_NumGoldCoinsGenerated = value; }
-        }
-
-        // Custom harvesting
-        #region IPY Custom harvesting
-        private Item m_TempStashedHarvest = null;
-        private Server.Engines.Harvest.HarvestDefinition m_TempStashedHarvestDef;
-        private List<DateTime> m_FailedHarvestAttempts = new List<DateTime>();
-        private bool m_HarvestLockedout = false;
-        public static int s_HarvestLockoutTime = 15; // also decay time for fails
-        public static int s_HarvestFailsForLockout = 10;
-        public HarvestTimer m_HarvestTimer;
-
-        public class HarvestTimer : Timer
-        {
-            private PlayerMobile m_Player;
-            private DateTime m_Start;
-            private static TimeSpan CaptchaTimeLimit = TimeSpan.FromSeconds(45);
-
-            public HarvestTimer(PlayerMobile player, DateTime started)
-                : base(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(15))
-            {
-                Priority = TimerPriority.FiveSeconds;
-                m_Player = player;
-                m_Start = started;
-            }
-
-            protected override void OnTick()
-            {
-                if (m_Player == null || m_Player.NetState == null || m_Player.Deleted)
-                {
-                    Stop();
-                    return;
-                }
-
-                if (DateTime.UtcNow > m_Start + CaptchaTimeLimit)
-                {
-                    if (m_Player.TempStashedHarvest != null && !(m_Player.TempStashedHarvest is BaseTreasureChest))
-                        m_Player.TempStashedHarvest.Delete();
-
-                    m_Player.TempStashedHarvest = null;
-                    m_Player.SendMessage(33, "You have taken too long to correctly answer the captcha, your harvest is lost");
-                    m_Player.FailedHarvestAttempts.Add(DateTime.UtcNow);
-                    m_Player.CloseGump(typeof(Server.Custom.AntiRailing.HarvestGump));
-                    Stop();
-                }
-            }
-        }
-
-        public bool HarvestLockedout
-        {
-            get
-            {
-                RefreshFailedHarvests();
-                if (m_HarvestLockedout)
-                {
-                    // move to jail
-                    LastLocation = new Point3D(Location);
-                    Location = new Point3D(5274, 1164, 0);
-                    SendMessage(0x22, "You have been moved to jail for failing the harvest captcha.");
-                    FailedHarvestAttempts.Clear();
-                    if (Account != null && Account is Account)
-                    {
-                        (Account as Account).Comments.Add(new AccountComment("Harvest System", string.Format("{0} failed the harvest captcha.", Name)));
-                        Server.Commands.CommandHandlers.BroadcastMessage(AccessLevel.GameMaster, 0x482, String.Format("{0} has been jailed for failing the captcha, please check in with them.", Name));
-                    }
-                    if (m_HarvestTimer != null && m_HarvestTimer.Running)
-                        m_HarvestTimer.Stop();
-                }
-                return m_HarvestLockedout;
-            }
-        }
-
-        public List<DateTime> FailedHarvestAttempts
-        {
-            get { return m_FailedHarvestAttempts; }
-            set { m_FailedHarvestAttempts = value; }
-        }
-        public Server.Engines.Harvest.HarvestDefinition TempStashedHarvestDef
-        {
-            get { return m_TempStashedHarvestDef; }
-            set { m_TempStashedHarvestDef = value; }
-        }
-
-        private void RefreshFailedHarvests()
-        {
-            // refresh timers
-            bool already_locked_out = m_FailedHarvestAttempts.Count > s_HarvestFailsForLockout;
-            DateTime latest = DateTime.UtcNow.AddMinutes(-s_HarvestLockoutTime * (already_locked_out ? 2 : 1)); // 30 min decay time once you get locked out, 15m otherwise
-            m_FailedHarvestAttempts.RemoveAll(elem => (elem < latest));
-            m_HarvestLockedout = m_FailedHarvestAttempts.Count >= s_HarvestFailsForLockout;
-        }
-
-        public Item TempStashedHarvest
-        {
-            get { return m_TempStashedHarvest; }
-            set
-            {
-                if (value != null)
-                {
-                    m_TempStashedHarvest = value;
-                    this.SendGump((new Server.Custom.AntiRailing.HarvestGump(this)));
-                    if (m_HarvestTimer != null && m_HarvestTimer.Running)
-                        m_HarvestTimer.Stop();
-
-                    m_HarvestTimer = new HarvestTimer(this, DateTime.UtcNow);
-                    m_HarvestTimer.Start();
-                }
-            }
-        }
-        #endregion             
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan NextInstahit
@@ -1221,869 +1134,129 @@ namespace Server.Mobiles
                 CompareInstahit(pm);
             }
         }
-        #endregion
 
-        // IPY - Player Flags
-        #region Player flags
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Paladin
-        {
-            get { return GetFlag(PlayerFlag.Paladin); }
-            set { SetFlag(PlayerFlag.Paladin, value); }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Murderer
-        {
-            get
-            {
-                return (ShortTermMurders >= 5);
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Pirate
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        private PlayerMobile m_LastPlayerKilledBy;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public PlayerMobile LastPlayerKilledBy
-        {
-            get { return m_LastPlayerKilledBy; }
-            set { m_LastPlayerKilledBy = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool KilledByPaladin
-        {
-            get { return GetFlag(PlayerFlag.KilledByPaladin); }
-            set { SetFlag(PlayerFlag.KilledByPaladin, value); }
-        }
+        #endregion        
         
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool BoatMovement
-        {
-            get { return GetFlag(PlayerFlag.BoatMovement); }
-            set { SetFlag(PlayerFlag.BoatMovement, value); }
-        }
-        #endregion
+        #region Captcha
+        
+        private Item m_TempStashedHarvest = null;
+        private Server.Engines.Harvest.HarvestDefinition m_TempStashedHarvestDef;
+        private List<DateTime> m_FailedHarvestAttempts = new List<DateTime>();
+        private bool m_HarvestLockedout = false;
 
-        // IPY - Achievements
-        #region achievements
-        private static void CheckAccountAgeAchievements(object mobile)
+        public static int s_HarvestLockoutTime = 15; // also decay time for fails
+        public static int s_HarvestFailsForLockout = 10;
+        public HarvestTimer m_HarvestTimer;
+
+        public class HarvestTimer : Timer
         {
-            if (mobile is PlayerMobile)
+            private PlayerMobile m_Player;
+            private DateTime m_Start;
+            private static TimeSpan CaptchaTimeLimit = TimeSpan.FromSeconds(45);
+
+            public HarvestTimer(PlayerMobile player, DateTime started): base(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(15))
             {
-                PlayerMobile pm = mobile as PlayerMobile;
-                if (pm.Deleted)
+                Priority = TimerPriority.FiveSeconds;
+                m_Player = player;
+                m_Start = started;
+            }
+
+            protected override void OnTick()
+            {
+                if (m_Player == null || m_Player.NetState == null || m_Player.Deleted)
+                {
+                    Stop();
                     return;
-                TimeSpan diff = DateTime.UtcNow - ((Account)pm.Account).Created;
+                }
 
-                if (diff.TotalDays >= 365.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_365dayOldAccount);
-                if (diff.TotalDays >= 180.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_180dayOldAccount);
-                if (diff.TotalDays >= 90.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_90dayOldAccount);
-                if (diff.TotalDays >= 30.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_30dayOldAccount);
-                if (diff.TotalDays >= 7.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_7dayOldAccount);
-                if (diff.TotalDays >= 1.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_1dayOldAccount);
-            }
-
-        }
-        #endregion
-        // IPY - Misc
-        #region IPY Misc
-
-        public PlayerTitleColors TitleColorState { get; set; }
-        public int SelectedTitleColorIndex;
-        public EColorRarity SelectedTitleColorRarity;
-        private DateTime m_LastDeathByPlayer;
-        private int m_CanReprieve;
-        private bool CanReprieveBool = false;
-        public TimeSpan m_TimeSpanDied;
-        public DateTime m_DateTimeDied;
-        public TimeSpan m_TimeSpanResurrected;
-        public List<string> PreviousNames { get; set; }
-        public DateTime HueModEnd { get; set; }
-        public TimeSpan LoginElapsedTime { get; set; }
-        public bool m_UserOptHideFameTitles;
-        private DateTime m_Created;
-        public DateTime CreatedOn { set { m_Created = value; } get { return m_Created; } }
-        public Boolean CloseBankRunebookGump;
-                      
-        public List<Mobile> m_ShortTermMurders;
-        public List<Mobile> m_PaladinsKilled;
-
-        private int m_UniqueMurders = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int UniqueMurders
-        {
-            get { return m_UniqueMurders; }
-            set { m_UniqueMurders = value; }
-        }
-
-        public Dictionary<PlayerMobile, DateTime> DictUniqueMurderEntries = new Dictionary<PlayerMobile, DateTime>();
-
-        public TimeSpan m_ShortTermElapse;
-        public TimeSpan m_LongTermElapse;
-        public TimeSpan m_minOrderJoinTime;
-        
-        private DateTime m_PaladinRejoinAllowed = DateTime.MinValue;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime PaladinRejoinAllowed
-        {
-            get { return m_PaladinRejoinAllowed; }
-            set { m_PaladinRejoinAllowed = value; }
-        }
-
-        private DateTime m_PaladinProbationExpiration = DateTime.MinValue;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime PaladinProbationExpiration
-        {
-            get { return m_PaladinProbationExpiration; }
-            set { m_PaladinProbationExpiration = value; }
-        }
-
-        private DateTime m_PenanceExpiration = DateTime.MinValue;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime PenanceExpiration
-        {
-            get { return m_PenanceExpiration; }
-            set { m_PenanceExpiration = value; }
-        }
-
-        private bool m_IsInTempStatLoss = false;
-        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
-        public bool IsInTempStatLoss
-        {
-            get { return m_IsInTempStatLoss; }
-            set { m_IsInTempStatLoss = value; }
-        }
-
-        public bool IsInUOACZ
-        {
-            get
-            {
-                if (!(Region is UOACZRegion))
-                    return false;
-
-                UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
-                return m_UOACZAccountEntry.ActiveProfile != UOACZAccountEntry.ActiveProfileType.None;
-            }
-        }
-
-        public bool IsUOACZHuman
-        {
-            get
-            {
-                UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
-
-                if (!(Region is UOACZRegion))
-                    return false;
-
-                return m_UOACZAccountEntry.ActiveProfile == UOACZAccountEntry.ActiveProfileType.Human;
-            }
-        }
-
-        public bool IsUOACZUndead
-        {
-            get
-            {
-                if (!(Region is UOACZRegion))
-                    return false;
-
-                UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
-                return m_UOACZAccountEntry.ActiveProfile == UOACZAccountEntry.ActiveProfileType.Undead;
-            }
-        }
-
-        private int m_RestitutionFee;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int RestitutionFee
-        {
-            get { return m_RestitutionFee; }
-            set { m_RestitutionFee = value; }
-        }
-
-        private int m_RestitutionFeesToDistribute = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int RestitutionFeesToDistribute
-        {
-            get { return m_RestitutionFeesToDistribute; }
-            set { m_RestitutionFeesToDistribute = value; }
-        }
-
-        private bool m_MurdererDeathGumpNeeded = false;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool MurdererDeathGumpNeeded
-        {
-            get { return m_MurdererDeathGumpNeeded; }
-            set { m_MurdererDeathGumpNeeded = value; }
-        }
-
-        public void EnterContestedRegion(bool ressingHere)
-        {            
-        }      
-
-        private DateTime m_HideRestrictionExpiration = DateTime.MinValue;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime HideRestrictionExpiration
-        {
-            get { return m_HideRestrictionExpiration; }
-            set { m_HideRestrictionExpiration = value; }
-        }
-
-        public DateTime m_RecallRestrictionExpiration;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime RecallRestrictionExpiration
-        {
-            get { return m_RecallRestrictionExpiration; }
-            set { m_RecallRestrictionExpiration = value; }
-        }
-
-        private DateTime m_NextBountyNote;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextBountyNote
-        {
-            get
-            {
-                TimeSpan ts = m_NextBountyNote - DateTime.UtcNow;
-
-                if (ts < TimeSpan.Zero)
-                    ts = TimeSpan.Zero;
-
-                return ts;
-            }
-            set
-            {
-                try { m_NextBountyNote = DateTime.UtcNow + value; }
-                catch { }
-            }
-        }
-
-        private bool m_IsInArenaFight;
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public bool IsInArenaFight
-        {
-            get { return m_IsInArenaFight; }
-            set { m_IsInArenaFight = value; }
-        }
-
-        public bool CheckPlayerAccountsForCommonGuild(PlayerMobile player2)
-        {
-            bool foundSameGuild = false;
-
-            List<Guilds.BaseGuild> m_Guilds = new List<Guilds.BaseGuild>();
-            List<Guilds.BaseGuild> m_Player2Guilds = new List<Guilds.BaseGuild>();
-
-            Account account = Account as Account;
-
-            if (account != null)
-            {
-                for (int a = 0; a < (account.Length - 1); a++)
+                if (DateTime.UtcNow > m_Start + CaptchaTimeLimit)
                 {
-                    Mobile m_Mobile = account.accountMobiles[a] as Mobile;
+                    if (m_Player.TempStashedHarvest != null && !(m_Player.TempStashedHarvest is BaseTreasureChest))
+                        m_Player.TempStashedHarvest.Delete();
 
-                    if (m_Mobile != null)
+                    m_Player.TempStashedHarvest = null;
+                    m_Player.SendMessage(33, "You have taken too long to correctly answer the captcha, your harvest is lost");
+                    m_Player.FailedHarvestAttempts.Add(DateTime.UtcNow);
+                    m_Player.CloseGump(typeof(Server.Custom.AntiRailing.HarvestGump));
+
+                    Stop();
+                }
+            }
+        }
+
+        public bool HarvestLockedout
+        {
+            get
+            {
+                RefreshFailedHarvests();
+
+                if (m_HarvestLockedout)
+                {
+                    // move to jail
+                    LastLocation = new Point3D(Location);
+                    Location = new Point3D(5274, 1164, 0);
+                    SendMessage(0x22, "You have been moved to jail for failing the harvest captcha.");
+                    FailedHarvestAttempts.Clear();
+                    
+                    if (Account != null && Account is Account)
                     {
-                        if (!m_Mobile.Deleted && m_Mobile.Guild != null)
-                            m_Guilds.Add(m_Mobile.Guild);
+                        (Account as Account).Comments.Add(new AccountComment("Harvest System", string.Format("{0} failed the harvest captcha.", Name)));
+                        Server.Commands.CommandHandlers.BroadcastMessage(AccessLevel.GameMaster, 0x482, String.Format("{0} has been jailed for failing the captcha, please check in with them.", Name));
                     }
-                }
-            }
 
-            Account player2Account = player2.Account as Account;
-
-            if (player2Account != null)
-            {
-                for (int a = 0; a < (player2Account.Length - 1); a++)
-                {
-                    Mobile m_Mobile = player2Account.accountMobiles[a] as Mobile;
-
-                    if (m_Mobile != null)
-                    {
-                        if (!m_Mobile.Deleted && m_Mobile.Guild != null)
-                            m_Player2Guilds.Add(m_Mobile.Guild);
-                    }
-                }
-            }
-
-            foreach (Guilds.BaseGuild player1Guild in m_Guilds)
-            {
-                foreach (Guilds.BaseGuild player2Guild in m_Player2Guilds)
-                {
-                    if (player1Guild == player2Guild)
-                    {
-                        return true;
-                        break;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public override void DoHarmful(Mobile target, bool indirect)
-        {
-            if (target == null)            
-                return;            
-
-            bool pvpValid = false;
-
-            BaseCreature bc_Target = target as BaseCreature;
-            PlayerMobile pm_Target = target as PlayerMobile;            
-
-            if (target != this)
-            {
-                LastCombatTime = DateTime.UtcNow;
-                target.LastCombatTime = DateTime.UtcNow;
-
-                if (bc_Target != null)
-                {
-                    if (bc_Target.Controlled && bc_Target.ControlMaster is PlayerMobile && bc_Target.ControlMaster != this)
-                    {
-                        PlayerMobile pm_Controller = bc_Target.ControlMaster as PlayerMobile;
-                        PlayerMobile pm_TargetController = bc_Target.ControlMaster as PlayerMobile;
-
-                        bc_Target.LastPlayerCombatTime = DateTime.UtcNow;
-
-                        PlayerVsPlayerCombatOccured(pm_Controller);          
-                        pm_TargetController.PlayerVsPlayerCombatOccured(this);
-                    }
+                    if (m_HarvestTimer != null && m_HarvestTimer.Running)
+                        m_HarvestTimer.Stop();
                 }
 
-                if (pm_Target != null)
-                {
-                    PlayerVsPlayerCombatOccured(pm_Target);  
-                    pm_Target.PlayerVsPlayerCombatOccured(this);
-                }
-            }
-
-            base.DoHarmful(target, indirect);
-        }
-
-        public void CapStatMods(Mobile mobile)
-        {
-            //Enhanced Spellbook: Wizard has Buff Spells with 5x Duration.
-            //Need to bring their duration down to normal maximum if another player does a harmful action to them        
-            for (int i = 0; i < mobile.StatMods.Count; ++i)
-            {
-                StatMod check = mobile.StatMods[i];
-
-                if (mobile.Region is UOACZRegion)
-                    return;
-
-                if (check.Type == StatType.Str || check.Type == StatType.Dex || check.Type == StatType.Int)
-                {
-                    if (check.Duration >= TimeSpan.FromSeconds(120))
-                        check.Duration = TimeSpan.FromSeconds(120);
-                }
+                return m_HarvestLockedout;
             }
         }
 
-        public override void OnHeal(ref int amount, Mobile from)
+        public List<DateTime> FailedHarvestAttempts
         {
-            base.OnHeal(ref amount, from);
-
-            SpecialAbilities.HealingOccured(from, this, amount);
-
-            if (this.Region is BattlegroundRegion)
-            {
-                Battleground bg = ((BattlegroundRegion)this.Region).Battleground;
-                if (bg.State == BattlegroundState.Active && from is PlayerMobile)
-                {
-                    // only score amount healed
-                    int diff = HitsMax - Hits;
-                    int scoredAmount = amount > diff ? diff : amount;
-                    bg.CurrentScoreboard.UpdateScore(from as PlayerMobile, Categories.Healing, scoredAmount);
-                }
-            }
+            get { return m_FailedHarvestAttempts; }
+            set { m_FailedHarvestAttempts = value; }
         }
 
-        private DateTime m_T2AAccess;
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public DateTime T2AAccess
+        public Server.Engines.Harvest.HarvestDefinition TempStashedHarvestDef
         {
-            get { return m_T2AAccess; }
-            set { m_T2AAccess = value; }
+            get { return m_TempStashedHarvestDef; }
+            set { m_TempStashedHarvestDef = value; }
         }
 
-        // Easy UO Detection
-        private Serial m_LastTarget;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Serial LastTarget
-        {
-            get { return m_LastTarget; }
-            set { m_LastTarget = value; }
+        private void RefreshFailedHarvests()
+        {           
+            bool already_locked_out = m_FailedHarvestAttempts.Count > s_HarvestFailsForLockout;
+            DateTime latest = DateTime.UtcNow.AddMinutes(-s_HarvestLockoutTime * (already_locked_out ? 2 : 1)); // 30 min decay time once you get locked out, 15m otherwise
+            
+            m_FailedHarvestAttempts.RemoveAll(elem => (elem < latest));
+            m_HarvestLockedout = m_FailedHarvestAttempts.Count >= s_HarvestFailsForLockout;
         }
 
-
-        [CommandProperty(AccessLevel.GameMaster)]//IPY (Sean)
-        public int TicketsOpenedSinceLastReset
+        public Item TempStashedHarvest
         {
-            get
-            {
-                if (DonationPlayerState == null)
-                    return 0;
-                else
-                    return DonationPlayerState.TicketsOpenedSinceLastReset;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]//IPY (Sean)
-        public int TotalOgre2TicketsOpened
-        {
-            get
-            {
-                if (DonationPlayerState == null)
-                    return 0;
-                else
-                    return DonationPlayerState.TotalOgre2TicketsOpened;
-            }
-        }
-
-        // Set bonus
-        private SetBonus m_ActiveSetBonuses;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public SetBonus ActiveSetBonuses
-        {
-            get { return m_ActiveSetBonuses; }
-            set { m_ActiveSetBonuses = value; }
-        }
-
-        public bool HasActiveSetBonus(SetBonus bonus)
-        {
-            return (m_ActiveSetBonuses & bonus) == bonus;
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int CanReprieve
-        {
-            get { return m_CanReprieve; }
-            set { m_CanReprieve = value; }
-        }
-
-        public override bool ShowFameTitle
-        {
-            get { return m_UserOptHideFameTitles ? false : base.ShowFameTitle; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime LastDeathByPlayer
-        {
-            get { return m_LastDeathByPlayer; }
-            set { m_LastDeathByPlayer = value; }
-        }
-      
-        private int m_PirateScore = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int PirateScore
-        {
-            get { return m_PirateScore; }
+            get { return m_TempStashedHarvest; }
             set
             {
-                m_PirateScore = value;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string AddPrefixTitle
-        {
-            set { if (!m_TitlesPrefix.Contains(value)) { m_TitlesPrefix.Add(value); } }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string RemovePrefixTitle
-        {
-            set
-            {
-                if (m_TitlesPrefix.Contains(value))
+                if (value != null)
                 {
-                    m_TitlesPrefix.Remove(value);
-                }
-                if (m_CurrentPrefix == value)
-                    m_CurrentPrefix = "";
-            }
-        }
+                    m_TempStashedHarvest = value;
 
-        public Server.Custom.DonationState DonationPlayerState { get; set; }        
+                    SendGump((new Server.Custom.AntiRailing.HarvestGump(this)));
 
-        private SlayerEntry m_RepelGroupEntry;
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public SlayerEntry RepelGroupEntry
-        {
-            get { return m_RepelGroupEntry; }
-            set { m_RepelGroupEntry = value; }
-        }
+                    if (m_HarvestTimer != null && m_HarvestTimer.Running)
+                        m_HarvestTimer.Stop();
 
-        private int m_PaladinPoints;
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public int PaladinCurrencyValue
-        {
-            get { return m_PaladinPoints; }
-            set { m_PaladinPoints = value; }
-        }
-
-        private DateTime m_PaladinPointsDecayed;
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public DateTime PaladinPointLastDecayTime
-        {
-            get { return m_PaladinPointsDecayed; }
-            set { m_PaladinPointsDecayed = value; }
-        }
-
-        private QuestStep m_Step;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public QuestStep Step
-        {
-            get { return m_Step; }
-            set { m_Step = value; }
-        }
-
-        private List<string> m_TitlesPrefix = new List<string>();
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public List<string> TitlesPrefix
-        {
-            get { return m_TitlesPrefix; }
-            set { m_TitlesPrefix = value; }
-        }
-
-        private string m_CurrentPrefix = "";
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public string CurrentPrefix
-        {
-            get { return m_CurrentPrefix; }
-            set { m_CurrentPrefix = value; }
-        }
-        #endregion
-   
-        private DateTime m_LastTownSquareNotification = DateTime.MinValue;
-        public DateTime LastTownSquareNotification
-        {
-            get { return m_LastTownSquareNotification; }
-            set { m_LastTownSquareNotification = value; }
-        }
-
-        public bool SquelchCitizenship;
-               
-        private bool m_IsInStatLoss = false;
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.Counselor)]
-        public bool IsInStatLoss
-        {
-            get { return m_IsInStatLoss; }
-            set { m_IsInStatLoss = value; }
-        }
-
-        //Parry Special Ability
-        #region ParrySpecialAbility
-
-        private DateTime m_ParrySpecialAbilityActivated = DateTime.UtcNow;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime ParrySpecialAbilityActivated
-        {
-            get { return m_ParrySpecialAbilityActivated; }
-            set { m_ParrySpecialAbilityActivated = value; }
-        }
-
-        #endregion
-
-        //////////////////////////////////////////////////////////////////////////
-        // END IPY ADDITIONS
-        //////////////////////////////////////////////////////////////////////////
-
-        private class CountAndTimeStamp
-        {
-            private int m_Count;
-            private DateTime m_Stamp;
-
-            public CountAndTimeStamp()
-            {
-            }
-
-            public DateTime TimeStamp { get { return m_Stamp; } }
-            public int Count
-            {
-                get { return m_Count; }
-                set { m_Count = value; m_Stamp = DateTime.UtcNow; }
-            }
-        }
-
-        private DesignContext m_DesignContext;
-
-        private static List<PlayerMobile> m_YoungChatListeners = new List<PlayerMobile>();
-        public static List<PlayerMobile> YoungChatListeners
-        {
-            get { return m_YoungChatListeners; }
-        }
-
-        private NpcGuild m_NpcGuild;
-        private DateTime m_NpcGuildJoinTime;
-        private DateTime m_NextBODTurnInTime;
-        private Point3D m_LastLocation = Point3D.Zero;
-        private TimeSpan m_NpcGuildGameTime;
-        private PlayerFlag m_Flags;
-        private int m_StepsTaken;
-        private int m_Profession;
-        private bool m_IsStealthing; // IsStealthing should be moved to Server.Mobiles
-        private bool m_IgnoreMobiles; // IgnoreMobiles should be moved to Server.Mobiles
-        private int m_NonAutoreinsuredItems; // number of items that could not be automatically reinsured because gold in bank was not enough
-        private bool m_NinjaWepCooldown;
-
-        private int m_ExecutesLightningStrike; // move to Server.Mobiles??
-
-        private DateTime m_LastOnline;
-        private Server.Guilds.RankDefinition m_GuildRank;
-
-        private bool m_Companion;
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
-        public bool Companion
-        {
-            get { return m_Companion; }
-            set
-            {
-                m_Companion = value;
-                if (value)
-                {
-                    if (!YoungChatListeners.Contains(this))
-                        YoungChatListeners.Add(this);
-                }
-                else
-                {
-                    if (YoungChatListeners.Contains(this))
-                        YoungChatListeners.Remove(this);
+                    m_HarvestTimer = new HarvestTimer(this, DateTime.UtcNow);
+                    m_HarvestTimer.Start();
                 }
             }
-        }
-
-        private PlayerMobile m_CompanionTarget;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public PlayerMobile CompanionTarget
-        {
-            get { return m_CompanionTarget; }
-            set { m_CompanionTarget = value; }
-        }
-
-        private Point3D m_CompanionLastLocation;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Point3D CompanionLastLocation
-        {
-            get { return m_CompanionLastLocation; }
-            set { m_CompanionLastLocation = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Point3D LastLocation
-        {
-            get { return m_LastLocation; }
-            set { m_LastLocation = value; }
-        }
-        
-        private bool m_PetBattleUnlocked = true;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool PetBattleUnlocked
-        {
-            get { return m_PetBattleUnlocked; }
-            set { m_PetBattleUnlocked = value; }
-        }
-
-        private BaseInstrument m_LastInstrument;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BaseInstrument LastInstrument
-        {
-            get { return m_LastInstrument; }
-            set { m_LastInstrument = value; }
-        }
-
-        private DateTime m_NextBattlegroundTime = DateTime.MinValue;
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public DateTime NextBattlegroundTime
-        {
-            get { return m_NextBattlegroundTime; }
-            set { m_NextBattlegroundTime = value; }
-        }
-
-        public PetBattleCreatureCollection PetBattleCreatureCollection;
-        public DateTime LastPetBattleActivity = DateTime.UtcNow;
-
-        private int m_GuildMessageHue, m_AllianceMessageHue;
-
-        private List<Mobile> m_AutoStabled;
-        private List<Mobile> m_AllFollowers;
-
-        #region Getters & Setters
-
-        public List<Mobile> AutoStabled { get { return m_AutoStabled; } }
-
-        public bool NinjaWepCooldown
-        {
-            get
-            {
-                return m_NinjaWepCooldown;
-            }
-            set
-            {
-                m_NinjaWepCooldown = value;
-            }
-        }
-
-        public List<Mobile> AllFollowers
-        {
-            get
-            {
-                if (m_AllFollowers == null)
-                    m_AllFollowers = new List<Mobile>();
-                return m_AllFollowers;
-            }
-        }
-
-        public Server.Guilds.RankDefinition GuildRank
-        {
-            get
-            {
-                if (this.AccessLevel >= AccessLevel.GameMaster)
-                    return Server.Guilds.RankDefinition.Leader;
-                else
-                    return m_GuildRank;
-            }
-            set { m_GuildRank = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int GuildMessageHue
-        {
-            get { return m_GuildMessageHue; }
-            set { m_GuildMessageHue = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int AllianceMessageHue
-        {
-            get { return m_AllianceMessageHue; }
-            set { m_AllianceMessageHue = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int Profession
-        {
-            get { return m_Profession; }
-            set { m_Profession = value; }
-        }
-
-        public int StepsTaken
-        {
-            get { return m_StepsTaken; }
-            set { m_StepsTaken = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsStealthing // IsStealthing should be moved to Server.Mobiles
-        {
-            get { return m_IsStealthing; }
-            set { m_IsStealthing = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IgnoreMobiles // IgnoreMobiles should be moved to Server.Mobiles
-        {
-            get
-            {
-                return m_IgnoreMobiles;
-            }
-            set
-            {
-                if (m_IgnoreMobiles != value)
-                {
-                    m_IgnoreMobiles = value;
-                    Delta(MobileDelta.Flags);
-                }
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public NpcGuild NpcGuild
-        {
-            get { return m_NpcGuild; }
-            set { m_NpcGuild = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime NpcGuildJoinTime
-        {
-            get { return m_NpcGuildJoinTime; }
-            set { m_NpcGuildJoinTime = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime NextBODTurnInTime
-        {
-            get { return m_NextBODTurnInTime; }
-            set { m_NextBODTurnInTime = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime LastOnline
-        {
-            get { return m_LastOnline; }
-            set { m_LastOnline = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public long LastMoved
-        {
-            get { return LastMoveTime; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NpcGuildGameTime
-        {
-            get { return m_NpcGuildGameTime; }
-            set { m_NpcGuildGameTime = value; }
-        }
-
-        private int m_ToTItemsTurnedIn;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int ToTItemsTurnedIn
-        {
-            get { return m_ToTItemsTurnedIn; }
-            set { m_ToTItemsTurnedIn = value; }
-        }
-
-        private int m_ToTTotalMonsterFame;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int ToTTotalMonsterFame
-        {
-            get { return m_ToTTotalMonsterFame; }
-            set { m_ToTTotalMonsterFame = value; }
-        }
-
-        public int ExecutesLightningStrike
-        {
-            get { return m_ExecutesLightningStrike; }
-            set { m_ExecutesLightningStrike = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int ToothAche
-        {
-            get { return CandyCane.GetToothAche(this); }
-            set { CandyCane.SetToothAche(this, value); }
         }
 
         #endregion
 
         #region PlayerFlags
+
         public PlayerFlag Flags
         {
             get { return m_Flags; }
@@ -2152,7 +1325,7 @@ namespace Server.Mobiles
             get { return GetFlag(PlayerFlag.UseOwnFilter); }
             set { SetFlag(PlayerFlag.UseOwnFilter, value); }
         }
-        
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool AcceptGuildInvites
         {
@@ -2175,65 +1348,518 @@ namespace Server.Mobiles
         }
         #endregion
 
-        #region Auto Arrow Recovery
-        private Dictionary<Type, int> m_RecoverableAmmo = new Dictionary<Type, int>();
-
-        public Dictionary<Type, int> RecoverableAmmo
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool Murderer 
         {
-            get { return m_RecoverableAmmo; }
+            get 
+            {
+                return (ShortTermMurders >= 5);
+            }
         }
 
-        public void RecoverAmmo()
+        private PlayerMobile m_LastPlayerKilledBy;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public PlayerMobile LastPlayerKilledBy
         {
-            if (Core.SE && Alive)
+            get { return m_LastPlayerKilledBy; }
+            set { m_LastPlayerKilledBy = value; }
+        }
+        
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool BoatMovement
+        {
+            get { return GetFlag(PlayerFlag.BoatMovement); }
+            set { SetFlag(PlayerFlag.BoatMovement, value); }
+        }
+        
+        private static void CheckAccountAgeAchievements(object mobile)
+        {
+            if (mobile is PlayerMobile)
             {
-                foreach (KeyValuePair<Type, int> kvp in m_RecoverableAmmo)
+                PlayerMobile pm = mobile as PlayerMobile;
+
+                if (pm.Deleted)
+                    return;
+
+                TimeSpan diff = DateTime.UtcNow - ((Account)pm.Account).Created;
+
+                if (diff.TotalDays >= 365.0)
+                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_365dayOldAccount);
+
+                if (diff.TotalDays >= 180.0)
+                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_180dayOldAccount);
+
+                if (diff.TotalDays >= 90.0)
+                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_90dayOldAccount);
+
+                if (diff.TotalDays >= 30.0)
+                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_30dayOldAccount);
+
+                if (diff.TotalDays >= 7.0)
+                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_7dayOldAccount);
+
+                if (diff.TotalDays >= 1.0)
+                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_1dayOldAccount);
+            }
+        }
+
+        public bool CheckPlayerAccountsForCommonGuild(PlayerMobile player2)
+        {
+            bool foundSameGuild = false;
+
+            List<Guilds.BaseGuild> m_Guilds = new List<Guilds.BaseGuild>();
+            List<Guilds.BaseGuild> secondPlayerGuilds = new List<Guilds.BaseGuild>();
+
+            Account account = Account as Account;
+
+            if (account != null)
+            {
+                for (int a = 0; a < (account.Length - 1); a++)
                 {
-                    if (kvp.Value > 0)
+                    Mobile m_Mobile = account.accountMobiles[a] as Mobile;
+
+                    if (m_Mobile != null)
                     {
-                        Item ammo = null;
-
-                        try
-                        {
-                            ammo = Activator.CreateInstance(kvp.Key) as Item;
-                        }
-                        catch
-                        {
-                        }
-
-                        if (ammo != null)
-                        {
-                            string name = ammo.Name;
-                            ammo.Amount = kvp.Value;
-
-                            if (name == null)
-                            {
-                                if (ammo is Arrow)
-                                    name = "arrow";
-                                else if (ammo is Bolt)
-                                    name = "bolt";
-                            }
-
-                            if (name != null && ammo.Amount > 1)
-                                name = String.Format("{0}s", name);
-
-                            if (name == null)
-                                name = String.Format("#{0}", ammo.LabelNumber);
-
-                            PlaceInBackpack(ammo);
-                            SendLocalizedMessage(1073504, String.Format("{0}\t{1}", ammo.Amount, name)); // You recover ~1_NUM~ ~2_AMMO~.
-                        }
+                        if (!m_Mobile.Deleted && m_Mobile.Guild != null)
+                            m_Guilds.Add(m_Mobile.Guild);
                     }
                 }
+            }
 
-                m_RecoverableAmmo.Clear();
+            Account secondPlayerAccount = player2.Account as Account;
+
+            if (secondPlayerAccount != null)
+            {
+                for (int a = 0; a < (secondPlayerAccount.Length - 1); a++)
+                {
+                    Mobile m_Mobile = secondPlayerAccount.accountMobiles[a] as Mobile;
+
+                    if (m_Mobile != null)
+                    {
+                        if (!m_Mobile.Deleted && m_Mobile.Guild != null)
+                            secondPlayerGuilds.Add(m_Mobile.Guild);
+                    }
+                }
+            }
+
+            foreach (Guilds.BaseGuild player1Guild in m_Guilds)
+            {
+                foreach (Guilds.BaseGuild player2Guild in secondPlayerGuilds)
+                {
+                    if (player1Guild == player2Guild)
+                    {
+                        return true;
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        }
+        
+        public PlayerTitleColors TitleColorState { get; set; }
+        public int SelectedTitleColorIndex;
+        public EColorRarity SelectedTitleColorRarity;        
+        private int m_CanReprieve;
+        private bool CanReprieveBool = false;
+        public TimeSpan m_TimeSpanDied;
+        public DateTime m_DateTimeDied;
+        public TimeSpan m_TimeSpanResurrected;
+        public List<string> PreviousNames = new List<string>();
+        public DateTime HueModEnd { get; set; }
+        public TimeSpan LoginElapsedTime { get; set; }
+
+        private DateTime m_Created = DateTime.UtcNow;
+        public DateTime CreatedOn { set { m_Created = value; } get { return m_Created; } }
+        public Boolean CloseBankRunebookGump;
+        
+        public TimeSpan m_ShortTermElapse;
+        public TimeSpan m_LongTermElapse;
+
+        #region UOACZ
+
+        public bool IsInUOACZ
+        {
+            get
+            {
+                if (!(Region is UOACZRegion))
+                    return false;
+
+                UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
+                return m_UOACZAccountEntry.ActiveProfile != UOACZAccountEntry.ActiveProfileType.None;
+            }
+        }
+
+        public bool IsUOACZHuman
+        {
+            get
+            {
+                UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
+
+                if (!(Region is UOACZRegion))
+                    return false;
+
+                return m_UOACZAccountEntry.ActiveProfile == UOACZAccountEntry.ActiveProfileType.Human;
+            }
+        }
+
+        public bool IsUOACZUndead
+        {
+            get
+            {
+                if (!(Region is UOACZRegion))
+                    return false;
+
+                UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
+                return m_UOACZAccountEntry.ActiveProfile == UOACZAccountEntry.ActiveProfileType.Undead;
             }
         }
 
         #endregion
+        
+        public void EnterContestedRegion(bool ressingHere)
+        {            
+        }      
+
+        private DateTime m_HideRestrictionExpiration = DateTime.MinValue;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime HideRestrictionExpiration
+        {
+            get { return m_HideRestrictionExpiration; }
+            set { m_HideRestrictionExpiration = value; }
+        }
+
+        public DateTime m_RecallRestrictionExpiration;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime RecallRestrictionExpiration
+        {
+            get { return m_RecallRestrictionExpiration; }
+            set { m_RecallRestrictionExpiration = value; }
+        }
+
+        public override void DoHarmful(Mobile target, bool indirect)
+        {
+            if (target == null)            
+                return;            
+
+            bool pvpValid = false;
+
+            BaseCreature bc_Target = target as BaseCreature;
+            PlayerMobile pm_Target = target as PlayerMobile;            
+
+            if (target != this)
+            {
+                LastCombatTime = DateTime.UtcNow;
+                target.LastCombatTime = DateTime.UtcNow;
+
+                if (bc_Target != null)
+                {
+                    if (bc_Target.Controlled && bc_Target.ControlMaster is PlayerMobile && bc_Target.ControlMaster != this)
+                    {
+                        PlayerMobile pm_Controller = bc_Target.ControlMaster as PlayerMobile;
+                        PlayerMobile pm_TargetController = bc_Target.ControlMaster as PlayerMobile;
+
+                        bc_Target.LastPlayerCombatTime = DateTime.UtcNow;
+
+                        PlayerVsPlayerCombatOccured(pm_Controller);          
+                        pm_TargetController.PlayerVsPlayerCombatOccured(this);
+                    }
+                }
+
+                if (pm_Target != null)
+                {
+                    PlayerVsPlayerCombatOccured(pm_Target);  
+                    pm_Target.PlayerVsPlayerCombatOccured(this);
+                }
+            }
+
+            base.DoHarmful(target, indirect);
+        }
+
+        public void CapStatMods(Mobile mobile)
+        {   
+            //Bring Boosted Stat Durations Down to Normal Maximum If PvP Occurs
+            TimeSpan MaximumPvPDuration = TimeSpan.FromMinutes(2);
+
+            for (int i = 0; i < mobile.StatMods.Count; ++i)
+            {
+                StatMod check = mobile.StatMods[i];
+
+                if (mobile.Region is UOACZRegion)
+                    return;
+
+                if (check.Type == StatType.Str || check.Type == StatType.Dex || check.Type == StatType.Int)
+                {
+                    if (check.Duration >= MaximumPvPDuration)
+                        check.Duration = MaximumPvPDuration;
+                }
+            }
+        }
+
+        public override void OnHeal(ref int amount, Mobile from)
+        {
+            base.OnHeal(ref amount, from);
+
+            SpecialAbilities.HealingOccured(from, this, amount);            
+        }
+        
+        //Easy UO Detection
+        private Serial m_LastTarget;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Serial LastTarget
+        {
+            get { return m_LastTarget; }
+            set { m_LastTarget = value; }
+        }
+
+        public bool m_UserOptHideFameTitles;
+        public override bool ShowFameTitle
+        {
+            get { return m_UserOptHideFameTitles ? false : base.ShowFameTitle; }
+        }
+
+        private DateTime m_LastDeathByPlayer;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime LastDeathByPlayer
+        {
+            get { return m_LastDeathByPlayer; }
+            set { m_LastDeathByPlayer = value; }
+        }
+      
+        private int m_PirateScore = 0;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int PirateScore
+        {
+            get { return m_PirateScore; }
+            set
+            {
+                m_PirateScore = value;
+            }
+        }
+
+        public Server.Custom.DonationState DonationPlayerState { get; set; }
+
+        private QuestStep m_Step;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public QuestStep Step
+        {
+            get { return m_Step; }
+            set { m_Step = value; }
+        }        
+
+        private DateTime m_LastTownSquareNotification = DateTime.MinValue;
+        public DateTime LastTownSquareNotification
+        {
+            get { return m_LastTownSquareNotification; }
+            set { m_LastTownSquareNotification = value; }
+        }
+        
+        private class CountAndTimeStamp
+        {
+            private int m_Count;
+            private DateTime m_Stamp;
+
+            public CountAndTimeStamp()
+            {
+            }
+
+            public DateTime TimeStamp { get { return m_Stamp; } }
+            public int Count
+            {
+                get { return m_Count; }
+                set { m_Count = value; m_Stamp = DateTime.UtcNow; }
+            }
+        }
+
+        private DesignContext m_DesignContext;
+
+        private static List<PlayerMobile> m_YoungChatListeners = new List<PlayerMobile>();
+        public static List<PlayerMobile> YoungChatListeners
+        {
+            get { return m_YoungChatListeners; }
+        }
+
+        private NpcGuild m_NpcGuild;
+        private DateTime m_NpcGuildJoinTime;
+        private DateTime m_NextBODTurnInTime;
+       
+        private TimeSpan m_NpcGuildGameTime;
+
+        private PlayerFlag m_Flags;                       
+
+        private bool m_IgnoreMobiles; // IgnoreMobiles should be moved to Server.Mobiles        
+        private int m_NonAutoreinsuredItems; // number of items that could not be automatically reinsured because gold in bank was not enough
+        
+        private DateTime m_LastOnline;
+        private Server.Guilds.RankDefinition m_GuildRank = Server.Guilds.RankDefinition.Lowest;
+
+        private bool m_Companion;
+        [CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+        public bool Companion
+        {
+            get { return m_Companion; }
+            set
+            {
+                m_Companion = value;
+
+                if (value)
+                {
+                    if (!YoungChatListeners.Contains(this))
+                        YoungChatListeners.Add(this);
+                }
+
+                else
+                {
+                    if (YoungChatListeners.Contains(this))
+                        YoungChatListeners.Remove(this);
+                }
+            }
+        }
+
+        private PlayerMobile m_CompanionTarget;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public PlayerMobile CompanionTarget
+        {
+            get { return m_CompanionTarget; }
+            set { m_CompanionTarget = value; }
+        }
+
+        private Point3D m_CompanionLastLocation;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Point3D CompanionLastLocation
+        {
+            get { return m_CompanionLastLocation; }
+            set { m_CompanionLastLocation = value; }
+        }
+
+        private Point3D m_LastLocation = Point3D.Zero;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Point3D LastLocation
+        {
+            get { return m_LastLocation; }
+            set { m_LastLocation = value; }
+        }
+        
+        private BaseInstrument m_LastInstrument;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public BaseInstrument LastInstrument
+        {
+            get { return m_LastInstrument; }
+            set { m_LastInstrument = value; }
+        }
+
+        private List<Mobile> m_AutoStabled = new List<Mobile>();
+        public List<Mobile> AutoStabled
+        {
+            get { return m_AutoStabled; } 
+        }
+
+        private List<Mobile> m_AllFollowers;
+        public List<Mobile> AllFollowers
+        {
+            get
+            {
+                if (m_AllFollowers == null)
+                    m_AllFollowers = new List<Mobile>();
+                return m_AllFollowers;
+            }
+        }
+
+        public Server.Guilds.RankDefinition GuildRank
+        {
+            get
+            {
+                if (this.AccessLevel >= AccessLevel.GameMaster)
+                    return Server.Guilds.RankDefinition.Leader;
+                else
+                    return m_GuildRank;
+            }
+            set { m_GuildRank = value; }
+        }
+
+        private int m_Profession;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int Profession
+        {
+            get { return m_Profession; }
+            set { m_Profession = value; }
+        }
+
+        private int m_StepsTaken;
+        public int StepsTaken
+        {
+            get { return m_StepsTaken; }
+            set { m_StepsTaken = value; }
+        }
+
+        private bool m_IsStealthing;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool IsStealthing
+        {
+            get { return m_IsStealthing; }
+            set { m_IsStealthing = value; }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool IgnoreMobiles
+        {
+            get
+            {
+                return m_IgnoreMobiles;
+            }
+
+            set
+            {
+                if (m_IgnoreMobiles != value)
+                {
+                    m_IgnoreMobiles = value;
+                    Delta(MobileDelta.Flags);
+                }
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public NpcGuild NpcGuild
+        {
+            get { return m_NpcGuild; }
+            set { m_NpcGuild = value; }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime NpcGuildJoinTime
+        {
+            get { return m_NpcGuildJoinTime; }
+            set { m_NpcGuildJoinTime = value; }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime NextBODTurnInTime
+        {
+            get { return m_NextBODTurnInTime; }
+            set { m_NextBODTurnInTime = value; }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime LastOnline
+        {
+            get { return m_LastOnline; }
+            set { m_LastOnline = value; }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public long LastMoved
+        {
+            get { return LastMoveTime; }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public TimeSpan NpcGuildGameTime
+        {
+            get { return m_NpcGuildGameTime; }
+            set { m_NpcGuildGameTime = value; }
+        }   
 
         private DateTime m_AnkhNextUse;
-
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime AnkhNextUse
         {
@@ -2254,36 +1880,7 @@ namespace Server.Mobiles
         {
             get { return DisguiseTimers.TimeRemaining(this); }
         }
-
-        private DateTime m_PeacedUntil;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime PeacedUntil
-        {
-            get { return m_PeacedUntil; }
-            set { m_PeacedUntil = value; }
-        }
-
-        #region Scroll of Alacrity
-        private DateTime m_AcceleratedStart;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime AcceleratedStart
-        {
-            get { return m_AcceleratedStart; }
-            set { m_AcceleratedStart = value; }
-        }
-
-        private SkillName m_AcceleratedSkill;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public SkillName AcceleratedSkill
-        {
-            get { return m_AcceleratedSkill; }
-            set { m_AcceleratedSkill = value; }
-        }
-        #endregion
-
+        
         public static Direction GetDirection4(Point3D from, Point3D to)
         {
             int dx = from.X - to.X;
@@ -2512,238 +2109,6 @@ namespace Server.Mobiles
             set { m_DesignContext = value; }
         }
 
-        public static void Initialize()
-        {
-            if (FastwalkPrevention)
-                PacketHandlers.RegisterThrottler(0x02, new ThrottlePacketCallback(MovementThrottle_Callback));
-
-            EventSink.Login += new LoginEventHandler(OnLogin);
-            EventSink.Logout += new LogoutEventHandler(OnLogout);
-            EventSink.Connected += new ConnectedEventHandler(EventSink_Connected);
-            EventSink.Disconnected += new DisconnectedEventHandler(EventSink_Disconnected);
-            if (Core.SE)
-            {
-                Timer.DelayCall(TimeSpan.Zero, new TimerCallback(CheckPets));
-            }
-
-            CommandSystem.Register("WipePlayerMobiles", AccessLevel.Administrator, new CommandEventHandler(WipeAllPlayerMobiles_OnCommand));
-            CommandSystem.Register("UseTrapPouch", AccessLevel.Player, new CommandEventHandler(UseTrappedPouch_OnCommand));
-            CommandSystem.Register("FireDungeonTimer", AccessLevel.Player, new CommandEventHandler(FireDungeonTimer_OnCommand));
-
-            CommandSystem.Register("ShowMeleeDamage", AccessLevel.Player, new CommandEventHandler(ShowMeleeDamage));
-            CommandSystem.Register("ShowSpellDamage", AccessLevel.Player, new CommandEventHandler(ShowSpellDamage));
-            CommandSystem.Register("ShowFollowerDamage", AccessLevel.Player, new CommandEventHandler(ShowFollowerDamage));
-            CommandSystem.Register("ShowProvocationDamage", AccessLevel.Player, new CommandEventHandler(ShowProvocationDamage));
-            CommandSystem.Register("ShowPoisonDamage", AccessLevel.Player, new CommandEventHandler(ShowPoisonDamage));
-            CommandSystem.Register("ShowDamageTaken", AccessLevel.Player, new CommandEventHandler(ShowDamageTaken));
-            CommandSystem.Register("ShowFollowerDamageTaken", AccessLevel.Player, new CommandEventHandler(ShowFollowerDamageTaken));
-            CommandSystem.Register("ShowHealing", AccessLevel.Player, new CommandEventHandler(ShowHealing));
-
-            CommandSystem.Register("ShowStealthSteps", AccessLevel.Player, new CommandEventHandler(ShowStealthSteps));
-            CommandSystem.Register("ShowHenchmenSpeech", AccessLevel.Player, new CommandEventHandler(ShowHenchmenSpeech));
-            CommandSystem.Register("ShowAdminTextFilter", AccessLevel.Counselor, new CommandEventHandler(ShowAdminTextFilter));
-
-            CommandSystem.Register("AutoStealth", AccessLevel.Player, new CommandEventHandler(ToggleAutoStealth));
-
-            CommandSystem.Register("GetDifficulty", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.GetDifficulty));
-            CommandSystem.Register("Provoke", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.AdminProvoke));
-            CommandSystem.Register("Tame", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.AdminTame));
-            CommandSystem.Register("GotoCurrentWaypoint", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.GotoCurrentWaypoint));
-
-            CommandSystem.Register("gotoentrance", AccessLevel.Administrator, new CommandEventHandler(GoToEntranceCommand));
-            CommandSystem.Register("playercount", AccessLevel.Administrator, new CommandEventHandler(PlayerCountCommand));
-            CommandSystem.Register("setthreshold", AccessLevel.Administrator, new CommandEventHandler(SetThresholdCommand));
-            CommandSystem.Register("togglethreshold", AccessLevel.Administrator, new CommandEventHandler(ToggleThresholdCommand));
-
-            //Used for Locally Testing Content
-            CommandSystem.Register("CreateTestLoadout", AccessLevel.GameMaster, new CommandEventHandler(CreateTestLoadout));
-            CommandSystem.Register("Anim", AccessLevel.GameMaster, new CommandEventHandler(Anim));
-            CommandSystem.Register("AnimationTest", AccessLevel.GameMaster, new CommandEventHandler(AnimationTest));
-        }
-
-        [Usage("CreateTestLoadout")]
-        [Description("Sets Character Stats, Skills, and Equipment for TESting")]
-        public static void CreateTestLoadout(CommandEventArgs arg)
-        {
-            PlayerMobile player = arg.Mobile as PlayerMobile;
-
-            if (player == null)
-                return;
-
-            player.SendMessage("Target the character to put in testing mode");
-            player.Target = new CreateTestLoadoutTarget(player);
-        }
-
-        private class CreateTestLoadoutTarget : Target
-        {
-            public CreateTestLoadoutTarget(Mobile from)
-                : base(100, false, TargetFlags.None)
-            {
-            }
-
-            protected override void OnTarget(Mobile from, object target)
-            {
-                if (target is PlayerMobile)
-                {
-                    PlayerMobile pm_Target = target as PlayerMobile;
-
-                    if (!pm_Target.Alive)
-                        return;
-
-                    pm_Target.RawStr = 10000;
-                    pm_Target.Hits = pm_Target.HitsMax;
-
-                    pm_Target.RawDex = 200;
-                    pm_Target.Stam = pm_Target.StamMax;
-
-                    pm_Target.RawInt = 1000;
-                    pm_Target.Mana = pm_Target.ManaMax;
-
-                    pm_Target.Young = false;
-
-                    foreach (Skill skill in pm_Target.Skills)
-                    {
-                        skill.Base = 100;
-                    }
-
-                    pm_Target.DeleteAllEquipment();
-
-                    pm_Target.Backpack.DropItem(new Arrow(2000));
-                    pm_Target.AddItem(new Bow());
-
-                    TotalRefreshPotion potion = new TotalRefreshPotion();
-                    potion.Amount = 50;
-                    pm_Target.Backpack.DropItem(potion);
-
-                    Bandage bandage = new Bandage();
-                    bandage.Amount = 200;
-                    pm_Target.Backpack.DropItem(bandage);
-
-                    BagOfReagents bagOfReagents = new BagOfReagents();
-                    pm_Target.Backpack.DropItem(bagOfReagents);
-
-                    bagOfReagents = new BagOfReagents();
-                    pm_Target.Backpack.DropItem(bagOfReagents);
-
-                    Spellbook spellbook = new Spellbook();
-                    if (spellbook.BookCount == 64)
-                        spellbook.Content = ulong.MaxValue;
-                    else
-                        spellbook.Content = (1ul << spellbook.BookCount) - 1;
-
-                    pm_Target.Backpack.DropItem(spellbook);
-
-                    int dungeonCount = Enum.GetNames(typeof(BaseDungeonArmor.DungeonEnum)).Length;
-
-                    BaseDungeonArmor.DungeonEnum dungeon = (BaseDungeonArmor.DungeonEnum)Utility.RandomMinMax(1, dungeonCount - 1);
-
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Helmet));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Gorget));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Arms));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Gloves));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Chest));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Legs));
-
-                    BaseDungeonArmor.DungeonArmorDetail dungeonArmorDetail = new BaseDungeonArmor.DungeonArmorDetail(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
-
-                    pm_Target.AddItem(new Cloak(dungeonArmorDetail.Hue));
-                }
-
-                else
-                {
-                    from.SendMessage("That is not a player.");
-                    return;
-                }
-            }
-        }
-
-        public void DeleteAllEquipment()
-        {
-            //Clean Out Backpack
-            if (Backpack != null)
-            {
-                if (!Backpack.Deleted)
-                {
-                    Backpack.Delete();
-                    AddItem(new Backpack());
-                }
-            }
-
-            List<Layer> m_Layers = new List<Layer>();
-
-            m_Layers.Add(Layer.Arms);
-            m_Layers.Add(Layer.Bracelet);
-            m_Layers.Add(Layer.Cloak);
-            m_Layers.Add(Layer.Earrings);
-            m_Layers.Add(Layer.FirstValid);
-            m_Layers.Add(Layer.Gloves);
-            m_Layers.Add(Layer.Helm);
-            m_Layers.Add(Layer.InnerLegs);
-            m_Layers.Add(Layer.InnerTorso);
-            m_Layers.Add(Layer.MiddleTorso);
-            m_Layers.Add(Layer.Neck);
-            m_Layers.Add(Layer.OneHanded);
-            m_Layers.Add(Layer.OuterLegs);
-            m_Layers.Add(Layer.OuterTorso);
-            m_Layers.Add(Layer.Pants);
-            m_Layers.Add(Layer.Ring);
-            m_Layers.Add(Layer.Shirt);
-            m_Layers.Add(Layer.Shoes);
-            m_Layers.Add(Layer.Talisman);
-            m_Layers.Add(Layer.TwoHanded);
-            m_Layers.Add(Layer.Waist);
-
-            foreach (Layer layer in m_Layers)
-            {
-                Item item = FindItemOnLayer(layer);
-
-                if (item != null)
-                {
-                    if (!item.Deleted)
-                        item.Delete();
-                }
-            }
-        }
-
-        [Usage("Anim <action> <frameCount>")]
-        [Description("Makes your character do a specified animation.")]
-        public static void Anim(CommandEventArgs e)
-        {
-            if (e.Length == 2)            
-                e.Mobile.Animate(e.GetInt32(0), e.GetInt32(1), 1, true, false, 0);
-        }
-
-        [Usage("Animation Test")]
-        [Description("Loop through all animations of a Bodyvalue")]
-        public static void AnimationTest(CommandEventArgs arg)
-        {
-            PlayerMobile player = arg.Mobile as PlayerMobile;
-
-            if (player == null)
-                return;
-
-            int animations = 32;
-            int frameCount = 15;
-            int delayBetween = 10;
-
-            Point3D location = player.Location;
-            Map map = player.Map;
-
-            for (int a = 1; a < animations + 1; a++)
-            {
-                int animation = a;
-
-                Timer.DelayCall(TimeSpan.FromSeconds((animation - 1) * delayBetween), delegate
-                {
-                    if (player == null) return;
-                    if (player.Location != location) return;
-
-                    player.Say("Animation: " + animation.ToString());
-                    player.Animate(animation, frameCount, 1, true, false, 0);
-                });           
-            }
-        }
-
         private static void CheckPets()
         {
             foreach (Mobile m in World.Mobiles.Values)
@@ -2798,20 +2163,15 @@ namespace Server.Mobiles
         {
             if (dismount)
             {
-                if (this.Mount != null)
-                {
-                    this.Mount.Rider = null;
-                }
-                else if (AnimalForm.UnderTransformation(this))
-                {
-                    AnimalForm.RemoveContext(this, true);
-                }
+                if (Mount != null)                
+                    Mount.Rider = null;
+                
+                else if (AnimalForm.UnderTransformation(this))                
+                    AnimalForm.RemoveContext(this, true);                
             }
 
-            if ((m_MountBlock == null) || !m_MountBlock.m_Timer.Running || (m_MountBlock.m_Timer.Next < (DateTime.UtcNow + duration)))
-            {
-                m_MountBlock = new MountBlock(duration, type, this);
-            }
+            if ((m_MountBlock == null) || !m_MountBlock.m_Timer.Running || (m_MountBlock.m_Timer.Next < (DateTime.UtcNow + duration)))            
+                m_MountBlock = new MountBlock(duration, type, this);            
         }
 
         public override void OnSkillInvalidated(Skill skill)
@@ -2907,124 +2267,7 @@ namespace Server.Mobiles
                 min = baseMin;
 
             return min;
-        }
-
-        private static void OnLogin(LoginEventArgs e)
-        {
-            Mobile from = e.Mobile;
-
-            CheckAtrophies(from);
-
-            from.FollowersMax = 5;
-
-            PlayerMobile pm_From = from as PlayerMobile;
-
-            if (pm_From != null)
-                pm_From.m_SessionStart = DateTime.UtcNow;
-
-            if (AccountHandler.LockdownLevel > AccessLevel.Player)
-            {
-                string notice;
-
-                Accounting.Account acct = from.Account as Accounting.Account;
-
-                if (acct == null || !acct.HasAccess(from.NetState))
-                {
-                    if (from.AccessLevel == AccessLevel.Player)
-                        notice = "The server is currently under lockdown. No players are allowed to log in at this time.";
-
-                    else
-                        notice = "The server is currently under lockdown. You do not have sufficient access level to connect.";
-
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(Disconnect), from);
-                }
-
-                else if (from.AccessLevel >= AccessLevel.Administrator)                
-                    notice = "The server is currently under lockdown. As you are an administrator, you may change this from the [Admin gump.";                
-
-                else                
-                    notice = "The server is currently under lockdown. You have sufficient access level to connect.";                
-
-                from.SendGump(new NoticeGump(1060637, 30720, notice, 0xFFC000, 300, 140, null, null));
-                return;
-            }
-
-            if (pm_From != null)
-            {
-                if ((pm_From.Young || pm_From.Companion) && !YoungChatListeners.Contains(pm_From))
-                    YoungChatListeners.Add(pm_From);
-
-                Timer.DelayCall(TimeSpan.FromSeconds(5), new TimerStateCallback(CheckAccountAgeAchievements), from as object);
-                pm_From.ClaimAutoStabledPets();
-
-                if (pm_From.AccessLevel > AccessLevel.Player)
-                    pm_From.Send(SpeedControl.MountSpeed);
-            }            
-                        
-            //Player Enhancements
-            if (pm_From.m_PlayerEnhancementAccountEntry == null)
-                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
-
-            if (pm_From.m_PlayerEnhancementAccountEntry.Deleted)
-                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
-
-            PlayerCustomization.OnLoginAudit(pm_From);
-
-            //Audit Enhancements For New Entries Available
-            pm_From.m_PlayerEnhancementAccountEntry.AuditCustomizationEntries();
-            pm_From.m_PlayerEnhancementAccountEntry.AuditSpellHueEntries();
-
-            InfluencePersistance.OnLogin(pm_From);
-            
-            //UOACZ
-            UOACZSystem.OnLogin(pm_From);
-
-            //World Chat
-            ChatPersistance.OnLogin(pm_From);
-
-            //Monster Hunter Society
-            MHSPersistance.CheckAndCreateMHSAccountEntry(pm_From);
-
-            //Event Calendar Account
-            EventCalendarPersistance.CheckAndCreateEventCalendarAccount(pm_From);
-
-            //Dungeon Armor
-            BaseDungeonArmor.CheckForAndUpdateDungeonArmorProperties(pm_From);
-
-            //OverloadProtectionSystem
-            pm_From.SystemOverloadActions = 0;
-        }
-
-        public void ResetRegenTimers()
-        {
-            //Reset Regen Timers
-            if (m_HitsTimer != null)
-            {
-                m_HitsTimer.Stop();
-                m_HitsTimer = null;
-
-                m_HitsTimer = new Mobile.HitsTimer(this);
-                m_HitsTimer.Start();
-            }
-
-            if (m_StamTimer != null)
-            {
-                m_StamTimer.Stop();
-                m_StamTimer = null;
-
-                m_StamTimer = new Mobile.StamTimer(this);
-                m_StamTimer.Start();
-            }
-
-            if (m_ManaTimer != null)
-            {
-                m_ManaTimer.Stop();
-                m_ManaTimer = null;
-
-                m_ManaTimer = new Mobile.ManaTimer(this);
-                m_ManaTimer.Start();
-            }
-        }
+        }        
 
         private bool m_NoDeltaRecursion;
 
@@ -3244,10 +2487,12 @@ namespace Server.Mobiles
                 if (moved)
                     from.SendLocalizedMessage(500647); // Some equipment has been moved to your backpack.
             }
+
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+
             finally
             {
                 m_NoDeltaRecursion = false;
@@ -3260,144 +2505,8 @@ namespace Server.Mobiles
 
             if ((flag & MobileDelta.Stat) != 0)
                 ValidateEquipment();           
-        }
-
-        private static void Disconnect(object state)
-        {
-            NetState ns = ((Mobile)state).NetState;
-
-            if (ns != null)
-                ns.Dispose();
-        }
-
-        private static void OnLogout(LogoutEventArgs e)
-        {
-            PlayerMobile player = e.Mobile as PlayerMobile;
-
-            if (player == null)
-                return;
-
-            player.AutoStablePets();  
-        }
-
-        private static void EventSink_Connected(ConnectedEventArgs e)
-        {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null)
-            {
-                pm.m_SessionStart = DateTime.UtcNow;
-
-                if (pm.m_Quest != null)
-                    pm.m_Quest.StartTimer();
-
-                pm.BedrollLogout = false;
-                pm.LastOnline = DateTime.UtcNow;
-            }
-
-            DisguiseTimers.StartTimer(e.Mobile);
-
-            Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(ClearSpecialMovesCallback), e.Mobile);
-        }
-
-        private static void ClearSpecialMovesCallback(object state)
-        {
-            Mobile from = (Mobile)state;
-
-            SpecialMove.ClearAllMoves(from);
-        }
-
-        private static void EventSink_Disconnected(DisconnectedEventArgs e)
-        {
-            Mobile from = e.Mobile;
-            DesignContext context = DesignContext.Find(from);
-
-            if (context != null)
-            {
-                /* Client disconnected
-                 *  - Remove design context
-                 *  - Eject all from house
-                 *  - Restore relocated entities
-                 */
-
-                // Remove design context
-                DesignContext.Remove(from);
-
-                // Eject all from house
-                from.RevealingAction();
-
-                foreach (Item item in context.Foundation.GetItems())
-                    item.Location = context.Foundation.BanLocation;
-
-                foreach (Mobile mobile in context.Foundation.GetMobiles())
-                    mobile.Location = context.Foundation.BanLocation;
-
-                // Restore relocated entities
-                context.Foundation.RestoreRelocatedEntities();
-            }
-
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null)
-            {
-                if (pm.m_PokerGame != null)
-                {
-                    PokerPlayer player = pm.m_PokerGame.GetPlayer( pm );
-                    if (player != null)
-                    {
-                        if (pm.m_PokerGame.Players != null && pm.m_PokerGame.Players.Contains( player ))
-                            pm.m_PokerGame.RemovePlayer( player );
-                    }
-                }
-
-                if (YoungChatListeners.Contains(pm))
-                    YoungChatListeners.Remove(pm);
-
-                pm.IsDragging = false;
-
-                if (pm.Region is BattlegroundRegion)
-                {
-                    Battleground bg = ((BattlegroundRegion)pm.Region).Battleground;
-                    // allow disconnected players to rejoin competitve ctf games
-                    if (!(bg is PickedTeamCTFBattleground))
-                        bg.Leave(pm);
-                }
-                else
-                {
-                    Battleground.Instances.ForEach(bg => bg.Queue.Leave(pm));
-                    // remove disconnects from team picker
-                    var bgs = Battleground.Instances.Where(bg => bg is PickedTeamCTFBattleground);
-                    foreach (var bg in bgs)
-                    {
-                        var cctfbg = bg as PickedTeamCTFBattleground;
-                        if (cctfbg != null && cctfbg.ReadyPlayers.Contains(pm))
-                            cctfbg.ReadyPlayers.Remove(pm);
-
-                        var teams = bg.Teams.Where(t => t.Contains(pm));
-                        foreach (var team in teams)
-                        {
-                            team.Players.Remove(pm);
-                            ((PickedTeamCTFBattleground)bg).UpdateTeamSelectionGumps();
-                        }
-                    }
-                }
-
-                TimeSpan gameTime = DateTime.UtcNow - pm.m_SessionStart;
-                pm.m_GameTime += gameTime;
-                pm.m_BankGameTime += gameTime;
-
-                if (pm.m_Quest != null)
-                    pm.m_Quest.StopTimer();
-
-                pm.m_SpeechLog = null;
-                pm.LastOnline = DateTime.UtcNow;
-                pm.SetSallos(false);
-            }
-
-            DisguiseTimers.StopTimer(from);
-        }
+        }        
         
-        #region Sallos
         private bool _Sallos;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -3410,18 +2519,13 @@ namespace Server.Mobiles
         {
             _Sallos = value;
         }
-        #endregion
 
         public override void RevealingAction()
         {
             if (m_DesignContext != null)
                 return;
 
-            Spells.Sixth.InvisibilitySpell.RemoveTimer(this);
-            InvisPotion.RemoveTimer(this);
-
-            if (Spectating && !(Region is BattlegroundRegion))
-                Spectating = false;
+            Spells.Sixth.InvisibilitySpell.RemoveTimer(this);                  
 
             base.RevealingAction();
 
@@ -3432,18 +2536,10 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public override bool Hidden
         {
-            get
-            {
-                return base.Hidden;
-            }
+            get { return base.Hidden; }
+
             set
             {
-                if (value && Custom.Battlegrounds.Items.CTFFlag.ExistsOn(this))
-                {
-                    SendMessage("You may not hide with a CTF flag.");
-                    return;
-                }
-
                 if (value && HideRestrictionExpiration > DateTime.UtcNow)
                 {
                     string hideRestrictionRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, HideRestrictionExpiration, false, false, false, true, true);
@@ -3457,14 +2553,11 @@ namespace Server.Mobiles
 
                 RemoveBuff(BuffIcon.Invisibility);	//Always remove, default to the hiding icon EXCEPT in the invis spell where it's explicitly set
 
-                if (!Hidden)
-                {
+                if (!Hidden)                
                     RemoveBuff(BuffIcon.HidingAndOrStealth);
-                }
-                else// if( !InvisibilitySpell.HasTimer( this ) )
-                {
-                    BuffInfo.AddBuff(this, new BuffInfo(BuffIcon.HidingAndOrStealth, 1075655));	//Hidden/Stealthing & You Are Hidden
-                }
+                
+                else // if( !InvisibilitySpell.HasTimer( this ) )                
+                    BuffInfo.AddBuff(this, new BuffInfo(BuffIcon.HidingAndOrStealth, 1075655));	//Hidden/Stealthing & You Are Hidden                
             }
         }
 
@@ -3524,20 +2617,8 @@ namespace Server.Mobiles
                 Hits = Hits; Stam = Stam; Mana = Mana;
             }
 
-            if (this.NetState != null)
-                CheckLightLevels(false);
-
-            if (Region is ArenaSystem.ArenaCombatRegion)
-            {
-                Item italisman = FindItemOnLayer(Layer.Talisman);
-                ArenaRewardTotem arena_talisman = italisman as ArenaRewardTotem;
-
-                if (arena_talisman != null)
-                {
-                    foreach (Item i in Items)
-                        arena_talisman.HueItem(i);
-                }
-            }            
+            if (NetState != null)
+                CheckLightLevels(false);           
         }
 
         public override void OnItemRemoved(Item item)
@@ -3549,7 +2630,7 @@ namespace Server.Mobiles
                 Hits = Hits; Stam = Stam; Mana = Mana;
             }
 
-            if (this.NetState != null)
+            if (NetState != null)
                 CheckLightLevels(false);
 
             // IPY ARENA ONLY HUES
@@ -3795,11 +2876,13 @@ namespace Server.Mobiles
         public override void MoveToWorld(Point3D loc, Map map)
         {
             base.MoveToWorld(loc, map);
+
             if (CloseBankRunebookGump)
             {
                 CloseGump(typeof(RunebookGump));
                 CloseBankRunebookGump = false;
             }
+
             RecheckTownProtection();
         }
 
@@ -3889,7 +2972,6 @@ namespace Server.Mobiles
                 default:
                     break;
             }
-            // IPY ACHIEVEMENT (Exploration)
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
@@ -3921,32 +3003,12 @@ namespace Server.Mobiles
                 {
                     if (Alive && house.InternalizedVendors.Count > 0 && house.IsOwner(this))
                         list.Add(new CallbackEntry(6204, new ContextCallback(GetVendor)));
-
-                    //if (house.IsAosRules)
-                    //    list.Add(new CallbackEntry(6207, new ContextCallback(LeaveHouse)));
                 }
-
-                if (m_JusticeProtectors.Count > 0)
-                    list.Add(new CallbackEntry(6157, new ContextCallback(CancelProtection)));
-
-                //if( Alive )
-                //	list.Add( new CallbackEntry( 6210, new ContextCallback( ToggleChampionTitleDisplay ) ) );
             }
         }
 
         private void CancelProtection()
         {
-            for (int i = 0; i < m_JusticeProtectors.Count; ++i)
-            {
-                Mobile prot = m_JusticeProtectors[i];
-
-                string args = String.Format("{0}\t{1}", this.Name, prot.Name);
-
-                prot.SendLocalizedMessage(1049371, args); // The protective relationship between ~1_PLAYER1~ and ~2_PLAYER2~ has been ended.
-                this.SendLocalizedMessage(1049371, args); // The protective relationship between ~1_PLAYER1~ and ~2_PLAYER2~ has been ended.
-            }
-
-            m_JusticeProtectors.Clear();
         }
 
         #region Insurance
@@ -4032,6 +3094,7 @@ namespace Server.Mobiles
 
                 SendLocalizedMessage(1060869, "", 0x23); // You cannot insure that
             }
+
             else
             {
                 if (!item.PayedInsurance)
@@ -4406,15 +3469,7 @@ namespace Server.Mobiles
                 SendGump(new ReclaimVendorGump(house));
             }
         }
-
-        //private void LeaveHouse()
-        //{
-        //    BaseHouse house = BaseHouse.FindHouseAt(this);
-
-        //    if (house != null)
-        //        this.Location = house.BanLocation;
-        //}
-
+        
         private delegate void ContextCallback();
 
         private class CallbackEntry : ContextMenuEntry
@@ -4733,10 +3788,7 @@ namespace Server.Mobiles
         }
 
         public override bool CheckShove(Mobile shoved)
-        {
-            if (Spectating && !(Region is BattlegroundRegion))
-                Spectating = false;            
-            
+        {   
             bool InStamFreeRange = (int)GetDistanceToSqrt(StamFreeMoveSource) <= BaseCreature.StamFreeMoveRange;
 
             //Currently Allowed Stamina-Free Movement
@@ -4755,9 +3807,6 @@ namespace Server.Mobiles
                     return true;
 
                 else if (shoved.Hidden && shoved.AccessLevel > AccessLevel.Player)
-                    return true;
-
-                if (shoved.Spectating || Spectating)
                     return true;
 
                 if (!Pushing)
@@ -4829,10 +3878,7 @@ namespace Server.Mobiles
                 base.OnBeneficialAction(target, isCriminal);
                 return;
             }
-
-            if (m_SentHonorContext != null)
-                m_SentHonorContext.OnSourceBeneficialAction(target);
-
+            
             base.OnBeneficialAction(target, isCriminal);
         }
 
@@ -4885,23 +3931,7 @@ namespace Server.Mobiles
                 Confidence.StopRegenerating(this);
 
             WeightOverloading.FatigueOnDamage(this, amount, 1.0);
-
-            if (m_ReceivedHonorContext != null)
-                m_ReceivedHonorContext.OnTargetDamaged(from, amount);
-
-            if (m_SentHonorContext != null)
-                m_SentHonorContext.OnSourceDamaged(from, amount);
-
-            if (willKill && from is PlayerMobile)
-                Timer.DelayCall(TimeSpan.FromSeconds(10), new TimerCallback(((PlayerMobile)from).RecoverAmmo));
-            
-            if (this.Region is BattlegroundRegion && from is PlayerMobile)
-            {
-                Battleground bg = ((BattlegroundRegion)this.Region).Battleground;
-                if (bg.Active && ((PlayerMobile)from) != this)
-                    bg.CurrentScoreboard.UpdateScore(from as PlayerMobile, Categories.Damage, amount);
-            }
-
+                        
             base.OnDamage(amount, from, willKill);
         }
                 
@@ -4986,25 +4016,10 @@ namespace Server.Mobiles
                 CustomizationAbilities.Reborn(this);            
         }
 
-        private void StartGhostScoutTimer()
-        {
-            if (m_GhostScoutTimer != null)
-            {
-                m_GhostScoutTimer.Stop();
-                m_GhostScoutTimer = null;
-            }
-
-            m_GhostScoutTimer = new GhostScoutingTimer(this);
-            m_GhostScoutTimer.Start();
-        }
-
         public override void Resurrect()
         {
             m_TimeSpanResurrected = this.GameTime;
-
-            if (KilledByPaladin)
-                KilledByPaladin = false;
-
+            
             if (CloseBankRunebookGump)
             {
                 CloseGump(typeof(RunebookGump));
@@ -5024,12 +4039,6 @@ namespace Server.Mobiles
 
                 else if (!EquipItem(deathRobe))
                     deathRobe.Delete();
-
-                if (m_GhostScoutTimer != null)
-                {
-                    m_GhostScoutTimer.Stop();
-                    m_GhostScoutTimer = null;
-                }
             }
         }
 
@@ -5100,9 +4109,6 @@ namespace Server.Mobiles
 
                 enu.Free();
             }
-
-            if (!Warmode)
-                Timer.DelayCall(TimeSpan.FromSeconds(10), new TimerCallback(RecoverAmmo));
         }
 
         private Mobile m_InsuranceAward;
@@ -5125,8 +4131,6 @@ namespace Server.Mobiles
         
         public override bool OnBeforeDeath()
         {
-            StartGhostScoutTimer();
-
             NetState state = NetState;
 
             if (state != null)
@@ -5151,14 +4155,7 @@ namespace Server.Mobiles
 
             if (m_InsuranceAward is PlayerMobile)
                 ((PlayerMobile)m_InsuranceAward).m_InsuranceBonus = 0;
-
-            if (m_ReceivedHonorContext != null)
-                m_ReceivedHonorContext.OnTargetKilled();
-            if (m_SentHonorContext != null)
-                m_SentHonorContext.OnSourceKilled();
-
-            RecoverAmmo();
-
+            
             DropHolding();
 
             return base.OnBeforeDeath();
@@ -5236,22 +4233,8 @@ namespace Server.Mobiles
         {
             DeathMoveResult result;
 
-            // It seems all items are unmarked on death, even blessed/insured ones
             if (item.QuestItem)
                 item.QuestItem = false;
-
-            //PlayerClass Items
-            if (item.PlayerClass != PlayerClass.None && !(Region is BattlegroundRegion))
-            {
-                if (item is BaseWeapon || item is Spellbook)
-                {
-                    item.PlayerClass = PlayerClass.None;
-                    item.PlayerClassOwner = null;
-                    item.PlayerClassRestricted = false;
-
-                    item.Hue = 0;
-                }
-            }
 
             if (CheckInsuranceOnDeath(item))
                 return DeathMoveResult.MoveToBackpack;
@@ -5367,7 +4350,7 @@ namespace Server.Mobiles
             if (NpcGuild == NpcGuild.ThievesGuild)
                 return;
 
-            bool justiceDisabledZone = IsInArenaFight || (Region is BattlegroundRegion) || DuelContext != null ||
+            bool justiceDisabledZone = DuelContext != null ||
                                         SpellHelper.InBuccs(Map, Location) || SpellHelper.InYewOrcFort(Map, Location) || SpellHelper.InYewCrypts(Map, Location) ||
                                         GreyZoneTotem.InGreyZoneTotemArea(Location, Map) || Hotspot.InHotspotArea(Location, Map, true);
 
@@ -5611,24 +4594,7 @@ namespace Server.Mobiles
                         highestPlayerDamager = playerDamager;
                         highestPlayerDamage = damageAmount;
                     }
-                }
-
-                //Paladin Damage
-                if (playerDamager.Paladin && playerDamager.PaladinProbationExpiration < DateTime.UtcNow)
-                {
-                    totalPaladinDamage += damageAmount;
-
-                    if (damageAmount >= MinIndividualDamageRequiredForDeathClaim)
-                    {
-                        paladinClaimCount++;
-
-                        if (damageAmount > highestPaladinDamage)
-                        {
-                            highestPaladinDamager = playerDamager;
-                            highestPaladinDamage = damageAmount;
-                        }
-                    }
-                }
+                }                
 
                 //Murderer Damage
                 else if (playerDamager.Murderer)
@@ -5653,9 +4619,6 @@ namespace Server.Mobiles
             {
                 if (totalPlayerDamage >= MinDamageRequiredForPlayerDeath && playerClaimCount > 0 && highestPlayerDamager != null)
                     killedByPlayer = true;
-
-                if (totalPaladinDamage >= MinDamageRequiredForPaladinDeath && paladinClaimCount > 0 && highestPaladinDamager != null)
-                    killedByPaladin = true;
 
                 if (totalMurdererDamage >= MinDamageRequiredForMurdererDeath && murdererClaimCount > 0 && highestMurdererDamager != null)
                     killedByMurderer = true;
@@ -5688,30 +4651,9 @@ namespace Server.Mobiles
 
             if ((carnage || violentDeath) && !(Region is UOACZRegion))
                 CustomizationAbilities.PlayerDeathExplosion(Location, Map, carnage, violentDeath);  
-
-            if (!(Region is BattlegroundRegion))
-                Server.Guilds.Guild.HandleDeath(this, killer);
-
-            #region Dueling
+            
             if (m_DuelContext != null)
-                m_DuelContext.OnDeath(this, c);
-            #endregion
-
-            if (Region is BattlegroundRegion)
-            {
-                ((BattlegroundRegion)this.Region).HandleDeath(this, c);
-                Battleground bg = ((BattlegroundRegion)this.Region).Battleground;
-                if (bg.Active && LastKiller is PlayerMobile)
-                {
-                    if (LastKiller != this)
-                    {
-                        bg.CurrentScoreboard.UpdateScore(LastKiller as PlayerMobile, Categories.Kills, 1);
-                        DailyAchievement.TickProgress(Category.PvP, (PlayerMobile)LastKiller, PvPCategory.KillPlayers);
-                    }
-                    bg.CurrentScoreboard.UpdateScore(this, Categories.Deaths, 1);
-                    bg.KillFeedBroadcast(LastKiller as PlayerMobile, this);
-                }
-            }
+                m_DuelContext.OnDeath(this, c);                     
 
             if (m_BuffTable != null)
             {
@@ -5736,208 +4678,23 @@ namespace Server.Mobiles
 
         public void ConsiderSins()
         {
-            this.SendMessage("Murder Counts: {0}", ShortTermMurders);
-            this.SendMessage("Lifetime Murder Counts: {0}", Kills);
+            SendMessage("Murder Counts: {0}", ShortTermMurders);
+            SendMessage("Lifetime Murder Counts: {0}", Kills);
 
-            int days;
-            int hours;
-            int minutes;
-            int seconds;
-
-            string sTime = "";
-
-            if (this.ShortTermMurders > 0)
+            if (ShortTermMurders > 0)
             {
-                days = Math.Abs((GameTime - m_ShortTermElapse).Days);
-                hours = Math.Abs((GameTime - m_ShortTermElapse).Hours);
-                minutes = Math.Abs((GameTime - m_ShortTermElapse).Minutes);
+                TimeSpan expiration = GameTime - m_ShortTermElapse;
 
-                if (minutes >= 60)
-                    hours++;
+                string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, DateTime.UtcNow + expiration, false, true, true, true, false);
 
-                if (hours >= 24)
-                    days++;
-
-                sTime = "";
-
-                if (days > 1)
-                    sTime += days.ToString() + " days ";
-
-                else if (days == 1)
-                    sTime += days.ToString() + " day ";
-
-                if (hours > 1)
-                    sTime += hours.ToString() + " hours ";
-
-                else if (hours == 1)
-                    sTime += hours.ToString() + " hour ";
-
-                if (minutes > 1)
-                    sTime += minutes.ToString() + " minutes ";
-
-                else if (minutes == 1)
-                    sTime += minutes.ToString() + " minute ";
-
-                sTime = sTime.Trim();
-
-                if (sTime != "")
-                    SendMessage("Your next murder count will decay in " + sTime + ".");
-            }
-
-            if (!Alive && RestitutionFee > 0)
-            {
-                int restitutionRemaining = RestitutionFee;
-
-                SendMessage("You are responsible for the restitution of " + restitutionRemaining.ToString() + " gold before you are freely resurrectable.");
-            }
-
-            //Find Longest Current Penance Timer on Account
-            DateTime longestPenance = DateTime.UtcNow;
-
-            Account acc = Account as Account;
-
-            for (int i = 0; i < (acc.Length - 1); i++)
-            {
-                Mobile m = acc.accountMobiles[i] as Mobile;
-
-                if (m != null)
-                {
-                    PlayerMobile player = m as PlayerMobile;
-
-                    if (player != null)
-                    {
-                        if (player.m_PenanceExpiration > DateTime.UtcNow && player.m_PenanceExpiration > longestPenance)
-                            longestPenance = player.m_PenanceExpiration;
-
-                        break;
-                    }
-                }
-            }
-
-            if (longestPenance > DateTime.UtcNow)
-            {
-                days = longestPenance.Subtract(DateTime.UtcNow).Days;
-                hours = longestPenance.Subtract(DateTime.UtcNow).Hours;
-                minutes = longestPenance.Subtract(DateTime.UtcNow).Minutes;
-
-                if (minutes >= 60)
-                    hours++;
-
-                if (hours >= 24)
-                    days++;
-
-                sTime = "";
-
-                if (days > 1)
-                    sTime += days.ToString() + " days ";
-
-                else if (days == 1)
-                    sTime += days.ToString() + " day ";
-
-                if (hours > 1)
-                    sTime += hours.ToString() + " hours ";
-
-                else if (hours == 1)
-                    sTime += hours.ToString() + " hour ";
-
-                if (minutes > 1)
-                    sTime += minutes.ToString() + " minutes ";
-
-                else if (minutes == 1)
-                    sTime += minutes.ToString() + " minute ";
-
-                sTime = sTime.Trim();
-
-                if (sTime != "")
-                {
-                    if (IsInTempStatLoss)
-                        this.SendMessage("You are currently in temporary statloss and will remain so for another " + sTime + ".");
-
-                    else if (!IsInTempStatLoss)
-                        SendMessage("Your account is under the risk of temporary statloss for another " + sTime + " if you enter any dungeon or contested area.");
-                }
-            }
-
-            //Paladin Timers
-            if (!Murderer)
-            {
-                if (PaladinRejoinAllowed > DateTime.UtcNow)
-                {
-                    days = PaladinRejoinAllowed.Subtract(DateTime.UtcNow).Days;
-                    hours = PaladinRejoinAllowed.Subtract(DateTime.UtcNow).Hours;
-                    minutes = PaladinRejoinAllowed.Subtract(DateTime.UtcNow).Minutes;
-
-                    if (minutes >= 60)
-                        hours++;
-
-                    if (hours >= 24)
-                        days++;
-
-                    sTime = "";
-
-                    if (days > 1)
-                        sTime += days.ToString() + " days ";
-                    else if (days == 1)
-                        sTime += days.ToString() + " day ";
-
-                    if (hours > 1)
-                        sTime += hours.ToString() + " hours ";
-                    else if (hours == 1)
-                        sTime += hours.ToString() + " hour ";
-
-                    if (minutes > 1)
-                        sTime += minutes.ToString() + " minutes ";
-                    else if (minutes == 1)
-                        sTime += minutes.ToString() + " minute ";
-
-                    sTime = sTime.Trim();
-
-                    if (sTime != "")
-                        SendMessage("You may rejoin the Paladin Order in " + sTime + ".");
-                }
-
-                else if (PaladinProbationExpiration > DateTime.UtcNow)
-                {
-                    days = PaladinProbationExpiration.Subtract(DateTime.UtcNow).Days;
-                    hours = PaladinProbationExpiration.Subtract(DateTime.UtcNow).Hours;
-                    minutes = PaladinProbationExpiration.Subtract(DateTime.UtcNow).Minutes;
-
-                    if (minutes >= 60)
-                        hours++;
-
-                    if (hours >= 24)
-                        days++;
-
-                    sTime = "";
-
-                    if (days > 1)
-                        sTime += days.ToString() + " days ";
-                    else if (days == 1)
-                        sTime += days.ToString() + " day ";
-
-                    if (hours > 1)
-                        sTime += hours.ToString() + " hours ";
-                    else if (hours == 1)
-                        sTime += hours.ToString() + " hour ";
-
-                    if (minutes > 1)
-                        sTime += minutes.ToString() + " minutes ";
-                    else if (minutes == 1)
-                        sTime += minutes.ToString() + " minute ";
-
-                    sTime = sTime.Trim();
-
-                    if (sTime != "")
-                        SendMessage("You are on probation within the Paladin Order for another " + sTime + ".");
-                }
+                SendMessage("Your next murder count will decay in " + timeRemaining + ".");
             }
         }
 
-        private List<Mobile> m_PermaFlags;
+        private List<Mobile> m_PermaFlags = new List<Mobile>();
         private List<Mobile> m_VisList;
         private Hashtable m_AntiMacroTable;
         private TimeSpan m_GameTime;
-        private TimeSpan m_BankGameTime;
         private DateTime m_SessionStart;
         private DateTime m_LastEscortTime;
         private DateTime m_LastPetBallTime;
@@ -5958,24 +4715,6 @@ namespace Server.Mobiles
         {
             get { return m_Learning; }
             set { m_Learning = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan SavagePaintExpiration
-        {
-            get
-            {
-                TimeSpan ts = m_SavagePaintExpiration - DateTime.UtcNow;
-
-                if (ts < TimeSpan.Zero)
-                    ts = TimeSpan.Zero;
-
-                return ts;
-            }
-            set
-            {
-                m_SavagePaintExpiration = DateTime.UtcNow + value;
-            }
         }
 
         private int m_KinPaintHue = -1;
@@ -6054,11 +4793,6 @@ namespace Server.Mobiles
 
         public PlayerMobile()
         {
-            m_ShortTermMurders = new List<Mobile>();
-            m_PaladinsKilled = new List<Mobile>();
-
-            m_minOrderJoinTime = TimeSpan.Zero;
-
             m_LastTarget = Serial.MinusOne;
             m_AutoStabled = new List<Mobile>();
 
@@ -6073,10 +4807,6 @@ namespace Server.Mobiles
             m_ShortTermElapse = TimeSpan.FromHours(MurderCountDecayHours);
             m_LongTermElapse = TimeSpan.FromHours(0.0);
 
-            m_JusticeProtectors = new List<Mobile>();
-            m_GuildRank = Guilds.RankDefinition.Lowest;
-
-            m_ChampionTitles = new ChampionTitleInfo();
             m_UserOptHideFameTitles = true;
 
             TitleColorState = new PlayerTitleColors();
@@ -6116,7 +4846,7 @@ namespace Server.Mobiles
                 
                 else	//Type == MessageType.Guild
                 {
-                    m_GuildMessageHue = hue;
+                    //m_GuildMessageHue = hue;
 
                     g.GuildChat(this, text);
                     SendToStaffMessage(this, "[Guild]: {0}", text);
@@ -6536,6 +5266,7 @@ namespace Server.Mobiles
         }
 
         #region Poison
+
         public override ApplyPoisonResult ApplyPoison(Mobile from, Poison poison)
         {
             if (!Alive)
@@ -6545,16 +5276,7 @@ namespace Server.Mobiles
             if (Spells.Necromancy.EvilOmenSpell.TryEndEffect(this))
                 poison = PoisonImpl.IncreaseLevel(poison);
             #endregion
-
-            double effectChance = this.Skills[SkillName.Parry].Value / 100;
-            double randomResult = Utility.RandomDouble();
-
-            //If Successful Chance (100% at GM), currently wearing shield, and within 20 seconds of using Parrying Shield Ability
-            if (effectChance >= randomResult && from is BaseCreature && (this.FindItemOnLayer(Layer.TwoHanded) is BaseShield) && (this.ParrySpecialAbilityActivated + TimeSpan.FromSeconds(20) > DateTime.UtcNow))
-            {
-                return ApplyPoisonResult.Immune;
-            }
-
+                        
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
             if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)
@@ -6674,15 +5396,12 @@ namespace Server.Mobiles
             SetHairMods(-1, -1);
         }
 
-        private Engines.BulkOrders.BOBFilter m_BOBFilter;
-
+        private Engines.BulkOrders.BOBFilter m_BOBFilter = new Engines.BulkOrders.BOBFilter();
         public Engines.BulkOrders.BOBFilter BOBFilter
         {
             get { return m_BOBFilter; }
         }        
-
-        private GhostScoutingTimer m_GhostScoutTimer;
-
+        
         public override void Serialize(GenericWriter writer)
         {
             //cleanup our anti-macro table 
@@ -6728,331 +5447,31 @@ namespace Server.Mobiles
 
             base.Serialize(writer);
                         
-            writer.Write((int)88); //Version
-            
-            /*
-            //Version 88
-            writer.Write(m_EventCalendarAccount);
-            writer.Write(m_BonusSkillCap);
-            writer.Write(m_MHSPlayerEntry);
+            writer.Write((int)0); //Version
 
-            //Version 87
-            writer.Write((int)m_ShowHealing);
-
-            //Version 86
-            writer.Write(m_WorldChatAccountEntry);
-
-            //Version 85
-            writer.Write(m_UOACZAccountEntry);
-
-            //Version 84
-            writer.Write(m_HideRestrictionExpiration);
-
-            //Version 83
-            writer.Write((int)m_peacemakingMode);
-
-            //Version 82
-            writer.Write((int)m_HenchmenSpeechDisplayMode);
-
-            //Version 81            
-            writer.Write(m_PowerHourBonus);
-            writer.Write(m_BankGameTime);
-
-            //Version 80
-            writer.Write((int)m_StealthStepsDisplayMode);
-            writer.Write(m_ShowAdminFilterText);
-            
-            //Version 79
-            writer.Write(m_TinkerTrapPlacementWindow);
-            writer.Write(m_TinkerTrapsPlaced);
-
-            //Version 78
-            writer.Write(m_PlayerEnhancementAccountEntry);
-            writer.Write(m_InfluenceAccountEntry);
-            
-            //Version 77
-            writer.Write((int)m_ShowFollowerDamageTaken);
-
-            //Version 76
-            writer.Write(m_PaladinsKilled, true);
-            writer.Write(m_MurdererDeathGumpNeeded);
-
-            //Version 75 (In Version 57 Vengeance Entry) 
-
-            //Version 74
-            writer.Write(m_RestitutionFeesToDistribute);
-            writer.Write(m_LastPlayerKilledBy);            
-
-            //Version 73
-            writer.Write(m_PaladinRejoinAllowed);
-            writer.Write(m_PaladinProbationExpiration);
-
-            //Version 72
-            writer.Write(m_LastInstrument);
-            
-            //Version 71
-            writer.Write((int)m_ShowDamageTaken);
-
-            //Version 70
-            writer.Write((int)m_ShowProvocationDamage);
-            writer.Write((int)m_ShowPoisonDamage);
-            writer.Write(m_AutoStealth);
-            writer.Write(m_BoatOccupied);
-            
-            //Version 69
-            writer.Write(ShowTownChat);
-
-            //Version 68
-
-            //Version 67
-            writer.Write(KinPaintHue);
-            writer.Write(KinPaintExpiration);
-
-            //Version 66
-            int specialAbilityEffectEntries = m_SpecialAbilityEffectEntries.Count;
-            writer.Write((int)specialAbilityEffectEntries);
-
-            for (int a = 0; a < specialAbilityEffectEntries; a++)
+            //Version 0            
+            writer.Write(m_SpecialAbilityEffectEntries.Count);
+            for (int a = 0; a < m_SpecialAbilityEffectEntries.Count; a++)
             {
                 writer.Write((int)m_SpecialAbilityEffectEntries[a].m_SpecialAbilityEffect);
                 writer.Write((Mobile)m_SpecialAbilityEffectEntries[a].m_Owner);
                 writer.Write((double)m_SpecialAbilityEffectEntries[a].m_Value);
                 writer.Write((DateTime)m_SpecialAbilityEffectEntries[a].m_Expiration);
             }
-
-            //Version 65
-            writer.Write((int)m_ShowMeleeDamage);
-            writer.Write((int)m_ShowSpellDamage);
-            writer.Write((int)m_ShowFollowerDamage);
-
-            writer.Write(m_IsInTempStatLoss);
-            writer.Write(m_RecallRestrictionExpiration);
-
-            //Version 64
-            writer.Write(m_LastLocation);
-
-            //Version 63          
-
-            //Version 62
-
-            //Version 61
-            writer.Write(m_PirateScore);
-
-            //Version 60
-            writer.Write(m_UniqueMurders);
-
-            writer.Write((int)DictUniqueMurderEntries.Count);
-            foreach (KeyValuePair<PlayerMobile, DateTime> pair in DictUniqueMurderEntries)
-            {
-                writer.Write(pair.Key);
-                writer.Write(pair.Value);
-            }
-
-            //Version 59
-            writer.Write(m_PetBattleUnlocked);
-            writer.Write(LastPetBattleActivity);
-
-            //Version 58
-
-            //Version 57           
-
-            writer.Write(m_RestitutionFee);
-            writer.Write(m_PenanceExpiration);
-
-            // version 56
-            writer.Write(m_ParrySpecialAbilityActivated);
-
-            // version 55
-            writer.Write(m_NextFireAttempt);
-
-            // version 54
-            writer.Write(m_CompanionLastLocation);
-
-            // version 53
-            writer.Write(m_Companion);
-
-            // version 52
-            writer.Write((int)m_NumGoldCoinsGenerated);
-
-            // version 51 removed ROT system and added powerhour
-            writer.Write(PowerHourReset);
-
-            // version 50 - This is actually version 28 in the runUO main trunk
-            writer.Write((DateTime)m_PeacedUntil);
-
-            // version 49
-            writer.Write(CreatedOn);
-
-            // version 48
-           
-            // version 47
-            writer.Write((byte)SelectedTitleColorIndex);
-            writer.Write((byte)SelectedTitleColorRarity);
-
-            // version 46
-            TitleColorState.Serialize(writer);
-
-            //version 45 
-            writer.Write(m_UserOptHideFameTitles);
-
-            //version 44
-            if (PreviousNames == null)
-            {
-                writer.Write((int)0);
-            }
-            else
-            {
-                writer.Write(PreviousNames.Count);
-                foreach (var name in PreviousNames)
-                {
-                    writer.Write(name);
-                }
-            }
-
-            //version 43
-            writer.Write(LoginElapsedTime);
             
-            //version 41
-            Server.Custom.DonationState.Serialize(writer, this);
-
-            //version 40
-            //T2A Access
-            writer.Write((DateTime)m_T2AAccess);
-
-            //Paladins
-            writer.Write((DateTime)m_DateTimeDied);
-
-            //Squelch Citizenship
-            writer.Write((bool)SquelchCitizenship);
-
-            //case 36: Paladin titles
-            writer.Write((int)m_PaladinPoints);
-            writer.Write((DateTime)m_PaladinPointsDecayed);
-
-            //case 35: Generic titles
-            writer.Write((int)m_TitlesPrefix.Count);
-
-            for (int n = 0; n < m_TitlesPrefix.Count; n++)
+            writer.Write(PreviousNames.Count);
+            for (int a = 0; a < PreviousNames.Count; a++)
             {
-                if (m_TitlesPrefix[n] != null)
-                {
-                    writer.Write(m_TitlesPrefix[n]);
-                }
+                writer.Write(PreviousNames[a]);
             }
-
-            writer.Write((int)0); // TITLE SUFFIX LEGACY (removed)
-
-            writer.Write((string)m_CurrentPrefix);
-
-            //Time to wait before re-joining The Paladin Order if you commit murder
-            if (m_minOrderJoinTime == null)
-                m_minOrderJoinTime = TimeSpan.Zero;
-
-            if (m_ShortTermMurders == null)
-                m_ShortTermMurders = new List<Mobile>();           
-
-            writer.Write((TimeSpan)m_minOrderJoinTime);     //IPY
-            //Track Short Term Murdered List
-            writer.Write(m_ShortTermMurders, true);         //IPY
-
-            //Murdercount decay while alive only
-            writer.Write((TimeSpan)m_TimeSpanDied);         //IPY
-            writer.Write((TimeSpan)m_TimeSpanResurrected);  //IPY
-
-            // Set bonuses
-            writer.Write((int)m_ActiveSetBonuses);
-
-            // SkillScroll Serialize Decay timers for LastSkillGains
-            int countTimer = 0;
-            DateTime badDate = DateTime.Parse("1/1/0001 12:00:00 AM");
-            for (int n = 0; n < 5; n++)
-            {
-                if (!this._StartedLastSkillGain[countTimer].Equals(badDate) && this._StartedLastSkillGain[countTimer] != null && this._TimerLastSkillGain[countTimer].Running)
-                {
-                    countTimer++;
-                }
-            }
-
-            writer.Write((int)countTimer);
-
-            for (int n = 0; n < countTimer; n++)
-            {
-                if (this._StartedLastSkillGain[n] != null)
-                {
-                    writer.Write(this._StartedLastSkillGain[n]);
-                }
-            }
-            // SkillScroll Serialize LastSkillGain[] nummmnut
-            // Find all non null elements in LastSkillGain[]
-            int count = 0;
-            while ((count < 5) && (this.LastSkillGain[count] != null))
-            {
-                count++;
-            }
-            // SkillScroll Serialize end
-
-            writer.Write((int)count);
-
-            // Serialize Skill in order of LastSkillGain[]
-            for (int n = 0; n < 5; n++)
-            {
-                if (this.LastSkillGain[n] != null)
-                {
-                    writer.Write((int)this.LastSkillGain[n].SkillID);
-                }
-            }
-
-            // SkillScroll Serialize LastSkillGain[] End
-
-            writer.Write((DateTime)m_AnkhNextUse);
-            writer.Write(m_AutoStabled, true);
-
-            if (m_AcquiredRecipes == null)
-            {
-                writer.Write((int)0);
-            }
-            else
-            {
-                writer.Write(m_AcquiredRecipes.Count);
-
-                foreach (KeyValuePair<int, bool> kvp in m_AcquiredRecipes)
-                {
-                    writer.Write(kvp.Key);
-                    writer.Write(kvp.Value);
-                }
-            }
-
-            writer.WriteDeltaTime(m_LastHonorLoss);
-
-            ChampionTitleInfo.Serialize(writer, m_ChampionTitles);
-
-            writer.Write(m_LastValorLoss);
-            writer.Write((int)m_Step); // IPY
-
-            writer.WriteEncodedInt(m_ToTItemsTurnedIn);
-            writer.Write(m_ToTTotalMonsterFame);
-            writer.Write((Serial)m_LastTarget); // IPY
-
-            writer.WriteEncodedInt(m_AllianceMessageHue);
-            writer.WriteEncodedInt(m_GuildMessageHue);
-            writer.Write((int)m_CanReprieve); // IPY
-            writer.Write((DateTime)m_LastDeathByPlayer); // IPY
-
-            writer.WriteEncodedInt(m_GuildRank.Rank);
-            writer.Write(m_LastOnline);
-
-            writer.WriteEncodedInt((int)m_SolenFriendship);
 
             QuestSerializer.Serialize(m_Quest, writer);
-
-            if (m_DoneQuests == null)
-            {
+            if (m_DoneQuests == null)            
                 writer.WriteEncodedInt((int)0);
-            }
+            
             else
             {
-                writer.WriteEncodedInt((int)m_DoneQuests.Count);
-
+                writer.WriteEncodedInt(m_DoneQuests.Count);
                 for (int i = 0; i < m_DoneQuests.Count; ++i)
                 {
                     QuestRestartInfo restartInfo = m_DoneQuests[i];
@@ -7062,205 +5481,83 @@ namespace Server.Mobiles
                 }
             }
 
-            writer.WriteEncodedInt((int)m_Profession);
+            writer.WriteEncodedInt(m_GuildRank.Rank);            
 
-            writer.WriteDeltaTime(m_LastCompassionLoss);
+            writer.Write(m_EventCalendarAccount);
+            writer.Write(m_BonusSkillCap);
+            writer.Write(m_MHSPlayerEntry);
+            writer.Write((int)m_ShowHealing);
+            writer.Write(m_WorldChatAccountEntry);
+            writer.Write(m_UOACZAccountEntry);
+            writer.Write(m_HideRestrictionExpiration);
+            writer.Write((int)m_HenchmenSpeechDisplayMode);
+            writer.Write((int)m_StealthStepsDisplayMode);
+            writer.Write(m_ShowAdminFilterText);
+            writer.Write(m_PlayerEnhancementAccountEntry);
+            writer.Write(m_InfluenceAccountEntry);
+            writer.Write((int)m_ShowFollowerDamageTaken);
+            writer.Write(m_LastPlayerKilledBy);
+            writer.Write(m_LastInstrument);
+            writer.Write((int)m_ShowDamageTaken);
+            writer.Write((int)m_ShowProvocationDamage);
+            writer.Write((int)m_ShowPoisonDamage);
+            writer.Write(m_AutoStealth);
+            writer.Write(m_BoatOccupied); 
+            writer.Write(KinPaintHue);
+            writer.Write(KinPaintExpiration);
+            writer.Write((int)m_ShowMeleeDamage);
+            writer.Write((int)m_ShowSpellDamage);
+            writer.Write((int)m_ShowFollowerDamage);
+            writer.Write(m_RecallRestrictionExpiration);
+            writer.Write(m_LastLocation);
+            writer.Write(m_PirateScore);
+            writer.Write(m_CompanionLastLocation);
+            writer.Write(m_Companion);
+            writer.Write((int)m_NumGoldCoinsGenerated);
+            writer.Write(CreatedOn);
+            writer.Write((byte)SelectedTitleColorIndex);
+            writer.Write((byte)SelectedTitleColorRarity);
+            TitleColorState.Serialize(writer);
+            writer.Write(m_UserOptHideFameTitles);
+            writer.Write(LoginElapsedTime);
+            Server.Custom.DonationState.Serialize(writer, this);
+            writer.Write((DateTime)m_DateTimeDied);
+            writer.Write((TimeSpan)m_TimeSpanDied);
+            writer.Write((TimeSpan)m_TimeSpanResurrected);
+            writer.Write((DateTime)m_AnkhNextUse);
+            writer.Write(m_AutoStabled, true);
+            writer.Write((int)m_Step);
+            writer.Write((Serial)m_LastTarget);
+            writer.Write((DateTime)m_LastDeathByPlayer);
+            writer.Write(m_LastOnline);
             writer.Write((bool)m_NoNewTimer); // IPY
-
-            writer.WriteEncodedInt(m_CompassionGains);
-            if (m_CompassionGains > 0)
-                writer.WriteDeltaTime(m_NextCompassionDay);
-
-            writer.Write(NextBountyNote); // IPY
-
             m_BOBFilter.Serialize(writer);
-
-            bool useMods = (m_HairModID != -1 || m_BeardModID != -1);
-
-            writer.Write(useMods);
-
-            if (useMods)
-            {
-                writer.Write((int)m_HairModID);
-                writer.Write((int)m_HairModHue);
-                writer.Write((int)m_BeardModID);
-                writer.Write((int)m_BeardModHue);
-            }
-
-            writer.Write(SavagePaintExpiration);
-
             writer.Write((int)m_NpcGuild);
             writer.Write((DateTime)m_NpcGuildJoinTime);
             writer.Write((TimeSpan)m_NpcGuildGameTime);
-
             writer.Write(m_PermaFlags, true);
-
             writer.Write(NextTailorBulkOrder);
-
             writer.Write(NextSmithBulkOrder);
-
-            writer.WriteDeltaTime(m_LastJusticeLoss);
-            writer.Write(m_JusticeProtectors, true);
-
-            writer.WriteDeltaTime(m_LastSacrificeGain);
-            writer.WriteDeltaTime(m_LastSacrificeLoss);
-            writer.Write(m_AvailableResurrects);
-
             writer.Write((int)m_Flags);
-
             writer.Write(m_LongTermElapse);
             writer.Write(m_ShortTermElapse);
-            writer.Write(this.GameTime);
-            */
+            writer.Write(GameTime);
+            
+            writer.Write((int)m_HairModID);
+            writer.Write((int)m_HairModHue);
+            writer.Write((int)m_BeardModID);
+            writer.Write((int)m_BeardModHue);  
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            CreatedOn = DateTime.UtcNow;
-
-            m_SpecialAbilityEffectEntries = new List<SpecialAbilityEffectEntry>();
-            m_SpecialAbilityEffectEntriesToAdd = new List<SpecialAbilityEffectEntry>();
-            m_SpecialAbilityEffectEntriesToRemove = new List<SpecialAbilityEffectEntry>();
-
-            //Safety Measures
-            Squelched = false;
-            Frozen = false;
-            CantWalk = false;
-            
-            //---------------------------
-
-            m_PaladinsKilled = new List<Mobile>();
-
-            /*
-            if (version >= 88)
-            {
-                m_EventCalendarAccount = (EventCalendarAccount)reader.ReadItem() as EventCalendarAccount;
-                m_BonusSkillCap = reader.ReadInt();
-                m_MHSPlayerEntry = (MHSPlayerEntry)reader.ReadItem() as MHSPlayerEntry;
-            }
-
-            if (version >= 87)
-            {
-                m_ShowHealing = (DamageDisplayMode)reader.ReadInt();
-            }
-
-            if (version >= 86)
-            {
-                m_WorldChatAccountEntry = (WorldChatAccountEntry)reader.ReadItem() as WorldChatAccountEntry;
-            }
-
-            if (version >= 85)
-            {
-                m_UOACZAccountEntry = (UOACZAccountEntry)reader.ReadItem() as UOACZAccountEntry;
-            }
-
-            if (version >= 84)
-            {
-                m_HideRestrictionExpiration = reader.ReadDateTime();
-            }
-
-            m_peacemakingMode = PeacemakingModeEnum.Combat; //Default value
-            if (version >= 83)
-            {
-                m_peacemakingMode = (PeacemakingModeEnum)reader.ReadInt();
-            }
-
-            if (version >= 82)
-            {
-                m_HenchmenSpeechDisplayMode = (HenchmenSpeechDisplayMode)reader.ReadInt();
-            }
-
-            if (version >= 81)
-            {
-                m_PowerHourBonus = reader.ReadTimeSpan();
-                m_BankGameTime = reader.ReadTimeSpan();
-            }
-
-            if (version >= 80)
-            {
-                m_StealthStepsDisplayMode = (StealthStepsDisplayMode)reader.ReadInt();
-                m_ShowAdminFilterText = reader.ReadBool();
-            }
-
-            if (version >= 79)
-            {
-                m_TinkerTrapPlacementWindow = reader.ReadDateTime();
-                m_TinkerTrapsPlaced = reader.ReadInt();
-            }
-
-            if (version >= 78)
-            {
-                m_PlayerEnhancementAccountEntry = (PlayerEnhancementAccountEntry)reader.ReadItem() as PlayerEnhancementAccountEntry;
-                m_InfluenceAccountEntry = reader.ReadItem() as InfluenceAccountEntry;
-            }
-
-            if (version >= 77)
-            {
-                m_ShowFollowerDamageTaken = (DamageDisplayMode)reader.ReadInt();
-            }
-
-            if (version >= 76)
-            {
-                m_PaladinsKilled = reader.ReadStrongMobileList();
-                m_MurdererDeathGumpNeeded = reader.ReadBool();
-            }
-
-            if (version >= 75)
-            {
-            }
-
-            if (version >= 74)
-            {
-                m_RestitutionFeesToDistribute = reader.ReadInt();
-                m_LastPlayerKilledBy = (PlayerMobile)reader.ReadMobile();
-            }
-
-            if (version >= 73)
-            {
-                m_PaladinRejoinAllowed = reader.ReadDateTime();
-                m_PaladinProbationExpiration = reader.ReadDateTime();
-            }
-
-            if (version >= 72)
-            {
-                m_LastInstrument = (BaseInstrument)reader.ReadItem();
-            }
-
-            if (version >= 71)
-            {
-                m_ShowDamageTaken = (DamageDisplayMode)reader.ReadInt();
-            }
-
-            if (version >= 70)
-            {
-                m_ShowProvocationDamage = (DamageDisplayMode)reader.ReadInt();
-                m_ShowPoisonDamage = (DamageDisplayMode)reader.ReadInt();
-                m_AutoStealth = reader.ReadBool();
-                m_BoatOccupied = (BaseBoat)reader.ReadItem();
-            }
-
-            if (version >= 69)
-            {
-                ShowTownChat = reader.ReadBool();
-            }
-
-            if (version >= 68)
-            {
-            }
-
-            if (version >= 67)
-            {
-                KinPaintHue = reader.ReadInt();
-                KinPaintExpiration = reader.ReadDateTime();
-            }
-
-            if (version >= 66)
+                   
+            //Version 0
+            if (version >= 0)
             {
                 int specialAbilityEntries = reader.ReadInt();
-
                 for (int a = 0; a < specialAbilityEntries; a++)
                 {
                     SpecialAbilityEffect effect = (SpecialAbilityEffect)reader.ReadInt();
@@ -7272,395 +5569,19 @@ namespace Server.Mobiles
 
                     m_SpecialAbilityEffectEntries.Add(entry);
                 }
-            }
 
-            if (version >= 65)
-            {
-                m_ShowMeleeDamage = (DamageDisplayMode)reader.ReadInt();
-                m_ShowSpellDamage = (DamageDisplayMode)reader.ReadInt();
-                m_ShowFollowerDamage = (DamageDisplayMode)reader.ReadInt();
-
-                m_IsInTempStatLoss = reader.ReadBool();
-                m_RecallRestrictionExpiration = reader.ReadDateTime();
-            }
-
-            if (version >= 64)
-            {
-                m_LastLocation = reader.ReadPoint3D();
-            }
-
-            if (version >= 63)
-            {
-            }
-
-            if (version >= 62)
-            {
-            }
-
-            if (version >= 61)
-            {
-                m_PirateScore = reader.ReadInt();
-            }
-
-            if (version >= 60)
-            {
-                m_UniqueMurders = reader.ReadInt();
-
-                int murderEntriesCount = reader.ReadInt();
-                for (int i = 0; i < murderEntriesCount; ++i)
+                int previousNamesCount = reader.ReadInt();
+                for (int i = 0; i < previousNamesCount; i++)
                 {
-                    PlayerMobile pm_Victim = reader.ReadMobile() as PlayerMobile;
-                    DateTime murderDate = reader.ReadDateTime();
-
-                    if (pm_Victim != null)
-                        DictUniqueMurderEntries.Add(pm_Victim, murderDate);
-                }
-            }
-
-            if (version >= 59)
-            {
-                m_PetBattleUnlocked = reader.ReadBool();
-                LastPetBattleActivity = reader.ReadDateTime();
-            }
-
-            if (version >= 58)
-            {
-            }
-
-            if (version >= 57)
-            {
-            }
-
-            if (version >= 56)
-            {
-                m_ParrySpecialAbilityActivated = reader.ReadDateTime();
-            }
-
-            if (version >= 55)
-            {
-                m_NextFireAttempt = reader.ReadDateTime();
-            }
-
-            if (version >= 54)
-            {
-                m_CompanionLastLocation = reader.ReadPoint3D();
-            }
-
-            if (version >= 53)
-            {
-                m_Companion = reader.ReadBool();
-            }
-
-            if (version >= 52)
-            {
-                m_NumGoldCoinsGenerated = reader.ReadInt();
-            }
-
-            if (version >= 51)
-            {
-                m_PowerHourReset = reader.ReadDateTime();
-            }
-
-            if (version >= 50)
-            {
-                m_PeacedUntil = reader.ReadDateTime();
-            }
-
-            if (version >= 49)
-            {
-                CreatedOn = reader.ReadDateTime();
-            }
-
-            if (version >= 48)
-            {
-            }
-
-            if (version >= 47)
-            {
-                SelectedTitleColorIndex = (int)reader.ReadByte();
-                SelectedTitleColorRarity = (EColorRarity)reader.ReadByte();
-            }
-
-            if (version >= 46)
-            {
-                TitleColorState = new PlayerTitleColors();
-                TitleColorState.Deserialize(reader);
-            }
-
-            if (version >= 45)
-            {
-                m_UserOptHideFameTitles = reader.ReadBool();
-            }
-
-            if (version >= 44)
-            {
-                int count = reader.ReadInt();
-                if (count > 0)
-                {
-                    PreviousNames = new List<string>();
-                    for (int i = 0; i < count; i++)
-                    {
-                        PreviousNames.Add(reader.ReadString());
-                    }
-                }
-            }
-
-            if (version >= 43)
-            {
-                LoginElapsedTime = reader.ReadTimeSpan();
-            }
-
-            if (version >= 42)
-            {
-            }
-
-            if (version >= 41)
-            {
-                DonationPlayerState = Server.Custom.DonationState.Deserialize(reader);
-            }
-
-            if (version >= 40)
-            {
-                m_T2AAccess = reader.ReadDateTime();
-            }
-
-            if (version >= 39)
-            {
-                //Removed
-            }
-
-            if (version >= 38)
-            {
-                m_DateTimeDied = reader.ReadDateTime();
-            }
-
-            if (version >= 37)
-            {
-                SquelchCitizenship = reader.ReadBool();
-            }
-
-            if (version >= 36)
-            {
-                m_PaladinPoints = reader.ReadInt();
-                m_PaladinPointsDecayed = reader.ReadDateTime();
-            }
-
-            if (version >= 35)
-            {
-                int count = reader.ReadInt();
-                for (int i = 0; i < count; ++i)
-                {
-                    string title = reader.ReadString();
-                    m_TitlesPrefix.Add(title);
+                    PreviousNames.Add(reader.ReadString());
                 }
 
-                int count2 = reader.ReadInt();
-                for (int i = 0; i < count2; ++i)
-                {
-                    string dummy = reader.ReadString();
-                }
-
-                m_CurrentPrefix = reader.ReadString();
-            }
-
-            if (version >= 34)
-            {
-            }
-
-            if (version >= 33)
-            {
-                m_minOrderJoinTime = reader.ReadTimeSpan();
-                m_ShortTermMurders = reader.ReadStrongMobileList();
-                m_TimeSpanDied = reader.ReadTimeSpan();
-                m_TimeSpanResurrected = reader.ReadTimeSpan();
-            }
-
-            if (version >= 32)
-            {
-                m_ActiveSetBonuses = (SetBonus)reader.ReadInt();
-            }
-
-            if (version >= 31)
-            {
-                //Removed: Stat Gains
-                if (51 > version)
-                {
-                    reader.ReadDateTime();
-                    reader.ReadInt();
-                }
-            }
-
-            if (version >= 30)
-            {
-                if (51 > version)
-                {
-                    //Removed: Skill Gain Timers
-                    int count = reader.ReadInt();
-                    for (int i = 0; i < count; ++i)
-                    {
-                        reader.ReadInt();
-                        reader.ReadDateTime();
-                    }
-                }
-
-                if (51 > version)
-                {
-                    //Removed: Skill Gains
-                    int count = reader.ReadInt();
-                    for (int i = 0; i < count; ++i)
-                    {
-                        reader.ReadInt();
-                        reader.ReadInt();
-                    }
-                }
-            }
-
-            if (version >= 29)
-            {
-                //SkillScroll Decay timer for LastSkillGain deserialize
-
-                int count = reader.ReadInt();
-                if (count != 0)
-                {
-                    for (int n = 0; n < count; n++)
-                    {
-                        _StartedLastSkillGain[n] = reader.ReadDateTime();
-
-                        DateTime now = DateTime.UtcNow;
-                        TimeSpan newDelay = now.Subtract(_StartedLastSkillGain[n]);
-
-                        if (newDelay > DecayLastSkillGain)
-                            newDelay = TimeSpan.Zero;
-
-                        _TimerLastSkillGain[n] = Timer.DelayCall(newDelay, new TimerCallback(deleteLastSkillGain));
-                    }
-                }
-            }
-
-            if (version >= 28)
-            {
-                //SkillScroll LastSkillGain Deserialize
-
-                int count = reader.ReadInt();
-                if (count != 0)
-                {
-                    int skillNum;
-                    for (int n = 0; n < count; n++)
-                    {
-                        skillNum = reader.ReadInt();
-                        LastSkillGain[n] = Skills[skillNum];
-                    }
-
-                    // if no timer delete skill
-                    DateTime badDate = DateTime.Parse("1/1/0001 12:00:00 AM");
-
-                    for (int n = 0; n < count; n++)
-                    {
-                        if (_StartedLastSkillGain[n] == null || _StartedLastSkillGain[n].Equals(badDate))
-
-                            deleteLastSkillGain();
-                    }
-                }
-            }
-
-            if (version >= 27)
-            {
-                m_AnkhNextUse = reader.ReadDateTime();
-            }
-
-            if (version >= 26)
-            {
-                m_AutoStabled = reader.ReadStrongMobileList();
-            }
-
-            if (version >= 25)
-            {
-                int recipeCount = reader.ReadInt();
-
-                if (recipeCount > 0)
-                {
-                    m_AcquiredRecipes = new Dictionary<int, bool>();
-
-                    for (int i = 0; i < recipeCount; i++)
-                    {
-                        int r = reader.ReadInt();
-                        if (reader.ReadBool())	//Don't add in recipies which we haven't gotten or have been removed
-                            m_AcquiredRecipes.Add(r, true);
-                    }
-                }
-            }
-
-            if (version >= 24)
-            {
-                m_LastHonorLoss = reader.ReadDeltaTime();
-            }
-
-            if (version >= 23)
-            {
-                m_ChampionTitles = new ChampionTitleInfo(reader);
-            }
-
-            if (version >= 22)
-            {
-                m_LastValorLoss = reader.ReadDateTime();
-                m_Step = (QuestStep)reader.ReadInt();
-            }
-
-            if (version >= 21)
-            {
-                m_ToTItemsTurnedIn = reader.ReadEncodedInt();
-                m_ToTTotalMonsterFame = reader.ReadInt();
-                m_LastTarget = (Serial)reader.ReadInt();
-            }
-
-            if (version >= 20)
-            {
-                m_AllianceMessageHue = reader.ReadEncodedInt();
-                m_GuildMessageHue = reader.ReadEncodedInt();
-
-                if (CanReprieveBool)
-                {
-                    m_CanReprieve = 0;
-                    reader.ReadInt();
-                }
-
-                else
-                    m_CanReprieve = reader.ReadInt();
-
-                m_LastDeathByPlayer = reader.ReadDateTime();
-            }
-
-            if (version >= 19)
-            {
-                int rank = reader.ReadEncodedInt();
-                int maxRank = Guilds.RankDefinition.Ranks.Length - 1;
-
-                if (rank > maxRank)
-                    rank = maxRank;
-
-                m_GuildRank = Guilds.RankDefinition.Ranks[rank];
-                m_LastOnline = reader.ReadDateTime();
-            }
-
-            if (version >= 18)
-            {
-                m_SolenFriendship = (SolenFriendship)reader.ReadEncodedInt();
-            }
-
-            if (version >= 17)
-            {
-                //Removed
-            }
-
-            if (version >= 16)
-            {
                 m_Quest = QuestSerializer.DeserializeQuest(reader);
 
                 if (m_Quest != null)
                     m_Quest.From = this;
 
                 int count = reader.ReadEncodedInt();
-
                 if (count > 0)
                 {
                     m_DoneQuests = new List<QuestRestartInfo>();
@@ -7668,163 +5589,105 @@ namespace Server.Mobiles
                     for (int i = 0; i < count; ++i)
                     {
                         Type questType = QuestSerializer.ReadType(QuestSystem.QuestTypes, reader);
-                        DateTime restartTime;
-
-                        if (version < 17)
-                            restartTime = DateTime.MaxValue;
-
-                        else
-                            restartTime = reader.ReadDateTime();
+                        DateTime restartTime = reader.ReadDateTime();
 
                         m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
                     }
                 }
 
-                m_Profession = reader.ReadEncodedInt();
-            }
+                int rank = reader.ReadEncodedInt();
+                int maxRank = Guilds.RankDefinition.Ranks.Length - 1;
 
-            if (version >= 15)
-            {
-                m_LastCompassionLoss = reader.ReadDeltaTime();
+                if (rank > maxRank)
+                    rank = maxRank;
+
+                m_GuildRank = Guilds.RankDefinition.Ranks[rank];
+
+                m_EventCalendarAccount = (EventCalendarAccount)reader.ReadItem() as EventCalendarAccount;
+                m_BonusSkillCap = reader.ReadInt();
+                m_MHSPlayerEntry = (MHSPlayerEntry)reader.ReadItem() as MHSPlayerEntry;
+                m_ShowHealing = (DamageDisplayMode)reader.ReadInt();
+                m_WorldChatAccountEntry = (WorldChatAccountEntry)reader.ReadItem() as WorldChatAccountEntry;
+                m_UOACZAccountEntry = (UOACZAccountEntry)reader.ReadItem() as UOACZAccountEntry;
+                m_HideRestrictionExpiration = reader.ReadDateTime();
+                m_HenchmenSpeechDisplayMode = (HenchmenSpeechDisplayMode)reader.ReadInt();
+                m_StealthStepsDisplayMode = (StealthStepsDisplayMode)reader.ReadInt();
+                m_ShowAdminFilterText = reader.ReadBool();
+                m_PlayerEnhancementAccountEntry = (PlayerEnhancementAccountEntry)reader.ReadItem() as PlayerEnhancementAccountEntry;
+                m_InfluenceAccountEntry = reader.ReadItem() as InfluenceAccountEntry;
+                m_ShowFollowerDamageTaken = (DamageDisplayMode)reader.ReadInt();
+                m_LastPlayerKilledBy = (PlayerMobile)reader.ReadMobile();
+                m_LastInstrument = (BaseInstrument)reader.ReadItem();
+                m_ShowDamageTaken = (DamageDisplayMode)reader.ReadInt();
+                m_ShowProvocationDamage = (DamageDisplayMode)reader.ReadInt();
+                m_ShowPoisonDamage = (DamageDisplayMode)reader.ReadInt();
+                m_AutoStealth = reader.ReadBool();
+                m_BoatOccupied = (BaseBoat)reader.ReadItem();
+                KinPaintHue = reader.ReadInt();
+                KinPaintExpiration = reader.ReadDateTime();
+                m_ShowMeleeDamage = (DamageDisplayMode)reader.ReadInt();
+                m_ShowSpellDamage = (DamageDisplayMode)reader.ReadInt();
+                m_ShowFollowerDamage = (DamageDisplayMode)reader.ReadInt();
+                m_RecallRestrictionExpiration = reader.ReadDateTime();
+                m_LastLocation = reader.ReadPoint3D();
+                m_PirateScore = reader.ReadInt();
+                m_CompanionLastLocation = reader.ReadPoint3D();
+                m_Companion = reader.ReadBool();
+                m_NumGoldCoinsGenerated = reader.ReadInt();
+                CreatedOn = reader.ReadDateTime();
+                SelectedTitleColorIndex = (int)reader.ReadByte();
+                SelectedTitleColorRarity = (EColorRarity)reader.ReadByte();
+                TitleColorState = new PlayerTitleColors();
+                TitleColorState.Deserialize(reader);
+                m_UserOptHideFameTitles = reader.ReadBool();
+                LoginElapsedTime = reader.ReadTimeSpan();
+                DonationPlayerState = Server.Custom.DonationState.Deserialize(reader);
+                m_DateTimeDied = reader.ReadDateTime();
+                m_TimeSpanDied = reader.ReadTimeSpan();
+                m_TimeSpanResurrected = reader.ReadTimeSpan();
+                m_AnkhNextUse = reader.ReadDateTime();
+                m_AutoStabled = reader.ReadStrongMobileList();
+                m_Step = (QuestStep)reader.ReadInt();
+                m_LastTarget = (Serial)reader.ReadInt();
+                m_LastDeathByPlayer = reader.ReadDateTime();
+                m_LastOnline = reader.ReadDateTime();
                 m_NoNewTimer = reader.ReadBool();
-            }
-
-            if (version >= 14)
-            {
-                m_CompassionGains = reader.ReadEncodedInt();
-
-                if (m_CompassionGains > 0)
-                    m_NextCompassionDay = reader.ReadDeltaTime();
-
-                NextBountyNote = reader.ReadTimeSpan();
-            }
-
-            if (version >= 13)
-            {
-                //Removed
-            }
-
-            if (version >= 12)
-            {
                 m_BOBFilter = new Engines.BulkOrders.BOBFilter(reader);
-            }
-
-            if (version >= 11)
-            {
-                if (version < 13)
-                {
-                    List<Item> payed = reader.ReadStrongItemList();
-
-                    for (int i = 0; i < payed.Count; ++i)
-                        payed[i].PayedInsurance = true;
-                }
-            }
-
-            if (version >= 10)
-            {
-                if (reader.ReadBool())
-                {
-                    m_HairModID = reader.ReadInt();
-                    m_HairModHue = reader.ReadInt();
-                    m_BeardModID = reader.ReadInt();
-                    m_BeardModHue = reader.ReadInt();
-                }
-            }
-
-            if (version >= 9)
-            {
-                SavagePaintExpiration = reader.ReadTimeSpan();
-            }
-
-            if (version >= 8)
-            {
                 m_NpcGuild = (NpcGuild)reader.ReadInt();
                 m_NpcGuildJoinTime = reader.ReadDateTime();
                 m_NpcGuildGameTime = reader.ReadTimeSpan();
-            }
-
-            if (version >= 7)
-            {
                 m_PermaFlags = reader.ReadStrongMobileList();
-            }
-
-            if (version >= 6)
-            {
                 NextTailorBulkOrder = reader.ReadTimeSpan();
-            }
-
-            if (version >= 5)
-            {
                 NextSmithBulkOrder = reader.ReadTimeSpan();
-            }
-
-            if (version >= 4)
-            {
-                m_LastJusticeLoss = reader.ReadDeltaTime();
-                m_JusticeProtectors = reader.ReadStrongMobileList();
-            }
-
-            if (version >= 3)
-            {
-                m_LastSacrificeGain = reader.ReadDeltaTime();
-                m_LastSacrificeLoss = reader.ReadDeltaTime();
-                m_AvailableResurrects = reader.ReadInt();
-            }
-
-            if (version >= 2)
-            {
                 m_Flags = (PlayerFlag)reader.ReadInt();
-            }
-
-            if (version >= 1)
-            {
                 m_LongTermElapse = reader.ReadTimeSpan();
                 m_ShortTermElapse = reader.ReadTimeSpan();
                 m_GameTime = reader.ReadTimeSpan();
+
+                m_HairModID = reader.ReadInt();
+                m_HairModHue = reader.ReadInt();
+                m_BeardModID = reader.ReadInt();
+                m_BeardModHue = reader.ReadInt();
             }
 
-            if (version >= 0)
-            {
-                m_AutoStabled = new List<Mobile>();
-            }
-            */
+            //----------------  
 
-            //----------------
-
-            PetBattleCreatureCollection = new PetBattleCreatureCollection();
-
-            // Professions weren't verified on 1.0 RC0
-            if (!CharacterCreation.VerifyProfession(m_Profession))
-                m_Profession = 0;
-
-            if (m_PermaFlags == null)
-                m_PermaFlags = new List<Mobile>();
-
-            if (m_JusticeProtectors == null)
-                m_JusticeProtectors = new List<Mobile>();
-
-            if (m_BOBFilter == null)
-                m_BOBFilter = new Engines.BulkOrders.BOBFilter();
-
-            if (m_GuildRank == null)
-                m_GuildRank = Guilds.RankDefinition.Member;	//Default to member if going from older version to new version (only time it should be null)
-
+            //Safety Measures
+            Squelched = false;
+            Frozen = false;
+            CantWalk = false;
+            
             if (m_LastOnline == DateTime.MinValue && Account != null)
                 m_LastOnline = ((Account)Account).LastLogin;
-
-            if (m_ChampionTitles == null)
-                m_ChampionTitles = new ChampionTitleInfo();
-
+            
             if (AccessLevel > AccessLevel.Player)
                 m_IgnoreMobiles = true;
 
             if (TitleColorState == null)
                 TitleColorState = new PlayerTitleColors();
 
-            List<Mobile> list = this.Stabled;
-
-            m_LastPassiveTamingSkillGain = DateTime.MinValue;
-
+            List<Mobile> list = Stabled;
+            
             for (int i = 0; i < list.Count; ++i)
             {
                 BaseCreature bc = list[i] as BaseCreature;
@@ -7844,28 +5707,8 @@ namespace Server.Mobiles
                 AddBuff(new BuffInfo(BuffIcon.HidingAndOrStealth, 1075655));
 
             //Reapply Kin Paint
-            if (KinPaintHue != -1 && KinPaintExpiration > DateTime.UtcNow)
-            {
-                HueMod = KinPaintHue;
-            }
-
-            if (Spectating)
-            {
-                if (Region is BattlegroundRegion)
-                {
-                    SpectatingTimer = new SpectatorTimer(this);
-                    SpectatingTimer.Start();
-                }
-                else
-                {
-                    Spectating = false;
-                }
-            }
-
-            if (!Alive)
-            {
-                StartGhostScoutTimer();
-            }
+            if (KinPaintHue != -1 && KinPaintExpiration > DateTime.UtcNow)            
+                HueMod = KinPaintHue;            
 
             if (!(Region.Find(LogoutLocation, LogoutMap) is GuardedRegion))
             {
@@ -7877,22 +5720,18 @@ namespace Server.Mobiles
             if (Region.Find(LogoutLocation, LogoutMap) is UOACZRegion)
                 Hidden = false;
 
-            if (LastPlayerCombatTime + PlayerCombatExpirationDelay > DateTime.UtcNow)
+            if (LastPlayerCombatTime > DateTime.MinValue)
             {
-                m_PlayerCombatTimer = new PlayerCombatTimer(this);
-                m_PlayerCombatTimer.Start();
-            }
+                if (LastPlayerCombatTime + PlayerCombatExpirationDelay > DateTime.UtcNow)
+                {
+                    m_PlayerCombatTimer = new PlayerCombatTimer(this);
+                    m_PlayerCombatTimer.Start();
+                }
+            }            
         }
 
         public static void CheckAtrophies(Mobile m)
-        {
-            SacrificeVirtue.CheckAtrophy(m);
-            JusticeVirtue.CheckAtrophy(m);
-            CompassionVirtue.CheckAtrophy(m);
-            ValorVirtue.CheckAtrophy(m);
-
-            if (m is PlayerMobile)
-                ChampionTitleInfo.CheckAtrophy((PlayerMobile)m);
+        {           
         }
 
         public void CheckKillDecay()
@@ -8112,13 +5951,11 @@ namespace Server.Mobiles
             try
             {                
                 bool show_guild = GuildClickMessage && Guild != null && (DisplayGuildTitle || (Player && Guild.Type != Guilds.GuildType.Regular));
-                bool show_custom_ipy_title = CurrentPrefix != null && CurrentPrefix.Length > 0;
                 bool show_other_titles = true;
 
                 if (from.Region is UOACZRegion)
                 { 
                     show_guild = false;
-                    show_custom_ipy_title = false;
                     show_other_titles = false;
                 }
 
@@ -8129,9 +5966,6 @@ namespace Server.Mobiles
 
                 else if (AccessLevel > AccessLevel.Player)
                     newhue = 11;
-
-                else if (from.ShortTermMurders > 4 && Paladin && !(Region is BattlegroundRegion) && !(Region is UOACZRegion))
-                    newhue = 2060;
 
                 else
                     newhue = Notoriety.GetHue(Notoriety.Compute(from, this));
@@ -8154,10 +5988,7 @@ namespace Server.Mobiles
                     string text = String.Format(title.Length <= 0 ? "[{1}]{2}" : "[{0}, {1}]{2}", title, Guild.Abbreviation, type);
                     PrivateOverheadMessage(MessageType.Regular, SpeechHue, true, text, from.NetState);
                 }
-
-                if (show_custom_ipy_title)
-                    PrivateOverheadMessage(MessageType.Label, PlayerTitleColors.GetSpokenColorValue(SelectedTitleColorIndex, SelectedTitleColorRarity), true, CurrentPrefix, from.NetState);
-
+                
                 if (show_other_titles)
                 {
                     string fullname_line = "";
@@ -8453,28 +6284,21 @@ namespace Server.Mobiles
         #endregion
 
         #region Quests
-        private QuestSystem m_Quest;
-        private List<QuestRestartInfo> m_DoneQuests;
-        private SolenFriendship m_SolenFriendship;
 
+        private QuestSystem m_Quest;
         public QuestSystem Quest
         {
             get { return m_Quest; }
             set { m_Quest = value; }
         }
 
+        private List<QuestRestartInfo> m_DoneQuests = new List<QuestRestartInfo>();
         public List<QuestRestartInfo> DoneQuests
         {
             get { return m_DoneQuests; }
             set { m_DoneQuests = value; }
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public SolenFriendship SolenFriendship
-        {
-            get { return m_SolenFriendship; }
-            set { m_SolenFriendship = value; }
-        }
         #endregion
 
         #region MyRunUO Invalidation       
@@ -8556,15 +6380,8 @@ namespace Server.Mobiles
 
         public override void OnDelete()
         {
-            if (m_ReceivedHonorContext != null)
-                m_ReceivedHonorContext.Cancel();
-            if (m_SentHonorContext != null)
-                m_SentHonorContext.Cancel();
-
             ReleaseAllFollowers();
-
-            ArenaSystem.ArenaSystem.OnCharacterDeleted(this);
-            
+                        
             #region UOACZ
 
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
@@ -8770,55 +6587,10 @@ namespace Server.Mobiles
                 storeID = hair ? HairItemID : FacialHairItemID;
                 storeHue = hair ? HairHue : FacialHairHue;
             }
+
             CreateHair(hair, id, 0);
         }
 
-        #endregion
-
-        #region Virtues
-        private DateTime m_LastSacrificeGain;
-        private DateTime m_LastSacrificeLoss;
-        private int m_AvailableResurrects;
-
-        public DateTime LastSacrificeGain { get { return m_LastSacrificeGain; } set { m_LastSacrificeGain = value; } }
-        public DateTime LastSacrificeLoss { get { return m_LastSacrificeLoss; } set { m_LastSacrificeLoss = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int AvailableResurrects { get { return m_AvailableResurrects; } set { m_AvailableResurrects = value; } }
-
-        private DateTime m_NextJustAward;
-        private DateTime m_LastJusticeLoss;
-        private List<Mobile> m_JusticeProtectors;
-
-        public DateTime LastJusticeLoss { get { return m_LastJusticeLoss; } set { m_LastJusticeLoss = value; } }
-        public List<Mobile> JusticeProtectors { get { return m_JusticeProtectors; } set { m_JusticeProtectors = value; } }
-
-        private DateTime m_LastCompassionLoss;
-        private DateTime m_NextCompassionDay;
-        private int m_CompassionGains;
-
-        public DateTime LastCompassionLoss { get { return m_LastCompassionLoss; } set { m_LastCompassionLoss = value; } }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime NextCompassionDay { get { return m_NextCompassionDay; } set { m_NextCompassionDay = value; } }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int CompassionGains { get { return m_CompassionGains; } set { m_CompassionGains = value; } }
-
-        private DateTime m_LastValorLoss;
-
-        public DateTime LastValorLoss { get { return m_LastValorLoss; } set { m_LastValorLoss = value; } }
-
-        private DateTime m_LastHonorLoss;
-        private DateTime m_LastHonorUse;
-        private bool m_HonorActive;
-        private HonorContext m_ReceivedHonorContext;
-        private HonorContext m_SentHonorContext;
-        public DateTime m_hontime;
-
-        public DateTime LastHonorLoss { get { return m_LastHonorLoss; } set { m_LastHonorLoss = value; } }
-        public DateTime LastHonorUse { get { return m_LastHonorUse; } set { m_LastHonorUse = value; } }
-        public bool HonorActive { get { return m_HonorActive; } set { m_HonorActive = value; } }
-        public HonorContext ReceivedHonorContext { get { return m_ReceivedHonorContext; } set { m_ReceivedHonorContext = value; } }
-        public HonorContext SentHonorContext { get { return m_SentHonorContext; } set { m_SentHonorContext = value; } }
         #endregion
 
         #region Young system
@@ -9106,297 +6878,7 @@ namespace Server.Mobiles
         }
 
         #endregion
-
-        #region Champion Titles
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool DisplayChampionTitle
-        {
-            get { return GetFlag(PlayerFlag.DisplayChampionTitle); }
-            set { SetFlag(PlayerFlag.DisplayChampionTitle, value); }
-        }
-
-        private ChampionTitleInfo m_ChampionTitles;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public ChampionTitleInfo ChampionTitles { get { return m_ChampionTitles; } set { } }
-
-        private void ToggleChampionTitleDisplay()
-        {
-            if (!CheckAlive())
-                return;
-
-            if (DisplayChampionTitle)
-                SendLocalizedMessage(1062419, "", 0x23); // You have chosen to hide your monster kill title.
-            else
-                SendLocalizedMessage(1062418, "", 0x23); // You have chosen to display your monster kill title.
-
-            DisplayChampionTitle = !DisplayChampionTitle;
-        }
-
-        [PropertyObject]
-        public class ChampionTitleInfo
-        {
-            public static TimeSpan LossDelay = TimeSpan.FromDays(1.0);
-            public const int LossAmount = 90;
-
-            private class TitleInfo
-            {
-                private int m_Value;
-                private DateTime m_LastDecay;
-
-                public int Value { get { return m_Value; } set { m_Value = value; } }
-                public DateTime LastDecay { get { return m_LastDecay; } set { m_LastDecay = value; } }
-
-                public TitleInfo()
-                {
-                }
-
-                public TitleInfo(GenericReader reader)
-                {
-                    int version = reader.ReadEncodedInt();
-
-                    switch (version)
-                    {
-                        case 0:
-                            {
-                                m_Value = reader.ReadEncodedInt();
-                                m_LastDecay = reader.ReadDateTime();
-                                break;
-                            }
-                    }
-                }
-
-                public static void Serialize(GenericWriter writer, TitleInfo info)
-                {
-                    writer.WriteEncodedInt((int)0); // version
-
-                    writer.WriteEncodedInt(info.m_Value);
-                    writer.Write(info.m_LastDecay);
-                }
-            }
-
-            private TitleInfo[] m_Values;
-
-            private int m_Harrower;	//Harrower titles do NOT decay
-
-            public int GetValue(ChampionSpawnType type)
-            {
-                return GetValue((int)type);
-            }
-
-            public void SetValue(ChampionSpawnType type, int value)
-            {
-                SetValue((int)type, value);
-            }
-
-            public void Award(ChampionSpawnType type, int value)
-            {
-                Award((int)type, value);
-            }
-
-            public int GetValue(int index)
-            {
-                if (m_Values == null || index < 0 || index >= m_Values.Length)
-                    return 0;
-
-                if (m_Values[index] == null)
-                    m_Values[index] = new TitleInfo();
-
-                return m_Values[index].Value;
-            }
-
-            public DateTime GetLastDecay(int index)
-            {
-                if (m_Values == null || index < 0 || index >= m_Values.Length)
-                    return DateTime.MinValue;
-
-                if (m_Values[index] == null)
-                    m_Values[index] = new TitleInfo();
-
-                return m_Values[index].LastDecay;
-            }
-
-            public void SetValue(int index, int value)
-            {
-                if (m_Values == null)
-                    m_Values = new TitleInfo[ChampionSpawnInfo.Table.Length];
-
-                if (value < 0)
-                    value = 0;
-
-                if (index < 0 || index >= m_Values.Length)
-                    return;
-
-                if (m_Values[index] == null)
-                    m_Values[index] = new TitleInfo();
-
-                m_Values[index].Value = value;
-            }
-
-            public void Award(int index, int value)
-            {
-                if (m_Values == null)
-                    m_Values = new TitleInfo[ChampionSpawnInfo.Table.Length];
-
-                if (index < 0 || index >= m_Values.Length || value <= 0)
-                    return;
-
-                if (m_Values[index] == null)
-                    m_Values[index] = new TitleInfo();
-
-                m_Values[index].Value += value;
-            }
-
-            public void Atrophy(int index, int value)
-            {
-                if (m_Values == null)
-                    m_Values = new TitleInfo[ChampionSpawnInfo.Table.Length];
-
-                if (index < 0 || index >= m_Values.Length || value <= 0)
-                    return;
-
-                if (m_Values[index] == null)
-                    m_Values[index] = new TitleInfo();
-
-                int before = m_Values[index].Value;
-
-                if ((m_Values[index].Value - value) < 0)
-                    m_Values[index].Value = 0;
-                else
-                    m_Values[index].Value -= value;
-
-                if (before != m_Values[index].Value)
-                    m_Values[index].LastDecay = DateTime.UtcNow;
-            }
-
-            public override string ToString()
-            {
-                return "...";
-            }
-
-            [CommandProperty(AccessLevel.GameMaster)]
-            public int Pestilence { get { return GetValue(ChampionSpawnType.Pestilence); } set { SetValue(ChampionSpawnType.Pestilence, value); } }
-
-            [CommandProperty(AccessLevel.GameMaster)]
-            public int Abyss { get { return GetValue(ChampionSpawnType.Abyss); } set { SetValue(ChampionSpawnType.Abyss, value); } }
-
-            [CommandProperty(AccessLevel.GameMaster)]
-            public int Arachnid { get { return GetValue(ChampionSpawnType.Arachnid); } set { SetValue(ChampionSpawnType.Arachnid, value); } }
-
-            [CommandProperty(AccessLevel.GameMaster)]
-            public int ColdBlood { get { return GetValue(ChampionSpawnType.ColdBlood); } set { SetValue(ChampionSpawnType.ColdBlood, value); } }
-
-            [CommandProperty(AccessLevel.GameMaster)]
-            public int ForestLord { get { return GetValue(ChampionSpawnType.ForestLord); } set { SetValue(ChampionSpawnType.ForestLord, value); } }
-
-            [CommandProperty(AccessLevel.GameMaster)]
-            public int SleepingDragon { get { return GetValue(ChampionSpawnType.SleepingDragon); } set { SetValue(ChampionSpawnType.SleepingDragon, value); } }
-
-            [CommandProperty(AccessLevel.GameMaster)]
-            public int UnholyTerror { get { return GetValue(ChampionSpawnType.UnholyTerror); } set { SetValue(ChampionSpawnType.UnholyTerror, value); } }
-
-            [CommandProperty(AccessLevel.GameMaster)]
-            public int VerminHorde { get { return GetValue(ChampionSpawnType.VerminHorde); } set { SetValue(ChampionSpawnType.VerminHorde, value); } }
-
-            [CommandProperty(AccessLevel.GameMaster)]
-            public int Harrower { get { return m_Harrower; } set { m_Harrower = value; } }
-
-            public ChampionTitleInfo()
-            {
-            }
-
-            public ChampionTitleInfo(GenericReader reader)
-            {
-                int version = reader.ReadEncodedInt();
-
-                switch (version)
-                {
-                    case 0:
-                        {
-                            m_Harrower = reader.ReadEncodedInt();
-
-                            int length = reader.ReadEncodedInt();
-                            m_Values = new TitleInfo[length];
-
-                            for (int i = 0; i < length; i++)
-                            {
-                                m_Values[i] = new TitleInfo(reader);
-                            }
-
-                            if (m_Values.Length != ChampionSpawnInfo.Table.Length)
-                            {
-                                TitleInfo[] oldValues = m_Values;
-                                m_Values = new TitleInfo[ChampionSpawnInfo.Table.Length];
-
-                                for (int i = 0; i < m_Values.Length && i < oldValues.Length; i++)
-                                {
-                                    m_Values[i] = oldValues[i];
-                                }
-                            }
-                            break;
-                        }
-                }
-            }
-
-            public static void Serialize(GenericWriter writer, ChampionTitleInfo titles)
-            {
-                writer.WriteEncodedInt((int)0); // version
-
-                writer.WriteEncodedInt(titles.m_Harrower);
-
-                int length = titles.m_Values.Length;
-                writer.WriteEncodedInt(length);
-
-                for (int i = 0; i < length; i++)
-                {
-                    if (titles.m_Values[i] == null)
-                        titles.m_Values[i] = new TitleInfo();
-
-                    TitleInfo.Serialize(writer, titles.m_Values[i]);
-                }
-            }
-
-            public static void CheckAtrophy(PlayerMobile pm)
-            {
-                ChampionTitleInfo t = pm.m_ChampionTitles;
-                if (t == null)
-                    return;
-
-                if (t.m_Values == null)
-                    t.m_Values = new TitleInfo[ChampionSpawnInfo.Table.Length];
-
-                for (int i = 0; i < t.m_Values.Length; i++)
-                {
-                    if ((t.GetLastDecay(i) + LossDelay) < DateTime.UtcNow)
-                    {
-                        t.Atrophy(i, LossAmount);
-                    }
-                }
-            }
-
-            public static void AwardHarrowerTitle(PlayerMobile pm)	//Called when killing a harrower.  Will give a minimum of 1 point.
-            {
-                ChampionTitleInfo t = pm.m_ChampionTitles;
-                if (t == null)
-                    return;
-
-                if (t.m_Values == null)
-                    t.m_Values = new TitleInfo[ChampionSpawnInfo.Table.Length];
-
-                int count = 1;
-
-                for (int i = 0; i < t.m_Values.Length; i++)
-                {
-                    if (t.m_Values[i].Value > 900)
-                        count++;
-                }
-
-                t.m_Harrower = Math.Max(count, t.m_Harrower);	//Harrower titles never decay.
-            }
-        }
-
-        #endregion
-
+        
         #region Recipes
 
         private Dictionary<int, bool> m_AcquiredRecipes;
@@ -9521,19 +7003,7 @@ namespace Server.Mobiles
                 m_BuffTable = null;
         }
         #endregion
-
-        #region Peacemaking Mode
-
-        private PeacemakingModeEnum m_peacemakingMode;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public PeacemakingModeEnum PeacemakingMode
-        {
-            get { return m_peacemakingMode; }
-            set { m_peacemakingMode = value; }
-        }
-
-        #endregion
-
+        
         public void AutoStablePets()
         {
             if (Core.SE && AllFollowers.Count > 0)

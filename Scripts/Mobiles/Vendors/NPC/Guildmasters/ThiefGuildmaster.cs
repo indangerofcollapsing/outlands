@@ -47,16 +47,12 @@ namespace Server.Mobiles
 				SayTo( pm, 501050 ); // This guild is for cunning thieves, not oafish cutthroats.
 				return false;
 			}
+
 			else if ( pm.Skills[SkillName.Stealing].Base < 60.0 )
 			{
 				SayTo( pm, 501051 ); // You must be at least a journeyman pickpocket to join this elite organization.
 				return false;
 			}
-            else if (pm.Paladin)
-            {
-                SayTo(pm ,"This guild is for cunning thieves, not misguided paladins.");
-                return false;
-            }
 
 			return true;
 		}

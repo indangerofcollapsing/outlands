@@ -12,8 +12,6 @@ using Server.Factions;
 using Server.Engines.Craft;
 using System.Collections.Generic;
 using Server.Spells.Spellweaving;
-
-using Server.Custom.Ubercrafting;
 using Server.Guilds;
 using Server.SkillHandlers;
 using Server.Multis;
@@ -91,7 +89,6 @@ namespace Server.Items
         private AosSkillBonuses m_AosSkillBonuses;
         private AosElementAttributes m_AosElementDamages;
 
-        // Overridable values. These values are provided to override the defaults which get defined in the individual weapon scripts.
         private int m_StrReq, m_DexReq, m_IntReq;
         private int m_MinDamage, m_MaxDamage;
         private int m_HitSound, m_MissSound;
@@ -99,9 +96,7 @@ namespace Server.Items
         private int m_MaxRange;
         private SkillName m_Skill;
         private WeaponType m_Type;
-        private WeaponAnimation m_Animation;
-        public IPYWeaponAttributes IPYWeaponAttributes { get; set; }
-        private WeaponEnhancement.EWeaponEnhancement m_UOACWeaponEnhancement { get; set; }
+        private WeaponAnimation m_Animation;              
 
         private BaseDungeonArmor.DungeonEnum m_Dungeon = BaseDungeonArmor.DungeonEnum.Unspecified;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -218,60 +213,7 @@ namespace Server.Items
         #endregion
 
         #region Getters & Setters
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public WeaponEnhancement.EWeaponEnhancement UOACWeaponAttribute
-        {
-            get { return m_UOACWeaponEnhancement; }
-            set { m_UOACWeaponEnhancement = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public IPYWeaponAttribute IPYWeaponAttribute
-        {
-            get
-            {
-                return this.IPYWeaponAttributes == null ? IPYWeaponAttribute.None : this.IPYWeaponAttributes.Attribute;
-            }
-            set
-            {
-                if (this.IPYWeaponAttributes == null)
-                {
-                    if (value != IPYWeaponAttribute.None)
-                    {
-                        this.IPYWeaponAttributes = new IPYWeaponAttributes(value, 100);
-                    }
-                }
-                else
-                {
-                    if (value == IPYWeaponAttribute.None)
-                    {
-                        this.IPYWeaponAttributes = null;
-                    }
-                    else
-                    {
-                        this.IPYWeaponAttributes.Attribute = value;
-                    }
-                }
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int IPYWeaponAttributeProc
-        {
-            get
-            {
-                return this.IPYWeaponAttributes == null ? 0 : this.IPYWeaponAttributes.Proc;
-            }
-            set
-            {
-                if (this.IPYWeaponAttributes != null)
-                {
-                    this.IPYWeaponAttributes.Proc = Math.Min(Math.Max(0, value), 100);
-                }
-            }
-        }
-
+        
         [CommandProperty(AccessLevel.GameMaster)]
         public AosAttributes Attributes
         {
@@ -676,46 +618,14 @@ namespace Server.Items
 
             BaseCreature bc_Creature = mobile as BaseCreature;
             PlayerMobile pm_Mobile = mobile as PlayerMobile;
-
-            bool petBattleCreature = false;
-
-            if (bc_Creature != null)
-            {
-                if (bc_Creature.PetBattleCreature)
-                    petBattleCreature = true;
-            }
-
+            
             //Player: Wrestling Speed Override
             if (pm_Mobile != null && this is Fists)
                 speed = 50;
 
             //Creature Override for Combat Speed
-            if (bc_Creature != null)
-            {
-                speed = bc_Creature.AttackSpeed;
-
-                #region PetBattle Ability SwingDelay Effects
-
-                    //PetBattle
-                    if (bc_Creature.PetBattleCreature)
-                    {
-                        double totalValue1; double totalValue2;
-
-                        //Increase Speed
-                        bc_Creature.GetPetBattleEntryValue(PetBattleAbilityEffect.IncreaseSpeed, out totalValue1, out totalValue2);
-                        speed += (int)totalValue1;
-
-                        //Reduce Speed
-                        bc_Creature.GetPetBattleEntryValue(PetBattleAbilityEffect.ReduceSpeed, out totalValue1, out totalValue2);
-                        speed -= (int)totalValue1;
-
-                        //Reduce Speed Percent
-                        bc_Creature.GetPetBattleEntryValue(PetBattleAbilityEffect.ReduceSpeedPercent, out totalValue1, out totalValue2);
-                        speed = (int)((double)speed * (1 - totalValue1));
-                    }
-
-                    #endregion                
-            }
+            if (bc_Creature != null)            
+                speed = bc_Creature.AttackSpeed;  
 
             //Frenzy Effect
             if (bc_Creature != null)
@@ -746,19 +656,10 @@ namespace Server.Items
 
             double delayInSeconds;            
 
-            int v;            
-
-            //Pet Battle Creature Formula Override
-            if (petBattleCreature)
-            {
-                if (speed < 10)
-                    speed = 10;
-
-                v = (int)(125 * (double)speed);
-            }
+            int v; 
 
             //Normal Creature Formula Override
-            else if (bc_Creature != null)
+            if (bc_Creature != null)
             {
                 double dexBase = bc_Creature.RawDex;
                 double stamBase = bc_Creature.Stam;
@@ -862,88 +763,7 @@ namespace Server.Items
 
             //Stealth Attack Cancel
             attacker.StealthAttackActive = false;            
-
-            #region PetBattle OnHit Ability Effects
-            //PetBattle
-            if (bc_Attacker != null && bc_Defender != null)
-            {
-                if (bc_Attacker.PetBattleCreature && bc_Defender.PetBattleCreature)
-                {
-                    double totalValue1; double totalValue2;
-
-                    //Check if Defender is Burning
-                    bool defenderBurning = false;
-
-                    bc_Defender.PetBattleAbilityEntryLookupInProgress = true;
-
-                    foreach (PetBattleAbilityEffectEntry entryB in bc_Defender.PetBattleAbilityEffectEntries)
-                    {
-                        if (entryB.m_PetBattleAbilityEffect == PetBattleAbilityEffect.Burning)
-                        {
-                            defenderBurning = true;
-                            break;
-                        }
-                    }
-
-                    //Defender Properties                    
-                    foreach (PetBattleAbilityEffectEntry entry in bc_Defender.PetBattleAbilityEffectEntries)
-                    {
-                        //On Dodge 
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.OnDodgeInflictMagicDamagePercentOfDamage)
-                        {
-                            int totalDamage = bc_Defender.DamageMin;
-                            double totalDamageReduction = 0;
-
-                            //Determine Defender Damage
-                            foreach (PetBattleAbilityEffectEntry entryB in bc_Defender.PetBattleAbilityEffectEntries)
-                            {
-                                if (entryB.m_PetBattleAbilityEffect == PetBattleAbilityEffect.IncreaseDamage)
-                                    totalDamage += (int)entry.m_Value1;
-
-                                if (entryB.m_PetBattleAbilityEffect == PetBattleAbilityEffect.ReduceDamage)
-                                    totalDamage -= (int)entry.m_Value1;
-
-                                if (entryB.m_PetBattleAbilityEffect == PetBattleAbilityEffect.ReduceDamagePercent)
-                                    totalDamageReduction += entry.m_Value1;
-                            }
-
-                            totalDamage = (int)((double)totalDamage * (1 - totalDamageReduction));
-                            totalDamage = (int)((double)totalDamage * entry.m_Value1);
-
-                            if (totalDamage < 0)
-                                totalDamage = 0;
-
-                            totalDamage = PetBattleAbilities.ScaleMeleeDamage(bc_Attacker, bc_Defender, totalDamage);
-
-                            //High Seas Creature Animation Override                            
-                            if (bc_Defender.IsHighSeasBodyType)
-                                bc_Defender.CheckedAnimate(Utility.RandomList(1, 25, 28), 5, 1, true, false, 1);
-
-                            else if (bc_Defender.Body.IsAnimal)
-                                bc_Defender.CheckedAnimate(9, 5, 1, true, false, 1);
-
-                            else if (bc_Defender.Body.IsMonster)
-                                bc_Defender.CheckedAnimate(17, 5, 1, true, false, 1);
-
-                            else
-                                bc_Defender.CheckedAnimate(9, 5, 1, true, false, 1);
-
-                            bc_Defender.PlaySound(bc_Defender.GetAttackSound());
-
-                            bc_Defender.MovingParticles(bc_Attacker, 0x36E4, 0, 0, false, true, 3006, 4006, 0);
-                            Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, 0x208);
-
-                            PetBattleAbilities.AddBloodEffect(bc_Attacker, 1, 2);
-                            bc_Attacker.Hits -= totalDamage;
-                            bc_Attacker.PublicOverheadMessage(0, bc_Attacker.m_PetBattleTeamHue, false, "-" + totalDamage.ToString());
-                        }
-                    }
-
-                    bc_Defender.PetBattleAbilityEntryLookupInProgress = false;
-                }
-            }
-            #endregion
-
+            
             WeaponAbility ability = WeaponAbility.GetCurrentAbility(attacker);
 
             if (ability != null)
@@ -953,14 +773,8 @@ namespace Server.Items
 
             if (move != null)
                 move.OnMiss(attacker, defender);
-
-            #region AOS - NOT USED
-            if (defender is IHonorTarget && ((IHonorTarget)defender).ReceivedHonorContext != null)
-            {
-                ((IHonorTarget)defender).ReceivedHonorContext.OnTargetMissed(attacker);
-            }
-            #endregion
         }
+
         #endregion
                 
         public void OnHit(Mobile attacker, Mobile defender)
@@ -1163,423 +977,11 @@ namespace Server.Items
                 || this is Pickaxe || this is FireworksWand || this is ShepherdsCrook || this is TrainingHammer || this is TrainingBow)
             {
                 doWeaponSpecialAttack = false;
-            }          
-
-            #region PetBattle OnHit Ability Effects
-
-            //PetBattle
-            if (CreatureAttacker && CreatureDefender)
-            {
-                if (bc_Attacker.PetBattleCreature && bc_Defender.PetBattleCreature)
-                {
-                    double totalValue1; double totalValue2;
-
-                    //Check if Defender is Burning
-                    bool defenderBurning = false;
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = true;
-                    bc_Defender.PetBattleAbilityEntryLookupInProgress = true;
-
-                    foreach (PetBattleAbilityEffectEntry entryB in bc_Defender.PetBattleAbilityEffectEntries)
-                    {
-                        if (entryB.m_PetBattleAbilityEffect == PetBattleAbilityEffect.Burning)
-                        {
-                            defenderBurning = true;
-                            break;
-                        }
-                    }
-
-                    //Attacker Properties
-                    foreach (PetBattleAbilityEffectEntry entry in bc_Attacker.PetBattleAbilityEffectEntries)
-                    {
-                        //SuccessfulAttackIncreaseSpeed
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.SuccessfulAttackIncreaseSpeed)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseSpeed, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseSpeed, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //SuccessfulAttackReduceAttack
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.SuccessfulAttackReduceAttack)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceAttack, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceAttack, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //SuccessfulAttackIncreaseAttack
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.SuccessfulAttackIncreaseAttack)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseAttack, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseAttack, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //SuccessfulAttackIncreaseDamage
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.SuccessfulAttackIncreaseDamage)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseDamage, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseDamage, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //SuccessfulAttackReduceOpponentSpeed
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.SuccessfulAttackReduceOpponentSpeed)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceSpeed, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceSpeed, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //SuccessfulAttackReduceOpponentAttack
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.SuccessfulAttackReduceOpponentAttack)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceAttack, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceAttack, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //SuccessfulAttackReduceOpponentDefense
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.SuccessfulAttackReduceOpponentDefense)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceDefense, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceDefense, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //NextHitMagicDamage
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.NextHitMagicDamage)
-                        {
-                            int magicDamage = (int)entry.m_Value1;
-
-                            magicDamage = PetBattleAbilities.ScaleMagicDamage(bc_Attacker, bc_Defender, magicDamage);
-
-                            bc_Defender.Hits -= magicDamage;
-                            bc_Defender.PublicOverheadMessage(0, bc_Defender.m_PetBattleTeamHue, false, "-" + magicDamage.ToString());
-
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-                        }
-
-                        //NextHitMagicDamageIfBurning
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.NextHitMagicDamageIfBurning)
-                        {
-                            if (defenderBurning)
-                            {
-                                int magicDamage = (int)entry.m_Value1;
-
-                                magicDamage = PetBattleAbilities.ScaleMagicDamage(bc_Attacker, bc_Defender, magicDamage);
-
-                                bc_Defender.Hits -= magicDamage;
-                                bc_Defender.PublicOverheadMessage(0, bc_Defender.m_PetBattleTeamHue, false, "-" + magicDamage.ToString());
-                            }
-
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-                        }
-
-                        //NextHitLoseDefensePowerIfBurning
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.NextHitLoseDefensivePowerIfBurning)
-                        {
-                            if (defenderBurning)
-                            {
-                                bc_Defender.m_PetBattleTotem.DefensivePower -= (int)entry.m_Value1;
-                                bc_Defender.PublicOverheadMessage(0, bc_Defender.m_PetBattleTeamHue, false, "-" + (int)entry.m_Value1 + " Defensive Power");
-                            }
-
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-                        }
-
-                        //NextHitLoseOffensePowerIfBurning
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.NextHitLoseOffensivePowerIfBurning)
-                        {
-                            if (defenderBurning)
-                            {
-                                bc_Defender.m_PetBattleTotem.OffensivePower -= (int)entry.m_Value1;
-                                bc_Defender.PublicOverheadMessage(0, bc_Defender.m_PetBattleTeamHue, false, "-" + (int)entry.m_Value1 + " Offensive Power");
-                            }
-
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-                        }
-                    }
-
-                    //Defender Properties
-                    foreach (PetBattleAbilityEffectEntry entry in bc_Defender.PetBattleAbilityEffectEntries)
-                    {
-                        //OnHitIncreaseDefense
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.OnHitIncreaseDefense)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseDefense, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseDefense, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //OnHitIncreaseArmor
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.OnHitIncreaseArmor)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseArmor, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseArmor, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //OnHitIncreaseDamage
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.OnHitIncreaseDamage)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseDamage, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.IncreaseDamage, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //OnHitChanceToIncreaseOffensivePower
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.OnHitChanceToIncreaseOffensivePower)
-                        {
-                            double randomValue = Utility.RandomDouble();
-
-                            if (randomValue <= entry.m_Value1)
-                            {
-                                int OffensivePower = (int)entry.m_Value2;
-
-                                bc_Defender.m_PetBattleTotem.OffensivePower += OffensivePower;
-                                bc_Defender.PublicOverheadMessage(0, bc_Defender.m_PetBattleTeamHue, false, "+" + OffensivePower.ToString() + " Offensive Power");
-                            }
-                        }
-
-                        //OnHitOpponentReduceAttack
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.OnHitOpponentReduceAttack)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceAttack, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceAttack, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //OnHitOpponentReduceDamage
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.OnHitOpponentReduceDamage)
-                        {
-                            //Permanent
-                            if (entry.m_Value2 == 1)
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceDamage, bc_Attacker, entry.m_Value1, 1, DateTime.UtcNow + TimeSpan.FromDays(7)));
-                            }
-
-                            //Temporary: Until Parent Ability Expiration
-                            else
-                            {
-                                bc_Attacker.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.ReduceDamage, bc_Attacker, entry.m_Value1, 0, entry.m_Expiration));
-                            }
-                        }
-
-                        //OnHitInflictMagicDamagePercentOfMaxHits
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.OnHitInflictMagicDamagePercentOfMaxHits)
-                        {
-                            double bonusPercent = 0;
-
-                            if (bc_Attacker.Poison != null)
-                                bonusPercent = (double)entry.m_Value1;
-
-                            int magicDamage = (int)(((double)entry.m_Value1 + bonusPercent) * (double)bc_Attacker.HitsMax);
-
-                            magicDamage = PetBattleAbilities.ScaleMagicDamage(bc_Defender, bc_Attacker, magicDamage);
-
-                            bc_Attacker.Hits -= magicDamage;
-                            bc_Attacker.PublicOverheadMessage(0, bc_Attacker.m_PetBattleTeamHue, false, "-" + magicDamage.ToString());
-
-                            bc_Attacker.FixedParticles(0x374A, 10, 30, 5013, 772, 0, EffectLayer.Waist);
-                            Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, 0x474);
-                        }
-
-                        //OnHitInflictMagicDamagePercentOfDamage
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.OnHitInflictMagicDamagePercentOfDamage)
-                        {
-                            int totalDamage = bc_Defender.DamageMin;
-                            double totalDamageReduction = 0;
-
-                            //Determine Defender Damage
-                            foreach (PetBattleAbilityEffectEntry entryB in bc_Defender.PetBattleAbilityEffectEntries)
-                            {
-                                if (entryB.m_PetBattleAbilityEffect == PetBattleAbilityEffect.IncreaseDamage)
-                                    totalDamage += (int)entry.m_Value1;
-
-                                if (entryB.m_PetBattleAbilityEffect == PetBattleAbilityEffect.ReduceDamage)
-                                    totalDamage -= (int)entry.m_Value1;
-
-                                if (entryB.m_PetBattleAbilityEffect == PetBattleAbilityEffect.ReduceDamagePercent)
-                                    totalDamageReduction += entry.m_Value1;
-                            }
-
-                            totalDamage = (int)((double)totalDamage * (1 - totalDamageReduction));
-                            totalDamage = (int)((double)totalDamage * entry.m_Value1);
-
-                            if (totalDamage < 0)
-                                totalDamage = 0;
-
-                            totalDamage = PetBattleAbilities.ScaleMagicDamage(bc_Defender, bc_Attacker, totalDamage);
-
-                            bc_Defender.MovingParticles(bc_Attacker, 0x36E4, 3, 0, false, true, 3006, 4006, 0);
-                            Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, 0x208);
-
-                            bc_Attacker.Hits -= totalDamage;
-                            bc_Attacker.PublicOverheadMessage(0, bc_Attacker.m_PetBattleTeamHue, false, "-" + totalDamage.ToString());
-                        }
-                    }
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = false;
-                    bc_Defender.PetBattleAbilityEntryLookupInProgress = false;
-                }
-            }
-            #endregion
+            }  
 
             //Base Damage
             int damage = ComputeDamage(attacker, defender);
-
-            #region Pet Battle Damage Bonuses
-
-            //PetBattle
-            if (CreatureAttacker && CreatureDefender)
-            {
-                if (bc_Attacker.PetBattleCreature && bc_Defender.PetBattleCreature)
-                {
-                    int minDamage = bc_Attacker.DamageMin - (int)((double)bc_Attacker.DamageMin * .25);
-                    int maxDamage = bc_Attacker.DamageMin + (int)((double)bc_Attacker.DamageMin * .25);
-
-                    if (minDamage < 0)
-                        minDamage = 1;
-
-                    if (maxDamage < 0)
-                        maxDamage = 1;
-
-                    damage = Utility.RandomMinMax(minDamage, maxDamage);
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = true;
-
-                    //Attacker Damage Base Properties
-                    foreach (PetBattleAbilityEffectEntry entry in bc_Attacker.PetBattleAbilityEffectEntries)
-                    {
-                        //IncreaseDamage
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.IncreaseDamage)
-                            damage += (int)entry.m_Value1;
-
-                        //ReduceDamage
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.ReduceDamage)
-                            damage -= (int)entry.m_Value1;
-                    }
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = false;
-                }
-            }
-
-            #endregion
-
+            
             //Bonus Damage Percent
             int percentageBonus = 0;
 
@@ -1598,16 +1000,6 @@ namespace Server.Items
             //Damage Bonus to Creatures
             if (PlayerAttacker && CreatureDefender)
             {
-                // UOAC Weapon Enhancement Property Bonus
-                if (UOACWeaponAttribute == WeaponEnhancement.EWeaponEnhancement.Overwhelming)
-                    percentageBonus += 10;
-
-                if (UOACWeaponAttribute == WeaponEnhancement.EWeaponEnhancement.Conquering)
-                    percentageBonus += 20;
-
-                if (UOACWeaponAttribute == WeaponEnhancement.EWeaponEnhancement.Eradication)
-                    percentageBonus += 30;
-
                 //Arms Lore Bonus: Tamed Defender
                 if (bc_Defender.Controlled && bc_Defender.ControlMaster is PlayerMobile)
                     percentageBonus += (int)(10 * (attacker.Skills[SkillName.ArmsLore].Value / 100));
@@ -1733,9 +1125,6 @@ namespace Server.Items
 
                         else if (TamedDefender)
                             stealthBonus = 50;
-
-                        else if (!(bc_Attacker.PetBattleCreature && bc_Defender.PetBattleCreature))
-                            stealthBonus = 50;
                     }
                 }
 
@@ -1812,73 +1201,8 @@ namespace Server.Items
                 int ironFistBonus = (int)(totalValue * 100);
                 
                 percentageBonus += ironFistBonus;
-            }   
+            }                          
 
-            #region PetBattle Damage Ability Effects
-
-            //PetBattle
-            if (CreatureAttacker && CreatureDefender)
-            {
-                if (bc_Attacker.PetBattleCreature && bc_Defender.PetBattleCreature)
-                {
-                    double totalValue1; double totalValue2;
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = true;
-
-                    //Attacker Damage Scaling Properties
-                    foreach (PetBattleAbilityEffectEntry entry in bc_Attacker.PetBattleAbilityEffectEntries)
-                    {
-                        //IncreaseDamagePercentPerMissingHits
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.IncreaseDamagePercentByPercentMissingHits)
-                            percentageBonus += (int)(((double)entry.m_Value1) * 100 * (1 - (bc_Attacker.Hits / bc_Attacker.HitsMax)));
-
-                        //ReduceDamagePercent
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.ReduceDamagePercent)
-                            percentageBonus -= (int)(((double)entry.m_Value1) * 100);
-
-                        //NextHitSpendDefensePowerForDamageBoost
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.NextHitSpendDefensePowerForDamageBoost)
-                        {
-                            int defensivePower = bc_Attacker.m_PetBattleTotem.DefensivePower;
-
-                            percentageBonus += (int)((double)entry.m_Value1 * 100) * defensivePower;
-                            bc_Attacker.m_PetBattleTotem.DefensivePower = 0;
-
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-                        }
-
-                        //NextHitDamageBoostPercent
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.NextHitDamageBoostPercent)
-                        {
-                            percentageBonus += (int)((double)entry.m_Value1 * 100);
-
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-                        }
-
-                        //NextHitDamageBoostPercentPerOpponentMissingArmor
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.NextHitDamageBoostPercentPerOpponentMissingArmor)
-                        {
-                            int opponentMissingArmor = 0;
-
-                            foreach (PetBattleAbilityEffectEntry entryB in bc_Defender.PetBattleAbilityEffectEntries)
-                            {
-                                if (entryB.m_PetBattleAbilityEffect == PetBattleAbilityEffect.ReduceArmor)
-                                    opponentMissingArmor += (int)entryB.m_Value1;
-                            }
-
-                            percentageBonus += (int)((double)entry.m_Value1 * 100 * opponentMissingArmor);
-
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-                        }
-                    }
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = false;
-                }
-            }
-
-            #endregion
-
-            //percentageBonus = Math.Min(percentageBonus, 400);
             damage = AOS.Scale(damage, 100 + percentageBonus);
 
             //Attacker is Creature: If Defender is Player and Has Armor Set Bonus (Will reduce damage to player)
@@ -1990,10 +1314,7 @@ namespace Server.Items
 
                     if (UOACZSystem.IsUOACZValidMobile(bc_Defender))
                         damage = (int)((double)damage * 1 * UOACZSystem.CreatureVsTamedCreatureDamageScalar);
-                }
-
-                else if (!(bc_Attacker.PetBattleCreature && bc_Defender.PetBattleCreature))
-                    damage = (int)((double)damage * 1 * ProvokedCreatureDamageInflictedScalar);                
+                }                             
             }
             
             //Armor Absorption: Player vs Player Melee Hits Use Standard OSI Armor Damage Reduction. All Other Melee Hits Use Custom Formulas
@@ -2309,51 +1630,7 @@ namespace Server.Items
                 //Effect Chance
                 if (allowDungeonAttack)
                     DungeonWeapon.CheckResolveSpecialEffect(this, pm_Attacker, bc_Defender);                              
-            }
-
-            #region PetBattle AfterDamage Ability Effects
-
-            //PetBattle
-            if (CreatureAttacker && CreatureDefender)
-            {
-                if (bc_Attacker.PetBattleCreature && bc_Defender.PetBattleCreature)
-                {
-                    bc_Defender.PublicOverheadMessage(0, bc_Defender.m_PetBattleTeamHue, false, "-" + damage.ToString());
-
-                    double totalValue1; double totalValue2;
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = true;
-
-                    foreach (PetBattleAbilityEffectEntry entry in bc_Attacker.PetBattleAbilityEffectEntries)
-                    {
-                        //Leech
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.Leech)
-                        {
-                            int leechAmount = (int)(entry.m_Value1 * (double)damage);
-                            bc_Attacker.Heal(leechAmount);
-                            bc_Attacker.PublicOverheadMessage(0, bc_Defender.m_PetBattleTeamHue, false, "+" + leechAmount.ToString());
-                        }
-
-                        //CauseBleedPercent
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.CauseBleedPercent)
-                        {
-                            int bleedDamage = (int)(entry.m_Value1 * (double)damage);
-
-                            for (int a = 0; a < entry.m_Value2; a++)
-                            {
-                                bc_Defender.AddPetBattleAbilityEffectEntry(new PetBattleAbilityEffectEntry
-                                (PetBattleAbilityEffect.TakeBleedDamage, bc_Attacker, bleedDamage, entry.m_Value2, DateTime.UtcNow + TimeSpan.FromSeconds((a + 1) * entry.m_Value2)));
-                            }
-
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-                        }
-                    }
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = false;
-                }
-            }
-
-            #endregion
+            }            
 
             //Weapon Takes Durability Loss on Hit (4% Chance)
             if (m_MaxHits > 0 && Utility.Random(25) == 0 && LootType != Server.LootType.Blessed)
@@ -2375,42 +1652,7 @@ namespace Server.Items
                 //Weapon Breaks
                 else
                     Delete();
-            }
-
-            //IPY Special Weapon Post-Hit Effects: OLD
-            #region IPY Special Effects 
-
-            if (IPYWeaponAttributes.IsActive(this) && IsIPYWeaponAttributeTarget(defender, cs))
-            {
-                int chance = this.IPYWeaponAttributes.Proc;
-
-                //Chance Succeeds
-                if (chance != 0 && chance > Utility.Random(100))
-                {
-                    switch (this.IPYWeaponAttributes.Attribute)
-                    {
-                        case IPYWeaponAttribute.HitFireball: DoFireball(attacker, defender); break;
-                        case IPYWeaponAttribute.HitHarm: DoHarm(attacker, defender); break;
-                        case IPYWeaponAttribute.HitLightning: DoLightning(attacker, defender); break;
-                        case IPYWeaponAttribute.HitMagicArrow: DoMagicArrow(attacker, defender); break;
-                        case IPYWeaponAttribute.HitCurse: DoCurse(attacker, defender); break;
-                        case IPYWeaponAttribute.HitPoison: DoPoison(attacker, defender); break;
-                        case IPYWeaponAttribute.HitParalyze: DoParalyze(attacker, defender); break;
-                        case IPYWeaponAttribute.HitManaDrain: DoManaDrain(attacker, defender); break;
-
-                        case IPYWeaponAttribute.AreaFireball: DoIPYAreaAttack(attacker, defender, (Mobile m1, Mobile m2) => DoFireball(m1, m2)); break;
-                        case IPYWeaponAttribute.AreaHarm: DoIPYAreaAttack(attacker, defender, (Mobile m1, Mobile m2) => DoHarm(m1, m2)); break;
-                        case IPYWeaponAttribute.AreaLightning: DoIPYAreaAttack(attacker, defender, (Mobile m1, Mobile m2) => DoLightning(m1, m2)); break;
-                        case IPYWeaponAttribute.AreaMagicArrow: DoIPYAreaAttack(attacker, defender, (Mobile m1, Mobile m2) => DoMagicArrow(m1, m2)); break;
-                        case IPYWeaponAttribute.AreaCurse: DoIPYAreaAttack(attacker, defender, (Mobile m1, Mobile m2) => DoCurse(m1, m2)); break;
-                        case IPYWeaponAttribute.AreaPoison: DoIPYAreaAttack(attacker, defender, (Mobile m1, Mobile m2) => DoPoison(m1, m2)); break;
-                        case IPYWeaponAttribute.AreaParalyze: DoIPYAreaAttack(attacker, defender, (Mobile m1, Mobile m2) => DoParalyze(m1, m2)); break;
-                        case IPYWeaponAttribute.AreaManaDrain: DoIPYAreaAttack(attacker, defender, (Mobile m1, Mobile m2) => DoManaDrain(m1, m2)); break;
-                    }
-                }
-            }
-
-            #endregion            
+            }                      
 
             //Player Attack Post-Hit Effects
             if (PlayerAttacker)            
@@ -2434,21 +1676,7 @@ namespace Server.Items
 
             //Special Move Post-Hit Effects
             if (specialMove != null)
-                specialMove.OnHit(attacker, defender, damage);            
-
-            #region AOS - NOT USED
-            if (defender is IHonorTarget && ((IHonorTarget)defender).ReceivedHonorContext != null)
-                ((IHonorTarget)defender).ReceivedHonorContext.OnTargetHit(attacker);
-
-            if (!(this is BaseRanged))
-            {
-                if (AnimalForm.UnderTransformation(attacker, typeof(GiantSerpent)))
-                    defender.ApplyPoison(attacker, Poison.Lesser);
-
-                if (AnimalForm.UnderTransformation(defender, typeof(BullFrog)))
-                    attacker.ApplyPoison(defender, Poison.Regular);
-            }
-            #endregion
+                specialMove.OnHit(attacker, defender, damage); 
         }
 
         public int GetGuildReducedDamage(int wear)
@@ -2992,73 +2220,7 @@ namespace Server.Items
                         defValue = 100;
                 }
             }
-
-            #region PetBattle ToHit Bonuses/Penalties
-
-            //PetBattle
-            if (bc_Attacker != null && bc_Defender != null)
-            {
-                if (bc_Attacker.PetBattleCreature && bc_Defender.PetBattleCreature)
-                {
-                    double totalValue1; double totalValue2;
-
-                    atkValue = (int)(76 + ((double)bc_Attacker.PetBattleCreatureAttack * 6));
-                    defValue = (int)(76 + ((double)bc_Defender.PetBattleCreatureDefend * 6));
-
-                    //Immediate Attack (Has Already Predetermined CheckHit)
-                    TimeSpan swingSpeedDelay = GetDelay(bc_Attacker, false);
-                    bc_Attacker.NextCombatTime = DateTime.UtcNow + swingSpeedDelay + bc_Attacker.PetBattlePostAbilitySwingDelay;
-
-                    bc_Attacker.PetBattlePostAbilitySwingDelay = TimeSpan.FromSeconds(0);
-
-                    //Predetermined Hit (Value is +1000 Attack)
-                    bc_Attacker.GetPetBattleEntryValue(PetBattleAbilityEffect.PredeterminedHit, out totalValue1, out totalValue2);
-                    atkValue += totalValue1;
-
-                    //Predetermined Miss (Value is -1000 Attack)
-                    bc_Attacker.GetPetBattleEntryValue(PetBattleAbilityEffect.PredeterminedMiss, out totalValue1, out totalValue2);
-                    atkValue += totalValue1;
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = true;
-
-                    foreach (PetBattleAbilityEffectEntry entry in bc_Attacker.m_PetBattleAbilityEffectEntries)
-                    {
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.ImmediateAttack)
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.PredeterminedHit)
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-
-                        if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.PredeterminedMiss)
-                            bc_Attacker.RemovePetBattleAbilityEffectEntry(entry);
-                    }
-
-                    bc_Attacker.PetBattleAbilityEntryLookupInProgress = false;
-
-                    //Increase Attack
-                    bc_Attacker.GetPetBattleEntryValue(PetBattleAbilityEffect.IncreaseAttack, out totalValue1, out totalValue2);
-                    atkValue += totalValue1;
-
-                    //Reduce Attack
-                    bc_Attacker.GetPetBattleEntryValue(PetBattleAbilityEffect.ReduceAttack, out totalValue1, out totalValue2);
-                    atkValue -= totalValue1;
-
-                    //Reduce AttackPercent
-                    bc_Attacker.GetPetBattleEntryValue(PetBattleAbilityEffect.ReduceAttackPercent, out totalValue1, out totalValue2);
-                    atkValue *= (1 - totalValue1);
-                                        
-                    //Increase Defense
-                    bc_Defender.GetPetBattleEntryValue(PetBattleAbilityEffect.IncreaseDefense, out totalValue1, out totalValue2);
-                    defValue += totalValue1;
-
-                    //Reduce Defense
-                    bc_Defender.GetPetBattleEntryValue(PetBattleAbilityEffect.ReduceDefense, out totalValue1, out totalValue2);
-                    defValue -= totalValue1;
-                }
-            }
-
-            #endregion
-
+            
             #region Weapon Special Attack: Stun ToHit Bonuses/Penalties
 
             //Special Ability Effect on Creature: Stun
@@ -3174,9 +2336,6 @@ namespace Server.Items
 
                     else if (TamedDefender)
                         chance += .25;
-
-                    else if (!(bc_Attacker.PetBattleCreature && bc_Defender.PetBattleCreature))
-                        chance += .25;
                 }
             }
 
@@ -3191,108 +2350,7 @@ namespace Server.Items
 
             else
                 return attacker.CheckSkill(atkSkill.SkillName, chance);
-        }
-
-        public virtual bool PetBattlePredetermineCheckHit(Mobile attacker, Mobile defender)
-        {
-            BaseWeapon atkWeapon = attacker.Weapon as BaseWeapon;
-            BaseWeapon defWeapon = defender.Weapon as BaseWeapon;
-
-            BaseCreature attackingCreature = attacker as BaseCreature;
-            BaseCreature defendingCreature = defender as BaseCreature;
-
-            Skill atkSkill = attacker.Skills[atkWeapon.Skill];
-            Skill defSkill = defender.Skills[defWeapon.Skill];
-
-            double atkValue = atkWeapon.GetAttackSkillValue(attacker, defender);
-            double defValue = defWeapon.GetDefendSkillValue(attacker, defender);
-
-            //PetBattle
-            if (attackingCreature != null && defendingCreature != null)
-            {
-                if (attackingCreature.PetBattleCreature && defendingCreature.PetBattleCreature)
-                {
-                    double totalValue1; double totalValue2;
-
-                    atkValue = attackingCreature.PetBattleCreatureAttack;
-                    defValue = defendingCreature.PetBattleCreatureDefend;
-
-                    //Immediate Attack          
-                    attackingCreature.GetPetBattleEntryValue(PetBattleAbilityEffect.ImmediateAttack, out totalValue1, out totalValue2);
-                    atkValue += totalValue1;
-
-                    //Increase Attack
-                    attackingCreature.GetPetBattleEntryValue(PetBattleAbilityEffect.IncreaseAttack, out totalValue1, out totalValue2);
-                    atkValue += totalValue1;
-
-                    //Reduce Attack
-                    attackingCreature.GetPetBattleEntryValue(PetBattleAbilityEffect.ReduceAttack, out totalValue1, out totalValue2);
-                    atkValue -= totalValue1;
-
-                    //Reduce AttackPercent
-                    attackingCreature.GetPetBattleEntryValue(PetBattleAbilityEffect.ReduceAttackPercent, out totalValue1, out totalValue2);
-                    atkValue *= (1 - totalValue1);
-
-                    //Increase Defense
-                    defendingCreature.GetPetBattleEntryValue(PetBattleAbilityEffect.IncreaseDefense, out totalValue1, out totalValue2);
-                    defValue += totalValue1;
-
-                    //Reduce Defense
-                    defendingCreature.GetPetBattleEntryValue(PetBattleAbilityEffect.ReduceDefense, out totalValue1, out totalValue2);
-                    defValue -= totalValue1;
-                }
-            }
-
-            //Weapon Special Attack Effect on Creature: Stun
-            if (attackingCreature != null)
-            {
-                double totalValue;
-
-                attackingCreature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Stun, out totalValue);
-
-                atkValue -= totalValue;
-
-                if (atkValue < 0)
-                    atkValue = 0;
-            }
-
-            if (defendingCreature != null)
-            {
-                double totalValue;
-
-                defendingCreature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Stun, out totalValue);
-
-                defValue -= totalValue;
-
-                if (defValue < 0)
-                    defValue = 0;
-            }
-
-            double ourValue, theirValue;
-
-            if (atkValue <= -50.0)
-                atkValue = -49.9;
-
-            if (defValue <= -50.0)
-                defValue = -49.9;
-
-            ourValue = (atkValue + 50.0);
-            theirValue = (defValue + 50.0);
-
-            double chance = ourValue / (theirValue * 2.0) + 0.075;
-
-            double weaponBonus = GetHitChanceBonus(attacker, defender);
-            chance += weaponBonus;
-
-            //Stealth Attack Accuracy Bonus
-            if (attacker.StealthAttackActive)
-                chance += .25;
-
-            if (defender is PlayerMobile && ((PlayerMobile)defender).m_DateTimeDied + TimeSpan.FromSeconds(60) > DateTime.UtcNow)
-                return (Utility.RandomDouble() < chance);
-            else
-                return attacker.CheckSkill(atkSkill.SkillName, chance);
-        }
+        }        
 
         #region Sounds
         public virtual int GetHitAttackSound(Mobile attacker, Mobile defender)
@@ -4346,8 +3404,7 @@ namespace Server.Items
             base.Serialize(writer);
 
             int version = 11;
-            int uoacflags = (int)m_UOACWeaponEnhancement;
-            int version_and_uoacFlags = (version) | (uoacflags << 16);
+            int version_and_uoacFlags = (version);
 
             writer.Write((int)version_and_uoacFlags); // version and flags
            
@@ -4377,8 +3434,7 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.Type, m_Type != (WeaponType)(-1));
             SetSaveFlag(ref flags, SaveFlag.Animation, m_Animation != (WeaponAnimation)(-1));
             SetSaveFlag(ref flags, SaveFlag.Resource, m_Resource != CraftResource.Iron);
-            SetSaveFlag(ref flags, SaveFlag.xAttributes, !m_AosAttributes.IsEmpty);
-            SetSaveFlag(ref flags, SaveFlag.xWeaponAttributes, IPYWeaponAttributes != null);//!m_AosWeaponAttributes.IsEmpty );
+            SetSaveFlag(ref flags, SaveFlag.xAttributes, !m_AosAttributes.IsEmpty);            
             SetSaveFlag(ref flags, SaveFlag.PlayerConstructed, m_PlayerConstructed);
             SetSaveFlag(ref flags, SaveFlag.SkillBonuses, !m_AosSkillBonuses.IsEmpty);
             SetSaveFlag(ref flags, SaveFlag.Slayer2, m_Slayer2 != SlayerName.None);
@@ -4461,12 +3517,6 @@ namespace Server.Items
 
             if (GetSaveFlag(flags, SaveFlag.xAttributes))
                 m_AosAttributes.Serialize(writer);
-
-            if (GetSaveFlag(flags, SaveFlag.xWeaponAttributes))
-            {
-                this.IPYWeaponAttributes.Serialize(writer);
-                //m_AosWeaponAttributes.Serialize(writer);
-            }
 
             if (GetSaveFlag(flags, SaveFlag.SkillBonuses))
                 m_AosSkillBonuses.Serialize(writer);
@@ -4667,11 +3717,9 @@ namespace Server.Items
 
                         if (version >= 10)
                         {
-                            if (GetSaveFlag(flags, SaveFlag.xWeaponAttributes))
-                                this.IPYWeaponAttributes = IPYWeaponAttributes.Deserialize(reader);
-
                             m_AosWeaponAttributes = new AosWeaponAttributes(this);
                         }
+
                         else
                         {
                             if (GetSaveFlag(flags, SaveFlag.xWeaponAttributes))
@@ -5484,23 +4532,10 @@ namespace Server.Items
 
             if (DecorativeEquipment)
                 LabelTo(from, "[Decorative]");
-
-            if (attrs.Count == 0 && Crafter == null && Name != null)
-            {
-                if (this.IPYWeaponAttributes != null)
-                    LabelTo(from, String.Concat("[", this.IPYWeaponAttributes.GetAttributeName(), "]"));
-                return;
-            }
-
+            
             EquipmentInfo eqInfo = new EquipmentInfo(number, m_Crafter, false, attrs.ToArray());
 
-            from.Send(new DisplayEquipmentInfo(this, eqInfo));
-
-            if (this.IPYWeaponAttributes != null)
-                LabelTo(from, String.Concat("[", this.IPYWeaponAttributes.GetAttributeName(), "]"));
-
-            if (m_UOACWeaponEnhancement != WeaponEnhancement.EWeaponEnhancement.None)
-                LabelTo(from, String.Concat("[", WeaponEnhancement.AsString(m_UOACWeaponEnhancement), "]"));
+            from.Send(new DisplayEquipmentInfo(this, eqInfo));           
 
             if (m_Poison != null && m_PoisonCharges > 0)
             {
@@ -5606,8 +4641,7 @@ namespace Server.Items
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
                                 //DurabilityLevel = WeaponDurabilityLevel.Durable;
                                 DamageLevel = WeaponDamageLevel.Ruin;
-                                AccuracyLevel = WeaponAccuracyLevel.Accurate;
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
+                                AccuracyLevel = WeaponAccuracyLevel.Accurate;                               
 
                                 break;
                             }
@@ -5619,8 +4653,7 @@ namespace Server.Items
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
                                 //DurabilityLevel = WeaponDurabilityLevel.Durable;
                                 DamageLevel = WeaponDamageLevel.Ruin;
-                                AccuracyLevel = WeaponAccuracyLevel.Accurate;
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
+                                AccuracyLevel = WeaponAccuracyLevel.Accurate;                                
 
                                 break;
                             }
@@ -5632,8 +4665,7 @@ namespace Server.Items
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
                                 //DurabilityLevel = WeaponDurabilityLevel.Fortified;
                                 DamageLevel = WeaponDamageLevel.Might;
-                                AccuracyLevel = WeaponAccuracyLevel.Surpassingly;
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
+                                AccuracyLevel = WeaponAccuracyLevel.Surpassingly;                                
 
                                 break;
                             }
@@ -5645,8 +4677,7 @@ namespace Server.Items
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
                                 //DurabilityLevel = WeaponDurabilityLevel.Fortified;
                                 DamageLevel = WeaponDamageLevel.Might;
-                                AccuracyLevel = WeaponAccuracyLevel.Surpassingly;
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
+                                AccuracyLevel = WeaponAccuracyLevel.Surpassingly;                                
 
                                 break;
                             }
@@ -5658,8 +4689,7 @@ namespace Server.Items
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
                                 //DurabilityLevel = WeaponDurabilityLevel.Indestructible;
                                 DamageLevel = WeaponDamageLevel.Might;
-                                AccuracyLevel = WeaponAccuracyLevel.Surpassingly;
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
+                                AccuracyLevel = WeaponAccuracyLevel.Surpassingly;                               
 
                                 break;
                             }
@@ -5671,8 +4701,7 @@ namespace Server.Items
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
                                 //DurabilityLevel = WeaponDurabilityLevel.Indestructible;
                                 DamageLevel = WeaponDamageLevel.Force;
-                                AccuracyLevel = WeaponAccuracyLevel.Eminently;
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
+                                AccuracyLevel = WeaponAccuracyLevel.Eminently;                               
 
                                 break;
                             }
@@ -5684,8 +4713,7 @@ namespace Server.Items
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
                                 //DurabilityLevel = WeaponDurabilityLevel.Indestructible;
                                 DamageLevel = WeaponDamageLevel.Force;
-                                AccuracyLevel = WeaponAccuracyLevel.Eminently;
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
+                                AccuracyLevel = WeaponAccuracyLevel.Eminently;                                
 
                                 break;
                             }
@@ -5697,8 +4725,7 @@ namespace Server.Items
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
                                 //DurabilityLevel = WeaponDurabilityLevel.Indestructible;
                                 DamageLevel = WeaponDamageLevel.Force;
-                                AccuracyLevel = WeaponAccuracyLevel.Eminently;
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
+                                AccuracyLevel = WeaponAccuracyLevel.Eminently;                                
 
                                 break;
                             }
@@ -5710,8 +4737,7 @@ namespace Server.Items
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
                                 //DurabilityLevel = WeaponDurabilityLevel.Indestructible;
                                 DamageLevel = WeaponDamageLevel.Force;
-                                AccuracyLevel = WeaponAccuracyLevel.Eminently;
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
+                                AccuracyLevel = WeaponAccuracyLevel.Eminently;                                
 
                                 break;
                             }
@@ -5756,7 +4782,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 1;
                                 Slayer = woodSlayerTiers[tier][Utility.RandomMinMax(0, woodSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
                                 break;
                             }
                         case CraftResource.AshWood:
@@ -5764,7 +4789,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 2;
                                 Slayer = woodSlayerTiers[tier][Utility.RandomMinMax(0, woodSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
                                 break;
                             }
                         case CraftResource.YewWood:
@@ -5772,7 +4796,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 3;
                                 Slayer = woodSlayerTiers[tier][Utility.RandomMinMax(0, woodSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
                                 break;
                             }
 
@@ -5781,7 +4804,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 4;
                                 Slayer = woodSlayerTiers[tier][Utility.RandomMinMax(0, woodSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
                                 break;
                             }
 
@@ -5790,7 +4812,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 5;
                                 Slayer = woodSlayerTiers[tier][Utility.RandomMinMax(0, woodSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
                                 break;
                             }
 
@@ -5799,7 +4820,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 6;
                                 Slayer = woodSlayerTiers[tier][Utility.RandomMinMax(0, woodSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
                                 break;
                             }
                     }
@@ -5841,7 +4861,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 1;
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
 
                                 break;
                             }
@@ -5851,7 +4870,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 2;
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
 
                                 break;
                             }
@@ -5861,7 +4879,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 3;
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
 
                                 break;
                             }
@@ -5871,7 +4888,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 4;
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
 
                                 break;
                             }
@@ -5881,7 +4897,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 5;
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
 
                                 break;
                             }
@@ -5891,7 +4906,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 6;
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
 
                                 break;
                             }
@@ -5901,7 +4915,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 7;
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
 
                                 break;
                             }
@@ -5911,7 +4924,6 @@ namespace Server.Items
                                 Identified = true;
                                 tier = 8;
                                 Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
-                                UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
 
                                 break;
                             }
@@ -5921,7 +4933,6 @@ namespace Server.Items
                             Identified = true;
                             tier = 9;
                             Slayer = ingotSlayerTiers[tier][Utility.RandomMinMax(0, ingotSlayerTiers[tier].Count - 1)];
-                            UOACWeaponAttribute = WeaponEnhancement.EWeaponEnhancement.None;
 
                             break;
                         }

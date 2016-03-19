@@ -294,34 +294,6 @@ namespace Server.Mobiles
 
 				m.SendLocalizedMessage( 1049524 ); // You have received a scroll of power!
 				m.AddToBackpack( new StatCapScroll( 225 + level ) );
-
-				if ( m is PlayerMobile )
-				{
-					PlayerMobile pm = (PlayerMobile)m;
-
-					for ( int j = 0; j < pm.JusticeProtectors.Count; ++j )
-					{
-						Mobile prot = (Mobile)pm.JusticeProtectors[j];
-
-						if ( prot.Map != m.Map || prot.ShortTermMurders >= 5 || prot.Criminal || !JusticeVirtue.CheckMapRegion( m, prot ) )
-							continue;
-
-						int chance = 0;
-
-						switch ( VirtueHelper.GetLevel( prot, VirtueName.Justice ) )
-						{
-							case VirtueLevel.Seeker: chance = 60; break;
-							case VirtueLevel.Follower: chance = 80; break;
-							case VirtueLevel.Knight: chance = 100; break;
-						}
-
-						if ( chance > Utility.Random( 100 ) )
-						{
-							prot.SendLocalizedMessage( 1049368 ); // You have been rewarded for your dedication to Justice!
-							prot.AddToBackpack( new StatCapScroll( 225 + level ) );
-						}
-					}
-				}
 			}
 		}
 
@@ -333,10 +305,7 @@ namespace Server.Mobiles
 
 				for ( int i = rights.Count - 1; i >= 0; --i )
 				{
-					DamageStore ds = rights[i];
-
-					if ( ds.m_HasRight && ds.m_Mobile is PlayerMobile )
-						PlayerMobile.ChampionTitleInfo.AwardHarrowerTitle( (PlayerMobile)ds.m_Mobile );
+					DamageStore ds = rights[i];					
 				}
 
 				if ( !NoKillAwards )

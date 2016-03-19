@@ -732,27 +732,7 @@ namespace Server
                         mobile.Combatant = null;
                 }
             }
-
-            Queue m_Queue = new Queue();
-
-            foreach (Item item in World.Items.Values)
-            {
-                if (item is TinkerTrapPlaced)
-                {
-                    TinkerTrapPlaced trap = item as TinkerTrapPlaced;
-
-                    if (trap.Owner == player)
-                        m_Queue.Enqueue(trap);
-                }
-            }
-
-            while (m_Queue.Count > 0)
-            {
-                Item item = (Item)m_Queue.Dequeue();
-
-                item.Delete();
-            }
-            
+                        
             //Human to Undead
             if (undead)
             {

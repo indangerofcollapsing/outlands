@@ -195,7 +195,7 @@ namespace Server.Custom.Pirates
 
                 else
                 {
-                    if (!pm_From.Pirate && this.PlayerClassOwner != pm_From)
+                    if (PlayerClassOwner != pm_From)
                     {
                         from.SendMessage("Only the Pirate owner of this item may use it");
                         return;

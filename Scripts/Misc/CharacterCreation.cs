@@ -374,36 +374,6 @@ namespace Server.Misc
 
             PlaceItemIn(bank, 18, 124, cont);
 
-            if (Core.SE)
-            {
-                cont = new Bag();
-                cont.Hue = 0x501;
-                cont.Name = "Tokuno Minor Artifacts";
-
-                PlaceItemIn(cont, 42, 70, new Exiler());
-                PlaceItemIn(cont, 38, 53, new HanzosBow());
-                PlaceItemIn(cont, 45, 40, new TheDestroyer());
-                PlaceItemIn(cont, 92, 80, new DragonNunchaku());
-                PlaceItemIn(cont, 42, 56, new PeasantsBokuto());
-                PlaceItemIn(cont, 44, 71, new TomeOfEnlightenment());
-                PlaceItemIn(cont, 35, 35, new ChestOfHeirlooms());
-                PlaceItemIn(cont, 29, 0, new HonorableSwords());
-                PlaceItemIn(cont, 49, 85, new AncientUrn());
-                PlaceItemIn(cont, 51, 58, new FluteOfRenewal());
-                PlaceItemIn(cont, 70, 51, new PigmentsOfTokuno());
-                PlaceItemIn(cont, 40, 79, new AncientSamuraiDo());
-                PlaceItemIn(cont, 51, 61, new LegsOfStability());
-                PlaceItemIn(cont, 88, 78, new GlovesOfTheSun());
-                PlaceItemIn(cont, 55, 62, new AncientFarmersKasa());
-                PlaceItemIn(cont, 55, 83, new ArmsOfTacticalExcellence());
-                PlaceItemIn(cont, 50, 85, new DaimyosHelm());
-                PlaceItemIn(cont, 52, 78, new BlackLotusHood());
-                PlaceItemIn(cont, 52, 79, new DemonForks());
-                PlaceItemIn(cont, 33, 49, new PilferedDancerFans());
-
-                PlaceItemIn(bank, 58, 124, cont);
-            }
-
             if (Core.SE)	//This bag came only after SE.
             {
                 cont = new Bag();
@@ -630,9 +600,6 @@ namespace Server.Misc
 
         private static void EventSink_CharacterCreated(CharacterCreatedEventArgs args)
         {
-            if (!VerifyProfession(args.Profession))
-                args.Profession = 0;
-
             NetState state = args.State;
 
             if (state == null)

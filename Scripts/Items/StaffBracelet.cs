@@ -11,6 +11,7 @@ namespace Server.Items
         [Constructable]
         public StaffBracelet(): base()
         {
+            Hue = 2587;
         }
 
         public StaffBracelet(Serial serial): base(serial)
@@ -39,7 +40,7 @@ namespace Server.Items
                 from.AccessLevel = m_Level;
                 m_Level = AccessLevel.Player;
 
-                if (m_Level > AccessLevel.Player)
+                if (from.AccessLevel > AccessLevel.Player)
                     from.Send(SpeedControl.MountSpeed);
             }
 

@@ -45,6 +45,7 @@ namespace Server.Misc
             {
                 if (beholder == beheld)
                     footer = "Your profile has been locked.";
+
                 else if (beholder.AccessLevel >= AccessLevel.Counselor)
                     footer = "This profile has been locked.";
             }
@@ -55,7 +56,7 @@ namespace Server.Misc
                 footer = String.Concat(footer, "\n", GetCharacterAge(beheld));
             }
 
-            footer = String.Concat(footer, "\n", GetPowerHourTimer(beheld));
+            //footer = String.Concat(footer, "\n", GetPowerHourTimer(beheld));
             footer = String.Concat(footer, "\n", GetPreviousNames(beheld));
 
             string body = beheld.Profile;
@@ -94,32 +95,7 @@ namespace Server.Misc
 
             return string.Empty;
         }
-
-        private static string GetPowerHourTimer(Mobile m)
-        {
-            var pm = m as PlayerMobile;
-
-            if (pm == null)
-                return "";
-
-            if (SkillCheck.InPowerHour(pm))
-            {
-                var left = pm.PowerHourReset.Add(pm.PowerHourDuration).Subtract(DateTime.UtcNow);
-                return String.Format("You will be boosted in your skills training for {0:0} more minutes.", left.TotalMinutes);
-            }
-            else
-            {
-                if (DateTime.UtcNow > pm.PowerHourReset.Add(SkillCheck.PowerHourResetTime))
-                {
-                    return "You can now trigger your powerhour to boost your skills training.";
-                }
-                else
-                {
-                    return "You will be able to benefit from boosted skills training in " + RestedStateGump.TimeSince(DateTime.UtcNow, pm.PowerHourReset.Add(SkillCheck.PowerHourResetTime));
-                }
-            }
-        }
-
+        
         public static string GetAccountDuration(Mobile m)
         {
             Account a = m.Account as Account;

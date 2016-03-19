@@ -37,19 +37,7 @@ namespace Server.Spells.Third
 
                 return false;
             }
-
-            if ( Caster is PlayerMobile && ((PlayerMobile)Caster).IsDragging )
-            {
-                Caster.SendMessage("Your siege weapon is too heavy to do that.");
-                return false;
-            }
-
-            if ( Caster.Backpack != null && Caster.Backpack.FindItemByType<Server.Custom.Battlegrounds.Items.CTFFlag>() != null)
-            {
-                Caster.SendMessage("You cannot teleport while carrying a flag.");
-                return false;
-            }
-
+            
 			if ( Server.Misc.WeightOverloading.IsOverloaded( Caster ) )
 			{
 				Caster.SendLocalizedMessage( 502359, "", 0x22 ); // Thou art too encumbered to move.
@@ -87,16 +75,6 @@ namespace Server.Spells.Third
                     Caster.SendMessage(recallBlocker.PreventTeleportInResponse);
                 else
                     Caster.SendMessage(WarpBlockerTotem.DefaultTeleportInResponse);               
-            }
-			
-            else if (Caster is PlayerMobile && ((PlayerMobile)Caster).IsDragging)
-            {
-                Caster.SendMessage("Your siege weapon is too heavy to do that.");
-            }
-
-            else if (Caster.Backpack != null && Caster.Backpack.FindItemByType<Server.Custom.Battlegrounds.Items.CTFFlag>() != null)
-            {
-                Caster.SendMessage("You cannot teleport while carrying a flag.");
             }
 
             else if ( Server.Misc.WeightOverloading.IsOverloaded( Caster ) )

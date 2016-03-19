@@ -830,10 +830,7 @@ namespace Server.Items
             if (from.AccessLevel == AccessLevel.Player && !from.InRange(this.GetWorldLocation(), 2))
                 return false;
 
-            // Corpses are not interactable within an Arena fight.
-            Region region = Region.Find(Location, Map);
-            if (region != null && region is ArenaSystem.ArenaCombatRegion)
-                return false;
+            Region region = Region.Find(Location, Map);          
 
             if (!IsCriminalAction(from))
                 return true;
@@ -1123,9 +1120,6 @@ namespace Server.Items
 
                 if (pm_Dead != null)
                 {
-                    if (pm_Dead.Paladin)
-                        head.PlayerType = PlayerType.Paladin;
-
                     if (pm_Dead.Murderer)
                         head.PlayerType = PlayerType.Murderer;
 
@@ -1133,11 +1127,8 @@ namespace Server.Items
                     {
                         head.Killer = pm_Dead.LastPlayerKilledBy;
                         head.KillerName = pm_Dead.LastPlayerKilledBy.RawName;
-
-                        if (pm_Dead.LastPlayerKilledBy.Paladin)
-                            head.KillerType = PlayerType.Paladin;
-
-                        else if (pm_Dead.LastPlayerKilledBy.Murderer)
+                        
+                        if (pm_Dead.LastPlayerKilledBy.Murderer)
                             head.KillerType = PlayerType.Murderer;
 
                         else

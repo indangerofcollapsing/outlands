@@ -141,16 +141,7 @@ namespace Server.Items
                     else if (from.InRange(m_Bandage.GetWorldLocation(), Bandage.Range))
                     {
                         PlayerMobile playerTarget = targeted as PlayerMobile;
-
-                        if (playerTarget != null)
-                        {
-                            if (playerTarget.RestitutionFee > 0 || playerTarget.MurdererDeathGumpNeeded)
-                            {
-                                from.SendMessage("That player may not be ressurrected while they have unpaid restitution fees.");
-                                return;
-                            }
-                        }
-
+                        
                         if (BandageContext.BeginHeal(from, (Mobile)targeted) != null)
                         {
                             if (!Engines.ConPVP.DuelContext.IsFreeConsume(from))

@@ -139,10 +139,7 @@ namespace Server
                 AddSpellCasterLoot(mob);
 
             if (mob.Hybrid)
-                AddHybridLoot(mob);
-
-            if (mob.LootTier >= Loot.LootTier.Three)
-                mob.AddLoot(LootPack.WeaponDamageEnhancer);
+                AddHybridLoot(mob);           
 
             double uniqueLootChance = .001;
 

@@ -43,12 +43,6 @@ namespace Server.Mobiles
             if (player == null)
                 return false;
 
-            else if (player.RestitutionFee > 0 || player.MurdererDeathGumpNeeded)
-            {
-                Say("Thou has not paid sufficiently for your crimes and I shall not ressurect thee.");
-                return false;
-            }
-
             return true;
         }
 

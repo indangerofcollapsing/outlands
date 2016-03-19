@@ -386,22 +386,9 @@ namespace Server.Achievements
 			PlayerMobile player_mobile = mobile as PlayerMobile;
 			Achievement achievement = m_AllAchievements[achievement_index];
             PlayerAccomplishments player_achievements = (player_mobile.Account as Account).AccountAchievements;
+            
             if (player_achievements.GetIsCompleted(achievement) && !player_achievements.GetHasBeenRewarded(achievement))
 			{
-				// completed and not claimed
-
-				// title reward(s)
-				if (achievement.m_RewardTitle.Length > 0)
-				{
-					player_mobile.SendMessage(AchievementSystemImpl.Instance.m_SysTweaks.m_AwardMsgColor, String.Format("You have been awarded a Title:\n\"{0}\"", achievement.m_RewardTitle));
-					player_mobile.AddPrefixTitle = achievement.m_RewardTitle;
-				}
-				if (achievement.m_RewardTitle2.Length > 0)
-				{
-					player_mobile.SendMessage(AchievementSystemImpl.Instance.m_SysTweaks.m_AwardMsgColor, String.Format("You have been awarded a Title:\n\"{0}\"", achievement.m_RewardTitle2));
-					player_mobile.AddPrefixTitle = achievement.m_RewardTitle2;
-				}
-
 				// Item reward(s)
 				Item reward_item = null;
 				if (achievement.m_RewardItemType != null)
@@ -470,18 +457,6 @@ namespace Server.Achievements
 
 			if (do_popups)
 				player.SendGump(new AchievementNotificationGump(player, achievement_index));
-
-            if (!(player.IsInUOACZ))
-            {
-			    // a 0.1 skillscroll is awarded for every achievement completed
-			    Item ss = SkillScroll.Generate(player as PlayerMobile, 120.0, 0);
-
-			    if (ss != null)
-			    {
-                        player.Backpack.AddItem(ss);
-                        player.PrivateOverheadMessage(MessageType.Emote, 0, true, "* a complementary skill scroll appears in your backpack *", player.NetState);                
-			    }
-            }
 
 			if (!player.Hidden && player.AccessLevel == AccessLevel.Player)
 			{

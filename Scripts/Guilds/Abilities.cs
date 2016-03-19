@@ -102,7 +102,7 @@ namespace Server.Custom.Guilds
                     return;
                 }
 
-                if (player.MurdererDeathGumpNeeded == false && player.RestitutionFee == 0 && guild.CanUseAbility(from, GuildBonus.SelfRez))
+                if (guild.CanUseAbility(from, GuildBonus.SelfRez))
                 {
                     from.CloseGump(typeof(ResurrectGump));
                     from.SendGump(new ResurrectGump(from));
@@ -126,12 +126,6 @@ namespace Server.Custom.Guilds
 
             if (from.Guild == targetPlayer.Guild && !targetPlayer.Alive && from.Map.LineOfSight(from, targetPlayer))
             {
-                if (targetPlayer.RestitutionFee > 0 || targetPlayer.MurdererDeathGumpNeeded)
-                {
-                    from.SendMessage("That player may not be ressurrected while they have unpaid restitution fees.");
-                    return;
-                }
-
                 if (BaseHouse.FindHouseAt(targetPlayer) != null)
                 {
                     from.SendMessage("You may not resurrect inside a house.");
@@ -176,9 +170,10 @@ namespace Server.Custom.Guilds
 
             int maximum = 4;
             int count = 0;
+
             foreach (var guildmate in guildmates)
             {
-                if (guildmate == null || guildmate.RestitutionFee > 0 || guildmate.MurdererDeathGumpNeeded || count > maximum)
+                if (guildmate == null || count > maximum)
                     continue;
 
                 if (BaseHouse.FindHouseAt(guildmate) != null)

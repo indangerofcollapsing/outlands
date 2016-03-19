@@ -66,8 +66,7 @@ namespace Server.Mobiles
         FactionHuman,
         FactionAnimal,
         Summoned,
-        Boss,
-        PetBattleCreature
+        Boss
     }
 
     public enum AISubgroup
@@ -153,7 +152,6 @@ namespace Server.Mobiles
         Aggressor,
         Any,
         None,
-        OpposingPetBattleTeam,
         UOACZHuman,
         UOACZIgnoreHumanSentry,
         UOACZHumanPlayer,
@@ -1969,23 +1967,11 @@ namespace Server.Mobiles
                     //Owner is Offline
                     if (pm_Owner.NetState == null)
                     {
-                        if (pm_Owner.IsInTempStatLoss)
+                        if (bc_Creature.ControlOrder != OrderType.Stop)
                         {
-                            if (bc_Creature.ControlOrder != OrderType.Stop)
-                            {
-                                bc_Creature.ControlOrder = OrderType.Stop;
-                                bc_Creature.AIObject.DoOrderStop();
-                            }
-                        }
-
-                        else
-                        {
-                            if (bc_Creature.ControlOrder != OrderType.Stop)
-                            {
-                                bc_Creature.ControlOrder = OrderType.Stop;
-                                bc_Creature.AIObject.DoOrderStop();
-                            }
-                        }
+                            bc_Creature.ControlOrder = OrderType.Stop;
+                            bc_Creature.AIObject.DoOrderStop();
+                        }                        
 
                         return false;
                     }
@@ -1996,23 +1982,11 @@ namespace Server.Mobiles
                         //Owner is Dead
                         if (!bc_Creature.ControlMaster.Alive && !bc_Creature.BardProvoked)
                         {
-                            if (pm_Owner.IsInTempStatLoss)
+                            if (bc_Creature.ControlOrder == OrderType.Attack || bc_Creature.ControlOrder == OrderType.Patrol || bc_Creature.ControlOrder == OrderType.Guard)
                             {
-                                if (bc_Creature.ControlOrder == OrderType.Attack || bc_Creature.ControlOrder == OrderType.Patrol || bc_Creature.ControlOrder == OrderType.Guard || bc_Creature.ControlOrder == OrderType.Stay)
-                                {
-                                    bc_Creature.ControlOrder = OrderType.Stop;
-                                    bc_Creature.AIObject.DoOrderStop();
-                                }
-                            }
-
-                            else
-                            {
-                                if (bc_Creature.ControlOrder == OrderType.Attack || bc_Creature.ControlOrder == OrderType.Patrol || bc_Creature.ControlOrder == OrderType.Guard)
-                                {
-                                    bc_Creature.ControlOrder = OrderType.Stop;
-                                    bc_Creature.AIObject.DoOrderStop();
-                                }
-                            }                            
+                                bc_Creature.ControlOrder = OrderType.Stop;
+                                bc_Creature.AIObject.DoOrderStop();
+                            }                                                    
 
                             return false;
                         }
@@ -2034,17 +2008,8 @@ namespace Server.Mobiles
                             //Go Into Stay Mode (Or Stop Mode if Player is In Temp-Statloss
                             else
                             {
-                                if (pm_Owner.IsInTempStatLoss)
-                                {
-                                    if (bc_Creature.ControlOrder != OrderType.Stop)
-                                        bc_Creature.ControlOrder = OrderType.Stop;
-                                }
-
-                                else
-                                {
-                                    if (bc_Creature.ControlOrder != OrderType.Stop)
-                                        bc_Creature.ControlOrder = OrderType.Stop;
-                                }
+                                if (bc_Creature.ControlOrder != OrderType.Stop)
+                                    bc_Creature.ControlOrder = OrderType.Stop;                                
                             }
                         }
 
@@ -2121,16 +2086,7 @@ namespace Server.Mobiles
             if (bc_Creature.CheckControlChance(from))
             {
                 PlayerMobile player = from as PlayerMobile;
-
-                if (player != null)
-                {
-                    if (player.IsInTempStatLoss)
-                    {
-                        from.SendMessage("That command cannot be issued while you are in temporary stat-loss");
-                        return false;
-                    }
-                }
-
+                
                 if (bc_Creature.Backpack is StrongBackpack || bc_Creature is StrongBearBackpack)
                 {
                     BeginPickTarget(from, OrderType.Fetch);
@@ -2222,15 +2178,6 @@ namespace Server.Mobiles
             }
 
             PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
-            {
-                if (player.IsInTempStatLoss)
-                {
-                    from.SendMessage("That command cannot be issued while you are in temporary stat-loss");
-                    return false;
-                }
-            }
 
             if (bc_Creature.IsDeadPet)
             {
@@ -2326,15 +2273,6 @@ namespace Server.Mobiles
 
             PlayerMobile player = from as PlayerMobile;
 
-            if (player != null)
-            {
-                if (player.IsInTempStatLoss)
-                {
-                    from.SendMessage("That command cannot be issued while you are in temporary stat-loss");
-                    return false;
-                }
-            }
-
             if (bc_Creature.IsDeadPet)
             {
                 from.SendMessage("You cannot command a deceased pet to do that.");
@@ -2380,15 +2318,6 @@ namespace Server.Mobiles
                 return false;
 
             PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
-            {
-                if (player.IsInTempStatLoss)
-                {
-                    from.SendMessage("That command cannot be issued while you are in temporary stat-loss");
-                    return false;
-                }
-            }
 
             if (bc_Creature.CheckControlChance(from))
             {
@@ -2457,16 +2386,7 @@ namespace Server.Mobiles
             }
 
             PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
-            {
-                if (player.IsInTempStatLoss)
-                {
-                    from.SendMessage("That command cannot be issued while you are in temporary stat-loss");
-                    return false;
-                }
-            }
-
+            
             if (bc_Creature.IsDeadPet)
             {
                 from.SendMessage("You cannot command a deceased follower to do that.");
@@ -2535,16 +2455,7 @@ namespace Server.Mobiles
             }
 
             PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
-            {
-                if (player.IsInTempStatLoss)
-                {
-                    from.SendMessage("That command cannot be issued while you are in temporary stat-loss");
-                    return false;
-                }
-            }
-
+            
             if (bc_Creature.IsDeadPet)
             {
                 from.SendMessage("You cannot command a deceased pet to do that.");
@@ -2958,16 +2869,8 @@ namespace Server.Mobiles
 
                 if (pm_ControlMaster != null)
                 {
-                    if (pm_ControlMaster.IsInTempStatLoss)
-                    {
-                        if (bc_Creature.ControlOrder != OrderType.Stop)
-                            bc_Creature.ControlOrder = OrderType.Stop;
-                    }
-                    else
-                    {
-                        if (bc_Creature.ControlOrder != OrderType.Stay)
-                            bc_Creature.ControlOrder = OrderType.Stay;
-                    }
+                    if (bc_Creature.ControlOrder != OrderType.Stay)
+                        bc_Creature.ControlOrder = OrderType.Stay;                    
                 }
 
                 else
@@ -3040,16 +2943,8 @@ namespace Server.Mobiles
 
             if (pm_ControlMaster != null)
             {
-                if (pm_ControlMaster.IsInTempStatLoss)
-                {
-                    if (bc_Creature.ControlOrder != OrderType.Stop)
-                        bc_Creature.ControlOrder = OrderType.Stop;
-                }
-                else
-                {
-                    if (bc_Creature.ControlOrder != OrderType.Stay)
-                        bc_Creature.ControlOrder = OrderType.Stay;
-                }
+                if (bc_Creature.ControlOrder != OrderType.Stay)
+                    bc_Creature.ControlOrder = OrderType.Stay;                
             }
 
             else
@@ -3461,21 +3356,12 @@ namespace Server.Mobiles
                 PlayerMobile pm_ControlMaster = bc_Creature.ControlMaster as PlayerMobile;
 
                 if (pm_ControlMaster != null)
-                {
-                    if (pm_ControlMaster.IsInTempStatLoss)
+                {                   
+                    if (bc_Creature.ControlOrder != OrderType.Stay)
                     {
-                        if (bc_Creature.ControlOrder != OrderType.Stop)
-                            bc_Creature.ControlOrder = OrderType.Stop;
-                    }
-
-                    else
-                    {
-                        if (bc_Creature.ControlOrder != OrderType.Stay)
-                        {
-                            bc_Creature.ControlOrder = OrderType.Stay;
-                            DoOrderStay();
-                        }
-                    }
+                        bc_Creature.ControlOrder = OrderType.Stay;
+                        DoOrderStay();
+                    }                    
                 }
 
                 else
@@ -4539,21 +4425,7 @@ namespace Server.Mobiles
             BaseWeapon targetWeapon = target.Weapon as BaseWeapon;
 
             if (bc_Target == null && pm_Target == null)
-                return 0;          
-
-            bool PetBattleOpponent = false;
-
-            if (bc_Creature != null && bc_Target != null)
-            {
-                if (bc_Creature.PetBattleCreature && bc_Target.PetBattleCreature)
-                {
-                    if (bc_Creature.PetBattleTotem != null && bc_Target.PetBattleTotem != null && bc_Creature.PetBattleTotem.PetBattleSignupStone.PetBattle == bc_Target.PetBattleTotem.PetBattleSignupStone.PetBattle)
-                    {
-                        if (bc_Creature.PetBattleTotem.Team != bc_Target.PetBattleTotem.Team)
-                            PetBattleOpponent = true;
-                    }
-                }
-            }            
+                return 0;       
 
             if (bc_Target != null)
             {
@@ -4828,28 +4700,14 @@ namespace Server.Mobiles
 
                 //Not Aggressor
                 else
-                {
-                    //Not Are Pet Battle Opponent
-                    if (!PetBattleOpponent)
-                    {
-                        //If Is Teammate, Ignore It
-                        if (AITeamList.CheckTeam(bc_Creature, target))
-                            return 0;
+                {                    
+                    //If Is Teammate, Ignore It
+                    if (AITeamList.CheckTeam(bc_Creature, target))
+                        return 0;
 
-                        //Ignore Player Kin Paint Allies
-                        else if (AIKinTeamList.CheckKinTeam(bc_Creature, target))
-                            return 0;
-                    }
-                }
-            }
-
-            //OpposingPetBattleTeam  
-            if (PetBattleOpponent)
-            {
-                if (bc_Creature.m_PetBattleTotem.PositionNumber == bc_Target.m_PetBattleTotem.PositionNumber)
-                {
-                    if (bc_Creature.DictCombatTargeting[CombatTargeting.OpposingPetBattleTeam] > BestTargetValue)
-                        BestTargetValue = bc_Creature.DictCombatTargeting[CombatTargeting.OpposingPetBattleTeam];
+                    //Ignore Player Kin Paint Allies
+                    else if (AIKinTeamList.CheckKinTeam(bc_Creature, target))
+                        return 0;                    
                 }
             }
 
@@ -5469,7 +5327,7 @@ namespace Server.Mobiles
                                     break;
                             }
 
-                            else if (item is TinkerTrap && !item.IsLockedDown)
+                            else if (!item.IsLockedDown)
                                 m_Obstacles.Enqueue(item);
 
                             else if (canDestroyObstacles && item.Movable && item.ItemData.Impassable && (item.Z + item.ItemData.Height) > bc_Creature.Z && (bc_Creature.Z + 16) > item.Z)
@@ -5778,23 +5636,6 @@ namespace Server.Mobiles
                 if (target is BaseCreature && ((BaseCreature)target).IsScaryToPets && bc_Creature.IsScaredOfScaryThings)
                 {
                     bc_Creature.SayTo(from, "Your pet refuses to attack this creature!");
-                    return;
-                }
-
-                if ((SolenHelper.CheckRedFriendship(from) &&
-                            (target is RedSolenInfiltratorQueen
-                            || target is RedSolenInfiltratorWarrior
-                            || target is RedSolenQueen
-                            || target is RedSolenWarrior
-                            || target is RedSolenWorker))
-                    || (SolenHelper.CheckBlackFriendship(from) &&
-                            (target is BlackSolenInfiltratorQueen
-                            || target is BlackSolenInfiltratorWarrior
-                            || target is BlackSolenQueen
-                            || target is BlackSolenWarrior
-                            || target is BlackSolenWorker)))
-                {
-                    from.SendAsciiMessage("You can not force your pet to attack a creature you are protected from.");
                     return;
                 }
 

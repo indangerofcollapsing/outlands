@@ -1,7 +1,7 @@
 using System;
 using Server;
 using Server.Items;
-using Server.Custom.Ubercrafting;
+
 namespace Server.Mobiles
 {
 	[CorpseName( "an ophidian corpse" )]

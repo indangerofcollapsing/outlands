@@ -1251,11 +1251,10 @@ namespace Server
 
                     if (Utility.RandomDouble() <= chance)
                     {
-                        switch (Utility.RandomMinMax(1, 3))
+                        switch (Utility.RandomMinMax(1, 2))
                         {
                             case 1: m_Items.Add(new Leather(Utility.RandomMinMax(4, 6))); break;
-                            case 2: m_Items.Add(new Feather(25)); break;
-                            case 3: m_Items.Add(new HuntingSnare()); break;
+                            case 2: m_Items.Add(new Feather(25)); break;                           
                         }
                     }
                 break;

@@ -176,7 +176,7 @@ namespace Server.Mobiles
         }
     }
 
-    public partial class BaseCreature : Mobile, IHonorTarget
+    public partial class BaseCreature : Mobile
     {
         #region IPY
         
@@ -503,7 +503,7 @@ namespace Server.Mobiles
 
         public bool m_WasFishedUp = false;
 
-        private bool m_IsStealthing;
+        
 
         private Point3D m_pHome;                // The home position of the creature, used by some AI
         private Point3D m_LastEnemyLocation;    // Last known location of enemy combatant
@@ -534,16 +534,12 @@ namespace Server.Mobiles
         private bool m_SuperPredator = false;
         private bool m_Predator = false;
         private bool m_Prey = false;
-
-        private bool m_DoingBandage = false; //If Doing an AI Bandage Action
-        private bool m_BandageOtherReady = false; //Changed When Attempting to Reach a Target to Bandage
-        private DateTime m_BandageTimeout; //Timer Checking if Bandage Action Has Occured Yet
-
+        
         private bool m_bBardProvoked = false;
-        private bool m_bBardPacified = false;
-        private PeacemakingModeEnum m_bBardPacifiedMode = PeacemakingModeEnum.Combat;
+        private bool m_bBardPacified = false;        
         private Mobile m_bBardMaster = null;
         private Mobile m_bBardTarget = null;
+
         private DateTime m_timeBardEnd;
 
         private WayPoint m_CurrentWaypoint = null;
@@ -593,8 +589,7 @@ namespace Server.Mobiles
         public const int DefaultRangePerception = 12;
 
         public AIGroup m_AIGroup = AIGroup.None;
-        public AISubgroup m_AISubgroup = AISubgroup.None;
-        public bool m_HasUniqueAI = false; //No Longer Used
+        public AISubgroup m_AISubgroup = AISubgroup.None;       
 
         private double m_UniqueCreatureDifficultyScalar = 1;
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
@@ -664,51 +659,6 @@ namespace Server.Mobiles
             base.LastPlayerCombatTimeChanged();
         }
 
-        //Pet Battle Values
-        public bool PetBattleCreature = false;
-        public int PetBattleItemId;
-        public int PetBattleItemHue;
-        public int PetBattleStatueOffsetZ;
-        public string PetBattleTitle;
-        public string PetBattleBriefDescription;
-        public string PetBattleDescription;
-
-        public int PetBattleCreatureSelectItemIdOffsetX = 0;
-        public int PetBattleCreatureSelectItemIdOffsetY = 0;
-
-        public int PetBattleGrimoireItemIdOffsetX = 0;
-        public int PetBattleGrimoireItemIdOffsetY = 0;
-
-        public int PetBattleCreatureHealth;
-        public int PetBattleCreatureDamage;
-        public int PetBattleCreatureAttack;
-        public int PetBattleCreatureDefend;
-        public int PetBattleCreatureSpeed;
-        public int PetBattleCreatureArmor;
-        public int PetBattleCreatureResist;
-
-        public List<PetBattleAbility> m_PetBattleOffensiveAbilities = new List<PetBattleAbility>();
-        public List<PetBattleAbility> m_PetBattleDefensiveAbilities = new List<PetBattleAbility>();
-
-        public int PetBattleOffensivePowerMax = 1;
-        public int PetBattleDefensivePowerMax = 1;
-
-        public TimeSpan PetBattlePostAbilitySwingDelay = TimeSpan.FromSeconds(0);
-
-        public Custom.PetBattleTotem m_PetBattleTotem;
-        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
-        public Custom.PetBattleTotem PetBattleTotem
-        {
-            get { return m_PetBattleTotem; }
-            set { m_PetBattleTotem = value; }
-        }
-
-        public PlayerMobile m_PetBattleOwner;
-        public PlayerMobile m_PetBattleOpponent;
-
-        public Custom.PetBattle.Team m_PetBattleTeam;
-        public Custom.PetBattle m_PetBattle;
-        public int m_PetBattleTeamHue;
         #endregion
 
         #region Tamed Creature Base Values
@@ -1111,16 +1061,7 @@ namespace Server.Mobiles
             m_SpecialAbilityEffectEntriesToRemove = new List<SpecialAbilityEffectEntry>();
 
             m_SpecialAbilityEffectTimer = new SpecialAbilityEffectTimer(this);
-            m_SpecialAbilityEffectTimer.Stop();
-
-            m_PetBattleAbilityEffectEntries = new List<PetBattleAbilityEffectEntry>();
-            m_PetBattleAbilityEffectEntriesToRemove = new List<PetBattleAbilityEffectEntry>();
-
-            m_PetBattleAbilityEffectTimer = new PetBattleAbilityEffectTimer(this);
-            m_PetBattleAbilityEffectTimer.Stop();
-
-            SetPetBattleOffensiveAbilities();
-            SetPetBattleDefensiveAbilities();
+            m_SpecialAbilityEffectTimer.Stop();            
 
             Timer.DelayCall(TimeSpan.FromMilliseconds(3000), delegate
             {
@@ -1199,7 +1140,6 @@ namespace Server.Mobiles
             DictCombatTargeting.Add(CombatTargeting.Aggressor, 3);
             DictCombatTargeting.Add(CombatTargeting.Any, 0);
             DictCombatTargeting.Add(CombatTargeting.None, 0);
-            DictCombatTargeting.Add(CombatTargeting.OpposingPetBattleTeam, 0);
 
             DictCombatTargeting.Add(CombatTargeting.UOACZHuman, 0);
             DictCombatTargeting.Add(CombatTargeting.UOACZIgnoreHumanSentry, 0);
@@ -2397,270 +2337,8 @@ namespace Server.Mobiles
 
             value = totalValue;
         }
-
-        public bool PetBattleAbilityEntryLookupInProgress = false;
-
-        public List<PetBattleAbilityEffectEntry> m_PetBattleAbilityEffectEntries = new List<PetBattleAbilityEffectEntry>();
-        [CommandProperty(AccessLevel.GameMaster)]
-        public List<PetBattleAbilityEffectEntry> PetBattleAbilityEffectEntries
-        {
-            get { return m_PetBattleAbilityEffectEntries; }
-            set { m_PetBattleAbilityEffectEntries = value; }
-        }
-
-        public List<PetBattleAbilityEffectEntry> m_PetBattleAbilityEffectEntriesToAdd = new List<PetBattleAbilityEffectEntry>();
-        [CommandProperty(AccessLevel.GameMaster)]
-        public List<PetBattleAbilityEffectEntry> PetBattleAbilityEffectEntriesToAdd
-        {
-            get { return m_PetBattleAbilityEffectEntriesToAdd; }
-            set { m_PetBattleAbilityEffectEntriesToAdd = value; }
-        }
-
-        public List<PetBattleAbilityEffectEntry> m_PetBattleAbilityEffectEntriesToRemove = new List<PetBattleAbilityEffectEntry>();
-        [CommandProperty(AccessLevel.GameMaster)]
-        public List<PetBattleAbilityEffectEntry> PetBattleAbilityEffectEntriesToRemove
-        {
-            get { return m_PetBattleAbilityEffectEntriesToRemove; }
-            set { m_PetBattleAbilityEffectEntriesToRemove = value; }
-        }
-
-        public virtual void SetPetBattleOffensiveAbilities()
-        {
-        }
-
-        public virtual void SetPetBattleDefensiveAbilities()
-        {
-        }
-
-        public PetBattleAbilityEffectTimer m_PetBattleAbilityEffectTimer;
-        public class PetBattleAbilityEffectTimer : Timer
-        {
-            private Mobile m_Mobile;
-
-            public PetBattleAbilityEffectTimer(Mobile mobile)
-                : base(TimeSpan.Zero, TimeSpan.FromMilliseconds(100))
-            {
-                m_Mobile = mobile;
-                Priority = TimerPriority.TwentyFiveMS;
-            }
-
-            protected override void OnTick()
-            {
-                BaseCreature bc_Creature = m_Mobile as BaseCreature;
-
-                if (bc_Creature == null)
-                    return;
-
-                List<PetBattleAbilityEffectEntry> entriesToRemove = new List<PetBattleAbilityEffectEntry>();
-
-                int entries = bc_Creature.m_PetBattleAbilityEffectEntries.Count;
-
-                for (int a = 0; a < entries; a++)
-                {
-                    if (bc_Creature.PetBattleAbilityEntryLookupInProgress)
-                        break;
-
-                    PetBattleAbilityEffectEntry entry = bc_Creature.m_PetBattleAbilityEffectEntries[a];
-
-                    if (entry == null)
-                        continue;
-
-                    //Frozen
-                    if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.Frozen)
-                    {
-                        if (DateTime.UtcNow >= entry.m_Expiration)
-                            bc_Creature.Frozen = false;
-                    }
-
-                    //TakeBleedDamage
-                    if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.TakeBleedDamage)
-                    {
-                        if (DateTime.UtcNow >= entry.m_Expiration)
-                        {
-                            int totalDamage = (int)entry.m_Value1;
-                            int incrementDamage = (int)(Math.Ceiling(entry.m_Value1 / entry.m_Value2));
-
-                            BaseCreature bc_From = entry.m_From as BaseCreature;
-
-                            incrementDamage = PetBattleAbilities.ScaleMagicDamage(bc_From, bc_Creature, incrementDamage);
-
-                            PetBattleAbilities.AddBloodEffect(bc_Creature, 1, 2);
-
-                            bc_Creature.Hits -= incrementDamage;
-                            bc_Creature.PublicOverheadMessage(0, bc_Creature.m_PetBattleTeamHue, false, "-" + incrementDamage.ToString());
-                        }
-                    }
-
-                    //Burning
-                    if (entry.m_PetBattleAbilityEffect == PetBattleAbilityEffect.Burning)
-                    {
-                        if (DateTime.UtcNow >= entry.m_Expiration)
-                        {
-                            int totalDamage = (int)entry.m_Value1;
-                            int incrementDamage = (int)(Math.Ceiling(entry.m_Value1 / entry.m_Value2));
-
-                            BaseCreature bc_From = entry.m_From as BaseCreature;
-
-                            incrementDamage = PetBattleAbilities.ScaleMagicDamage(bc_From, bc_Creature, incrementDamage);
-
-                            Effects.PlaySound(bc_Creature.Location, bc_Creature.Map, 0x208);
-                            Effects.SendLocationParticles(EffectItem.Create(bc_Creature.Location, bc_Creature.Map, TimeSpan.FromSeconds(1.0)), 0x3996, 10, 80, 5029);
-
-                            bc_Creature.Hits -= incrementDamage;
-                            bc_Creature.PublicOverheadMessage(0, bc_Creature.m_PetBattleTeamHue, false, "-" + incrementDamage.ToString());
-                        }
-                    }
-
-                    if (DateTime.UtcNow >= entry.m_Expiration)
-                        bc_Creature.RemovePetBattleAbilityEffectEntry(entry);
-                }
-
-                if (bc_Creature.m_PetBattleAbilityEffectEntries.Count == 0)
-                    this.Stop();
-            }
-        }
-
-        public AddPetBattleAbilityEffectTimer m_AddPetBattleAbilityEffectTimer;
-        public class AddPetBattleAbilityEffectTimer : Timer
-        {
-            private BaseCreature bc_Creature;
-
-            public AddPetBattleAbilityEffectTimer(BaseCreature creature)
-                : base(TimeSpan.Zero, TimeSpan.FromMilliseconds(50))
-            {
-                bc_Creature = creature;
-
-                Priority = TimerPriority.TwentyFiveMS;
-            }
-
-            protected override void OnTick()
-            {
-                int entriesToAdd = bc_Creature.m_PetBattleAbilityEffectEntriesToAdd.Count;
-                for (int a = 0; a < entriesToAdd; a++)
-                {
-                    if (bc_Creature.PetBattleAbilityEntryLookupInProgress)
-                        break;
-
-                    bc_Creature.m_PetBattleAbilityEffectEntries.Add(bc_Creature.m_PetBattleAbilityEffectEntriesToAdd[0]);
-                    bc_Creature.m_PetBattleAbilityEffectEntriesToAdd.RemoveAt(0);
-
-                    if (bc_Creature.m_PetBattleAbilityEffectTimer == null)
-                    {
-                        bc_Creature.m_PetBattleAbilityEffectTimer = new PetBattleAbilityEffectTimer(bc_Creature);
-                        bc_Creature.m_PetBattleAbilityEffectTimer.Start();
-                    }
-
-                    else
-                    {
-                        if (!bc_Creature.m_PetBattleAbilityEffectTimer.Running)
-                            bc_Creature.m_PetBattleAbilityEffectTimer.Start();
-                    }
-                }
-
-                if (bc_Creature.m_PetBattleAbilityEffectEntriesToAdd.Count == 0)
-                    this.Stop();
-            }
-        }
-
-        public RemovePetBattleAbilityEffectTimer m_RemovePetBattleAbilityEffectTimer;
-        public class RemovePetBattleAbilityEffectTimer : Timer
-        {
-            private BaseCreature bc_Creature;
-
-            public RemovePetBattleAbilityEffectTimer(BaseCreature creature)
-                : base(TimeSpan.Zero, TimeSpan.FromMilliseconds(50))
-            {
-                bc_Creature = creature;
-                Priority = TimerPriority.TwentyFiveMS;
-            }
-
-            protected override void OnTick()
-            {
-                int entriesToRemove = bc_Creature.m_PetBattleAbilityEffectEntriesToRemove.Count;
-                for (int a = 0; a < entriesToRemove; a++)
-                {
-                    if (bc_Creature.PetBattleAbilityEntryLookupInProgress)
-                        break;
-
-                    bc_Creature.m_PetBattleAbilityEffectEntries.Remove(bc_Creature.m_PetBattleAbilityEffectEntriesToRemove[0]);
-                    bc_Creature.m_PetBattleAbilityEffectEntriesToRemove.RemoveAt(0);
-
-                    if (bc_Creature.m_PetBattleAbilityEffectEntries.Count == 0)
-                    {
-                        if (bc_Creature.m_PetBattleAbilityEffectTimer != null)
-                        {
-                            if (!bc_Creature.m_PetBattleAbilityEffectTimer.Running)
-                                bc_Creature.m_PetBattleAbilityEffectTimer.Stop();
-                        }
-                    }
-                }
-
-                if (bc_Creature.m_PetBattleAbilityEffectEntriesToRemove.Count == 0)
-                    this.Stop();
-            }
-        }
-
-        public void AddPetBattleAbilityEffectEntry(PetBattleAbilityEffectEntry entryToAdd)
-        {
-            m_PetBattleAbilityEffectEntriesToAdd.Add(entryToAdd);
-
-            if (m_AddPetBattleAbilityEffectTimer == null)
-            {
-                m_AddPetBattleAbilityEffectTimer = new AddPetBattleAbilityEffectTimer(this);
-                m_AddPetBattleAbilityEffectTimer.Start();
-            }
-
-            else
-            {
-                if (!m_AddPetBattleAbilityEffectTimer.Running)
-                    m_AddPetBattleAbilityEffectTimer.Start();
-            }
-        }
-
-        public void RemovePetBattleAbilityEffectEntry(PetBattleAbilityEffectEntry entryToRemove)
-        {
-            m_PetBattleAbilityEffectEntriesToRemove.Add(entryToRemove);
-
-            if (m_RemovePetBattleAbilityEffectTimer == null)
-            {
-                m_RemovePetBattleAbilityEffectTimer = new RemovePetBattleAbilityEffectTimer(this);
-                m_RemovePetBattleAbilityEffectTimer.Start();
-            }
-
-            else
-            {
-                if (!m_RemovePetBattleAbilityEffectTimer.Running)
-                    m_RemovePetBattleAbilityEffectTimer.Start();
-            }
-        }
-
-        public void GetPetBattleEntryValue(PetBattleAbilityEffect effectType, out double totalValue1, out double totalValue2)
-        {
-            int count = 0;
-            double value1 = 0;
-            double value2 = 0;
-
-            if (m_PetBattleAbilityEffectEntries != null)
-            {
-                PetBattleAbilityEntryLookupInProgress = true;
-
-                foreach (PetBattleAbilityEffectEntry entry in m_PetBattleAbilityEffectEntries)
-                {
-                    //Matching Effect Type and Not Expired
-                    if (entry.m_PetBattleAbilityEffect == effectType && DateTime.UtcNow < entry.m_Expiration)
-                    {
-                        value1 += entry.m_Value1;
-                        value2 += entry.m_Value2;
-                    }
-                }
-
-                PetBattleAbilityEntryLookupInProgress = false;
-            }
-
-            totalValue1 = value1;
-            totalValue2 = value2;
-        }
-
+        
+        private bool m_IsStealthing;
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsStealthing // IsStealthing should be moved to Server.Mobiles
         {
@@ -2668,6 +2346,7 @@ namespace Server.Mobiles
             set { m_IsStealthing = value; }
         }
 
+        private bool m_DoingBandage = false;
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
         public bool DoingBandage
         {
@@ -2675,6 +2354,7 @@ namespace Server.Mobiles
             set { m_DoingBandage = value; }
         }
 
+        private bool m_BandageOtherReady = false;
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
         public bool BandageOtherReady
         {
@@ -2682,6 +2362,7 @@ namespace Server.Mobiles
             set { m_BandageOtherReady = value; }
         }
 
+        private DateTime m_BandageTimeout;
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
         public DateTime BandageTimeout
         {
@@ -3929,15 +3610,6 @@ namespace Server.Mobiles
             if (IsHenchman && m.Skills[SkillName.Begging].Value >= TargetTamingLore && m.Skills[SkillName.Camping].Value >= TargetTamingLore)
                 return true;
 
-            //Allow Temp-Stat Free Control of Creatures (They Will Only Be Able to Do Stop, Follow, and Come Commands Anyways)
-            PlayerMobile pm_Mobile = m as PlayerMobile;
-
-            if (pm_Mobile != null)
-            {
-                if (pm_Mobile.IsInTempStatLoss)
-                    return true;
-            }
-
             return false;
         }
 
@@ -4517,21 +4189,17 @@ namespace Server.Mobiles
             }
         }
 
-        private HonorContext m_ReceivedHonorContext;
-
-        public HonorContext ReceivedHonorContext { get { return m_ReceivedHonorContext; } set { m_ReceivedHonorContext = value; } }
-                
         public void Unpacify()
         {
             BardMaster = null;
             BardTarget = null;
             Combatant = null;
             BardPacified = false;
-            BardPacifiedMode = PeacemakingModeEnum.Combat;
 
             BardEndTime = DateTime.UtcNow;
             NextCombatTime = DateTime.UtcNow;
             m_LastBreakPeaceCheck = DateTime.MinValue;
+
             PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "*breaks from trance*");
         }
 
@@ -4758,32 +4426,6 @@ namespace Server.Mobiles
         {
             if (BardPacified)
             {
-                //If in crowd control mode, then break right away
-                if (BardPacifiedMode == PeacemakingModeEnum.CrowdControl)
-                    Unpacify();
-                else
-                {
-                    int threshold = 5;
-                    double percent = 1 - (double)Hits / (double)HitsMax;
-
-                    if (m_LastBreakPeaceCheck + TimeBetweenPacifyBreak < DateTime.UtcNow && amount > threshold)
-                    {
-                        bool ignoreBreak = false;
-
-                        BaseDungeonArmor.PlayerDungeonArmorProfile bardDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(BardMaster, null);
-
-                        if (bardDungeonArmor.MatchingSet && !bardDungeonArmor.InPlayerCombat)
-                        {
-                            if (Utility.RandomDouble() <= bardDungeonArmor.DungeonArmorDetail.IgnorePeacemakingBreakChance)
-                                ignoreBreak = true;
-                        }
-
-                        m_LastBreakPeaceCheck = DateTime.UtcNow;
-
-                        if (percent > Utility.RandomDouble() && !ignoreBreak)
-                            Unpacify();
-                    }
-                }
             }
 
             int disruptThreshold;
@@ -4828,10 +4470,7 @@ namespace Server.Mobiles
                             timespan += pm_Tamer.Skills[Server.SkillName.AnimalTaming].Base - 75.0; // linearly going from 5 to 25 minutes from 75.0 to 99.9 skill.
 
                         timespan = Math.Min(timespan, 30);
-
-                        if (SkillCheck.InPowerHour(pm_Tamer))
-                            timespan *= 0.75;
-
+                        
                         // Basically once every X minutes your pet attacking a monster in dungeon will gain you taming skill.
                         TimeSpan timeBetween = TimeSpan.FromMinutes(timespan); // 0.6% per hour if maxed
 
@@ -4926,10 +4565,7 @@ namespace Server.Mobiles
 
             if (speechType != null && !willKill)
                 speechType.OnDamage(this, amount);
-
-            if (m_ReceivedHonorContext != null)
-                m_ReceivedHonorContext.OnTargetDamaged(from, amount);
-
+            
             BaseCreature bc_From = from as BaseCreature;
 
             if (bc_From != null)
@@ -4941,10 +4577,7 @@ namespace Server.Mobiles
             if (!willKill)
             {
             }
-
-            else if (from is PlayerMobile)
-                Timer.DelayCall(TimeSpan.FromSeconds(10), new TimerCallback(((PlayerMobile)from).RecoverAmmo));
-
+                
             base.OnDamage(amount, from, willKill);
 
             if (!willKill)
@@ -5406,79 +5039,10 @@ namespace Server.Mobiles
             writer.Write((int)m_AttackSpeed);
 
             //Version 28
-            if (m_PetBattleAbilityEffectEntries != null)
-            {
-                int petBattleAbilityEffectEntries = m_PetBattleAbilityEffectEntries.Count;
-                writer.Write((int)petBattleAbilityEffectEntries);
-
-                for (int a = 0; a < petBattleAbilityEffectEntries; a++)
-                {
-                    writer.Write((int)m_PetBattleAbilityEffectEntries[a].m_PetBattleAbilityEffect);
-                    writer.Write((Mobile)m_PetBattleAbilityEffectEntries[a].m_From);
-                    writer.Write((double)m_PetBattleAbilityEffectEntries[a].m_Value1);
-                    writer.Write((double)m_PetBattleAbilityEffectEntries[a].m_Value2);
-                    writer.Write((DateTime)m_PetBattleAbilityEffectEntries[a].m_Expiration);
-                }
-            }
 
             //Version 29
-            writer.Write(m_HasUniqueAI);
 
-            writer.Write(PetBattleCreature);
-            writer.Write(PetBattleItemId);
-            writer.Write(PetBattleItemHue);
-            writer.Write(PetBattleStatueOffsetZ);
-            writer.Write(PetBattleTitle);
-            writer.Write(PetBattleBriefDescription);
-            writer.Write(PetBattleDescription);
-
-            writer.Write(PetBattleCreatureSelectItemIdOffsetX);
-            writer.Write(PetBattleCreatureSelectItemIdOffsetY);
-
-            writer.Write(PetBattleGrimoireItemIdOffsetX);
-            writer.Write(PetBattleGrimoireItemIdOffsetY);
-
-            writer.Write(PetBattleCreatureHealth);
-            writer.Write(PetBattleCreatureDamage);
-            writer.Write(PetBattleCreatureAttack);
-            writer.Write(PetBattleCreatureDefend);
-            writer.Write(PetBattleCreatureSpeed);
-            writer.Write(PetBattleCreatureArmor);
-            writer.Write(PetBattleCreatureResist);
-
-            writer.Write(PetBattleOffensivePowerMax);
-            writer.Write(PetBattleDefensivePowerMax);
-
-            writer.Write(PetBattlePostAbilitySwingDelay);
-
-            writer.Write(m_PetBattleTotem);
-            writer.Write(m_PetBattleOwner);
-            writer.Write(m_PetBattleOpponent);
-
-            //Version 30
-            int petBattleAbilityEffectEntriesToAdd = m_PetBattleAbilityEffectEntriesToAdd.Count;
-            writer.Write((int)petBattleAbilityEffectEntriesToAdd);
-
-            for (int a = 0; a < m_PetBattleAbilityEffectEntriesToAdd.Count; a++)
-            {
-                writer.Write((int)m_PetBattleAbilityEffectEntriesToAdd[a].m_PetBattleAbilityEffect);
-                writer.Write((Mobile)m_PetBattleAbilityEffectEntriesToAdd[a].m_From);
-                writer.Write((double)m_PetBattleAbilityEffectEntriesToAdd[a].m_Value1);
-                writer.Write((double)m_PetBattleAbilityEffectEntriesToAdd[a].m_Value2);
-                writer.Write((DateTime)m_PetBattleAbilityEffectEntriesToAdd[a].m_Expiration);
-            }
-
-            int petBattleAbilityEffectEntriesToRemove = m_PetBattleAbilityEffectEntriesToRemove.Count;
-            writer.Write((int)petBattleAbilityEffectEntriesToRemove);
-
-            for (int a = 0; a < m_PetBattleAbilityEffectEntriesToRemove.Count; a++)
-            {
-                writer.Write((int)m_PetBattleAbilityEffectEntriesToRemove[a].m_PetBattleAbilityEffect);
-                writer.Write((Mobile)m_PetBattleAbilityEffectEntriesToRemove[a].m_From);
-                writer.Write((double)m_PetBattleAbilityEffectEntriesToRemove[a].m_Value1);
-                writer.Write((double)m_PetBattleAbilityEffectEntriesToRemove[a].m_Value2);
-                writer.Write((DateTime)m_PetBattleAbilityEffectEntriesToRemove[a].m_Expiration);
-            }
+            //Version 30           
 
             //Version 31
             writer.Write(m_ResolveAcquireTargetDelay);
@@ -5558,10 +5122,7 @@ namespace Server.Mobiles
 
             //Version 47
             writer.Write(m_AncientMysteryCreature);
-
-            //Version 48
-            writer.Write((int)m_bBardPacifiedMode);
-
+            
             //Version 49
             writer.Write(BaseSummonedDamageMin);
             writer.Write(BaseSummonedDamageMax);
@@ -5896,104 +5457,22 @@ namespace Server.Mobiles
             m_SpecialAbilityEffectTimer = new SpecialAbilityEffectTimer(this);
 
             if (m_SpecialAbilityEffectEntries.Count > 0)
-                m_SpecialAbilityEffectTimer.Start();
-
-            m_PetBattleAbilityEffectEntries = new List<PetBattleAbilityEffectEntry>();
+                m_SpecialAbilityEffectTimer.Start();           
 
             //Version 28
             if (version >= 28)
             {
-                int petBattleAbilityEffectEntries = reader.ReadInt();
-
-                for (int a = 0; a < petBattleAbilityEffectEntries; a++)
-                {
-                    PetBattleAbilityEffect effect = (PetBattleAbilityEffect)reader.ReadInt();
-                    Mobile from = reader.ReadMobile();
-                    double value1 = reader.ReadDouble();
-                    double value2 = reader.ReadDouble();
-                    DateTime expiration = reader.ReadDateTime();
-
-                    PetBattleAbilityEffectEntry entry = new PetBattleAbilityEffectEntry(effect, from, value1, value2,
-                        expiration);
-
-                    m_PetBattleAbilityEffectEntries.Add(entry);
-                }
+                
             }
 
             //Version 29
             if (version >= 29)
-            {
-                m_HasUniqueAI = reader.ReadBool();
-
-                PetBattleCreature = reader.ReadBool();
-                PetBattleItemId = reader.ReadInt();
-                PetBattleItemHue = reader.ReadInt();
-                PetBattleStatueOffsetZ = reader.ReadInt();
-                PetBattleTitle = reader.ReadString();
-                PetBattleBriefDescription = reader.ReadString();
-                PetBattleDescription = reader.ReadString();
-
-                PetBattleCreatureSelectItemIdOffsetX = reader.ReadInt();
-                PetBattleCreatureSelectItemIdOffsetY = reader.ReadInt();
-
-                PetBattleGrimoireItemIdOffsetX = reader.ReadInt();
-                PetBattleGrimoireItemIdOffsetY = reader.ReadInt();
-
-                PetBattleCreatureHealth = reader.ReadInt();
-                PetBattleCreatureDamage = reader.ReadInt();
-                PetBattleCreatureAttack = reader.ReadInt();
-                PetBattleCreatureDefend = reader.ReadInt();
-                PetBattleCreatureSpeed = reader.ReadInt();
-                PetBattleCreatureArmor = reader.ReadInt();
-                PetBattleCreatureResist = reader.ReadInt();
-
-                PetBattleOffensivePowerMax = reader.ReadInt();
-                PetBattleDefensivePowerMax = reader.ReadInt();
-
-                PetBattlePostAbilitySwingDelay = reader.ReadTimeSpan();
-
-                m_PetBattleTotem = reader.ReadItem() as Custom.PetBattleTotem;
-                m_PetBattleOwner = reader.ReadMobile() as PlayerMobile;
-                m_PetBattleOpponent = reader.ReadMobile() as PlayerMobile;
+            {                           
             }
-
-            m_PetBattleAbilityEffectEntriesToAdd = new List<PetBattleAbilityEffectEntry>();
-            m_PetBattleAbilityEffectEntriesToRemove = new List<PetBattleAbilityEffectEntry>();
-
+            
             //Version 30
             if (version >= 30)
-            {
-                int petBattleAbilityEffectEntriesToAddCount = reader.ReadInt();
-
-                for (int a = 0; a < petBattleAbilityEffectEntriesToAddCount; a++)
-                {
-                    PetBattleAbilityEffect effect = (PetBattleAbilityEffect)reader.ReadInt();
-                    Mobile from = reader.ReadMobile();
-                    double value1 = reader.ReadDouble();
-                    double value2 = reader.ReadDouble();
-                    DateTime expiration = reader.ReadDateTime();
-
-                    PetBattleAbilityEffectEntry entry = new PetBattleAbilityEffectEntry(effect, from, value1, value2,
-                        expiration);
-
-                    m_PetBattleAbilityEffectEntriesToAdd.Add(entry);
-                }
-
-                int petBattleAbilityEffectEntriesToRemoveCount = reader.ReadInt();
-
-                for (int a = 0; a < petBattleAbilityEffectEntriesToRemoveCount; a++)
-                {
-                    PetBattleAbilityEffect effect = (PetBattleAbilityEffect)reader.ReadInt();
-                    Mobile from = reader.ReadMobile();
-                    double value1 = reader.ReadDouble();
-                    double value2 = reader.ReadDouble();
-                    DateTime expiration = reader.ReadDateTime();
-
-                    PetBattleAbilityEffectEntry entry = new PetBattleAbilityEffectEntry(effect, from, value1, value2,
-                        expiration);
-
-                    m_PetBattleAbilityEffectEntriesToRemove.Add(entry);
-                }
+            {                
             }
 
             //Version 31
@@ -6001,41 +5480,11 @@ namespace Server.Mobiles
             {
                 m_ResolveAcquireTargetDelay = reader.ReadDouble();
             }
-
-            m_PetBattleOffensiveAbilities = new List<PetBattleAbility>();
-            m_PetBattleDefensiveAbilities = new List<PetBattleAbility>();
-
-            SetPetBattleOffensiveAbilities();
-            SetPetBattleDefensiveAbilities();
-
+            
             if (MHSCreatures.RareList.Contains(GetType()))
             {
                 if (Utility.RandomDouble() <= MHSPersistance.RareChance && !IsParagon)
                     m_Rare = true;
-            }
-
-            m_PetBattleAbilityEffectTimer = new PetBattleAbilityEffectTimer(this);
-
-            if (m_PetBattleAbilityEffectEntries != null)
-            {
-                if (m_PetBattleAbilityEffectEntries.Count > 0)
-                    m_PetBattleAbilityEffectTimer.Start();
-            }
-
-            m_AddPetBattleAbilityEffectTimer = new AddPetBattleAbilityEffectTimer(this);
-
-            if (m_PetBattleAbilityEffectEntriesToAdd != null)
-            {
-                if (m_PetBattleAbilityEffectEntriesToAdd.Count > 0)
-                    m_AddPetBattleAbilityEffectTimer.Start();
-            }
-
-            m_RemovePetBattleAbilityEffectTimer = new RemovePetBattleAbilityEffectTimer(this);
-
-            if (m_PetBattleAbilityEffectEntriesToRemove != null)
-            {
-                if (m_PetBattleAbilityEffectEntriesToRemove.Count > 0)
-                    m_RemovePetBattleAbilityEffectTimer.Start();
             }
 
             int m_StoredHits = Hits;
@@ -6172,15 +5621,6 @@ namespace Server.Mobiles
             {
                 m_AncientMysteryCreature = reader.ReadBool();
             }   
-
-            //Set default pacified mode
-            m_bBardPacifiedMode = PeacemakingModeEnum.Combat;
-
-            //Version 48
-            if (version >= 48)
-            {
-                m_bBardPacifiedMode = (PeacemakingModeEnum)reader.ReadInt();
-            }
 
             //Version 49
             if (version >= 49)
@@ -7038,20 +6478,7 @@ namespace Server.Mobiles
                 m_bBardPacified = value;
             }
         }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public PeacemakingModeEnum BardPacifiedMode
-        {
-            get
-            {
-                return m_bBardPacifiedMode;
-            }
-            set
-            {
-                m_bBardPacifiedMode = value;
-            }
-        }
-
+        
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile BardMaster
         {
@@ -7245,32 +6672,11 @@ namespace Server.Mobiles
                 m_RemoveSpecialAbilityEffectTimer.Stop();
                 m_RemoveSpecialAbilityEffectTimer = null;
             }
-
-            if (m_PetBattleAbilityEffectTimer != null)
-            {
-                m_PetBattleAbilityEffectTimer.Stop();
-                m_PetBattleAbilityEffectTimer = null;
-            }
-
-            if (m_AddPetBattleAbilityEffectTimer != null)
-            {
-                m_AddPetBattleAbilityEffectTimer.Stop();
-                m_AddPetBattleAbilityEffectTimer = null;
-            }
-
-            if (m_RemovePetBattleAbilityEffectTimer != null)
-            {
-                m_RemovePetBattleAbilityEffectTimer.Stop();
-                m_RemovePetBattleAbilityEffectTimer = null;
-            }
-
+            
             FocusMob = null;
 
             if (IsAnimatedDead)
                 Spells.Necromancy.AnimateDeadSpell.Unregister(m_SummonMaster, this);
-
-            //if ( MLQuestSystem.Enabled )
-            //    MLQuestSystem.HandleDeletion( this );
 
             base.OnAfterDelete();
         }
@@ -8503,64 +7909,7 @@ namespace Server.Mobiles
         }
 
         #endregion
-
-        #region SetPetBattleStats
-
-        public void SetPetBattleBaseStats()
-        {
-            SetSkill(SkillName.Tactics, 50);
-            SetSkill(SkillName.Wrestling, 85);
-            SetSkill(SkillName.MagicResist, 100);
-        }
-
-        public void SetPetBattleCreatureHealthLevel(int healthLevel)
-        {
-            PetBattleCreatureHealth = healthLevel;
-
-            int hits = (int)(600 + ((double)healthLevel * 50));
-
-            m_HitsMax = hits;
-            Hits = HitsMax;
-        }
-
-        public void SetPetBattleCreatureDamageLevel(int damageLevel)
-        {
-            PetBattleCreatureDamage = damageLevel;
-            SetDamage((int)(28 + ((double)damageLevel * 3)));
-        }
-
-        public void SetPetBattleCreatureAttackLevel(int attackLevel)
-        {
-            PetBattleCreatureAttack = attackLevel;
-            //Effectively: (76 + (attackLevel * 6));            
-        }
-
-        public void SetPetBattleCreatureDefendLevel(int defendLevel)
-        {
-            PetBattleCreatureDefend = defendLevel;
-            //Effectively: (76 + (defendLevel * 6));            
-        }
-
-        public void SetPetBattleCreatureSpeedLevel(int speedLevel)
-        {
-            PetBattleCreatureSpeed = speedLevel;
-            AttackSpeed = (int)(28 + ((double)speedLevel * 4));
-        }
-
-        public void SetPetBattleCreatureArmorLevel(int armorLevel)
-        {
-            PetBattleCreatureArmor = armorLevel;
-            VirtualArmor = (int)(((double)armorLevel * 25));
-        }
-
-        public void SetPetBattleCreatureResistLevel(int resistLevel)
-        {
-            PetBattleCreatureResist = resistLevel;
-            SetSkill(SkillName.MagicResist, ((double)resistLevel * 25));
-        }
-
-        #endregion
-
+        
         public static void Cap(ref int val, int min, int max)
         {
             if (val < min)
@@ -8793,239 +8142,6 @@ namespace Server.Mobiles
 
             m_KillersLuck = highest.m_Mobile.Luck;
             return m_KillersLuck;
-        }
-
-        public virtual SkillScroll GenerateSkillScroll(PlayerMobile player, double max, bool dropFlag = false)
-        {
-            if (player == null)
-                return null;
-
-            Skill skill = player.BestCombatSkill(max);
-
-            if (skill == null)
-                return null;
-
-            string skillname = FameKarmaTitles.GetSkillLevelName(skill);
-
-            /*
-                Roll through matching skill level strings so the chance to drop can be assigned
-                Neophyte =      20%     to drop at that level rarity    (33.3%,33.3%,33.3%)
-                Novice =        10%   to drop at that level rarity    (40%,40%,20%)
-                Apprentice =    4% to   drop at that level rarity       (65%,25%,10%)
-                Journeyman =    2% to   drop at that level rarity       (92.5%,7%,0.5%)
-                Expert =        1.33%   to drop at that level rarity    (92.5%,7%,0.5%)
-                Adept =         0.8%    to drop at that level rarity    (92.5%,7%,0.5%)
-                Master =        0.5%    to drop at that level rarity    (97%,2.9%,0.1%)
-            */
-
-            int rarity = 0;
-            double rareChance = 0;
-
-            double baseScalar = 0.33;
-            double drop = baseScalar * Utility.RandomDouble();
-            
-            double baselineBonus = 1.25;
-            double regionMod = 1.0 + Server.Commands.RegionSkillscrollMod.GetModifier(Region);
-
-            drop /= baselineBonus;
-            drop /= regionMod;
-                        
-            var party = Engines.PartySystem.Party.Get(player);
-
-            if (party != null && party.Members.Count > 2)
-            {
-                double mod = 1.00 - (Math.Min(7, party.Members.Count - 1) / 20);
-                drop /= mod;
-            }
-            
-            double dropJourneyman = drop / m_JourneymanDropIncrease;
-            double dropApprentice = dropJourneyman / m_ApprenticeDropIncrease;
-            double dropExpert = dropApprentice / m_ExpertDropIncrease;
-            double dropAdept = dropExpert / m_AdeptDropIncrease;
-            
-            switch (skillname)
-            {
-                case "Neophyte":
-                    {
-                        if (.75 > dropApprentice)
-                        {
-                            dropFlag = true;
-                            rarity = Utility.Random(3);
-                        }
-                    }
-                    break;
-                case "Novice":
-                    {
-                        if (.50 > dropApprentice)
-                        {
-                            dropFlag = true;
-                            rareChance = Utility.RandomDouble();
-                            if (rareChance < 0.8)
-                            {
-                                // Bronze/Silver
-                                rarity = Utility.Random(2);
-                            }
-                            else //
-                            {
-                                rarity = 2;
-                            }
-                        }
-                    }
-                    break;
-                case "Apprentice":
-                    {
-                        if (.30 > dropApprentice)
-                        {
-                            dropFlag = true;
-                            rareChance = Utility.RandomDouble();
-                            if (rareChance < .65) //bronze
-                            {
-                                rarity = 0;
-                            }
-                            else if (rareChance < .85) //silver
-                            {
-                                rarity = 1;
-                            }
-                            else
-                            {
-                                rarity = 2;
-                            }
-                        }
-                    }
-                    break;
-                case "Journeyman":
-                    {
-                        if (.16 > dropJourneyman)
-                        {
-                            dropFlag = true;
-                            rareChance = Utility.RandomDouble();
-                            if (rareChance < .85) //bronze
-                            {
-                                rarity = 0;
-                            }
-                            else if (rareChance < .975) //silver
-                            {
-                                rarity = 1;
-                            }
-                            else
-                            {
-                                rarity = 2;
-                            }
-                        }
-                    }
-                    break;
-                case "Expert":
-                    {
-                        if (.12 > dropExpert)
-                        {
-                            dropFlag = true;
-                            rareChance = Utility.RandomDouble();
-                            if (rareChance < .875) //bronze
-                            {
-                                rarity = 0;
-                            }
-                            else if (rareChance < .985) //silver
-                            {
-                                rarity = 1;
-                            }
-                            else
-                            {
-                                rarity = 2;
-                            }
-                        }
-                    }
-                    break;
-                case "Adept":
-                    {
-                        if (.05 > dropAdept)
-                        {
-                            dropFlag = true;
-                            rareChance = Utility.RandomDouble();
-                            if (rareChance < .925) //bronze
-                            {
-                                rarity = 0;
-                            }
-                            else if (rareChance < .985) //silver
-                            {
-                                rarity = 1;
-                            }
-                            else
-                            {
-                                rarity = 2;
-                            }
-                        }
-                    }
-                    break;
-                case "Master":
-                    {
-                        if (.03 > drop)
-                        {
-                            dropFlag = true;
-                            rareChance = Utility.RandomDouble();
-                            if (rareChance < .95) //bronze
-                            {
-                                rarity = 0;
-                            }
-                            else if (rareChance < .99) //silver
-                            {
-                                rarity = 1;
-                            }
-                            else
-                            {
-                                rarity = 2;
-                            }
-                        }
-                    }
-                    break;
-                case "Grandmaster":
-                    {
-                        if (.015 > drop)
-                        {
-                            dropFlag = true;
-                            rareChance = Utility.RandomDouble();
-                            if (rareChance < .95) //bronze
-                            {
-                                rarity = 0;
-                            }
-                            else if (rareChance < .99) //silver
-                            {
-                                rarity = 1;
-                            }
-                            else
-                            {
-                                rarity = 2;
-                            }
-                        }
-                    }
-                    break;
-                case "Elder":
-                    {
-                        if (.01 > drop)
-                        {
-                            dropFlag = true;
-                            rareChance = Utility.RandomDouble();
-                            if (rareChance < .95) //bronze
-                            {
-                                rarity = 0;
-                            }
-                            else if (rareChance < .99) //silver
-                            {
-                                rarity = 1;
-                            }
-                            else
-                            {
-                                rarity = 2;
-                            }
-                        }
-                    }
-                break;
-            }
-
-            if (dropFlag)
-                return new SkillScroll(player, skill.SkillID, rarity, skillname);
-
-            else
-                return null;
         }
 
         public bool PackArmor(int minLevel, int maxLevel)
@@ -9382,19 +8498,6 @@ namespace Server.Mobiles
 
         public override void OnSingleClick(Mobile from)
         {
-            if (PetBattleCreature)
-            {
-                if (PetBattleTitle == null || PetBattleTitle == "" || m_PetBattleTeam == null)
-                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, RawName, from.NetState);
-                else
-                {
-                    PrivateOverheadMessage(MessageType.Regular, m_PetBattleTeam.textHue, false, PetBattleTitle, from.NetState);
-                    PrivateOverheadMessage(MessageType.Regular, m_PetBattleTeam.textHue, false, "[" + m_PetBattleTeam.m_Player.RawName + "]", from.NetState);
-                }
-
-                return;
-            }
-
             if (BardPacified)
             {
                 PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*pacified*", from.NetState);
@@ -9484,18 +8587,7 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            if (m_IPYLootTag == EIPYLootTag.RARE_SPAWN && !DiedByShipSinking)
-            {
-                PlayerMobile playerKiller = LastKiller as PlayerMobile;
-
-                if (playerKiller != null)
-                {
-                    if (!playerKiller.IsInTempStatLoss && !(Region is UOACZRegion))
-                        SkillScroll.Generate(this.LastKiller as PlayerMobile, 100.0, 2);
-                }
-            }
-
-            else if (IsBoss() && !(Region is NewbieDungeonRegion) && !DiedByShipSinking && !IsLoHBoss() && !(Region is UOACZRegion))
+            if (IsBoss() && !(Region is NewbieDungeonRegion) && !DiedByShipSinking && !IsLoHBoss() && !(Region is UOACZRegion))
             {
                 double dungeonArmorChance = 1;
                 double dungeonArmorUpgradeHammerChance = 1;
@@ -9608,10 +8700,7 @@ namespace Server.Mobiles
             InhumanSpeech speechType = this.SpeechType;
 
             if (speechType != null)
-                speechType.OnDeath(this);
-
-            if (m_ReceivedHonorContext != null)
-                m_ReceivedHonorContext.OnTargetKilled();
+                speechType.OnDeath(this);           
             
             if (IsLoHBoss() && m_OnBeforeDeathCallback != null)
                 m_OnBeforeDeathCallback();
@@ -10046,8 +9135,7 @@ namespace Server.Mobiles
                     List<DamageStore> list = GetLootingRights(this.DamageEntries, this.HitsMax);
 
                     bool givenQuestKill = false;
-                    bool givenFactionKill = false;
-                    bool givenToTKill = false;
+                    bool givenFactionKill = false;                    
 
                     for (int i = 0; i < list.Count; ++i)
                     {
@@ -10077,12 +9165,6 @@ namespace Server.Mobiles
                         {
                             givenFactionKill = true;
                             Faction.HandleDeath(this, ds.m_Mobile);
-                        }
-
-                        if (!givenToTKill)
-                        {
-                            givenToTKill = true;
-                            TreasuresOfTokuno.HandleKill(this, ds.m_Mobile);
                         }
 
                         if (givenQuestKill)
@@ -10151,6 +9233,7 @@ namespace Server.Mobiles
 
                             double damagePercent = (double)pair.Value / (double)totalDamage;
 
+                            /*
                             if (Utility.RandomDouble() < damagePercent && !playerDamager.TitlesPrefix.Contains(TitleReward))
                             {
                                 playerDamager.TitlesPrefix.Add(TitleReward);
@@ -10159,6 +9242,7 @@ namespace Server.Mobiles
                                 playerDamager.FixedParticles(0x375A, 9, 40, 5027, EffectLayer.Waist);
                                 playerDamager.PlaySound(0x1F7);
                             }
+                            */
                         }
                     }
 
@@ -10239,37 +9323,6 @@ namespace Server.Mobiles
                             }
                         }
                     }
-                }
-
-                if (MaxSkillScrollWorth > 0.0 && !DiedByShipSinking)
-                {
-                    var validPlayers = ValidSkillScrollRecipients();
-
-                    foreach (var player in validPlayers)
-                    {
-                        var skillScroll = GenerateSkillScroll(player, MaxSkillScrollWorth);
-
-                        if (skillScroll != null)
-                            player.AddToBackpack(skillScroll);
-                    }
-                }
-
-                if (m_PetBattleAbilityEffectTimer != null)
-                {
-                    m_PetBattleAbilityEffectTimer.Stop();
-                    m_PetBattleAbilityEffectTimer = null;
-                }
-
-                if (m_AddPetBattleAbilityEffectTimer != null)
-                {
-                    m_AddPetBattleAbilityEffectTimer.Stop();
-                    m_AddPetBattleAbilityEffectTimer = null;
-                }
-
-                if (m_RemovePetBattleAbilityEffectTimer != null)
-                {
-                    m_RemovePetBattleAbilityEffectTimer.Stop();
-                    m_RemovePetBattleAbilityEffectTimer = null;
                 }
 
                 if (m_StamFreeMoveAuraTimer != null)
@@ -10358,9 +9411,6 @@ namespace Server.Mobiles
             SetControlMaster(null);
             SummonMaster = null;
             DoingBandage = false;
-
-            if (m_ReceivedHonorContext != null)
-                m_ReceivedHonorContext.Cancel();
 
             base.OnDelete();
 
@@ -10968,8 +10018,9 @@ namespace Server.Mobiles
             return base.GetDamageMaster(damagee);
         }
 
-        public void Pacify(Mobile master, DateTime endtime, bool message, PeacemakingModeEnum mode = PeacemakingModeEnum.Combat)
+        public void Pacify(Mobile master, DateTime endtime, bool message)
         {
+            /*
             if (message)
             {
                 PublicOverheadMessage(MessageType.Emote, EmoteHue, false,
@@ -11006,6 +10057,7 @@ namespace Server.Mobiles
                     AIObject.DoOrderStop();
                 }
             }
+            */
         }
 
         public void Provoke(Mobile master, Mobile target, bool bSuccess, bool admin)

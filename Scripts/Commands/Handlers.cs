@@ -18,8 +18,6 @@ using Server.Targets;
 using Server.Gumps;
 using Server.Commands.Generic;
 using Server.Diagnostics;
-using Server.Custom.Battlegrounds.Regions;
-using Server.Custom.Battlegrounds.Gumps;
 
 namespace Server.Commands
 {
@@ -1252,13 +1250,7 @@ namespace Server.Commands
 		public static void Help_OnCommand( CommandEventArgs e )
 		{
 			Mobile m = e.Mobile;
-
-            if (m.Region is BattlegroundRegion)
-            {
-                m.SendGump(new BattlegroundHelpGump(m));
-                return;
-            }
-
+            
 			List<CommandEntry> list = new List<CommandEntry>();
 
 			foreach ( CommandEntry entry in CommandSystem.Entries.Values )

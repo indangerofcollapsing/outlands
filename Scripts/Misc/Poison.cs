@@ -163,11 +163,7 @@ namespace Server
                 m_LastDamage = finalDamage;				
 
 				if ( m_From != null )
-					m_From.DoHarmful( m_Mobile, true );
-
-				IHonorTarget honorTarget = m_Mobile as IHonorTarget;
-				if ( honorTarget != null && honorTarget.ReceivedHonorContext != null )
-					honorTarget.ReceivedHonorContext.OnTargetPoisoned();
+					m_From.DoHarmful( m_Mobile, true );				
 
                 int adjustedDamageDisplayed = finalDamage;
                 int discordancePenalty = 0;                

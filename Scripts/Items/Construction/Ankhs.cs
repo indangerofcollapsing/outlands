@@ -19,7 +19,7 @@ namespace Server.Items
 			if ( from is PlayerMobile )
 				list.Add( new LockKarmaEntry( (PlayerMobile)from ) );
 
-            if (from is PlayerMobile && ((PlayerMobile)from).RestitutionFee == 0 && ((PlayerMobile)from).MurdererDeathGumpNeeded == false)
+            if (from is PlayerMobile)
 			    list.Add( new ResurrectEntry( from, item ) );
 
 			if ( Core.AOS )
@@ -30,19 +30,16 @@ namespace Server.Items
 		{
 			if ( m.Alive )
 				return;
-            else if (m is PlayerMobile && (((PlayerMobile)m).RestitutionFee > 0 || ((PlayerMobile)m).MurdererDeathGumpNeeded))
-            {
-                m.SendMessage("You have not paid sufficiently for your crimes and shall not be ressurected.");
-                return;
-            }
 
 			if ( !m.InRange( item.GetWorldLocation(), ResurrectRange ) )
 				m.SendLocalizedMessage( 500446 ); // That is too far away.
+
 			else if( m.Map != null && m.Map.CanFit( m.Location, 16, false, false ) )
 			{
 				m.CloseGump( typeof( ResurrectGump ) );
 				m.SendGump( new ResurrectGump( m, ResurrectMessage.VirtueShrine ) );
 			}
+
 			else
 				m.SendLocalizedMessage( 502391 ); // Thou can not be resurrected there!
 		}

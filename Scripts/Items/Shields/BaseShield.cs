@@ -175,52 +175,6 @@ namespace Server.Items
             }
 
             return damage;
-        }
-
-        public override void OnDoubleClick(Mobile from)
-        {
-            PlayerMobile pm_Owner = from as PlayerMobile;
-
-            if (from.Region is UOACZRegion)
-            {
-                from.SendMessage("That ability does not appear to work here.");
-                return;
-            }
-
-            if (DecorativeEquipment)
-            {
-                from.SendMessage("That ability does not appear to work with this.");
-                return;
-            }
-
-            //Owner Exists
-            if (pm_Owner != null)
-            {
-                //Shield is Equipped on Owner
-                if (pm_Owner.FindItemOnLayer(Layer.TwoHanded) == this)
-                {
-                    //Cooldown on Ability has Expired: Can Be Reactivated
-                    if (pm_Owner.ParrySpecialAbilityActivated + TimeSpan.FromMinutes(3) < DateTime.UtcNow)
-                    {
-                        pm_Owner.SendMessage("You tighten your grip on your shield and brace for incoming attacks!");
-                        pm_Owner.PublicOverheadMessage(Server.Network.MessageType.Emote, pm_Owner.EmoteHue, true, "Grips shield tightly");
-                        pm_Owner.FixedEffect(0x37B9, 10, 20);
-                        pm_Owner.ParrySpecialAbilityActivated = DateTime.UtcNow;
-                    }
-
-                    //Cooldown still in effect
-                    else
-                    {
-                        pm_Owner.SendMessage("You must wait for this ability to cooldown before activating it again.");
-                    }
-                }
-
-                //Shield Not Equipped
-                else
-                {
-                    pm_Owner.SendMessage("You must equip that shield in order to use it's ability.");
-                }
-            }
-        }
+        }        
     }
 }

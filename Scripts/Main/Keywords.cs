@@ -85,12 +85,6 @@ namespace Server.Mobiles
             {
                 if (pm != null)
                 {
-                    if (pm.IsInTempStatLoss)
-                    {
-                        pm.SendMessage("That command cannot be issued while you are in temporary stat-loss");
-                        return;
-                    }
-
                     if (pm.AllFollowers.Count <= 0)
                     {
                         pm.SendMessage("You do not have any followers to send on patrol!");
@@ -105,12 +99,6 @@ namespace Server.Mobiles
             {
                 if (pm != null)
                 {
-                    if (pm.IsInTempStatLoss)
-                    {
-                        pm.SendMessage("That command cannot be issued while you are in temporary stat-loss");
-                        return;
-                    }
-
                     if (pm.AllFollowers.Count <= 0)
                     {
                         pm.SendMessage("You do not have any followers to order to fetch!");

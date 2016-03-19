@@ -35,9 +35,7 @@ namespace Server.Mobiles
 			Karma = -1500;
 
 			PackGold( Utility.Random( 100, 180 ) );
-
-			SolenHelper.PackPicnicBasket( this );
-
+            
 			PackItem( new ZoogiFungus() );
 		}
 

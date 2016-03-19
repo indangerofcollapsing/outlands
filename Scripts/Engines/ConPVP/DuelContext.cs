@@ -18,8 +18,6 @@ using Server.Spells.Necromancy;
 using Server.Spells.Ninjitsu;
 using Server.Spells.Seventh;
 using Server.Spells.Spellweaving;
-using Server.Custom.Battlegrounds;
-using Server.Custom.Battlegrounds.Regions;
 
 namespace Server.Engines.ConPVP
 {
@@ -64,14 +62,7 @@ namespace Server.Engines.ConPVP
         public static bool IsFreeConsume(Mobile mob)
         {
             PlayerMobile pm = mob as PlayerMobile;
-
-            if (mob.Region is BattlegroundRegion)
-            {
-                var battleground = ((BattlegroundRegion)mob.Region).Battleground;
-                if (battleground != null)
-                    return battleground.FreeConsume;
-            }
-
+            
             if (pm == null || pm.DuelContext == null || pm.DuelContext.m_EventGame == null)
                 return false;
 

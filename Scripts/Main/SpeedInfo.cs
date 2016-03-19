@@ -600,8 +600,6 @@ namespace Server
                     typeof( SavageShaman ),
                     typeof( InterredGrizzle),
                     typeof( RagingGrizzlyBear ),
-                    typeof( PetSlime ),
-                    typeof( DonationSlime ),
                     typeof( Dummy ),
                     typeof( DummyMace ),
                     typeof( DummyFence ),
@@ -788,14 +786,6 @@ namespace Server
                 //Super Fast
                 new SpeedInfo( 0.25, 0.35, new Type[]
                 {
-                    typeof( PetBattlePanther),
-                    typeof( PetBattleDesertOstard),
-                    typeof( PetBattleGorilla),
-                    typeof( PetBattleGiantSpider),
-                    typeof( PetBattleGrizzlyBear),
-                    typeof( PetBattleHellHound),
-                    typeof( PetBattleBurrowBeetle),
-
                     typeof( Valkyrie),
                     typeof( MysteryVampire ),
                     typeof( MysteryMedusa ),

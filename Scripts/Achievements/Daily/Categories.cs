@@ -205,10 +205,6 @@ namespace Server.Achievements
         [Description("Complete a Battleground")] // DONE
         [AchievementTarget(2)]
         CompleteBattleground,
-
-        [Description("Participate in Pet Battles")]
-        [AchievementTarget(4)]
-        PetBattles,
     }
 
     public enum NewbCategory

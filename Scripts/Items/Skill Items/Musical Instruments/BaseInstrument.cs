@@ -617,6 +617,7 @@ namespace Server.Items
                 m_From.EndAction(typeof(BaseInstrument));
             }
         }
+
         #region ICraftable Members
 
         public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue)
@@ -633,45 +634,7 @@ namespace Server.Items
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
-            base.GetContextMenuEntries(from, list);
-
-            if (@from is PlayerMobile && @from.Alive)
-                list.Add(new ContextMenus.PeacemakingModeEntry());
+            base.GetContextMenuEntries(from, list);           
         }
     }
-}
-
-namespace Server.ContextMenus
-{
-    public class PeacemakingModeEntry : ContextMenuEntry
-    {
-        public PeacemakingModeEntry()
-            : base(97, 1)
-        {
-            Enabled = true;
-        }
-
-        public override void OnClick()
-        {
-            if (!(this.Owner.From is PlayerMobile))
-                return;
-
-            var player = (PlayerMobile)this.Owner.From;
-            player.LocalOverheadMessage(MessageType.Emote, player.EmoteHue, false, "*adjusts the instrument*");
-            switch (player.PeacemakingMode)
-            {
-                case PeacemakingModeEnum.Combat:
-                    player.SendMessage("You prepare to play a distracting tune.");
-                    player.PeacemakingMode = PeacemakingModeEnum.CrowdControl;
-                    break;
-                case PeacemakingModeEnum.CrowdControl:
-                default:
-                    player.SendMessage("You prepare to play a mesmerizing melody.");
-                    player.PeacemakingMode = PeacemakingModeEnum.Combat;
-                    break;
-            }
-        }
-    }
-
-
 }

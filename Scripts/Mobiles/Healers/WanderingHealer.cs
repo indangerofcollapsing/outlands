@@ -54,12 +54,6 @@ namespace Server.Mobiles
                 return false;
             }
 
-            else if (player.RestitutionFee > 0 || player.MurdererDeathGumpNeeded)
-            {
-                Say("Thou has not paid sufficiently for your crimes and I shall not ressurect thee.");
-                return false;
-            }
-
             else if (player.Karma < 0)
             {
                 Say(501224); // Thou hast strayed from the path of virtue, but thou still deservest a second chance.

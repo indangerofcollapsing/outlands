@@ -20,12 +20,11 @@ honor points on yourself?", true, false);
 		}
 
 		public override void OnResponse( NetState sender, RelayInfo info )
-		{
-			
+		{			
 			if ( info.ButtonID == 1 )
-			{
-				HonorVirtue.ActivateEmbrace(m_from);
+			{				
 			}
+
 			else
 			{
 				return;

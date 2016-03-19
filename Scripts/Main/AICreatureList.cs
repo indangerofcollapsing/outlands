@@ -635,8 +635,6 @@ namespace Server
                 typeof( HolySteed ),
                 typeof( HolyFamiliar ),
                 typeof( Beetle ),
-                typeof( PetSlime ),
-                typeof( DonationSlime ),
                 typeof( Walrus ),
                 typeof( Bull ),
                 typeof( Bison ),
@@ -1247,17 +1245,6 @@ namespace Server
             new AICreatureList(AIGroup.EvilHuman, AISubgroup.Ranged, new Type[]
             {
                typeof( Poacher ),
-            } ),
-
-            new AICreatureList(AIGroup.PetBattleCreature, AISubgroup.None, new Type[]
-            {
-                typeof( PetBattleDesertOstard ),
-                typeof( PetBattlePanther),
-                typeof( PetBattleGorilla),
-                typeof( PetBattleGiantSpider),
-                typeof( PetBattleGrizzlyBear),
-                typeof( PetBattleHellHound),
-                typeof( PetBattleBurrowBeetle),
             } ),
         };
     }

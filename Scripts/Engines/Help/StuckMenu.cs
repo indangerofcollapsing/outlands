@@ -2,10 +2,8 @@ using System;
 using Server.Network;
 using Server.Gumps;
 using Server.Mobiles;
-
 using System.Collections.Generic;
-using Server.Custom.Battlegrounds;
-using Server.Custom.Battlegrounds.Regions;
+
 namespace Server.Menus.Questions
 {
 	public class StuckMenuEntry

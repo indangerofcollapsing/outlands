@@ -39,8 +39,6 @@ namespace Server.Mobiles
 
 			VirtualArmor = 35;
 
-			SolenHelper.PackPicnicBasket( this );
-
 			PackItem( new ZoogiFungus( ( 0.05 > Utility.RandomDouble() )? 13 : 3 ) );
 
 			if ( Utility.RandomDouble() < 0.05 )
@@ -79,8 +77,6 @@ namespace Server.Mobiles
 
 		public override void OnDamage( int amount, Mobile from, bool willKill )
 		{
-			SolenHelper.OnBlackDamage( from );
-
 			if ( !willKill )
 			{
 				if ( !BurstSac )

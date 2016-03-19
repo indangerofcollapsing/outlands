@@ -36,13 +36,8 @@ namespace Server.Mobiles
 			Fame = 4500;
 			Karma = -4500;
 
-			SolenHelper.PackPicnicBasket( this );
-
 			PackItem( new ZoogiFungus( ( Utility.RandomDouble() > 0.05 )? 5 : 25 ) );
-
-			if( Utility.RandomDouble() < 0.05 )
-				PackItem( new BallOfSummoning() );
-		}
+        }
 
         public override void SetUniqueAI()
         {
@@ -76,8 +71,6 @@ namespace Server.Mobiles
 
 		public override void OnDamage( int amount, Mobile from, bool willKill )
 		{
-			SolenHelper.OnRedDamage( from );
-
 			if ( !willKill )
 			{
 				if ( !BurstSac )

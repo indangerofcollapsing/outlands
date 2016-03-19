@@ -211,24 +211,14 @@ namespace Server.Items
 				from.SendLocalizedMessage( 1070734 ); // You may not use a Soulstone while your character is poisoned.
 				return false;
 			}
+
 			else if ( from.Paralyzed )
 			{
 				from.SendLocalizedMessage( 1070735 ); // You may not use a Soulstone while your character is paralyzed.
 				return false;
 			}
-
-			#region Scroll of Alacrity
-			if ( pm.AcceleratedStart > DateTime.UtcNow )
-			{
-				from.SendLocalizedMessage(1078115); // You may not use a soulstone while your character is under the effects of a Scroll of Alacrity.
-				return false;
-			}
-			#endregion
-
-			else
-			{
-				return true;
-			}
+			
+			return true;			
 		}
 
 		public override void OnDoubleClick( Mobile from )
@@ -591,22 +581,7 @@ namespace Server.Items
 
 					from.SendGump( new ErrorGump( m_Stone, 1070717, 1070802 ) );
 					return;
-				}
-
-				#region Scroll of ALacrity
-				PlayerMobile pm = from as PlayerMobile;
-				if (pm.AcceleratedStart > DateTime.UtcNow)
-				{
-					// <CENTER>Unable to Absorb Selected Skill from Soulstone</CENTER>
-
-					/*You may not use a soulstone while your character is under the effects of a Scroll of Alacrity.*/
-
-					// Wrong message?!
-
-					from.SendGump(new ErrorGump(m_Stone, 1070717, 1078115));
-					return;
-				}
-				#endregion
+				}				
 
 				if ( requiredAmount > 0 )
 				{

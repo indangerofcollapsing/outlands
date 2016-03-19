@@ -111,7 +111,6 @@ namespace Server.Items
 
             //Uncommon
             DictTemp.Add("CraftingComponentsMediumAmount", uncommonValue);
-            DictTemp.Add("TinkerTrap", uncommonValue);
             DictTemp.Add("SpiderSilkFishingNet", uncommonValue);
             DictTemp.Add("CampingFirepit", uncommonValue);
             DictTemp.Add("GoldLargeAmount", uncommonValue);
@@ -371,23 +370,7 @@ namespace Server.Items
                         case "CraftingComponentsMediumAmount":
                             item = CraftingComponent.GetRandomCraftingComponent(6);
                             rewardText = "You receive a moderate number of crafting components.";
-                        break;
-
-                        case "TinkerTrap":
-                            switch (Utility.RandomMinMax(1, 8))
-                            {
-                                case 1: item = new Custom.AvalancheTrap(); break;
-                                case 2: item = new Custom.BleedingSpikeTrap(); break;
-                                case 3: item = new Custom.GustTrap(); break;
-                                case 4: item = new Custom.MassiveSpikeTrap(); break;
-                                case 5: item = new Custom.PoisonGasTrap(); break;
-                                case 6: item = new Custom.RazorSawTrap(); break;
-                                case 7: item = new Custom.SunburstTrap(); break;
-                                case 8: item = new Custom.WebTrap(); break;
-                            }
-                           
-                            rewardText = "You receive a tinker trap.";
-                        break;
+                        break;                        
 
                         case "SpiderSilkFishingNet":
                             item = new Custom.SpidersilkFishingNet();

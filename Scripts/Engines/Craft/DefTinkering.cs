@@ -306,42 +306,9 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(BarrelTap), 1044252, 1, 1044253);
 
             #endregion
-
-            #region Traps 1044052
             
-            //Luthius Expansion            
-            index = AddCraft(typeof(AvalancheTrap), "Placeable Traps", "avalanche trap", 80, 120, typeof(IronIngot), 1044036, 10, 1044037);
-            AddRes(index, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(Quartzstone), "Quartzstone", 1, "You do not have the neccesary crafting component to make this.");
-
-            index = AddCraft(typeof(BleedingSpikeTrap), "Placeable Traps", "bleeding spike trap", 80, 120, typeof(IronIngot), 1044036, 10, 1044037);
-            AddRes(index, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccesary crafting component to make this.");
-
-            index = AddCraft(typeof(GustTrap), "Placeable Traps", "gust trap", 80, 120, typeof(IronIngot), 1044036, 10, 1044037);
-            AddRes(index, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(Ghostweed), "Ghostweed", 1, "You do not have the neccesary crafting component to make this.");
-
-            index = AddCraft(typeof(MassiveSpikeTrap), "Placeable Traps", "massive spike trap", 80, 120, typeof(IronIngot), 1044036, 10, 1044037);
-            AddRes(index, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(ObsidianShard), "Obsidian Shard", 1, "You do not have the neccesary crafting component to make this.");
-
-            index = AddCraft(typeof(PoisonGasTrap), "Placeable Traps", "poison gas trap", 80, 120, typeof(IronIngot), 1044036, 10, 1044037);
-            AddRes(index, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(Snakeskin), "Snakeskin", 1, "You do not have the neccesary crafting component to make this.");
-
-            index = AddCraft(typeof(RazorSawTrap), "Placeable Traps", "razor saw trap", 80, 120, typeof(IronIngot), 1044036, 10, 1044037);
-            AddRes(index, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(LuniteHeart), "Lunite Heart", 1, "You do not have the neccesary crafting component to make this.");
-
-            index = AddCraft(typeof(SunburstTrap), "Placeable Traps", "sunburst trap", 80, 120, typeof(IronIngot), 1044036, 10, 1044037);
-            AddRes(index, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(FireEssence), "Fire Essence", 1, "You do not have the neccesary crafting component to make this.");
-
-            index = AddCraft(typeof(WebTrap), "Placeable Traps", "web trap", 80, 120, typeof(IronIngot), 1044036, 10, 1044037);
-            AddRes(index, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(Creepervine), "Creepervine", 1, "You do not have the neccesary crafting component to make this.");
-                        
+            
+            #region Traps 1044052
              
             /* IPY
             // Faction Gas Trap

@@ -4874,16 +4874,12 @@ namespace Server
 
         public virtual bool CheckLift(Mobile from, Item item, ref LRReason reject)
         {
-            if (from.Spectating && from.AccessLevel == Server.AccessLevel.Player)
-            {
-                reject = LRReason.CannotLift;
-                return false;
-            }
-
             if (m_Parent is Item)
                 return ((Item)m_Parent).CheckLift(from, item, ref reject);
+
             else if (m_Parent is Mobile)
                 return ((Mobile)m_Parent).CheckLift(from, item, ref reject);
+
             else
                 return true;
         }

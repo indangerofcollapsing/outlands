@@ -14,11 +14,7 @@
 	
 	<Facet name="Tokuno">		
 	</Facet>	
+	
 	<Facet name="TerMur">
-		<region type="SiegeBattlegroundRegion" priority="50" name="Throne Siege">
-			<rect x="265" y="85" width="224" height="138" />
-			<go x="373" y="158" z="5" />
-			<music name="Dungeon9" />
-		</region>
 	</Facet>
 </ServerRegions>

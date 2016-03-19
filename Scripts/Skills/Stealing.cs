@@ -11,8 +11,6 @@ using Server.Spells.Seventh;
 using Server.Spells.Fifth;
 using Server.Spells.Necromancy;
 using Server.Spells;
-using Server.Spells.Ninjitsu;
-using Server.Custom.Battlegrounds.Regions;
 
 namespace Server.SkillHandlers
 {
@@ -66,11 +64,6 @@ namespace Server.SkillHandlers
                 else if (SuspendOnMurder && root is Mobile && ((Mobile)root).Player && IsInGuild(m_Thief) && m_Thief.ShortTermMurders > 0)
                 {
                     m_Thief.SendLocalizedMessage(502706); // You are currently suspended from the thieves guild.
-                }
-
-                else if (m_Thief.Region is BattlegroundRegion)
-                {
-                    m_Thief.SendMessage("Stealing is not allowed while in battlegrounds.");
                 }
 
                 else if (root is BaseVendor && ((BaseVendor)root).IsInvulnerable)
@@ -310,11 +303,6 @@ namespace Server.SkillHandlers
             if (!IsEmptyHanded(m))
             {
                 m.SendLocalizedMessage(1005584); // Both hands must be free to steal.
-            }
-
-            else if (m.Region is BattlegroundRegion)
-            {
-                m.SendMessage("Stealing is not allowed while in battlegrounds.");
             }
 
             else

@@ -155,14 +155,18 @@ namespace Server.Gumps
 					//CommandSystem.Handle(sender.Mobile, "[OCLeaderboard");
 					CommandSystem.Handle(sender.Mobile, "[militiaboard");
 					break;
-				case (int)Buttons.ArenaLeaders:
-					sender.Mobile.SendGump(new ArenaLeaderboardsGump(sender.Mobile, EArenaMatchEra.eAMR_IPY, EArenaMatchRestrictions.eAMC_Order, 0));
-					break;
+
+				//case (int)Buttons.ArenaLeaders:
+				//sender.Mobile.SendGump(new ArenaLeaderboardsGump(sender.Mobile, EArenaMatchEra.eAMR_IPY, EArenaMatchRestrictions.eAMC_Order, 0));
+				//break;
+
 				case (int)Buttons.ArenaTournaments:
 					break;
-				case (int)Buttons.ArenaMyTeams:
-					sender.Mobile.SendGump(new ArenaAdminGump(sender.Mobile, ArenaAdminGump.ListType.MyTeams));
-					break;
+
+				//case (int)Buttons.ArenaMyTeams:
+				//sender.Mobile.SendGump(new ArenaAdminGump(sender.Mobile, ArenaAdminGump.ListType.MyTeams));
+				//break;
+
                 case (int)Buttons.PveLeaderboards:
                     sender.Mobile.SendGump(new Server.Custom.GoldCoinReportGump(sender.Mobile, Server.Custom.GoldCoinTracker.LastReport));
                     break;

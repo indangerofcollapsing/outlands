@@ -3779,19 +3779,6 @@ namespace Server
             return m.CheckShove(this);
         }
 
-        private bool m_Spectating = false;
-
-        [CommandProperty(AccessLevel.Counselor)]
-        public bool Spectating { get { return m_Spectating; } 
-            set 
-            {
-                if (AccessLevel == AccessLevel.Player)
-                    Hidden = Squelched = value;
-
-                m_Spectating = value; 
-            } 
-        }
-
         private DateTime m_StamFreeMoveExpiration = DateTime.MinValue;
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime StamFreeMoveExpiration
@@ -3817,10 +3804,7 @@ namespace Server
 
                 else if (shoved.m_Hidden && shoved.m_AccessLevel > AccessLevel.Player)
                     return true;
-
-                if (shoved.Spectating || Spectating)
-                    return true;
-
+                
                 if (!m_Pushing)
                 {
                     m_Pushing = true;
@@ -6041,9 +6025,9 @@ namespace Server
 
                     goto case 36;
 
-                case 36:
-                    m_Spectating = reader.ReadBool();
+                case 36:                  
                     goto case 35;
+
                 case 35:
                     m_GuildJoinTime = reader.ReadDateTime();
                     goto case 34;
@@ -6526,7 +6510,6 @@ namespace Server
             writer.Write(m_StamFreeMoveSource);
 
             //version 36
-            writer.Write(m_Spectating);
 
             //version 35
             writer.Write(m_GuildJoinTime);
@@ -7110,7 +7093,7 @@ namespace Server
             if (Squelched && Hidden)
                 return;
 
-            if (m_Hidden && m_AccessLevel == AccessLevel.Player && !Spectating)
+            if (m_Hidden && m_AccessLevel == AccessLevel.Player)
                 Hidden = false;
 
             StealthAttackReady = false;
@@ -7506,15 +7489,7 @@ namespace Server
         {
             if (m_Squelched)
             {
-                if (Core.ML)
-                    this.SendLocalizedMessage(500168); // You can not say anything, you have been muted.
-
-                else if (Spectating)
-                    SendMessage("You cannot do that while spectating a battleground.");
-
-                else
-                    SendMessage("You have been silenced and cannot speak."); //Cliloc ITSELF changed during ML.
-
+                SendMessage("You have been silenced and cannot speak.");
                 e.Blocked = true;
             }
 

@@ -29,24 +29,7 @@ namespace Server
                     target.DictCombatAction[CombatAction.CombatHealOther] = 0;
                     target.DictCombatAction[CombatAction.CombatSpecialAction] = 0;
                     target.DictCombatAction[CombatAction.CombatEpicAction] = 0;
-                break;
-
-                case AIGroup.PetBattleCreature:
-                    target.DictCombatTargeting[CombatTargeting.OpposingFaction] = 0;
-                    target.DictCombatTargeting[CombatTargeting.Aggressor] = 0;
-                    target.DictCombatTargeting[CombatTargeting.OpposingPetBattleTeam] = 1;
-
-                    target.DictCombatTargetingWeight[CombatTargetingWeight.CurrentCombatant] = 1;
-                    target.DictCombatTargetingWeight[CombatTargetingWeight.Closest] = 1;
-
-                    target.DictCombatRange[CombatRange.WeaponAttackRange] = 1;
-                    target.DictCombatAction[CombatAction.AttackOnly] = 10;
-
-                    target.DictCombatFlee[CombatFlee.Flee50] = 0;
-                    target.DictCombatFlee[CombatFlee.Flee25] = 0;
-                    target.DictCombatFlee[CombatFlee.Flee10] = 0;
-                    target.DictCombatFlee[CombatFlee.Flee5] = 0;
-                break;
+                break;                
 
                 case AIGroup.EvilMonster:
                     target.DictCombatTargeting[CombatTargeting.PlayerAny] = 1;

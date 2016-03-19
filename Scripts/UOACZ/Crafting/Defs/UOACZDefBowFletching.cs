@@ -115,10 +115,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Feather), "Feather", 1, "You do not have the feathers neccessary in order to craft that.");
             SetUseAllRes(index, true);
             
-            //Snares
-            index = AddCraft(typeof(HuntingSnare), "Snares", "Hunting Snare", 5, 30, typeof(UOACZRope), "Rope", 1, "You do not have the neccessary rope required to make this.");
-            AddRes(index, typeof(Log), "Log", 5, "You do not have the neccessary logs required to make this.");
-
             // Weapons            
             AddCraft(typeof(Bow), "Weapons", "Bow", 15, 50, typeof(Log), "Log", 15, "You do not have the logs neccessary in order to craft that.");
             AddCraft(typeof(Crossbow), "Weapons", "Crossbow", 15, 50, typeof(Log), "Log", 15, "You do not have the logs neccessary in order to craft that.");

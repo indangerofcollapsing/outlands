@@ -48,23 +48,8 @@ namespace Server.Mobiles
 
 		public void Peace( Mobile target )
 		{
-			if ( target == null || Deleted || !Alive || m_NextPeace > DateTime.UtcNow || 0.1 < Utility.RandomDouble() )
-				return;
-
-			PlayerMobile p = target as PlayerMobile;
-
-			if ( p != null && p.PeacedUntil < DateTime.UtcNow && !p.Hidden && CanBeHarmful( p ) )
-			{
-				p.PeacedUntil = DateTime.UtcNow + TimeSpan.FromMinutes( 1 );
-				p.SendLocalizedMessage( 500616 ); // You hear lovely music, and forget to continue battling!
-				p.FixedParticles( 0x376A, 1, 32, 0x15BD, EffectLayer.Waist );
-				p.Combatant = null;
-
-				PlaySound( 0x58D );
-			}
-
-			m_NextPeace = DateTime.UtcNow + TimeSpan.FromSeconds( 10 );
 		}
+
 		#endregion
 
 		#region Suppress

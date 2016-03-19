@@ -142,11 +142,6 @@ namespace Server.Misc
 
             bool showSkillTitle = beheld.ShowFameTitle && ((beholder == beheld) || (fame >= 5000));
 
-            /*if ( beheld.Kills >= 5 )
-            {
-                title.AppendFormat( beheld.Fame >= 10000 ? "The Murderer {1} {0}" : "The Murderer {0}", beheld.Name, beheld.Female ? "Lady" : "Lord" );
-            }
-            else*/
             if (beheld.ShowFameTitle || (beholder == beheld))
             {
                 for (int i = 0; i < m_FameEntries.Length; ++i)
@@ -179,55 +174,13 @@ namespace Server.Misc
                 title.AppendFormat(title.Length > 0 ? " {0}" : "{0}", beheld.Female ? "Lady" : "Lord");
             }
 
-            if (include_ipy_prefix && beheld is PlayerMobile)
-            {
-                string customPrefix = ((PlayerMobile)beheld).CurrentPrefix;
-                if (customPrefix != null && (customPrefix = customPrefix.Trim()).Length > 0)
-                    title.AppendFormat(title.Length > 0 ? " {0}" : "{0}", customPrefix);
-            }
-
             title.AppendFormat(title.Length > 0 ? " {0}" : "{0}", beheld.Name);
 
             string customTitle = beheld.Title;
             if (customTitle != null && customTitle.Trim().Length > 0)
             {
                 title.AppendFormat(customTitle.IndexOf("the", 0, 5) == -1 ? ", {0}" : " {0}", customTitle.Trim());
-            }
-
-            if (beheld is PlayerMobile && ((PlayerMobile)beheld).DisplayChampionTitle)
-            {
-                PlayerMobile.ChampionTitleInfo info = ((PlayerMobile)beheld).ChampionTitles;
-
-                if (info.Harrower > 0)
-                    title.AppendFormat(": {0} of Evil", HarrowerTitles[Math.Min(HarrowerTitles.Length, info.Harrower) - 1]);
-                else
-                {
-                    int highestValue = 0, highestType = 0;
-                    for (int i = 0; i < ChampionSpawnInfo.Table.Length; i++)
-                    {
-                        int v = info.GetValue(i);
-
-                        if (v > highestValue)
-                        {
-                            highestValue = v;
-                            highestType = i;
-                        }
-                    }
-
-                    int offset = 0;
-                    if (highestValue > 800)
-                        offset = 3;
-                    else if (highestValue > 300)
-                        offset = (int)(highestValue / 300);
-
-                    if (offset > 0)
-                    {
-                        ChampionSpawnInfo champInfo = ChampionSpawnInfo.GetInfo((ChampionSpawnType)highestType);
-                        title.AppendFormat(": {0} of the {1}", champInfo.LevelNames[Math.Min(offset, champInfo.LevelNames.Length) - 1], champInfo.Name);
-                    }
-                }
-            }
-
+            }            
 
             if (customTitle == null || customTitle.Trim().Length == 0)
             {

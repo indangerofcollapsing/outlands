@@ -478,15 +478,6 @@ namespace Server.Mobiles
                                     this.Say(500389); // I will not do business with a criminal!
                                     break;
                                 }
-                                if (e.Mobile.Player)
-                                {
-                                    PlayerMobile pm = e.Mobile as PlayerMobile;
-                                    if (pm.IsInArenaFight)
-                                    {
-                                        this.Say("You are currently too busy to access your bank!");
-                                        break;
-                                    }
-                                }
 
                                 string[] split = e.Speech.Split(' ');
 
@@ -535,15 +526,7 @@ namespace Server.Mobiles
                                     this.Say(500389); // I will not do business with a criminal!
                                     break;
                                 }
-                                if (e.Mobile.Player)
-                                {
-                                    PlayerMobile pm = e.Mobile as PlayerMobile;
-                                    if (pm.IsInArenaFight)
-                                    {
-                                        this.Say("You are currently too busy to access your bank!");
-                                        break;
-                                    }
-                                }
+
                                 BankBox box = e.Mobile.FindBankNoCreate();
 
                                 if (box != null)
@@ -568,15 +551,7 @@ namespace Server.Mobiles
                                     this.Say(500378); // Thou art a criminal and cannot access thy bank box.
                                     break;
                                 }
-                                if (e.Mobile.Player)
-                                {
-                                    PlayerMobile pm = e.Mobile as PlayerMobile;
-                                    if (pm.IsInArenaFight)
-                                    {
-                                        this.Say("You are currently too busy to access your bank!");
-                                        break;
-                                    }
-                                }
+
                                 e.Mobile.BankBox.Open();
 
                                 break;
@@ -590,15 +565,7 @@ namespace Server.Mobiles
                                     this.Say(500389); // I will not do business with a criminal!
                                     break;
                                 }
-                                if (e.Mobile.Player)
-                                {
-                                    PlayerMobile pm = e.Mobile as PlayerMobile;
-                                    if (pm.IsInArenaFight)
-                                    {
-                                        this.Say("You are currently too busy to access your bank!");
-                                        break;
-                                    }
-                                }
+
                                 string[] split = e.Speech.Split(' ');
 
                                 if (split.Length >= 2)

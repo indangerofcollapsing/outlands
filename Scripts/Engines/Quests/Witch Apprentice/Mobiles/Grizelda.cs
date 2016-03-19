@@ -147,16 +147,9 @@ namespace Server.Engines.Quests.Hag
 									cont.DropItem( new HangoverCure() );
 
 								if ( player.PlaceInBackpack( cont ) )
-								{
-									bool gainedPath = false;
-
-									if ( VirtueHelper.Award( player, VirtueName.Sacrifice, 250, ref gainedPath ) ) // TODO: Check amount on OSI.
-										player.SendLocalizedMessage( 1054160 ); // You have gained in sacrifice.
-
-									PlaySound( 0x253 );
-									PlaySound( 0x20 );
-									obj.Complete();
+								{									
 								}
+
 								else
 								{
 									cont.Delete();

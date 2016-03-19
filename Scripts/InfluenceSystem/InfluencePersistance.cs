@@ -3489,26 +3489,11 @@ namespace Server.Items
                             title = femaleTitle;
 
                         if (isNewController)
-                        {
-                            if (!pm_Mobile.TitlesPrefix.Contains(title))
-                            {
-                                pm_Mobile.TitlesPrefix.Add(title);
-                                pm_Mobile.SendMessage(0x3F, "You have earned the title of " + title + ".");
-                                pm_Mobile.SendSound(0x5A7);
-                            }
+                        {  
                         }
 
                         else
-                        {
-                            if (pm_Mobile.CurrentPrefix == title)
-                                pm_Mobile.CurrentPrefix = "";
-
-                            if (pm_Mobile.TitlesPrefix.Contains(title))
-                            {
-                                pm_Mobile.TitlesPrefix.Remove(title);
-                                pm_Mobile.SendMessage(149, "You have lost the title of " + title + ".");
-                                pm_Mobile.SendSound(0x5B3);
-                            }
+                        {                            
                         }
                     }
                 }
@@ -3541,26 +3526,11 @@ namespace Server.Items
                             title = femaleTitle;
 
                         if (isNewController)
-                        {
-                            if (!pm_Mobile.TitlesPrefix.Contains(title))
-                            {
-                                pm_Mobile.TitlesPrefix.Add(title);
-                                pm_Mobile.SendMessage(0x3F, "You have earned the title of " + title + ".");
-                                pm_Mobile.SendSound(0x5A7);                                
-                            }                          
+                        {                                                
                         }
 
                         else
-                        {
-                            if (pm_Mobile.CurrentPrefix == title)
-                                pm_Mobile.CurrentPrefix = "";
-
-                            if (pm_Mobile.TitlesPrefix.Contains(title))
-                            {
-                                pm_Mobile.TitlesPrefix.Remove(title);
-                                pm_Mobile.SendMessage(149, "You have lost the title of " + title + ".");
-                                pm_Mobile.SendSound(0x5B3);
-                            }
+                        {                            
                         }
                     }
                 }

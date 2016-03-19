@@ -27,8 +27,6 @@ namespace Server.Custom.Donations
             // deeds
             typeof(GenderChangeDeed), typeof(NameChangeDeed), typeof(HairRestylingDeed), typeof(BeardRestylingDeed), typeof(LockDownExpansionDeed), typeof(SecureExpansionDeed),
             typeof(ItemRenameDeed),
-            // pets
-            typeof(PetBattleBurrowBeetleToken),
         };
 
 
@@ -207,16 +205,8 @@ namespace Server.Custom.Donations
                 new DonationItem("An Corp Supporter Fancy Shirt", "Show your support for An Corp with this commemorative fancy shirt! <i>Blessed</i>", 0x1EFD, 1159, 750, false, typeof(AnCorpSupporterFancyShirt)),
                 new DonationItem("An Corp Supporter Shirt", "Show your support for An Corp with this commemorative shirt! <i>Blessed</i>", 0x1517, 1159, 750, false, typeof(AnCorpSupporterShirt)),
                 new DonationItem("An Corp Supporter Tunic", "Show your support for An Corp with this commemorative tunic! <i>Blessed</i>", 0x1fa1, 1159, 750, false, typeof(AnCorpSupporterTunic)),
-                new DonationItem("Incognito Potion", "Change your appearance and go undercover for a brief time with this incognito potion! (duration 5 minutes)", 0xF0B, 2515, 50, false, typeof(IncognitoPotion)),
-                new DonationItem("Monstrous Polymorph Potion", "Change your appearance to that of a random monster! (duration 5 minutes)", 0xF0B, 2600, 50, false, typeof(PolymorphPotion)),
             }},
-
-            { "Pet Battles",
-            new List<DonationItem>()
-            {
-                new DonationItem("Burrow Beetle", "A Burrow Beetle to decimate your opponents in the Pet Battle Arena.<i>Nontransferrable.</i>", 9743, 0, 325, false, typeof(PetBattleBurrowBeetleToken)),
-            }},
-
+            
             { "Addons",
             new List<DonationItem>()
             {

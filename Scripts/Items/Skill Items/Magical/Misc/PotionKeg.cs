@@ -303,7 +303,7 @@ namespace Server.Items
 
         public override bool OnDragDrop(Mobile from, Item item)
         {
-            if (item is PolymorphPotion || item is IncognitoPotion)
+            if (item is PolymorphPotion || item is IncognitoPotion || item is RabbitBomb)
                 return false;
 
             if (item is BasePotion)

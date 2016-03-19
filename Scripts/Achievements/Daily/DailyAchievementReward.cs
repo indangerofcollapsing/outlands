@@ -9,17 +9,16 @@ namespace Server.Achievements
 {
     public class DailyAchievementReward : MetalBox
     {
-
         public DailyAchievementReward(PlayerMobile player)
         {
             Hue = Utility.RandomNondyedHue();
             Weight = 1.0;
-            DropItem(SkillScroll.Generate(player, 120.0, 1));
-            DropItem(SkillScroll.Generate(player, 120.0, 1));
+
             DropItem(Loot.RandomGem());
             DropItem(Loot.RandomGem());
             DropItem(Loot.RandomGem());
             DropItem(Loot.RandomGem());
+
             if (Utility.RandomDouble() > 0.9)
                 DropItem(new DragonLotteryTicket());
 

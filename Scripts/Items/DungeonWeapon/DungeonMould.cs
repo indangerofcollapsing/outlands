@@ -189,13 +189,7 @@ namespace Server.Items
                     {
                         player.SendMessage("Magical weapons may not be converted.");
                         return;
-                    }
-
-                    if (weapon.UOACWeaponAttribute != Custom.Ubercrafting.WeaponEnhancement.EWeaponEnhancement.None)
-                    {
-                        player.SendMessage("Enhanced weapons may not be converted.");
-                        return;
-                    }                    
+                    }                 
 
                     newWeapon = true;
                 }
@@ -1008,9 +1002,6 @@ namespace Server.Items
                             weaponValid = false;
 
                         if (m_Weapon.DamageLevel != WeaponDamageLevel.Regular || m_Weapon.AccuracyLevel != WeaponAccuracyLevel.Regular || m_Weapon.DurabilityLevel != WeaponDurabilityLevel.Regular)
-                            weaponValid = false;
-
-                        if (m_Weapon.UOACWeaponAttribute != Custom.Ubercrafting.WeaponEnhancement.EWeaponEnhancement.None)
                             weaponValid = false;
                     }
 

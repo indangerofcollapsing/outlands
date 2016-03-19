@@ -97,12 +97,6 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from.Region is ArenaSpectatorRegion && m_TrapType != TrapType.None)
-            {
-                SendMessageTo(from, "That is trapped, you decide against opening it while watching Arena matches.", 0x3B2);
-                return;
-            }
-
             base.OnDoubleClick(from);
         }
 

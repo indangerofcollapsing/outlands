@@ -54,8 +54,6 @@ namespace Server.Items
 			{
 				if (weapon.WeaponMinRange == 0 || !from.InRange(target, weapon.WeaponMinRange))
 				{
-					from.NinjaWepCooldown = true;
-
 					from.Direction = from.GetDirectionTo(target);
 
 					from.RevealingAction();
@@ -79,8 +77,7 @@ namespace Server.Items
 		}
 
 		private static void ResetUsing(PlayerMobile from)
-		{
-			from.NinjaWepCooldown = false;
+		{			
 		}
 
 		private static void Unload(Mobile from, INinjaWeapon weapon)
@@ -173,21 +170,6 @@ namespace Server.Items
 			{
 				if (weapon.UsesRemaining > 0)
 				{
-					if (!from.NinjaWepCooldown)
-					{
-						if (BasePotion.HasFreeHand(from))
-						{
-							return true;
-						}
-						else
-						{
-							from.SendLocalizedMessage(weapon.NoFreeHandMessage);
-						}
-					}
-					else
-					{
-						from.SendLocalizedMessage(weapon.RecentlyUsedMessage);
-					}
 				}
 				else
 				{

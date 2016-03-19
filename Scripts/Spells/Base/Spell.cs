@@ -402,31 +402,7 @@ namespace Server.Spells
                 //Creature Target
                 else                
                     scalar *= 2.0 * (1 + spiritSpeakBonus);                
-            }
-
-            //Spell Parry: Players Only
-            if (PlayerTarget)
-            {
-                double parrySpellScalar;
-                
-                //Player is Wearing a Shield
-                if (pm_Target.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
-                {   
-                    //Caster Is Creature
-                    if (CreatureCaster && (pm_Target.ParrySpecialAbilityActivated + TimeSpan.FromSeconds(10) > DateTime.UtcNow))
-                    {   
-                        scalar -= (pm_Target.Skills[SkillName.Parry].Value / 100) * .50;                        
-                        pm_Target.FixedEffect(0x37B9, 10, 16);
-                    }
-
-                    //Caster Is Player and Player Activated Parrying Special Ability within 2 seconds
-                    if (PlayerCaster && (pm_Target.ParrySpecialAbilityActivated + TimeSpan.FromSeconds(2) > DateTime.UtcNow))
-                    {                            
-                        scalar -= (pm_Target.Skills[SkillName.Parry].Value / 100) * .25;                      
-                        pm_Target.FixedEffect(0x37B9, 10, 16);
-                    }
-                }
-            }            
+            }                      
 
             if (CreatureTarget)
                 bc_Target.AlterDamageScalarFrom(m_Caster, ref scalar);
@@ -591,7 +567,7 @@ namespace Server.Spells
             if (m_Scroll is BaseWand)
                 return;
 
-            bool no_LOS_check = m_Caster.Player && ((PlayerMobile)m_Caster).IsInArenaFight; // allow arena spectators to see spell mantras
+            bool no_LOS_check = false;
 
             if (m_Info.Mantra != null && m_Info.Mantra.Length > 0 && (m_Caster.Player))
                 m_Caster.PublicOverheadMessage(MessageType.Spell, m_Caster.SpeechHue, true, m_Info.Mantra, no_LOS_check);
@@ -655,11 +631,6 @@ namespace Server.Spells
             else if (CheckNextSpellTime && DateTime.UtcNow < m_Caster.NextSpellTime)
             {
                 m_Caster.SendLocalizedMessage(502644); // You have not yet recovered from casting a spell.
-            }
-
-            else if (m_Caster is PlayerMobile && ((PlayerMobile)m_Caster).PeacedUntil > DateTime.UtcNow)
-            {
-                m_Caster.SendLocalizedMessage(1072060); // You cannot cast a spell while calmed.
             }
 
             #region Dueling
@@ -995,12 +966,6 @@ namespace Server.Spells
             else if (Core.AOS && (m_Caster.Frozen || m_Caster.Paralyzed))
             {
                 m_Caster.SendLocalizedMessage(502646); // You cannot cast a spell while frozen.
-                DoFizzle();
-            }
-
-            else if (m_Caster is PlayerMobile && ((PlayerMobile)m_Caster).PeacedUntil > DateTime.UtcNow)
-            {
-                m_Caster.SendLocalizedMessage(1072060); // You cannot cast a spell while calmed.
                 DoFizzle();
             }
 

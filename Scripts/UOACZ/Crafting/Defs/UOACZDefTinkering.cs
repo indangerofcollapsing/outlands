@@ -164,36 +164,7 @@ namespace Server.Engines.Craft
             AddCraft(typeof(UOACZIronWire), "Materials", "Iron Wire", 10, 35, typeof(IronIngot), 1044036, 25, 1044037);          
             AddCraft(typeof(Springs), "Materials", "Springs", 5, 30, typeof(IronIngot), 1044036, 1, 1044037);
             AddCraft(typeof(Gears), "Materials", "Gears", 5, 30, typeof(IronIngot), 1044036, 1, 1044037);           
-
-            //Tinker Traps
-            index = AddCraft(typeof(GustTrap), "Traps", "Gust Trap", 5, 30, typeof(UOACZIronWire), "Iron Wire", 1, "You do not have the neccessary iron wire required to make this.");
-            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary springs required to make this.");
-            AddRes(index, typeof(Gears), "Gears", 1, "You do not have the neccessary gears required to make this.");
-
-            index = AddCraft(typeof(RazorSawTrap), "Traps", "Razor Saw Trap", 10, 35, typeof(UOACZIronWire), "Iron Wire", 1, "You do not have the neccessary iron wire required to make this.");
-            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary springs required to make this.");
-            AddRes(index, typeof(Gears), "Gears", 1, "You do not have the neccessary gears required to make this.");
-
-            index = AddCraft(typeof(WebTrap), "Traps", "Web Trap", 10, 35, typeof(UOACZIronWire), "Iron Wire", 1, "You do not have the neccessary iron wire required to make this.");
-            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary springs required to make this.");
-            AddRes(index, typeof(Gears), "Gears", 1, "You do not have the neccessary gears required to make this.");
-
-            index = AddCraft(typeof(AvalancheTrap), "Traps", "Avalanche Trap", 15, 40, typeof(UOACZIronWire), "Iron Wire", 1, "You do not have the neccessary iron wire required to make this.");
-            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary springs required to make this.");
-            AddRes(index, typeof(Gears), "Gears", 1, "You do not have the neccessary gears required to make this.");
-
-            index = AddCraft(typeof(SunburstTrap), "Traps", "Sunburst Trap", 15, 40, typeof(UOACZIronWire), "Iron Wire", 1, "You do not have the neccessary iron wire required to make this.");
-            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary springs required to make this.");
-            AddRes(index, typeof(Gears), "Gears", 1, "You do not have the neccessary gears required to make this.");
-
-            index = AddCraft(typeof(BleedingSpikeTrap), "Traps", "Bleeding Spike Trap", 20, 45, typeof(UOACZIronWire), "Iron Wire", 1, "You do not have the neccessary iron wire required to make this.");
-            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary springs required to make this.");
-            AddRes(index, typeof(Gears), "Gears", 1, "You do not have the neccessary gears required to make this.");
-
-            index = AddCraft(typeof(MassiveSpikeTrap), "Traps", "Massive Spike Trap", 20, 45, typeof(UOACZIronWire), "Iron Wire", 1, "You do not have the neccessary iron wire required to make this.");
-            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary springs required to make this.");
-            AddRes(index, typeof(Gears), "Gears", 1, "You do not have the neccessary gears required to make this.");            
-            
+                      
             // Set the overridable material
             SetSubRes(typeof(IronIngot), 1044022);
 

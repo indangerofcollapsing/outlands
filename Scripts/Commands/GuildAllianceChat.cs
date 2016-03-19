@@ -19,13 +19,15 @@ namespace Server.Custom.Commands
         {
             var pm = e.Mobile as PlayerMobile;
             string message = String.Join(" ", e.Arguments);
+
             Guild g = pm.Guild as Guild;
 
             if (g != null && g.Alliance != null) 
             {
-                g.Alliance.AllianceChat(e.Mobile, pm.AllianceMessageHue, message);
+                g.Alliance.AllianceChat(e.Mobile, Guild.GuildAllianceMessageHue, message);
                 PlayerMobile.SendToStaffMessage(pm, String.Format("[Alliance]: {0}", message));
             }
+
             else
             {
                 pm.SendLocalizedMessage(1071020); // You are not in an alliance!

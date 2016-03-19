@@ -13,6 +13,7 @@ using Server.Commands.Generic;
 namespace Server.Guilds
 {
     #region Guild Levels
+
     public enum GuildLevel
     {
         Zero=0,
@@ -112,6 +113,7 @@ namespace Server.Guilds
     #endregion
 
     #region Alliances
+
     public class AllianceInfo
     {
         private static Dictionary<string, AllianceInfo> m_Alliances = new Dictionary<string, AllianceInfo>();
@@ -407,8 +409,8 @@ namespace Server.Guilds
         public void AllianceChat(Mobile from, string text)
         {
             PlayerMobile pm = from as PlayerMobile;
-
-            AllianceChat(from, (pm == null) ? 0x3B2 : pm.AllianceMessageHue, text);
+            
+            AllianceChat(from, (pm == null) ? 0x3B2 : Guild.GuildAllianceMessageHue, text);
         }
         #endregion
 
@@ -633,7 +635,7 @@ namespace Server.Guilds
     }
 
     #endregion
-
+    
     public class GuildExperienceResetPersistence : Item
     {
         public static void Initialize()
@@ -697,6 +699,9 @@ namespace Server.Guilds
 
     public class Guild : BaseGuild
     {
+        public static int GuildMessageHue = 2550;
+        public static int GuildAllianceMessageHue = 2550;
+
         public static void Configure()
         {
             EventSink.CreateGuild += new CreateGuildHandler(EventSink_CreateGuild);
@@ -1969,13 +1974,13 @@ namespace Server.Guilds
                 }
 
                 if (count <= 1)
-                    from.SendMessage((pm == null) ? 0x3B2 : pm.GuildMessageHue, "There are no other guild members online at this time.");
+                    from.SendMessage((pm == null) ? 0x3B2 : Guild.GuildMessageHue, "There are no other guild members online at this time.");
                 else
                     from.SendGump(new OnlineMembersGump(strList));
             }
             else
             {
-                GuildChat(from, (pm == null) ? 0x3B2 : pm.GuildMessageHue, text);
+                GuildChat(from, (pm == null) ? 0x3B2 : Guild.GuildMessageHue, text);
             }
         }
         #endregion
@@ -2002,6 +2007,7 @@ namespace Server.Guilds
             if (NewGuildSystem)
             {
                 PlayerMobile pm = m as PlayerMobile;
+
                 if (pm == null || !pm.GuildRank.GetFlag(RankFlags.CanVote))
                     return false;
             }

@@ -58,39 +58,18 @@ namespace Server.Mobiles
 		}
 
 		#region Area Peace
+
 		private DateTime m_NextPeace;
 
 		public void AreaPeace()
 		{
-			if ( Combatant == null || Deleted || !Alive || m_NextPeace > DateTime.UtcNow || 0.1 < Utility.RandomDouble() )
-				return;
-
-			TimeSpan duration = TimeSpan.FromSeconds( Utility.RandomMinMax( 20, 80 ) );
-
-			foreach ( Mobile m in GetMobilesInRange( RangePerception ) )
-			{
-				PlayerMobile p = m as PlayerMobile;
-
-				if ( IsValidTarget( p ) )
-				{
-					p.PeacedUntil = DateTime.UtcNow + duration;
-					p.SendLocalizedMessage( 1072065 ); // You gaze upon the dryad's beauty, and forget to continue battling!
-					p.FixedParticles( 0x376A, 1, 20, 0x7F5, EffectLayer.Waist );
-					p.Combatant = null;
-				}
-			}
-
-			m_NextPeace = DateTime.UtcNow + TimeSpan.FromSeconds( 10 );
-			PlaySound( 0x1D3 );
-		}
+        }
 
 		public bool IsValidTarget( PlayerMobile m )
 		{
-			if ( m != null && m.PeacedUntil < DateTime.UtcNow && !m.Hidden && m.AccessLevel == AccessLevel.Player && CanBeHarmful( m ) )
-				return true;
-
 			return false;
 		}
+
 		#endregion
 
 		#region Undress

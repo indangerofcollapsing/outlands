@@ -38,14 +38,13 @@ namespace Server.Guilds
 		}
 
 		public override void OnResponse( NetState sender, RelayInfo info )
-		{
-			
+		{			
 			PlayerMobile pm = sender.Mobile as PlayerMobile;
 
 			if( !IsMember( pm, guild ) )
 				return;
 
-			RankDefinition playerRank = pm.GuildRank;
+            RankDefinition playerRank = pm.GuildRank;
 
 			switch( info.ButtonID )
 			{

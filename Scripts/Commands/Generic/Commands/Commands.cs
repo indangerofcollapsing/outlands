@@ -60,9 +60,6 @@ namespace Server.Commands.Generic
 			Register( new BringToPackCommand() );
 			Register( new TraceLockdownCommand() );
 
-            Register(new PowerHourCommand(true));
-            Register(new PowerHourCommand(false));
-
             Register(new StealthSquelchCommand());
             Register(new ClearStealthSquelchCommand());
 		}

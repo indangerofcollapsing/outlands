@@ -98,15 +98,6 @@ namespace Server.Spells.Eighth
                 validTarget = false;
             }
 
-            if (playerTarget != null)
-            {
-                if (playerTarget.RestitutionFee > 0 || playerTarget.MurdererDeathGumpNeeded)
-                {
-                    Caster.SendMessage("That player may not be ressurrected while they have unpaid restitution fees.");
-                    validTarget = false;
-                }                
-            }
-
             if (validTarget)
             {
                 if (CheckBSequence(m, true))

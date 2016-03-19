@@ -5,7 +5,6 @@ using Server;
 using Server.Items;
 using Server.Mobiles;
 using Server.Custom.Items;
-using Server.Custom.Ubercrafting;
 using Server.Custom.Donations.Items;
 
 namespace Server
@@ -68,10 +67,6 @@ namespace Server
             }
         }
         
-        public static readonly LootPackItem[] PetBattleTokens = new LootPackItem[] {
-            new LootPackItem(typeof(PetBattleHellHoundToken), 1),
-        };
-
         public static readonly LootPackItem[] Gold = new LootPackItem[]
 			{
 				new LootPackItem( typeof( Gold ), 1 )
@@ -197,27 +192,19 @@ namespace Server
 			});
 
         public static readonly LootPack SuperBoss = new LootPack(new LootPackEntry[]
-			{
-				new LootPackEntry( false, MagicItems,	40, 1, 2, 40, 100 ),
-				new LootPackEntry( false, MagicItems,	40, 1, 2, 40, 100 ),
-				new LootPackEntry( false, MagicItems,	40, 1, 2, 40, 100 ),
-				new LootPackEntry( false, MagicItems,	30, 1, 2, 50, 100 ),
-				new LootPackEntry( false, MagicItems,	30, 1, 2, 50, 100 ),
-				new LootPackEntry( false, MagicItems,	30, 1, 2, 50, 100 ),
-				new LootPackEntry( false, MagicItems,	20, 1, 2, 60, 100 ),
-				new LootPackEntry( false, MagicItems,	20, 1, 2, 60, 100 ),
-				new LootPackEntry( false, MagicItems,	20, 1, 2, 60, 100 ),
-				new LootPackEntry( false, MagicItems,	10, 1, 2, 70, 100 ),
-                new LootPackEntry( false, HighScrollItems, 10, 1 ),
-			});
-
-        public static readonly LootPack PetBattleToken = new LootPack(new LootPackEntry[] {
-            new LootPackEntry(false, PetBattleTokens, 5, 1),
-        });
-        
-        public static readonly LootPackItem[] WeaponDamageEnhancers = new LootPackItem[] {
-            new LootPackItem(typeof(WeaponDamageEnhancer), 1),
-        };
+		{
+			new LootPackEntry( false, MagicItems,	40, 1, 2, 40, 100 ),
+			new LootPackEntry( false, MagicItems,	40, 1, 2, 40, 100 ),
+			new LootPackEntry( false, MagicItems,	40, 1, 2, 40, 100 ),
+			new LootPackEntry( false, MagicItems,	30, 1, 2, 50, 100 ),
+			new LootPackEntry( false, MagicItems,	30, 1, 2, 50, 100 ),
+			new LootPackEntry( false, MagicItems,	30, 1, 2, 50, 100 ),
+			new LootPackEntry( false, MagicItems,	20, 1, 2, 60, 100 ),
+			new LootPackEntry( false, MagicItems,	20, 1, 2, 60, 100 ),
+			new LootPackEntry( false, MagicItems,	20, 1, 2, 60, 100 ),
+			new LootPackEntry( false, MagicItems,	10, 1, 2, 70, 100 ),
+            new LootPackEntry( false, HighScrollItems, 10, 1 ),
+		});  
 
         public static readonly LootPackItem[] RareClothHues = new LootPackItem[] {
             new LootPackItem(typeof(RareCloth), 1),
@@ -340,11 +327,7 @@ namespace Server
         {
             new LootPackEntry(false, RareCraftingIngredients, 0.25, 1),
         });
-
-        public static readonly LootPack WeaponDamageEnhancer = new LootPack(new LootPackEntry[] {
-            new LootPackEntry(false, WeaponDamageEnhancers, 1, 1),
-        });
-
+        
         public static readonly LootPack EnhancedTome = new LootPack(new LootPackEntry[] 
         {
     	    new LootPackEntry(false, EnhancedTomeItems, 1.0, 1),

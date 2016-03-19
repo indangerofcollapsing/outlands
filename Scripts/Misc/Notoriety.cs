@@ -10,11 +10,6 @@ using Server.Engines.PartySystem;
 using Server.Spells.Necromancy;
 using Server.Spells.Ninjitsu;
 using Server.Spells;
-using Server.Bounty;
-using Server.ArenaSystem;
-
-using Server.Custom.Battlegrounds;
-using Server.Custom.Battlegrounds.Regions;
 using Server.Network;
 
 namespace Server.Misc
@@ -97,12 +92,6 @@ namespace Server.Misc
 
             if (pmFrom != null && pmTarg != null)
             {
-                if (pmFrom.Region is BattlegroundRegion)
-                    return Battleground.AllowBeneficial(pmFrom, pmTarg);
-
-                if (pmFrom.IsInArenaFight && pmTarg.IsInArenaFight)
-                    return ArenaSystem.ArenaSystem.AllowBeneficial(pmFrom, pmTarg);
-
                 if (pmFrom.DuelContext != pmTarg.DuelContext && ((pmFrom.DuelContext != null && pmFrom.DuelContext.Started) || (pmTarg.DuelContext != null && pmTarg.DuelContext.Started)))
                     return false;
 
@@ -305,7 +294,7 @@ namespace Server.Misc
                     if (sourceGuild == targetGuild || sourceGuild.IsAlly(targetGuild))
                         return Notoriety.Ally;
 
-                    else if (sourceGuild.IsEnemy(targetGuild) && !IsPaladin(source, null))
+                    else if (sourceGuild.IsEnemy(targetGuild))
                         return Notoriety.Enemy;
                 }
 
@@ -351,7 +340,8 @@ namespace Server.Misc
                 {
                     if (sourceGuild == targetGuild || sourceGuild.IsAlly(targetGuild))
                         return Notoriety.Ally;
-                    else if (sourceGuild.IsEnemy(targetGuild) && !IsPaladin(source, target.Owner))
+
+                    else if (sourceGuild.IsEnemy(targetGuild))
                         return Notoriety.Enemy;
                 }
 
@@ -541,12 +531,6 @@ namespace Server.Misc
             if (target is BladeSpirits || target is EnergyVortex)
                 return Notoriety.Murderer;
 
-            //Arena
-            int result = ArenaSystem.ArenaSystem.GetNotoriety(source, target);
-
-            if (result == Notoriety.Enemy || result == Notoriety.Ally)
-                return result;
-
             //Staff Members Always Attackable
             if (target.AccessLevel > AccessLevel.Player)
                 return Notoriety.CanBeAttacked;
@@ -564,10 +548,6 @@ namespace Server.Misc
                 //Duel
                 if (pm_Source.DuelContext != null && pm_Source.DuelContext.StartedBeginCountdown && !pm_Source.DuelContext.Finished && pm_Source.DuelContext == pm_Target.DuelContext)
                     return pm_Source.DuelContext.IsAlly(pm_Source, pm_Target) ? Notoriety.Ally : Notoriety.Enemy;
-
-                //Battlegrounds
-                if (pm_Source.Region is BattlegroundRegion)
-                    return Battleground.AllowBeneficial(pm_Source, pm_Target) ? Notoriety.Ally : Notoriety.Enemy;
             }
 
             //Enemy of One
@@ -616,24 +596,7 @@ namespace Server.Misc
                     //Target is Perma-Grey to Source Creature's Controller
                     if (SkillHandlers.Stealing.ClassicMode && pm_Target.PermaFlags.Contains(pm_SourceController))                    
                         return Notoriety.CanBeAttacked;                    
-                }
-
-                //Paladin (Murderers Can Freely Attack Paladins)
-                if (pm_Target.Paladin)
-                {
-                    if (pm_Source != null)
-                    {
-                        if (pm_Source.Murderer)                        
-                            return Notoriety.CanBeAttacked;                        
-                    }
-
-                    if (pm_SourceController != null)
-                    {
-                        //Source Creature's Controller is Murderer
-                        if (pm_SourceController.Murderer)                        
-                            return Notoriety.CanBeAttacked;                        
-                    }
-                }
+                }                
             }
 
             //Guilds
@@ -645,7 +608,7 @@ namespace Server.Misc
                 if (sourceGuild == targetGuild || sourceGuild.IsAlly(targetGuild))
                     return Notoriety.Ally;
 
-                else if (sourceGuild.IsEnemy(targetGuild) && !IsPaladin(source, target))
+                else if (sourceGuild.IsEnemy(targetGuild))
                     return Notoriety.Enemy;
             }
 
@@ -711,27 +674,7 @@ namespace Server.Misc
                         if (SkillHandlers.Stealing.ClassicMode && pm_TargetController.PermaFlags.Contains(pm_SourceController))                        
                             return Notoriety.CanBeAttacked;                        
                     }
-                }
-
-                //Paladin (Murderers Can Freely Attack Paladins)
-                if (pm_TargetController != null)
-                {
-                    if (pm_TargetController.Paladin)
-                    {
-                        if (pm_Source != null)
-                        {
-                            if (pm_Source.Murderer)                            
-                                return Notoriety.CanBeAttacked;                            
-                        }
-
-                        if (pm_SourceController != null)
-                        {
-                            //Source Creature's Controller is Murderer
-                            if (pm_SourceController.Murderer)                            
-                                return Notoriety.CanBeAttacked;                            
-                        }
-                    }
-                }                
+                }                                
             }
 
             //Housing
@@ -1045,11 +988,6 @@ namespace Server.Misc
                     }
                 }
             }
-        }
-
-        public static bool IsPaladin(Mobile source, Mobile target)
-        {
-            return (source is PlayerMobile && ((PlayerMobile)source).Paladin) || (target is PlayerMobile && ((PlayerMobile)target).Paladin);
         }
 
         public static bool CheckHouseFlag(Mobile from, Mobile m, Point3D p, Map map)

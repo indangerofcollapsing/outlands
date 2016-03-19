@@ -163,9 +163,8 @@ namespace Server.Spells.Fourth
                 Caster.SendLocalizedMessage(501802); // Thy spell doth not appear to work...
             }
 
-            else if (SpellHelper.IsAnyT2A(map, loc) && pm != null && pm.T2AAccess < DateTime.UtcNow)
+            else if (SpellHelper.IsAnyT2A(map, loc) && pm != null)
             {
-                Caster.SendMessage("To have access to T2A, please visit the donation shop.");
             }
 
             else if (Server.Misc.WeightOverloading.IsOverloaded(Caster))

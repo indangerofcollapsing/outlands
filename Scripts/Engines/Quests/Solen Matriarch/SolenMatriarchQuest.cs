@@ -135,10 +135,7 @@ namespace Server.Engines.Quests.Matriarch
 
 		public static bool IsFriend( PlayerMobile player, bool redSolen )
 		{
-			if ( redSolen )
-				return player.SolenFriendship == SolenFriendship.Red;
-			else
-				return player.SolenFriendship == SolenFriendship.Black;
+            return false;
 		}
 
 		public static bool GiveRewardTo( PlayerMobile player )

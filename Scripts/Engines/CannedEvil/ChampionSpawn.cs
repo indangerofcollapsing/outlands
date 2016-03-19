@@ -515,6 +515,7 @@ namespace Server.Engines.CannedEvil
 					BeginRestart( m_RestartDelay );
 				}
 			}
+
 			else
 			{
 				int kills = m_Kills;
@@ -529,6 +530,7 @@ namespace Server.Engines.CannedEvil
 						{
 							((Corpse)m.Corpse).BeginDecay( TimeSpan.FromMinutes( 1 ));
 						}
+
 						m_Creatures.RemoveAt( i );
 						--i;
 						++m_Kills;
@@ -539,70 +541,6 @@ namespace Server.Engines.CannedEvil
 
 						if( killer is BaseCreature )
 							killer = ((BaseCreature)killer).GetMaster();
-
-						if( killer is PlayerMobile )
-						{
-							#region Scroll of Transcendence
-							if ( Core.ML )
-							{
-								if ( Map == Map.Felucca )
-								{
-									if ( Utility.RandomDouble() < 0.001 )
-									{
-										PlayerMobile pm = (PlayerMobile)killer;
-										double random = Utility.Random ( 49 );
-										
-										/* IPY
-										if ( random <= 24 )
-										{
-											ScrollofTranscendence SoTF = CreateRandomSoT( true );
-											GiveScrollTo( pm, (SpecialScroll)SoTF );
-										}
-										else
-										{
-											PowerScroll PS = PowerScroll.CreateRandomNoCraft(5, 5);
-											GiveScrollTo( pm, (SpecialScroll)PS );
-										}
-										*/
-									}
-								}
-
-								// IPY
-								//if ( Map == Map.Ilshenar || Map == Map.Tokuno || Map == Map.Malas )
-								//{
-								//    if ( Utility.RandomDouble() < 0.0015 )
-								//    {
-								//        killer.SendLocalizedMessage( 1094936 ); // You have received a Scroll of Transcendence!
-								//        ScrollofTranscendence SoTT = CreateRandomSoT( false );
-								//        killer.AddToBackpack( SoTT );
-								//    }
-								//}
-							}
-							#endregion
-
-							int mobSubLevel = GetSubLevelFor( m ) + 1;
-
-							if( mobSubLevel >= 0 )
-							{
-								bool gainedPath = false;
-
-								int pointsToGain = mobSubLevel * 40;
-
-								if( VirtueHelper.Award( killer, VirtueName.Valor, pointsToGain, ref gainedPath ) )
-								{
-									if( gainedPath )
-										m.SendLocalizedMessage( 1054032 ); // You have gained a path in Valor!
-									else
-										m.SendLocalizedMessage( 1054030 ); // You have gained in Valor!
-
-									//No delay on Valor gains
-								}
-
-								PlayerMobile.ChampionTitleInfo info = ((PlayerMobile)killer).ChampionTitles;
-
-								info.Award( m_Type, mobSubLevel );
-							}
-						}
 					}
 				}
 

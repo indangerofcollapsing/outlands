@@ -4,10 +4,7 @@ using Server.Mobiles;
 using Server.Items;
 using Server.Multis;
 using Server.Spells;
-
 using Server.Achievements;
-using Server.Custom.Battlegrounds;
-using Server.Custom.Battlegrounds.Regions;
 using Server.Regions;
 
 namespace Server.Misc
@@ -415,9 +412,7 @@ namespace Server.Misc
             // IPY
             if (from.Player)
             {
-                HouseModifier(from, ref gc); // -50% skill gain in houses unless you're in a militia
-
-                gc *= GetPowerhourModifier(from); // +100% boost modifier if in power hour
+                HouseModifier(from, ref gc); // -50% skill gain in houses unless you're in a militia                
                 
                 Items.TownSquare.TownSquareModifier(from, skill, ref gc); // +30% bonus to crafting skills if in range of town square item
 
@@ -490,20 +485,6 @@ namespace Server.Misc
             }
         }
 
-        public static bool InPowerHour(PlayerMobile pm)
-        {
-            return DateTime.UtcNow < pm.PowerHourReset.Add(pm.PowerHourDuration);
-        }
-
-        private static double GetPowerhourModifier(Mobile from)
-        {
-            PlayerMobile pm = from as PlayerMobile;
-            if (pm != null && InPowerHour(pm))
-                return 2.0;
-            else
-                return 1.0;
-        }
-
         public static bool Mobile_SkillCheckTarget(Mobile from, SkillName skillName, object target, double minSkill, double maxSkill)
         {
             Skill skill = from.Skills[skillName];
@@ -540,9 +521,6 @@ namespace Server.Misc
 
         private static bool AllowGain(Mobile from, Skill skill, object obj)
         {
-            if (from.Region is BattlegroundRegion)
-                return false;
-
             if (from.Region is NewbieDungeonRegion)
             {
                 if (skill.Base >= NewbieDungeonRegion.SkillGainCap)
@@ -575,17 +553,12 @@ namespace Server.Misc
                 if (bc.Controlled && bc.ControlMaster is PlayerMobile)
                     return;
             }
-
-            //Cannot Gain Skill while in Temp Statloss
+           
             if (pm != null)
             {
-                if (pm.IsInTempStatLoss || pm.Region is UOACZRegion)
+                if (pm.Region is UOACZRegion)
                     return;
             }
-
-            if (from.Player)
-                if (((PlayerMobile)from).IsInArenaFight)
-                    return;
 
             if (from.Region.IsPartOf(typeof(Regions.Jail)))
                 return;
@@ -605,7 +578,7 @@ namespace Server.Misc
 
                 Skills skills = from.Skills;
 
-                if ((skills.Total / skills.Cap) >= Utility.RandomDouble())//( skills.Total >= skills.Cap )
+                if ((skills.Total / skills.Cap) >= Utility.RandomDouble()) //( skills.Total >= skills.Cap )
                 {
                     for (int i = 0; i < skills.Length; ++i)
                     {
@@ -617,29 +590,7 @@ namespace Server.Misc
                             break;
                         }
                     }
-                }
-
-                if ((skills.Total + toGain) <= skills.Cap)
-                {
-                    skill.BaseFixedPoint += toGain;
-
-                    // flag LastSkillGain for SkillScroll reference -Nummmnut
-                    if (pm != null && skill.Base < 100)
-                    {
-                        foreach (var s in PlayerMobile.SkillPool)
-                        {
-                            var playerSkill = pm.Skills[s];
-                            if (playerSkill.SkillID == skill.SkillID)
-                            {
-                                //((PlayerMobile)from).LastSkillGain = skill;
-                                ((PlayerMobile)from).addLastSkillGain(skill);
-                                break;
-                            }
-                        }
-
-                    }
-                    // SkillScroll -end
-                }
+                }                
             }
 
             if (from.Player)
@@ -653,6 +604,7 @@ namespace Server.Misc
                 SkillInfo info = skill.Info;
 
                 double gc = 1.0;
+                
                 StatScaleModifier(from, skill.Value, ref gc);
 
                 if (from.StrLock == StatLockType.Up && (gc * info.StrGain / 12.0) > Utility.RandomDouble()) //33.3

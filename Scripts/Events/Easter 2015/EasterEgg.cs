@@ -125,12 +125,6 @@ namespace Server.Items
                 i = wep;
             }
 
-            else if (seed <= 1650)
-            {
-                text = "You receive a rabbit bomb!";
-                i = new RabbitBomb();
-            }
-
             else if (seed <= 3150)
             {
                 text = "You receive more easter eggs!";

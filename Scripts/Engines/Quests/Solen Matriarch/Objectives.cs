@@ -150,18 +150,7 @@ namespace Server.Engines.Quests.Matriarch
 		}
 
 		public override void OnComplete()
-		{
-			PlayerMobile player = System.From;
-			bool redSolen = ((SolenMatriarchQuest)System).RedSolen;
-
-			bool friend = SolenMatriarchQuest.IsFriend( player, redSolen );
-
-			System.AddConversation( new ProcessFungiConversation( friend ) );
-
-			if ( redSolen )
-				player.SolenFriendship = SolenFriendship.Red;
-			else
-				player.SolenFriendship = SolenFriendship.Black;
+		{			
 		}
 	}
 

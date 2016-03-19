@@ -673,93 +673,7 @@ namespace Server.Spells
 
         public static bool ValidIndirectTarget(Mobile from, Mobile to)
         {
-            if (to.Region is ArenaSpectatorRegion)
-                return false;
-
-            //IPY doesnt have this method
             return true;
-            /*
-                        if ( from == to )
-                            return true;
-
-                        if ( to.Hidden && to.AccessLevel > from.AccessLevel )
-                            return false;
-
-                        #region Dueling
-                        PlayerMobile pmFrom = from as PlayerMobile;
-                        PlayerMobile pmTarg = to as PlayerMobile;
-
-                        if ( pmFrom == null && from is BaseCreature )
-                        {
-                            BaseCreature bcFrom = (BaseCreature) from;
-
-                            if ( bcFrom.Summoned )
-                                pmFrom = bcFrom.SummonMaster as PlayerMobile;
-                        }
-
-                        if ( pmTarg == null && to is BaseCreature )
-                        {
-                            BaseCreature bcTarg = (BaseCreature) to;
-
-                            if ( bcTarg.Summoned )
-                                pmTarg = bcTarg.SummonMaster as PlayerMobile;
-                        }
-
-                        if ( pmFrom != null && pmTarg != null )
-                        {
-                            if ( pmFrom.DuelContext != null && pmFrom.DuelContext == pmTarg.DuelContext && pmFrom.DuelContext.Started && pmFrom.DuelPlayer != null && pmTarg.DuelPlayer != null )
-                                return ( pmFrom.DuelPlayer.Participant != pmTarg.DuelPlayer.Participant );
-                        }
-                        #endregion
-
-                        Guild fromGuild = GetGuildFor( from );
-                        Guild toGuild = GetGuildFor( to );
-
-                        if ( fromGuild != null && toGuild != null && (fromGuild == toGuild || fromGuild.IsAlly( toGuild )) )
-                        return false;
-
-                        Party p = Party.Get( from );
-
-                        if ( p != null && p.Contains( to ) )
-                            return false;
-
-                        if ( to is BaseCreature )
-                        {
-                            BaseCreature c = (BaseCreature)to;
-
-                            if ( c.Controled || c.Summoned )
-                            {
-                                if ( c.ControlMaster == from || c.SummonMaster == from )
-                                    return false;
-
-                                if ( p != null && (p.Contains( c.ControlMaster ) || p.Contains( c.SummonMaster )) )
-                                    return false;
-                            }
-                        }
-
-                        if ( from is BaseCreature )
-                        {
-                            BaseCreature c = (BaseCreature)from;
-
-                            if ( c.Controled || c.Summoned )
-                            {
-                                if ( c.ControlMaster == to || c.SummonMaster == to )
-                                    return false;
-
-                                p = Party.Get( to );
-
-                                if ( p != null && (p.Contains( c.ControlMaster ) || p.Contains( c.SummonMaster )) )
-                                    return false;
-                            }
-                        }
-
-                        if( to is BaseCreature && !((BaseCreature)to).Controlled && ((BaseCreature)to).InitialInnocent )
-                            return true;
-
-                        int noto = Notoriety.Compute( from, to );
-
-                        return ( noto != Notoriety.Innocent || from.Kills >= 5 );
-            */
         }
 
         private static int[] m_Offsets = new int[]
@@ -1646,10 +1560,7 @@ namespace Server.Spells
             PlayerMobile pm_Target = target as PlayerMobile;
 
             int iDamage = (int)damage;
-
-            if (target is PlayerMobile && ((PlayerMobile)target).DamageVulnerable)
-                iDamage = (int)(iDamage * 1.25);
-
+            
             if (delay == TimeSpan.Zero || delay == null)
             {
                 if (from is BaseCreature)

@@ -262,6 +262,8 @@ namespace Server.SkillHandlers
 
                                 from.NextSkillTime = Core.TickCount + 10000;
 
+                                /*
+
                                 if (bc_Target != null)
                                 {
                                     if (bc_Target.Spell != null)
@@ -271,21 +273,13 @@ namespace Server.SkillHandlers
 
                                     double duration = BaseCreature.PeacemakingCreatureDuration;
 
-                                    //If this is a crowd control mode, then set to half of usual duration.
-                                    if (from is PlayerMobile &&
-                                        ((PlayerMobile)from).PeacemakingMode == PeacemakingModeEnum.CrowdControl)
-                                    {
-                                        from.NextSkillTime = Core.TickCount + 6000;
-                                        duration = duration / 2;
-                                    }
-
                                     //Tamed Creature Peacemaking Duration Limit                                    
                                     if (bc_Target.Controlled && bc_Target.ControlMaster != null)
                                         duration = BaseCreature.PeacemakingFollowerDurationLimit;
 
 
                                     if (from is PlayerMobile &&
-     ((PlayerMobile)from).PeacemakingMode == PeacemakingModeEnum.CrowdControl)
+                                     ((PlayerMobile)from).PeacemakingMode == PeacemakingModeEnum.CrowdControl)
                                     {
                                         bc_Target.Pacify(from, DateTime.UtcNow + TimeSpan.FromSeconds(duration), true, PeacemakingModeEnum.CrowdControl);
                                     }
@@ -304,6 +298,7 @@ namespace Server.SkillHandlers
                                     target.Combatant = null;
                                     target.Warmode = false;
                                 }
+                                */
                             }
 
                             else

@@ -86,12 +86,6 @@ namespace Server.Items
                 from.SendMessage("Usage of that item is not allowed in this region.");
                 return;
             }
-
-            if (from.Region is Custom.Battlegrounds.Regions.BattlegroundRegion)
-            {
-                from.SendMessage("Usage of that item is not allowed in this region.");
-                return;
-            }
             
             if (DateTime.UtcNow < player.LastPlayerCombatTime + TimeSpan.FromSeconds(30))
             {

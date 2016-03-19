@@ -1126,6 +1126,7 @@ namespace Server
             player.FixedParticles(0x373A, 10, 15, 5036, 2615, 0, EffectLayer.Head);
             player.PlaySound(0x1E2);
 
+            /*
             player.SendMessage("You fashion a hunting snare.");
 
             HuntingSnare huntingSnare = new HuntingSnare();
@@ -1135,6 +1136,7 @@ namespace Server
                 player.SendMessage("You do not have enough room in your backpack so the item is placed at your feet.");
                 huntingSnare.MoveToWorld(player.Location, player.Map);
             }
+            */
 
             AbilitySuccessful(player, UOACZHumanAbilityType.Snare);
         }
