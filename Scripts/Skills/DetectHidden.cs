@@ -140,40 +140,10 @@ namespace Server.SkillHandlers
                     }
 
                     inRange.Free();
-
-                    bool fac = Faction.Find( from ) != null;
-
-					IPooledEnumerable itemsInRange = from.Map.GetItemsInRange( p, range );
-					foreach ( Item item in itemsInRange )
-					{
-                        if (item is IHideable && from.InLOS(item))
-                        {
-                            from.Direction = from.GetDirectionTo(item);
-
-                            if (!((IHideable)item).IsVisible && ((IHideable)item).Findable)
-                            {
-                                double ss = srcSkill + Utility.Random(21) - 10;
-                                double ts = ((IHideable)item).HideLevel + Utility.Random(21) - 10;
-                                if (ss >= ts)
-                                    ((IHideable)item).IsVisible = true;
-                                foundAnyone = true;
-                                ((IHideable)item).Reveal(from);
-                                ((IHideable)item).Finder = from;
-                            }
-                        } 
-					}
-
-                    itemsInRange.Free();
 				}
 
-                //IPY Detectives
-                if (from is PlayerMobile && ((PlayerMobile)from).NpcGuild == NpcGuild.DetectivesGuild)
-                    Detective.OnDetectHidden(from, p, range * 5, ref foundAnyone);
-
-				if ( !foundAnyone )
-				{
-					from.SendLocalizedMessage( 500817 ); // You can see nothing hidden there.
-				}
+				if ( !foundAnyone )				
+					from.SendLocalizedMessage( 500817 ); // You can see nothing hidden there.				
 			}
 		}
 	}

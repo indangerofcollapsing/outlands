@@ -126,15 +126,13 @@ namespace Server.Custom
                 m_State = WindState.Active;
                 start = TimeSpan.Zero;
             }
+
             else
             {
                 start = UntilNextActive();
                 m_State = WindState.Pending;
             }
-
-            Utility.PushColor(ConsoleColor.Yellow);
-            Console.Write("Next Wind Battleground time is in {0} days, {1} hours, and {2} minutes.\n", (int)start.TotalDays, (int)start.TotalHours - (int)start.TotalDays * 24, start.Minutes);
-            Utility.PopColor();
+            
             m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(5), Slice);
         }
 

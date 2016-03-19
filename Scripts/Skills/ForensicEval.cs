@@ -121,10 +121,6 @@ namespace Server.SkillHandlers
                     {
                         Corpse c = (Corpse)target;
 
-                        if (!Custom.Detective.OnTargetCorpse(from, c))//If the killer has not already been identified...
-                            if (((Body)c.Amount).IsHuman)
-                                c.LabelTo(from, 1042751, (c.Killer == null ? "no one" : c.Killer.Name));//This person was killed by ~1_KILLER_NAME~
-
                         if (c.Looters.Count > 0)
                         {
                             StringBuilder sb = new StringBuilder();

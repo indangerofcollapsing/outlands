@@ -242,10 +242,7 @@ namespace Server.Engines.Help
                     }
 
                     else if (player.Region.IsPartOf(typeof(Server.Regions.Jail)))
-                        player.SendLocalizedMessage(1041530, "", 0x35); // You'll need a better jailbreak plan then that!
-
-                    else if (player.YewJailed)
-                        player.SendLocalizedMessage(1041530, "", 0x35); // You'll need a better jailbreak plan then that!
+                        player.SendLocalizedMessage(1041530, "", 0x35); // You'll need a better jailbreak plan then that!                   
 
                     else if (Factions.Sigil.ExistsOn(player))
                         player.SendLocalizedMessage(1061632); // You can't do that while carrying the sigil.

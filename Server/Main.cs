@@ -520,10 +520,10 @@ namespace Server
 
 			Version ver = m_Assembly.GetName().Version;
 
-			// Added to help future code support on forums, as a 'check' people can ask for to it see if they recompiled core or not
             Utility.PushColor(ConsoleColor.Green);
-            Console.WriteLine("UO An Corp 2.0");
+            Console.WriteLine("UO Outlands");
             Utility.PopColor();
+
 			Console.WriteLine( "RunUO Version {0}.{1}, Build {2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision );
 			Console.WriteLine( "Core: Running on .NET Framework Version {0}.{1}.{2}", Environment.Version.Major, Environment.Version.Minor, Environment.Version.Build );
 

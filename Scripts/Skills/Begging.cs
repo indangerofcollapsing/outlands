@@ -55,10 +55,7 @@ namespace Server.SkillHandlers
                     {
                         number = 500398; // Perhaps just asking would work better.
                     }
-                    else if (targ is YewJail.YewJailFlintGuard)
-                    {
-                        ((YewJail.YewJailFlintGuard)targ).TryBeg(from);
-                    }
+
                     else if (!targ.Body.IsHuman) // Make sure the NPC is human
                     {
                         number = 500399; // There is little chance of getting money from that!
