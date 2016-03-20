@@ -48,14 +48,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-    		switch( Utility.Random( 1000 ) )
-    		{
-         		case 1: { c.AddItem( new Diamond( ) ); } break;
-         		case 2: { c.AddItem( new Ruby( ) ); } break;
-         		case 3: { c.AddItem( new HealPotion( ) ); } break;
-         		case 4: { c.AddItem( new HealScroll( ) ); } break;         			
-    		}
 		}
 
 		public DreadSpider( Serial serial ) : base( serial )
@@ -72,9 +64,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == 263 )
-				BaseSoundID = 1170;
 		}
 	}
 }

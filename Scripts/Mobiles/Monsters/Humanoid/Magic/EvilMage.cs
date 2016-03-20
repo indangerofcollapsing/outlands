@@ -13,6 +13,7 @@ namespace Server.Mobiles
 		{ 
 			Name = NameList.RandomName( "evil mage" );
 			Title = "the evil mage";
+
 			Body = 0x190;
 			Hue = Utility.RandomSkinHue();
 
@@ -41,18 +42,8 @@ namespace Server.Mobiles
 
             Utility.AssignRandomHair(this);
 
-			AddItem(new Robe(Utility.RandomNeutralHue()));
-
-			// rare sandals
-			Item sandals = new Sandals();
-
-			switch (Utility.Random(100))
-			{
-				case 0: sandals.Hue = Utility.RandomBlueHue(); break;
-				case 1: sandals.Hue = Utility.RandomOrangeHue(); break;
-			}
-
-			AddItem( sandals );
+			AddItem( new Robe(Utility.RandomNeutralHue()) );
+			AddItem( new Sandals());
 		}
 
         public override bool CanRummageCorpses { get { return true; } }

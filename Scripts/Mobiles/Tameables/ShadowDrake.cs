@@ -42,7 +42,7 @@ namespace Server.Mobiles
             Fame = 5500;
             Karma = -5500;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 3;
             MinTameSkill = 95;
         }
@@ -50,26 +50,19 @@ namespace Server.Mobiles
         public override Poison PoisonImmune { get { return Poison.Deadly; } }
         public override Poison HitPoison { get { return Poison.Deadly; } }
 
-        public override bool CanFly { get { return true; } }
+        public override bool CanFly { get { return true; } } 
 
-        public override int Meat { get { return 10; } }
-        public override int Hides { get { return 20; } }
-        public override HideType HideType { get { return HideType.Horned; } }   
-
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8406; } }
         public override int TamedItemHue { get { return 2500; } }
         public override int TamedItemXOffset { get { return 10; } }
         public override int TamedItemYOffset { get { return 5; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 300; } }
         public override int TamedBaseMinDamage { get { return 20; } }
         public override int TamedBaseMaxDamage { get { return 22; } }
         public override double TamedBaseWrestling { get { return 90; } }
         public override double TamedBaseEvalInt { get { return 50; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -95,11 +88,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            switch (Utility.Random(500))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new GateTravelScroll())); } break;
-            }
         }
 
         public ShadowDrake(Serial serial): base(serial)

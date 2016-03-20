@@ -50,20 +50,8 @@ namespace Server.Mobiles
         public override void OnDeath( Container c )
         {     
             base.OnDeath( c );
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_GargoyleKilled);
-            AwardAchievementForKiller(AchievementTriggers.Trigger_GargoyleKilled_TIMED);
-            AwardDailyAchievementForKiller(PvECategory.KillGargoyles);
-            // END IPY ACHIEVEMENT TRIGGER
-
-            switch( Utility.Random( 500 ) )
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new EnergyFieldScroll())); } break;
-            }
         }
 
-		public override int Meat{ get{ return 1; } }
 		public override bool CanFly { get { return true; } }
 
 		public FireGargoyle( Serial serial ) : base( serial )

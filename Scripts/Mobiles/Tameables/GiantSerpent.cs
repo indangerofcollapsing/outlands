@@ -9,7 +9,6 @@ using Server.Spells.Third;
 namespace Server.Mobiles
 {
 	[CorpseName( "a giant serpent corpse" )]
-	[TypeAlias( "Server.Mobiles.Serpant" )]
 	public class GiantSerpent : BaseCreature
 	{
         public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
@@ -42,34 +41,27 @@ namespace Server.Mobiles
 			Fame = 2500;
 			Karma = -2500;		
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 2;
             MinTameSkill = 80;
-
-            PackItem(new Bone(6));
         }
 
         public override Poison PoisonImmune { get { return Poison.Deadly; } }
         public override Poison HitPoison { get { return Poison.Deadly; } }
 
-        public override int Meat { get { return 4; } }
-        public override int Hides { get { return 15; } }
         public override HideType HideType { get { return HideType.Spined; } }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 9663; } }
         public override int TamedItemHue { get { return Hue; } }
         public override int TamedItemXOffset { get { return 0; } }
         public override int TamedItemYOffset { get { return 0; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 225; } }
         public override int TamedBaseMinDamage { get { return 10; } }
         public override int TamedBaseMaxDamage { get { return 12; } }
         public override double TamedBaseWrestling { get { return 80; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -96,9 +88,6 @@ namespace Server.Mobiles
 			base.Deserialize(reader);
 
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == -1 )
-				BaseSoundID = 219;
 		}
 	}
 }

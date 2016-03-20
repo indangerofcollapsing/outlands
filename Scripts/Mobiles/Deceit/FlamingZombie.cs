@@ -49,8 +49,7 @@ namespace Server.Mobiles
         }
 
         protected override bool OnMove(Direction d)
-        {
-            
+        {            
             if (Utility.RandomDouble() < .25)
             {
                 Effects.PlaySound(Location, Map, 0x208);
@@ -88,8 +87,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {   
             base.OnDeath(c);
-
-            AwardDailyAchievementForKiller(PvECategory.KillFlamingZombies);
         }    
 
         public FlamingZombie(Serial serial): base(serial)

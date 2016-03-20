@@ -35,8 +35,6 @@ namespace Server.Mobiles
 
 			Fame = 4000;
 			Karma = -4000;
-
-			PackItem( new BlackPearl(6) );
 		}
 
         public override void SetUniqueAI()

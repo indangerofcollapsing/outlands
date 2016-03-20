@@ -39,7 +39,7 @@ namespace Server.Misc
 		 */
 
 		public static readonly string Address = null;
-		public static readonly string ServerName = "UO An Corp";
+		public static readonly string ServerName = "UO Outlands";
 
 		public static readonly bool AutoDetect = true;
 

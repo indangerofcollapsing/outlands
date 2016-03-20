@@ -12,7 +12,7 @@ namespace Server.Mobiles
 		[Constructable]
 		public SanguinProtector(): base()
 		{			
-			Name = "a sanguine protector";
+			Name = "a sanguin protector";
 			Hue = 902;
 
             SetStr(100);
@@ -48,8 +48,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 0.66;
+            UniqueCreatureDifficultyScalar = 0.66;
             
             CombatEpicActionMinDelay = 10;
             CombatEpicActionMaxDelay = 20;
@@ -63,25 +62,22 @@ namespace Server.Mobiles
         }
 
         public override bool OnBeforeDeath()
-        {
-            if (Global_AllowAbilities)
-            {
-                Balron rm = new Balron();
-                rm.Team = this.Team;
-                rm.Combatant = this.Combatant;
+        {            
+            Balron rm = new Balron();
+            rm.Team = Team;
+            rm.Combatant = this.Combatant;
 
-                Effects.PlaySound(this, Map, GetDeathSound());
-                Effects.SendLocationEffect(Location, Map, 0x3709, 30, 10, 1775, 0);
+            Effects.PlaySound(this, Map, GetDeathSound());
+            Effects.SendLocationEffect(Location, Map, 0x3709, 30, 10, 1775, 0);
 
-                rm.MoveToWorld(Location, Map);
+            rm.MoveToWorld(Location, Map);
 
-                Effects.SendLocationEffect(Location, Map, 0x376A, 10, 1);
+            Effects.SendLocationEffect(Location, Map, 0x376A, 10, 1);
 
-                var goldItem = new Gold(ModifiedGoldWorth());
-                goldItem.MoveToWorld(Location, Map);
+            var goldItem = new Gold(ModifiedGoldWorth());
+            goldItem.MoveToWorld(Location, Map);
 
-                Delete();
-            }
+            Delete();            
 
             return false;
         }

@@ -42,7 +42,7 @@ namespace Server.Mobiles
 			Fame = 18000;
 			Karma = -18000;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 3;
             MinTameSkill = 95;
 		}
@@ -102,16 +102,7 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            if (!IsBonded)
-            {
-                AwardAchievementForKiller(AchievementTriggers.Trigger_DragonKilled);
-                AwardDailyAchievementForKiller(PvECategory.KillDragons);
-            }
-            // END IPY ACHIEVEMENT TRIGGER
-        }
-    
+        }    
 
 		public WhiteWyrm( Serial serial ) : base( serial )
 		{

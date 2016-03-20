@@ -40,8 +40,6 @@ namespace Server.Mobiles
 
 			Fame = 3000;
 			Karma = -3000;
-
-			PackItem( new Bone(6) );
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }				
@@ -53,11 +51,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            switch (Utility.Random(500))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new MassDispelScroll())); } break;
-            }
         }
 
 		public override void Serialize( GenericWriter writer )

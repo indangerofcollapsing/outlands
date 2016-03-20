@@ -31,32 +31,14 @@ namespace Server.Mobiles
             VirtualArmor = 25;
 
 			Fame = 1000;
-			Karma = -1000;			
-
-			if ( 0.25 > Utility.RandomDouble() )
-				PackItem( new Board( 10 ) );
-			else
-				PackItem( new Log( 10 ) );
-
-			PackItem( new MandrakeRoot( 3 ) );
-            PackItem( new Engines.Plants.Seed() );
-      
+			Karma = -1000;	      
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
 
         public override void OnDeath(Container c)
         {
-            base.OnDeath(c);         
-
-            switch (Utility.Random(800))
-            {
-                case 0: { c.AddItem(new RangerArms()); } break;
-                case 1: { c.AddItem(new RangerChest()); } break;
-                case 2: { c.AddItem(new RangerGloves()); } break;
-                case 3: { c.AddItem(new RangerGorget()); } break;
-                case 4: { c.AddItem(new RangerLegs()); } break;
-            }
+            base.OnDeath(c); 
         }
 		
 		public override bool DisallowAllMoves{ get{ return true; } }
@@ -75,9 +57,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == 352 )
-				BaseSoundID = 684;
 		}
 	}
 }

@@ -46,40 +46,7 @@ namespace Server.Mobiles
         public override Poison HitPoison { get { return Poison.Deadly; } }
 
         public override bool OnBeforeDeath()
-        {
-            if (this.Map != null && this.Combatant != null)
-            {
-                Map map = this.Map;
-
-                if (map == null)
-                    return false;   
-             
-                for (int k = 0; k < 3; ++k)
-                {
-                    BaseCreature spawn = new GreaterSlime();
-                    spawn.Team = this.Team;
-                    bool validLocation = false;
-                    Point3D loc = this.Location;
-
-                    for (int j = 0; !validLocation && j < 10; ++j)
-                    {
-                        int x = X + Utility.Random(3) - 1;
-                        int y = Y + Utility.Random(3) - 1;
-                        int z = map.GetAverageZ(x, y);
-
-                        if (validLocation = map.CanFit(x, y, this.Z, 16, false, false))
-                            loc = new Point3D(x, y, Z);
-                        else if (validLocation = map.CanFit(x, y, z, 16, false, false))
-                            loc = new Point3D(x, y, z);
-                    }
-
-                    this.PlaySound(Utility.RandomMinMax(457, 459));
-                    spawn.MoveToWorld(loc, map);
-                    spawn.Combatant = this.Combatant;
-                }
-            }
-
-            this.Delete();
+        {            
             return base.OnBeforeDeath();
         }
 

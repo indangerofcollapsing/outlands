@@ -41,10 +41,7 @@ namespace Server.Mobiles
 		}
 
         public override bool AlwaysMurderer { get { return true; } }
-       
-        public override int Hides { get { return 35; } }
-        public override int Meat { get { return 75; } }
-        
+               
         public override void SetUniqueAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
@@ -53,26 +50,6 @@ namespace Server.Mobiles
 
 		public override bool OnBeforeDeath()
 		{
-			switch (Utility.Random(12))
-			{
-				case 0: AddItem(TitleDye.VeryRareTitleDye(Server.Custom.PlayerTitleColors.EVeryRareColorTypes.MurdererHue));
-					break;
-				case 1: AddItem(new BoilingCauldronDeed() { LootType = LootType.Regular });
-					break;
-				case 2: AddItem(new WallBlood() { LootType = LootType.Regular });
-					break;
-				case 3: AddItem(new RedPlainRugDeed() { LootType = LootType.Regular });
-					break;
-				case 4: AddItem(new BeardRestylingDeed() { LootType = LootType.Regular });
-					break;
-				case 5: AddItem(new RewardBrazierDeed() { LootType = LootType.Regular });
-					break;
-				default: AddItem(new TreasureMap(6));
-					break;
-			}
-
-			AddItem(new RunebookDyeTub() { UsesRemaining = Utility.RandomMinMax(1, 4), LootType = LootType.Regular });
-
 			return base.OnBeforeDeath();
 		}
 

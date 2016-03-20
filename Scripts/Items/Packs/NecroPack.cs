@@ -33,7 +33,6 @@ namespace Server.Items
         {
             switch (type) {
                 case NecroPackType.Green:
-                    DropItem(new BloodyPentagramDeed { Hue = 2006 });
                     DropItem(new DriedOnions { Name = "Shrunken Heads", Hue = 2406 });
                     DropItem(new Item {ItemID = 0x1ECD, Hue = 1268 }); //crystal
                     DropItem(new MonsterStatuette(MonsterStatuetteType.Zombie));
@@ -41,7 +40,6 @@ namespace Server.Items
                     DropItem(new Item(0xd18)); //mushrooms
                     break;
                 case NecroPackType.Red:
-                    DropItem(new BloodyPentagramDeed { Hue = 2118 });
                     DropItem(new DriedOnions { Name = "Shrunken Heads", Hue = 2406 });
                     DropItem(new Item {ItemID = 0x1f19, Hue = 2118 }); //crystal
                     DropItem(new MonsterStatuette(MonsterStatuetteType.Zombie) { Hue = 2118 });
@@ -50,7 +48,6 @@ namespace Server.Items
                     DropItem(new Item(0xd18)); //mushrooms
                     break;
                 case NecroPackType.Black:
-                    DropItem(new BloodyPentagramDeed { Hue = 2019 });
                     DropItem(new DriedOnions { Name = "Shrunken Heads", Hue = 2406 });
                     DropItem(new Item {ItemID = 0x2206, Hue = 2406 }); //crystal
                     DropItem(new MonsterStatuette(MonsterStatuetteType.Zombie) { Hue = 2106 });

@@ -71,9 +71,6 @@ namespace Server.Mobiles
 		public override void OnDeath(Container c)
 		{
 			base.OnDeath(c);
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_JWilsonKilled);
-			// END IPY ACHIEVEMENT TRIGGER
 		}	
 
 		public override void Serialize(GenericWriter writer)

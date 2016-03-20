@@ -35,18 +35,10 @@ namespace Server.Mobiles
 
 			CanSwim = true;
 			CantWalk = true;
-			
-			if( Utility.RandomDouble() < .05 )
-				PackItem( new MessageInABottle() );
-
-            PackItem(new RawFishSteak(4));
 		}
 
         public override int OceanDoubloonValue { get { return 50; } }
-        public override bool IsOceanCreature { get { return true; } }        
-
-        public override int Hides { get { return 15; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
+        public override bool IsOceanCreature { get { return true; } }  
 
 		public Kraken( Serial serial ) : base( serial )
 		{

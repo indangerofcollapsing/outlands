@@ -2469,59 +2469,6 @@ namespace Server.Items
             return false;
         }
 
-        public virtual int GetPackInstinctBonus(Mobile attacker, Mobile defender)
-        {
-            if (attacker.Player || defender.Player)
-                return 0;
-
-            BaseCreature bc = attacker as BaseCreature;
-
-            if (bc == null || bc.PackInstinct == PackInstinct.None || (!bc.Controlled && !bc.Summoned))
-                return 0;
-
-            Mobile master = bc.ControlMaster;
-
-            if (master == null)
-                master = bc.SummonMaster;
-
-            if (master == null)
-                return 0;
-
-            int inPack = 1;
-
-            IPooledEnumerable eable = defender.GetMobilesInRange(1);
-            foreach (Mobile m in eable)
-            {
-                if (m != attacker && m is BaseCreature)
-                {
-                    BaseCreature tc = (BaseCreature)m;
-
-                    if ((tc.PackInstinct & bc.PackInstinct) == 0 || (!tc.Controlled && !tc.Summoned))
-                        continue;
-
-                    Mobile theirMaster = tc.ControlMaster;
-
-                    if (theirMaster == null)
-                        theirMaster = tc.SummonMaster;
-
-                    if (master == theirMaster && tc.Combatant == defender)
-                        ++inPack;
-                }
-            }
-            eable.Free();
-
-            if (inPack >= 5)
-                return 100;
-            else if (inPack >= 4)
-                return 75;
-            else if (inPack >= 3)
-                return 50;
-            else if (inPack >= 2)
-                return 25;
-
-            return 0;
-        }
-
         private static bool m_InDoubleStrike;
 
         public static bool InDoubleStrike

@@ -10,12 +10,8 @@ namespace Server.Mobiles
     [CorpseName("an ancient flame corpse")]
     public class AncientFlame : BaseCreature
     {
-        public override double DispelDifficulty { get { return 117.5; } }
-        public override double DispelFocus { get { return 45.0; } }
-
         [Constructable]
-        public AncientFlame()
-            : base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
+        public AncientFlame(): base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "an ancient flame";
             Body = 15;
@@ -48,8 +44,6 @@ namespace Server.Mobiles
             VirtualArmor = 25;
             ControlSlots = 2;
 
-            PackItem(new SulfurousAsh(3));
-
             AddItem(new LightSource());
         }
 
@@ -64,10 +58,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_FireElementalKilled);
-            // END IPY ACHIEVEMENT TRIGGER
         }
 
         public AncientFlame(Serial serial): base(serial)
@@ -84,9 +74,6 @@ namespace Server.Mobiles
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (BaseSoundID == 274)
-                BaseSoundID = 838;
         }
     }
 }

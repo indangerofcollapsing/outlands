@@ -39,25 +39,6 @@ namespace Server.Mobiles
 
 			Fame = 1500;
 			Karma = -1500;
-
-			switch ( Utility.Random( 20 ) )
-			{
-				case 0: PackItem( new Scimitar() ); break;
-				case 1: PackItem( new Katana() ); break;
-				case 2: PackItem( new WarMace() ); break;
-				case 3: PackItem( new WarHammer() ); break;
-				case 4: PackItem( new Kryss() ); break;
-				case 5: PackItem( new Pitchfork() ); break;
-			}
-
-			PackItem( new ThighBoots() );
-
-			switch ( Utility.Random( 3 ) )
-			{
-				case 0: PackItem( new Ribs() ); break;
-				case 1: PackItem( new Shaft() ); break;
-				case 2: PackItem( new Candle() ); break;
-			}
 		}
 
 		public override int Meat { get { return 1; } }
@@ -65,14 +46,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_OrcKilled);
-			AwardDailyAchievementForKiller(NewbCategory.KillOrcs);
-			// END IPY ACHIEVEMENT TRIGGER
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new CaveMoss());
 		}
 
 		public Orc( Serial serial ) : base( serial )

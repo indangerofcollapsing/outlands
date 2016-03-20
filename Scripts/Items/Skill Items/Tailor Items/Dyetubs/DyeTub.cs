@@ -257,10 +257,12 @@ namespace Server.Items
                                 {
                                     BaseHouse house = BaseHouse.FindHouseAt(item);
 
-                                    if (house == null || (!house.IsLockedDown(item) && !house.IsSecure(item) && !(item is Banner)))
+                                    if (house == null || (!house.IsLockedDown(item) && !house.IsSecure(item)))
                                         from.SendLocalizedMessage(501022); // Furniture must be locked down to paint it.
+
                                     else if (!house.IsCoOwner(from))
                                         from.SendLocalizedMessage(501023); // You must be the owner to use this item.
+
                                     else
                                         okay = true;
                                 }

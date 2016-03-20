@@ -10,9 +10,6 @@ namespace Server.Mobiles
     [CorpseName("an elder water elemental corpse")]
     public class ElderWaterElemental: BaseCreature
 	{
-		public override double DispelDifficulty{ get{ return 117.5; } }
-		public override double DispelFocus{ get{ return 45.0; } }
-
 		[Constructable]
 		public ElderWaterElemental () : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -47,22 +44,11 @@ namespace Server.Mobiles
 			
 			ControlSlots = 3;
 			CanSwim = true;
-
-			PackItem( new BlackPearl( 3 ) );
 		}
 
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_WaterElementalKilled);
-			// END IPY ACHIEVEMENT TRIGGER
-
-      switch( Utility.Random( 250 ) )
-      {
-        case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonWaterElementalScroll())); } break;
-      }
 		}	
         
 		public ElderWaterElemental( Serial serial ) : base( serial )

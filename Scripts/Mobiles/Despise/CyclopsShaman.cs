@@ -40,8 +40,6 @@ namespace Server.Mobiles
 			Karma = -4500;
 		}
         		
-		public override int Meat{ get{ return 4; } }
-
 		public CyclopsShaman( Serial serial ) : base( serial )
 		{
 		}

@@ -3,8 +3,6 @@ using Server;
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
-using Server.Engines.Quests;
-using Server.Engines.Quests.Collector;
 using System.Collections.Generic;
 
 using Server.Multis;
@@ -145,29 +143,7 @@ namespace Server.Engines.Harvest
             PlayerMobile player = from as PlayerMobile;
 
             if (player != null)
-            {
-                QuestSystem qs = player.Quest;
-
-                if (qs is CollectorQuest)
-                {
-                    QuestObjective obj = qs.FindObjective(typeof(FishPearlsObjective));
-
-                    if (obj != null && !obj.Completed)
-                    {
-                        if (Utility.RandomDouble() < 0.5)
-                        {
-                            player.SendLocalizedMessage(1055086, "", 0x59); // You pull a shellfish out of the water, and find a rainbow pearl inside of it.
-
-                            obj.CurProgress++;
-                        }
-                        else
-                        {
-                            player.SendLocalizedMessage(1055087, "", 0x2C); // You pull a shellfish out of the water, but it doesn't have a rainbow pearl.
-                        }
-
-                        return true;
-                    }
-                }
+            {                
             }
 
             return false;
@@ -499,26 +475,6 @@ namespace Server.Engines.Harvest
                                     lantern.Movable = true;
 
                                     chest.DropItem(lantern);
-                                    break;
-                                }
-                            case 2:
-                                {
-                                    Item brazier = new RewardBrazier(6587);
-                                    brazier.Name = "a fisherman's waypoint";
-                                    brazier.Hue = 2601;
-                                    brazier.LootType = LootType.Regular;
-
-                                    chest.DropItem(brazier);
-                                    break;
-                                }
-                            case 3:
-                                {
-                                    Item tallbrazier = new RewardBrazier(6570);
-                                    tallbrazier.Name = "a fisherman's waypoint";
-                                    tallbrazier.Hue = 2601;
-                                    tallbrazier.LootType = LootType.Regular;
-
-                                    chest.DropItem(tallbrazier);
                                     break;
                                 }
                         }

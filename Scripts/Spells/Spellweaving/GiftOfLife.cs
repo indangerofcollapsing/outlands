@@ -115,23 +115,8 @@ namespace Server.Spells.Spellweaving
 						master.CloseGump( typeof( PetResurrectGump ) );
 						master.SendGump( new PetResurrectGump( master, pet, hitsScalar ) );
 					}
-					else
-					{
-						List<Mobile> friends = pet.Friends;
-
-						for( int i = 0; friends != null && i < friends.Count; i++ )
-						{
-							Mobile friend = friends[i];
-
-							if( friend.NetState != null && Utility.InUpdateRange( pet, friend ) )
-							{
-								friend.CloseGump( typeof( PetResurrectGump ) );
-								friend.SendGump( new PetResurrectGump( friend, pet ) );
-								break;
-							}
-						}
-					}
 				}
+
 				else
 				{
 					m.CloseGump( typeof( ResurrectGump ) );

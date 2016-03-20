@@ -7,8 +7,6 @@ namespace Server.Mobiles
     [CorpseName("an eagle corpse")]
     public class Eagle : BaseCreature
     {
-        public override bool DropsGold { get { return false; } }
-        public override double MaxSkillScrollWorth { get { return 0.0; } }
         [Constructable]
         public Eagle(): base(AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4)
         {
@@ -34,30 +32,27 @@ namespace Server.Mobiles
             Fame = 300;
             Karma = 0;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 30;
         }
 
-        public override int Meat { get { return 3; } }
         public override MeatType MeatType { get { return MeatType.Bird; } }
         public override int Feathers { get { return 75; } }
+
         public override bool CanFly { get { return true; } }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8434; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return -15; } }
         public override int TamedItemYOffset { get { return 5; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 75; } }
         public override int TamedBaseMinDamage { get { return 4; } }
         public override int TamedBaseMaxDamage { get { return 6; } }
         public override double TamedBaseWrestling { get { return 65; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 75; } }
         public override int TamedBaseInt { get { return 5; } }

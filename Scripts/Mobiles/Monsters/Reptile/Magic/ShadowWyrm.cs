@@ -41,9 +41,8 @@ namespace Server.Mobiles
 		}
 
         public override Poison HitPoison { get { return Poison.Deadly; } }
-        public override Poison PoisonImmune { get { return Poison.Deadly; } }        
-        
-        public override HideType HideType { get { return HideType.Barbed; } }
+        public override Poison PoisonImmune { get { return Poison.Deadly; } }  
+
         public override bool CanFly { get { return true; } }
 
         public override void SetUniqueAI()

@@ -41,9 +41,8 @@ namespace Server.Mobiles
 		}
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.15;
+        {           
+            UniqueCreatureDifficultyScalar = 1.15;
         }
 
         public override void OnGaveMeleeAttack(Mobile defender)
@@ -55,11 +54,6 @@ namespace Server.Mobiles
 
 		public override bool OnBeforeDeath()
 		{
-			AwardDailyAchievementForKiller(PvECategory.KillSuccubi);
-            
-			if( Utility.Random(200) == 0)
-         		PackItem( SpellScroll.MakeMaster( new EnergyVortexScroll() ) );
-
 			return base.OnBeforeDeath();
 		}
 

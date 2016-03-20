@@ -41,25 +41,22 @@ namespace Server.Mobiles
         }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
-            {
-                Blood blood = new Blood();
-                blood.Hue = 2963;
-                blood.Name = "slime";
-                blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
+        {           
+            Blood blood = new Blood();
+            blood.Hue = 2963;
+            blood.Name = "slime";
+            blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
 
-                blood.MoveToWorld(Location, Map);
+            blood.MoveToWorld(Location, Map);
 
-                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
-            }
+            Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));            
 
             return base.OnMove(d);
         }
 		
 		public override void OnDamagedBySpell( Mobile caster )
 		{
-			if ( this.Map != null && caster != this && 0.25 > Utility.RandomDouble() )
+			if ( Map != null && caster != this && 0.20 > Utility.RandomDouble() )
 			{
 				BaseCreature spawn = new PlagueSpawn( this );
 

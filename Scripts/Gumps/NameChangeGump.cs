@@ -63,7 +63,7 @@ namespace Server.Gumps
             this.AddImage(30, 271, 3507);
             this.AddImage(4, 271, 3506);
             this.AddImage(272, 271, 3508);
-            this.AddHtml(30, 27, 241, 197, @"<center><h1>Welcome to UO An Corp!</h1></center><br>Unfortunately, the name you have chosen is either already taken by another player or is otherwise unacceptable. Many of the exciting new additions to UO An Corp hinge on all players having unique names. Please enter your selection for a new name below:", (bool)false, (bool)false);
+            this.AddHtml(30, 27, 241, 197, @"<center><h1>Welcome to UO Outlands!</h1></center><br>Unfortunately, the name you have chosen is either already taken by another player or is otherwise unacceptable. Many of the exciting new additions to UO An Corp hinge on all players having unique names. Please enter your selection for a new name below:", (bool)false, (bool)false);
             this.AddImage(27, 244, 2440);
             this.AddTextEntry(36, 246, 149, 16, 0, (int)Buttons.TextEntry, name);
             this.AddButton(198, 244, 239, 240, (int)Buttons.btnApply, GumpButtonType.Reply, 0);

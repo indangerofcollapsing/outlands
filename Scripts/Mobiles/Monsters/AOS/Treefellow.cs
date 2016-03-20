@@ -30,8 +30,6 @@ namespace Server.Mobiles
 
 			Fame = 500;
 			Karma = 1500;
-
-			PackItem( new Log( Utility.RandomMinMax( 23, 34 ) ) );
 		}		
 
         public override int GetIdleSound() { return 443; }

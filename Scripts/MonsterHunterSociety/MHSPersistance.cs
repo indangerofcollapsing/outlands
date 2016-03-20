@@ -21,8 +21,7 @@ namespace Server
 
         public static List<MHSPlayerEntry> m_PlayerEntries = new List<MHSPlayerEntry>();
 
-        public static double RareChance = .002;
-        public static int RareHue = 2500;        
+        public static double RareChance = .002;       
 
         public static void Initialize()
         {        

@@ -44,14 +44,9 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new Bloodroot());
         }
 
-        public override int Meat { get { return 1; } }
         public override bool AlwaysMurderer { get { return true; } }
-        public override bool ShowFameTitle { get { return false; } }
 
 		public Savage( Serial serial ) : base( serial )
 		{

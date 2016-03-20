@@ -198,7 +198,7 @@ namespace Server.Mobiles
 				Dex = Stam;
 
 			Karma = -1000;
-			Tamable = false;
+			Tameable = false;
 
 			SummonMaster = summoner;
 		}

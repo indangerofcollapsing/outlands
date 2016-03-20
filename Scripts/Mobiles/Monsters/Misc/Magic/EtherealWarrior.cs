@@ -34,9 +34,7 @@ namespace Server.Mobiles
 			Fame = 7000;
 			Karma = 7000;
 		}
-
-        public override int Feathers { get { return 250; } }
-        
+                
 		private DateTime m_NextResurrect;
 		private static TimeSpan ResurrectDelay = TimeSpan.FromSeconds(2.0);
 

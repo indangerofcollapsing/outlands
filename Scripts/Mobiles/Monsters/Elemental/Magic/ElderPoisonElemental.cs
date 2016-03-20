@@ -45,15 +45,11 @@ namespace Server.Mobiles
 
 			Fame = 12500;
 			Karma = -12500;
-
-			PackItem( new Nightshade( 30 ) );
-			PackItem( new LesserPoisonPotion() );
 		}
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 0.9;
+        {            
+            UniqueCreatureDifficultyScalar = 0.9;
         }
 
         public override Poison HitPoison { get { return Poison.Lethal; } }
@@ -61,50 +57,12 @@ namespace Server.Mobiles
 
         public override void OnThink()
         {
-            base.OnThink();
-
-            if (Global_AllowAbilities)
-            {
-                if (Utility.RandomDouble() < .01 && DateTime.UtcNow > m_NextAIChangeAllowed)
-                {
-                    Effects.PlaySound(Location, Map, GetAngerSound());
-
-                    switch (Utility.RandomMinMax(1, 5))
-                    {
-                        case 1:
-                            DictCombatTargetingWeight[CombatTargetingWeight.Player] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.Closest] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.HighestHitPoints] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                            break;
-
-                        case 2:
-                            DictCombatTargetingWeight[CombatTargetingWeight.Player] = 10;
-                            DictCombatTargetingWeight[CombatTargetingWeight.Closest] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.HighestHitPoints] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                            break;
-
-                    }
-
-                    m_NextAIChangeAllowed = DateTime.UtcNow + NextAIChangeDelay;
-                }
-            }
+            base.OnThink();           
         }
 
 		public override void OnDeath( Container c )
 		{			
 			base.OnDeath( c );
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_PoisonElementalKilled);
-			AwardDailyAchievementForKiller(PvECategory.KillPoisonElementals);
-			// END IPY ACHIEVEMENT TRIGGER
-
-    		switch( Utility.Random( 500 ) )
-    		{
-         		case 0: { c.AddItem( SpellScroll.MakeMaster( new EnergyVortexScroll( ) ) ); } break;
-    		}
 		}
 
 		public ElderPoisonElemental( Serial serial ) : base( serial )

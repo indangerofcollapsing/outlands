@@ -33,36 +33,28 @@ namespace Server.Mobiles
 
             VirtualArmor = 25;             
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 50.0;
 
             Fame = 500;
             Karma = -500;
-            PackItem( new Engines.Plants.Seed() );
         }
-
-        public override int Meat { get { return 1; } }
-        public override int Hides { get { return 4; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
 
         public override bool IsHighSeasBodyType { get { return true; } }
         public override bool HasAlternateHighSeasHurtAnimation { get { return true; } }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8534; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 10; } }
         public override int TamedItemYOffset { get { return 5; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 125; } }
         public override int TamedBaseMinDamage { get { return 5; } }
         public override int TamedBaseMaxDamage { get { return 7; } }
         public override double TamedBaseWrestling { get { return 60; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }

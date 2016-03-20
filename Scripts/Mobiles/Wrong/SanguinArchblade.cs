@@ -7,14 +7,14 @@ using Server.Network;
 
 namespace Server.Mobiles
 {
-    [CorpseName("a sanguine archeblade corpse")]
+    [CorpseName("a sanguin archeblade corpse")]
     public class SanguinArchblade : BaseSanguin
     {
 
         [Constructable]
         public SanguinArchblade(): base()
         {            
-            Name = "a sanguine archeblade";
+            Name = "a sanguin archblade";
 
             SetStr(75);
             SetDex(100);
@@ -48,7 +48,6 @@ namespace Server.Mobiles
             SpellDelayMax = 4;
             SpellHue = 1775;
         }
-
 
         public SanguinArchblade(Serial serial): base(serial)
         {

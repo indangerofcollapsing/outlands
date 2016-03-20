@@ -22,7 +22,6 @@ namespace Server.Items
             DropItem(new Item(8758)); 
             DropItem(new Item(5095)); 
             DropItem(new Item(5687));
-            DropItem(new WallBannerDeed());
         }
 
         public DragonSlayerPack(Serial serial)

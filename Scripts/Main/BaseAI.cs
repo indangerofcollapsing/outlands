@@ -13,8 +13,6 @@ using Server.Targets;
 using Server.Network;
 using Server.Regions;
 using Server.ContextMenus;
-using Server.Engines.Quests;
-using Server.Engines.Quests.Necro;
 using MoveImpl = Server.Movement.MovementImpl;
 using Server.Spells;
 using Server.Spells.First;
@@ -2584,10 +2582,9 @@ namespace Server.Mobiles
                     if (bc_Target == null || !bc_Target.Alive || bc_Target.Deleted || !bc_Target.Controlled || from.Map != bc_Target.Map || !from.CheckAlive())
                         continue;
 
-                    bool isOwner = (from == bc_Target.ControlMaster);
-                    bool isFriend = (!isOwner && bc_Target.IsPetFriend(from));
+                    bool isOwner = (from == bc_Target.ControlMaster);                   
 
-                    if (!isOwner && !isFriend)
+                    if (!isOwner)
                         continue;
 
                     if (bc_Target.CheckControlChance(from))
@@ -2958,75 +2955,11 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderFriend()
         {
-            Mobile from = bc_Creature.ControlMaster;
-            Mobile to = bc_Creature.ControlTarget;
-
-            if (from == null || to == null || from == to || from.Deleted || to.Deleted || !to.Player)
-                bc_Creature.PublicOverheadMessage(MessageType.Regular, 0x3B2, 502039); // *looks confused*            
-            else
-            {
-                if (from.CanBeBeneficial(to, true))
-                {
-                    NetState fromState = from.NetState, toState = to.NetState;
-
-                    if (fromState != null && toState != null)
-                    {
-                        if (from.HasTrade)
-                            from.SendLocalizedMessage(1070947); // You cannot friend a pet with a trade pending                        
-
-                        else if (to.HasTrade)
-                            to.SendLocalizedMessage(1070947); // You cannot friend a pet with a trade pending                        
-
-                        else if (bc_Creature.IsPetFriend(to))
-                            from.SendLocalizedMessage(1049691); // That person is already a friend.                        
-
-                        else if (!bc_Creature.AllowNewPetFriend)
-                            from.SendLocalizedMessage(1005482); // Your pet does not seem to be interested in making new friends right now.                        
-
-                        else
-                        {
-                            from.SendLocalizedMessage(1049676, String.Format("{0}\t{1}", bc_Creature.Name, to.Name));
-                            to.SendLocalizedMessage(1043246, String.Format("{0}\t{1}", from.Name, bc_Creature.Name));
-
-                            bc_Creature.AddPetFriend(to);
-
-                            bc_Creature.ControlTarget = to;
-                            bc_Creature.ControlOrder = OrderType.Follow;
-
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            bc_Creature.ControlTarget = from;
-            bc_Creature.ControlOrder = OrderType.Follow;
-
             return true;
         }
 
         public virtual bool DoOrderUnfriend()
         {
-            Mobile from = bc_Creature.ControlMaster;
-            Mobile to = bc_Creature.ControlTarget;
-
-            if (from == null || to == null || from == to || from.Deleted || to.Deleted || !to.Player)
-                bc_Creature.PublicOverheadMessage(MessageType.Regular, 0x3B2, 502039); // *looks confused*            
-
-            else if (!bc_Creature.IsPetFriend(to))
-                from.SendLocalizedMessage(1070953); // That person is not a friend.            
-
-            else
-            {
-                from.SendLocalizedMessage(1070951, String.Format("{0}\t{1}", bc_Creature.Name, to.Name));
-                to.SendLocalizedMessage(1070952, String.Format("{0}\t{1}", from.Name, bc_Creature.Name));
-
-                bc_Creature.RemovePetFriend(to);
-            }
-
-            bc_Creature.ControlTarget = from;
-            bc_Creature.ControlOrder = OrderType.Follow;
-
             return true;
         }
 
@@ -3161,7 +3094,6 @@ namespace Server.Mobiles
             bc_Creature.SetControlMaster(null);
             bc_Creature.SummonMaster = null;
 
-            bc_Creature.BondingBegin = DateTime.MinValue;
             bc_Creature.OwnerAbandonTime = DateTime.UtcNow;
             bc_Creature.IsBonded = false;
 
@@ -4876,7 +4808,7 @@ namespace Server.Mobiles
                     }
 
                     //Tamed
-                    if (bc_Target.Tamable && bc_Target.Controlled && bc_Target.ControlMaster is PlayerMobile)
+                    if (bc_Target.Tameable && bc_Target.Controlled && bc_Target.ControlMaster is PlayerMobile)
                         BonusWeightValue += bc_Creature.DictCombatTargetingWeight[CombatTargetingWeight.Tamed];
                 }             
 
@@ -5570,13 +5502,9 @@ namespace Server.Mobiles
             if (bc_Creature.Deleted || !bc_Creature.Controlled || !from.InRange(bc_Creature, 14) || from.Map != bc_Creature.Map)
                 return;
 
-            bool isOwner = (from == bc_Creature.ControlMaster);
-            bool isFriend = (!isOwner && bc_Creature.IsPetFriend(from));
+            bool isOwner = (from == bc_Creature.ControlMaster);            
 
-            if (!isOwner && !isFriend)
-                return;
-
-            else if (isFriend && order != OrderType.Follow && order != OrderType.Stay && order != OrderType.Stop)
+            if (!isOwner)
                 return;
 
             if (from.Target == null)
@@ -5620,12 +5548,9 @@ namespace Server.Mobiles
             if (bc_Creature.Deleted || !bc_Creature.Controlled || !from.InRange(bc_Creature, 14) || from.Map != bc_Creature.Map || !from.Alive)
                 return;
 
-            bool isOwner = (from == bc_Creature.ControlMaster);
-            bool isFriend = (!isOwner && bc_Creature.IsPetFriend(from));
+            bool isOwner = (from == bc_Creature.ControlMaster);           
 
-            if (!isOwner && !isFriend)
-                return;
-            else if (isFriend && order != OrderType.Follow && order != OrderType.Stay && order != OrderType.Stop)
+            if (!isOwner)
                 return;
 
             if (order == OrderType.Attack)
@@ -5888,11 +5813,6 @@ namespace Server.Mobiles
                 if (distance < 1 && target.X == 1076 && target.Y == 450 && (bc_Creature is HordeMinionFamiliar))
                 {
                     PlayerMobile pm = bc_Creature.ControlMaster as PlayerMobile;
-
-                    if (pm != null)
-                    {
-                        QuestSystem qs = pm.Quest;
-                    }
                 }
 
                 bc_Creature.TargetLocation = null;
@@ -6272,8 +6192,7 @@ namespace Server.Mobiles
             {
                 bc_Creature.DebugSay("Listening...");
 
-                bool isOwner = (e.Mobile == bc_Creature.ControlMaster);
-                bool isFriend = (!isOwner && bc_Creature.IsPetFriend(e.Mobile));
+                bool isOwner = (e.Mobile == bc_Creature.ControlMaster);               
 
                 string exceededFollowers = "You have currently exceeded your follower limit and they refuse to obey your command!";                
 
@@ -6639,7 +6558,6 @@ namespace Server.Mobiles
                         if (m_Creature.Summoned)
                             m_Creature.SummonMaster = to;
 
-                        m_Creature.BondingBegin = DateTime.UtcNow;
                         m_Creature.OwnerAbandonTime = DateTime.UtcNow + m_Creature.AbandonDelay;
                         m_Creature.IsBonded = false;
 

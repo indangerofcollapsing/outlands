@@ -7,8 +7,6 @@ namespace Server.Mobiles
 	[CorpseName( "a darknight creeper corpse" )]
 	public class DarknightCreeper : BaseCreature
 	{
-		public override bool IgnoreYoungProtection { get { return Core.ML; } }
-
 		[Constructable]
 		public DarknightCreeper() : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -53,9 +51,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == 471 )
-				BaseSoundID = 0xE0;
 		}
 	}
 }

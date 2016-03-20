@@ -33,8 +33,6 @@ namespace Server.Mobiles
 
 			Fame = 775;
 			Karma = -775;
-
-			PackItem( new SpidersSilk( 12 ) );
 		}
 
         public override Poison HitPoison { get { return Poison.Regular; } }
@@ -54,9 +52,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == 387 )
-				BaseSoundID = 0x388;
 		}
 	}
 }

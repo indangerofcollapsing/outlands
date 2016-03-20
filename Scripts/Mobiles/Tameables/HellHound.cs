@@ -41,29 +41,22 @@ namespace Server.Mobiles
 			Fame = 3400;
 			Karma = -3400;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 85;
-
-            PackItem(new SulfurousAsh(10));
         }
-
-        public override int Meat { get { return 1; } }
-
-        //Animal Lore Display Info
+        
         public override int TamedItemId { get { return 8482; } }
         public override int TamedItemHue { get { return 237; } }
         public override int TamedItemXOffset { get { return 5; } }
         public override int TamedItemYOffset { get { return 15; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 175; } }
         public override int TamedBaseMinDamage { get { return 8; } }
         public override int TamedBaseMaxDamage { get { return 10; } }
         public override double TamedBaseWrestling { get { return 75; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -84,17 +77,12 @@ namespace Server.Mobiles
         public override void SetTamedAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
+            DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
 
 		public override void OnDeath( Container c )
 		{
 			base.OnDeath(c);
-
-			// IPY ACHIEVEMENT
-			AwardAchievementForKiller(AchievementTriggers.Trigger_HellhoundKilled_TIMED);
-			AwardDailyAchievementForKiller(PvECategory.KillHellHounds);
-
-			// IPY ACHIEVEMENT
 		}
 
 		public HellHound( Serial serial ) : base( serial )

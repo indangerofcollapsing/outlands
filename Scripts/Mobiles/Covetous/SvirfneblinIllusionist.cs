@@ -46,9 +46,8 @@ namespace Server.Mobiles
         }        
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.25;   
+        {   
+            UniqueCreatureDifficultyScalar = 1.25;   
             
             DictWanderAction[WanderAction.None] = 1;
             DictWanderAction[WanderAction.Stealth] = 3;
@@ -61,28 +60,22 @@ namespace Server.Mobiles
         public override void OnThink()
         {
             base.OnThink();
-
-            if (Global_AllowAbilities)
+           
+            if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed)
             {
-                if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed)
+                if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
                 {
-                    if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
-                    {
-                        if (SpecialAbilities.VanishAbility(this, 3.0, true, -1, 3, 6, true, null))
-                            Say("*poof*");
+                    if (SpecialAbilities.VanishAbility(this, 3.0, true, -1, 3, 6, true, null))
+                        Say("*poof*");
 
-                        m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
-                    }
+                    m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
                 }
-            }
+            }            
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new StrangeMushrooms());
         }
 
         public override int GetAttackSound(){return 0x5FD;}

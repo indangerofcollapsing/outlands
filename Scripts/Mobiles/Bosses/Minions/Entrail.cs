@@ -47,9 +47,8 @@ namespace Server.Mobiles
             DictCombatFlee[CombatFlee.Flee25] = 0;
             DictCombatFlee[CombatFlee.Flee10] = 0;
             DictCombatFlee[CombatFlee.Flee5] = 0;
-
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.15;
+           
+            UniqueCreatureDifficultyScalar = 1.15;
         }
 
         public override bool AlwaysBossMinion { get { return true; } }
@@ -64,40 +63,34 @@ namespace Server.Mobiles
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
+                        
+            defender.SendMessage("The creature burrows inside of you, causing you immense pain and discomfort!");
 
-            if (Global_AllowAbilities)
+            double damage = 120;
+
+            if (defender is BaseCreature)
+                damage *= 1.5;
+
+            SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 30, -1, true, "", "");
+
+            Effects.PlaySound(Location, Map, 0x4F1);
+
+            new Blood().MoveToWorld(new Point3D(defender.X, defender.Y, defender.Z), defender.Map);
+
+            for (int a = 0; a < 4; a++)
             {
-                defender.SendMessage("The creature burrows inside of you, causing you immense pain and discomfort!");
-
-                double damage = 120;
-
-                if (defender is BaseCreature)
-                    damage *= 1.5;
-
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 30, -1, true, "", "");
-
-                Effects.PlaySound(Location, Map, 0x4F1);
-
-                new Blood().MoveToWorld(new Point3D(defender.X, defender.Y, defender.Z), defender.Map);
-
-                for (int a = 0; a < 4; a++)
-                {
-                    new Blood().MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z), defender.Map);
-                }
-
-                Kill();
+                new Blood().MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z), defender.Map);
             }
+
+            Kill();            
         }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
-            {
-                Blood blood = new Blood();
-                blood.ItemID = Utility.RandomList(4651, 4652, 4653, 4654);
+        {           
+            Blood blood = new Blood();
+            blood.ItemID = Utility.RandomList(4651, 4652, 4653, 4654);
 
-                blood.MoveToWorld(Location, Map);
-            }
+            blood.MoveToWorld(Location, Map);            
 
             return base.OnMove(d);
         }

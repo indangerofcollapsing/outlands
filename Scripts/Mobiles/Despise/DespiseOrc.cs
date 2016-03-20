@@ -42,17 +42,19 @@ namespace Server.Mobiles
                     SetSkill(SkillName.Swords, 90.1, 100);
                     var swords = new Item[] { new Halberd(), new Bardiche() };
                     AddItem(swords[Utility.Random(swords.Length)]);
-                    break;
+                break;
+
                 case 1:
                     SetSkill(SkillName.Macing, 90.1, 100);
                     var maces = new Item[] { new WarHammer(), new QuarterStaff() };
                     AddItem(maces[Utility.Random(maces.Length)]);
-                    break;
+                break;
+
                 case 2:
                     SetSkill(SkillName.Fencing, 90.1, 100);
                     var spears = new Item[] { new Spear(), new ShortSpear() };
                     AddItem(spears[Utility.Random(spears.Length)]);
-                    break;
+                break;
             }
 
             Karma = -15000;

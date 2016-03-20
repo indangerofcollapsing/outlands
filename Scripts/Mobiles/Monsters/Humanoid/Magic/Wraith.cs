@@ -12,7 +12,7 @@ namespace Server.Mobiles
 		{
 			Name = "a wraith";
 			Body = 26;
-            Hue = 2615; //0x4001;
+            Hue = 2615;
 			BaseSoundID = 0x482;
 
             SetStr(50);
@@ -44,9 +44,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new Bonemeal());
         }
 
 		public Wraith( Serial serial ) : base( serial )

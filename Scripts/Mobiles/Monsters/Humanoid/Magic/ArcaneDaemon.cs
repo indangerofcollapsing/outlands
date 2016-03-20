@@ -42,16 +42,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_DaemonKilled);
-            AwardDailyAchievementForKiller(PvECategory.KillDemons);
-            // END IPY ACHIEVEMENT TRIGGER
-
-            switch (Utility.Random(500))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonDaemonScroll())); } break;
-            }
         }
 
         public ArcaneDaemon(Serial serial)

@@ -60,7 +60,7 @@ namespace Server.Mobiles
 
         public static void Convert(BaseCreature bc)
         {
-            if (bc.IsParagon || bc.IPYLootTag == BaseCreature.EIPYLootTag.SEQ_SPAWN_MINIBOSS)
+            if (bc.IsParagon || bc.Rare)
                 return;
 
             bc.Hue = Hue;
@@ -128,7 +128,7 @@ namespace Server.Mobiles
 
         public static bool CheckConvert(BaseCreature bc, Point3D location, Map m)
         {
-            if (!bc.AllowParagon || bc.Difficulty >= 50 || bc.Difficulty <= 0.5 || bc is BaseChampion || bc is Harrower || bc is BaseVendor || bc is BaseEscortable || bc is Clone || bc.IsParagon || bc.IPYLootTag == BaseCreature.EIPYLootTag.SEQ_SPAWN_MINIBOSS)
+            if (!bc.AllowParagon || bc.Difficulty >= 50 || bc.Difficulty <= 0.5 || bc is BaseChampion || bc is Harrower || bc is BaseVendor || bc is BaseEscortable || bc is Clone || bc.IsParagon || bc.Rare)
                 return false;
 
             double regionMod = Server.Commands.RegionParagonMod.GetModifier(Region.Find(location, m));

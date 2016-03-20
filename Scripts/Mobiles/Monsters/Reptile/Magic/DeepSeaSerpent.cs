@@ -36,20 +36,10 @@ namespace Server.Mobiles
 
 			CanSwim = true;
 			CantWalk = true;
-
-			if ( Utility.RandomBool() )
-			    PackItem( new SulfurousAsh( 10 ) );
-			else
-			    PackItem( new BlackPearl( 10 ) ); 
-
-            PackItem(new RawFishSteak(6));
 		}
 
         public override int OceanDoubloonValue { get { return 10; } }
-        public override bool IsOceanCreature { get { return true; } }        
-
-        public override int Hides { get { return 15; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
+        public override bool IsOceanCreature { get { return true; } }     
 
         public override void SetUniqueAI()
         {
@@ -64,13 +54,8 @@ namespace Server.Mobiles
 
 		public override bool OnBeforeDeath()
 		{
-			if ( 0.02 >= Utility.RandomDouble() )
-				PackItem( new SpecialFishingNet() );
-
 			return base.OnBeforeDeath();
 		}
-	
-		public override int Meat{ get{ return 1; } }		
 
 		public DeepSeaSerpent( Serial serial ) : base( serial )
 		{

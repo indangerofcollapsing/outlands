@@ -41,21 +41,17 @@ namespace Server.Mobiles
         public override Poison PoisonImmune { get { return Poison.Greater; } }
 
         public override bool CanRummageCorpses { get { return true; } }
-        public override int Meat { get { return 2; } }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
-            {
-                Blood blood = new Blood();
-                blood.Hue = 2002;
-                blood.Name = "slime";
-                blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
+        {           
+            Blood blood = new Blood();
+            blood.Hue = 2002;
+            blood.Name = "slime";
+            blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
 
-                blood.MoveToWorld(Location, Map);
+            blood.MoveToWorld(Location, Map);
 
-                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
-            }
+            Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));            
 
             return base.OnMove(d);
         }
@@ -63,14 +59,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-    		switch( Utility.Random( 1000 ) )
-    		{
-         		case 0: { c.AddItem( new IncognitoScroll( ) ); } break;
-         		case 2: { c.AddItem( new Tourmaline( ) ); } break;
-         		case 3: { c.AddItem( new BlankScroll( ) ); } break;
-         		case 4: { c.AddItem( new StrengthScroll( ) ); } break;         			
-    		}
 		}				
        	
 		public SlimeTroll( Serial serial ) : base( serial )

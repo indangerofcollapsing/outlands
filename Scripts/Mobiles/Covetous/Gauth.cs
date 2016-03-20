@@ -47,17 +47,13 @@ namespace Server.Mobiles
             
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.CauseWounds] = 1;
-
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.15;
+            
+            UniqueCreatureDifficultyScalar = 1.15;
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new StrangeMushrooms());
         }
 
 		public override int Meat{ get{ return 1; } }

@@ -35,11 +35,6 @@ namespace Server.Mobiles
 
 			Fame = 3000;
 			Karma = -3000;
-			
-			PackItem( new ZoogiFungus( ( 0.05 < Utility.RandomDouble() )? 3 : 13 ) );
-
-			if ( Utility.RandomDouble() < 0.05 )
-				PackItem( new BraceletOfBinding() );
 		}
 
         public override void SetUniqueAI()

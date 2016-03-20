@@ -44,13 +44,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
             base.OnDeath( c );
-            AwardAchievementForKiller(AchievementTriggers.Trigger_AirElementalKilled);
-            
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonAirElementalScroll())); } break;
-            }
 		}
 
 		private DateTime m_NextAttack;
@@ -91,6 +84,7 @@ namespace Server.Mobiles
 			protected override void OnTick()
 			{
 				m_Mobile.PlaySound( 0x4CF );
+
 				AOS.Damage( m_Mobile, m_From, Utility.RandomMinMax( 10, 20 ), 90, 10, 0, 0, 0 );
 			}
 		}

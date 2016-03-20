@@ -7,13 +7,13 @@ using Server.Network;
 
 namespace Server.Mobiles
 {
-    [CorpseName("a sanguine scout corpse")]
+    [CorpseName("a sanguin scout corpse")]
     public class SanguinScout : BaseSanguin
     {
         [Constructable]
         public SanguinScout(): base()
         {            
-            Name = "a sanguine scout";
+            Name = "a sanguin scout";
 
             SetStr(50);
             SetDex(75);
@@ -46,9 +46,7 @@ namespace Server.Mobiles
             AddItem(new LeatherLegs() { Movable = false, Hue = itemHue });
             AddItem(new Sandals() { Movable = false, Hue = itemHue });
 
-            AddItem(new Bow() { Movable = false, Hue = 0 });            
-
-            AddItem(new Arrow(10));
+            AddItem(new Bow() { Movable = false, Hue = 0 });    
         }
         
         public SanguinScout(Serial serial): base(serial)

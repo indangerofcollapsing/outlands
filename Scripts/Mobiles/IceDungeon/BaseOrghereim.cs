@@ -85,8 +85,6 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {            
-            AddItem(new Kilt(305));
-
             return base.OnBeforeDeath();
         }
 

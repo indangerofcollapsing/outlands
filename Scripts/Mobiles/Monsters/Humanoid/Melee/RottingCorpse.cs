@@ -10,8 +10,7 @@ namespace Server.Mobiles
     public class RottingCorpse : BaseCreature
     {
         [Constructable]
-        public RottingCorpse()
-            : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
+        public RottingCorpse(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "a rotting corpse";
             Body = 155;
@@ -36,7 +35,6 @@ namespace Server.Mobiles
 
             Fame = 6000;
             Karma = -6000;
-            PackItem(new Bone(15));
         }
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
@@ -44,13 +42,6 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            AwardDailyAchievementForKiller(PvECategory.KillRottingCorpses);
-
-            if (Utility.Random(250) == 0)
-            {
-                AddItem(TitleDye.VeryRareTitleDye(Server.Custom.PlayerTitleColors.EVeryRareColorTypes.SnowWhiteTitleHue));
-            }
-
             return base.OnBeforeDeath();
         }
 

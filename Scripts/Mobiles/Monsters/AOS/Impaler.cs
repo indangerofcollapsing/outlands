@@ -36,8 +36,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.15;
+            UniqueCreatureDifficultyScalar = 1.15;
         }
 
         public override void OnGaveMeleeAttack(Mobile defender)
@@ -65,9 +64,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == 1200 )
-				BaseSoundID = 0x2A7;
 		}
 	}
 }

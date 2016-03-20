@@ -6,9 +6,6 @@ namespace Server.Mobiles
 	[CorpseName( "an inhuman corpse" )]
 	public class Cursed : BaseCreature
 	{
-		public override bool ClickTitle{ get{ return false; } }
-		public override bool ShowFameTitle{ get{ return false; } }
-
 		[Constructable]
 		public Cursed() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{

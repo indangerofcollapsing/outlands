@@ -34,23 +34,15 @@ namespace Server.Mobiles
 			Fame = 10000;
 			Karma = -15000;
 		}
-
-        public override int Meat { get { return 3; } }
-
+        
 		public ChaosDaemon( Serial serial ) : base( serial )
 		{
 		}
 
-    public override void OnDeath( Container c )
-    {     
-      base.OnDeath( c );
-
-      // IPY ACHIEVEMENT TRIGGER 
-      AwardAchievementForKiller(AchievementTriggers.Trigger_DaemonKilled);
-      AwardDailyAchievementForKiller(PvECategory.KillDemons);
-      // END IPY ACHIEVEMENT TRIGGER
-    }
-
+        public override void OnDeath( Container c )
+        {     
+          base.OnDeath( c );
+        }
 
 		public override void Serialize( GenericWriter writer )
 		{

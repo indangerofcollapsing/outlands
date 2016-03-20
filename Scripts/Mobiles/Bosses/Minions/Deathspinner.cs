@@ -50,9 +50,8 @@ namespace Server.Mobiles
             DictCombatFlee[CombatFlee.Flee25] = 0;
             DictCombatFlee[CombatFlee.Flee10] = 0;
             DictCombatFlee[CombatFlee.Flee5] = 0;
-
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.1;
+           
+            UniqueCreatureDifficultyScalar = 1.1;
         }
 
         public override bool AlwaysBossMinion { get { return true; } }
@@ -60,19 +59,16 @@ namespace Server.Mobiles
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
-
-            if (Global_AllowAbilities)
+           
+            if (Utility.RandomDouble() < .25)
             {
-                if (Utility.RandomDouble() < .25)
-                {
-                    Effects.PlaySound(defender.Location, defender.Map, 0x580);
-                    Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(5.0)), Utility.RandomList(3811, 3812, 3813, 3814, 4306, 4307, 4308, 4308), 0, 125, 0, 0, 5029, 0);
+                Effects.PlaySound(defender.Location, defender.Map, 0x580);
+                Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(5.0)), Utility.RandomList(3811, 3812, 3813, 3814, 4306, 4307, 4308, 4308), 0, 125, 0, 0, 5029, 0);
 
-                    defender.SendMessage("You have been wrapped in a web!");
+                defender.SendMessage("You have been wrapped in a web!");
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1.0, Utility.RandomMinMax(3, 5), false, -1, false, "", "");
-                }
-            }
+                SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1.0, Utility.RandomMinMax(3, 5), false, -1, false, "", "");
+            }            
         }
 
         public override void OnDeath(Container c)

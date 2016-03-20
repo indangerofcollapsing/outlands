@@ -33,8 +33,6 @@ namespace Server.Mobiles
 
 			Fame = 4000;
 			Karma = -4000;
-
-			PackItem( new IronIngot( 12 ) );
 		}
 
 		public StoneGargoyle( Serial serial ) : base( serial )
@@ -44,17 +42,6 @@ namespace Server.Mobiles
         public override void OnDeath( Container c )
         {     
             base.OnDeath( c );
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_GargoyleKilled);
-            AwardAchievementForKiller(AchievementTriggers.Trigger_GargoyleKilled_TIMED);
-            AwardDailyAchievementForKiller(PvECategory.KillGargoyles);
-            // END IPY ACHIEVEMENT TRIGGER
-
-            switch( Utility.Random( 500 ) )
-            {
-            case 0: { c.AddItem(SpellScroll.MakeMaster(new EnergyFieldScroll())); } break;
-            }
         }
 
 		public override void Serialize( GenericWriter writer )

@@ -33,9 +33,6 @@ namespace Server.Mobiles
 			Karma = -900;		
 		}
 
-        public override int Meat { get { return 1; } }
-
-
 		public GazerLarva( Serial serial ) : base( serial )
 		{
 		}

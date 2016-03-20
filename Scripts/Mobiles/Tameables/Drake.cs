@@ -34,30 +34,24 @@ namespace Server.Mobiles
             Fame = 5500;
             Karma = -5500;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 2;
             MinTameSkill = 85;
         }
 
-        public override int Meat { get { return 10; } }
-        public override int Hides { get { return 20; } }
-        public override HideType HideType { get { return HideType.Horned; } }
         public override bool CanFly { get { return true; } }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8406; } }
         public override int TamedItemHue { get { return 1205; } }
         public override int TamedItemXOffset { get { return 10; } }
         public override int TamedItemYOffset { get { return 5; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 300; } }
         public override int TamedBaseMinDamage { get { return 16; } }
         public override int TamedBaseMaxDamage { get { return 18; } }
         public override double TamedBaseWrestling { get { return 80; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -78,19 +72,12 @@ namespace Server.Mobiles
         public override void SetTamedAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
+            DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-            
-            if (!IsBonded)
-            {
-                switch (Utility.Random(500))
-                {
-                    case 0: { c.AddItem(SpellScroll.MakeMaster(new GateTravelScroll())); } break;
-                }
-            }
         }
 
         public Drake(Serial serial): base(serial)

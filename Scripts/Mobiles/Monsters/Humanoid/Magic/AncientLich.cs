@@ -40,8 +40,6 @@ namespace Server.Mobiles
 
 			Fame = 23000;
 			Karma = -23000;
-
-            PackItem(new Bone(25));
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
@@ -49,22 +47,13 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{
     		base.OnDeath( c );
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_AncientLichKilled);
-			// END IPY ACHIEVEMENT TRIGGER
-
-			switch( Utility.Random( 500 ) )
-			{
-				case 0: { c.AddItem(SpellScroll.MakeMaster(new MeteorSwarmScroll())); } break;
-			}
 		}			
 
-        public override int GetIdleSound()        {            return 0x19D;        }
-        public override int GetAngerSound()        {            return 0x175;        }
-        public override int GetDeathSound()        {            return 0x108;        }
-        public override int GetAttackSound()        {            return 0xE2;        }
-        public override int GetHurtSound()        {            return 0x28B;        }
+        public override int GetIdleSound(){return 0x19D;}
+        public override int GetAngerSound(){return 0x175;}
+        public override int GetDeathSound(){return 0x108;}
+        public override int GetAttackSound(){return 0xE2;}
+        public override int GetHurtSound(){return 0x28B;}
 
 		public AncientLich( Serial serial ) : base( serial )
 		{

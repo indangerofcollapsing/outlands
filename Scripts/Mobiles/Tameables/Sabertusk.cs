@@ -37,12 +37,11 @@ namespace Server.Mobiles
 			Fame = 600;
 			Karma = -600;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 2;
             MinTameSkill = 115.1;
         }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedItemId { get { return 16381; } }
         public override int TamedItemHue { get { return 2599; } }
         public override int TamedItemXOffset { get { return 0; } }
@@ -54,7 +53,6 @@ namespace Server.Mobiles
         public override double TamedBaseWrestling { get { return 100; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 75; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -104,7 +102,6 @@ namespace Server.Mobiles
 
         public override void SetTamedAI()
         {
-            AttackSpeed = 40;
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)
@@ -140,11 +137,3 @@ namespace Server.Mobiles
 		}
 	}
 }
-
-//Animate(4, 15, 1, true, false, 0) //Huge Swipe
-//Animate(5, 12, 1, true, false, 0) //Huge Bite
-//Animate(10, 11, 1, true, false, 0) //Hurt
-//Animate(12, 15, 1, true, false, 0) //Howl
-//Animate(26, 10, 1, true, false, 0) //Hurt 2
-//Animate(27, 15, 1, true, false, 0) //Paw Ground
-//Animate(28, 20, 1, true, false, 0) //Idle

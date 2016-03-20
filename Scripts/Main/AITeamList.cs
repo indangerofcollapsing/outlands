@@ -149,7 +149,6 @@ namespace Server
             //Orcs
 			new AITeamList(new Type[]
 			{
-                typeof( SpawnedOrcishLord ),
                 typeof( BlackOrc ),
                 typeof( Orc ),
 			    typeof( OrcBomber ),		
@@ -192,13 +191,6 @@ namespace Server
                typeof( FrostOoze ),
                typeof( Jwilson ),	
                typeof( Slime ),
-               typeof( Slime2 ),
-               typeof( Slime3 ),
-               typeof( Slime4 ),
-               typeof( Slime5 ),
-               typeof( Slime6 ),
-               typeof( Slime7 ),
-               typeof( Slime8 ),
             } ),
 
             //Cold Elementals

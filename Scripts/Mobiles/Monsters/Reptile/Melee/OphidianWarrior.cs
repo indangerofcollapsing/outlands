@@ -5,19 +5,13 @@ using Server.Targeting;
 
 namespace Server.Mobiles
 {
-	[CorpseName( "an ophidian corpse" )]
+	[CorpseName( "an ophidian warrior corpse" )]
 	public class OphidianWarrior : BaseCreature
 	{
-		private static string[] m_Names = new string[]
-			{
-				"an ophidian warrior",
-				"an ophidian enforcer"
-			};
-
 		[Constructable]
 		public OphidianWarrior() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
-			Name = m_Names[Utility.Random( m_Names.Length )];
+            Name = "an ophidian warrior";
 			Body = 86;
 			BaseSoundID = 634;
 
@@ -42,8 +36,6 @@ namespace Server.Mobiles
 
         public override Poison HitPoison { get { return Poison.Greater; } }
         public override Poison PoisonImmune { get { return Poison.Greater; } }
-
-		public override int Meat{ get{ return 1; } }
 
 		public OphidianWarrior( Serial serial ) : base( serial )
 		{

@@ -57,97 +57,20 @@ namespace Server.Mobiles
 
 			CanSwim = true;
 			CantWalk = true;
-
-			if (Utility.Random(5) == 0)
-			{
-				Rope rope = new Rope();
-				rope.ItemID = 0x14F8;
-				PackItem(rope);
-			}
-
-            PackItem(new RawFishSteak(8));
 		}
 
         public override int OceanDoubloonValue { get { return 150; } }
         public override bool IsOceanCreature { get { return true; } }
             
-        public override int Hides { get { return 25; } }
-        public override HideType HideType { get { return HideType.Spined; } }
-
         public override void SetUniqueAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
-
-        public static Type[] Artifacts { get { return m_Artifacts; } }
-
-        private static Type[] m_Artifacts = new Type[]
-		{
-			// Decorations
-			typeof( ShipModelOfTheHMSCape ),
-            typeof( ChickenOfTheSea ),
-            typeof( EyeOfTrout ),
-            typeof( Sardines ),
-            typeof( HangingFilets ),
-			typeof( AdmiralsHeartyRum ),
-            typeof( PirateGlassEye ),
-            typeof( FishHeads ),
-            typeof( RawFish ),
-
-			// Equipment
-			//typeof( AlchemistsBauble ),
-			//typeof( ArcticDeathDealer ),
-			//typeof( BlazeOfDeath ),
-			//typeof( BurglarsBandana ),
-			//typeof( CaptainQuacklebushsCutlass ),
-			//typeof( CavortingClub ),
-			//typeof( DreadPirateHat ),
-			//typeof( EnchantedTitanLegBone ),
-			//typeof( GwennosHarp ),
-			//typeof( IolosLute ),
-			//typeof( LunaLance ),
-			//typeof( NightsKiss ),
-			//typeof( NoxRangersHeavyCrossbow ),
-			//typeof( PolarBearMask ),
-			//typeof( VioletCourage )
-		};
-
-        public static void GiveArtifactTo(Mobile m)
-        {
-            Item item = Loot.Construct(m_Artifacts);
-
-            if (item == null)
-                return;
-
-            // TODO: Confirm messages
-            if (m.AddToBackpack(item))
-                m.SendMessage("As a reward for slaying the mighty leviathan, an artifact has been placed in your backpack.");
-            else
-                m.SendMessage("As your backpack is full, your reward for destroying the legendary leviathan has been placed at your feet.");
-        }
-
-        public override void OnKilledBy(Mobile mob)
-        {
-            base.OnKilledBy(mob);
-
-            if (Paragon.CheckArtifactChance(mob, this))
-            {
-                GiveArtifactTo(mob);
-
-                if (mob == m_Fisher)
-                    m_Fisher = null;
-            }
-        }
-
+        
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (m_Fisher != null && 25 > Utility.Random(100))
-                GiveArtifactTo(m_Fisher);
-
-            m_Fisher = null;
         }
 
 		public Leviathan( Serial serial ) : base( serial )
@@ -157,14 +80,12 @@ namespace Server.Mobiles
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 );
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
 		}		
 	}

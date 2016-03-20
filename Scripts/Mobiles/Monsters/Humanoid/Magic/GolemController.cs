@@ -38,29 +38,8 @@ namespace Server.Mobiles
 
 			Fame = 4000;
 			Karma = -4000;
+		}		
 
-            AddArcane(new Robe());
-            AddArcane(new ThighBoots());
-            AddArcane(new LeatherGloves());
-            AddArcane(new Cloak());
-		}
-		
-		public void AddArcane( Item item )
-		{
-			if ( item is IArcaneEquip )
-			{
-				IArcaneEquip eq = (IArcaneEquip)item;
-				eq.CurArcaneCharges = eq.MaxArcaneCharges = 20;
-			}
-
-			item.Hue = ArcaneGem.DefaultArcaneHue;
-			item.LootType = LootType.Newbied;
-
-			AddItem( item );
-		}
-
-		public override bool ClickTitle{ get{ return false; } }
-		public override bool ShowFameTitle{ get{ return false; } }
 		public override bool AlwaysMurderer{ get{ return true; } }
 
 		public GolemController( Serial serial ) : base( serial ) 

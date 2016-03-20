@@ -4,7 +4,7 @@ using Server.Items;
 
 namespace Server.Mobiles
 {
-	[CorpseName( "a dragon corpse" )]
+	[CorpseName( "a serpentine drago corpse" )]
 	public class SerpentineDragon : BaseCreature
 	{
 		[Constructable]
@@ -38,9 +38,6 @@ namespace Server.Mobiles
 			Karma = 15000;			
 		}
                 
-        public override HideType HideType { get { return HideType.Barbed; } }
-        public override int Hides { get { return 20; } }
-        public override int Meat { get { return 19; } }
         public override int Scales { get { return 6; } }
         public override ScaleType ScaleType { get { return (Utility.RandomBool() ? ScaleType.Black : ScaleType.White); } }
 

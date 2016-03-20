@@ -32,8 +32,6 @@ namespace Server.Mobiles
 
 			Fame = 20000;
 			Karma = -20000;
-
-            PackItem(new Bone(30));
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }	     
@@ -42,16 +40,10 @@ namespace Server.Mobiles
 		{
 		}
 
-    public override void OnDeath( Container c )
-    {     
-      base.OnDeath( c );
-
-      // IPY ACHIEVEMENT TRIGGER 
-      AwardAchievementForKiller(AchievementTriggers.Trigger_DaemonKilled);
-      AwardDailyAchievementForKiller(PvECategory.KillDemons);
-      // END IPY ACHIEVEMENT TRIGGER
-    }
-
+        public override void OnDeath( Container c )
+        {     
+          base.OnDeath( c );
+        }
 
 		public override void Serialize( GenericWriter writer )
 		{

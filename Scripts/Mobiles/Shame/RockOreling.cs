@@ -12,8 +12,7 @@ namespace Server.Mobiles
     public class RockOreling : BaseCreature
     {
         [Constructable]
-        public RockOreling()
-            : base(AIType.AI_Generic, FightMode.Closest, 10, 1, 0.2, 0.4)
+        public RockOreling(): base(AIType.AI_Generic, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "a rock oreling";
             Body = 305;
@@ -36,16 +35,11 @@ namespace Server.Mobiles
 
             Fame = 1500;
             Karma = -1500;
-
-            PackItem(new IronOre(1));
-            PackItem(new FertileDirt(1));
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-            AwardAchievementForKiller(AchievementTriggers.Trigger_EarthElementalKilled);
-            AwardDailyAchievementForKiller(NewbCategory.KillEarthElementals);
         }
 
         public RockOreling(Serial serial): base(serial)

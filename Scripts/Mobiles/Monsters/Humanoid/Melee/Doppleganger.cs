@@ -34,9 +34,6 @@ namespace Server.Mobiles
 			VirtualArmor = 55;
 		}
 		
-		public override int Hides{ get{ return 6; } }
-		public override int Meat{ get{ return 1; } }
-
 		public Doppleganger( Serial serial ) : base( serial )
 		{
 		}

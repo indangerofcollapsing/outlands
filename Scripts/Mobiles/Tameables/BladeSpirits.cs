@@ -12,9 +12,6 @@ namespace Server.Mobiles
         public override bool AlwaysMurderer { get { return true; } }
 		public override bool IsHouseSummonable { get { return true; } }
 
-		public override double DispelDifficulty { get { return 0.0; } }
-		public override double DispelFocus { get { return 20.0; } }
-
 		[Constructable]
 		public BladeSpirits(): base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.3, 0.6 )
 		{

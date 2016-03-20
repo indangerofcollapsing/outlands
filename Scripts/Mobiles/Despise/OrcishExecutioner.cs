@@ -48,8 +48,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.2;
+            UniqueCreatureDifficultyScalar = 1.2;
 
             DictCombatAction[CombatAction.CombatSpecialAction] = 1;
             DictCombatSpecialAction[CombatSpecialAction.ThrowShipBomb] = 1;
@@ -59,44 +58,21 @@ namespace Server.Mobiles
         public override bool CanSwitchWeapons { get { return true; } }
         
         public override void OnDamage(int amount, Mobile from, bool willKill)
-        {
-            if (Global_AllowAbilities)
-            {
-                if (!willKill)
-                {
-                    double hitsPercent = (double)Hits / (double)HitsMax;
-
-                    double minAttackSpeed = 30;
-                    double maxAttackBonus = 80;
-
-                    int finalAttackSpeed = (int)(minAttackSpeed + (maxAttackBonus * (1 - hitsPercent)));
-
-                    AttackSpeed = finalAttackSpeed;
-
-                    if (Utility.RandomDouble() < .5 && !BardPacified)
-                        PublicOverheadMessage(MessageType.Regular, 0, false, "*becomes more enraged*");
-                }
-            }
+        {            
+            if (!willKill)
+            {               
+            }            
 
             base.OnDamage(amount, from, willKill);
         }
         
         public override bool OnBeforeDeath()
         {
-            if (Global_AllowAbilities)
-                AttackSpeed = 30;
-
-            AwardDailyAchievementForKiller(PvECategory.KillOrcishExecutioners);
-
             return base.OnBeforeDeath();
         }
 
         public override void OnDeath(Container c)
         {
-            if (Region is Server.Regions.DungeonRegion && Utility.Random(500) == 0)
-                c.AddItem(TitleDye.VeryRareTitleDye(Server.Custom.PlayerTitleColors.EVeryRareColorTypes.DarkGreyTitleHue));
-                
-            AwardAchievementForKiller(AchievementTriggers.Trigger_OrcKilled);
             base.OnDeath(c);
         }
 
@@ -114,9 +90,6 @@ namespace Server.Mobiles
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (Global_AllowAbilities)
-                AttackSpeed = 30;
         }
     } 
 }

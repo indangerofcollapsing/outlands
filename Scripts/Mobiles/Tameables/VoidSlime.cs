@@ -12,8 +12,9 @@ namespace Server.Mobiles
         public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
 
         public DateTime m_NextVoidAttackAllowed;
+
         public TimeSpan NextPvMVoidAttackDelay = TimeSpan.FromSeconds(3);
-        public TimeSpan NextPvPVoidAttackDelay = TimeSpan.FromSeconds(5);
+        public TimeSpan NextPvPVoidAttackDelay = TimeSpan.FromSeconds(3);
 
 		[Constructable]
 		public VoidSlime() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
@@ -41,25 +42,22 @@ namespace Server.Mobiles
 			Fame = 300;
 			Karma = -300;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 115.1;
         }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8424; } }
         public override int TamedItemHue { get { return Hue; } }
         public override int TamedItemXOffset { get { return 0; } }
         public override int TamedItemYOffset { get { return 5; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 225; } }
         public override int TamedBaseMinDamage { get { return 10; } }
         public override int TamedBaseMaxDamage { get { return 12; } }
         public override double TamedBaseWrestling { get { return 95; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 25; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -80,11 +78,12 @@ namespace Server.Mobiles
             DictCombatRange[CombatRange.Withdraw] = 0;
         }
 
+        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+
         public override void OnThink()
         {
             base.OnThink();
 
-            //Prevent Melee Attacks
             NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(30);
 
             Mobile combatant = Combatant;
@@ -204,21 +203,11 @@ namespace Server.Mobiles
             }
         }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
         public override int GetAttackSound() { return 0x5DA; }
 
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-    		switch( Utility.Random( 1000 ) )
-    		{
-         		case 1: { c.AddItem( new Diamond( ) ); } break;
-         		case 2: { c.AddItem( new Ruby( ) ); } break;
-         		case 3: { c.AddItem( new HealPotion( ) ); } break;
-         		case 4: { c.AddItem( new HealScroll( ) ); } break;         			
-    		}
 		}        
         
         public VoidSlime( Serial serial ) : base( serial )

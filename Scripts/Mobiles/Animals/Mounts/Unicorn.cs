@@ -91,10 +91,6 @@ namespace Server.Mobiles
 		}
 
 		public override Poison PoisonImmune{ get{ return Poison.Lethal; } }
-		public override int Meat{ get{ return 3; } }
-		public override int Hides{ get{ return 10; } }
-		public override HideType HideType{ get{ return HideType.Horned; } }
-		public override FoodType FavoriteFood{ get{ return FoodType.FruitsAndVegies | FoodType.GrainsAndHay; } }
 
 		public Unicorn( Serial serial ) : base( serial )
 		{

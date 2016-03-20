@@ -355,7 +355,7 @@ namespace Server.Misc
                 "in por ylem",
                 "uoac",
                 "uo an corp",
-                "uo an corp",
+                "outlands",
 				"puppz",
 				"abigor",
 			};

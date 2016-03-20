@@ -33,16 +33,6 @@ namespace Server.Mobiles
 			Fame = 1000;
 			Karma = 0;
 
-			VirtualArmor = 4;
-
-			int carrots = Utility.RandomMinMax( 5, 10 );
-			PackItem( new Carrot( carrots ) );
-
-			if ( Utility.Random( 5 ) == 0 )
-				PackItem( new BrightlyColoredEggs() );
-
-			PackStatue();
-
 			DelayBeginTunnel();
 		}
 
@@ -96,11 +86,7 @@ namespace Server.Mobiles
 
 			Timer.DelayCall( TimeSpan.FromSeconds( 5.0 ), new TimerCallback( Delete ) );
 		}
-
-		public override int Meat{ get{ return 1; } }
-		public override int Hides{ get{ return 1; } }
-		public override bool BardImmune{ get{ return !Core.AOS; } }
-
+        
 		public VorpalBunny( Serial serial ) : base( serial )
 		{
 		}

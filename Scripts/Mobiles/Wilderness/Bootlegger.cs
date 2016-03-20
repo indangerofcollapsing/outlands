@@ -108,58 +108,54 @@ namespace Server.Mobiles
 
                 m_NextSpeechAllowed = DateTime.UtcNow + NextSpeechDelay;
             }
-
-            if (Global_AllowAbilities)
+            
+            if (Utility.RandomDouble() < 1 && DateTime.UtcNow > m_NextDrinkAllowed && Combatant == null)
             {
-                if (Utility.RandomDouble() < 1 && DateTime.UtcNow > m_NextDrinkAllowed && Combatant == null)
+                Effects.PlaySound(this.Location, this.Map, Utility.RandomList(0x030, 0x031, 0x050));
+                Animate(34, 5, 1, true, false, 0);
+
+                AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+                NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(2);
+
+                m_NextDrinkAllowed = DateTime.UtcNow + NextDrinkDelay;
+            }
+
+            if (Utility.RandomDouble() < 1 && DateTime.UtcNow > m_NextThrowingBottleAllowed && AIObject.currentCombatRange != CombatRange.Withdraw && AIObject.Action != ActionType.Flee)
+            {
+                Mobile combatant = this.Combatant;
+
+                if (combatant != null)
                 {
-                    Effects.PlaySound(this.Location, this.Map, Utility.RandomList(0x030, 0x031, 0x050));
-                    Animate(34, 5, 1, true, false, 0);
-
-                    AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-                    NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(2);
-
-                    m_NextDrinkAllowed = DateTime.UtcNow + NextDrinkDelay;
-                }
-
-                if (Utility.RandomDouble() < 1 && DateTime.UtcNow > m_NextThrowingBottleAllowed && AIObject.currentCombatRange != CombatRange.Withdraw && AIObject.Action != ActionType.Flee)
-                {
-                    Mobile combatant = this.Combatant;
-
-                    if (combatant != null)
+                    if (combatant.Alive && this.InLOS(combatant) && this.GetDistanceToSqrt(combatant) <= 8)
                     {
-                        if (combatant.Alive && this.InLOS(combatant) && this.GetDistanceToSqrt(combatant) <= 8)
-                        {
-                            int minDamage = 1;
-                            int maxDamage = 2;
+                        int minDamage = 1;
+                        int maxDamage = 2;
 
-                            int itemId = 0;
-                            int itemIdA = 0;
-                            int itemIdB = 0;
-                            int itemHitSound = 0;
+                        int itemId = 0;
+                        int itemIdA = 0;
+                        int itemIdB = 0;
+                        int itemHitSound = 0;
 
-                            minDamage = 6;
-                            maxDamage = 12;
+                        minDamage = 6;
+                        maxDamage = 12;
 
-                            itemId = Utility.RandomList(2459, 2463, 2503);
+                        itemId = Utility.RandomList(2459, 2463, 2503);
 
-                            itemIdA = itemId;
-                            itemIdB = itemId;
+                        itemIdA = itemId;
+                        itemIdB = itemId;
 
-                            itemHitSound = Utility.RandomList(0x38D, 0x38E, 0x38F, 0x390);
+                        itemHitSound = Utility.RandomList(0x38D, 0x38E, 0x38F, 0x390);
 
-                            SpecialAbilities.ThrowObjectAbility(this, combatant, 1.5, 5, .5, minDamage, maxDamage, itemIdA, itemIdB, 0, -1, itemHitSound, .66);
+                        SpecialAbilities.ThrowObjectAbility(this, combatant, 1.5, 5, .5, minDamage, maxDamage, itemIdA, itemIdB, 0, -1, itemHitSound, .66);
 
-                            m_NextThrowingBottleAllowed = DateTime.UtcNow + NextThrowingBottleDelay;
-                        }
+                        m_NextThrowingBottleAllowed = DateTime.UtcNow + NextThrowingBottleDelay;
                     }
                 }
-            }
+            }            
         }
 
         public override bool CanRummageCorpses { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-        public override bool ShowFameTitle { get { return false; } }
 
         public Bootlegger(Serial serial): base(serial)
         {

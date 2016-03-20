@@ -309,7 +309,7 @@ namespace Server.Mobiles
                     pet.IsStabled = true;
                     pet.StabledBy = from;
 
-                    pet.OwnerAbandonTime = DateTime.MaxValue;
+                    pet.OwnerAbandonTime = DateTime.UtcNow + TimeSpan.FromDays(1000);
                     
                     from.Stabled.Add(pet);
 

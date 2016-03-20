@@ -41,30 +41,24 @@ namespace Server.Mobiles
             Fame = 15000;
             Karma = -15000;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 4;
             MinTameSkill = 110.1;
         }
 
-        public override int Meat { get { return 5; } }
-        public override int Hides { get { return 20; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
         public override bool CanFly { get { return true; } }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 9780; } }
         public override int TamedItemHue { get { return 2500; } }
         public override int TamedItemXOffset { get { return 0; } }
         public override int TamedItemYOffset { get { return -10; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 500; } }
         public override int TamedBaseMinDamage { get { return 26; } }
         public override int TamedBaseMaxDamage { get { return 28; } }
         public override double TamedBaseWrestling { get { return 100; } }
         public override double TamedBaseEvalInt { get { return 25; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 50; } }
@@ -117,24 +111,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (!IsBonded)
-            {
-                // IPY ACHIEVEMENT TRIGGER 
-                AwardAchievementForKiller(AchievementTriggers.Trigger_DragonKilled);
-                AwardDailyAchievementForKiller(PvECategory.KillDragons);
-                // END IPY ACHIEVEMENT TRIGGER
-
-                switch (Utility.Random(1000))
-                {
-                    case 0: { c.AddItem(SpellScroll.MakeMaster(new FlamestrikeScroll())); } break;
-                    case 1: { c.AddItem(new BlankScroll()); } break;
-                    case 2: { c.AddItem(new Ruby()); } break;
-                    case 3: { c.AddItem(new BlankScroll()); } break;
-                    case 4: { c.AddItem(BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Destard, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Legs)); } break;
-                    case 5: { c.AddItem(new ReactiveArmorScroll()); } break;
-                }
-            }
         }      
 
         public ChromaticDragon(Serial serial): base(serial)

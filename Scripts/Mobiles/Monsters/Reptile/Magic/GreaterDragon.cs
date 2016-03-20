@@ -40,11 +40,9 @@ namespace Server.Mobiles
             Karma = -15000;         
         }
         
-        public override int Meat { get { return 19; } }
-        public override int Hides { get { return 30; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
         public override int Scales { get { return 7; } }
         public override ScaleType ScaleType { get { return (Body == 12 ? ScaleType.Yellow : ScaleType.Red); } }
+
         public override bool CanFly { get { return true; } }
 
         public override void SetUniqueAI()
@@ -55,22 +53,11 @@ namespace Server.Mobiles
 
         public override void GenerateLoot()
         {
-            AddLoot(LootPack.Gems, 8);
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER
-            AwardAchievementForKiller(AchievementTriggers.Trigger_DragonKilled);
-            AwardDailyAchievementForKiller(PvECategory.KillDragons);
-            // END IPY ACHIEVEMENT TRIGGER
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new FlamestrikeScroll())); } break;
-            }
         }        
 
         public GreaterDragon(Serial serial): base(serial)

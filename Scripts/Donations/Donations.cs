@@ -198,9 +198,6 @@ namespace Server.Custom.Donations
             {
                 new DonationItem("Dragon Lottery Ticket", "Special rare artifacts and in-game items. Gives a small chance of a random prize. <i>Nontransferrable.</i>", 0x14ED, 0, 30, false, typeof(DragonLotteryTicket)),
                 new DonationItem("Pouch With Many Pockets", "Blessed trapped pouch with 10 charges.", 0xE79, 14, 225, false, typeof(PouchWithManyPockets)),
-                new DonationItem("Journeyman Skill Scroll Spyglass", "15 Charges.  Use on a monster to double its chance of dropping a skill scroll. (Up to journeyman level only).", 5365, 0, 35, false, typeof(JourneymanSkillScrollSpyglass)),
-                new DonationItem("Expert Skill Scroll Spyglass", "15 Charges.  Use on a monster to double its chance of dropping a skill scroll. (Up to expert level only).", 5365, 0, 50, false, typeof(ExpertSkillScrollSpyglass)),
-                new DonationItem("Adept Skill Scroll Spyglass", "10 Charges.  Use on a monster to double its chance of dropping a skill scroll. (Up to adept level only).", 5365, 0, 75, false, typeof(AdeptSkillScrollSpyglass)),
                 new DonationItem("An Corp Supporter Fancy Dress", "Show your support for An Corp with this commemorative fancy dress! <i>Blessed</i>", 0x1EFF, 1159, 750, false, typeof(AnCorpSupporterFancyDress)),
                 new DonationItem("An Corp Supporter Fancy Shirt", "Show your support for An Corp with this commemorative fancy shirt! <i>Blessed</i>", 0x1EFD, 1159, 750, false, typeof(AnCorpSupporterFancyShirt)),
                 new DonationItem("An Corp Supporter Shirt", "Show your support for An Corp with this commemorative shirt! <i>Blessed</i>", 0x1517, 1159, 750, false, typeof(AnCorpSupporterShirt)),
@@ -211,11 +208,8 @@ namespace Server.Custom.Donations
             new List<DonationItem>()
             {
                 new DonationItem("Hearth", "A warm, cozy fireplace for your home.", 5360, 0, 485, false, typeof(HearthOfHomeFireDeed)),
-                new DonationItem("Banner", "Display a proud banner in your home.", 5552, 0, 125, false, typeof(BannerDeed)),
                 new DonationItem("Archery Butte", "An archery butte for your home.", 5360, 0, 125, false, typeof(ArcheryButteDeed)),
                 new DonationItem("Sandstone Fountain", "A sandstone fountain addon for your home.", 5360, 0, 350, false, typeof(SandstoneFountainDeed)),
-                new DonationItem("Mining Cart", "A mining cart addon deed.", 6787, 0, 600, false, typeof(MiningCartDeed)),
-                new DonationItem("Tree Stump", "A tree stump addon deed.", 3672, 0, 600, false, typeof(TreeStumpDeed)),
                 new DonationItem("Aquarium Deed (east)", "Show off your collections from the sea with your very own aquarium!", 17159, 0, 750, false, typeof(AquariumEastDeed)),
                 new DonationItem("Aquarium Deed (north)", "Show off your collections from the sea with your very own aquarium!", 17159, 0, 750, false, typeof(AquariumNorthDeed)),
                 new DonationItem("House Bulletin Board (south)", "Leave messages for your friends and guildmates in your home!", 8977, 0, 500, false, typeof(PlayerBBSouth)),

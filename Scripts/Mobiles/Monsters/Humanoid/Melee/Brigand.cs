@@ -77,14 +77,7 @@ namespace Server.Mobiles
 
         public override void OnDeath(Container c)
         {
-            if (Region is Server.Regions.DungeonRegion && Utility.Random(200) == 0)
-                c.AddItem(TitleDye.VeryRareTitleDye(Server.Custom.PlayerTitleColors.EVeryRareColorTypes.DarkGreyTitleHue));
-
-            base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_BrigandKilled);
-            // END IPY ACHIEVEMENT TRIGGER			
+            base.OnDeath(c);			
         }
 
 		public Brigand( Serial serial ) : base( serial )

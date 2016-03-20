@@ -4,8 +4,6 @@ using Server.Network;
 using Server.Mobiles;
 using Server.Targeting;
 using Server.Items;
-using Server.Engines.Quests;
-using Server.Engines.Quests.Necro;
 
 namespace Server.Spells.Necromancy
 {
@@ -153,36 +151,6 @@ namespace Server.Spells.Necromancy
 
 		public void Target( object obj )
 		{
-			MaabusCoffinComponent comp = obj as MaabusCoffinComponent;
-
-			if ( comp != null )
-			{
-				MaabusCoffin addon = comp.Addon as MaabusCoffin;
-
-				if ( addon != null )
-				{
-					PlayerMobile pm = Caster as PlayerMobile;
-
-					if ( pm != null )
-					{
-						QuestSystem qs = pm.Quest;
-
-						if ( qs is DarkTidesQuest )
-						{
-							QuestObjective objective = qs.FindObjective( typeof( AnimateMaabusCorpseObjective ) );
-
-							if ( objective != null && !objective.Completed )
-							{
-								addon.Awake( Caster );
-								objective.Complete();
-							}
-						}
-					}
-
-					return;
-				}
-			}
-
 			Corpse c = obj as Corpse;
 
 			if( c == null )
@@ -357,7 +325,7 @@ namespace Server.Spells.Necromancy
 				BaseCreature bc = (BaseCreature)summoned;
 
 				// to be sure
-				bc.Tamable = false;
+				bc.Tameable = false;
 
 				if ( bc is BaseMount )
 					bc.ControlSlots = 1;

@@ -16,6 +16,7 @@ namespace Server.Mobiles
 		{
 			Name = NameList.RandomName( "lizardman" );
 			Body = Utility.RandomList( 35, 36 );
+
 			BaseSoundID = 417;
 
             SetStr(50);
@@ -38,18 +39,10 @@ namespace Server.Mobiles
 		}
 
         public override bool CanRummageCorpses { get { return true; } }
-        public override int Meat { get { return 1; } }
-        public override int Hides { get { return 12; } }
-        public override HideType HideType { get { return HideType.Spined; } }
 
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-			switch( Utility.Random( 1000 ) )
-    		{
-         		case 0: { var statue = new MonsterStatuette(MonsterStatuetteType.Lizardman); statue.Hue = 2101; statue.Name = "Silver Lizardman"; c.AddItem(statue); } break;
-    		}
 		}
 
 		public Lizardman( Serial serial ) : base( serial )

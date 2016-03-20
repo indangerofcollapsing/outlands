@@ -8,8 +8,6 @@ namespace Server.Mobiles
     [CorpseName("a dog corpse")]
     public class Dog : BaseCreature
     {
-        public override bool DropsGold { get { return false; } }
-        public override double MaxSkillScrollWorth { get { return 0.0; } }
         [Constructable]
         public Dog(): base(AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4)
         {
@@ -36,25 +34,22 @@ namespace Server.Mobiles
             Fame = 250;
             Karma = 0;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 25;
         }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8476; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }
         public override int TamedItemYOffset { get { return 15; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 50; } }
         public override int TamedBaseMinDamage { get { return 4; } }
         public override int TamedBaseMaxDamage { get { return 6; } }
         public override double TamedBaseWrestling { get { return 50; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -66,21 +61,12 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public override int Meat { get { return 1; } }
-        public override FoodType FavoriteFood { get { return FoodType.Meat; } }
-        public override PackInstinct PackInstinct { get { return PackInstinct.Canine; } }
-
-        public Dog(Serial serial)
-            : base(serial)
+        public Dog(Serial serial): base(serial)
         {
         }
 
         public override void OnDeath(Container c)
         {
-            if (this.ControlMaster != null)
-                AwardAchievementForKiller(AchievementTriggers.Trigger_KillTamedRabbDogCatBird);
-            else
-                AwardAchievementForKiller(AchievementTriggers.Trigger_KillRabbitDogCat);
             base.OnDeath(c);
         }
 

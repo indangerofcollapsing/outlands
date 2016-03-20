@@ -35,36 +35,16 @@ namespace Server.Mobiles
 
 			Fame = 2500;
 			Karma = -2500;
-
-            if (Utility.RandomMinMax(1, 4) == 1)
-            {
-                switch (Utility.RandomMinMax(1, 5))
-                {
-                    case 1: PackItem(new BoneHelm()); break;
-                    case 2: PackItem(new BoneChest()); break;
-                    case 3: PackItem(new BoneArms()); break;
-                    case 4: PackItem(new BoneLegs()); break;
-                    case 5: PackItem(new BoneGloves()); break;
-                }
-            }
-
-			PackItem( Loot.RandomWeapon() );
-            PackItem(new Bone(3));
 		}
 
 		public override bool OnBeforeDeath()
-		{
-            PackItem( new Bone() );			
-
+		{	
 			return base.OnBeforeDeath();
 		}
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new Bonemeal());
         }
 		
 		public Ghoul( Serial serial ) : base( serial )

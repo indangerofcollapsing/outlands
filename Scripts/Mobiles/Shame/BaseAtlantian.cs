@@ -86,15 +86,9 @@ namespace Server.Mobiles
 
         public override bool CanRummageCorpses { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-        public override bool ShowFameTitle { get { return false; } }
 
         public override bool OnBeforeDeath()
         { 
-            if (this is AtlanteanBattleMage)
-                AddItem(new Skirt(438));
-            else
-                AddItem(new Skirt(902));
-
             return base.OnBeforeDeath();
         }
 

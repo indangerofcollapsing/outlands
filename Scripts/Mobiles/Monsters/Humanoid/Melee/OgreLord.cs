@@ -15,9 +15,6 @@ namespace Server.Mobiles
 	[CorpseName( "an ogre lords corpse" )]
 	public class OgreLord : BaseCreature
 	{
-		public override Faction FactionAllegiance { get { return Minax.Instance; } }
-		public override Ethics.Ethic EthicAllegiance { get { return Ethics.Ethic.Evil; } }
-
 		[Constructable]
 		public OgreLord () : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -42,30 +39,17 @@ namespace Server.Mobiles
 
             Fame = 15000;
             Karma = -15000;
-
-            PackItem(new Club());
 		}
 
         public override bool CanRummageCorpses { get { return true; } }
-        public override int Meat { get { return 2; } }
 
 		public override void OnDeath( Container c )
 		{
     		base.OnDeath( c );
-
-			AwardDailyAchievementForKiller(PvECategory.KillOgreLords);
-
-    		switch( Utility.Random( 1000 ) )
-    		{
-         		case 0: { c.AddItem( SpellScroll.MakeMaster( new EarthquakeScroll() ) ); } break;
-    		}
 		}
 
 		public override bool OnBeforeDeath()
 		{
-			PackItem( new Club() );
-			PackItem( new Arrow( 10 ) );
-
 			return base.OnBeforeDeath();
 		}
 		

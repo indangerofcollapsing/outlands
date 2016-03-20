@@ -40,9 +40,6 @@ namespace Server.Mobiles
 
 			Fame = 8000;
 			Karma = -8000;
-
-			PackItem( new GnarledStaff() );
-            PackItem(new Bone(10));
 		}
         
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
@@ -51,10 +48,6 @@ namespace Server.Mobiles
 		public override void OnDeath(Container c)
 		{
 			base.OnDeath(c);
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_LichKilled);
-			// END IPY ACHIEVEMENT TRIGGER
 		}
 
 		public Lich( Serial serial ) : base( serial )

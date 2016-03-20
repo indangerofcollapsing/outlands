@@ -7,7 +7,7 @@ using Server.Network;
 
 namespace Server.Mobiles 
 { 	
-	[CorpseName( "a sanguine knight corpse" )] 
+	[CorpseName( "a sanguin knight corpse" )] 
 	public class SanguinKnight : BaseSanguin 
 	{ 
 		[Constructable] 
@@ -15,7 +15,7 @@ namespace Server.Mobiles
 		{
             Body = 0x190;
             
-            Name = "a sanguine knight"; 
+            Name = "a sanguin knight"; 
 
 			SetStr( 100 );
 			SetDex( 50 );

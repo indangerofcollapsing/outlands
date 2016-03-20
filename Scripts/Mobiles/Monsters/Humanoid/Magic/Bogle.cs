@@ -40,8 +40,6 @@ namespace Server.Mobiles
 
 			Fame = 4000;
 			Karma = -4000;		
-      	
-            PackItem(new Bone(4));
 		}			
 
 		public Bogle( Serial serial ) : base( serial )

@@ -13,12 +13,6 @@ namespace Server.Mobiles
 	[CorpseName( "a daemon corpse" )]
 	public class Daemon : BaseCreature
 	{
-		public override double DispelDifficulty{ get{ return 125.0; } }
-		public override double DispelFocus{ get{ return 45.0; } }
-
-		public override Faction FactionAllegiance { get { return Shadowlords.Instance; } }
-		public override Ethics.Ethic EthicAllegiance { get { return Ethics.Ethic.Evil; } }
-
 		[Constructable]
 		public Daemon () : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -55,20 +49,9 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
 			base.OnDeath( c );
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_DaemonKilled);
-			AwardDailyAchievementForKiller(PvECategory.KillDemons);
-			// END IPY ACHIEVEMENT TRIGGER
-
-          switch( Utility.Random( 500 ) )
-          {
-            case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonDaemonScroll())); } break;
-          }
 		}
 		
-		public override bool CanRummageCorpses{ get{ return true; } }		
-		public override int Meat{ get{ return 1; } }
+		public override bool CanRummageCorpses{ get{ return true; } }
 		public override bool CanFly { get { return true; } }
 
 		public Daemon( Serial serial ) : base( serial )

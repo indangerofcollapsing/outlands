@@ -43,13 +43,6 @@ namespace Server.Mobiles
 
             Fame = 3000;
             Karma = -3000;
-			
-			switch ( Utility.Random( 3 ))
-			{
-				case 0: PackItem( new LeftArm() ); break;
-				case 1: PackItem( new RightArm() ); break;
-				case 2: PackItem( new Torso() ); break;
-			}
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }

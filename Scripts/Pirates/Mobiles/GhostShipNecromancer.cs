@@ -97,42 +97,39 @@ namespace Server.Custom.Pirates
         public override void OnThink()
         {
             base.OnThink();
-
-            if (Global_AllowAbilities)
+            
+            if (DateTime.UtcNow > m_NextPotionThrowAllowed && AIObject.currentCombatRange != CombatRange.Withdraw && AIObject.Action != ActionType.Flee)
             {
-                if (DateTime.UtcNow > m_NextPotionThrowAllowed && AIObject.currentCombatRange != CombatRange.Withdraw && AIObject.Action != ActionType.Flee)
+                if (Spell != null)
+                    return;
+
+                Mobile combatant = this.Combatant;
+
+                if (combatant != null && !BardPacified)
                 {
-                    if (Spell != null)
-                        return;
+                    BaseBoat thisBoat = BaseBoat.FindBoatAt(Location, Map);
+                    BaseBoat combatantBoat = BaseBoat.FindBoatAt(combatant.Location, combatant.Map);
 
-                    Mobile combatant = this.Combatant;
-
-                    if (combatant != null && !BardPacified)
+                    //Target isn't on a boat or is on a different boat than this one
+                    if (combatantBoat == null || (thisBoat != null && combatantBoat != null && thisBoat != combatantBoat))
                     {
-                        BaseBoat thisBoat = BaseBoat.FindBoatAt(Location, Map);
-                        BaseBoat combatantBoat = BaseBoat.FindBoatAt(combatant.Location, combatant.Map);
-
-                        //Target isn't on a boat or is on a different boat than this one
-                        if (combatantBoat == null || (thisBoat != null && combatantBoat != null && thisBoat != combatantBoat))
+                        if (combatant.Alive && this.InLOS(combatant) && this.GetDistanceToSqrt(combatant) <= 10)
                         {
-                            if (combatant.Alive && this.InLOS(combatant) && this.GetDistanceToSqrt(combatant) <= 10)
+                            int potionType = Utility.RandomMinMax(1, 4);
+
+                            switch (potionType)
                             {
-                                int potionType = Utility.RandomMinMax(1, 4);
-
-                                switch (potionType)
-                                {
-                                    case 1: SpecialAbilities.ThrowPotionAbility(this, combatant, 1.5, 1.5, PotionAbilityEffectType.Explosion, 1, 10, 15, 1, 0, true, true); break;
-                                    case 2: SpecialAbilities.ThrowPotionAbility(this, combatant, 1.5, 1.5, PotionAbilityEffectType.Poison, 1, 8, 12, Utility.RandomMinMax(1, 2), 1, true, true); break;
-                                    case 3: SpecialAbilities.ThrowPotionAbility(this, combatant, 1.5, 1.5, PotionAbilityEffectType.Frost, 1, 8, 12, .2, 10, true, true); break;
-                                    case 4: SpecialAbilities.ThrowPotionAbility(this, combatant, 1.5, 1.5, PotionAbilityEffectType.Shrapnel, 1, 8, 12, 10, 0, true, true); break;
-                                }
-
-                                m_NextPotionThrowAllowed = DateTime.UtcNow + NextPotionThrowDelay;
+                                case 1: SpecialAbilities.ThrowPotionAbility(this, combatant, 1.5, 1.5, PotionAbilityEffectType.Explosion, 1, 10, 15, 1, 0, true, true); break;
+                                case 2: SpecialAbilities.ThrowPotionAbility(this, combatant, 1.5, 1.5, PotionAbilityEffectType.Poison, 1, 8, 12, Utility.RandomMinMax(1, 2), 1, true, true); break;
+                                case 3: SpecialAbilities.ThrowPotionAbility(this, combatant, 1.5, 1.5, PotionAbilityEffectType.Frost, 1, 8, 12, .2, 10, true, true); break;
+                                case 4: SpecialAbilities.ThrowPotionAbility(this, combatant, 1.5, 1.5, PotionAbilityEffectType.Shrapnel, 1, 8, 12, 10, 0, true, true); break;
                             }
+
+                            m_NextPotionThrowAllowed = DateTime.UtcNow + NextPotionThrowDelay;
                         }
                     }
                 }
-            }
+            }            
         }
 
         public GhostShipNecromancer(Serial serial): base(serial)

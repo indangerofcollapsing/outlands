@@ -41,8 +41,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.2;
+            UniqueCreatureDifficultyScalar = 1.2;
         }
 
         public override void OnGaveMeleeAttack(Mobile defender)
@@ -52,10 +51,7 @@ namespace Server.Mobiles
             SpecialAbilities.BleedSpecialAbility(.3, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!");
         }
 
-        public override int Meat { get { return 3; } }
-
-        public Devourer(Serial serial)
-            : base(serial)
+        public Devourer(Serial serial): base(serial)
         {
         }
 

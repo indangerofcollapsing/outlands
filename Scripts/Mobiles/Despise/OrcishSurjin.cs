@@ -58,18 +58,12 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            AwardDailyAchievementForKiller(PvECategory.KillOrcishSurijins);
-
             return base.OnBeforeDeath();
         }
         
         public override void OnDeath( Container c )
         {           
             base.OnDeath( c );
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_OrcKilled);
-            // END IPY ACHIEVEMENT TRIGGER
         }
 
         public OrcishSurjin(Serial serial): base(serial)

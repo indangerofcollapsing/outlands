@@ -31,9 +31,7 @@ namespace Server.Mobiles
 			Fame = 7500;
 			Karma = -7500;
 		}
-
-        public override int Meat { get { return 4; } }
-		
+        		
 		public Moloch( Serial serial ) : base( serial )
 		{
 		}

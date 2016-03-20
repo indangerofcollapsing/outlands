@@ -148,7 +148,7 @@ namespace Server.Items
 				if ( bc.IsParagon )
 					return false;
 
-				if ( bc.Tamable )
+				if ( bc.Tameable )
 					return true;
 
 				Map map = bc.Map;

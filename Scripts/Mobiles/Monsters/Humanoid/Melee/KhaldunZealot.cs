@@ -69,11 +69,7 @@ namespace Server.Mobiles
 			AddItem( new Boots() );
 		}
                 
-        public override bool Unprovokable { get { return true; } }
-
         public override bool AlwaysMurderer { get { return true; } }
-        public override bool ClickTitle { get { return false; } }
-        public override bool ShowFameTitle { get { return false; } }
 
 		public override int GetIdleSound()
 		{
@@ -97,36 +93,7 @@ namespace Server.Mobiles
 
 		public KhaldunZealot( Serial serial ) : base( serial )
 		{
-		}
-
-		public override bool OnBeforeDeath()
-		{
-			BoneKnight rm = new BoneKnight();
-			rm.Team = this.Team;
-			rm.Combatant = this.Combatant;
-			rm.NoKillAwards = true;
-
-			if ( rm.Backpack == null )
-			{
-				Backpack pack = new Backpack();
-				pack.Movable = false;
-				rm.AddItem( pack );
-			}
-
-			for ( int i = 0; i < 2; i++ )
-			{
-				LootPack.FilthyRich.Generate( this, rm.Backpack, true );
-				LootPack.FilthyRich.Generate( this, rm.Backpack, false );
-			}
-
-			Effects.PlaySound(this, Map, GetDeathSound());
-			Effects.SendLocationEffect( Location, Map, 0x3709, 30, 10, 0x835, 0 );
-			rm.MoveToWorld( Location, Map );
-
-			Delete();
-
-			return false;
-		}
+		}		
 
 		public override void Serialize( GenericWriter writer )
 		{

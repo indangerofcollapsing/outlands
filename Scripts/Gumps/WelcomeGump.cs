@@ -35,7 +35,7 @@ namespace Server.Gumps
 			string s = "";
          
             AddItem( 20, 25, 7774 );
-			AddLabel(115, 20, 53, @"Welcome to UO An Corp!");
+			AddLabel(115, 20, 53, @"Welcome to UO Outlands!");
 			AddButton(13, 105, 0x845, 0x846, 1, GumpButtonType.Reply, 0);
 			AddLabel(35, 103, 1153, @"Rules");
 			AddButton(13, 130, 0x845, 0x846, 2, GumpButtonType.Reply, 0);

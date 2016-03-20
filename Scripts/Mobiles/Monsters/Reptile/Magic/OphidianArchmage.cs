@@ -4,20 +4,13 @@ using Server.Items;
 
 namespace Server.Mobiles
 {
-	[CorpseName( "an ophidian corpse" )]
-	[TypeAlias( "Server.Mobiles.OphidianJusticar", "Server.Mobiles.OphidianZealot" )]
+	[CorpseName( "an ophidian archmage corpse" )]
 	public class OphidianArchmage : BaseCreature
 	{
-		private static string[] m_Names = new string[]
-			{
-				"an ophidian justicar",
-				"an ophidian zealot"
-			};
-
 		[Constructable]
 		public OphidianArchmage() : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
-			Name = m_Names[Utility.Random( m_Names.Length )];
+            Name = "an ophidian archmage";
 			Body = 85;
 			BaseSoundID = 639;
             Hue = 2008;
@@ -48,9 +41,7 @@ namespace Server.Mobiles
 
         public override Poison HitPoison { get { return Poison.Deadly; } }
         public override Poison PoisonImmune { get { return Poison.Deadly; } }
-
-        public override int Meat { get { return 1; } }
-
+        
 		public OphidianArchmage( Serial serial ) : base( serial )
 		{
 		}

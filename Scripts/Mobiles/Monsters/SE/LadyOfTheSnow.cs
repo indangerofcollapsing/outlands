@@ -55,12 +55,8 @@ namespace Server.Mobiles
 		{
 			return 0x370;
 		}
-		
-		public override bool BleedImmune { get { return true; } }
-		public override bool CanRummageCorpses { get { return true; } }
-		//public override int TreasureMapLevel { get { return 4; } }
 
-		// TODO: Snowball
+		public override bool CanRummageCorpses { get { return true; } }
 
 		public override void OnGaveMeleeAttack( Mobile defender )
 		{

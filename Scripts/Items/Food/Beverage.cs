@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using Server.Engines.Plants;
-using Server.Engines.Quests;
-using Server.Engines.Quests.Hag;
-using Server.Engines.Quests.Matriarch;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
@@ -851,29 +848,7 @@ namespace Server.Items
                 PlayerMobile player = from as PlayerMobile;
 
                 if (player != null)
-                {
-                    QuestSystem qs = player.Quest;
-
-                    if (qs is WitchApprenticeQuest)
-                    {
-                        FindIngredientObjective obj = qs.FindObjective(typeof(FindIngredientObjective)) as FindIngredientObjective;
-
-                        if (obj != null && !obj.Completed && obj.Ingredient == Ingredient.SwampWater)
-                        {
-                            bool contains = false;
-
-                            for (int i = 0; !contains && i < m_SwampTiles.Length; i += 2)
-                                contains = (tileID >= m_SwampTiles[i] && tileID <= m_SwampTiles[i + 1]);
-
-                            if (contains)
-                            {
-                                Delete();
-
-                                player.SendLocalizedMessage(1055035); // You dip the container into the disgusting swamp water, collecting enough for the Hag's vile stew.
-                                obj.Complete();
-                            }
-                        }
-                    }
+                {                    
                 }
             }
 		}
@@ -1243,39 +1218,7 @@ namespace Server.Items
 			else if ( targ is AddonComponent && ( ((AddonComponent)targ).Addon is WaterVatEast || ((AddonComponent)targ).Addon is WaterVatSouth ) &&
 				this.Content == BeverageType.Water )
 			{
-				PlayerMobile player = from as PlayerMobile;
-
-				if ( player != null )
-				{
-					SolenMatriarchQuest qs = player.Quest as SolenMatriarchQuest;
-
-					if ( qs != null )
-					{
-						QuestObjective obj = qs.FindObjective( typeof( GatherWaterObjective ) );
-
-						if ( obj != null && !obj.Completed )
-						{
-							BaseAddon vat = ((AddonComponent)targ).Addon;
-
-							if ( vat.X > 5784 && vat.X < 5814 && vat.Y > 1903 && vat.Y < 1934 &&
-								( (qs.RedSolen && vat.Map == Map.Trammel) || (!qs.RedSolen && vat.Map == Map.Felucca) ) )
-							{
-								if ( obj.CurProgress + Quantity > obj.MaxProgress )
-								{
-									int delta = obj.MaxProgress - obj.CurProgress;
-
-									Quantity -= delta;
-									obj.CurProgress = obj.MaxProgress;
-								}
-								else
-								{
-									obj.CurProgress += Quantity;
-									Quantity = 0;
-								}
-							}
-						}
-					}
-				}
+				PlayerMobile player = from as PlayerMobile;				
 			}
 
 			else

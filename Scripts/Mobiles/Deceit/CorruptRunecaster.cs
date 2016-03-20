@@ -55,8 +55,6 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            AwardDailyAchievementForKiller(PvECategory.KillCorruptRunecasters);
-
             return base.OnBeforeDeath();
         }
 

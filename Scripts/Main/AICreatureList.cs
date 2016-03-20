@@ -110,16 +110,9 @@ namespace Server
                 typeof( MinotaurCaptain ),
                 typeof( GreaterSlime ),
                 typeof( PoisonousSlime ),
-                typeof( Slime2 ),
-                typeof( Slime3 ),
-                typeof( Slime4 ),
-                typeof( Slime5 ),
-                typeof( Slime6 ),
-                typeof( Slime7 ),
-                typeof( Slime8 ),
                 typeof( CorrosiveSlime ),
                 typeof( CorruptedSoul ),
-                typeof( FerelTreefellow ),
+                typeof( FeralTreefellow ),
                 typeof( PestilentBandage ),
                 typeof( TormentedMinotaur ),
                 typeof( Troglodyte ),
@@ -127,13 +120,11 @@ namespace Server
                 typeof( BlackOrc ),
                 typeof( GreaterMongbat ),
                 typeof( SlimeTroll ),
-                typeof( SpawnedOrcishLord ),
                 typeof( AncientSlime ),
                 typeof( VoidSlime ),
                 typeof( EnergyLlama ),
                 typeof( HarrowerTentacles ),
                 typeof( CapturedHordeMinion ),
-                typeof( CharredProtector ),
                 typeof( AntLion ),
                 typeof( ArcticOgreLord ),
                 typeof( BogThing ),
@@ -253,7 +244,6 @@ namespace Server
                 typeof( Sphinx ),
                 typeof( MysterySphinx ),
                 typeof( WyvernHatchling ),
-                typeof( PoisonArrowFrog ),
                 typeof( Umberhulk ),
                 typeof( Myconid ),
                 typeof( MyconidTallstalk ),
@@ -278,7 +268,6 @@ namespace Server
                 typeof( Turkey ),
                 typeof( CrystalElemental ),
                 typeof( Phoenix ),
-                typeof( WhiteDrake ),
                 typeof( OrcishExecutioner ),
                 typeof( HookHorror ),
                 typeof( DemonwebQueen),
@@ -296,10 +285,6 @@ namespace Server
                 typeof( ArborealMyconid ),
                 typeof( Ent ),
                 typeof( OtherworldlyDenizon ),
-                typeof( HalloweenVampire ),
-                typeof( HalloweenWerewolf ),
-                typeof( HalloweenPoltergeist),
-                typeof( HalloweenPossessedPumpkin),
                 typeof( DeDOSBotNetZombie),
                 typeof( DeDOSBot),
                 typeof( DeDOSLargeBot),
@@ -328,7 +313,6 @@ namespace Server
                 typeof( DreadSpider ),
                 typeof( Efreet ),
                 typeof( Dragon ),
-                typeof( BloodBoiler ),
                 typeof( GrayTroll ),
                 typeof( MongbatLord ),
                 typeof( DragonWhelp ),
@@ -361,8 +345,6 @@ namespace Server
                 typeof( KazeKemono ),
                 typeof( YomotsuPriest ),
                 typeof( Oni ),
-                typeof( CoreHound ),
-                typeof( LavaSurger ),
                 typeof( FetidEssence ),
                 typeof( LadyOfTheSnow ),
                 typeof( BloodTroll ),
@@ -387,7 +369,6 @@ namespace Server
             new AICreatureList(AIGroup.EvilMonster, AISubgroup.MeleeMage4, new Type[]
             {               
                 typeof( GreaterDragon ),
-                typeof( ModAncientWyrm ),
                 typeof( FireGargoyle ),
                 typeof( SerpentineDragon ),
                 typeof( TerathanMatriarch ),
@@ -433,8 +414,7 @@ namespace Server
             new AICreatureList(AIGroup.EvilMonster, AISubgroup.Mage1, new Type[]
             {
                 typeof( Gauth ),
-                 typeof( Imp ),
-                 typeof( Familiar ),
+                typeof( Imp ),
             } ) ,
 
             new AICreatureList(AIGroup.EvilMonster, AISubgroup.Mage2, new Type[]
@@ -570,7 +550,6 @@ namespace Server
                 typeof( IceSnake ),
                 typeof( Snake ),
                 typeof( LavaSerpent ),
-                typeof( CrimsonRecluse ),
                 typeof( LavaSnake ),
                 typeof( Scorpion ),
                 typeof( ChromaticCrawler ),
@@ -609,7 +588,6 @@ namespace Server
                 typeof( HellCat ),
                 typeof( Alligator ),
                 typeof( Bullvore ),
-                typeof( WhiteStag ),
                 typeof( BayingHound ),
                 typeof( Salamander ),
                 typeof( SwampCrawler ),
@@ -618,7 +596,6 @@ namespace Server
                 typeof( WhiteWolf ),
                 typeof( Deepstalker ),
                 typeof( Bloodcat ),
-                typeof( RavenousOstard ),
                 typeof( Sabertusk ),
             } ),
 
@@ -629,7 +606,6 @@ namespace Server
 
             new AICreatureList( AIGroup.NeutralAnimal, AISubgroup.None, new Type[]
             {
-                typeof( ArmoredPackBear ),
                 typeof( UnholyFamiliar ),
                 typeof( UnholySteed ),
                 typeof( HolySteed ),
@@ -741,16 +717,6 @@ namespace Server
 
             new AICreatureList( AIGroup.NeutralHuman, AISubgroup.None, new Type[]
             {
-                typeof( Dummy ),
-                typeof( DummyMace ),
-                typeof( DummyFence ),
-                typeof( DummySword ),
-                typeof( DummyNox ),
-                typeof( DummyStun ),
-                typeof( DummySuper ),
-                typeof( DummyHealer ),
-                typeof( DummyAssassin ),
-                typeof( DummyTheif ),
                 typeof( BaseEscortable ),
                 typeof( TalkingBaseEscortable ),
                 typeof( SeekerOfAdventure ),
@@ -909,7 +875,6 @@ namespace Server
                 typeof( KhaldunLichKaltivel ),
                 typeof( KhaldunLichBaratoz ),
                 typeof( KhaldunLichMaliel ),
-                typeof( HalloweenFlamingSkull)
             } ) ,
 
             new AICreatureList(AIGroup.Undead, AISubgroup.GroupHealerMeleeMage4, new Type[]
@@ -959,9 +924,6 @@ namespace Server
             {
                 typeof( ShadowWisp ),
                 typeof( Wisp ),
-                typeof( ThunderBird ),
-                typeof( EnergyCluster ),
-
                 typeof( Custom.HenchmanBoneMagi ),
                 typeof( Custom.HenchmanLich ),
                 typeof( Custom.HenchmanMummy ),
@@ -999,7 +961,6 @@ namespace Server
 
             new AICreatureList( AIGroup.FactionHuman, AISubgroup.MeleeMage4, new Type[]
             {
-                typeof( HalloweenMummy )
             } ) ,
 
             new AICreatureList( AIGroup.FactionHuman, AISubgroup.MeleeMage5, new Type[]

@@ -44,7 +44,7 @@ namespace Server.Mobiles
 
 			VirtualArmor = 60;
 
-			Tamable = false;
+			Tameable = false;
 			ControlSlots = 1;
 		}
 
@@ -53,8 +53,6 @@ namespace Server.Mobiles
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
-
-		public override FoodType FavoriteFood { get { return FoodType.FruitsAndVegies | FoodType.GrainsAndHay; } }
 
 		public UnholySteed( Serial serial )
 			: base( serial )

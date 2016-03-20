@@ -43,22 +43,9 @@ namespace Server.Mobiles
 			Karma = -18000;
 			VirtualArmor = 65;
 
-			PackItem( new PowerCrystal() );
-			PackItem( new ArcaneGem() );
-			PackItem( new ClockworkAssembly() );
-
-			switch( Utility.Random( 3 ) )
-			{
-				case 0: PackItem( new PowerCrystal() ); break;
-				case 1: PackItem( new ArcaneGem() ); break;
-				case 2: PackItem( new ClockworkAssembly() ); break;
-			}
-
 			m_FieldActive = CanUseField;
 		}
 
-		public override bool AutoDispel{ get{ return true; } }
-		public override bool BardImmune{ get{ return !Core.AOS; } }
 		public override Poison PoisonImmune{ get{ return Poison.Lethal; } }
 
 		public override int GetIdleSound()

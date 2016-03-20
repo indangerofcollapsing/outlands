@@ -58,9 +58,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            AwardDailyAchievementForKiller(PvECategory.KillElderMojokas);
-            AwardAchievementForKiller(AchievementTriggers.Trigger_OrcKilled);
         }
 
         public ElderMojoka(Serial serial): base(serial)

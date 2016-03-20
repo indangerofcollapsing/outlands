@@ -44,29 +44,15 @@ namespace Server.Mobiles
 			Fame = 10500;
 			Karma = -10500;
 
-			PackReg( 23 );
-			
-            //Rare Sandals
-			Item sandals = new Sandals();
-
-			if (Utility.Random(25) == 0)
-				sandals.Hue = Utility.RandomMetalHue();
-
-			AddItem(sandals);
+            AddItem(new Sandals());
 		}
 
         public override bool CanRummageCorpses { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-        public override int Meat { get { return 1; } }
 
 		public override void OnDeath( Container c )
 		{
 			base.OnDeath(c);
-
-			switch (Utility.Random(750))
-			{
-				case 0: { c.AddItem(new SummonDaemonScroll()); } break;
-			}
 		}
 
 		public EvilMageLord( Serial serial ) : base( serial ) 

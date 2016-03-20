@@ -50,17 +50,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{
 			base.OnDeath(c);
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_BalronKilled);
-			AwardDailyAchievementForKiller(PvECategory.KillBalrons);
-			// END IPY ACHIEVEMENT TRIGGER
-
-    		switch( Utility.Random( 500 ) )
-			{
-				case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonDaemonScroll())); } break;
-				case 1: { c.AddItem(SpellScroll.MakeMaster(new EarthquakeScroll())); } break;
-			}
 		}
 
 		public Balron( Serial serial ) : base( serial )

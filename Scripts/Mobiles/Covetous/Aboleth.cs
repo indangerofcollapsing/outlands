@@ -51,8 +51,7 @@ namespace Server.Mobiles
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.CauseWounds] = 1;
 
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.05;
+            UniqueCreatureDifficultyScalar = 1.05;
         }
 
         public override int GetAngerSound(){return 0x594;}

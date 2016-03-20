@@ -36,36 +36,10 @@ namespace Server.Mobiles
 
 			Fame = 3000;
 			Karma = -3000;
-
-            PackItem(new Bone(12));
-
-			switch ( Utility.Random( 6 ) )
-			{
-				case 0: PackItem( new PlateArms() ); break;
-				case 1: PackItem( new PlateChest() ); break;
-				case 2: PackItem( new PlateGloves() ); break;
-				case 3: PackItem( new PlateGorget() ); break;
-				case 4: PackItem( new PlateLegs() ); break;
-				case 5: PackItem( new PlateHelm() ); break;
-			}
 		}
 
 		public override bool OnBeforeDeath()
 		{
-            switch (Utility.Random(500))
-            {
-                case 0: PackItem(new DaemonArms()); break;
-                case 1: PackItem(new DaemonChest()); break;
-                case 2: PackItem(new DaemonGloves()); break;
-                case 3: PackItem(new DaemonHelm()); break;
-                case 4: PackItem(new DaemonLegs()); break;
-            }
-
-            AwardDailyAchievementForKiller(PvECategory.KillBoneKnights);
-            
-			PackItem( new Scimitar() );			
-			PackItem( new WoodenShield() );
-
 			return base.OnBeforeDeath();
 		}
 		

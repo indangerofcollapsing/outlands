@@ -42,25 +42,22 @@ namespace Server.Mobiles
             Fame = 2000;
             Karma = -2000;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 2;
             MinTameSkill = 110.1;
         }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 9743; } }
         public override int TamedItemHue { get { return 1359; } }
         public override int TamedItemXOffset { get { return -10; } }
         public override int TamedItemYOffset { get { return 5; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 300; } }
         public override int TamedBaseMinDamage { get { return 14; } }
         public override int TamedBaseMaxDamage { get { return 16; } }
         public override double TamedBaseWrestling { get { return 95; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 25; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -80,7 +77,6 @@ namespace Server.Mobiles
 
         public override int Meat { get { return 1; } }
 
-        public override int Hides { get { return 12; } }
         public override HideType HideType { get { return HideType.Spined; } }
 
         public override bool RevealImmune { get { return !Controlled; } }
@@ -155,60 +151,57 @@ namespace Server.Mobiles
         public override void OnThink()
         {
             base.OnThink();
+            
+            if (Controlled && ControlMaster is PlayerMobile)
+                return;
 
-            if (Global_AllowAbilities)
+            double hitsPercent = (double)Hits / (double)HitsMax;
+
+            if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed && hitsPercent < .50)
             {
-                if (Controlled && ControlMaster is PlayerMobile)
-                    return;
-
-                double hitsPercent = (double)Hits / (double)HitsMax;
-
-                if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed && hitsPercent < .50)
+                if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
                 {
-                    if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
+                    Point3D originalLocation = Location;
+
+                    if (SpecialAbilities.VanishAbility(this, 5.0, false, 0x21D, 5, 10, true, null))
                     {
-                        Point3D originalLocation = Location;
-
-                        if (SpecialAbilities.VanishAbility(this, 5.0, false, 0x21D, 5, 10, true, null))
+                        for (int a = 0; a < 3; a++)
                         {
-                            for (int a = 0; a < 3; a++)
+                            if (Utility.RandomDouble() <= .50)
                             {
-                                if (Utility.RandomDouble() <= .50)
-                                {
-                                    //Rocks
-                                    Blood rocks = new Blood();
-                                    rocks.Name = "rocks";
-                                    rocks.ItemID = Utility.RandomList(4967, 4970, 4973);
+                                //Rocks
+                                Blood rocks = new Blood();
+                                rocks.Name = "rocks";
+                                rocks.ItemID = Utility.RandomList(4967, 4970, 4973);
 
-                                    Point3D rockLocation = new Point3D(originalLocation.X + Utility.RandomMinMax(-2, 2), originalLocation.Y + Utility.RandomMinMax(-2, 2), originalLocation.Z);
+                                Point3D rockLocation = new Point3D(originalLocation.X + Utility.RandomMinMax(-2, 2), originalLocation.Y + Utility.RandomMinMax(-2, 2), originalLocation.Z);
 
-                                    rocks.MoveToWorld(rockLocation, Map);
-                                }
-
-                                else
-                                {
-                                    //Dirt
-                                    Blood dirt = new Blood();
-                                    dirt.Name = "dirt";
-                                    dirt.ItemID = Utility.RandomList(7681, 7682);
-
-                                    Point3D dirtLocation = new Point3D(originalLocation.X + Utility.RandomMinMax(-2, 2), originalLocation.Y + Utility.RandomMinMax(-2, 2), Z);
-
-                                    dirt.MoveToWorld(dirtLocation, Map);
-                                }
+                                rocks.MoveToWorld(rockLocation, Map);
                             }
 
-                            PublicOverheadMessage(MessageType.Regular, 0, false, "*burrows*");
+                            else
+                            {
+                                //Dirt
+                                Blood dirt = new Blood();
+                                dirt.Name = "dirt";
+                                dirt.ItemID = Utility.RandomList(7681, 7682);
 
-                            Combatant = null;
+                                Point3D dirtLocation = new Point3D(originalLocation.X + Utility.RandomMinMax(-2, 2), originalLocation.Y + Utility.RandomMinMax(-2, 2), Z);
 
-                            Effects.PlaySound(Location, Map, GetIdleSound());
+                                dirt.MoveToWorld(dirtLocation, Map);
+                            }
                         }
 
-                        m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
+                        PublicOverheadMessage(MessageType.Regular, 0, false, "*burrows*");
+
+                        Combatant = null;
+
+                        Effects.PlaySound(Location, Map, GetIdleSound());
                     }
+
+                    m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
                 }
-            }
+            }            
         }        
 
         public FireBeetle(Serial serial): base(serial)

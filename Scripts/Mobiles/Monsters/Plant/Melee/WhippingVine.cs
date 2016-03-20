@@ -30,9 +30,7 @@ namespace Server.Mobiles
             VirtualArmor = 25;
 
 			Fame = 1000;
-			Karma = -1000;
-
-			PackReg( 3 );			
+			Karma = -1000;			
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }

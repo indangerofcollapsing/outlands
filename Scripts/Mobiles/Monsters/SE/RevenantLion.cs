@@ -92,7 +92,6 @@ namespace Server.Mobiles
 			return 0x515;
 		}
 
-		public override bool BleedImmune{ get{ return true; } }		
 
 		public RevenantLion( Serial serial ) : base( serial )
 		{

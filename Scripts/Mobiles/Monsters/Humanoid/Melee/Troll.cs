@@ -13,6 +13,7 @@ namespace Server.Mobiles
 		public Troll () : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
 			Name = "a troll";
+
 			Body = Utility.RandomList( 53, 54 );
 			BaseSoundID = 461;
 
@@ -36,13 +37,10 @@ namespace Server.Mobiles
 		}
 
         public override bool CanRummageCorpses { get { return true; } }
-        public override int Meat { get { return 2; } }
 
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-    		AwardDailyAchievementForKiller(NewbCategory.KillTrolls);
 		}	
 
 		public Troll( Serial serial ) : base( serial )

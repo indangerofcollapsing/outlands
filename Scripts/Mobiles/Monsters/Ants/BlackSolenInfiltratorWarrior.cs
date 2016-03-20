@@ -35,9 +35,7 @@ namespace Server.Mobiles
             VirtualArmor = 50;
 
 			Fame = 3000;
-			Karma = -3000;
-
-			PackItem( new ZoogiFungus( ( 0.05 > Utility.RandomDouble() )? 13 : 3 ) );		
+			Karma = -3000;	
 		}
 
 		public override int GetAngerSound()

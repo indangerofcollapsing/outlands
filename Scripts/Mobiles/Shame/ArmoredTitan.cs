@@ -41,8 +41,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.1;
+            UniqueCreatureDifficultyScalar = 1.1;
         }
 
         public override int Meat { get { return 2; } }
@@ -51,8 +50,6 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            AwardDailyAchievementForKiller(PvECategory.KillArmoredTitans);
-
             return base.OnBeforeDeath();
         }
 

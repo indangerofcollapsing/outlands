@@ -12,14 +12,10 @@ namespace Server.Mobiles
 
 		public override void DisplayPaperdollTo( Mobile to )
 		{
-			// Do nothing
 		}
 
 		public override Mobile ConstantFocus{ get{ return m_Target; } }
 		public override bool NoHouseRestrictions{ get{ return true; } }
-
-		public override double DispelDifficulty{ get{ return 80.0; } }
-		public override double DispelFocus{ get{ return 20.0; } }
 
 		public Revenant( Mobile caster, Mobile target, TimeSpan duration ) : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.18, 0.36 )
 		{
@@ -88,8 +84,10 @@ namespace Server.Mobiles
 			{
                 m_Target.LastKiller = null;
 				Kill();
+
 				return;
 			}
+
 			else if ( Map != m_Target.Map || !InRange( m_Target, 15 ) )
 			{
 				Map fromMap = Map;

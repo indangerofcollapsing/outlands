@@ -31,12 +31,7 @@ namespace Server.Mobiles
             VirtualArmor = 75;
 
 			Fame = 4500;
-			Karma = -4500;            			
-
-			PackItem( new Bone( 3 ) );
-
-			if ( Core.ML && Utility.RandomDouble() < .33 )
-				PackItem( Engines.Plants.Seed.RandomPeculiarSeed(2) );
+			Karma = -4500;       
 		}
 
 		public override int GetAngerSound()

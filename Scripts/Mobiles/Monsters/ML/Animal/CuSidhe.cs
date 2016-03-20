@@ -62,10 +62,6 @@ namespace Server.Mobiles
 			base.OnDoubleClick( from );
 		}
 		
-		public override FoodType FavoriteFood{ get{ return FoodType.FruitsAndVegies; } }
-		public override int Hides{ get{ return 10; } }	
-		public override int Meat{ get{ return 3; } }	
-
 		public override WeaponAbility GetWeaponAbility()
 		{
 			return WeaponAbility.BleedAttack;

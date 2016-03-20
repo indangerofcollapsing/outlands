@@ -43,15 +43,33 @@ namespace Server.Mobiles
 			Fame = 22500;
 			Karma = -22500;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 4;
             MinTameSkill = 105.1;
 		}
 
-        public override int Meat { get { return 10; } }
-        public override int Hides { get { return 20; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
+        public override int TamedItemId { get { return 9781; } }
+        public override int TamedItemHue { get { return 0; } }
+        public override int TamedItemXOffset { get { return 5; } }
+        public override int TamedItemYOffset { get { return -15; } }
 
+        public override int TamedBaseMaxHits { get { return 400; } }
+        public override int TamedBaseMinDamage { get { return 30; } }
+        public override int TamedBaseMaxDamage { get { return 32; } }
+        public override double TamedBaseWrestling { get { return 95; } }
+        public override double TamedBaseEvalInt { get { return 50; } }
+
+        public override int TamedBaseStr { get { return 5; } }
+        public override int TamedBaseDex { get { return 50; } }
+        public override int TamedBaseInt { get { return 50; } }
+        public override int TamedBaseMaxMana { get { return 500; } }
+        public override double TamedBaseMagicResist { get { return 75; } }
+        public override double TamedBaseMagery { get { return 50; } }
+        public override double TamedBasePoisoning { get { return 25; } }
+        public override double TamedBaseTactics { get { return 100; } }
+        public override double TamedBaseMeditation { get { return 100; } }
+        public override int TamedBaseVirtualArmor { get { return 75; } } 
+        
         public override Poison PoisonImmune { get { return Poison.Deadly; } }
         public override Poison HitPoison { get { return Poison.Deadly; } }
 
@@ -75,32 +93,7 @@ namespace Server.Mobiles
 
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.PoisonBreathAttack] = 1;
-        }        
-
-        //Animal Lore Display Info
-        public override int TamedItemId { get { return 9781; } }
-        public override int TamedItemHue { get { return 0; } }
-        public override int TamedItemXOffset { get { return 5; } }
-        public override int TamedItemYOffset { get { return -15; } }
-
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
-        public override int TamedBaseMaxHits { get { return 400; } }
-        public override int TamedBaseMinDamage { get { return 30; } }
-        public override int TamedBaseMaxDamage { get { return 32; } }
-        public override double TamedBaseWrestling { get { return 95; } }
-        public override double TamedBaseEvalInt { get { return 50; } }
-
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
-        public override int TamedBaseStr { get { return 5; } }
-        public override int TamedBaseDex { get { return 50; } }
-        public override int TamedBaseInt { get { return 50; } }
-        public override int TamedBaseMaxMana { get { return 500; } }
-        public override double TamedBaseMagicResist { get { return 75; } }
-        public override double TamedBaseMagery { get { return 50; } }
-        public override double TamedBasePoisoning { get { return 25; } }
-        public override double TamedBaseTactics { get { return 100; } }
-        public override double TamedBaseMeditation { get { return 100; } }
-        public override int TamedBaseVirtualArmor { get { return 75; } }        		
+        }      		
 		
 		public override int GetIdleSound(){return 0x2D5;}
 		public override int GetHurtSound(){return 0x2D1;}
@@ -108,14 +101,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            if (!IsBonded)
-            {
-                AwardAchievementForKiller(AchievementTriggers.Trigger_DragonKilled);
-                AwardDailyAchievementForKiller(PvECategory.KillDragons);
-            }
-            // END IPY ACHIEVEMENT TRIGGER
         }
 
 		public ShadowDragon( Serial serial ) : base( serial )

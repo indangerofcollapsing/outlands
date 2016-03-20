@@ -10,9 +10,6 @@ namespace Server.Mobiles
 	[CorpseName( "a water elemental corpse" )]
 	public class WaterElemental : BaseCreature
 	{
-		public override double DispelDifficulty{ get{ return 117.5; } }
-		public override double DispelFocus{ get{ return 45.0; } }
-
 		[Constructable]
 		public WaterElemental () : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -51,15 +48,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_WaterElementalKilled);
-			// END IPY ACHIEVEMENT TRIGGER
-
-    		switch( Utility.Random( 500 ) )
-			{
-				case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonWaterElementalScroll())); } break;
-			}
 		}
 
 		public WaterElemental( Serial serial ) : base( serial )

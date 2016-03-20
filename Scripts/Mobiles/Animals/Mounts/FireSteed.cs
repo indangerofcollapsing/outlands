@@ -47,9 +47,6 @@ namespace Server.Mobiles
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
-		
-		public override FoodType FavoriteFood{ get{ return FoodType.Meat; } }
-		public override PackInstinct PackInstinct{ get{ return PackInstinct.Daemon | PackInstinct.Equine; } }
 
 		public FireSteed( Serial serial ) : base( serial )
 		{

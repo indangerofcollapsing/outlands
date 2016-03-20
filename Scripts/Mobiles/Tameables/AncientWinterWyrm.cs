@@ -51,29 +51,22 @@ namespace Server.Mobiles
 			Fame = 18000;
 			Karma = -18000;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 5;
             MinTameSkill = 115.1;
 		}
-
-        public override int Meat { get { return 10; } }
-        public override int Hides { get { return 20; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
-
-        //Animal Lore Display Info
+        
         public override int TamedItemId { get { return 17062; } }
         public override int TamedItemHue { get { return Hue; } }
         public override int TamedItemXOffset { get { return 10; } }
         public override int TamedItemYOffset { get { return 0; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 600; } }
         public override int TamedBaseMinDamage { get { return 38; } }
         public override int TamedBaseMaxDamage { get { return 40; } }
         public override double TamedBaseWrestling { get { return 100; } }
         public override double TamedBaseEvalInt { get { return 50; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 75; } }
@@ -144,17 +137,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_AncientWyrmKilled);
-            // END IPY ACHIEVEMENT TRIGGER
-
-            switch (Utility.Random(100))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new ChainLightningScroll())); } break;
-                case 1: { c.AddItem(TitleDye.VeryRareTitleDye(Server.Custom.PlayerTitleColors.EVeryRareColorTypes.StrongOrangeTitleHue)); } break;
-                case 2: { c.AddItem(new RunebookDyeTub() { UsesRemaining = Utility.RandomMinMax(1, 2), LootType = LootType.Regular }); } break;
-            }
         }
 
         public AncientWinterWyrm(Serial serial): base(serial)

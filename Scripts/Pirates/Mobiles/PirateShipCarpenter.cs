@@ -101,60 +101,37 @@ namespace Server.Custom.Pirates
         public override void OnThink()
         {
             base.OnThink();
-
-            if (Global_AllowAbilities)
+            
+            if (DateTime.UtcNow > m_NextRepairCheck)
             {
-                if (DateTime.UtcNow > m_NextRepairCheck)
+                m_NextRepairCheck = DateTime.UtcNow + NextRepairCheckDelay;
+
+                BaseBoat m_Boat = BaseBoat.FindBoatAt(this.Location, this.Map);
+
+                if (DateTime.UtcNow > m_NextRepairAllowed && CheckIfBoatValid(m_Boat))
                 {
-                    m_NextRepairCheck = DateTime.UtcNow + NextRepairCheckDelay;
-
-                    BaseBoat m_Boat = BaseBoat.FindBoatAt(this.Location, this.Map);
-
-                    if (DateTime.UtcNow > m_NextRepairAllowed && CheckIfBoatValid(m_Boat))
+                    if (m_Boat.HitPoints < m_Boat.MaxHitPoints || m_Boat.SailPoints < m_Boat.MaxSailPoints || m_Boat.GunPoints < m_Boat.MaxGunPoints)
                     {
-                        if (m_Boat.HitPoints < m_Boat.MaxHitPoints || m_Boat.SailPoints < m_Boat.MaxSailPoints || m_Boat.GunPoints < m_Boat.MaxGunPoints)
+                        Say("*begins repairing the ship*");
+
+                        Effects.PlaySound(this.Location, this.Map, 0x23D);
+                        Animate(12, 5, 1, true, false, 0);
+
+                        double repairInterval = 3.5;
+
+                        m_NextRepairAllowed = DateTime.UtcNow + NextRepairDelay;
+
+                        AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(repairInterval);
+                        NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(repairInterval);
+
+                        NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(repairInterval);
+                        NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(repairInterval);
+                        NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(repairInterval);
+                        NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(repairInterval);
+
+                        for (int a = 0; a < 4; a++)
                         {
-                            Say("*begins repairing the ship*");
-
-                            Effects.PlaySound(this.Location, this.Map, 0x23D);
-                            Animate(12, 5, 1, true, false, 0);
-
-                            double repairInterval = 3.5;
-
-                            m_NextRepairAllowed = DateTime.UtcNow + NextRepairDelay;
-
-                            AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(repairInterval);
-                            NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(repairInterval);
-
-                            NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(repairInterval);
-                            NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(repairInterval);
-                            NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(repairInterval);
-                            NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(repairInterval);
-
-                            for (int a = 0; a < 4; a++)
-                            {
-                                Timer.DelayCall(TimeSpan.FromSeconds((a + 1) * 3), delegate
-                                {
-                                    if (this == null) return;
-                                    if (!this.Alive || this.Deleted) return;
-
-                                    if (CheckIfBoatValid(m_Boat))
-                                    {
-                                        Effects.PlaySound(Location, Map, 0x23D);
-                                        Animate(12, 5, 1, true, false, 0);
-
-                                        AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(repairInterval);
-                                        NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(repairInterval);
-
-                                        NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(repairInterval);
-                                        NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(repairInterval);
-                                        NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(repairInterval);
-                                        NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(repairInterval);
-                                    }
-                                });
-                            }
-
-                            Timer.DelayCall(TimeSpan.FromSeconds(15), delegate
+                            Timer.DelayCall(TimeSpan.FromSeconds((a + 1) * 3), delegate
                             {
                                 if (this == null) return;
                                 if (!this.Alive || this.Deleted) return;
@@ -164,25 +141,44 @@ namespace Server.Custom.Pirates
                                     Effects.PlaySound(Location, Map, 0x23D);
                                     Animate(12, 5, 1, true, false, 0);
 
-                                    if (m_Boat.HitPoints < m_Boat.MaxHitPoints || m_Boat.SailPoints < m_Boat.MaxSailPoints || m_Boat.GunPoints < m_Boat.MaxGunPoints)
-                                    {
-                                        int hitPointsRepairable = (int)(.05 * (double)m_Boat.MaxHitPoints);
-                                        int sailPointsRepairable = (int)(.10 * (double)m_Boat.MaxSailPoints);
-                                        int gunPointsRepairable = (int)(.10 * (double)m_Boat.MaxGunPoints);
+                                    AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(repairInterval);
+                                    NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(repairInterval);
 
-                                        m_Boat.HitPoints += hitPointsRepairable;
-                                        m_Boat.SailPoints += sailPointsRepairable;
-                                        m_Boat.GunPoints += gunPointsRepairable;
-
-                                        Say("Repairs completed!");
-                                    }
+                                    NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(repairInterval);
+                                    NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(repairInterval);
+                                    NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(repairInterval);
+                                    NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(repairInterval);
                                 }
                             });
                         }
-                    }
 
+                        Timer.DelayCall(TimeSpan.FromSeconds(15), delegate
+                        {
+                            if (this == null) return;
+                            if (!this.Alive || this.Deleted) return;
+
+                            if (CheckIfBoatValid(m_Boat))
+                            {
+                                Effects.PlaySound(Location, Map, 0x23D);
+                                Animate(12, 5, 1, true, false, 0);
+
+                                if (m_Boat.HitPoints < m_Boat.MaxHitPoints || m_Boat.SailPoints < m_Boat.MaxSailPoints || m_Boat.GunPoints < m_Boat.MaxGunPoints)
+                                {
+                                    int hitPointsRepairable = (int)(.05 * (double)m_Boat.MaxHitPoints);
+                                    int sailPointsRepairable = (int)(.10 * (double)m_Boat.MaxSailPoints);
+                                    int gunPointsRepairable = (int)(.10 * (double)m_Boat.MaxGunPoints);
+
+                                    m_Boat.HitPoints += hitPointsRepairable;
+                                    m_Boat.SailPoints += sailPointsRepairable;
+                                    m_Boat.GunPoints += gunPointsRepairable;
+
+                                    Say("Repairs completed!");
+                                }
+                            }
+                        });
+                    }
                 }
-            }
+            }            
         }
 
         public bool CheckIfBoatValid(BaseBoat boat)

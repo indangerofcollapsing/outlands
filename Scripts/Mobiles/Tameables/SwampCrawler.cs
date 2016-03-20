@@ -41,7 +41,7 @@ namespace Server.Mobiles
             SetSkill(SkillName.Hiding, 95);
             SetSkill(SkillName.Stealth, 95);
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 2;
             MinTameSkill = 85.0;
 
@@ -49,20 +49,17 @@ namespace Server.Mobiles
             Karma = -1000;
         }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8469; } }
         public override int TamedItemHue { get { return 870; } }
         public override int TamedItemXOffset { get { return 10; } }
         public override int TamedItemYOffset { get { return 10; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 250; } }
         public override int TamedBaseMinDamage { get { return 16; } }
         public override int TamedBaseMaxDamage { get { return 18; } }
         public override double TamedBaseWrestling { get { return 80; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 25; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -75,9 +72,6 @@ namespace Server.Mobiles
         public override int TamedBaseVirtualArmor { get { return 75; } }
 
         public override bool IsHighSeasBodyType { get { return true; } }
-
-        public override int Meat { get { return 1; } }
-        public override int Hides { get { return 15; } }
 
         public override void SetUniqueAI()
         {            
@@ -116,65 +110,62 @@ namespace Server.Mobiles
         public override void OnThink()
         {
             base.OnThink();
-
-            if (Global_AllowAbilities)
+            
+            if (Alive && Controlled && ControlMaster is PlayerMobile && ControlOrder != OrderType.Stop)
             {
-                if (Alive && Controlled && ControlMaster is PlayerMobile && ControlOrder != OrderType.Stop)
+                if (Hidden || Combatant != null)
+                    m_NextStealthCheckAllowed = DateTime.UtcNow + StealthDelay;
+
+                else if (DateTime.UtcNow > m_NextStealthCheckAllowed)
                 {
-                    if (Hidden || Combatant != null)
-                        m_NextStealthCheckAllowed = DateTime.UtcNow + StealthDelay;
+                    bool stealthValid = true;
 
-                    else if (DateTime.UtcNow > m_NextStealthCheckAllowed)
+                    if (Combatant != null)
+                        stealthValid = false;
+
+                    if (stealthValid)
                     {
-                        bool stealthValid = true;
+                        IPooledEnumerable eable = Map.GetMobilesInRange(Location, RangePerception);
 
-                        if (Combatant != null)
-                            stealthValid = false;
-
-                        if (stealthValid)
+                        foreach (Mobile mobile in eable)
                         {
-                            IPooledEnumerable eable = Map.GetMobilesInRange(Location, RangePerception);
-
-                            foreach (Mobile mobile in eable)
+                            if (mobile.InLOS(this) && mobile.CanSee(this))
                             {
-                                if (mobile.InLOS(this) && mobile.CanSee(this))
+                                if (mobile.Combatant == this)
                                 {
-                                    if (mobile.Combatant == this)
-                                    {
-                                        stealthValid = false;
-                                        break;
-                                    }
+                                    stealthValid = false;
+                                    break;
+                                }
 
-                                    bool aggressive = false;
+                                bool aggressive = false;
 
-                                    foreach (AggressorInfo aggressorInfo in mobile.Aggressors)
+                                foreach (AggressorInfo aggressorInfo in mobile.Aggressors)
+                                {
+                                    if (aggressorInfo.Attacker == this || aggressorInfo.Defender == this)
                                     {
-                                        if (aggressorInfo.Attacker == this || aggressorInfo.Defender == this)
-                                        {
-                                            aggressive = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if (aggressive)
-                                    {
-                                        stealthValid = false;
+                                        aggressive = true;
                                         break;
                                     }
                                 }
+
+                                if (aggressive)
+                                {
+                                    stealthValid = false;
+                                    break;
+                                }
                             }
-
-                            eable.Free();
                         }
 
-                        if (stealthValid)
-                        {
-                            AIMiscAction.DoStealth(this);
-                            m_NextStealthCheckAllowed = DateTime.UtcNow + StealthDelay;
-                        }
+                        eable.Free();
+                    }
+
+                    if (stealthValid)
+                    {
+                        AIMiscAction.DoStealth(this);
+                        m_NextStealthCheckAllowed = DateTime.UtcNow + StealthDelay;
                     }
                 }
-            }
+            }            
         }
 
         public SwampCrawler(Serial serial): base(serial)

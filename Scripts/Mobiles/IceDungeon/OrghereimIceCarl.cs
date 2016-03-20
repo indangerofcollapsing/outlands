@@ -61,11 +61,8 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.75;
-            
-            DictCombatTargeting[CombatTargeting.Predator] = 1;
-            
+            UniqueCreatureDifficultyScalar = 1.75;
+                        
             DictCombatRange[CombatRange.WeaponAttackRange] = 0;
             DictCombatRange[CombatRange.SpellRange] = 8;
             DictCombatRange[CombatRange.Withdraw] = 1;

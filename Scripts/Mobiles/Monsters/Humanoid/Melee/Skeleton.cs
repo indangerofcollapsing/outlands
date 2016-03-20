@@ -33,20 +33,6 @@ namespace Server.Mobiles
 
 			Fame = 450;
 			Karma = -450;
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-            {
-                switch (Utility.RandomMinMax(1, 5))
-                {
-                    case 1: PackItem(new BoneHelm()); break;
-                    case 2: PackItem(new BoneChest()); break;
-                    case 3: PackItem(new BoneArms()); break;
-                    case 4: PackItem(new BoneLegs()); break;
-                    case 5: PackItem(new BoneGloves()); break;
-                }
-            }
-
-            PackItem(new Bone(4));
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
@@ -54,11 +40,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-			AwardDailyAchievementForKiller(NewbCategory.KillSkeletons);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new Bonemeal());
 		}
         		
 		public Skeleton( Serial serial ) : base( serial )

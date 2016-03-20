@@ -34,15 +34,10 @@ namespace Server.Mobiles
 
 			Fame = 4000;
 			Karma = -4000;
-
-			if ( Core.ML && Utility.RandomDouble() < .33 )
-				PackItem( Engines.Plants.Seed.RandomPeculiarSeed(3) );
 		}
 
         public override Poison HitPoison { get { return Poison.Regular; } }
         public override Poison PoisonImmune { get { return Poison.Regular; } }   
-
-		public override int Meat{ get{ return 4; } }
 
 		public TerathanWarrior( Serial serial ) : base( serial )
 		{

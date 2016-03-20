@@ -59,9 +59,8 @@ namespace Server.Mobiles
         }
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.2;
+        {            
+            UniqueCreatureDifficultyScalar = 1.2;
 
             CombatEpicActionMinDelay = 15;
             CombatEpicActionMaxDelay = 30;

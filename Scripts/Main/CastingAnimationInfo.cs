@@ -303,7 +303,7 @@ namespace Server
                 target.SpellCastFrameCount = 7;
             }
 
-            //Sanguineous
+            //sanguinous
             if (target.Body == 741)
             {
                 target.SpellCastAnimation = 12;

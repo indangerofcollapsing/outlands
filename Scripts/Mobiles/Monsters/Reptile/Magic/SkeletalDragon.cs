@@ -8,8 +8,7 @@ namespace Server.Mobiles
     public class SkeletalDragon : BaseCreature
     {
         [Constructable]
-        public SkeletalDragon()
-            : base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
+        public SkeletalDragon(): base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "a skeletal dragon";
             Body = 104;
@@ -37,8 +36,6 @@ namespace Server.Mobiles
 
             Fame = 22500;
             Karma = -22500;
-
-            PackItem(new Bone(25));
         }
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
@@ -49,8 +46,7 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
 
-        public SkeletalDragon(Serial serial)
-            : base(serial)
+        public SkeletalDragon(Serial serial): base(serial)
         {
         }
 

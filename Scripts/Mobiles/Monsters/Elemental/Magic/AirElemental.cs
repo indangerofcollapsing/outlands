@@ -10,9 +10,6 @@ namespace Server.Mobiles
 	[CorpseName( "an air elemental corpse" )]
 	public class AirElemental : BaseCreature
 	{
-		public override double DispelDifficulty{ get{ return 117.5; } }
-		public override double DispelFocus{ get{ return 45.0; } }
-
 		[Constructable]
 		public AirElemental () : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -52,18 +49,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
             base.OnDeath( c );
-            AwardAchievementForKiller(AchievementTriggers.Trigger_AirElementalKilled);
-            AwardDailyAchievementForKiller(NewbCategory.KillAirElementals);
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonAirElementalScroll())); } break;
-                case 1: { c.AddItem(new DaemonBone()); } break;
-                case 2: { c.AddItem(new Diamond()); } break;
-                case 3: { c.AddItem(new BlankScroll()); } break;
-                case 4: { c.AddItem(BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Shame, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Arms)); } break;
-                case 5: { c.AddItem(new StrengthScroll()); } break;
-            }
 		}
         
 		public AirElemental( Serial serial ) : base( serial )
@@ -80,9 +65,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == 263 )
-				BaseSoundID = 655;
 		}
 	}
 }

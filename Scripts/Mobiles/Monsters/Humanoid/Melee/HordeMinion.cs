@@ -33,9 +33,7 @@ namespace Server.Mobiles
 			Fame = 500;
 			Karma = -500;
 
-			AddItem( new LightSource() );
-
-			PackItem( new Bone( 3 ) );			
+			AddItem( new LightSource() );		
 		}
 
 		public override int GetIdleSound(){return 338;}

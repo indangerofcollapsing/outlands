@@ -58,14 +58,12 @@ namespace Server.Factions
 			Fame = 300;
 			Karma = 300;
 
-			Tamable = true;
+			Tameable = true;
 			ControlSlots = 1;
 
 			Faction = faction;
 		}
-
-		public override FoodType FavoriteFood{ get{ return FoodType.FruitsAndVegies | FoodType.GrainsAndHay; } }
-
+        
 		public FactionWarHorse( Serial serial ) : base( serial )
 		{
 		}

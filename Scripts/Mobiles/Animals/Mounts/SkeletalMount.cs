@@ -39,7 +39,6 @@ namespace Server.Mobiles
 		}
 
 		public override Poison PoisonImmune{ get{ return Poison.Lethal; } }
-		public override bool BleedImmune{ get{ return true; } }
 
 		public SkeletalMount( Serial serial ) : base( serial )
 		{
@@ -63,7 +62,7 @@ namespace Server.Mobiles
 				case 0:
 				{
 					Name = "a skeletal steed";
-					Tamable = false;
+					Tameable = false;
 					MinTameSkill = 0.0;
 					ControlSlots = 0;
 					break;

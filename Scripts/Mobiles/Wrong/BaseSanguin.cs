@@ -57,11 +57,11 @@ namespace Server.Mobiles
             Name = "a sanguin";
             Hue = Utility.RandomSkinHue(); 
             
-            if (this.Female = Utility.RandomBool())            
-                this.Body = 0x191;            
+            if (Female = Utility.RandomBool())            
+                Body = 0x191;            
 
             else   
-                this.Body = 0x190;   
+                Body = 0x190;   
         }
 
         public override void OnThink()
@@ -81,12 +81,9 @@ namespace Server.Mobiles
 
         public override bool CanRummageCorpses { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-        public override bool ShowFameTitle { get { return false; } }
 
         public override bool OnBeforeDeath()
         {
-            AddItem(new Kilt(907));
-
             return base.OnBeforeDeath();
         }
 

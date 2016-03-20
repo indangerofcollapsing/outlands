@@ -55,7 +55,6 @@ namespace Server.Mobiles
 		public override HideType HideType{ get{ return HideType.Horned; } }
 		public override int Scales{ get{ return 2; } }
 		public override ScaleType ScaleType{ get{ return ( Body == 60 ? ScaleType.Yellow : ScaleType.Red ); } }
-		public override FoodType FavoriteFood{ get{ return FoodType.Meat | FoodType.Fish; } }
 
 		public TalkingDrake( Serial serial ) : base( serial )
 		{

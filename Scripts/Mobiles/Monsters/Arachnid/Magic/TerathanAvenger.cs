@@ -43,8 +43,6 @@ namespace Server.Mobiles
         public override Poison HitPoison { get { return Poison.Greater; } }
         public override Poison PoisonImmune { get { return Poison.Greater; } }
 
-        public override int Meat { get { return 2; } }	
-
 		public TerathanAvenger( Serial serial ) : base( serial )
 		{
 		}
@@ -59,9 +57,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == 263 )
-				BaseSoundID = 0x24D;
 		}
 	}
 }

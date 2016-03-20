@@ -49,8 +49,6 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            PackItem(new Bandage(Utility.RandomMinMax(4,8)));
-
             return base.OnBeforeDeath();
         }
 

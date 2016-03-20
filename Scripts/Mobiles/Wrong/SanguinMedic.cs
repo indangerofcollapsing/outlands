@@ -7,13 +7,13 @@ using Server.Network;
 
 namespace Server.Mobiles
 {
-    [CorpseName("a sanguine medic corpse")]
+    [CorpseName("a sanguin medic corpse")]
     public class SanguinMedic : BaseSanguin
     {
         [Constructable]
         public SanguinMedic(): base()
         {
-            Name = "a sanguine medic";
+            Name = "a sanguin medic";
 
             SetStr(75);
             SetDex(50);
@@ -50,10 +50,6 @@ namespace Server.Mobiles
 
             AddItem(new Mace() { Movable = false, Hue = weaponHue });
             AddItem(new MetalShield() { Movable = false, Hue = weaponHue });
-
-            PackItem(new Bandage(6));
-            PackItem(new HealPotion());
-            PackItem(new CurePotion());
         }
 
         public SanguinMedic(Serial serial): base(serial)

@@ -61,7 +61,7 @@ namespace Server.Custom
 			Fame = 1000;
 			Karma = -2000;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 50;
 		}

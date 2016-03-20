@@ -37,17 +37,12 @@ namespace Server.Mobiles
             
 			Fame = 3000;
 			Karma = -3000;
-
-			PackItem( new Club() );
 		}
 
         public override bool CanRummageCorpses { get { return true; } }
-        public override int Meat { get { return 2; } }
 
 		public override bool OnBeforeDeath()
 		{
-			PackItem(new Club());
-
 			return base.OnBeforeDeath();
 		}
 
@@ -58,10 +53,6 @@ namespace Server.Mobiles
 		public override void OnDeath(Container c)
 		{
 			base.OnDeath(c);
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_OgreKilled);
-			// END IPY ACHIEVEMENT TRIGGER
 		}
 
 		public override void Serialize( GenericWriter writer )

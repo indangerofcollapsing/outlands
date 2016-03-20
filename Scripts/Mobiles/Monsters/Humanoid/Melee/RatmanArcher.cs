@@ -36,13 +36,11 @@ namespace Server.Mobiles
 
             Fame = 6500;
             Karma = -6500;
-            PackItem(new Arrow(10));
         }
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 2;
+            UniqueCreatureDifficultyScalar = 2;
             
             DictCombatRange[CombatRange.WeaponAttackRange] = 0;
             DictCombatRange[CombatRange.SpellRange] = 8;
@@ -118,9 +116,6 @@ namespace Server.Mobiles
         }
 
         public override bool CanRummageCorpses { get { return true; } }
-        public override int Hides { get { return 8; } }
-        public override HideType HideType { get { return HideType.Spined; } }
-        public override int Meat { get { return 1; } }
 
         public RatmanArcher(Serial serial): base(serial)
         {
@@ -136,12 +131,6 @@ namespace Server.Mobiles
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (Body == 42)
-            {
-                Body = 0x8E;
-                Hue = 0;
-            }
         }
     }
 }

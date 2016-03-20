@@ -5,9 +5,7 @@ namespace Server.Mobiles
 {
 	[CorpseName( "a llama corpse" )]
 	public class RidableLlama : BaseMount
-	{
-    public override bool DropsGold { get { return false; } }
-		public override double MaxSkillScrollWorth { get { return 0.0; } }		
+	{	
 		[Constructable]
 		public RidableLlama() : this( "a ridable llama" )
 		{
@@ -42,10 +40,6 @@ namespace Server.Mobiles
 			Fame = 300;
 			Karma = 0;
 		}
-
-		public override int Meat{ get{ return 1; } }
-		public override int Hides{ get{ return 12; } }
-		public override FoodType FavoriteFood{ get{ return FoodType.FruitsAndVegies | FoodType.GrainsAndHay; } }
 
 		public RidableLlama( Serial serial ) : base( serial )
 		{

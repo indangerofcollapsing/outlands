@@ -42,29 +42,22 @@ namespace Server.Mobiles
 			Fame = 18000;
 			Karma = -18000;			
 
-			Tamable = true;
+			Tameable = true;
 			ControlSlots = 4;
 			MinTameSkill = 105.1;
 		}
 
-        public override int Meat { get { return 10; } }
-        public override int Hides { get { return 20; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
-
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 9780; } }
         public override int TamedItemHue { get { return 295; } }
         public override int TamedItemXOffset { get { return 0; } }
         public override int TamedItemYOffset { get { return -15; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 400; } }
         public override int TamedBaseMinDamage { get { return 24; } }
         public override int TamedBaseMaxDamage { get { return 26; } }
         public override double TamedBaseWrestling { get { return 95; } }
         public override double TamedBaseEvalInt { get { return 75; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 100; } }
@@ -99,18 +92,8 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            if (!IsBonded)
-            {
-                AwardAchievementForKiller(AchievementTriggers.Trigger_DragonKilled);
-                AwardDailyAchievementForKiller(PvECategory.KillDragons);
-            }
-            // END IPY ACHIEVEMENT TRIGGER
         }
 
-        
-        
 		public ArcaneDragon( Serial serial ) : base( serial )
 		{
 		}

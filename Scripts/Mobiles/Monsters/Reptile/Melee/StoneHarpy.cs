@@ -9,8 +9,7 @@ namespace Server.Mobiles
     public class StoneHarpy : BaseCreature
     {
         [Constructable]
-        public StoneHarpy()
-            : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
+        public StoneHarpy(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "a stone harpy";
             Body = 73;
@@ -32,8 +31,7 @@ namespace Server.Mobiles
             VirtualArmor = 75;
 
             Fame = 4500;
-            Karma = -4500;
-            PackGem(2);     
+            Karma = -4500; 
         }
 
         public override int GetAttackSound()
@@ -61,13 +59,12 @@ namespace Server.Mobiles
             return 918;
         }
 
-        public override int Meat { get { return 4; } }
         public override MeatType MeatType { get { return MeatType.Bird; } }
         public override int Feathers { get { return 200; } }
+
         public override bool CanFly { get { return true; } }
 
-        public StoneHarpy(Serial serial)
-            : base(serial)
+        public StoneHarpy(Serial serial): base(serial)
         {
         }
 

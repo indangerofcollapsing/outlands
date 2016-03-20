@@ -60,15 +60,7 @@ namespace Server.Mobiles
 
         public override void OnDeath(Container c)
         {
-            base.OnDeath(c);
-
-            AwardAchievementForKiller(AchievementTriggers.Trigger_DragonKilled);
-            AwardDailyAchievementForKiller(PvECategory.KillDragons);
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new FlamestrikeScroll())); } break;
-            }            
+            base.OnDeath(c);          
         } 
 
         public RoyalDragon(Serial serial): base(serial)

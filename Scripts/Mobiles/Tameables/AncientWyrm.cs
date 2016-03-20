@@ -53,7 +53,7 @@ namespace Server.Mobiles
             Fame = 25500;
             Karma = -22500;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 5;
             MinTameSkill = 115.1;
         }
@@ -112,25 +112,18 @@ namespace Server.Mobiles
                 }                
             }
         }
-
-        public override HideType HideType { get { return HideType.Barbed; } }
-        public override int Hides { get { return 30; } }
-        public override int Meat { get { return 19; } }
-
-        //Animal Lore Display Info
+        
         public override int TamedItemId { get { return 17062; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 10; } }
         public override int TamedItemYOffset { get { return 0; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 600; } }
         public override int TamedBaseMinDamage { get { return 38; } }
         public override int TamedBaseMaxDamage { get { return 40; } }
         public override double TamedBaseWrestling { get { return 100; } }
         public override double TamedBaseEvalInt { get { return 50; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 75; } }
@@ -145,17 +138,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_AncientWyrmKilled);
-            // END IPY ACHIEVEMENT TRIGGER
-
-            switch (Utility.Random(100))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new ChainLightningScroll())); } break;
-                case 1: { c.AddItem(TitleDye.VeryRareTitleDye(Server.Custom.PlayerTitleColors.EVeryRareColorTypes.StrongOrangeTitleHue)); } break;
-                case 2: { c.AddItem(new RunebookDyeTub() { UsesRemaining = Utility.RandomMinMax(1, 2), LootType = LootType.Regular }); } break;
-            }
         }
 
         public override int GetIdleSound(){ return 0x2D3; }

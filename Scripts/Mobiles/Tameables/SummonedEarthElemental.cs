@@ -8,9 +8,6 @@ namespace Server.Mobiles
     [CorpseName("an earth elemental corpse")]
     public class SummonedEarthElemental : BaseCreature
     {
-        public override double DispelDifficulty { get { return 117.5; } }
-        public override double DispelFocus { get { return 45.0; } }
-
         [Constructable]
         public SummonedEarthElemental(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {

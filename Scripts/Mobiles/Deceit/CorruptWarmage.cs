@@ -57,13 +57,9 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            AwardDailyAchievementForKiller(PvECategory.KillCorruptWarmages);
-
             return base.OnBeforeDeath();
         }
-
-        public override int Meat { get { return 1; } }
-
+        
         public CorruptWarmage(Serial serial): base(serial)
         {
         }

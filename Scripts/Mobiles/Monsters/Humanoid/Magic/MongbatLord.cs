@@ -42,9 +42,7 @@ namespace Server.Mobiles
 
 			Fame = 12000;
 			Karma = -8000;
-		}
-		
-		public override int Meat{ get{ return 1; } }		
+		}	
 
 		public MongbatLord( Serial serial ) : base( serial )
 		{

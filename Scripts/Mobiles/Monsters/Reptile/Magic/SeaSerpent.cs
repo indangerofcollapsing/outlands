@@ -4,8 +4,7 @@ using Server.Items;
 
 namespace Server.Mobiles
 {
-	[CorpseName( "a sea serpents corpse" )]
-	[TypeAlias( "Server.Mobiles.Seaserpant" )]
+	[CorpseName( "a sea serpent corpse" )]
 	public class SeaSerpent : BaseCreature
 	{
 		[Constructable]
@@ -36,21 +35,11 @@ namespace Server.Mobiles
 			Karma = -6000;
 
 			CanSwim = true;
-			CantWalk = true;
-
-			if ( Utility.RandomBool() )
-				PackItem( new SulfurousAsh( 8 ) );
-			else
-				PackItem( new BlackPearl( 8 ) );
-
-			PackItem( new RawFishSteak(3) );			
+			CantWalk = true;			
 		}
 
         public override int OceanDoubloonValue { get { return 6; } }
-        public override bool IsOceanCreature { get { return true; } }        
-
-        public override int Hides { get { return 10; } }
-        public override HideType HideType { get { return HideType.Horned; } }
+        public override bool IsOceanCreature { get { return true; } }     
 
         public override void SetUniqueAI()
         {

@@ -131,10 +131,7 @@ namespace Server
 
             if (mob.Region is NewbieDungeonRegion)
                 mob.AddLoot(LootPack.NewbieDungeon);
-
-            if (mob.IPYLootTag == BaseCreature.EIPYLootTag.SEQ_SPAWN_MINIBOSS)
-                AddSequentialBossLoot(mob);
-
+            
             if (mob.SpellCaster)
                 AddSpellCasterLoot(mob);
 

@@ -57,8 +57,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.25;
+            UniqueCreatureDifficultyScalar = 1.25;
 
             DictCombatAction[CombatAction.CombatSpecialAction] = 1;
             DictCombatSpecialAction[CombatSpecialAction.ThrowShipBomb] = 1;
@@ -76,53 +75,18 @@ namespace Server.Mobiles
         public override void OnThink()
         {
             base.OnThink();
-
-            if (Global_AllowAbilities)
+           
+            if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed && BoatOccupied == null)
             {
-                if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed && BoatOccupied == null)
+                if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
                 {
-                    if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
-                    {
-                        if (SpecialAbilities.VanishAbility(this, 1.0, true, -1, 5, 10, true, null))
-                        {
-                            PublicOverheadMessage(MessageType.Regular, 0, false, "*vanishes*");
+                    if (SpecialAbilities.VanishAbility(this, 1.0, true, -1, 5, 10, true, null))                    
+                        PublicOverheadMessage(MessageType.Regular, 0, false, "*vanishes*");
 
-                            switch (Utility.RandomMinMax(1, 4))
-                            {
-                                case 1:
-                                    DictCombatTargetingWeight[CombatTargetingWeight.EasiestToHit] = 10;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LeastCombatants] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.MostCombatants] = 0;
-                                    break;
-
-                                case 2:
-                                    DictCombatTargetingWeight[CombatTargetingWeight.EasiestToHit] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 10;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LeastCombatants] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.MostCombatants] = 0;
-                                    break;
-
-                                case 3:
-                                    DictCombatTargetingWeight[CombatTargetingWeight.EasiestToHit] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LeastCombatants] = 10;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.MostCombatants] = 0;
-                                    break;
-
-                                case 4:
-                                    DictCombatTargetingWeight[CombatTargetingWeight.EasiestToHit] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LeastCombatants] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.MostCombatants] = 10;
-                                    break;
-                            }
-                        }
-
-                        m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
-                    }
+                    m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
                 }
             }
+            
         }
 
         public override int GetAttackSound() { return 0x238; }

@@ -58,45 +58,12 @@ namespace Server.Mobiles
 
         public override void OnThink()
         {
-            base.OnThink();
-
-            if (Global_AllowAbilities)
-            {
-                if (Utility.RandomDouble() < .01 && DateTime.UtcNow > m_NextAIChangeAllowed)
-                {
-                    Effects.PlaySound(Location, Map, GetAngerSound());
-
-                    switch (Utility.RandomMinMax(1, 5))
-                    {
-                        case 1:
-                            DictCombatTargetingWeight[CombatTargetingWeight.Player] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.Closest] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.HighestHitPoints] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                            break;
-
-                        case 2:
-                            DictCombatTargetingWeight[CombatTargetingWeight.Player] = 10;
-                            DictCombatTargetingWeight[CombatTargetingWeight.Closest] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.HighestHitPoints] = 0;
-                            DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                            break;
-
-                    }
-
-                    m_NextAIChangeAllowed = DateTime.UtcNow + NextAIChangeDelay;
-                }
-            }
+            base.OnThink();            
         }
 
 		public override void OnDeath( Container c )
         {     
             base.OnDeath( c );
-
-            switch (Utility.Random(500))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonAirElementalScroll())); } break;
-            }
         }
 
 		public ElderToxicElemental( Serial serial ) : base( serial )

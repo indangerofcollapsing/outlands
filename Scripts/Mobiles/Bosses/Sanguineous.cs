@@ -10,7 +10,7 @@ using Server.Spells;
 
 namespace Server.Mobiles
 {
-    [CorpseName("Sanguineous's corpse")]
+    [CorpseName("sanguineous's corpse")]
     public class Sanguineous : BaseCreature
     {
         public enum BossPhase
@@ -18,7 +18,7 @@ namespace Server.Mobiles
             PikeMounted,
             SwordShield,
             Axe,
-            Sanguineous
+            sanguinous
         }
 
         public enum BloodPower
@@ -54,8 +54,8 @@ namespace Server.Mobiles
         public DateTime m_NextBloodBurstAllowed;
         public TimeSpan NextBloodBurstDelay = TimeSpan.FromSeconds(20);
 
-        public DateTime m_NextSanguineousChargeAllowed;
-        public TimeSpan NextSanguineousChargeDelay = TimeSpan.FromSeconds(20);
+        public DateTime m_NextsanguinousChargeAllowed;
+        public TimeSpan NextsanguinousChargeDelay = TimeSpan.FromSeconds(20);
         
         public DateTime m_ChargeTimeout;
         public TimeSpan ChargeTimeoutDelay = TimeSpan.FromSeconds(10);
@@ -93,7 +93,7 @@ namespace Server.Mobiles
 
         public const int SwordShieldInterval = 4;
         public const int AxeInterval = 8;
-        public const int SanguineousTrueFormInterval = 12;
+        public const int sanguinousTrueFormInterval = 12;
 
         public string[] idleSpeech { get { return new string[] {"*stirs*"}; } }
         public string[] combatSpeech { get  { return new string[] {""}; } }
@@ -105,7 +105,7 @@ namespace Server.Mobiles
         [Constructable]
         public Sanguineous(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
-            Name = "Sanguineous";
+            Name = "Sanguinous";
             SpeechHue = 0x22;
 
             Body = 400;
@@ -193,7 +193,7 @@ namespace Server.Mobiles
                 {
                     case BossPhase.PikeMounted: return 1; break;
                     case BossPhase.SwordShield: return 1; break;
-                    case BossPhase.Sanguineous: return 2; break;
+                    case BossPhase.sanguinous: return 2; break;
                 }
 
                 return 2;
@@ -201,15 +201,15 @@ namespace Server.Mobiles
         }
         
         public override bool AlwaysBoss { get { return true; } }
-        public override string TitleReward { get { return "Slayer of Sanguineous"; } }
-        public override string BossSpawnMessage { get { return "Sanguineous has arisen and stirs within Wrong Dungeon..."; } }
+        public override string TitleReward { get { return "Slayer of sanguinous"; } }
+        public override string BossSpawnMessage { get { return "sanguinous has arisen and stirs within Wrong Dungeon..."; } }
         public override bool AlwaysMurderer { get { return true; } }
 
         public override bool IsHighSeasBodyType 
         {
             get       
             {
-                if (m_BossPhase == BossPhase.Sanguineous)
+                if (m_BossPhase == BossPhase.sanguinous)
                     return true;
 
                 return false;
@@ -223,7 +223,7 @@ namespace Server.Mobiles
                 if (m_BossPhase == BossPhase.PikeMounted)
                     return 28;
 
-                if (m_BossPhase == BossPhase.Sanguineous) 
+                if (m_BossPhase == BossPhase.sanguinous) 
                     return 5;
 
                 return -1; 
@@ -237,19 +237,19 @@ namespace Server.Mobiles
                 if (m_BossPhase == BossPhase.PikeMounted)
                     return 7;
 
-                if (m_BossPhase == BossPhase.Sanguineous)
+                if (m_BossPhase == BossPhase.sanguinous)
                     return 8;
 
                 return 0;
             }
         }
 
-        public override int HurtAnimation { get { if (m_BossPhase == BossPhase.Sanguineous) return 28; return -1; } }
-        public override int HurtFrames { get { if (m_BossPhase == BossPhase.Sanguineous) return 8; return 0; } }
-        public override bool HurtAnimationPlayForwards { get { if (m_BossPhase == BossPhase.Sanguineous) return false; return true; } }
+        public override int HurtAnimation { get { if (m_BossPhase == BossPhase.sanguinous) return 28; return -1; } }
+        public override int HurtFrames { get { if (m_BossPhase == BossPhase.sanguinous) return 8; return 0; } }
+        public override bool HurtAnimationPlayForwards { get { if (m_BossPhase == BossPhase.sanguinous) return false; return true; } }
 
-        public override int IdleAnimation { get { if (m_BossPhase == BossPhase.Sanguineous) return 25; return -1; } }
-        public override int IdleFrames { get { if (m_BossPhase == BossPhase.Sanguineous) return 12; return 0; } }
+        public override int IdleAnimation { get { if (m_BossPhase == BossPhase.sanguinous) return 25; return -1; } }
+        public override int IdleFrames { get { if (m_BossPhase == BossPhase.sanguinous) return 12; return 0; } }
                 
         public override void SetUniqueAI()
         {   
@@ -290,7 +290,7 @@ namespace Server.Mobiles
                     SpecialAbilities.FrenzySpecialAbility(bleedChance, this, defender, .5, 15, -1, true, "", "", "*becomes frenzied*");
                 break;
 
-                case BossPhase.Sanguineous:
+                case BossPhase.sanguinous:
                     bleedChance = .25;
 
                     SpecialAbilities.BleedSpecialAbility(bleedChance, this, defender, DamageMin, 1.0, -1, true, "", "Their strike causes you to bleed!");
@@ -306,7 +306,7 @@ namespace Server.Mobiles
             {
                 double effectChance = .1;
 
-                SpecialAbilities.EnrageSpecialAbility(effectChance, attacker, this, .1, 15, -1, true, "Your attack enrages Sanguineous.", "", "*becomes enraged*");
+                SpecialAbilities.EnrageSpecialAbility(effectChance, attacker, this, .1, 15, -1, true, "Your attack enrages sanguinous.", "", "*becomes enraged*");
             }
         }
 
@@ -344,14 +344,14 @@ namespace Server.Mobiles
                 transformation = true;
             }
 
-            else if (intervalCount >= AxeInterval && intervalCount < SanguineousTrueFormInterval && m_BossPhase != BossPhase.Axe)
+            else if (intervalCount >= AxeInterval && intervalCount < sanguinousTrueFormInterval && m_BossPhase != BossPhase.Axe)
             {
                 AxeTransform();
 
                 transformation = true;
             }
 
-            else if (intervalCount >= SanguineousTrueFormInterval && m_BossPhase != BossPhase.Sanguineous)
+            else if (intervalCount >= sanguinousTrueFormInterval && m_BossPhase != BossPhase.sanguinous)
             {
                 TrueFormTransform();
 
@@ -374,7 +374,7 @@ namespace Server.Mobiles
 
                     spawnPercent = (double)intervalCount / (double)totalIntervals;
 
-                    if (m_BossPhase == BossPhase.Sanguineous && !transformation)
+                    if (m_BossPhase == BossPhase.sanguinous && !transformation)
                     {
                         if (intervalCount % 5 == 0)
                             SummonTheBlood();
@@ -416,7 +416,7 @@ namespace Server.Mobiles
                         case BossPhase.Axe:
                         break;
 
-                        case BossPhase.Sanguineous:
+                        case BossPhase.sanguinous:
                         break;
                     }
                 }
@@ -510,14 +510,14 @@ namespace Server.Mobiles
 
         public void TrueFormTransform()
         {
-            m_BossPhase = BossPhase.Sanguineous;
+            m_BossPhase = BossPhase.sanguinous;
 
             BodyValue = 741;
             Hue = 0;
 
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
 
-            PublicOverheadMessage(MessageType.Regular, SpeechHue, false, "*becomes trueform sanguineous*");
+            PublicOverheadMessage(MessageType.Regular, SpeechHue, false, "*becomes trueform sanguinous*");
 
             IgniteTheBlood(false);         
         }
@@ -1131,7 +1131,7 @@ namespace Server.Mobiles
                         PlaySound(GetAngerSound());
                     break;
 
-                    case BossPhase.Sanguineous:
+                    case BossPhase.sanguinous:
                         Animate(11, 10, 1, false, false, 0);
                         PlaySound(GetAngerSound());
                     break;
@@ -1148,7 +1148,7 @@ namespace Server.Mobiles
 
                     Queue m_Queue = new Queue();
 
-                    foreach (SanguineousTrap trap in m_Traps)
+                    foreach (sanguinousTrap trap in m_Traps)
                     {
                         if (trap == null) continue;
                         if (trap.Deleted) continue;
@@ -1158,7 +1158,7 @@ namespace Server.Mobiles
 
                     while (m_Queue.Count > 0)
                     {
-                        SanguineousTrap trap = (SanguineousTrap)m_Queue.Dequeue();
+                        sanguinousTrap trap = (sanguinousTrap)m_Queue.Dequeue();
                         trap.Delete();
                     }
 
@@ -1226,8 +1226,8 @@ namespace Server.Mobiles
 
                     foreach (Point3D point in m_TrapLocations)
                     {
-                        SanguineousTrap.TrapType trapType = (SanguineousTrap.TrapType)Utility.RandomMinMax(0, Enum.GetNames(typeof(SanguineousTrap.TrapType)).Length - 1);
-                        SanguineousTrap trap = new SanguineousTrap(trapType, this, DateTime.UtcNow + TimeSpan.FromMinutes(5));
+                        sanguinousTrap.TrapType trapType = (sanguinousTrap.TrapType)Utility.RandomMinMax(0, Enum.GetNames(typeof(sanguinousTrap.TrapType)).Length - 1);
+                        sanguinousTrap trap = new sanguinousTrap(trapType, this, DateTime.UtcNow + TimeSpan.FromMinutes(5));
 
                         trap.MoveToWorld(point, Map);
                         m_Traps.Add(trap);
@@ -1236,12 +1236,12 @@ namespace Server.Mobiles
                         adjustedPoint.Z++;
 
                         TimedStatic trapTile = new TimedStatic(6179, 1 - (.5 * spawnPercent));
-                        trapTile.Name = "sanguineous trap";
+                        trapTile.Name = "sanguinous trap";
                         trapTile.Hue = 2118;
                         trapTile.MoveToWorld(adjustedPoint, Map);
 
                         TimedStatic trapGlow = new TimedStatic(14202, 1 - (.5 * spawnPercent));
-                        trapGlow.Name = "sanguineous glow";
+                        trapGlow.Name = "sanguinous glow";
                         trapGlow.Hue = 2118;
                         trapGlow.MoveToWorld(adjustedPoint, Map);
 
@@ -1253,9 +1253,9 @@ namespace Server.Mobiles
 
         #endregion
 
-        #region Sanguineous Charge
+        #region sanguinous Charge
 
-        public void SanguineousCharge()
+        public void sanguinousCharge()
         {
             if (!SpecialAbilities.Exists(this))
                 return;
@@ -1265,7 +1265,7 @@ namespace Server.Mobiles
             double spawnPercent = (double)intervalCount / (double)totalIntervals;
 
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
-            m_NextSanguineousChargeAllowed = DateTime.UtcNow + NextSanguineousChargeDelay;
+            m_NextsanguinousChargeAllowed = DateTime.UtcNow + NextsanguinousChargeDelay;
 
             int range = 18;
 
@@ -2858,7 +2858,7 @@ namespace Server.Mobiles
                         }
                     break;
 
-                    case BossPhase.Sanguineous:
+                    case BossPhase.sanguinous:
                         if (DateTime.UtcNow >= m_NextHarvestBlood)
                         {
                             HarvestBlood();
@@ -2886,9 +2886,9 @@ namespace Server.Mobiles
                                 break;
 
                                 case 3:
-                                    if (DateTime.UtcNow >= m_NextSanguineousChargeAllowed)
+                                    if (DateTime.UtcNow >= m_NextsanguinousChargeAllowed)
                                     {
-                                        SanguineousCharge();
+                                        sanguinousCharge();
                                         return;
                                     }
                                 break;
@@ -2978,7 +2978,7 @@ namespace Server.Mobiles
                 case BossPhase.Axe:
                 break;
 
-                case BossPhase.Sanguineous:
+                case BossPhase.sanguinous:
                     Effects.PlaySound(Location, Map, Utility.RandomList(0x11F, 0x120));
                 break;
             }            
@@ -3071,7 +3071,7 @@ namespace Server.Mobiles
             if (m_BossPhase == BossPhase.PikeMounted)
                 return 0x2A9;
 
-            if (m_BossPhase == BossPhase.Sanguineous)
+            if (m_BossPhase == BossPhase.sanguinous)
                 return 0x289;
 
             return 0x572;
@@ -3082,7 +3082,7 @@ namespace Server.Mobiles
             if (m_BossPhase == BossPhase.PikeMounted)
                 return 0x598;
 
-            if (m_BossPhase == BossPhase.Sanguineous)
+            if (m_BossPhase == BossPhase.sanguinous)
                 return 0x2C4;
 
             return 0x572;
@@ -3090,7 +3090,7 @@ namespace Server.Mobiles
 
         public override int GetAttackSound()
         {
-            if (m_BossPhase == BossPhase.Sanguineous)
+            if (m_BossPhase == BossPhase.sanguinous)
                 return 0x28B;
 
             return -1; 
@@ -3101,7 +3101,7 @@ namespace Server.Mobiles
             if (m_BossPhase == BossPhase.PikeMounted)
                 return 0x5FA;
 
-            if (m_BossPhase == BossPhase.Sanguineous)
+            if (m_BossPhase == BossPhase.sanguinous)
                 return 0x28C;
             
             return 0x5FA;
@@ -3109,7 +3109,7 @@ namespace Server.Mobiles
 
         public override int GetDeathSound() 
         {
-            if (m_BossPhase == BossPhase.Sanguineous)
+            if (m_BossPhase == BossPhase.sanguinous)
                 return 0x2C1;
 
             return 0x2AB;
@@ -3175,7 +3175,7 @@ namespace Server.Mobiles
                 int trapCount = reader.ReadInt();
                 for (int a = 0; a < trapCount; a++)
                 {
-                    SanguineousTrap trap = (SanguineousTrap)reader.ReadItem();
+                    sanguinousTrap trap = (sanguinousTrap)reader.ReadItem();
 
                     m_Traps.Add(trap);
                 }

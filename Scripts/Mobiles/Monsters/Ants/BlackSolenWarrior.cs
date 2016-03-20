@@ -38,11 +38,6 @@ namespace Server.Mobiles
 			Karma = -3000;
 
 			VirtualArmor = 35;
-
-			PackItem( new ZoogiFungus( ( 0.05 > Utility.RandomDouble() )? 13 : 3 ) );
-
-			if ( Utility.RandomDouble() < 0.05 )
-				PackItem( new BraceletOfBinding() );
 		}
 
         public override void SetUniqueAI()

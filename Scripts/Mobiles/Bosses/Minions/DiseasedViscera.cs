@@ -51,8 +51,7 @@ namespace Server.Mobiles
             DictCombatFlee[CombatFlee.Flee10] = 0;
             DictCombatFlee[CombatFlee.Flee5] = 0;
 
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.15;
+            UniqueCreatureDifficultyScalar = 1.15;
         }
 
         public override bool AlwaysBossMinion { get { return true; } }
@@ -66,34 +65,28 @@ namespace Server.Mobiles
         public override bool IsHighSeasBodyType { get { return true; } }
 
         public override bool OnBeforeDeath()
-        {
-            if (Global_AllowAbilities)
+        {            
+            PublicOverheadMessage(MessageType.Regular, 0, false, "*explodes in a shower of bile*");
+
+            for (int a = 0; a < 8; a++)
             {
-                PublicOverheadMessage(MessageType.Regular, 0, false, "*explodes in a shower of bile*");
+                Bile bile = new Bile();
+                bile.MoveToWorld(new Point3D(X + Utility.RandomMinMax(-3, 3), Y + Utility.RandomMinMax(-3, 3), Z + 1), Map);
 
-                for (int a = 0; a < 8; a++)
-                {
-                    Bile bile = new Bile();
-                    bile.MoveToWorld(new Point3D(X + Utility.RandomMinMax(-3, 3), Y + Utility.RandomMinMax(-3, 3), Z + 1), Map);
-
-                    Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
-                }
-            }
+                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
+            }            
 
             return base.OnBeforeDeath();
         }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
-            {
-                Blood blood = new Blood();
-                blood.ItemID = Utility.RandomList(4651, 4652, 4653, 4654);
+        {           
+            Blood blood = new Blood();
+            blood.ItemID = Utility.RandomList(4651, 4652, 4653, 4654);
 
-                blood.MoveToWorld(Location, Map);
+            blood.MoveToWorld(Location, Map);
 
-                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
-            }
+            Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));            
 
             return base.OnMove(d);
         }

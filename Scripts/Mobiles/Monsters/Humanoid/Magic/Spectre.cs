@@ -41,8 +41,6 @@ namespace Server.Mobiles
 
 			Fame = 4000;
 			Karma = -4000;
-
-			PackReg( 10 );
 		}
 		
 		public override Poison PoisonImmune{ get{ return Poison.Lethal; } }
@@ -50,9 +48,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new Bonemeal());
         }
 
 		public Spectre( Serial serial ) : base( serial )

@@ -36,7 +36,7 @@ namespace Server.Mobiles
 
             VirtualArmor = 75;             
 
-            Tamable = false;
+            Tameable = false;
 
             Fame = 500;
             Karma = -500;

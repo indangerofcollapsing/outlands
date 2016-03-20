@@ -44,24 +44,20 @@ namespace Server.Mobiles
         public override int Meat { get { return 2; } }
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.05;
+        {   
+            UniqueCreatureDifficultyScalar = 1.05;
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)
         {
             base.OnDamage(amount, from, willKill);
+            
+            int bloodItem = Utility.RandomMinMax(1, 2);
 
-            if (Global_AllowAbilities)
+            for (int a = 0; a < bloodItem; a++)
             {
-                int bloodItem = Utility.RandomMinMax(1, 2);
-
-                for (int a = 0; a < bloodItem; a++)
-                {
-                    new Blood().MoveToWorld(new Point3D(Location.X + Utility.RandomMinMax(-1, 1), Location.Y + Utility.RandomMinMax(-1, 1), Location.Z), Map);
-                }
-            }
+                new Blood().MoveToWorld(new Point3D(Location.X + Utility.RandomMinMax(-1, 1), Location.Y + Utility.RandomMinMax(-1, 1), Location.Z), Map);
+            }            
         }
 
         public override void OnGaveMeleeAttack(Mobile defender)
@@ -72,45 +68,29 @@ namespace Server.Mobiles
         }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
+        {           
+            for (int a = 0; a < 1; a++)
             {
-                for (int a = 0; a < 1; a++)
-                {
-                    new Blood().MoveToWorld(new Point3D(this.X + Utility.RandomMinMax(-1, 1), this.Y + Utility.RandomMinMax(-1, 1), this.Z), this.Map);
-                }
-
-                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
+                new Blood().MoveToWorld(new Point3D(this.X + Utility.RandomMinMax(-1, 1), this.Y + Utility.RandomMinMax(-1, 1), this.Z), this.Map);
             }
+
+            Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));            
 
             return base.OnMove(d);
         }
 
         public override void OnDeath(Container c)
-        {
-            if (Global_AllowAbilities)
+        {           
+            Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
+
+            int bloodItem = Utility.RandomMinMax(2, 3);
+
+            for (int a = 0; a < bloodItem; a++)
             {
-                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
-
-                int bloodItem = Utility.RandomMinMax(2, 3);
-
-                for (int a = 0; a < bloodItem; a++)
-                {
-                    new Blood().MoveToWorld(new Point3D(Location.X + Utility.RandomMinMax(-1, 1), Location.Y + Utility.RandomMinMax(-1, 1), Location.Z), Map);
-                }
-            }
+                new Blood().MoveToWorld(new Point3D(Location.X + Utility.RandomMinMax(-1, 1), Location.Y + Utility.RandomMinMax(-1, 1), Location.Z), Map);
+            }            
             
             base.OnDeath(c);
-
-            AwardDailyAchievementForKiller(PvECategory.KillBloodyZombies);
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(new IncognitoScroll()); } break;
-                case 2: { c.AddItem(new Tourmaline()); } break;
-                case 3: { c.AddItem(new BlankScroll()); } break;
-                case 4: { c.AddItem(new StrengthScroll()); } break;
-            }
         }    
 
         public BloodyZombie(Serial serial): base(serial)

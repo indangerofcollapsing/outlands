@@ -30,15 +30,6 @@ namespace Server.Mobiles
 
 			Fame = 8000;
 			Karma = -8000;
-
-			if ( 0.25 > Utility.RandomDouble() )
-				PackItem( new Board( 10 ) );
-			else
-				PackItem( new Log( 10 ) );
-
-			PackReg( 3 );
-            PackItem( new Engines.Plants.Seed() );
-            PackItem( new Engines.Plants.Seed() );
 		}
 
         public override void SetUniqueAI()
@@ -52,7 +43,7 @@ namespace Server.Mobiles
         {
             base.OnGotMeleeAttack(attacker);
 
-            if (this.Hits > (this.HitsMax / 4))
+            if (Hits > (HitsMax / 4))
             {
                 if (0.25 >= Utility.RandomDouble())
                     SpawnBogling(attacker);

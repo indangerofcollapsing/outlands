@@ -77,7 +77,7 @@ namespace Server.SkillHandlers
                             return;
                         }
 
-                        if (!creature.Tamable)
+                        if (!creature.Tameable)
                             creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1049655, from.NetState); // That creature cannot be tamed.
 
                         else if (creature.Controlled)
@@ -189,7 +189,7 @@ namespace Server.SkillHandlers
                         Stop();
                     }
 
-                    else if (!m_Creature.Tamable)
+                    else if (!m_Creature.Tameable)
                     {
                         m_BeingTamed.Remove(m_Creature);
                         m_Tamer.NextSkillTime = Core.TickCount;

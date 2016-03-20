@@ -11,9 +11,6 @@ namespace Server.Mobiles
     [CorpseName("an earth elemental corpse")]
     public class EarthElemental : BaseCreature
     {
-        public override double DispelDifficulty { get { return 117.5; } }
-        public override double DispelFocus { get { return 45.0; } }
-
         [Constructable]
         public EarthElemental(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -40,23 +37,11 @@ namespace Server.Mobiles
             Karma = -3500;           
 
             ControlSlots = 2;
-           
-            PackItem(new IronOre(3));
-            PackItem(new MandrakeRoot(3));
-            PackItem(new FertileDirt());
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            AwardAchievementForKiller(AchievementTriggers.Trigger_EarthElementalKilled);
-            AwardDailyAchievementForKiller(NewbCategory.KillEarthElementals);
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonEarthElementalScroll())); } break;
-            }
         }
 
         public EarthElemental(Serial serial): base(serial)

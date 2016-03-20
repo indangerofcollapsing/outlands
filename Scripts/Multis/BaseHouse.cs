@@ -1211,9 +1211,7 @@ namespace Server.Multis
             else if (item is BaseInstrument)
                 return true;
             else if (item is VendorRentalContract)
-                return true;
-            else if (item is RewardBrazier)
-                return true;          
+                return true;           
 
 			return false;
 		}
@@ -2021,12 +2019,9 @@ namespace Server.Multis
 			if ( IsLockedDown( item ) )
 			{
 				item.PublicOverheadMessage( Server.Network.MessageType.Label, 0x3B2, 501657 );//[no longer locked down]
-				SetLockdown( item, false );
-				//TidyItemList( m_LockDowns );
-
-				if ( item is RewardBrazier )
-					((RewardBrazier) item).TurnOff();
+				SetLockdown( item, false );				
 			}
+
 			else if ( IsSecure( item ) )
 			{
 				ReleaseSecure( m, item );

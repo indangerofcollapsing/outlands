@@ -148,9 +148,6 @@ namespace Server.Mobiles
 
 		public override bool OnDragDrop( Mobile from, Item item )
 		{
-			if ( CheckFeed( from, item ) )
-				return true;
-
 			if ( PackAnimal.CheckAccess( this, from ) )
 			{
 				AddToBackpack( item );

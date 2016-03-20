@@ -31,15 +31,8 @@ namespace Server.Mobiles
             VirtualArmor = 25;
 
 			Fame = 6500;
-			Karma = 0;
-
-			AddItem( new Bow() );
-			PackItem( new Arrow( Utility.RandomMinMax( 80, 90 ) ) ); // OSI it is different: in a sub backpack, this is probably just a limitation of their engine
+			Karma = 0;			
 		}
-        
-		public override int Meat{ get{ return 1; } }
-		public override int Hides{ get{ return 8; } }
-        public override HideType HideType { get { return HideType.Spined; } }
 
 		public Centaur( Serial serial ) : base( serial )
 		{
@@ -55,9 +48,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == 678 )
-				BaseSoundID = 679;
 		}
 	}
 }

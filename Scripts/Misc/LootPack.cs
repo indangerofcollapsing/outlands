@@ -250,7 +250,6 @@ namespace Server
             new LootPackItem(typeof(RareLogPile), 1),
             // cooking
             new LootPackItem(typeof(RarePot), 1),
-            new LootPackItem(typeof(Cauldron), 1),
             new LootPackItem(typeof(RareHorseDung), 1),
             new LootPackItem(typeof(RareBerries), 5),
             // inscription

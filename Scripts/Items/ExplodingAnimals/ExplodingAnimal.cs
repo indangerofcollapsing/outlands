@@ -101,7 +101,7 @@ namespace Server.Items
 
                 BaseCreature bc_Creature = (BaseCreature)Activator.CreateInstance(m_ExplodingAnimal.CreatureType);
 
-                bc_Creature.Tamable = false;
+                bc_Creature.Tameable = false;
                 bc_Creature.Blessed = true;
                 bc_Creature.Hue = 2620;
                 bc_Creature.Name = m_ExplodingAnimal.CreatureName;

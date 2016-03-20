@@ -30,12 +30,7 @@ namespace Server.Mobiles
 
 			Fame = 3500;
 			Karma = 0;
-
-			if ( 0.2 > Utility.RandomDouble() )
-				PackItem( new GargoylesPickaxe() );
 		}
-
-		public override int Meat{ get{ return 1; } }		
 
 		public EnslavedGargoyle( Serial serial ) : base( serial )
 		{

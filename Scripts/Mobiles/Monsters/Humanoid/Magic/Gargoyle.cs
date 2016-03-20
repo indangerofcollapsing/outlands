@@ -44,31 +44,10 @@ namespace Server.Mobiles
 		}
 
 		public override bool CanFly { get { return true; } }
-		public override void GenerateLoot()
-        {
-           	switch (Utility.Random(1000))
-           	{
-             	case 1: { AddItem(new Diamond()); } break;
-             	case 2: { AddItem(new Ruby()); } break;
-             	case 3: { AddItem(new HealPotion()); } break;
-              	case 4: { AddItem(new HealScroll()); } break;
-       		}
-        }
 
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_GargoyleKilled);
-			AwardAchievementForKiller(AchievementTriggers.Trigger_GargoyleKilled_TIMED);
-			AwardDailyAchievementForKiller(PvECategory.KillGargoyles);
-			// END IPY ACHIEVEMENT TRIGGER
-
-    		switch( Utility.Random( 500 ) )
-			{
-				case 0: { c.AddItem(SpellScroll.MakeMaster(new EnergyFieldScroll())); } break;
-			}
 		}
 
 		public Gargoyle( Serial serial ) : base( serial )

@@ -6,8 +6,6 @@ namespace Server.Mobiles
 	[CorpseName( "a crane corpse" )]
 	public class Crane : BaseCreature
 	{
-		public override bool DropsGold { get { return false; } }
-		public override double MaxSkillScrollWorth { get { return 0.0; } }
 		[Constructable]
 		public Crane() : base( AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4 )
 		{

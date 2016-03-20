@@ -46,8 +46,6 @@ namespace Server.Mobiles
 			Karma = -8000;
 		}
 
-		public override bool BleedImmune { get { return true; } }
-
 		public override void OnGaveMeleeAttack( Mobile defender )
 		{
 			base.OnGaveMeleeAttack( defender );

@@ -40,9 +40,8 @@ namespace Server.Mobiles
 		}
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.33;
+        {           
+            UniqueCreatureDifficultyScalar = 1.33;
 
             DictCombatFlee[CombatFlee.Flee50] = 0;
             DictCombatFlee[CombatFlee.Flee25] = 0;
@@ -59,32 +58,11 @@ namespace Server.Mobiles
 
         public override void OnDamage(int amount, Mobile from, bool willKill)
         {
-            if (Global_AllowAbilities)
-            {
-                if (!willKill)
-                {
-                    double hitsPercent = (double)Hits / (double)HitsMax;
-
-                    double minAttackSpeed = 40;
-                    double maxAttackBonus = 80;
-
-                    int finalAttackSpeed = (int)(minAttackSpeed + (maxAttackBonus * (1 - hitsPercent)));
-
-                    AttackSpeed = finalAttackSpeed;
-
-                    if (Utility.RandomDouble() < .5 && !BardPacified)
-                        PublicOverheadMessage(MessageType.Regular, 0, false, "*becomes more enraged*");
-                }
-            }
-
             base.OnDamage(amount, from, willKill);
         }
 
         public override bool OnBeforeDeath()
         {
-            if (Global_AllowAbilities)
-                AttackSpeed = 40;
-
             return base.OnBeforeDeath();
         }
 
@@ -112,10 +90,7 @@ namespace Server.Mobiles
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-			int version = reader.ReadInt();
-
-            if (Global_AllowAbilities)
-                AttackSpeed = 40;
+			int version = reader.ReadInt();            
 		}
 	}
 }

@@ -66,14 +66,7 @@ namespace Server.Mobiles
 
 		}
 
-		public override FoodType FavoriteFood{ get{ return FoodType.Fish; } }
-
-		public override int Meat{ get{ return 1; } }
-
 		public override bool CanRummageCorpses{ get{ return true; } }
-		//public override int TreasureMapLevel{ get{ return 3; } }
-
-		// TODO: Throwing Dagger
 
 		public override void OnGaveMeleeAttack( Mobile defender ) 
 		{

@@ -30,8 +30,6 @@ namespace Server.Mobiles
 
 			Fame = 450;
 			Karma = -450;			
-
-			PackItem( new Log( 4 ) );
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }

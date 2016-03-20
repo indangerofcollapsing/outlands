@@ -44,12 +44,6 @@ namespace Server.Mobiles
 				PackItem( Engines.Plants.Seed.RandomBonsaiSeed() );
 		}
 
-		public override int Meat{ get{ return 5; } }
-		public override int Hides{ get{ return 10; } }
-		public override HideType HideType{ get{ return HideType.Barbed; } }
-		public override FoodType FavoriteFood{ get{ return FoodType.Fish; } }
-		public override bool ShowFameTitle{ get{ return false; } }
-		public override bool ClickTitle{ get{ return false; } }
 		public override bool PropertyTitle{ get{ return false; } }
 
 		public override void OnCombatantChange()

@@ -233,7 +233,7 @@ namespace Server.Items
                 if (bc_Creature.IsHenchman)
                     return SkillName.Healing;
 
-                if (bc_Creature.Tamable)
+                if (bc_Creature.Tameable)
                     return SkillName.Veterinary;
 
                 else if (!bc_Creature.Body.IsHuman)
@@ -251,7 +251,7 @@ namespace Server.Items
                 if (bc_Creature.IsHenchman)
                     return SkillName.Anatomy;
 
-                if (bc_Creature.Tamable)
+                if (bc_Creature.Tameable)
                     return SkillName.AnimalLore;
             }
 
@@ -375,24 +375,6 @@ namespace Server.Items
                             else
                             {
                                 bool found = false;
-
-                                List<Mobile> friends = petPatient.Friends;
-
-                                for (int i = 0; friends != null && i < friends.Count; ++i)
-                                {
-                                    Mobile friend = friends[i];
-
-                                    if (friend.InRange(petPatient, 3))
-                                    {
-                                        healerNumber = 503255; // You are able to resurrect the creature.
-
-                                        friend.CloseGump(typeof(PetResurrectGump));
-                                        friend.SendGump(new PetResurrectGump(m_Healer, petPatient));
-
-                                        found = true;
-                                        break;
-                                    }
-                                }
 
                                 if (!found)
                                     healerNumber = 1049670; // The pet's owner must be nearby to attempt resurrection.

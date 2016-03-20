@@ -52,7 +52,7 @@ namespace Server.Mobiles
             Name = "a thug";
             Hue = Utility.RandomSkinHue(); 
              
-            this.Body = 0x190;
+            Body = 0x190;
 
             SetStr(50);
             SetDex(50);
@@ -100,7 +100,6 @@ namespace Server.Mobiles
 
         public override bool CanRummageCorpses { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-        public override bool ShowFameTitle { get { return false; } }
 
         public Thug(Serial serial): base(serial)
         {

@@ -51,7 +51,7 @@ namespace Server
 
             VirtualArmor = 25;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
 		}
 
@@ -70,8 +70,6 @@ namespace Server
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            AwardAchievementForKiller(AchievementTriggers.Trigger_UOACZKillZombies);
         }
 
         public UOACZZombie(Serial serial): base(serial)

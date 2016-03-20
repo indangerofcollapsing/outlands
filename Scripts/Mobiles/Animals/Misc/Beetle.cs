@@ -74,9 +74,7 @@ namespace Server.Mobiles
 		{
 			return 0x21D;
 		}
-
-		public override FoodType FavoriteFood{ get{ return FoodType.Meat; } }
-
+        
 		public Beetle( Serial serial ) : base( serial )
 		{
 		}
@@ -94,6 +92,7 @@ namespace Server.Mobiles
 		}
 
 		#region Pack Animal Methods
+
 		public override bool OnBeforeDeath()
 		{
 			if ( !base.OnBeforeDeath() )
@@ -119,9 +118,6 @@ namespace Server.Mobiles
 
 		public override bool OnDragDrop( Mobile from, Item item )
 		{
-			if ( CheckFeed( from, item ) )
-				return true;
-
 			if ( PackAnimal.CheckAccess( this, from ) )
 			{
 				AddToBackpack( item );

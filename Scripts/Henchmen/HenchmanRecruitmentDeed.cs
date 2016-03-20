@@ -164,7 +164,6 @@ namespace Server.Custom
                     henchman.TimesTamed++;
                     henchman.SetControlMaster(pm_From);
                     henchman.IsBonded = true;
-                    henchman.BondingBegin = DateTime.MinValue;
                     henchman.OwnerAbandonTime = DateTime.UtcNow + henchman.AbandonDelay;
                     henchman.ResurrectionsRemaining = 2;
 

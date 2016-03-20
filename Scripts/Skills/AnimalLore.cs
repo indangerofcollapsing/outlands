@@ -368,7 +368,7 @@ namespace Server.SkillHandlers
 
             bool showTamedScalars = false;
 
-            if (bc_Creature.Tamable)
+            if (bc_Creature.Tameable)
             {
                 showTamedScalars = true;
 

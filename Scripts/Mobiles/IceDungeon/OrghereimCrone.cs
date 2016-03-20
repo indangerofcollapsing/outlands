@@ -46,8 +46,6 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            DictCombatTargeting[CombatTargeting.Predator] = 1;
-
             DictCombatAction[CombatAction.CombatSpecialAction] = 1;
             DictCombatSpecialAction[CombatSpecialAction.ThrowShipBomb] = 1;
         }

@@ -37,13 +37,11 @@ namespace Server.Mobiles
 			Fame = 300;
 			Karma = 300;
 
-			Tamable = true;
+			Tameable = true;
 			ControlSlots = 1;
 			MinTameSkill = 29.1;
 		}
-
-		public override FoodType FavoriteFood{ get{ return FoodType.FruitsAndVegies | FoodType.GrainsAndHay; } }
-
+        
 		public BaseWarHorse( Serial serial ) : base( serial )
 		{
 		}

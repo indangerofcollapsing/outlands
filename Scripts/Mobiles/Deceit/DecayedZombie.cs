@@ -53,61 +53,50 @@ namespace Server.Mobiles
         public override void OnDamage(int amount, Mobile from, bool willKill)
         {
             base.OnDamage(amount, from, willKill);
-
-            if (Global_AllowAbilities)
+            
+            if (Utility.RandomDouble() < .5)
             {
-                if (Utility.RandomDouble() < .5)
-                {
-                    Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
+                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
 
-                    Item corpsePart = new Blood();
-                    corpsePart.ItemID = Utility.RandomList(7389, 7397, 7395, 7402, 7408, 7407, 7393, 7405, 7394, 7406, 7586, 7600);
+                Item corpsePart = new Blood();
+                corpsePart.ItemID = Utility.RandomList(7389, 7397, 7395, 7402, 7408, 7407, 7393, 7405, 7394, 7406, 7586, 7600);
 
-                    corpsePart.MoveToWorld(new Point3D(Location.X + Utility.RandomMinMax(-1, 1), Location.Y + Utility.RandomMinMax(-1, 1), Location.Z), Map);
-                }
-            }
+                corpsePart.MoveToWorld(new Point3D(Location.X + Utility.RandomMinMax(-1, 1), Location.Y + Utility.RandomMinMax(-1, 1), Location.Z), Map);
+            }            
         }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
+        {            
+            if (Utility.RandomDouble() < .5)
             {
-                if (Utility.RandomDouble() < .5)
-                {
-                    Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
+                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
 
-                    Item corpsePart = new Blood();
-                    corpsePart.ItemID = Utility.RandomList(7389, 7397, 7395, 7402, 7408, 7407, 7393, 7405, 7394, 7406, 7586, 7600);
+                Item corpsePart = new Blood();
+                corpsePart.ItemID = Utility.RandomList(7389, 7397, 7395, 7402, 7408, 7407, 7393, 7405, 7394, 7406, 7586, 7600);
 
-                    corpsePart.MoveToWorld(Location, Map);
-                }
-            }
+                corpsePart.MoveToWorld(Location, Map);
+            }            
 
             return base.OnMove(d);
         }
 
         public override bool OnBeforeDeath()
         {
-            AwardDailyAchievementForKiller(PvECategory.KillDecayedZombies);
+            Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
 
-            if (Global_AllowAbilities)
+            int corpseItems = Utility.RandomMinMax(2, 3);
+
+            for (int a = 0; a < corpseItems; a++)
             {
-                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
+                Point3D point = new Point3D(Location.X + Utility.RandomMinMax(-1, 1), Location.Y + Utility.RandomMinMax(-1, 1), Location.Z);
 
-                int corpseItems = Utility.RandomMinMax(2, 3);
+                Item corpsePart = new Blood();
+                corpsePart.ItemID = Utility.RandomList(7389, 7397, 7395, 7402, 7408, 7407, 7393, 7405, 7394, 7406, 7586, 7600);
 
-                for (int a = 0; a < corpseItems; a++)
-                {
-                    Point3D point = new Point3D(Location.X + Utility.RandomMinMax(-1, 1), Location.Y + Utility.RandomMinMax(-1, 1), Location.Z);
+                corpsePart.MoveToWorld(point, Map);
 
-                    Item corpsePart = new Blood();
-                    corpsePart.ItemID = Utility.RandomList(7389, 7397, 7395, 7402, 7408, 7407, 7393, 7405, 7394, 7406, 7586, 7600);
-
-                    corpsePart.MoveToWorld(point, Map);
-
-                    new Blood().MoveToWorld(point, Map);
-                }
-            }
+                new Blood().MoveToWorld(point, Map);
+            }            
 
             return base.OnBeforeDeath();
         }

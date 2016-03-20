@@ -5,20 +5,14 @@ using Server.Targeting;
 
 namespace Server.Mobiles
 {
-	[CorpseName( "an ophidian corpse" )]
-	[TypeAlias( "Server.Mobiles.OphidianAvenger" )]
+	[CorpseName( "an ophidian knight corpse" )]
 	public class OphidianKnight : BaseCreature
 	{
-		private static string[] m_Names = new string[]
-			{
-				"an ophidian knight-errant",
-				"an ophidian avenger"
-			};
-
 		[Constructable]
 		public OphidianKnight() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
-			Name = m_Names[Utility.Random( m_Names.Length )];
+            Name = "an ophidian knight";
+
 			Body = 86;
 			BaseSoundID = 634;
             Hue = 2534;
@@ -42,12 +36,8 @@ namespace Server.Mobiles
 
 			Fame = 10000;
 			Karma = -10000;
-
-			PackItem( new LesserPoisonPotion() );
 		}
-
-        public override int Meat { get { return 2; } }
-
+        
         public override Poison HitPoison { get { return Poison.Deadly; } }
         public override Poison PoisonImmune { get { return Poison.Deadly; } }       
 		

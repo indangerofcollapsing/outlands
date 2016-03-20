@@ -33,25 +33,12 @@ namespace Server.Mobiles
 
 			Fame = 7000;
 			Karma = -7000;
-
-			switch ( Utility.Random( 6 ) )
-			{
-				case 0: PackItem( new PlateArms() ); break;
-				case 1: PackItem( new PlateChest() ); break;
-				case 2: PackItem( new PlateGloves() ); break;
-				case 3: PackItem( new PlateGorget() ); break;
-				case 4: PackItem( new PlateLegs() ); break;
-				case 5: PackItem( new PlateHelm() ); break;
-			}
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
 
 		public override bool OnBeforeDeath()
 		{			
-			PackItem( new Scimitar() );
-			PackItem( new WoodenShield() );
-
 			return base.OnBeforeDeath();
 		}
 

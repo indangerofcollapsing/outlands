@@ -47,18 +47,9 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-    		switch( Utility.Random( 1000 ) )
-    		{
-         		case 0: { c.AddItem( new IncognitoScroll( ) ); } break;
-         		case 2: { c.AddItem( new Tourmaline( ) ); } break;
-         		case 3: { c.AddItem( new BlankScroll( ) ); } break;
-         		case 4: { c.AddItem( new StrengthScroll( ) ); } break;         			
-    		}
 		}	
 		
-		public override bool CanRummageCorpses{ get{ return true; } }		
-		public override int Meat{ get{ return 2; } }       	
+		public override bool CanRummageCorpses{ get{ return true; } }	  	
 
 		public GrayTroll( Serial serial ) : base( serial )
 		{
@@ -66,12 +57,6 @@ namespace Server.Mobiles
 
 		public override void OnThink()
 		{
-            if (Global_AllowAbilities)
-            {
-                if (FocusMob != null)
-                    Attack(FocusMob);
-            }
-
 			base.OnThink();
 		}
 

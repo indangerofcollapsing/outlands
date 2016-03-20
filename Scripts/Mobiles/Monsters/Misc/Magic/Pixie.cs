@@ -38,16 +38,8 @@ namespace Server.Mobiles
             
 			Fame = 7000;
 			Karma = 7000;
-
-			VirtualArmor = 100;
-			if ( 0.02 > Utility.RandomDouble() )
-				PackStatue();
 		}
-
-		public override HideType HideType{ get{ return HideType.Spined; } }
-		public override int Hides{ get{ return 5; } }
-		public override int Meat{ get{ return 1; } }
-
+        
 		public Pixie( Serial serial ) : base( serial )
 		{
 		}

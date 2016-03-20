@@ -10,9 +10,6 @@ namespace Server.Mobiles
     [CorpseName("a puddle corpse")]
     public class Puddle : BaseCreature
     {
-        public override double DispelDifficulty { get { return 117.5; } }
-        public override double DispelFocus { get { return 45.0; } }
-
         [Constructable]
         public Puddle(): base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -44,23 +41,18 @@ namespace Server.Mobiles
             Karma = -4500;
             
             CanSwim = true;
-
-            PackItem(new BlackPearl(1));
         }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
-            {
-                Blood blood = new Blood();
-                blood.Hue = 2222;
-                blood.Name = "water";
-                blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
+        {            
+            Blood blood = new Blood();
+            blood.Hue = 2222;
+            blood.Name = "water";
+            blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
 
-                blood.MoveToWorld(Location, Map);
+            blood.MoveToWorld(Location, Map);
 
-                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
-            }
+            Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));            
 
             return base.OnMove(d);
         }
@@ -68,10 +60,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardDailyAchievementForKiller(PvECategory.KillPuddles);
-            AwardAchievementForKiller(AchievementTriggers.Trigger_WaterElementalKilled);
-            // END IPY ACHIEVEMENT TRIGGER
         }
 
         public override int GetAngerSound() { return 0x1C8; }

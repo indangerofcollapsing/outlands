@@ -37,29 +37,12 @@ namespace Server.Mobiles
 
             Fame = 3500;
             Karma = -3500;
-
-            PackItem(new Nightshade(4));
-        }
-
-        public override void GenerateLoot()
-        {
-            switch (Utility.Random(1000))
-            {
-                case 1: { AddItem(new Diamond()); } break;
-                case 2: { AddItem(new Ruby()); } break;
-                case 3: { AddItem(new HealPotion()); } break;
-                case 4: { AddItem(new HealScroll()); } break;
-            }
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            AwardDailyAchievementForKiller(PvECategory.KillGazers);
         }
-
-        public override int Meat { get { return 1; } }
 
         public Gazer(Serial serial): base(serial)
         {

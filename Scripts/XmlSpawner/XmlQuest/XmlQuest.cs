@@ -198,9 +198,7 @@ namespace Server.Items
 		// this just brings up the normal quest objectives gump 
 		public static void NormalQuestButton(PlayerMobile from)
 		{
-			if (from == null || from.Quest == null) return;
-
-			from.Quest.ShowQuestLog();
+			if (from == null) return;
 		}
 
 		public static void RemoveTemporaryQuestObjects(Mobile questowner, string questname)

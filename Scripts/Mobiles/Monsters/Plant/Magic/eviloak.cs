@@ -40,9 +40,7 @@ namespace Server.Mobiles
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
-        public override bool AlwaysMurderer { get { return true; } }       
-
+        public override bool AlwaysMurderer { get { return true; } }   
         public override bool DisallowAllMoves { get { return true; } }		
 
 		public EvilOak( Serial serial ) : base( serial )

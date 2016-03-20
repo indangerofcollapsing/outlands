@@ -49,28 +49,22 @@ namespace Server.Mobiles
         public override void OnThink()
         {
             base.OnThink();
-
-            if (Global_AllowAbilities)
+            
+            if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextMushroomExplosionAllowed)
             {
-                if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextMushroomExplosionAllowed)
+                if (Combatant != null)
                 {
-                    if (Combatant != null)
-                    {
-                        SpecialAbilities.MushroomExplosionAbility(this, 4, 6, 0, 4, true);
+                    SpecialAbilities.MushroomExplosionAbility(this, 4, 6, 0, 4, true);
 
-                        m_NextMushroomExplosionAllowed = DateTime.UtcNow + NextMushroomExplosionDelay;
-                    }
+                    m_NextMushroomExplosionAllowed = DateTime.UtcNow + NextMushroomExplosionDelay;
                 }
-            }
+            }            
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)
-        {
-            if (Global_AllowAbilities)
-            {
-                if (willKill)
-                    SpecialAbilities.MushroomExplosionAbility(this, 6, 8, 0, 4, false);
-            }
+        {            
+            if (willKill)
+                SpecialAbilities.MushroomExplosionAbility(this, 6, 8, 0, 4, false);            
 
             base.OnDamage(amount, from, willKill);
         }

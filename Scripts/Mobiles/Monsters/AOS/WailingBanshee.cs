@@ -7,7 +7,6 @@ namespace Server.Mobiles
 	[CorpseName( "a wailing banshee corpse" )]
 	public class WailingBanshee : BaseCreature
 	{
-
 		[Constructable]
 		public WailingBanshee() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -45,8 +44,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.05;
+            UniqueCreatureDifficultyScalar = 1.05;
             
             CombatSpecialActionMinDelay = 5;
             CombatSpecialActionMaxDelay = 10;

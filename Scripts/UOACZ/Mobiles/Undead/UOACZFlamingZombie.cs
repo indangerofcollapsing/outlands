@@ -56,7 +56,7 @@ namespace Server
             Fame = 3500;
             Karma = -3500;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 2;
 		}
 

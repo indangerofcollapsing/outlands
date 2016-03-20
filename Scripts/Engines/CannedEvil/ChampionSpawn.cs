@@ -632,7 +632,7 @@ namespace Server.Engines.CannedEvil
 				if( m is BaseCreature )
 				{
 					BaseCreature bc = m as BaseCreature;
-					bc.Tamable = false;
+					bc.Tameable = false;
 
 					if( !m_ConfinedRoaming )
 					{

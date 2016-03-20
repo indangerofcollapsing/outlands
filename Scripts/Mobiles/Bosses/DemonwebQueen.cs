@@ -533,9 +533,8 @@ namespace Server.Mobiles
         public override void OnAfterSpawn()
         {
             base.OnAfterSpawn();
-
-            if (Global_AllowAbilities)            
-                SpawnTrees();            
+       
+            SpawnTrees();            
         }
 
         protected override bool OnMove(Direction d)
@@ -566,35 +565,29 @@ namespace Server.Mobiles
 
             if (Utility.RandomMinMax(1, 20) == 1)
                 c.AddItem(new DemonwebCocoon());
-
-            if (Global_AllowAbilities)
+            
+            for (int a = 0; a < m_Creatures.Count; ++a)
             {
-                for (int a = 0; a < m_Creatures.Count; ++a)
+                if (m_Creatures[a] != null)
                 {
-                    if (m_Creatures[a] != null)
-                    {
-                        if (m_Creatures[a].Alive)
-                            m_Creatures[a].Kill();
-                    }
+                    if (m_Creatures[a].Alive)
+                        m_Creatures[a].Kill();
                 }
-            }
+            }            
         }
 
         public override void OnAfterDelete()
         {
             base.OnAfterDelete();
-
-            if (Global_AllowAbilities)
+            
+            for (int a = 0; a < m_Creatures.Count; ++a)
             {
-                for (int a = 0; a < m_Creatures.Count; ++a)
+                if (m_Creatures[a] != null)
                 {
-                    if (m_Creatures[a] != null)
-                    {
-                        if (m_Creatures[a].Alive)
-                            m_Creatures[a].Kill();
-                    }
+                    if (m_Creatures[a].Alive)
+                        m_Creatures[a].Kill();
                 }
-            }
+            }            
         }
 
         public DemonwebQueen(Serial serial): base(serial)

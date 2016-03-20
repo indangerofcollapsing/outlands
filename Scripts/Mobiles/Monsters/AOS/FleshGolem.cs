@@ -33,8 +33,6 @@ namespace Server.Mobiles
 			Karma = -1800;
 		}
 
-        public override int Meat { get { return 2; } }
-
         protected override bool OnMove(Direction d)
         {           
             if (Utility.RandomDouble() < .33)

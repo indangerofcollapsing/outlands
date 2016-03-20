@@ -41,14 +41,7 @@ namespace Server.Mobiles
 			Karma = -10000;
 		}
 
-        public override bool BardImmune { get { return false; } }
-        public override int Meat { get { return 1; } }
         public override bool CanFly { get { return true; } }
-
-		public override void GenerateLoot()
-		{			
-			AddLoot( LootPack.Gems, 2 );
-		}	
 
 		public GargoyleDestroyer( Serial serial ) : base( serial )
 		{

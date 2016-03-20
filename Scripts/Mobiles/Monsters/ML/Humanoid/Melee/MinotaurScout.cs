@@ -70,8 +70,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.1;
+            UniqueCreatureDifficultyScalar = 1.1;
         }
 
         public override void OnGaveMeleeAttack(Mobile defender)

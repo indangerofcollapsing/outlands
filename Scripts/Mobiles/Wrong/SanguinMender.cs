@@ -5,13 +5,13 @@ using Server.Items;
 
 namespace Server.Mobiles
 {
-    [CorpseName("a sanguine mender corpse")]
+    [CorpseName("a sanguin mender corpse")]
     public class SanguinMender : BaseSanguin
     {
         [Constructable]
         public SanguinMender(): base()
         {
-            Name = "a sanguine mender";
+            Name = "a sanguin mender";
 
             SetStr(75);
             SetDex(25);

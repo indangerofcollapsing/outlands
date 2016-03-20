@@ -15,7 +15,7 @@ namespace Server.Mobiles
 		{
 			Name = "a shade";
 			Body = 26;
-            Hue = 2101; //0x4001;
+            Hue = 2101;
 			BaseSoundID = 0x482;
 
             SetStr(50);
@@ -40,8 +40,6 @@ namespace Server.Mobiles
 
 			Fame = 4000;
 			Karma = -4000;
-
-			PackReg( 10 );
 		}
 		
 		public override Poison PoisonImmune{ get{ return Poison.Lethal; } }
@@ -49,9 +47,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new Bonemeal());
         }
 
 		public Shade( Serial serial ) : base( serial )

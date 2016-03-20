@@ -1,17 +1,3 @@
-/***************************************************************************
- *                              HousePlans.cs
- *                            ------------------
- *   author               : Richard Petron
- *   email                : richard.petron@gmail.com
- *
- *      based on boatplans.cs by the author below and modified for UO An Corp
- *
- *   begin                : August 2010
- *   author               : Sean Stavropoulos
- *   email                : sean.stavro@gmail.com
- *
- *
- ***************************************************************************/
 using System;
 using System.Collections.Generic;
 using Server;

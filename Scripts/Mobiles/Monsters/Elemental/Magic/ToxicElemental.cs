@@ -52,14 +52,9 @@ namespace Server.Mobiles
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
 
 		public override void OnDeath( Container c )
-    {     
+        {     
             base.OnDeath( c );
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonAirElementalScroll())); } break;
-            }
-    }
+        }
 
 		public ToxicElemental( Serial serial ) : base( serial )
 		{

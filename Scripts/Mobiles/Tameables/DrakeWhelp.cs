@@ -36,30 +36,24 @@ namespace Server.Mobiles
             Fame = 1500;
             Karma = -1500;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 75;
         }
 
-        public override int Meat { get { return 1; } }
-        public override int Hides { get { return 8; } }
-        public override HideType HideType { get { return HideType.Horned; } }
         public override bool CanFly { get { return true; } }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8467; } }
         public override int TamedItemHue { get { return 1005; } }
         public override int TamedItemXOffset { get { return 10; } }
         public override int TamedItemYOffset { get { return 10; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 125; } }
         public override int TamedBaseMinDamage { get { return 7; } }
         public override int TamedBaseMaxDamage { get { return 9; } }
         public override double TamedBaseWrestling { get { return 70; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -92,18 +86,7 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            AwardDailyAchievementForKiller(PvECategory.KillDrakeWhelps);
-
-            switch (Utility.Random(1000)) 
-            {
-                case 1: { c.AddItem(new Diamond()); } break;
-                case 2: { c.AddItem(new Ruby()); } break;
-                case 3: { c.AddItem(new HealPotion()); } break;
-                case 4: { c.AddItem(new HealScroll()); } break;
-            }
-        }
-        
+        }        
 
 		public DrakeWhelp( Serial serial ) : base(serial)
 		{

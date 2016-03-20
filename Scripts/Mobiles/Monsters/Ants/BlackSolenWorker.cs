@@ -33,10 +33,6 @@ namespace Server.Mobiles
 
 			Fame = 1500;
 			Karma = -1500;
-
-			PackGold( Utility.Random( 100, 180 ) );
-            
-			PackItem( new ZoogiFungus() );
 		}
 
 		public override int GetAngerSound()

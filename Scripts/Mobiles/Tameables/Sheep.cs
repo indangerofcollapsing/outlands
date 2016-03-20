@@ -8,10 +8,7 @@ namespace Server.Mobiles
 {
     [CorpseName("a sheep corpse")]
     public class Sheep : BaseCreature, ICarvable
-    {
-        public override double MaxSkillScrollWorth { get { return 0.0; } }
-        public override bool DropsGold { get { return false; } }
-        
+    {        
         private DateTime m_NextWoolTime;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -78,25 +75,22 @@ namespace Server.Mobiles
             Karma = 0;
 
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 25;
         }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8427; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 10; } }
         public override int TamedItemYOffset { get { return 5; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 50; } }
         public override int TamedBaseMinDamage { get { return 4; } }
         public override int TamedBaseMaxDamage { get { return 6; } }
         public override double TamedBaseWrestling { get { return 50; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -107,15 +101,10 @@ namespace Server.Mobiles
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
-
-        public override int Meat { get { return 3; } }
-        public override MeatType MeatType { get { return MeatType.LambLeg; } }
-        public override FoodType FavoriteFood { get { return FoodType.FruitsAndVegies | FoodType.GrainsAndHay; } }
-
+        
         public override int Wool { get { return (Body == 0xCF ? 1 : 0); } }
 
-        public Sheep(Serial serial)
-            : base(serial)
+        public Sheep(Serial serial): base(serial)
         {
         }
 
@@ -136,10 +125,10 @@ namespace Server.Mobiles
             switch (version)
             {
                 case 1:
-                    {
-                        NextWoolTime = reader.ReadDeltaTime();
-                        break;
-                    }
+                {
+                    NextWoolTime = reader.ReadDeltaTime();
+                    break;
+                }
             }
         }
     }

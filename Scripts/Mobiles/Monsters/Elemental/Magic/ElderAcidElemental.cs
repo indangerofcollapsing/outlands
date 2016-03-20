@@ -47,8 +47,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.05;
+            UniqueCreatureDifficultyScalar = 1.05;
         }
 
         public override Poison HitPoison { get { return Poison.Deadly; } }
@@ -59,36 +58,30 @@ namespace Server.Mobiles
             base.OnGaveMeleeAttack(defender);
 
             SpecialAbilities.PierceSpecialAbility(.5, this, defender, .5, 15, -1, true, "", "Their acid momentarily weakens your armor!");
+                       
+            Acid acid = new Acid();
+            acid.MoveToWorld(defender.Location, Map);
 
-            if (Global_AllowAbilities)
+            Effects.PlaySound(defender.Location, Map, Utility.RandomList(0x22F));
+
+            int acidAmount = Utility.RandomMinMax(1, 3);
+
+            for (int a = 0; a < acidAmount; a++)
             {
-                Acid acid = new Acid();
-                acid.MoveToWorld(defender.Location, Map);
-
-                Effects.PlaySound(defender.Location, Map, Utility.RandomList(0x22F));
-
-                int acidAmount = Utility.RandomMinMax(1, 3);
-
-                for (int a = 0; a < acidAmount; a++)
-                {
-                    Acid extraAcid = new Acid();
-                    extraAcid.MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z), Map);
-                }
-            }
+                Acid extraAcid = new Acid();
+                extraAcid.MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z), Map);
+            }            
         }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
+        {            
+            if (Utility.RandomDouble() <= .5)
             {
-                if (Utility.RandomDouble() <= .5)
-                {
-                    Acid acid = new Acid();
-                    acid.MoveToWorld(Location, Map);
+                Acid acid = new Acid();
+                acid.MoveToWorld(Location, Map);
 
-                    Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
-                }
-            }
+                Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
+            }            
 
             return base.OnMove(d);
         }

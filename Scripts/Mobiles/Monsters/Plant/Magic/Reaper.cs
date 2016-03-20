@@ -33,36 +33,19 @@ namespace Server.Mobiles
             SetSkill(SkillName.Meditation, 100);
 
 			Fame = 3500;
-			Karma = -3500;
-
-			PackItem( new Log( 10 ) );
-			PackItem( new MandrakeRoot( 5 ) );
-            PackItem( new Engines.Plants.Seed() );
-      
+			Karma = -3500;      
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
         public override bool DisallowAllMoves { get { return true; } }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            switch (Utility.Random(500))
-            {
-                case 0: { c.AddItem(new RangerArms()); } break;
-                case 1: { c.AddItem(new RangerChest()); } break;
-                case 2: { c.AddItem(new RangerGloves()); } break;
-                case 3: { c.AddItem(new RangerGorget()); } break;
-                case 4: { c.AddItem(new RangerLegs()); } break;
-            }
         }
 
 		public override bool OnBeforeDeath()
 		{
-			PackItem( new Log( 10 ) );			
-
 			return base.OnBeforeDeath();
 		}
 		

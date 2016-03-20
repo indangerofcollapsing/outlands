@@ -14,7 +14,6 @@ namespace Server.Mobiles
 
 		public override bool IsBondable{ get{ return false; } }
 
-		public override FoodType FavoriteFood { get { return FoodType.None; } }
         
 		[Constructable]
 		public Golem() : this( false, 1.0 )
@@ -60,27 +59,11 @@ namespace Server.Mobiles
 				Fame = 10;
 				Karma = 10;
 			}
+
 			else
 			{
 				Fame = 3500;
 				Karma = -3500;
-			}
-
-			if ( !summoned )
-			{
-				PackItem( new IronIngot( Utility.RandomMinMax( 11, 25 ) ) );
-
-				if ( 0.1 > Utility.RandomDouble() )
-					PackItem( new PowerCrystal() );
-
-				if ( 0.15 > Utility.RandomDouble() )
-					PackItem( new ClockworkAssembly() );
-
-				if ( 0.2 > Utility.RandomDouble() )
-					PackItem( new ArcaneGem() );
-
-				if ( 0.25 > Utility.RandomDouble() )
-					PackItem( new Gears() );
 			}
 
 			ControlSlots = 4;

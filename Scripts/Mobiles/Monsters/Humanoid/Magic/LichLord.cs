@@ -41,9 +41,6 @@ namespace Server.Mobiles
 
 			Fame = 20000;
 			Karma = -18000;
-
-			PackItem( new GnarledStaff() );
-            PackItem(new Bone(15));
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
@@ -52,9 +49,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-            AwardDailyAchievementForKiller(PvECategory.KillLichLords);
-            AwardAchievementForKiller(AchievementTriggers.Trigger_LichKilled);
 		}
 
 		public LichLord( Serial serial ) : base( serial )

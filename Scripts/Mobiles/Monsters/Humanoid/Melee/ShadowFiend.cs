@@ -38,25 +38,18 @@ namespace Server.Mobiles
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
-
-            if (Global_AllowAbilities)
-            {               
-                Blood blood = new Blood();
-                blood.Hue = 2051;
-                blood.Name = "dark essence";
-                blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
-                blood.MoveToWorld(defender.Location, Map);
-            }
+                         
+            Blood blood = new Blood();
+            blood.Hue = 2051;
+            blood.Name = "dark essence";
+            blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
+            blood.MoveToWorld(defender.Location, Map);            
         }
 
         public override bool OnBeforeDeath()
-    {
-      Effects.SendLocationEffect( Location, Map, 0x376A, 10, 1 );
-            var goldItem = new Gold(ModifiedGoldWorth());
-            goldItem.MoveToWorld(Location, Map);
-
-      return base.OnBeforeDeath();
-    }
+        {
+            return base.OnBeforeDeath();
+        }
 
 		public override int GetIdleSound(){return 0x37A;}
 		public override int GetAngerSound(){return 0x379;}

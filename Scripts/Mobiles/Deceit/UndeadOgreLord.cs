@@ -41,8 +41,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.2;
+            UniqueCreatureDifficultyScalar = 1.2;
         }
 
         private bool spawnedZombies = false;
@@ -55,14 +54,11 @@ namespace Server.Mobiles
         public override void OnDamage(int amount, Mobile from, bool willKill)
         {
             base.OnDamage(amount, from, willKill);
+            
+            double hitsPercent = (double)Hits / (double)HitsMax;
 
-            if (Global_AllowAbilities)
-            {
-                double hitsPercent = (double)Hits / (double)HitsMax;
-
-                if (hitsPercent <= .5 && !spawnedZombies)
-                    SpawnZombies();
-            }
+            if (hitsPercent <= .5 && !spawnedZombies)
+                SpawnZombies();            
         }
 
         private void SpawnZombies()
@@ -93,8 +89,6 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            AwardDailyAchievementForKiller(PvECategory.KillUndeadOgreLords);
-
             return base.OnBeforeDeath();
         }        
 
@@ -107,6 +101,7 @@ namespace Server.Mobiles
             base.Serialize(writer);
             writer.Write((int)0);
 
+            //Version 0
             writer.Write(spawnedZombies);
         }
 
@@ -115,7 +110,10 @@ namespace Server.Mobiles
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            spawnedZombies = reader.ReadBool();
+            if (version >= 0)
+            {
+                spawnedZombies = reader.ReadBool();
+            }
         }
     }
 }

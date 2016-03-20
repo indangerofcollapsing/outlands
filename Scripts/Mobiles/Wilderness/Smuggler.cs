@@ -52,11 +52,11 @@ namespace Server.Mobiles
             Name = "a smuggler";
             Hue = Utility.RandomSkinHue();
 
-            if (this.Female = Utility.RandomBool())
-                this.Body = 0x191;
+            if (Female = Utility.RandomBool())
+                Body = 0x191;
 
             else
-                this.Body = 0x190;
+                Body = 0x190;
 
             SetStr(50);
             SetDex(75);
@@ -131,7 +131,6 @@ namespace Server.Mobiles
 
         public override bool CanRummageCorpses { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-        public override bool ShowFameTitle { get { return false; } }
 
         public Smuggler(Serial serial): base(serial)
         {

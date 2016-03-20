@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Server.Items
 {
-    public class SanguineousTrap : Item
+    public class sanguinousTrap : Item
     {
         public enum TrapType
         {
@@ -21,9 +21,9 @@ namespace Server.Items
         public bool m_TrapSprung = false;
         
         [Constructable]
-        public SanguineousTrap(TrapType trapType, Mobile owner, DateTime expiration): base(6179)
+        public sanguinousTrap(TrapType trapType, Mobile owner, DateTime expiration): base(6179)
         {
-            Name = "sanguineous trap";            
+            Name = "sanguinous trap";            
 
             Movable = false;
             Visible = false;
@@ -194,7 +194,7 @@ namespace Server.Items
             }
         }
 
-        public SanguineousTrap(Serial serial): base(serial)
+        public sanguinousTrap(Serial serial): base(serial)
         {
         }
 
@@ -206,7 +206,7 @@ namespace Server.Items
 
             foreach (Item item in itemsOnTile)
             {
-                if (item is SanguineousTrap)
+                if (item is sanguinousTrap)
                 {
                     foundOtherTrap = true;
                     break;

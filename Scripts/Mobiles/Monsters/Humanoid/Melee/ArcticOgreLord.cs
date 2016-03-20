@@ -36,8 +36,6 @@ namespace Server.Mobiles
             Karma = -15000;
         }
 
-        public override int Meat { get { return 2; } }
-
         public override void SetUniqueAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
@@ -46,22 +44,15 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            PackItem(new Club());
-
             return base.OnBeforeDeath();
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-            switch (Utility.Random(500))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new EarthquakeScroll())); } break;
-            }
         }
 
-        public ArcticOgreLord(Serial serial)
-            : base(serial)
+        public ArcticOgreLord(Serial serial): base(serial)
         {
         }
 

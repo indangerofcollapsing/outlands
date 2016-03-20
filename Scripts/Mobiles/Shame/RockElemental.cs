@@ -35,23 +35,12 @@ namespace Server.Mobiles
             VirtualArmor = 100;
 
             Fame = 3500;
-            Karma = -3500;
-
-            PackItem(new IronOre(4) {ItemID = 6584});
-            PackItem(new MandrakeRoot(4));        
+            Karma = -3500;      
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            AwardAchievementForKiller(AchievementTriggers.Trigger_EarthElementalKilled);
-            AwardDailyAchievementForKiller(NewbCategory.KillEarthElementals);
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonEarthElementalScroll())); } break;
-            }
         }
 
         public RockElemental(Serial serial): base(serial)

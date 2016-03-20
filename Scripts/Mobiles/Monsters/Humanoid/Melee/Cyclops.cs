@@ -33,8 +33,6 @@ namespace Server.Mobiles
 			Fame = 4500;
 			Karma = -4500;
 		}
-        		
-		public override int Meat{ get{ return 4; } }
 
 		public Cyclops( Serial serial ) : base( serial )
 		{

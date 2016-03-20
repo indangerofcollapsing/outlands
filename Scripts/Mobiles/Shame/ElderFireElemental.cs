@@ -10,9 +10,6 @@ namespace Server.Mobiles
     [CorpseName("an elder fire elemental corpse")]
     public class ElderFireElemental : BaseCreature
     {
-        public override double DispelDifficulty { get { return 117.5; } }
-        public override double DispelFocus { get { return 45.0; } }
-
         [Constructable]
         public ElderFireElemental(): base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -46,8 +43,6 @@ namespace Server.Mobiles
 
             ControlSlots = 2;
 
-            PackItem(new SulfurousAsh(3));
-
             AddItem(new LightSource());
         }
 
@@ -59,15 +54,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_FireElementalKilled);
-            // END IPY ACHIEVEMENT TRIGGER
-
-            switch (Utility.Random(250))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonFireElementalScroll())); } break;
-            }
         }
 
         public ElderFireElemental(Serial serial): base(serial)

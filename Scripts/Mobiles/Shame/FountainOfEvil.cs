@@ -10,9 +10,6 @@ namespace Server.Mobiles
     [CorpseName("a fountain of evil corpse")]
     public class FountainOfEvil: BaseCreature
 	{
-		public override double DispelDifficulty{ get{ return 117.5; } }
-		public override double DispelFocus{ get{ return 45.0; } }
-
 		[Constructable]
 		public FountainOfEvil () : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -44,66 +41,57 @@ namespace Server.Mobiles
 			Karma = -4500;			
 
 			CanSwim = true;
-
-			PackItem( new BlackPearl( 3 ) );
 		}
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.15;
+            UniqueCreatureDifficultyScalar = 1.15;
         }
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
-
-            if (Global_AllowAbilities)
+            
+            if (Utility.RandomDouble() < .33)
             {
-                if (Utility.RandomDouble() < .33)
+                Blood ichor = new Blood();
+                ichor.Hue = 2051;
+                ichor.Name = "ichor";
+                ichor.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
+                ichor.MoveToWorld(defender.Location, Map);
+
+                for (int a = 0; a < 4; a++)
                 {
-                    Blood ichor = new Blood();
-                    ichor.Hue = 2051;
-                    ichor.Name = "ichor";
-                    ichor.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
-                    ichor.MoveToWorld(defender.Location, Map);
-
-                    for (int a = 0; a < 4; a++)
-                    {
-                        Blood blood = new Blood();
-                        blood.Hue = 2051;
-                        blood.Name = "ichor";
-                        blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
-                        blood.MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z), Map);
-                    }
-
-                    Effects.PlaySound(defender.Location, defender.Map, 0x580);
-                    defender.FixedParticles(0x374A, 10, 20, 5021, 1107, 0, EffectLayer.Head);
-
-                    defender.SendMessage("You have been covered in an evil ichor!");
-
-                    SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 3, -1, false, "", "");
-                    SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 10, -1, false, "", "");
-                    SpecialAbilities.PierceSpecialAbility(1.0, this, defender, .33, 15, -1, false, "", "");
-                    SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .15, 15, -1, false, "", "");
-                    SpecialAbilities.StunSpecialAbility(1.0, this, defender, .10, 15, -1, false, "", "");
+                    Blood blood = new Blood();
+                    blood.Hue = 2051;
+                    blood.Name = "ichor";
+                    blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
+                    blood.MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z), Map);
                 }
-            }
+
+                Effects.PlaySound(defender.Location, defender.Map, 0x580);
+                defender.FixedParticles(0x374A, 10, 20, 5021, 1107, 0, EffectLayer.Head);
+
+                defender.SendMessage("You have been covered in an evil ichor!");
+
+                SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 3, -1, false, "", "");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 10, -1, false, "", "");
+                SpecialAbilities.PierceSpecialAbility(1.0, this, defender, .33, 15, -1, false, "", "");
+                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .15, 15, -1, false, "", "");
+                SpecialAbilities.StunSpecialAbility(1.0, this, defender, .10, 15, -1, false, "", "");
+            }            
         }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
-            {
-                Blood blood = new Blood();
-                blood.Hue = 2051;
-                blood.Name = "ichor";
-                blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
+        {            
+            Blood blood = new Blood();
+            blood.Hue = 2051;
+            blood.Name = "ichor";
+            blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
 
-                blood.MoveToWorld(Location, Map);
+            blood.MoveToWorld(Location, Map);
 
-                Effects.PlaySound(Location, Map, Utility.RandomList(0x101));
-            }
+            Effects.PlaySound(Location, Map, Utility.RandomList(0x101));            
 
             return base.OnMove(d);
         }
@@ -117,19 +105,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_WaterElementalKilled);
-			// END IPY ACHIEVEMENT TRIGGER
-
-    		switch( Utility.Random( 500 ) )
-			{
-				case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonWaterElementalScroll())); } break;
-				case 1: { c.AddItem(new Fish()); } break;
-				case 2: { c.AddItem(new Sapphire()); } break;
-				case 3: { c.AddItem(new RuinedPaintingArtifact()); } break;
-				case 4: { c.AddItem(new NightSightScroll()); } break;
-			}
 		}	
 
         public FountainOfEvil(Serial serial): base(serial)

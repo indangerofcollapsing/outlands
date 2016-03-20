@@ -40,9 +40,8 @@ namespace Server.Mobiles
 		}
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 0.95;
+        {            
+            UniqueCreatureDifficultyScalar = 0.95;
 
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.IceBreathAttack] = 1;

@@ -45,9 +45,8 @@ namespace Server.Mobiles
         public override bool IsHighSeasBodyType { get { return true; } }
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.05;
+        {           
+            UniqueCreatureDifficultyScalar = 1.05;
             
             DictCombatSpell[CombatSpell.SpellDamage5] = 8;
         }
@@ -55,36 +54,33 @@ namespace Server.Mobiles
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
-
-            if (Global_AllowAbilities)
+           
+            if (Utility.RandomDouble() < .5)
             {
-                if (Utility.RandomDouble() < .5)
-                {
-                    double manaLoss = Utility.RandomMinMax(30, 60);
+                double manaLoss = Utility.RandomMinMax(30, 60);
 
-                    if (defender is PlayerMobile)
-                        manaLoss /= 2;
+                if (defender is PlayerMobile)
+                    manaLoss /= 2;
 
-                    if (manaLoss < 1)
-                        manaLoss = 1;
+                if (manaLoss < 1)
+                    manaLoss = 1;
 
-                    defender.Mana -= (int)manaLoss;
+                defender.Mana -= (int)manaLoss;
 
-                    double manaPercent = (double)Mana / (double)ManaMax;
-                    double damageAmount = manaLoss * (1 - manaPercent);
+                double manaPercent = (double)Mana / (double)ManaMax;
+                double damageAmount = manaLoss * (1 - manaPercent);
 
-                    if (damageAmount < 1)
-                        damageAmount = 1;
+                if (damageAmount < 1)
+                    damageAmount = 1;
 
-                    defender.FixedParticles(0x374A, 10, 30, 5038, 0x075, 0, EffectLayer.Head);
-                    defender.PlaySound(0x581);
+                defender.FixedParticles(0x374A, 10, 30, 5038, 0x075, 0, EffectLayer.Head);
+                defender.PlaySound(0x581);
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1, 1.0, false, -1, false, "", "The creature feeds upon your brain!");
-                    new Blood().MoveToWorld(defender.Location, defender.Map);
+                SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1, 1.0, false, -1, false, "", "The creature feeds upon your brain!");
+                new Blood().MoveToWorld(defender.Location, defender.Map);
 
-                    AOS.Damage(defender, this, (int)damageAmount, 0, 100, 0, 0, 0);
-                }
-            }
+                AOS.Damage(defender, this, (int)damageAmount, 0, 100, 0, 0, 0);
+            }            
         }        
 
         public override int GetAngerSound(){return 0x381;}

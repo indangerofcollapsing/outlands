@@ -36,33 +36,13 @@ namespace Server.Mobiles
 
 			Fame = 2500;
 			Karma = -2500;
-
-			switch ( Utility.Random( 7 ) )
-			{
-				case 0: PackItem( new Arrow() ); break;
-				case 1: PackItem( new Lockpick() ); break;
-				case 2: PackItem( new Shaft() ); break;
-				case 3: PackItem( new Ribs() ); break;
-				case 4: PackItem( new OrcishKinMask() ); break;
-				case 5: PackItem( new BeverageBottle( BeverageType.Wine ) ); break;
-				case 6: PackItem( new Jug( BeverageType.Cider ) ); break;
-			}
-
-			if (Utility.Random(7500) == 0)
-				PackItem(new Rope());
 		}
 
         public override bool CanRummageCorpses { get { return true; } }
-        public override int Meat { get { return 1; } }
 
 		public override void OnDeath(Container c)
 		{
 			base.OnDeath(c);
-
-			AwardDailyAchievementForKiller(NewbCategory.KillOrcs);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new CaveMoss());
 		}		
         
 		public OrcCaptain( Serial serial ) : base( serial )

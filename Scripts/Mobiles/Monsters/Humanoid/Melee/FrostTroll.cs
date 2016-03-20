@@ -40,8 +40,6 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.IceBreathAttack] = 1;
         }
 
-        public override int Meat { get { return 2; } }
-
 		public FrostTroll( Serial serial ) : base( serial )
 		{
 		}

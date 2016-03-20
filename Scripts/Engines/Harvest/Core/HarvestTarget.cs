@@ -4,8 +4,6 @@ using Server.Items;
 using Server.Targeting;
 using Server.Multis;
 using Server.Mobiles;
-using Server.Engines.Quests;
-using Server.Engines.Quests.Hag;
 
 namespace Server.Engines.Harvest
 {
@@ -42,21 +40,7 @@ namespace Server.Engines.Harvest
                     PlayerMobile player = from as PlayerMobile;
 
                     if (player != null)
-                    {
-                        QuestSystem qs = player.Quest;
-
-                        if (qs is WitchApprenticeQuest)
-                        {
-                            FindIngredientObjective obj = qs.FindObjective(typeof(FindIngredientObjective)) as FindIngredientObjective;
-
-                            if (obj != null && !obj.Completed && obj.Ingredient == Ingredient.Bones)
-                            {
-                                player.SendLocalizedMessage(1055037); // You finish your grim work, finding some of the specific bones listed in the Hag's recipe.
-                                obj.Complete();
-
-                                return;
-                            }
-                        }
+                    {                        
                     }
                 }
             }

@@ -39,7 +39,7 @@ namespace Server.Mobiles
 			Fame = 2000;
 			Karma = -2000;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 100.1;
 
@@ -48,23 +48,18 @@ namespace Server.Mobiles
 
         public override Poison HitPoison { get { return Poison.Deadly; } }
         public override Poison PoisonImmune { get { return Poison.Deadly; } }        
-
-        public override int Meat { get { return 1; } }
-
-        //Animal Lore Display Info
+        
         public override int TamedItemId { get { return 8420; } }
         public override int TamedItemHue { get { return 2500; } }
         public override int TamedItemXOffset { get { return 10; } }
         public override int TamedItemYOffset { get { return 5; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 200; } }
         public override int TamedBaseMinDamage { get { return 8; } }
         public override int TamedBaseMaxDamage { get { return 10; } }
         public override double TamedBaseWrestling { get { return 90; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 25; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -77,8 +72,7 @@ namespace Server.Mobiles
         public override int TamedBaseVirtualArmor { get { return 125; } }
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
+        {          
             UniqueCreatureDifficultyScalar = 1.2;
         }
 
@@ -101,8 +95,6 @@ namespace Server.Mobiles
 		public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            AwardDailyAchievementForKiller(NewbCategory.KillScorpions);
         }
 
 		public ChromaticCrawler( Serial serial ) : base( serial )

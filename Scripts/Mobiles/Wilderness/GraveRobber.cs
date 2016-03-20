@@ -51,11 +51,11 @@ namespace Server.Mobiles
             Name = "a grave robber";
             Hue = Utility.RandomSkinHue(); 
             
-            if (this.Female = Utility.RandomBool())            
-                this.Body = 0x191;            
+            if (Female = Utility.RandomBool())            
+                Body = 0x191;            
 
             else   
-                this.Body = 0x190;
+                Body = 0x190;
 
             SetStr(50);
             SetDex(50);
@@ -79,10 +79,8 @@ namespace Server.Mobiles
             Utility.AssignRandomHair(this, Utility.RandomHairHue());
            
             AddItem(new ShortPants() { Movable = true, Hue = Utility.RandomNeutralHue()});           
-            AddItem(new StuddedGloves() { Movable = true, Hue = 0 });           
-
+            AddItem(new StuddedGloves() { Movable = true, Hue = 0 });  
             AddItem(new Pickaxe() { Movable = true, Hue = 0 });
-
             AddItem(new Torch());          
         }
 
@@ -99,37 +97,33 @@ namespace Server.Mobiles
 
                 m_NextSpeechAllowed = DateTime.UtcNow + NextSpeechDelay;
             }
-
-            if (Global_AllowAbilities)
+          
+            if (Utility.RandomDouble() < 1 && DateTime.UtcNow > m_NextDigAllowed && Combatant == null)
             {
-                if (Utility.RandomDouble() < 1 && DateTime.UtcNow > m_NextDigAllowed && Combatant == null)
+                Effects.PlaySound(this.Location, this.Map, Utility.RandomList(0x125, 0x126));
+                Animate(Utility.RandomList(11, 12), 5, 1, true, false, 0);
+
+                AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+                NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(2);
+
+                //Dirt
+                for (int a = 0; a < 2; a++)
                 {
-                    Effects.PlaySound(this.Location, this.Map, Utility.RandomList(0x125, 0x126));
-                    Animate(Utility.RandomList(11, 12), 5, 1, true, false, 0);
+                    Blood dirt = new Blood();
+                    dirt.Name = "dirt";
+                    dirt.ItemID = Utility.RandomList(7681, 7682);
 
-                    AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-                    NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(2);
+                    Point3D dirtLocation = new Point3D(X + Utility.RandomMinMax(-1, 1), Y + Utility.RandomMinMax(-1, 1), Z);
 
-                    //Dirt
-                    for (int a = 0; a < 2; a++)
-                    {
-                        Blood dirt = new Blood();
-                        dirt.Name = "dirt";
-                        dirt.ItemID = Utility.RandomList(7681, 7682);
-
-                        Point3D dirtLocation = new Point3D(X + Utility.RandomMinMax(-1, 1), Y + Utility.RandomMinMax(-1, 1), Z);
-
-                        dirt.MoveToWorld(dirtLocation, Map);
-                    }
-
-                    m_NextDigAllowed = DateTime.UtcNow + NextDigDelay;
+                    dirt.MoveToWorld(dirtLocation, Map);
                 }
-            }
+
+                m_NextDigAllowed = DateTime.UtcNow + NextDigDelay;
+            }            
         }
 
         public override bool CanRummageCorpses { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-        public override bool ShowFameTitle { get { return false; } }
 
         public GraveRobber(Serial serial): base(serial)
         {

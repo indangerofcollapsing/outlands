@@ -37,25 +37,22 @@ namespace Server.Mobiles
 			Fame = 300;
 			Karma = -300;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 30;
         }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8424; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 0; } }
         public override int TamedItemYOffset { get { return 5; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 75; } }
         public override int TamedBaseMinDamage { get { return 5; } }
         public override int TamedBaseMaxDamage { get { return 7; } }
         public override double TamedBaseWrestling { get { return 55; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 25; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -73,14 +70,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-    		switch( Utility.Random( 1000 ) )
-    		{
-         		case 1: { c.AddItem( new Diamond( ) ); } break;
-         		case 2: { c.AddItem( new Ruby( ) ); } break;
-         		case 3: { c.AddItem( new HealPotion( ) ); } break;
-         		case 4: { c.AddItem( new HealScroll( ) ); } break;         			
-    		}
 		}
         
         public Slime( Serial serial ) : base( serial )

@@ -52,11 +52,11 @@ namespace Server.Mobiles
             Name = "a poacher";
             Hue = Utility.RandomSkinHue(); 
             
-            if (this.Female = Utility.RandomBool())            
-                this.Body = 0x191;            
+            if (Female = Utility.RandomBool())            
+                Body = 0x191;            
 
             else   
-                this.Body = 0x190;
+                Body = 0x190;
 
             SetStr(75);
             SetDex(75);
@@ -105,8 +105,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.05;
+            UniqueCreatureDifficultyScalar = 1.05;
 
             DictCombatTargeting[CombatTargeting.Predator] = 1;
             DictCombatTargeting[CombatTargeting.Prey] = 1;
@@ -145,7 +144,6 @@ namespace Server.Mobiles
 
         public override bool CanRummageCorpses { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-        public override bool ShowFameTitle { get { return false; } }
 
         public Poacher(Serial serial): base(serial)
         {

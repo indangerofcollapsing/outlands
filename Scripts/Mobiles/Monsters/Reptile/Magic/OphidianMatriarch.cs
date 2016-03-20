@@ -4,7 +4,7 @@ using Server.Items;
 
 namespace Server.Mobiles
 {
-	[CorpseName( "an ophidian corpse" )]
+	[CorpseName( "an ophidian matriarch corpse" )]
 	public class OphidianMatriarch : BaseCreature
 	{
 		[Constructable]
@@ -37,8 +37,6 @@ namespace Server.Mobiles
 			Fame = 16000;
 			Karma = -16000;
 		}
-
-      public override int Meat { get { return 2; } }
 
         public override Poison HitPoison { get { return Poison.Deadly; } }
         public override Poison PoisonImmune { get { return Poison.Deadly; } }

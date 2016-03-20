@@ -115,12 +115,6 @@ namespace Server.Mobiles
 			return 0x4FB;
 		}
 
-		//public override int TreasureMapLevel { get { return 3; } }
-		public override int Meat { get { return 16; } }
-		public override int Hides { get { return 60; } }
-		public override FoodType FavoriteFood { get { return FoodType.Meat; } }
-		public override bool CanAngerOnTame { get { return true; } }
-
 		public override void OnGaveMeleeAttack( Mobile defender )
 		{
 			base.OnGaveMeleeAttack( defender );

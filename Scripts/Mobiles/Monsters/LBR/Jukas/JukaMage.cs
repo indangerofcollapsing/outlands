@@ -106,7 +106,7 @@ namespace Server.Mobiles
 
                 foreach (Mobile m in eable)
 				{
-					if ( m is JukaLord && IsFriend( m ) && m.Combatant != null && CanBeBeneficial( m ) && m.CanBeginAction( typeof( JukaMage ) ) && InLOS( m ) )
+					if ( m is JukaLord && m.Combatant != null && CanBeBeneficial( m ) && m.CanBeginAction( typeof( JukaMage ) ) && InLOS( m ) )
 					{
 						toBuff = (JukaLord)m;
 						break;

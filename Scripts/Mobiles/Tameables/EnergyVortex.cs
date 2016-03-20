@@ -11,9 +11,6 @@ namespace Server.Mobiles
         public override bool DeleteCorpseOnDeath { get { return Summoned; } }
         public override bool AlwaysMurderer { get { return true; } }
 
-        public override double DispelDifficulty { get { return 80.0; } }
-        public override double DispelFocus { get { return 20.0; } }
-
         [Constructable]
         public EnergyVortex(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {

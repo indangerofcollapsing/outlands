@@ -39,17 +39,11 @@ namespace Server.Mobiles
 
 			Fame = 10000;
 			Karma = -10000;
-
-			int count = Utility.RandomMinMax( 2, 3 );
-
-			for ( int i = 0; i < count; ++i )
-				PackItem( new TreasureMap( 3, Map.Trammel ) );
 		}
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.05;
+            UniqueCreatureDifficultyScalar = 1.05;
             
             DictCombatSpell[CombatSpell.SpellDamage5] = 8;
 

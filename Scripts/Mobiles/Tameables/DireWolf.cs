@@ -32,29 +32,22 @@ namespace Server.Mobiles
             Fame = 2500;
             Karma = -2500;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 60;
         }
 
-        public override int Meat { get { return 1; } }
-        public override int Hides { get { return 7; } }
-        public override HideType HideType { get { return HideType.Spined; } }
-
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8482; } }
         public override int TamedItemHue { get { return 902; } }
         public override int TamedItemXOffset { get { return 0; } }
         public override int TamedItemYOffset { get { return 0; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 150; } }
         public override int TamedBaseMinDamage { get { return 7; } }
         public override int TamedBaseMaxDamage { get { return 9; } }
         public override double TamedBaseWrestling { get { return 70; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }

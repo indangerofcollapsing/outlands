@@ -7,7 +7,7 @@ using Server.Network;
 
 namespace Server.Mobiles
 {
-    [CorpseName("a sanguine assassin corpse")]
+    [CorpseName("a sanguin assassin corpse")]
     public class SanguinAssassin : BaseSanguin
     {
         public DateTime m_NextVanishAllowed;
@@ -16,7 +16,7 @@ namespace Server.Mobiles
         [Constructable]
         public SanguinAssassin(): base()
         {           
-            Name = "a sanguine assassin";
+            Name = "a sanguin assassin";
 
             SetStr(75);
             SetDex(75);
@@ -57,67 +57,27 @@ namespace Server.Mobiles
                 case 1: AddItem(new Kryss() { Movable = false, Hue = weaponHue, }); break;
                 case 2: AddItem(new Katana() { Movable = false, Hue = weaponHue, }); break;
             }
-
-            PackItem(new PoisonPotion());
-            PackItem(new PoisonPotion());
         }
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.1;
+            UniqueCreatureDifficultyScalar = 1.1;
         }
 
         public override void OnThink()
         {
             base.OnThink();
-
-            if (Global_AllowAbilities)
+            
+            if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed)
             {
-                if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed)
+                if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
                 {
-                    if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
-                    {
-                        if (SpecialAbilities.VanishAbility(this, 1.0, true, -1, 3, 6, true, null))
-                        {
-                            PublicOverheadMessage(MessageType.Regular, 0, false, "*vanishes*");
+                    if (SpecialAbilities.VanishAbility(this, 1.0, true, -1, 3, 6, true, null))                    
+                        PublicOverheadMessage(MessageType.Regular, 0, false, "*vanishes*");                    
 
-                            switch (Utility.RandomMinMax(1, 4))
-                            {
-                                case 1:
-                                    DictCombatTargetingWeight[CombatTargetingWeight.EasiestToHit] = 10;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LeastCombatants] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.MostCombatants] = 0;
-                                    break;
-
-                                case 2:
-                                    DictCombatTargetingWeight[CombatTargetingWeight.EasiestToHit] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 10;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LeastCombatants] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.MostCombatants] = 0;
-                                    break;
-
-                                case 3:
-                                    DictCombatTargetingWeight[CombatTargetingWeight.EasiestToHit] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LeastCombatants] = 10;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.MostCombatants] = 0;
-                                    break;
-
-                                case 4:
-                                    DictCombatTargetingWeight[CombatTargetingWeight.EasiestToHit] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LowestHitPoints] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.LeastCombatants] = 0;
-                                    DictCombatTargetingWeight[CombatTargetingWeight.MostCombatants] = 10;
-                                    break;
-                            }
-                        }
-
-                        m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
-                    }
+                    m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
                 }
-            }
+            }            
         }
 
         public SanguinAssassin(Serial serial): base(serial)

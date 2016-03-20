@@ -42,15 +42,11 @@ namespace Server.Mobiles
 
 			Fame = 12500;
 			Karma = -12500;
-
-			PackItem( new Nightshade( 15 ) );
-			PackItem( new LesserPoisonPotion() );
 		}
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 0.9;
+        {           
+            UniqueCreatureDifficultyScalar = 0.9;
         }
 
         public override Poison HitPoison { get { return Poison.Lethal; } }
@@ -59,16 +55,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
 			base.OnDeath( c );
-
-			// IPY ACHIEVEMENT TRIGGER 
-			AwardAchievementForKiller(AchievementTriggers.Trigger_PoisonElementalKilled);
-			AwardDailyAchievementForKiller(PvECategory.KillPoisonElementals);
-			// END IPY ACHIEVEMENT TRIGGER
-
-    		switch( Utility.Random( 500 ) )
-    		{
-         		case 0: { c.AddItem( SpellScroll.MakeMaster( new EnergyVortexScroll( ) ) ); } break;
-    		}
 		}
 
 		public PoisonElemental( Serial serial ) : base( serial )

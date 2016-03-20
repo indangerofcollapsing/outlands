@@ -18,15 +18,15 @@ namespace Server.Mobiles
 
 			if ( this.Female = Utility.RandomBool() ) 
 			{ 
-				this.Body = 0x191; 
-				this.Name = NameList.RandomName( "female" ); 
+				Body = 0x191; 
+				Name = NameList.RandomName( "female" ); 
 				AddItem( new Skirt( Utility.RandomRedHue() ) ); 
 			} 
 
 			else 
 			{ 
-				this.Body = 0x190; 
-				this.Name = NameList.RandomName( "male" ); 
+				Body = 0x190; 
+				Name = NameList.RandomName( "male" ); 
 				AddItem( new ShortPants( Utility.RandomRedHue() ) ); 
 			}
 
@@ -55,8 +55,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.1;
+            UniqueCreatureDifficultyScalar = 1.1;
         }
 
         public override void OnGaveMeleeAttack(Mobile defender)
@@ -70,9 +69,6 @@ namespace Server.Mobiles
 
 		public override void OnDeath(Container c)
 		{
-			if (Region is Server.Regions.DungeonRegion && Utility.Random(500) == 0)
-				c.AddItem(TitleDye.VeryRareTitleDye(Server.Custom.PlayerTitleColors.EVeryRareColorTypes.DarkGreyTitleHue));
-
 			base.OnDeath(c);
 		}
 

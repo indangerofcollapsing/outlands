@@ -40,8 +40,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-            AwardAchievementForKiller(AchievementTriggers.Trigger_EarthElementalKilled);
-            AwardDailyAchievementForKiller(NewbCategory.KillEarthElementals);
         }
 
         public EarthOreling(Serial serial): base(serial)

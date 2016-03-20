@@ -51,9 +51,8 @@ namespace Server.Mobiles
             DictCombatFlee[CombatFlee.Flee25] = 0;
             DictCombatFlee[CombatFlee.Flee10] = 0;
             DictCombatFlee[CombatFlee.Flee5] = 0;
-
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.1;
+           
+            UniqueCreatureDifficultyScalar = 1.1;
         }
 
         public override bool AlwaysBossMinion { get { return true; } }
@@ -61,20 +60,17 @@ namespace Server.Mobiles
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
-
-            if (Global_AllowAbilities)
+            
+            if (Utility.RandomDouble() < .25)
             {
-                if (Utility.RandomDouble() < .25)
-                {
-                    Effects.PlaySound(defender.Location, defender.Map, 0x4F1);
-                    defender.FixedParticles(0x374A, 10, 20, 5021, 0x110, 0, EffectLayer.Head);
+                Effects.PlaySound(defender.Location, defender.Map, 0x4F1);
+                defender.FixedParticles(0x374A, 10, 20, 5021, 0x110, 0, EffectLayer.Head);
 
-                    defender.SendMessage("You have weakened by the creature's venom!");
+                defender.SendMessage("You have weakened by the creature's venom!");
 
-                    SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .25, 10, -1, false, "", "");
-                    SpecialAbilities.StunSpecialAbility(1.0, this, defender, .15, 10, -1, false, "", "");
-                }
-            }  
+                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .25, 10, -1, false, "", "");
+                SpecialAbilities.StunSpecialAbility(1.0, this, defender, .15, 10, -1, false, "", "");
+            }            
         }
 
         public override void OnDeath(Container c)

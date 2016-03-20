@@ -42,12 +42,9 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{
 			base.OnDeath(c);
-
-			AwardDailyAchievementForKiller(NewbCategory.KillEttins);
 		}
 
-		public override bool CanRummageCorpses{ get{ return true; } }		
-		public override int Meat{ get{ return 4; } }
+		public override bool CanRummageCorpses{ get{ return true; } }
 
 		public Ettin( Serial serial ) : base( serial )
 		{

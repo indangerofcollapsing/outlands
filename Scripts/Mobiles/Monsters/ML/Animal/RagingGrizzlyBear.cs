@@ -31,11 +31,7 @@ namespace Server.Mobiles
 			Fame = 10000;
 			Karma = 10000;			
 		}
-
-		public override int Meat{ get{ return 4; } }
-		public override int Hides{ get{ return 32; } }
-		public override PackInstinct PackInstinct{ get{ return PackInstinct.Bear; } }
-
+        
 		public RagingGrizzlyBear( Serial serial ) : base( serial )
 		{
 		}

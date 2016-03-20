@@ -42,9 +42,8 @@ namespace Server.Mobiles
         }
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.12;
+        {            
+            UniqueCreatureDifficultyScalar = 1.12;
         }
 
         public override void OnGaveMeleeAttack(Mobile defender)
@@ -64,14 +63,11 @@ namespace Server.Mobiles
         }
 
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
-            {
-                Blood blood = new Blood();
-                blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
+        {            
+            Blood blood = new Blood();
+            blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
 
-                blood.MoveToWorld(Location, Map);
-            }
+            blood.MoveToWorld(Location, Map);            
 
             return base.OnMove(d);
         }
@@ -79,16 +75,6 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            // IPY ACHIEVEMENT TRIGGER 
-            AwardAchievementForKiller(AchievementTriggers.Trigger_BloodElementalKilled);
-            AwardDailyAchievementForKiller(PvECategory.KillBloodElementals);
-            // END IPY ACHIEVEMENT TRIGGER
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new EnergyVortexScroll())); } break;
-            }
         }
 
         public ElderBloodElemental(Serial serial): base(serial)

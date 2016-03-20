@@ -43,8 +43,6 @@ namespace Server.Mobiles
 			Fame = 1000;
 			Karma = -1000;
 			
-			PackItem( new Bandage( Utility.RandomMinMax( 1, 15 ) ) );
-
             AddItem( new GnarledStaff());
 			AddItem( new BoneArms() );
 			AddItem( new BoneLegs() );
@@ -53,14 +51,9 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-
-            if (Utility.RandomMinMax(1, 5) == 1)
-                c.AddItem(new Bloodroot());
         }
 
-        public override int Meat { get { return 1; } }
-        public override bool AlwaysMurderer { get { return true; } }
-        public override bool ShowFameTitle { get { return false; } }        
+        public override bool AlwaysMurderer { get { return true; } }      
 
 		public SavageShaman( Serial serial ) : base( serial )
 		{

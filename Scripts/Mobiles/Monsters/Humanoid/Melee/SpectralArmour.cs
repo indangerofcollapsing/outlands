@@ -39,7 +39,6 @@ namespace Server.Mobiles
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
         public override bool AlwaysMurderer { get { return true; } }
 
         public override void DisplayPaperdollTo(Mobile to)
@@ -54,18 +53,6 @@ namespace Server.Mobiles
 		public override int GetAngerSound()
 		{
 			return 0x56;
-		}
-
-		public override bool OnBeforeDeath()
-		{
-			if ( !base.OnBeforeDeath() )
-				return false;
-
-			Gold gold = new Gold( ModifiedGoldWorth() );
-			gold.MoveToWorld( Location, Map );
-
-			Effects.SendLocationEffect( Location, Map, 0x376A, 10, 1 );
-			return true;
 		}
 
 		public SpectralArmour( Serial serial ) : base( serial ) 

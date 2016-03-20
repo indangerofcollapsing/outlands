@@ -36,7 +36,7 @@ namespace Server.Mobiles
 
             VirtualArmor = 25;
             
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 90;
 
@@ -44,32 +44,26 @@ namespace Server.Mobiles
             Karma = -1000;
         }
 
-        public override int Meat { get { return 4; } }
         public override MeatType MeatType { get { return MeatType.Bird; } }
-
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.15;
+            UniqueCreatureDifficultyScalar = 1.15;
         }
 
         public override int Feathers { get { return 150; } }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8465; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 0; } }
         public override int TamedItemYOffset { get { return 0; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 150; } }
         public override int TamedBaseMinDamage { get { return 7; } }
         public override int TamedBaseMaxDamage { get { return 9; } }
         public override double TamedBaseWrestling { get { return 85; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }

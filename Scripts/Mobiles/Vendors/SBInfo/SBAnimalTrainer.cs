@@ -33,7 +33,6 @@ namespace Server.Mobiles
                 Add(new AnimalBuyInfo(1, typeof(PackHorse), 606, 10, 0x123, 0));
                 Add(new AnimalBuyInfo(1, typeof(PackLlama), 491, 10, 0x124, 0));
                 Add(new AnimalBuyInfo(1, typeof(Rat), 107, 10, 0xEE, 0));
-                Add(new AnimalBuyInfo(2, typeof(ArmoredPackBear), 37700, 10, 0xD4, 0));
 			}
 		}
 

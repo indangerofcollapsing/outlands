@@ -40,23 +40,13 @@ namespace Server.Mobiles
 
 			Fame = 1500;
 			Karma = -1500;
-
-			PackReg( 3 );
 		}
 
         public override bool CanRummageCorpses { get { return true; } }
-        public override int Meat { get { return 1; } }
-        public override int Hides { get { return 8; } }
-        public override HideType HideType { get { return HideType.Spined; } }
 
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-    		switch( Utility.Random( 5000 ) )
-    		{
-         		case 0: { c.AddItem( SpellScroll.MakeMaster( new MeteorSwarmScroll( ) ) ); } break;
-    		}
 		}
 
 		public RatmanMage( Serial serial ) : base( serial )
@@ -73,12 +63,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-
-			if ( Body == 42 )
-			{
-				Body = 0x8F;
-				Hue = 0;
-			}
 		}
 	}
 }

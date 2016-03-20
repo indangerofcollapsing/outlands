@@ -42,17 +42,6 @@ namespace Server.Mobiles
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-    		AwardDailyAchievementForKiller(PvECategory.KillElderGazers);
-
-    		switch( Utility.Random( 1000 ) )
-    		{
-         		case 0: { c.AddItem( SpellScroll.MakeMaster( new MeteorSwarmScroll( ) ) ); } break;
-         		case 1: { c.AddItem( new LargeEmptyFlask( ) ); } break;
-         		case 2: { c.AddItem( new Sapphire( ) ); } break;
-         		case 3: { c.AddItem( new BlankScroll( ) ); } break;
-         		case 4: { c.AddItem( new TeleportScroll( ) ); } break;         			
-    		}
 		}
 
 		public ElderGazer( Serial serial ) : base( serial )

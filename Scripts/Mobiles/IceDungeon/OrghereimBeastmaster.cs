@@ -57,82 +57,19 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 1.1;
-            
-            DictCombatTargeting[CombatTargeting.Predator] = 1;
-            
+            UniqueCreatureDifficultyScalar = 1.1;
+                        
             DictCombatAction[CombatAction.CombatHealSelf] = 0;
 
             DictCombatAction[CombatAction.CombatSpecialAction] = 1;
             DictCombatSpecialAction[CombatSpecialAction.ThrowShipBomb] = 1;
         }
 
-        public override int OceanDoubloonValue { get { return 5; } }
-
-        public override void OnAfterSpawn()
-        {
-            base.OnAfterSpawn();
-
-            if (Global_AllowAbilities)
-            {
-                int bayingHounds = 2;
-
-                for (int a = 0; a < bayingHounds; a++)
-                {
-                    BayingHound bayinghound = new BayingHound();
-
-                    bayinghound.Fame = 500;
-                    bayinghound.Karma = -2000;
-                    bayinghound.RangePerception = 12;
-
-                    bayinghound.Kills = 5;
-                    bayinghound.ShortTermMurders = 5;
-
-                    bayinghound.MoveToWorld(this.Location, this.Map);
-
-                    bayinghound.Controlled = true;
-                    bayinghound.ControlMaster = this;
-
-                    m_BayingHounds.Add(bayinghound);
-
-                    Timer.DelayCall(TimeSpan.FromSeconds(2), delegate
-                    {
-                        if (bayinghound.Alive)
-                        {
-                            if (bayinghound.AIObject != null)
-                            {
-                                bayinghound.ControlOrder = OrderType.Guard;
-
-                                bayinghound.DictCombatFlee[CombatFlee.Flee50] = 0;
-                                bayinghound.DictCombatFlee[CombatFlee.Flee25] = 0;
-                                bayinghound.DictCombatFlee[CombatFlee.Flee10] = 0;
-                                bayinghound.DictCombatFlee[CombatFlee.Flee5] = 0;
-
-                            }
-                        }
-                    });
-                }
-            }
-        }
+        public override int OceanDoubloonValue { get { return 5; } }        
 
         public override void OnDelete()
         {
- 	        base.OnDelete();
-
-            if (Global_AllowAbilities)
-            {
-                int hounds = m_BayingHounds.Count;
-
-                for (int a = 0; a < hounds; a++)
-                {
-                    if (m_BayingHounds[a] != null)
-                    {
-                        if (!m_BayingHounds[a].Deleted)
-                            m_BayingHounds[a].Kill();
-                    }
-                }
-            }
+ 	        base.OnDelete();            
         }
 
 		public OrghereimBeastmaster( Serial serial ) : base( serial ) 
@@ -142,28 +79,13 @@ namespace Server.Mobiles
 		public override void Serialize( GenericWriter writer ) 
 		{ 
 			base.Serialize( writer ); 
-			writer.Write( (int) 0 ); // version             
-            
-            writer.Write(m_BayingHounds.Count);
-            foreach (Mobile mobile in m_BayingHounds)
-            {
-                writer.Write(mobile);
-            }
+			writer.Write( (int) 0 ); // version
 		} 
 
 		public override void Deserialize( GenericReader reader ) 
 		{ 
 			base.Deserialize( reader ); 
-			int version = reader.ReadInt(); 
-
-            m_BayingHounds = new List<Mobile>();
-
-            int bayingHounds = reader.ReadInt();
-            for (int a = 0; a < bayingHounds; a++)
-            {
-                Mobile mobile = reader.ReadMobile();
-                m_BayingHounds.Add(mobile);
-            }            
+			int version = reader.ReadInt();           
 		} 
 	} 
 }

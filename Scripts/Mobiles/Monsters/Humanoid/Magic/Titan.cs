@@ -8,8 +8,7 @@ namespace Server.Mobiles
     public class Titan : BaseCreature
     {
         [Constructable]
-        public Titan()
-            : base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
+        public Titan(): base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "a titan";
             Body = 76;
@@ -38,9 +37,7 @@ namespace Server.Mobiles
             Fame = 11500;
             Karma = -11500;
         }
-
-        public override int Meat { get { return 4; } }
-
+        
         public Titan(Serial serial): base(serial)
         {
         }

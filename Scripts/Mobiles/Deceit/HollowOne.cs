@@ -10,12 +10,7 @@ namespace Server.Mobiles
 {
     [CorpseName("a hollow one's corpse")]
     public class HollowOne : BaseCreature
-    {
-        public bool frenzied = false;
-
-        public DateTime m_NextFrenzyDamage;
-        public TimeSpan NextFrenzyDelay = TimeSpan.FromSeconds(1);
-        
+    {        
         [Constructable]
         public HollowOne(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -47,9 +42,8 @@ namespace Server.Mobiles
         }
 
         public override void SetUniqueAI()
-        {
-            if (Global_AllowAbilities)
-                UniqueCreatureDifficultyScalar = 2.0;
+        {            
+            UniqueCreatureDifficultyScalar = 2.0;
         }
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
@@ -60,56 +54,10 @@ namespace Server.Mobiles
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
-
-            if (Global_AllowAbilities)
-            {
-                if (!frenzied)
-                {
-                    PlaySound(GetAngerSound());
-
-                    frenzied = true;
-
-                    SetDamage(20, 30);
-                    SetSkill(SkillName.Wrestling, 120);
-                    AttackSpeed = 60;
-
-                    ActiveSpeed = .3;
-                    CurrentSpeed = .3;
-
-                    PublicOverheadMessage(MessageType.Regular, 0, true, "*the scent of blood drives the beast wild*");
-
-                    Timer.DelayCall(TimeSpan.FromSeconds(10), delegate()
-                    {
-                        if (this == null) return;
-                        if (!this.Alive || this.Deleted) return;
-
-                        frenzied = false;
-
-                        SetSkill(SkillName.Wrestling, 65);
-                        SetDamage(10, 20);
-                        AttackSpeed = 30;
-
-                        ActiveSpeed = .4;
-                        CurrentSpeed = .4;
-
-                        PublicOverheadMessage(MessageType.Regular, 0, true, "*the beast's frenzy subsides*");
-                    });
-                }
-            }
         }
 
         public override bool OnBeforeDeath()
         {
-            if (Global_AllowAbilities)
-            {
-                SetSkill(SkillName.Wrestling, 65);
-                SetDamage(10, 20);
-                AttackSpeed = 30;
-
-                ActiveSpeed = .4;
-                CurrentSpeed = .4;
-            }
-
             return base.OnBeforeDeath();
         }
 
@@ -133,18 +81,6 @@ namespace Server.Mobiles
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (Global_AllowAbilities)
-            {
-                frenzied = false;
-
-                SetSkill(SkillName.Wrestling, 65);
-                SetDamage(10, 20);
-                AttackSpeed = 30;
-
-                ActiveSpeed = .4;
-                CurrentSpeed = .4;
-            }
         }
     }
 }

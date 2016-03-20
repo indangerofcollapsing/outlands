@@ -38,12 +38,11 @@ namespace Server.Mobiles
 
             VirtualArmor = 25;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 115.1;
         }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedItemId { get { return 17053; } }
         public override int TamedItemHue { get { return 2501; } }
         public override int TamedItemXOffset { get { return 0; } }
@@ -55,7 +54,6 @@ namespace Server.Mobiles
         public override double TamedBaseWrestling { get { return 95; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }

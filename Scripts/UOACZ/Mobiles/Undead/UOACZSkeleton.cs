@@ -51,7 +51,7 @@ namespace Server
 
             VirtualArmor = 50;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
 		}
 

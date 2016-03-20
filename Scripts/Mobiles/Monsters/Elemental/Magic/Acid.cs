@@ -39,7 +39,7 @@ namespace Server.Items
 
             if (mobile is Maggot || mobile is Entrail || mobile is DiseasedViscera || mobile is AcidElemental || mobile is ElderAcidElemental ||
                 mobile is ToxicElemental || mobile is ElderToxicElemental || mobile is PoisonElemental || mobile is ElderPoisonElemental ||
-                mobile is HalloweenPossessedPumpkin || mobile is CorrosiveSlime)          
+                mobile is CorrosiveSlime)          
                 
             {
                 return true;
@@ -104,7 +104,7 @@ namespace Server.Items
 
                         if (mobile is Maggot || mobile is Entrail || mobile is DiseasedViscera || mobile is AcidElemental || mobile is ElderAcidElemental ||
                             mobile is ToxicElemental || mobile is ElderToxicElemental || mobile is PoisonElemental || mobile is ElderPoisonElemental ||
-                            mobile is HalloweenPossessedPumpkin || mobile is CorrosiveSlime)
+                            mobile is CorrosiveSlime)
                         {
                             continue;
                         }

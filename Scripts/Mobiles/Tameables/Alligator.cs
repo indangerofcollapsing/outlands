@@ -6,11 +6,7 @@ namespace Server.Mobiles
 {
 	[CorpseName( "an alligator corpse" )]
 	public class Alligator : BaseCreature
-	{
-
-        public override bool DropsGold { get { return false; } }
-        public override double MaxSkillScrollWorth { get { return 0.0; } }
-        
+	{        
 		[Constructable]
 		public Alligator() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -36,12 +32,11 @@ namespace Server.Mobiles
 			Fame = 600;
 			Karma = -600;
 
-            Tamable = true;
+            Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 55;
         }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedItemId { get { return 8410; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }
@@ -53,7 +48,6 @@ namespace Server.Mobiles
         public override double TamedBaseWrestling { get { return 55; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -84,13 +78,7 @@ namespace Server.Mobiles
 
             SpecialAbilities.EntangleSpecialAbility(effectChance, this, defender, 5.0, 1, -1, true, "", "The creature grasps you with its jaws, holding you in place!");
         }
-
-		//public override double MaxSkillScrollWorth { get { return 60.0; } }
-		public override int Meat{ get{ return 1; } }
-		public override int Hides{ get{ return 12; } }
-        public override HideType HideType { get { return HideType.Spined; } }
-		public override FoodType FavoriteFood{ get{ return FoodType.Meat | FoodType.Fish; } }
-
+        
 		public Alligator(Serial serial) : base(serial)
 		{
 		}
@@ -98,7 +86,6 @@ namespace Server.Mobiles
 		public override void Serialize(GenericWriter writer)
 		{
 			base.Serialize(writer);
-
 			writer.Write((int) 0);
 		}
 
@@ -107,9 +94,6 @@ namespace Server.Mobiles
 			base.Deserialize(reader);
 
 			int version = reader.ReadInt();
-
-			if ( BaseSoundID == 0x5A )
-				BaseSoundID = 660;
 		}
 	}
 }

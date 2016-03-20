@@ -19,7 +19,6 @@ using Server.Spells.Necromancy;
 using Server.Spells.Ninjitsu;
 using Server.Spells.Bushido;
 using Server.Targeting;
-using Server.Engines.Quests;
 using Server.Regions;
 using Server.Accounting;
 using Server.Engines.CannedEvil;
@@ -847,10 +846,7 @@ namespace Server.Mobiles
             if (pm != null)
             {
                 pm.m_SessionStart = DateTime.UtcNow;
-
-                if (pm.m_Quest != null)
-                    pm.m_Quest.StartTimer();
-
+                
                 pm.BedrollLogout = false;
                 pm.LastOnline = DateTime.UtcNow;
             }
@@ -910,10 +906,7 @@ namespace Server.Mobiles
                 TimeSpan gameTime = DateTime.UtcNow - pm.m_SessionStart;
 
                 pm.m_GameTime += gameTime;
-
-                if (pm.m_Quest != null)
-                    pm.m_Quest.StopTimer();
-
+                
                 pm.m_SpeechLog = null;
                 pm.LastOnline = DateTime.UtcNow;
                 pm.SetSallos(false);
@@ -1638,14 +1631,6 @@ namespace Server.Mobiles
         }
 
         public Server.Custom.DonationState DonationPlayerState { get; set; }
-
-        private QuestStep m_Step;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public QuestStep Step
-        {
-            get { return m_Step; }
-            set { m_Step = value; }
-        }        
 
         private DateTime m_LastTownSquareNotification = DateTime.MinValue;
         public DateTime LastTownSquareNotification
@@ -2980,9 +2965,6 @@ namespace Server.Mobiles
 
             if (from == this)
             {
-                if (m_Quest != null)
-                    m_Quest.GetContextMenuEntries(list);
-
                 // IPY Gump
                 list.Add(new CallbackEntry(10008, new ContextCallback(ShowIPYGump)));
                 // IPY Gump
@@ -5464,23 +5446,7 @@ namespace Server.Mobiles
             {
                 writer.Write(PreviousNames[a]);
             }
-
-            QuestSerializer.Serialize(m_Quest, writer);
-            if (m_DoneQuests == null)            
-                writer.WriteEncodedInt((int)0);
             
-            else
-            {
-                writer.WriteEncodedInt(m_DoneQuests.Count);
-                for (int i = 0; i < m_DoneQuests.Count; ++i)
-                {
-                    QuestRestartInfo restartInfo = m_DoneQuests[i];
-
-                    QuestSerializer.Write((Type)restartInfo.QuestType, QuestSystem.QuestTypes, writer);
-                    writer.Write((DateTime)restartInfo.RestartTime);
-                }
-            }
-
             writer.WriteEncodedInt(m_GuildRank.Rank);            
 
             writer.Write(m_EventCalendarAccount);
@@ -5526,7 +5492,6 @@ namespace Server.Mobiles
             writer.Write((TimeSpan)m_TimeSpanResurrected);
             writer.Write((DateTime)m_AnkhNextUse);
             writer.Write(m_AutoStabled, true);
-            writer.Write((int)m_Step);
             writer.Write((Serial)m_LastTarget);
             writer.Write((DateTime)m_LastDeathByPlayer);
             writer.Write(m_LastOnline);
@@ -5575,26 +5540,7 @@ namespace Server.Mobiles
                 {
                     PreviousNames.Add(reader.ReadString());
                 }
-
-                m_Quest = QuestSerializer.DeserializeQuest(reader);
-
-                if (m_Quest != null)
-                    m_Quest.From = this;
-
-                int count = reader.ReadEncodedInt();
-                if (count > 0)
-                {
-                    m_DoneQuests = new List<QuestRestartInfo>();
-
-                    for (int i = 0; i < count; ++i)
-                    {
-                        Type questType = QuestSerializer.ReadType(QuestSystem.QuestTypes, reader);
-                        DateTime restartTime = reader.ReadDateTime();
-
-                        m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
-                    }
-                }
-
+                
                 int rank = reader.ReadEncodedInt();
                 int maxRank = Guilds.RankDefinition.Ranks.Length - 1;
 
@@ -5647,7 +5593,6 @@ namespace Server.Mobiles
                 m_TimeSpanResurrected = reader.ReadTimeSpan();
                 m_AnkhNextUse = reader.ReadDateTime();
                 m_AutoStabled = reader.ReadStrongMobileList();
-                m_Step = (QuestStep)reader.ReadInt();
                 m_LastTarget = (Serial)reader.ReadInt();
                 m_LastDeathByPlayer = reader.ReadDateTime();
                 m_LastOnline = reader.ReadDateTime();
@@ -5697,7 +5642,7 @@ namespace Server.Mobiles
                     bc.IsStabled = true;
                     bc.StabledBy = this;
 
-                    bc.OwnerAbandonTime = DateTime.MaxValue;
+                    bc.OwnerAbandonTime = DateTime.UtcNow + TimeSpan.FromDays(1000);
                 }
             }
 
@@ -6281,26 +6226,9 @@ namespace Server.Mobiles
                     SendEverything();
             }
         }
-        #endregion
 
-        #region Quests
-
-        private QuestSystem m_Quest;
-        public QuestSystem Quest
-        {
-            get { return m_Quest; }
-            set { m_Quest = value; }
-        }
-
-        private List<QuestRestartInfo> m_DoneQuests = new List<QuestRestartInfo>();
-        public List<QuestRestartInfo> DoneQuests
-        {
-            get { return m_DoneQuests; }
-            set { m_DoneQuests = value; }
-        }
-
-        #endregion
-
+        #endregion      
+  
         #region MyRunUO Invalidation       
         
         public override void OnKillsChange(int oldValue)
@@ -6690,9 +6618,6 @@ namespace Server.Mobiles
             if (from is BaseCreature && ((BaseCreature)from).IgnoreYoungProtection)
                 return false;
 
-            if (this.Quest != null && this.Quest.IgnoreYoungProtection(from))
-                return false;
-
             if (DateTime.UtcNow - m_LastYoungMessage > TimeSpan.FromMinutes(1.0))
             {
                 m_LastYoungMessage = DateTime.UtcNow;
@@ -7044,7 +6969,7 @@ namespace Server.Mobiles
                     pet.IsStabled = true;
                     pet.StabledBy = this;
 
-                    pet.OwnerAbandonTime = DateTime.MaxValue;
+                    pet.OwnerAbandonTime = DateTime.UtcNow + TimeSpan.FromDays(1000);
 
                     pet.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully happy
 

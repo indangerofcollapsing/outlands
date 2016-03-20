@@ -45,50 +45,37 @@ namespace Server.Mobiles
 
 			Fame = 3500;
 			Karma = -3500;
-
 		}
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-            AwardAchievementForKiller(AchievementTriggers.Trigger_EarthElementalKilled);
-
-            switch (Utility.Random(1000))
-            {
-                case 0: { c.AddItem(SpellScroll.MakeMaster(new SummonEarthElementalScroll())); } break;
-            }
         }
 
         public override bool OnBeforeDeath()
         {
-            PackItem(new AgapiteOre(2));
-
             return base.OnBeforeDeath();
         }
 
         public override void SetUniqueAI()
         {
-            if (Global_AllowAbilities)
                 UniqueCreatureDifficultyScalar = 1.12;          
         }
 
         public override void OnThink()
         {
             base.OnThink();
-
-            if (Global_AllowAbilities)
+            
+            if (!Hidden && DateTime.UtcNow > m_NextReflectAllowed && MagicDamageAbsorb < 1)
             {
-                if (!Hidden && DateTime.UtcNow > m_NextReflectAllowed && MagicDamageAbsorb < 1)
-                {
-                    FixedParticles(0x375A, 10, 15, 5037, EffectLayer.Waist);
-                    MagicDamageAbsorb = 1;
+                FixedParticles(0x375A, 10, 15, 5037, EffectLayer.Waist);
+                MagicDamageAbsorb = 1;
 
-                    PlaySound(0x1E9);
+                PlaySound(0x1E9);
 
-                    double reflectDelay = NextReflectDelayMin + (Utility.RandomDouble() * (NextReflectDelayMax - NextReflectDelayMin));
-                    m_NextReflectAllowed = DateTime.UtcNow + TimeSpan.FromSeconds(reflectDelay);
-                }
-            }
+                double reflectDelay = NextReflectDelayMin + (Utility.RandomDouble() * (NextReflectDelayMax - NextReflectDelayMin));
+                m_NextReflectAllowed = DateTime.UtcNow + TimeSpan.FromSeconds(reflectDelay);
+            }            
         }
 
 		public AgapiteElemental( Serial serial ) : base( serial )

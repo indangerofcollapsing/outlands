@@ -7,8 +7,6 @@ namespace Server.Mobiles
 	[TypeAlias( "Server.Mobiles.Icesnake" )]
 	public class IceSnake : BaseCreature
 	{
-    public override bool DropsGold { get { return false; } }
-    public override double MaxSkillScrollWorth { get { return 0.0; } }
 		[Constructable]
 		public IceSnake() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{

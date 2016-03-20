@@ -33,32 +33,20 @@ namespace Server.Mobiles
 
 			Fame = 1000;
 			Karma = -1000;
-
-			if ( 0.25 > Utility.RandomDouble() )
-				PackItem( new Board( 10 ) );
-			else
-				PackItem( new Log( 10 ) );
-
-			PackItem( new MandrakeRoot( 3 ) );
             
-            CanSwim = true;
-            PackItem( new Engines.Plants.Seed() );
-            
+            CanSwim = true;            
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
         
         protected override bool OnMove(Direction d)
-        {
-            if (Global_AllowAbilities)
-            {
-                Blood blood = new Blood();
-                blood.Hue = 196;
-                blood.Name = "translucent slime";
-                blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
+        {            
+            Blood blood = new Blood();
+            blood.Hue = 196;
+            blood.Name = "translucent slime";
+            blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
 
-                blood.MoveToWorld(Location, Map);
-            }
+            blood.MoveToWorld(Location, Map);            
             
             return base.OnMove(d);            
         }

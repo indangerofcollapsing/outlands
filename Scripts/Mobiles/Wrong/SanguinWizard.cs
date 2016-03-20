@@ -5,13 +5,13 @@ using Server.Items;
 
 namespace Server.Mobiles 
 { 
-	[CorpseName( "a sanguine wizard corpse" )] 
+	[CorpseName( "a sanguin wizard corpse" )] 
 	public class SanguinWizard : BaseSanguin 
 	{ 
 		[Constructable] 
 		public SanguinWizard() : base() 
 		{ 
-			Name = "a sanguine wizard";
+			Name = "a sanguin wizard";
 
             SetStr(50);
             SetDex(75);

@@ -149,8 +149,7 @@ namespace Server.Misc
 				|| item is MonsterStatuette
 				|| item is Pier
 				|| item is ArtifactLargeVase
-				|| item is ArtifactVase
-				|| item is MinotaurStatueDeed
+				|| item is ArtifactVase				
 				|| item is SwampTile
 				|| item is WallBlood
 				|| item is TatteredAncientMummyWrapping

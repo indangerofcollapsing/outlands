@@ -47,16 +47,10 @@ namespace Server.Mobiles
 		}
 
         public override bool CanRummageCorpses { get { return true; } }
-        public override int Meat { get { return 1; } }
 
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );
-
-    		AwardDailyAchievementForKiller(NewbCategory.KillOrcs);
-        AwardAchievementForKiller(AchievementTriggers.Trigger_OrcKilled);
-        if (Utility.RandomMinMax(1, 5) == 1)
-            c.AddItem(new CaveMoss());
 		}
 
 		public OrcishMage( Serial serial ) : base( serial )
