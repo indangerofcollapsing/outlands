@@ -51,7 +51,7 @@ namespace Server
             {LootTier.Five,  14.00},  // 
             {LootTier.Six,   21.00},  // 
             {LootTier.Seven, 30.00},  // end game mobs (balrons, AL, AW)
-            {LootTier.Eight, 75.00},  // world bosses
+            {LootTier.Eight, 60.00},  // world bosses
         };
 
         private static void AddSequentialBossLoot(BaseCreature mob)
