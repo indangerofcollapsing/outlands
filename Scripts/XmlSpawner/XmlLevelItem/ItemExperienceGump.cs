@@ -137,10 +137,8 @@ namespace Server.Gumps
                             AddLabel(337, 344, LabelHue, @"Previous");
 						}
 					}
-
-                    if (m_Item is BaseWeapon)
-                        attrvalue = ((BaseWeapon)m_Item).Attributes[LevelAttributes.m_Attributes[i].m_Attribute];
-                    else if (m_Item is BaseArmor)
+                   
+                    if (m_Item is BaseArmor)
                         attrvalue = ((BaseArmor)m_Item).Attributes[LevelAttributes.m_Attributes[i].m_Attribute];
                     else if (m_Item is BaseJewel)
                         attrvalue = ((BaseJewel)m_Item).Attributes[LevelAttributes.m_Attributes[i].m_Attribute];
@@ -186,16 +184,11 @@ namespace Server.Gumps
 						if (LevelAttributes.m_WeaponAttributes[i].m_Attribute == AosWeaponAttribute.DurabilityBonus)
 						{
 							attrvalue = ((BaseWeapon)m_Item).MaxHitPoints;
-						}
-						else
-						{
-                        	attrvalue = ((BaseWeapon)m_Item).WeaponAttributes[LevelAttributes.m_WeaponAttributes[i].m_Attribute];
-						}
-                        if (attrvalue < LevelAttributes.m_WeaponAttributes[i].m_MaxValue)
-                            AddButton(301, 116 + (pageindex * 20), 4005, 4007, GetButtonID(3, i), GumpButtonType.Reply, 0);
+						}                        
+                        
 
                         AddLabel(337, 117 + (pageindex * 20), LabelHue, LevelAttributes.m_WeaponAttributes[i].m_Name+" ("+GetPointCost(m_Item, LevelAttributes.m_WeaponAttributes[i].m_XP)+"sp)");
-                        AddLabel(540, 117 + (pageindex * 20), LabelHue, attrvalue.ToString());
+                        //AddLabel(540, 117 + (pageindex * 20), LabelHue, attrvalue.ToString());
 
                         ++index;
                     }
@@ -451,12 +444,6 @@ namespace Server.Gumps
                         {
 							if (m_Item is BaseWeapon)
 							{
-								attrvalue = ((BaseWeapon)m_Item).Attributes[LevelAttributes.m_Attributes[index].m_Attribute];
-								if (attrvalue < LevelAttributes.m_Attributes[index].m_MaxValue)
-								{
-									((BaseWeapon)m_Item).Attributes[LevelAttributes.m_Attributes[index].m_Attribute] += 1;
-									levitem.Points -= cost;
-								}
 							}
 							else if (m_Item is BaseArmor)
 							{
@@ -513,13 +500,12 @@ namespace Server.Gumps
 							}
 							else
 							{
-                        		attrvalue = ((BaseWeapon)m_Item).WeaponAttributes[LevelAttributes.m_WeaponAttributes[index].m_Attribute];
+                        		
 							}
 
 							if (attrvalue < LevelAttributes.m_WeaponAttributes[index].m_MaxValue)
 							{
-                            	((BaseWeapon)m_Item).WeaponAttributes[LevelAttributes.m_WeaponAttributes[index].m_Attribute] += 1;
-                            	levitem.Points -= cost;
+                            	
 							}
                         }
                     }

@@ -199,7 +199,7 @@ namespace Server.SkillHandlers
                         if (m_Instrument.Quality == InstrumentQuality.Exceptional)
                             effectiveBardSkill += 5;
 
-                        effectiveBardSkill += m_Instrument.GetBonusesFor(bc_Target);
+                        effectiveBardSkill += 0; //m_Instrument.GetBonusesFor(bc_Target);
 
                         double effectiveDifficulty = creatureDifficulty * SkillRequiredPerDifficulty;
                         double successChance = (effectiveBardSkill - effectiveDifficulty) * SuccessChanceScalar;

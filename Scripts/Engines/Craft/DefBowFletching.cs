@@ -119,8 +119,7 @@ namespace Server.Engines.Craft
                 SetNeededExpansion(index, Expansion.SE);
             }
 
-            // Weapons
-            AddCraft(typeof(TrainingBow), 1044566, "training bow", 0.0, 40.0, typeof(Board), 1044041, 7, 1044351);
+            // Weapons            
             AddCraft(typeof(Bow), 1044566, 1025042, 30.0, 70.0, typeof(Board), 1044041, 7, 1044351);
             AddCraft(typeof(Crossbow), 1044566, 1023919, 60.0, 100.0, typeof(Board), 1044041, 7, 1044351);
             AddCraft(typeof(HeavyCrossbow), 1044566, 1025117, 80.0, 120.0, typeof(Board), 1044041, 10, 1044351);

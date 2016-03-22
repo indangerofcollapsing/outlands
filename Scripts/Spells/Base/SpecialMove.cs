@@ -252,8 +252,6 @@ namespace Server.Spells
 
 			if ( move != null )
 			{
-				WeaponAbility.ClearCurrentAbility( m );
-
 				m_Table[m] = move;
 
 				move.OnUse( m );

@@ -13,12 +13,7 @@ namespace Server.Items
 		[Constructable]
 		public Windsong() : base()
 		{
-			Hue = 0xF7;
-			
-			Attributes.WeaponDamage = 35;
-			WeaponAttributes.SelfRepair = 3;
-			
-			//Velocity = 25;			
+			Hue = 0xF7;		
 		}
 
 		public Windsong( Serial serial ) : base( serial )

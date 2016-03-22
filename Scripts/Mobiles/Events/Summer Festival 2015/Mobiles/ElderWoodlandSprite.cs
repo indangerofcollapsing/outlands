@@ -63,7 +63,7 @@ namespace Server.Mobiles
         {            
             UniqueCreatureDifficultyScalar = 1.25;
 
-            SetSubGroup(AISubgroup.GroupHealerMage3);
+            AISubGroup = AISubGroupType.GroupHealerMage3;
             UpdateAI(false);
 
             SpellDelayMin *= 2;

@@ -207,7 +207,7 @@ namespace Server.Items
             if (weapon.DungeonTier == 0) return;
 
             double effectChance = BaseEffectChance + ((double)weapon.DungeonTier * BaseEffectChancePerTier);
-            double speedScalar = GetSpeedScalar(weapon.OldSpeed);
+            double speedScalar = GetSpeedScalar(weapon.Speed);
 
             double finalChance = effectChance * speedScalar;
                         
@@ -255,7 +255,7 @@ namespace Server.Items
             
             double effectChance = DungeonWeapon.BaseEffectChance + (DungeonWeapon.BaseEffectChancePerTier * (double)weaponTier);
 
-            effectChance *= DungeonWeapon.GetSpeedScalar(m_Weapon.OldSpeed);
+            effectChance *= DungeonWeapon.GetSpeedScalar(m_Weapon.Speed);
 
             BaseDungeonArmor.DungeonArmorDetail detail = new BaseDungeonArmor.DungeonArmorDetail(m_Weapon.Dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
 

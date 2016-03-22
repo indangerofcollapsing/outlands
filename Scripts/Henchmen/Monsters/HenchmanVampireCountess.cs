@@ -108,7 +108,7 @@ namespace Server.Custom
 
         public override void SetTamedAI()
         {
-            SetSubGroup(AISubgroup.MeleeMage3);
+            AISubGroup = AISubGroupType.MeleeMage3;
             UpdateAI(false);
 
             DictCombatSpell[CombatSpell.SpellDamage4] += 2;

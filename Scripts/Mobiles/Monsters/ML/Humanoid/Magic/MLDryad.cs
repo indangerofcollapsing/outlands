@@ -7,12 +7,7 @@ namespace Server.Mobiles
 	public class MLDryad : BaseCreature
 	{
 		public override bool InitialInnocent { get { return true; } }
-
-		public override OppositionGroup OppositionGroup
-		{
-			get { return OppositionGroup.FeyAndUndead; }
-		}
-
+        
 		[Constructable]
 		public MLDryad() : base( AIType.AI_Mage, FightMode.Evil, 10, 1, 0.2, 0.4 )
 		{

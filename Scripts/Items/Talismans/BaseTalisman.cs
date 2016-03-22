@@ -1054,9 +1054,6 @@ namespace Server.Items
 							target.PlaySound(0x201);
 							Effects.SendLocationParticles(EffectItem.Create(target.Location, target.Map, EffectItem.DefaultDuration), 0x3728, 1, 13, 0x834, 0, 0x13B2, 0);
 
-							BleedAttack.EndBleed(target, true);
-							MortalStrike.EndWound(target);
-
 							BuffInfo.RemoveBuff(target, BuffIcon.Bleed);
 							BuffInfo.RemoveBuff(target, BuffIcon.MortalStrike);
 

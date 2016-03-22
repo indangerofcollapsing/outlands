@@ -2588,11 +2588,6 @@ namespace Server.Items
         {
             if (m == null)
                 return;
-            m.SendLocalizedMessage(1060160); // You are bleeding!
-            m.PlaySound(0x133);
-            m.FixedParticles(0x377A, 244, 25, 9950, 31, 0, EffectLayer.Waist);
-            BleedAttack.BeginBleed(m, m);
-
         }
 
         private void DoDrain(Mobile m)

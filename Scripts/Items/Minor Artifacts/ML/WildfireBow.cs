@@ -13,12 +13,7 @@ namespace Server.Items
 		[Constructable]
 		public WildfireBow() : base()
 		{
-			Hue = 0x489;
-			
-			SkillBonuses.SetValues( 0, SkillName.Archery, 10 );
-			WeaponAttributes.ResistFireBonus = 25;
-			
-			//Velocity = 15;			
+			Hue = 0x489;			
 		}
 
 		public override void GetDamageTypes( Mobile wielder, out int phys, out int fire, out int cold, out int pois, out int nrgy, out int chaos, out int direct )

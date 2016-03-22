@@ -432,6 +432,7 @@ namespace Server.Spells
                 return scalarBonus;            
 
             Spellbook atkBook;
+            BaseCreature bc_Defender = defender as BaseCreature;
 
             //Player Has a Bound Enhanced Spellbook
             if (pm.FindItemOnLayer(Layer.OneHanded) is EnhancedSpellbook)
@@ -439,12 +440,9 @@ namespace Server.Spells
                 EnhancedSpellbook enhancedSpellbook = pm.FindItemOnLayer(Layer.OneHanded) as EnhancedSpellbook;
 
                 //Enhanced Spellbook is Currently Equipped on Player and is Slayer Type
-                if (enhancedSpellbook.EnhancedType == EnhancedSpellbookType.Slayer)
+                if (enhancedSpellbook.EnhancedType == EnhancedSpellbookType.Slayer && bc_Defender != null)
                 {
-                    SlayerEntry atkSlayer = SlayerGroup.GetEntryByName(enhancedSpellbook.Slayer);
-                    SlayerEntry atkSlayer2 = SlayerGroup.GetEntryByName(enhancedSpellbook.Slayer2);
-
-                    if (atkSlayer != null && atkSlayer.Slays(defender) || atkSlayer2 != null && atkSlayer2.Slays(defender))
+                    if (enhancedSpellbook.SlayerGroup == bc_Defender.SlayerGroup)
                     {
                         defender.FixedEffect(0x37B9, 10, 5);
 
@@ -733,10 +731,7 @@ namespace Server.Spells
                     {
                         m_Caster.ClearHands();
                     }
-
-                    if (Core.ML)
-                        WeaponAbility.ClearCurrentAbility(m_Caster);
-
+                    
                     //Increase SwingDelay for BaseCreatures While Casting
                     if (m_Caster is BaseCreature)
                     {

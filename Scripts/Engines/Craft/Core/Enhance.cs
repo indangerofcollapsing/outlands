@@ -109,9 +109,6 @@ namespace Server.Engines.Craft
 				baseChance = 20;
 
 				dura = weapon.MaxHitPoints;
-				luck = weapon.Attributes.Luck;
-				lreq = weapon.WeaponAttributes.LowerStatReq;
-				dinc = weapon.Attributes.WeaponDamage;
 
 				fireBonus = ( attributes.WeaponFireDamage > 0 );
 				coldBonus = ( attributes.WeaponColdDamage > 0 );

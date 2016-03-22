@@ -9,11 +9,6 @@ namespace Server.Mobiles
 	[CorpseName( "a rune beetle corpse" )]
 	public class RuneBeetle : BaseCreature
 	{
-		public override WeaponAbility GetWeaponAbility()
-		{
-			return WeaponAbility.BleedAttack;
-		}
-
 		[Constructable]
 		public RuneBeetle() : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{

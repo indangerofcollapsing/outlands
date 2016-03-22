@@ -14,14 +14,6 @@ namespace Server.Items
 		public PixieSwatter()
 		{
 			Hue = 0x8A;
-			WeaponAttributes.HitPoisonArea = 75;
-			Attributes.WeaponSpeed = 30;
-            
-			WeaponAttributes.UseBestSkill = 1;
-			WeaponAttributes.ResistFireBonus = 12;
-			WeaponAttributes.ResistEnergyBonus = 12;
-
-			Slayer = SlayerName.Fey;
 		}
 
 		public override void GetDamageTypes( Mobile wielder, out int phys, out int fire, out int cold, out int pois, out int nrgy, out int chaos, out int direct )

@@ -490,10 +490,7 @@ namespace Server.Engines.CannedEvil
 				if( m_Champion.Deleted )
 				{
 					RegisterDamageTo( m_Champion );
-
-					if( m_Champion is BaseChampion )
-						AwardArtifact( ((BaseChampion)m_Champion).GetArtifact() );
-
+                    
 					m_DamageEntries.Clear();
 
 					if( m_Platform != null )

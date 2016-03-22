@@ -297,15 +297,9 @@ namespace Server
 				Item obj = items[i];
 
 				if( obj is BaseWeapon )
-				{
-					AosAttributes attrs = ((BaseWeapon)obj).Attributes;
-
-					if( attrs != null )
-						value += attrs[attribute];
-
-					if( attribute == AosAttribute.Luck )
-						value += ((BaseWeapon)obj).GetLuckBonus();
+				{					
 				}
+
 				else if( obj is BaseArmor )
 				{
 					AosAttributes attrs = ((BaseArmor)obj).Attributes;
@@ -330,13 +324,7 @@ namespace Server
 					if( attrs != null )
 						value += attrs[attribute];
 				}
-				else if( obj is Spellbook )
-				{
-					AosAttributes attrs = ((Spellbook)obj).Attributes;
-
-					if( attrs != null )
-						value += attrs[attribute];
-				}
+				
 				else if( obj is BaseQuiver )
 				{
 					AosAttributes attrs = ((BaseQuiver)obj).Attributes;
@@ -532,21 +520,6 @@ namespace Server
 			for( int i = 0; i < items.Count; ++i )
 			{
 				Item obj = items[i];
-
-				if( obj is BaseWeapon )
-				{
-					AosWeaponAttributes attrs = ((BaseWeapon)obj).WeaponAttributes;
-
-					if( attrs != null )
-						value += attrs[attribute];
-				}
-				else if ( obj is ElvenGlasses )
-				{
-					AosWeaponAttributes attrs = ((ElvenGlasses)obj).WeaponAttributes;
-
-					if( attrs != null )
-						value += attrs[attribute];
-				}
 			}
 
 			return value;

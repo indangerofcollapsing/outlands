@@ -14,24 +14,14 @@ namespace Server.Items
     {
         public override HarvestSystem HarvestSystem { get { return Mining.System; } }
 
-        public override WeaponAbility PrimaryAbility { get { return WeaponAbility.DoubleStrike; } }
-        public override WeaponAbility SecondaryAbility { get { return WeaponAbility.Disarm; } }
+        public override int BaseMinDamage { get { return 5; } }
+        public override int BaseMaxDamage { get { return 10; } }
+        public override int BaseSpeed { get { return 50; } }
 
-        public override int AosStrengthReq { get { return 50; } }
-        public override int AosMinDamage { get { return 13; } }
-        public override int AosMaxDamage { get { return 15; } }
-        public override int AosSpeed { get { return 35; } }
-        public override float MlSpeed { get { return 3.00f; } }
-
-        public override int OldStrengthReq { get { return 1; } }
-        public override int OldMinDamage { get { return 5; } }
-        public override int OldMaxDamage { get { return 10; } }
-        public override int OldSpeed { get { return 40; } }
-
-        public override int InitMinHits { get { return 31; } }
+        public override int InitMinHits { get { return 40; } }
         public override int InitMaxHits { get { return 60; } }
 
-        public override WeaponAnimation DefAnimation { get { return WeaponAnimation.Slash1H; } }
+        public override WeaponAnimation BaseAnimation { get { return WeaponAnimation.Slash1H; } }
 
         public override void OnSingleClick(Mobile from)
         {

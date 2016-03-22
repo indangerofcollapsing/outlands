@@ -217,7 +217,7 @@ namespace Server.Mobiles
                 return;
 
             PopulateDefaultAI();
-            SetGroup(AIGroup.EvilHuman);
+            AIGroup = AIGroupType.EvilHuman;
 
             ActiveSpeed = 0.4;
             PassiveSpeed = 0.4;
@@ -248,7 +248,7 @@ namespace Server.Mobiles
 
                     VirtualArmor = 25;
 
-                    SetSubGroup(AISubgroup.GroupHealerMeleeMage4);
+                    AISubGroup = AISubGroupType.GroupHealerMeleeMage4;
                     UpdateAI(false);
 
                     Effects.PlaySound(Location, Map, 0x4);
@@ -271,7 +271,7 @@ namespace Server.Mobiles
 
                     VirtualArmor = 25;
                     
-                    SetSubGroup(AISubgroup.None);
+                    AISubGroup = AISubGroupType.None;
                     UpdateAI(false);
                     
                     Effects.PlaySound(Location, Map, 0x4);
@@ -294,7 +294,7 @@ namespace Server.Mobiles
 
                     VirtualArmor = 25;                    
 
-                    SetSubGroup(AISubgroup.Duelist);
+                    AISubGroup = AISubGroupType.Duelist;
                     UpdateAI(false);
 
                     ActiveSpeed = 0.2;
@@ -321,7 +321,7 @@ namespace Server.Mobiles
 
                     VirtualArmor = 150;
 
-                    SetSubGroup(AISubgroup.AntiArmor);
+                    AISubGroup = AISubGroupType.AntiArmor;
                     UpdateAI(false);
 
                     ActiveSpeed = 0.3;

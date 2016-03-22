@@ -976,10 +976,7 @@ namespace Server.Mobiles
                         weapon.AccuracyLevel = (WeaponAccuracyLevel)Utility.RandomMinMax(1, 2);
                         weapon.DamageLevel = (WeaponDamageLevel)Utility.RandomMinMax(1, 2);
                         weapon.DurabilityLevel = (WeaponDurabilityLevel)Utility.RandomMinMax(1, 2);
-
-                        if (Utility.RandomDouble() <= .05)
-                            weapon.Slayer = SlayerName.Silver;
-
+                        
                         weapon.Identified = true;
 
                         c.AddItem(weapon);

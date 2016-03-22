@@ -132,12 +132,6 @@ namespace Server
             if (mob.Region is NewbieDungeonRegion)
                 mob.AddLoot(LootPack.NewbieDungeon);
             
-            if (mob.SpellCaster)
-                AddSpellCasterLoot(mob);
-
-            if (mob.Hybrid)
-                AddHybridLoot(mob);           
-
             double uniqueLootChance = .001;
 
             double craftingChanceComponentScalar = 5;

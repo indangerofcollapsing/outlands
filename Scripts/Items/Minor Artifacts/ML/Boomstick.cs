@@ -15,11 +15,6 @@ namespace Server.Items
 		public Boomstick() : base()
 		{
 			Hue = 0x25;
-			
-			Attributes.SpellChanneling = 1;
-			Attributes.RegenMana = 3;
-			Attributes.CastSpeed = 1;
-			Attributes.LowerRegCost = 20;
 		}
 
 		public override void GetDamageTypes( Mobile wielder, out int phys, out int fire, out int cold, out int pois, out int nrgy, out int chaos, out int direct )

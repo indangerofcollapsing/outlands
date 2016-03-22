@@ -493,14 +493,13 @@ namespace Server
                             armor.Durability = (ArmorDurabilityLevel)GetRandomBonus(luckChance);
                     }
                 }
+
                 else if (item is BaseInstrument)
                 {
-                    SlayerName slayer = SlayerName.None;
 
                     BaseInstrument instr = (BaseInstrument)item;
 
                     instr.Quality = InstrumentQuality.Regular;
-                    instr.Slayer = slayer;
                 }
 
                 if (item.Stackable)

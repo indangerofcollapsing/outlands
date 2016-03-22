@@ -47,8 +47,9 @@ namespace Server.Mobiles
         AI_Generic
     }
 
-    public enum AIGroup
+    public enum AIGroupType
     {
+        Unspecified,
         None,
         EvilMonster,
         NeutralMonster,
@@ -67,8 +68,9 @@ namespace Server.Mobiles
         Boss
     }
 
-    public enum AISubgroup
+    public enum AISubGroupType
     {
+        Unspecified,
         None,
         MeleeMage1,
         MeleeMage2,
@@ -155,9 +157,9 @@ namespace Server.Mobiles
         UOACZHumanPlayer,
         UOACZEvilHumanPlayer,
         UOACZUndead,
-        UOACZUndeadPlayer,        
+        UOACZUndeadPlayer,
         UOACZWildlife,
-        UOACZEvilWildlife,        
+        UOACZEvilWildlife,
     }
 
     public enum CombatTargetingWeight
@@ -199,7 +201,7 @@ namespace Server.Mobiles
         Flee50,
         Flee25,
         Flee10,
-        Flee5        
+        Flee5
     }
 
     public enum CombatAction
@@ -210,7 +212,7 @@ namespace Server.Mobiles
         CombatHealSelf,
         CombatHealOther,
         CombatSpecialAction,
-        CombatEpicAction        
+        CombatEpicAction
     }
 
     public enum CombatSpell
@@ -233,7 +235,7 @@ namespace Server.Mobiles
         SpellHarmfulField,
         SpellNegativeField,
         SpellBeneficial1to2,
-        SpellBeneficial3to5        
+        SpellBeneficial3to5
     }
 
     public enum CombatHealSelf
@@ -253,7 +255,7 @@ namespace Server.Mobiles
         BandageHealSelf75,
         BandageHealSelf50,
         BandageHealSelf25,
-        BandageCureSelf        
+        BandageCureSelf
     }
 
     public enum CombatHealOther
@@ -268,18 +270,18 @@ namespace Server.Mobiles
         BandageHealOther75,
         BandageHealOther50,
         BandageHealOther25,
-        BandageCureOther        
+        BandageCureOther
     }
 
     public enum CombatSpecialAction
     {
         None,
-        ApplyWeaponPoison,        
+        ApplyWeaponPoison,
         ThrowShipBomb,
-        CauseWounds,        
+        CauseWounds,
         FireBreathAttack,
         IceBreathAttack,
-        PoisonBreathAttack       
+        PoisonBreathAttack
     }
 
     public enum CombatEpicAction
@@ -298,7 +300,7 @@ namespace Server.Mobiles
         None,
         DetectHidden,
         SpellDispelSummon,
-        SpellReveal        
+        SpellReveal
     }
 
     public enum WanderAction
@@ -323,7 +325,7 @@ namespace Server.Mobiles
         BandageCureSelf,
         PotionCureSelf,
         SpellCureOther,
-        BandageCureOther        
+        BandageCureOther
     }
 
     public enum WaypointAction
@@ -336,7 +338,7 @@ namespace Server.Mobiles
     public enum InteractAction
     {
         None,
-        Greeting        
+        Greeting
     }
 
 
@@ -407,7 +409,8 @@ namespace Server.Mobiles
         {
             private BaseAI m_Owner;
 
-            public AITimer(BaseAI owner): base(TimeSpan.FromSeconds(Utility.RandomDouble()), TimeSpan.FromSeconds(Math.Max(0.0, owner.bc_Creature.CurrentSpeed)))
+            public AITimer(BaseAI owner)
+                : base(TimeSpan.FromSeconds(Utility.RandomDouble()), TimeSpan.FromSeconds(Math.Max(0.0, owner.bc_Creature.CurrentSpeed)))
             {
                 m_Owner = owner;
 
@@ -425,7 +428,7 @@ namespace Server.Mobiles
             }
 
             protected override void OnTick()
-            {                
+            {
                 if (m_Owner.bc_Creature.Deleted)
                 {
                     Stop();
@@ -439,21 +442,21 @@ namespace Server.Mobiles
                 }
 
                 else if (m_Owner.bc_Creature.PlayerRangeSensitive)
-                {   
+                {
                     Sector sect = m_Owner.bc_Creature.Map.GetSector(m_Owner.bc_Creature);
 
                     if (!sect.Active)
                     {
                         if (m_Owner.bc_Creature.LastActivated + m_Owner.DeactivateDelay < DateTime.UtcNow)
-                        {                          
+                        {
                             m_Owner.Deactivate();
 
                             return;
                         }
                     }
 
-                    else                                          
-                        m_Owner.bc_Creature.LastActivated = DateTime.UtcNow;                    
+                    else
+                        m_Owner.bc_Creature.LastActivated = DateTime.UtcNow;
                 }
 
                 m_Owner.bc_Creature.OnThink();
@@ -491,8 +494,8 @@ namespace Server.Mobiles
 
         public virtual void Deactivate()
         {
-            if (bc_Creature.PlayerRangeSensitive)            
-                m_Timer.Stop();            
+            if (bc_Creature.PlayerRangeSensitive)
+                m_Timer.Stop();
         }
 
         private void ReturnToHome()
@@ -698,7 +701,7 @@ namespace Server.Mobiles
                     bc_Creature.Warmode = true;
                     bc_Creature.FocusMob = null;
                     bc_Creature.Combatant = null;
-                break;
+                    break;
 
                 case OrderType.Patrol:
                     bc_Creature.CurrentSpeed = bc_Creature.ActiveTamedSpeed;
@@ -708,7 +711,7 @@ namespace Server.Mobiles
                     bc_Creature.Warmode = false;
                     bc_Creature.FocusMob = null;
                     bc_Creature.Combatant = null;
-                break;
+                    break;
 
                 case OrderType.Guard:
                     if (bc_Creature.ControlMaster != null)
@@ -724,7 +727,7 @@ namespace Server.Mobiles
                     bc_Creature.Warmode = true;
                     bc_Creature.FocusMob = null;
                     bc_Creature.Combatant = null;
-                break;
+                    break;
 
                 case OrderType.Come:
                     bc_Creature.CurrentSpeed = bc_Creature.ActiveTamedFollowModeSpeed;
@@ -736,7 +739,7 @@ namespace Server.Mobiles
                     bc_Creature.Combatant = null;
 
                     bc_Creature.ControlDest = bc_Creature.ControlMaster != null ? bc_Creature.ControlMaster.Location : bc_Creature.Location;
-                break;
+                    break;
 
                 case OrderType.Follow:
                     bc_Creature.CurrentSpeed = bc_Creature.ActiveTamedFollowModeSpeed;
@@ -746,7 +749,7 @@ namespace Server.Mobiles
                     bc_Creature.Warmode = false;
                     bc_Creature.FocusMob = null;
                     bc_Creature.Combatant = null;
-                break;
+                    break;
 
                 case OrderType.Stay:
                     bc_Creature.CurrentSpeed = bc_Creature.PassiveTamedSpeed;
@@ -758,11 +761,11 @@ namespace Server.Mobiles
 
                     bc_Creature.Home = bc_Creature.Location;
                     bc_Creature.ControlDest = bc_Creature.ControlMaster != null ? bc_Creature.ControlMaster.Location : bc_Creature.Home;
-                break;
+                    break;
 
                 case OrderType.Stop:
-                    if (!bc_Creature.IsBarded())                    
-                        bc_Creature.Aggressors.Clear();                    
+                    if (!bc_Creature.IsBarded())
+                        bc_Creature.Aggressors.Clear();
 
                     bc_Creature.CurrentSpeed = bc_Creature.PassiveTamedSpeed;
                     bc_Creature.NextDecisionTime = DateTime.UtcNow;
@@ -774,7 +777,7 @@ namespace Server.Mobiles
 
                     bc_Creature.Home = bc_Creature.Location;
                     bc_Creature.ControlDest = bc_Creature.ControlMaster != null ? bc_Creature.ControlMaster.Location : bc_Creature.Home;
-                break;
+                    break;
 
                 case OrderType.None:
                     bc_Creature.CurrentSpeed = bc_Creature.PassiveTamedSpeed;
@@ -787,7 +790,7 @@ namespace Server.Mobiles
 
                     bc_Creature.Home = bc_Creature.Location;
                     bc_Creature.ControlDest = bc_Creature.Location;
-                break;
+                    break;
 
                 case OrderType.Drop:
                     bc_Creature.CurrentSpeed = bc_Creature.PassiveTamedSpeed;
@@ -795,15 +798,15 @@ namespace Server.Mobiles
                     bc_Creature.PlaySound(bc_Creature.GetIdleSound());
                     bc_Creature.Warmode = true;
                     bc_Creature.Combatant = null;
-                break;
+                    break;
 
                 case OrderType.Friend:
                     bc_Creature.NextDecisionTime = DateTime.UtcNow;
-                break;
+                    break;
 
                 case OrderType.Unfriend:
                     bc_Creature.NextDecisionTime = DateTime.UtcNow;
-                break;
+                    break;
 
                 case OrderType.Release:
                     bc_Creature.CurrentSpeed = bc_Creature.PassiveTamedSpeed;
@@ -842,7 +845,7 @@ namespace Server.Mobiles
 
             double manaAmount = bc_Creature.Mana;
             double manaPercent = (manaAmount / bc_Creature.ManaMax) * 100;
-            
+
             if (bc_Creature.BardPacified)
             {
                 if (CheckBardPacified())
@@ -862,7 +865,7 @@ namespace Server.Mobiles
             {
                 if (bc_Creature.Combatant != null)
                 {
-                    if (bc_Creature.Combatant.Hidden && bc_Creature.Combatant.Alive)                    
+                    if (bc_Creature.Combatant.Hidden && bc_Creature.Combatant.Alive)
                         return false;
 
                     if (bc_Creature.Combatant.GetDistanceToSqrt(bc_Creature) >= ((double)bc_Creature.RangePerception * 4))
@@ -1018,10 +1021,10 @@ namespace Server.Mobiles
                         if (validCombatant)
                             bc_Creature.Direction = bc_Creature.GetDirectionTo(bc_Creature.Combatant);
                     }
-                    
-                    currentCombatAction = GetCombatAction();                                       
+
+                    currentCombatAction = GetCombatAction();
                     currentCombatRange = GetCombatRange();
-                  
+
                     bc_Creature.NextDecisionTime = DateTime.UtcNow + TimeSpan.FromSeconds(bc_Creature.DecisionTimeDelay);
                 }
             }
@@ -1074,7 +1077,7 @@ namespace Server.Mobiles
                         case CombatRange.WeaponAttackRange:
                             if (validWeapon)
                             {
-                                if (iCurrDist > weapon.DefMaxRange || !bc_Creature.InLOS(bc_Creature.Combatant))
+                                if (iCurrDist > weapon.MaxRange || !bc_Creature.InLOS(bc_Creature.Combatant))
                                 {
                                     if (bc_Creature.BoatOccupied != null)
                                     {
@@ -1379,12 +1382,12 @@ namespace Server.Mobiles
 
             if (bc_Creature.BardPacified)
             {
-                if (CheckBardPacified())                
-                    pacified = true; 
+                if (CheckBardPacified())
+                    pacified = true;
             }
 
             if (!pacified)
-            {                
+            {
                 if (bc_Creature.Combatant != null)
                 {
                     if (bc_Creature.Combatant.Alive)
@@ -1393,7 +1396,7 @@ namespace Server.Mobiles
 
                         return true;
                     }
-                }    
+                }
 
                 if (DateTime.UtcNow >= bc_Creature.m_NextAcquireTargetAllowed)
                 {
@@ -1408,7 +1411,7 @@ namespace Server.Mobiles
                             m_WanderModeTargetReady = true;
 
                             NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(WanderModeAcquireTargetDelayAmount);
-                            m_WanderModeTargetDelay = DateTime.UtcNow + TimeSpan.FromSeconds(WanderModeAcquireTargetDelayAmount);                        
+                            m_WanderModeTargetDelay = DateTime.UtcNow + TimeSpan.FromSeconds(WanderModeAcquireTargetDelayAmount);
                         }
 
                         else if (m_WanderModeTargetReady && DateTime.UtcNow > m_WanderModeTargetDelay)
@@ -1713,13 +1716,13 @@ namespace Server.Mobiles
                             SendCreatureTowardsHome();
 
                         #endregion
-                    }                   
+                    }
 
                     else
                     {
                         if (bc_Creature.ReturnsHome && !pacified)
                         {
-                            double distanceFromHome = bc_Creature.GetDistanceToSqrt(bc_Creature.Home);                            
+                            double distanceFromHome = bc_Creature.GetDistanceToSqrt(bc_Creature.Home);
 
                             if ((distanceFromHome <= (double)bc_Creature.RangeHome))
                             {
@@ -1745,12 +1748,12 @@ namespace Server.Mobiles
                             else
                             {
                                 //Wander In Current Location
-                                if (DateTime.UtcNow < m_WalkRandomOutsideHome)                                
-                                    WalkRandom(2, 2, 1);                                
+                                if (DateTime.UtcNow < m_WalkRandomOutsideHome)
+                                    WalkRandom(2, 2, 1);
 
                                 //Walk Towards Home
-                                else if (DateTime.UtcNow > m_WalkRandomOutsideHome && DateTime.UtcNow < m_WalkTowardsHome)                                
-                                    DoMove(bc_Creature.GetDirectionTo(bc_Creature.Home));                                
+                                else if (DateTime.UtcNow > m_WalkRandomOutsideHome && DateTime.UtcNow < m_WalkTowardsHome)
+                                    DoMove(bc_Creature.GetDirectionTo(bc_Creature.Home));
 
                                 //Teleport Home
                                 else
@@ -1769,8 +1772,8 @@ namespace Server.Mobiles
                             }
                         }
 
-                        else if (bc_Creature.ReturnsHome && pacified)                        
-                            WalkRandom(2, 2, 1);                        
+                        else if (bc_Creature.ReturnsHome && pacified)
+                            WalkRandom(2, 2, 1);
 
                         else
                         {
@@ -1884,8 +1887,8 @@ namespace Server.Mobiles
                     foreach (Mobile target in eable)
                     {
                         //If Target is Not Teammate (Self is Allowed!)
-                        if (!AITeamList.CheckTeam(bc_Creature, target))
-                            continue;
+                        //if (!AITeamList.CheckTeam(bc_Creature, target))
+                            //continue;
 
                         //Ignore If Deleted or Blessed
                         if (target.Deleted || target.Blessed)
@@ -1956,7 +1959,7 @@ namespace Server.Mobiles
             if (bc_Creature.Controlled == true && bc_Creature.ControlMaster != null)
             {
                 if (bc_Creature.ControlOrder == OrderType.Release)
-                    return true;   
+                    return true;
 
                 if (bc_Creature.ControlMaster.Player && bc_Creature.Map == bc_Creature.ControlMaster.Map)
                 {
@@ -1969,7 +1972,7 @@ namespace Server.Mobiles
                         {
                             bc_Creature.ControlOrder = OrderType.Stop;
                             bc_Creature.AIObject.DoOrderStop();
-                        }                        
+                        }
 
                         return false;
                     }
@@ -1984,7 +1987,7 @@ namespace Server.Mobiles
                             {
                                 bc_Creature.ControlOrder = OrderType.Stop;
                                 bc_Creature.AIObject.DoOrderStop();
-                            }                                                    
+                            }
 
                             return false;
                         }
@@ -2007,7 +2010,7 @@ namespace Server.Mobiles
                             else
                             {
                                 if (bc_Creature.ControlOrder != OrderType.Stop)
-                                    bc_Creature.ControlOrder = OrderType.Stop;                                
+                                    bc_Creature.ControlOrder = OrderType.Stop;
                             }
                         }
 
@@ -2084,7 +2087,7 @@ namespace Server.Mobiles
             if (bc_Creature.CheckControlChance(from))
             {
                 PlayerMobile player = from as PlayerMobile;
-                
+
                 if (bc_Creature.Backpack is StrongBackpack || bc_Creature is StrongBearBackpack)
                 {
                     BeginPickTarget(from, OrderType.Fetch);
@@ -2119,7 +2122,7 @@ namespace Server.Mobiles
                         from.SendMessage("You must have Animal Taming and Animal Lore skill equal to this creature's taming difficulty in order to command this creature!");
 
                     return false;
-                }                
+                }
             }
 
             return false;
@@ -2384,7 +2387,7 @@ namespace Server.Mobiles
             }
 
             PlayerMobile player = from as PlayerMobile;
-            
+
             if (bc_Creature.IsDeadPet)
             {
                 from.SendMessage("You cannot command a deceased follower to do that.");
@@ -2453,7 +2456,7 @@ namespace Server.Mobiles
             }
 
             PlayerMobile player = from as PlayerMobile;
-            
+
             if (bc_Creature.IsDeadPet)
             {
                 from.SendMessage("You cannot command a deceased pet to do that.");
@@ -2582,7 +2585,7 @@ namespace Server.Mobiles
                     if (bc_Target == null || !bc_Target.Alive || bc_Target.Deleted || !bc_Target.Controlled || from.Map != bc_Target.Map || !from.CheckAlive())
                         continue;
 
-                    bool isOwner = (from == bc_Target.ControlMaster);                   
+                    bool isOwner = (from == bc_Target.ControlMaster);
 
                     if (!isOwner)
                         continue;
@@ -2596,16 +2599,16 @@ namespace Server.Mobiles
 
                         IPoint3D p = objTarget.Location as IPoint3D;
 
-                        if (p == null)                        
-                            return;                        
+                        if (p == null)
+                            return;
 
                         if (bc_Target.Backpack is StrongBackpack || bc_Target.Backpack is StrongBearBackpack)
                         {
                             bc_Target.ControlObject = objTarget;
                             bc_Target.ControlOrder = OrderType.Fetch;
 
-                            if (bc_Target.AIObject != null)                            
-                                bc_Target.AIObject.DoOrderFetch();                            
+                            if (bc_Target.AIObject != null)
+                                bc_Target.AIObject.DoOrderFetch();
                         }
                     }
 
@@ -2634,7 +2637,7 @@ namespace Server.Mobiles
                 from.SendMessage("Your lack of Begging or Camping skill made one or more of your followers unable to follow this command!");
 
             if (aniamlCommandFailed)
-                from.SendMessage("Your lack of Animal Taming or Animal Lore skill made one or more of your creatures unable to follow this command!");         
+                from.SendMessage("Your lack of Animal Taming or Animal Lore skill made one or more of your creatures unable to follow this command!");
         }
 
         public virtual bool DoOrderAttack()
@@ -2867,7 +2870,7 @@ namespace Server.Mobiles
                 if (pm_ControlMaster != null)
                 {
                     if (bc_Creature.ControlOrder != OrderType.Stay)
-                        bc_Creature.ControlOrder = OrderType.Stay;                    
+                        bc_Creature.ControlOrder = OrderType.Stay;
                 }
 
                 else
@@ -2941,7 +2944,7 @@ namespace Server.Mobiles
             if (pm_ControlMaster != null)
             {
                 if (bc_Creature.ControlOrder != OrderType.Stay)
-                    bc_Creature.ControlOrder = OrderType.Stay;                
+                    bc_Creature.ControlOrder = OrderType.Stay;
             }
 
             else
@@ -2966,11 +2969,11 @@ namespace Server.Mobiles
         public virtual bool DoOrderTransfer()
         {
             if (bc_Creature == null)
-                return false;           
+                return false;
 
             Mobile from = bc_Creature.ControlMaster;
             Mobile to = bc_Creature.ControlTarget;
-            
+
             if (from != to && from != null && !from.Deleted && to != null && !to.Deleted && to.Player)
             {
                 bc_Creature.DebugSay("Begin transfer with {0}", to.Name);
@@ -2984,7 +2987,7 @@ namespace Server.Mobiles
                     if (bc_Creature.ControlOrder != OrderType.Stop)
                         bc_Creature.ControlOrder = OrderType.Stop;
 
-                    return false;                    
+                    return false;
                 }
 
                 if (bc_Creature.IsHenchman)
@@ -3016,7 +3019,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                else 
+                else
                 {
                     if (to.Skills[SkillName.AnimalTaming].Value < bc_Creature.MinTameSkill || to.Skills[SkillName.AnimalLore].Value < bc_Creature.MinTameSkill)
                     {
@@ -3043,7 +3046,7 @@ namespace Server.Mobiles
 
                         return false;
                     }
-                }                
+                }
 
                 if (TransferItem.IsInCombat(bc_Creature))
                 {
@@ -3288,12 +3291,12 @@ namespace Server.Mobiles
                 PlayerMobile pm_ControlMaster = bc_Creature.ControlMaster as PlayerMobile;
 
                 if (pm_ControlMaster != null)
-                {                   
+                {
                     if (bc_Creature.ControlOrder != OrderType.Stay)
                     {
                         bc_Creature.ControlOrder = OrderType.Stay;
                         DoOrderStay();
-                    }                    
+                    }
                 }
 
                 else
@@ -3315,7 +3318,7 @@ namespace Server.Mobiles
             if (creature.DictCombatRange[CombatRange.WeaponAttackRange] > 0)
                 return true;
 
-            return false;            
+            return false;
         }
 
         public bool CanDoSpellRange(BaseCreature creature, Mobile target)
@@ -3357,13 +3360,13 @@ namespace Server.Mobiles
         public bool CanDoAttackOnly(BaseCreature creature)
         {
             return true;
-        }           
+        }
 
         public CombatRange GetDefaultCombatRange()
         {
             //Default Range
             CombatRange range = CombatRange.WeaponAttackRange;
-            
+
             int rangeValue = 0;
 
             Dictionary<CombatRange, int> DictTemp = new Dictionary<CombatRange, int>();
@@ -3389,7 +3392,7 @@ namespace Server.Mobiles
         {
             //Default Range
             CombatRange combatRange = CombatRange.WeaponAttackRange;
-            
+
             //Default to WeaponAttackRange if Somehow Combatant is Gone
             if (bc_Creature.Combatant == null)
                 return combatRange;
@@ -3397,14 +3400,14 @@ namespace Server.Mobiles
             //Default to WeaponAttackRange if Low on Mana: Will only be True if Caster
             if (m_LowMana && !(bc_Creature.Controlled && bc_Creature.ControlMaster is PlayerMobile))
                 return combatRange;
-            
+
             int TotalValues = 0;
 
             Dictionary<CombatRange, int> DictTemp = new Dictionary<CombatRange, int>();
 
-            if (CanDoWeaponAttackRange(bc_Creature)){DictTemp.Add(CombatRange.WeaponAttackRange, bc_Creature.DictCombatRange[CombatRange.WeaponAttackRange]);}
-            if (CanDoSpellRange(bc_Creature, bc_Creature.Combatant)) {DictTemp.Add(CombatRange.SpellRange, bc_Creature.DictCombatRange[CombatRange.SpellRange]);}
-            if (CanDoWithdraw(bc_Creature, bc_Creature.Combatant)) {DictTemp.Add(CombatRange.Withdraw, bc_Creature.DictCombatRange[CombatRange.Withdraw]);}
+            if (CanDoWeaponAttackRange(bc_Creature)) { DictTemp.Add(CombatRange.WeaponAttackRange, bc_Creature.DictCombatRange[CombatRange.WeaponAttackRange]); }
+            if (CanDoSpellRange(bc_Creature, bc_Creature.Combatant)) { DictTemp.Add(CombatRange.SpellRange, bc_Creature.DictCombatRange[CombatRange.SpellRange]); }
+            if (CanDoWithdraw(bc_Creature, bc_Creature.Combatant)) { DictTemp.Add(CombatRange.Withdraw, bc_Creature.DictCombatRange[CombatRange.Withdraw]); }
 
             //Calculate Total Values
             foreach (KeyValuePair<CombatRange, int> pair in DictTemp)
@@ -3429,7 +3432,7 @@ namespace Server.Mobiles
                     {
                         case CombatRange.WeaponAttackRange: break;
                         case CombatRange.SpellRange: break;
-                        case CombatRange.Withdraw: m_NextStopWithdraw = DateTime.UtcNow + TimeSpan.FromSeconds(maxWithdrawDuration);break;
+                        case CombatRange.Withdraw: m_NextStopWithdraw = DateTime.UtcNow + TimeSpan.FromSeconds(maxWithdrawDuration); break;
                     }
 
                     return combatRange;
@@ -3459,18 +3462,18 @@ namespace Server.Mobiles
             if (weapon != null)
             {
                 //Can Back Up Further
-                if (withdrawDistance < weapon.DefMaxRange)
+                if (withdrawDistance < weapon.MaxRange)
                 {
                     if (rangedWeapon != null)
                     {
-                        withdrawDistance = rangedWeapon.DefMaxRange;
+                        withdrawDistance = rangedWeapon.MaxRange;
 
-                        if (rangedWeapon.DefMaxRange > 4)
-                            withdrawDistance = rangedWeapon.DefMaxRange - 1;
+                        if (rangedWeapon.MaxRange > 4)
+                            withdrawDistance = rangedWeapon.MaxRange - 1;
                     }
 
                     else
-                        withdrawDistance = weapon.DefMaxRange;
+                        withdrawDistance = weapon.MaxRange;
                 }
             }
 
@@ -3480,15 +3483,15 @@ namespace Server.Mobiles
         public CombatAction GetCombatAction()
         {
             CombatAction combatAction = CombatAction.AttackOnly;
-            
-            if (bc_Creature.IsStealthing && bc_Creature.DictCombatAction[CombatAction.AttackOnly] > 0)            
-                return combatAction;            
-            
+
+            if (bc_Creature.IsStealthing && bc_Creature.DictCombatAction[CombatAction.AttackOnly] > 0)
+                return combatAction;
+
             int TotalValues = 0;
 
             Dictionary<CombatAction, int> DictTemp = new Dictionary<CombatAction, int>();
 
-            if (CanDoAttackOnly(bc_Creature)) { DictTemp.Add(CombatAction.AttackOnly, bc_Creature.DictCombatAction[CombatAction.AttackOnly]); }            
+            if (CanDoAttackOnly(bc_Creature)) { DictTemp.Add(CombatAction.AttackOnly, bc_Creature.DictCombatAction[CombatAction.AttackOnly]); }
             if (AICombatSpell.CanDoCombatSpell(bc_Creature)) { DictTemp.Add(CombatAction.CombatSpell, bc_Creature.DictCombatAction[CombatAction.CombatSpell]); }
             if (AICombatHealSelf.CanDoCombatHealSelf(bc_Creature)) { DictTemp.Add(CombatAction.CombatHealSelf, bc_Creature.DictCombatAction[CombatAction.CombatHealSelf]); }
             if (AICombatHealOther.CanDoCombatHealOther(bc_Creature)) { DictTemp.Add(CombatAction.CombatHealOther, bc_Creature.DictCombatAction[CombatAction.CombatHealOther]); }
@@ -3531,10 +3534,10 @@ namespace Server.Mobiles
             }
 
             return combatAction;
-        }          
+        }
 
         public bool GetGuardAction()
-        {            
+        {
             GuardAction guardAction = GuardAction.None;
 
             Dictionary<GuardAction, int> DictTemp = new Dictionary<GuardAction, int>();
@@ -3597,7 +3600,7 @@ namespace Server.Mobiles
             if (AIWanderHeal.CanDoWanderHealSelfSpellHealSelf(bc_Creature, 50)) { DictTemp.Add(WanderAction.SpellHealSelf50, bc_Creature.DictWanderAction[WanderAction.SpellHealSelf50]); }
             if (AIWanderHeal.CanDoWanderHealSelfPotionHealSelf(bc_Creature, 50)) { DictTemp.Add(WanderAction.PotionHealSelf50, bc_Creature.DictWanderAction[WanderAction.PotionHealSelf50]); }
             if (AIWanderHeal.CanDoWanderHealSelfBandageHealSelf(bc_Creature, 50)) { DictTemp.Add(WanderAction.BandageHealSelf50, bc_Creature.DictWanderAction[WanderAction.BandageHealSelf50]); }
-            
+
             if (AIWanderHeal.CanDoWanderHealSelfSpellCureSelf(bc_Creature)) { DictTemp.Add(WanderAction.SpellCureSelf, bc_Creature.DictWanderAction[WanderAction.SpellCureSelf]); }
             if (AIWanderHeal.CanDoWanderHealSelfPotionCureSelf(bc_Creature)) { DictTemp.Add(WanderAction.PotionCureSelf, bc_Creature.DictWanderAction[WanderAction.PotionCureSelf]); }
             if (AIWanderHeal.CanDoWanderHealSelfBandageCureSelf(bc_Creature)) { DictTemp.Add(WanderAction.BandageCureSelf, bc_Creature.DictWanderAction[WanderAction.BandageCureSelf]); }
@@ -4014,7 +4017,7 @@ namespace Server.Mobiles
             //Minions Won't Flee
             if (bc_Creature.IsBossMinion() || bc_Creature.IsMiniBossMinion() || bc_Creature.IsLoHMinion() || bc_Creature.IsEventMinion())
                 return false;
-            
+
             //Mandatory Flee Duration in Place
             if (bc_Creature.EndFleeTime > DateTime.UtcNow)
                 return true;
@@ -4101,7 +4104,7 @@ namespace Server.Mobiles
             {
                 double MobileHealth = (double)bc_Creature.Hits / (double)bc_Creature.HitsMax;
                 int HighestFleePriority = 0;
-                
+
                 if (MobileHealth <= .05)
                 {
                     if (bc_Creature.DictCombatFlee[CombatFlee.Flee5] > HighestFleePriority)
@@ -4270,26 +4273,26 @@ namespace Server.Mobiles
                     m_MobilesToEvaluate.Add(bc_Creature.Combatant);
 
                 IPooledEnumerable eable = map.GetMobilesInRange(bc_Creature.Location, bc_Creature.RangePerception);
-                
+
                 foreach (Mobile target in eable)
                 {
                     m_MobilesToEvaluate.Add(target);
                 }
 
-                eable.Free();                
+                eable.Free();
 
                 foreach (Mobile target in m_MobilesToEvaluate)
                 {
                     if (target.Deleted) continue;
                     if (target.Map != bc_Creature.Map) continue;
-                    if (target == bc_Creature) continue;                    
-                    if (target.AccessLevel > AccessLevel.Player) continue;                   
+                    if (target == bc_Creature) continue;
+                    if (target.AccessLevel > AccessLevel.Player) continue;
                     if (!bc_Creature.CanBeHarmful(target)) continue;
-                    if (!bc_Creature.CanSee(target))continue;
+                    if (!bc_Creature.CanSee(target)) continue;
 
                     if (bc_Creature.Combatant == target && bc_Creature.GetDistanceToSqrt(target.Location) > bc_Creature.RangePerception * 2) continue;
-                    if (bc_Creature.Combatant != target && bc_Creature.GetDistanceToSqrt(target.Location) > bc_Creature.RangePerception) continue;  
-                                        
+                    if (bc_Creature.Combatant != target && bc_Creature.GetDistanceToSqrt(target.Location) > bc_Creature.RangePerception) continue;
+
                     CheckMobileTargetValue = DetermineMobileTargetValue(target, bestMobileTarget, CurrentlyInCombat);
 
                     //Can Be a Valid Target
@@ -4308,8 +4311,8 @@ namespace Server.Mobiles
                             bestMobileTarget = target;
                         }
                     }
-                }                
-                
+                }
+
                 //Check First Target Against Best Target: First Target Wasn't Properly Compared
                 if (firstMobileTarget != null && firstMobileTarget != bestMobileTarget)
                 {
@@ -4317,7 +4320,7 @@ namespace Server.Mobiles
 
                     if (CheckMobileTargetValue > bestMobileTargetValue)
                         bestMobileTarget = firstMobileTarget;
-                } 
+                }
 
                 //Fear-Inducing Item Found Player in Search Range
                 if (foundFearfulTarget)
@@ -4341,7 +4344,7 @@ namespace Server.Mobiles
         }
 
         public double DetermineMobileTargetValue(Mobile target, Mobile currentBestTarget, bool CurrentlyInCombat)
-        {   
+        {
             int MobValue = 0;
             int BestTargetValue = 0;
             int BonusWeightValue = 0;
@@ -4350,14 +4353,14 @@ namespace Server.Mobiles
                 return 0;
 
             bool IsFollower = false;
-                       
+
             BaseCreature bc_Target = target as BaseCreature;
             PlayerMobile pm_Target = target as PlayerMobile;
 
             BaseWeapon targetWeapon = target.Weapon as BaseWeapon;
 
             if (bc_Target == null && pm_Target == null)
-                return 0;       
+                return 0;
 
             if (bc_Target != null)
             {
@@ -4458,7 +4461,7 @@ namespace Server.Mobiles
                         if (bc_Creature.DictCombatTargeting[CombatTargeting.PlayerAny] > BestTargetValue)
                             BestTargetValue = bc_Creature.DictCombatTargeting[CombatTargeting.PlayerAny];
                     }
-                }                
+                }
             }
 
             //Targets SuperPredators
@@ -4555,8 +4558,8 @@ namespace Server.Mobiles
             }
 
             //Any Target
-            if (bc_Creature.DictCombatTargeting[CombatTargeting.Any] > BestTargetValue)            
-                BestTargetValue = bc_Creature.DictCombatTargeting[CombatTargeting.Any];            
+            if (bc_Creature.DictCombatTargeting[CombatTargeting.Any] > BestTargetValue)
+                BestTargetValue = bc_Creature.DictCombatTargeting[CombatTargeting.Any];
 
             //Aggressor
             if (bc_Creature.DictCombatTargeting[CombatTargeting.Aggressor] > 0)
@@ -4632,14 +4635,14 @@ namespace Server.Mobiles
 
                 //Not Aggressor
                 else
-                {                    
+                {
                     //If Is Teammate, Ignore It
-                    if (AITeamList.CheckTeam(bc_Creature, target))
-                        return 0;
+                    //if (AITeamList.CheckTeam(bc_Creature, target))
+                        //return 0;
 
                     //Ignore Player Kin Paint Allies
-                    else if (AIKinTeamList.CheckKinTeam(bc_Creature, target))
-                        return 0;                    
+                    //else if (AIKinTeamList.CheckKinTeam(bc_Creature, target))
+                        //return 0;
                 }
             }
 
@@ -4739,7 +4742,7 @@ namespace Server.Mobiles
                     UOACZBaseWildlife wildlife = target as UOACZBaseWildlife;
 
                     if (wildlife.Corrupted && (bc_Creature.DictCombatTargeting[CombatTargeting.UOACZEvilWildlife] > BestTargetValue))
-                        BestTargetValue = bc_Creature.DictCombatTargeting[CombatTargeting.UOACZEvilWildlife];                    
+                        BestTargetValue = bc_Creature.DictCombatTargeting[CombatTargeting.UOACZEvilWildlife];
                 }
             }
 
@@ -4771,12 +4774,12 @@ namespace Server.Mobiles
                     double closestValue = weightValue * ratio;
 
                     BonusWeightValue += (int)closestValue;
-                }                
+                }
 
                 //Player             
                 if (pm_Target != null)
                     BonusWeightValue += bc_Creature.DictCombatTargetingWeight[CombatTargetingWeight.Player];
-                
+
                 //Creature
                 if (bc_Target != null && !(bc_Target is BladeSpirits || bc_Target is EnergyVortex))
                 {
@@ -4810,7 +4813,7 @@ namespace Server.Mobiles
                     //Tamed
                     if (bc_Target.Tameable && bc_Target.Controlled && bc_Target.ControlMaster is PlayerMobile)
                         BonusWeightValue += bc_Creature.DictCombatTargetingWeight[CombatTargetingWeight.Tamed];
-                }             
+                }
 
                 //Highest Hit Points
                 if (target.Hits > currentBestTarget.Hits)
@@ -4924,7 +4927,7 @@ namespace Server.Mobiles
 
                     BonusWeightValue += (int)(Math.Round(SoloBonus));
                 }
-                
+
                 //Hardest or Easiest To Hit
                 if (bc_Creature.DictCombatTargetingWeight[CombatTargetingWeight.HardestToHit] > 0 || bc_Creature.DictCombatTargetingWeight[CombatTargetingWeight.EasiestToHit] > 0)
                 {
@@ -4980,11 +4983,11 @@ namespace Server.Mobiles
                         if (pm_Target.BoatOccupied != null)
                             ignoreBonusAggro = true;
                     }
-                    
+
                     if (!ignoreBonusAggro)
                         BonusWeightValue += target.AggroBonus;
                 }
-            }            
+            }
 
             MobValue += BestTargetValue;
 
@@ -5009,7 +5012,7 @@ namespace Server.Mobiles
         {
             if (bc_Creature.Deleted || bc_Creature.DisallowAllMoves)
                 return;
-            
+
             for (int i = 0; i < iSteps; i++)
             {
                 if (Utility.Random(8 * iChanceToNotMove) <= 8)
@@ -5304,7 +5307,7 @@ namespace Server.Mobiles
                             else
                             {
                                 bc_Creature.DebugSay("Ugabooga. I'm so big and tough I can destroy it: {0}", item.GetType().Name);
-                                
+
                                 if (item is Container)
                                 {
                                     Container cont = (Container)item;
@@ -5502,7 +5505,7 @@ namespace Server.Mobiles
             if (bc_Creature.Deleted || !bc_Creature.Controlled || !from.InRange(bc_Creature, 14) || from.Map != bc_Creature.Map)
                 return;
 
-            bool isOwner = (from == bc_Creature.ControlMaster);            
+            bool isOwner = (from == bc_Creature.ControlMaster);
 
             if (!isOwner)
                 return;
@@ -5541,14 +5544,14 @@ namespace Server.Mobiles
                 if (t.Order == order)
                     t.AddAI(this);
             }
-        }        
+        }
 
         public virtual void EndPickTarget(Mobile from, Mobile target, OrderType order)
         {
             if (bc_Creature.Deleted || !bc_Creature.Controlled || !from.InRange(bc_Creature, 14) || from.Map != bc_Creature.Map || !from.Alive)
                 return;
 
-            bool isOwner = (from == bc_Creature.ControlMaster);           
+            bool isOwner = (from == bc_Creature.ControlMaster);
 
             if (!isOwner)
                 return;
@@ -5577,7 +5580,7 @@ namespace Server.Mobiles
                     BaseCreature bc_Target = target as BaseCreature;
 
                     if (!(bc_Target.ControlMaster is PlayerMobile) || bc_Target is BladeSpirits || bc_Target is EnergyVortex)
-                        flagTamerToTarget = false;                        
+                        flagTamerToTarget = false;
                 }
 
                 if (flagTamerToTarget)
@@ -5630,7 +5633,7 @@ namespace Server.Mobiles
                 bc_Creature.Combatant = null;
                 bc_Creature.Warmode = false;
 
-                bc_Creature.PostPeacemakingTeleportDelay = DateTime.UtcNow + TimeSpan.FromSeconds(5);                           
+                bc_Creature.PostPeacemakingTeleportDelay = DateTime.UtcNow + TimeSpan.FromSeconds(5);
             }
 
             return false;
@@ -5830,7 +5833,7 @@ namespace Server.Mobiles
             m_Timer.Delay = TimeSpan.FromSeconds(Utility.RandomDouble());
             m_Timer.Interval = TimeSpan.FromSeconds(Math.Max(0.0, bc_Creature.CurrentSpeed));
             m_Timer.Start();
-        }        
+        }
 
         private class InternalEntry : ContextMenuEntry
         {
@@ -5839,7 +5842,8 @@ namespace Server.Mobiles
             private BaseAI m_AI;
             private OrderType m_Order;
 
-            public InternalEntry(Mobile from, int number, int range, BaseCreature creature, BaseAI ai, OrderType order): base(number, range)
+            public InternalEntry(Mobile from, int number, int range, BaseCreature creature, BaseAI ai, OrderType order)
+                : base(number, range)
             {
                 m_From = from;
                 bc_Creature = creature;
@@ -5861,43 +5865,43 @@ namespace Server.Mobiles
                 {
                     case OrderType.Attack:
                         bc_Creature.AIObject.ReceiveOrderAttack(m_From);
-                    break;
+                        break;
 
                     case OrderType.Guard:
                         bc_Creature.AIObject.ReceiveOrderGuard(m_From);
-                    break;
+                        break;
 
                     case OrderType.Patrol:
                         bc_Creature.AIObject.ReceiveOrderPatrol(m_From);
-                    break;
+                        break;
 
                     case OrderType.Follow:
                         bc_Creature.AIObject.ReceiveOrderFollow(m_From);
-                    break;
+                        break;
 
                     case OrderType.Come:
                         bc_Creature.AIObject.ReceiveOrderCome(m_From);
-                    break;                    
+                        break;
 
                     case OrderType.Stay:
                         bc_Creature.AIObject.ReceiveOrderStay(m_From);
-                    break;
+                        break;
 
                     case OrderType.Stop:
                         bc_Creature.AIObject.ReceiveOrderStop(m_From);
-                    break;
+                        break;
 
                     case OrderType.Fetch:
                         bc_Creature.AIObject.ReceiveOrderFetch(m_From);
-                    break;
+                        break;
 
                     case OrderType.Transfer:
                         bc_Creature.AIObject.ReceiveOrderTransfer(m_From);
-                    break;
+                        break;
 
                     case OrderType.Release:
                         bc_Creature.AIObject.ReceiveOrderRelease(m_From);
-                    break;                    
+                        break;
                 }
             }
         }
@@ -5929,7 +5933,7 @@ namespace Server.Mobiles
                     if (!bc_Creature.Summoned)
                         list.Add(new InternalEntry(from, 6113, 14, bc_Creature, this, OrderType.Transfer)); // Transfer                   
                 }
-            }            
+            }
         }
 
         private static SkillName[] m_KeywordTable = new SkillName[]
@@ -5998,13 +6002,13 @@ namespace Server.Mobiles
 
         public virtual void OnSpeech(SpeechEventArgs e)
         {
-            bool isNonHuman = false;  
+            bool isNonHuman = false;
 
             if (bc_Creature != null && (bc_Creature.Body.IsAnimal || bc_Creature.Body.IsMonster || bc_Creature.Body.IsSea))
                 isNonHuman = true;
 
             int[] keywords = e.Keywords;
-            string speech = e.Speech;     
+            string speech = e.Speech;
 
             string customSpeech = e.Speech.Trim().ToLower();
 
@@ -6034,7 +6038,7 @@ namespace Server.Mobiles
 
             #endregion
 
-            if (e.Mobile.Alive && e.Mobile.InRange(bc_Creature.Location, 3) && !isNonHuman)            
+            if (e.Mobile.Alive && e.Mobile.InRange(bc_Creature.Location, 3) && !isNonHuman)
             {
                 if (bc_Creature is BaseVendor && !e.Handled)
                 {
@@ -6068,8 +6072,8 @@ namespace Server.Mobiles
                         {
                             if (bc_Creature.Combatant != null)
                                 bc_Creature.PublicOverheadMessage(MessageType.Regular, 0x3B2, 501482);// I am too busy fighting to deal with thee!                    
-                            else                                                          
-                                WalkRandomInHome(2, 2, 1);                            
+                            else
+                                WalkRandomInHome(2, 2, 1);
                         }
 
                         bc_Creature.FocusMob = e.Mobile;
@@ -6192,9 +6196,9 @@ namespace Server.Mobiles
             {
                 bc_Creature.DebugSay("Listening...");
 
-                bool isOwner = (e.Mobile == bc_Creature.ControlMaster);               
+                bool isOwner = (e.Mobile == bc_Creature.ControlMaster);
 
-                string exceededFollowers = "You have currently exceeded your follower limit and they refuse to obey your command!";                
+                string exceededFollowers = "You have currently exceeded your follower limit and they refuse to obey your command!";
 
                 Mobile mobile = e.Mobile;
                 PlayerMobile pm_Mobile = e.Mobile as PlayerMobile;
@@ -6206,7 +6210,7 @@ namespace Server.Mobiles
                     {
                         mobile.SendMessage(exceededFollowers);
                         return;
-                    }                                  
+                    }
 
                     //Fetch Command
                     if (customSpeech.IndexOf("all fetch") == -1 && customSpeech.IndexOf("fetch") > -1)
@@ -6218,63 +6222,63 @@ namespace Server.Mobiles
                     // First, check the all*
                     for (int i = 0; i < keywords.Length; ++i)
                     {
-                        int keyword = keywords[i];                        
+                        int keyword = keywords[i];
 
                         switch (keyword)
                         {
                             case 0x164: // all come
-                            {
-                                ReceiveOrderCome(mobile);   
-                                return;
-                            }
+                                {
+                                    ReceiveOrderCome(mobile);
+                                    return;
+                                }
 
                             case 0x165: // all follow
-                            {
-                                ReceiveOrderFollow(mobile);
-                                return;
-                            }
+                                {
+                                    ReceiveOrderFollow(mobile);
+                                    return;
+                                }
 
                             case 0x166: // all guard
-                            {
-                                ReceiveOrderGuard(mobile);
-                                return;
-                            }
+                                {
+                                    ReceiveOrderGuard(mobile);
+                                    return;
+                                }
 
                             case 0x16B: // all guard me
-                            {
-                                ReceiveOrderGuard(mobile);
-                                return;
-                            }
+                                {
+                                    ReceiveOrderGuard(mobile);
+                                    return;
+                                }
 
                             case 0x167: // all stop
-                            {
-                                ReceiveOrderStop(mobile);
-                                return;
-                            }
+                                {
+                                    ReceiveOrderStop(mobile);
+                                    return;
+                                }
 
                             case 0x168: // all kill
-                            {
-                                ReceiveOrderAttack(mobile);
-                                return;
-                            }
+                                {
+                                    ReceiveOrderAttack(mobile);
+                                    return;
+                                }
 
                             case 0x169: // all attack
-                            {
-                                ReceiveOrderAttack(mobile);
-                                return;
-                            }
+                                {
+                                    ReceiveOrderAttack(mobile);
+                                    return;
+                                }
 
                             case 0x16C: // all follow me
-                            {
-                                ReceiveOrderFollow(mobile);
-                                return;
-                            }
+                                {
+                                    ReceiveOrderFollow(mobile);
+                                    return;
+                                }
 
                             case 0x170: // all stay
-                            {
-                                ReceiveOrderStay(mobile);
-                                return;
-                            }
+                                {
+                                    ReceiveOrderStay(mobile);
+                                    return;
+                                }
                         }
                     }
 
@@ -6290,11 +6294,11 @@ namespace Server.Mobiles
                                 {
                                     ReceiveOrderCome(mobile);
                                     return;
-                                }                            
-                            break;
+                                }
+                                break;
 
                             case 0x156: // *drop
-                            break;
+                                break;
 
                             case 0x15A: // *follow                            
                                 if (WasNamed(speech))
@@ -6302,82 +6306,82 @@ namespace Server.Mobiles
                                     ReceiveOrderFollow(mobile);
                                     return;
                                 }
-                            break;
+                                break;
 
                             case 0x15B: // *friend
-                            break;
+                                break;
 
                             case 0x15C: // *guard                            
                                 if (WasNamed(speech))
                                 {
                                     ReceiveOrderGuard(mobile);
                                     return;
-                                }                            
-                            break;
+                                }
+                                break;
 
                             case 0x15D: // *kill                            
                                 if (WasNamed(speech))
                                 {
                                     ReceiveOrderAttack(mobile);
                                     return;
-                                }                            
-                            break;
+                                }
+                                break;
 
                             case 0x15E: // *attack                            
                                 if (WasNamed(speech))
                                 {
                                     ReceiveOrderAttack(mobile);
                                     return;
-                                }   
-                            break;
+                                }
+                                break;
 
                             case 0x15F: // *patrol                                
                                 if (WasNamed(speech))
                                 {
                                     ReceiveOrderPatrol(mobile);
                                     return;
-                                }                                 
-                            break;
+                                }
+                                break;
 
                             case 0x161: // *stop                                
                                 if (WasNamed(speech))
                                 {
                                     ReceiveOrderStop(mobile);
                                     return;
-                                }                                
-                            break;
+                                }
+                                break;
 
                             case 0x163: // *follow me                                
                                 if (WasNamed(speech))
                                 {
                                     ReceiveOrderFollow(mobile);
                                     return;
-                                }                                
-                            break;
+                                }
+                                break;
 
                             case 0x16D: // *release                                
                                 if (WasNamed(speech) && customSpeech.IndexOf("all release") == -1)
                                 {
                                     ReceiveOrderRelease(mobile);
                                     return;
-                                }                                
-                            break;
+                                }
+                                break;
 
                             case 0x16E: // *transfer                            
                                 if (WasNamed(speech))
                                 {
                                     ReceiveOrderTransfer(mobile);
                                     return;
-                                }                            
-                            break;
+                                }
+                                break;
 
                             case 0x16F: // *stay                            
                                 if (WasNamed(speech))
                                 {
                                     ReceiveOrderStay(mobile);
                                     return;
-                                }                            
-                            break;
+                                }
+                                break;
                         }
                     }
                 }
@@ -6483,9 +6487,9 @@ namespace Server.Mobiles
                 if (!accepted)
                     return false;
 
-		        if (m_Creature.IsHenchman)
-		        {
-	                if (to.Skills[SkillName.Begging].Value < m_Creature.MinTameSkill || to.Skills[SkillName.Camping].Value < m_Creature.MinTameSkill)
+                if (m_Creature.IsHenchman)
+                {
+                    if (to.Skills[SkillName.Begging].Value < m_Creature.MinTameSkill || to.Skills[SkillName.Camping].Value < m_Creature.MinTameSkill)
                     {
                         from.SendMessage("That individual refuses to be transferred to them. They do not have enough begging and camping skill to command them.");
                         to.SendMessage("That individual refuses to be transferred to you. You do not have enough begging and camping skill to command them.");
@@ -6500,9 +6504,9 @@ namespace Server.Mobiles
 
                         return false;
                     }
-		        }
+                }
 
-                else 
+                else
                 {
                     if (to.Skills[SkillName.AnimalTaming].Value < m_Creature.MinTameSkill || to.Skills[SkillName.AnimalLore].Value < m_Creature.MinTameSkill)
                     {
@@ -6571,7 +6575,7 @@ namespace Server.Mobiles
                 }
             }
         }
-        
+
         public void DoWaypointIdle(double seconds, WaypointBehavior waypointBehavior)
         {
             WayPoint waypoint = bc_Creature.CurrentWaypoint;

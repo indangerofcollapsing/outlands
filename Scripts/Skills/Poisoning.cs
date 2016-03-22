@@ -67,13 +67,8 @@ namespace Server.SkillHandlers
 					else if ( targeted is BaseWeapon )
 					{
 						BaseWeapon weapon = (BaseWeapon)targeted;
-
-						if ( Core.AOS )
-						{
-							startTimer = ( weapon.PrimaryAbility == WeaponAbility.InfectiousStrike || weapon.SecondaryAbility == WeaponAbility.InfectiousStrike );
-						}
-						
-						else if ( weapon.Layer == Layer.OneHanded || weapon.Layer == Layer.TwoHanded )
+                        
+                        if ( weapon.Layer == Layer.OneHanded || weapon.Layer == Layer.TwoHanded )
 						{
 							//Ranged, One-Hand Swords, Fencing
 							startTimer = (weapon.Type == WeaponType.Ranged || weapon.Type == WeaponType.Slashing || weapon.Type == WeaponType.Piercing );

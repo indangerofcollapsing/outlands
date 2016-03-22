@@ -1287,6 +1287,7 @@ namespace Server.Engines.Craft
                     item.Acquisition = Item.AcquisitionType.Crafted;
                     item.AcquisitionData = from.Serial.Value;
                     item.CraftedBy = from;
+                    item.CrafterName = from.RawName;
 
                     from.AddToBackpack(item);
 

@@ -10,20 +10,12 @@ namespace Server.Items
 		public override int InitMinHits{ get{ return 150; } }
 		public override int InitMaxHits{ get{ return 150; } }
 
-		public override bool CanFortify{ get{ return false; } }
+		
 
 		[Constructable]
 		public Pacify()
 		{
 			Hue = 0x835;
-
-			Attributes.SpellChanneling = 1;
-			Attributes.AttackChance = 10;
-			Attributes.WeaponSpeed = 20;
-			Attributes.WeaponDamage = 50;
-
-			WeaponAttributes.HitLeechMana = 100;
-			WeaponAttributes.UseBestSkill = 1;
 		}
 
 		public Pacify( Serial serial ) : base( serial )

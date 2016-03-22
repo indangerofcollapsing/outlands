@@ -68,7 +68,7 @@ namespace Server
 
         public override void SetUniqueAI()
         {
-            SetSubGroup(AISubgroup.Mage3);
+            AISubGroup = AISubGroupType.Mage3;
             UpdateAI(false);
 
             base.SetUniqueAI();

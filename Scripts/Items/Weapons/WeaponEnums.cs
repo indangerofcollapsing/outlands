@@ -11,6 +11,7 @@ namespace Server.Items
 
 	public enum WeaponType
 	{
+        None,
 		Axe,		// Axes, Hatches, etc. These can give concussion blows
 		Slashing,	// Katana, Broadsword, Longsword, etc. Slashing weapons are poisonable
 		Staff,		// Staves
@@ -53,6 +54,7 @@ namespace Server.Items
 
 	public enum WeaponAnimation
 	{
+        None,
 		Slash1H = 9,
 		Pierce1H = 10,
 		Bash1H = 11,

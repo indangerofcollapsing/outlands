@@ -84,80 +84,44 @@ namespace Server.Engines.XmlSpawner2
 
 		private static Type[] HumanoidMembers =
 			new Type[]
-				{
-					typeof( Ogre ), typeof( OgreLord ), typeof( ArcticOgreLord ),typeof( Orc ), typeof( OrcishMage ),
-					typeof( OrcishLord ), typeof( OrcBrute ), typeof( OrcBomber ), typeof( OrcCaptain ), typeof( Troll ),
-					typeof( Cyclops ), typeof( Titan ), typeof( Juggernaut ), typeof( JukaMage ), typeof( JukaLord ),
-					typeof( JukaWarrior ), typeof( Betrayer ), typeof( Ettin ), typeof( Ratman ),
-					typeof( RatmanMage ), typeof( RatmanArcher )
+				{					
 				};
 
 		private static Type[] UndeadMembers =
 			new Type[]
-				{
-					typeof( AncientLich ), typeof( Bogle ), typeof( BoneMagi ), typeof( Lich ), typeof( LichLord ),
-					typeof( Shade ), typeof( Spectre ), typeof( Wraith ), typeof( BoneKnight ), typeof( Ghoul ),
-					typeof( Mummy ), typeof( SkeletalKnight ), typeof( Skeleton ), typeof( Zombie ), typeof(Succubus),
-					typeof( SkeletalMage), typeof( RottingCorpse )
+				{					
 				};
 
 		private static Type[] ReptilianMembers =
 			new Type[]
-				{
-					typeof( AncientWyrm ), typeof( Dragon ), typeof( Drake ), typeof( SerpentineDragon ), typeof( ShadowWyrm ),
-					typeof( SkeletalDragon ), typeof( SwampDragon ), typeof( WhiteWyrm ), typeof( Wyvern ) , typeof( Lizardman ),
-					typeof( OphidianArchmage ), typeof( OphidianKnight ), typeof( OphidianMage ), typeof( OphidianMatriarch ), typeof( OphidianWarrior ),
-					typeof( IceSerpent ), typeof( GiantIceWorm ), typeof( GiantSerpent ), typeof( IceSnake ), typeof( LavaSerpent ), typeof( LavaSnake ),
-					typeof( SilverSerpent ), typeof( Snake ), typeof( SeaSerpent ), typeof( Kraken), typeof( DeepSeaSerpent)
+				{				
 				};
 
 		private static Type[] ArachnidMembers =
 			new Type[]
-				{
-					typeof( DreadSpider ), typeof( FrostSpider ), typeof( GiantBlackWidow ), typeof( GiantSpider ),
-					typeof( TerathanAvenger ), typeof( TerathanDrone ), typeof( TerathanMatriarch ), typeof( TerathanWarrior ),
-					typeof( Scorpion ), typeof( Mephitis ), typeof( RedSolenWorker), typeof( RedSolenWarrior),
-					typeof( RedSolenQueen), typeof( RedSolenInfiltratorWarrior), typeof( RedSolenInfiltratorQueen), typeof( AntLion),
-					typeof( Beetle)
+				{					
 				};
 
 		private static Type[] ElementalMembers =
 			new Type[]
-				{
-					typeof( BloodElemental ), typeof( EarthElemental ), typeof( SummonedEarthElemental ), typeof( AgapiteElemental ),
-					typeof( BronzeElemental ), typeof( CopperElemental ), typeof( DullCopperElemental ), typeof( GoldenElemental ),
-					typeof( ShadowIronElemental ), typeof( ValoriteElemental ), typeof( VeriteElemental ), typeof( PoisonElemental ),
-					typeof( FireElemental ), typeof( SummonedFireElemental ), typeof( SnowElemental ), typeof( AirElemental ),
-					typeof( SummonedAirElemental ), typeof( WaterElemental ), typeof( SummonedWaterElemental ), typeof(CrystalElemental),
-					typeof(AcidElemental), typeof( Efreet )
+				{				
 				};
 		private static Type[] AbyssMembers =
 			new Type[]
-				{
-					typeof( AbysmalHorror ), typeof( Balron ), typeof( BoneDemon ), typeof( ChaosDaemon ), typeof( Daemon ),
-					typeof( SummonedDaemon ), typeof( DemonKnight ), typeof( Gargoyle ), typeof( FireGargoyle ),
-					typeof( HordeMinion ), typeof( IceFiend ), typeof( Imp ),
-					typeof( StoneGargoyle ), typeof(HellHound), typeof(EnslavedGargoyle), typeof(Nightmare)
+				{					
 				};
 
 		private static Type[] FairieMembers =
 			new Type[]
-				{
-					typeof( Pixie ), typeof( Wisp ), typeof( ShadowWisp ), typeof( EtherealWarrior )
+				{				
 				};
 		private static Type[] PlantMembers =
 			new Type[]
-				{
-					typeof( SwampTentacle ), typeof( Quagmire ), typeof( Corpser ), typeof( BogThing ), typeof( Bogling ), typeof( WhippingVine ),
-					typeof( Reaper )
+				{					
 				};
 		private static Type[] UnderworldMembers =
 			new Type[]
-				{
-					typeof( Gazer), typeof(ElderGazer), typeof(WandererOfTheVoid), typeof(WailingBanshee), typeof(VampireBat), typeof(Revenant),
-					typeof(Ravager), typeof(Impaler), typeof(GoreFiend), typeof(Gibberling), typeof(FleshRenderer), typeof(PatchworkSkeleton),
-					typeof(FleshGolem), typeof(FleshRenderer), typeof(Devourer), typeof(DarknightCreeper), typeof(AbysmalHorror),
-					typeof(SkitteringHopper), typeof(MoundOfMaggots)
+				{					
 				};
 
 

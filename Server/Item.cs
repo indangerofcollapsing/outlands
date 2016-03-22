@@ -847,6 +847,14 @@ namespace Server
             set { m_CraftedBy = value; }
         }
 
+        private string m_CrafterName = "";
+        [CommandProperty(AccessLevel.GameMaster)]
+        public string CrafterName
+        {
+            get { return m_CrafterName; }
+            set { m_CrafterName = value; }
+        }
+
         /// <summary>
         /// The <see cref="Mobile" /> who is currently <see cref="Mobile.Holding">holding</see> this item.
         /// </summary>
@@ -2230,32 +2238,21 @@ namespace Server
 
             //Version 18
             writer.Write(m_DecorativeEquipment);
-
-            //Version 17
             writer.Write(m_CraftedBy);
-
-            //Version 16
+            writer.Write(m_CrafterName);
             writer.Write(m_IsArcaneDustRechargable);
             writer.Write(m_ArcaneDustBasedChargesRemaining);
             writer.Write(m_ArcaneDustBasedChargesMaximumCharges);
             writer.Write(m_ArcaneDustBasedChargesRegainedPerArcaneDust);
-
-            //Version 15
             writer.Write(m_Stealable);
             writer.Write(m_AlreadyStolen);
             writer.Write(m_MinimumStealing);
             writer.Write(m_MaximumStealing);  
-            
-            //Version 14
             writer.Write(m_OceanStatic);
             writer.Write(m_ShipItem);
-
-            //Version 13            
             writer.Write((int)m_PlayerClass);
             writer.Write(m_PlayerClassRestricted);
             writer.Write(m_PlayerClassOwner);
-
-            //Version 12
             writer.Write((int)BreakChanceFromReforge);
             writer.Write((byte)Acquisition);
             writer.Write(AcquisitionData);
@@ -2452,132 +2449,6 @@ namespace Server
                 writer.WriteEncodedInt(info.m_SavedFlags);
         }
 
-        public IPooledEnumerable<IEntity> GetObjectsInRange(int range)
-        {
-            Map map = m_Map;
-
-            if (map == null)
-                return Server.Map.NullEnumerable<IEntity>.Instance;
-
-            if (m_Parent == null)
-                return map.GetObjectsInRange(m_Location, range);
-
-            return map.GetObjectsInRange(GetWorldLocation(), range);
-        }
-
-        public IPooledEnumerable<Item> GetItemsInRange(int range)
-        {
-            Map map = m_Map;
-
-            if (map == null)
-                return Server.Map.NullEnumerable<Item>.Instance;
-
-            if (m_Parent == null)
-                return map.GetItemsInRange(m_Location, range);
-
-            return map.GetItemsInRange(GetWorldLocation(), range);
-        }
-
-        public IPooledEnumerable<Mobile> GetMobilesInRange(int range)
-        {
-            Map map = m_Map;
-
-            if (map == null)
-                return Server.Map.NullEnumerable<Mobile>.Instance;
-
-            if (m_Parent == null)
-                return map.GetMobilesInRange(m_Location, range);
-
-            return map.GetMobilesInRange(GetWorldLocation(), range);
-        }
-
-        public IPooledEnumerable<NetState> GetClientsInRange(int range)
-        {
-            Map map = m_Map;
-
-            if (map == null)
-                return Server.Map.NullEnumerable<NetState>.Instance;
-
-            if (m_Parent == null)
-                return map.GetClientsInRange(m_Location, range);
-
-            return map.GetClientsInRange(GetWorldLocation(), range);
-        }
-
-        private static int m_LockedDownFlag;
-        private static int m_SecureFlag;
-
-        public static int LockedDownFlag
-        {
-            get { return m_LockedDownFlag; }
-            set { m_LockedDownFlag = value; }
-        }
-
-        public static int SecureFlag
-        {
-            get { return m_SecureFlag; }
-            set { m_SecureFlag = value; }
-        }
-
-        [CommandProperty(AccessLevel.Administrator)]
-        public bool IsLockedDown
-        {
-            get { return GetTempFlag(m_LockedDownFlag); }
-            set { SetTempFlag(m_LockedDownFlag, value); InvalidateProperties(); }
-        }
-
-        public bool IsSecure
-        {
-            get { return GetTempFlag(m_SecureFlag); }
-            set { SetTempFlag(m_SecureFlag, value); InvalidateProperties(); }
-        }
-
-        public bool GetTempFlag(int flag)
-        {
-            CompactInfo info = LookupCompactInfo();
-
-            if (info == null)
-                return false;
-
-            return ((info.m_TempFlags & flag) != 0);
-        }
-
-        public void SetTempFlag(int flag, bool value)
-        {
-            CompactInfo info = AcquireCompactInfo();
-
-            if (value)
-                info.m_TempFlags |= flag;
-            else
-                info.m_TempFlags &= ~flag;
-
-            if (info.m_TempFlags == 0)
-                VerifyCompactInfo();
-        }
-
-        public bool GetSavedFlag(int flag)
-        {
-            CompactInfo info = LookupCompactInfo();
-
-            if (info == null)
-                return false;
-
-            return ((info.m_SavedFlags & flag) != 0);
-        }
-
-        public void SetSavedFlag(int flag, bool value)
-        {
-            CompactInfo info = AcquireCompactInfo();
-
-            if (value)
-                info.m_SavedFlags |= flag;
-            else
-                info.m_SavedFlags &= ~flag;
-
-            if (info.m_SavedFlags == 0)
-                VerifyCompactInfo();
-        }
-
         public virtual void Deserialize(GenericReader reader)
         {
             int version = reader.ReadInt();
@@ -2596,6 +2467,7 @@ namespace Server
                 case 17:
                     {
                         m_CraftedBy = reader.ReadMobile();
+                        m_CrafterName = reader.ReadString();
 
                         goto case 16;
                     }
@@ -2619,7 +2491,7 @@ namespace Server
                         goto case 14;
                     }
                 case 14:
-                    {                       
+                    {
                         m_OceanStatic = reader.ReadBool();
                         m_ShipItem = reader.ReadBool();
 
@@ -3023,6 +2895,132 @@ namespace Server
 
             //if ( version < 9 )
             VerifyCompactInfo();
+        }
+
+        public IPooledEnumerable<IEntity> GetObjectsInRange(int range)
+        {
+            Map map = m_Map;
+
+            if (map == null)
+                return Server.Map.NullEnumerable<IEntity>.Instance;
+
+            if (m_Parent == null)
+                return map.GetObjectsInRange(m_Location, range);
+
+            return map.GetObjectsInRange(GetWorldLocation(), range);
+        }
+
+        public IPooledEnumerable<Item> GetItemsInRange(int range)
+        {
+            Map map = m_Map;
+
+            if (map == null)
+                return Server.Map.NullEnumerable<Item>.Instance;
+
+            if (m_Parent == null)
+                return map.GetItemsInRange(m_Location, range);
+
+            return map.GetItemsInRange(GetWorldLocation(), range);
+        }
+
+        public IPooledEnumerable<Mobile> GetMobilesInRange(int range)
+        {
+            Map map = m_Map;
+
+            if (map == null)
+                return Server.Map.NullEnumerable<Mobile>.Instance;
+
+            if (m_Parent == null)
+                return map.GetMobilesInRange(m_Location, range);
+
+            return map.GetMobilesInRange(GetWorldLocation(), range);
+        }
+
+        public IPooledEnumerable<NetState> GetClientsInRange(int range)
+        {
+            Map map = m_Map;
+
+            if (map == null)
+                return Server.Map.NullEnumerable<NetState>.Instance;
+
+            if (m_Parent == null)
+                return map.GetClientsInRange(m_Location, range);
+
+            return map.GetClientsInRange(GetWorldLocation(), range);
+        }
+
+        private static int m_LockedDownFlag;
+        private static int m_SecureFlag;
+
+        public static int LockedDownFlag
+        {
+            get { return m_LockedDownFlag; }
+            set { m_LockedDownFlag = value; }
+        }
+
+        public static int SecureFlag
+        {
+            get { return m_SecureFlag; }
+            set { m_SecureFlag = value; }
+        }
+
+        [CommandProperty(AccessLevel.Administrator)]
+        public bool IsLockedDown
+        {
+            get { return GetTempFlag(m_LockedDownFlag); }
+            set { SetTempFlag(m_LockedDownFlag, value); InvalidateProperties(); }
+        }
+
+        public bool IsSecure
+        {
+            get { return GetTempFlag(m_SecureFlag); }
+            set { SetTempFlag(m_SecureFlag, value); InvalidateProperties(); }
+        }
+
+        public bool GetTempFlag(int flag)
+        {
+            CompactInfo info = LookupCompactInfo();
+
+            if (info == null)
+                return false;
+
+            return ((info.m_TempFlags & flag) != 0);
+        }
+
+        public void SetTempFlag(int flag, bool value)
+        {
+            CompactInfo info = AcquireCompactInfo();
+
+            if (value)
+                info.m_TempFlags |= flag;
+            else
+                info.m_TempFlags &= ~flag;
+
+            if (info.m_TempFlags == 0)
+                VerifyCompactInfo();
+        }
+
+        public bool GetSavedFlag(int flag)
+        {
+            CompactInfo info = LookupCompactInfo();
+
+            if (info == null)
+                return false;
+
+            return ((info.m_SavedFlags & flag) != 0);
+        }
+
+        public void SetSavedFlag(int flag, bool value)
+        {
+            CompactInfo info = AcquireCompactInfo();
+
+            if (value)
+                info.m_SavedFlags |= flag;
+            else
+                info.m_SavedFlags &= ~flag;
+
+            if (info.m_SavedFlags == 0)
+                VerifyCompactInfo();
         }
 
         private void FixHolding_Sandbox()

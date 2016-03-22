@@ -202,13 +202,6 @@ namespace Server.Engines.BulkOrders
 
 		private static Item CreateMiningGloves( int type )
 		{
-			if ( type == 1 )
-				return new LeatherGlovesOfMining( 1 );
-			else if ( type == 3 )
-				return new StuddedGlovesOfMining( 3 );
-			else if ( type == 5 )
-				return new RingmailGlovesOfMining( 5 );
-
 			throw new InvalidOperationException();
 		}
 

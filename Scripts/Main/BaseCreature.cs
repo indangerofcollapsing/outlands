@@ -28,7 +28,27 @@ using System.Linq;
 
 namespace Server.Mobiles
 {
-    #region Enums
+    public enum SpeedGroupType
+    {
+        SuperSlow,
+        VerySlow,
+        Slow,
+        Medium,
+        Fast,
+        VeryFast,
+        SuperFast,
+    }
+
+    public enum SlayerGroupType
+    {
+        None,
+        Beast,
+        Daemonic,
+        Elemental,
+        Humanoid,
+        Monstrous,
+        Undead
+    }
 
     public enum FightMode
     {
@@ -111,8 +131,6 @@ namespace Server.Mobiles
         Barbed
     }
 
-    #endregion
-
     public class DamageStore : IComparable
     {
         public Mobile m_Mobile;
@@ -135,7 +153,7 @@ namespace Server.Mobiles
 
     [AttributeUsage(AttributeTargets.Class)]
     public class FriendlyNameAttribute : Attribute
-    {   
+    {
         private TextDefinition m_FriendlyName;
 
         public TextDefinition FriendlyName
@@ -170,24 +188,24 @@ namespace Server.Mobiles
     }
 
     public partial class BaseCreature : Mobile
-    {        
+    {
         public delegate void OnBeforeDeathCB();
-        public OnBeforeDeathCB m_OnBeforeDeathCallback;        
+        public OnBeforeDeathCB m_OnBeforeDeathCallback;
 
         public virtual bool DropsGold { get { return true; } }
 
         private bool m_FreelyLootable = false;
         public bool FreelyLootable
-        { 
+        {
             get
-            { 
+            {
                 return m_FreelyLootable;
-            } 
+            }
 
-            set 
-            { 
+            set
+            {
                 m_FreelyLootable = value;
-            } 
+            }
         }
 
         public virtual bool AlwaysFreelyLootable { get { return false; } }
@@ -249,7 +267,7 @@ namespace Server.Mobiles
             else
             {
                 if (!(ControlMaster is PlayerMobile) && (InitialDifficulty >= BaseCreature.HighDifficultyThreshold || IsMiniBoss() || IsBoss() || IsLoHBoss() || IsEventBoss()))
-                    duration /= PlayerProximityDifficultyDivisor;                
+                    duration /= PlayerProximityDifficultyDivisor;
             }
 
             return base.Paralyze(from, duration);
@@ -260,7 +278,7 @@ namespace Server.Mobiles
         {
             get
             {
-                if (!DropsGold) 
+                if (!DropsGold)
                     return 0;
 
                 int max = 10000;
@@ -278,7 +296,7 @@ namespace Server.Mobiles
 
                 if (Difficulty < 30)
                     bonusScalar = 1.10;
-                
+
                 value *= bonusScalar;
 
                 int seed = Utility.Random(10);
@@ -286,7 +304,7 @@ namespace Server.Mobiles
 
                 return (int)(Math.Min(value * scale, max));
             }
-        }      
+        }
 
         public virtual bool CanBeResurrectedThroughVeterinary { get { return true; } } // IPY - Dragon, drake etc requires special item to be resurrected
 
@@ -437,12 +455,12 @@ namespace Server.Mobiles
 
         public double TamedDamageAgainstPlayerDisruptChance = .02; //Tamed Creature Chance to Disrupt a Player Per Point of Damage Inflicted (Effects Bandages / Spells / Meditation)
 
-        public bool m_WasFishedUp = false;        
+        public bool m_WasFishedUp = false;
 
         private Point3D m_pHome;                // The home position of the creature, used by some AI
         private Point3D m_LastEnemyLocation;    // Last known location of enemy combatant
         private int m_iRangeHome = 10;      // The home range of the creature
-        
+
         private bool m_bControlled;         // Is controlled
         private Mobile m_ControlMaster;     // My master
         private Mobile m_ControlTarget;     // My target mobile
@@ -462,9 +480,9 @@ namespace Server.Mobiles
         private bool m_SuperPredator = false;
         private bool m_Predator = false;
         private bool m_Prey = false;
-        
+
         private bool m_bBardProvoked = false;
-        private bool m_bBardPacified = false;        
+        private bool m_bBardPacified = false;
         private Mobile m_bBardMaster = null;
         private Mobile m_bBardTarget = null;
 
@@ -513,9 +531,6 @@ namespace Server.Mobiles
 
         public const int DefaultRangePerception = 12;
 
-        public AIGroup m_AIGroup = AIGroup.None;
-        public AISubgroup m_AISubgroup = AISubgroup.None;       
-
         private double m_UniqueCreatureDifficultyScalar = 1;
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
         public double UniqueCreatureDifficultyScalar
@@ -531,23 +546,13 @@ namespace Server.Mobiles
         public static double BasePvPAbilityDamageScalar = .40;
 
         public static double BasePvPHenchmenDamageScalar = .90; //Additional PvP Damage Modifier Henchmen Receive (on top of Base Scalars)
-        
+
         public double PvPMeleeDamageScalar = BasePvPMeleeDamageScalar;
         public double PvPSpellDamageScalar = BasePvPSpellDamageScalar;
         public double PvPAbilityDamageScalar = BasePvPAbilityDamageScalar;
-        
-        public void SetGroup(AIGroup group)
-        {
-            m_AIGroup = group;
-        }
-
-        public void SetSubGroup(AISubgroup subgroup)
-        {
-            m_AISubgroup = subgroup;
-        }
 
         public virtual void SetRare()
-        {          
+        {
         }
 
         public virtual void SetUniqueAI()
@@ -719,11 +724,11 @@ namespace Server.Mobiles
                     changedValues = true;
                 }
 
-                if (changedValues)                
-                    ApplyExperience();                
+                if (changedValues)
+                    ApplyExperience();
             }
         }
-        
+
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual int MaxExperience { get { return 250; } }
 
@@ -944,12 +949,6 @@ namespace Server.Mobiles
 
             m_iTeam = 0;
 
-            SpeedInfo.GetSpeeds(this, ref dActiveSpeed, ref dPassiveSpeed);
-
-            m_dActiveSpeed = dActiveSpeed;
-            m_dPassiveSpeed = dPassiveSpeed;
-            m_dCurrentSpeed = dPassiveSpeed;
-
             m_bDebugAI = false;
 
             m_bControlled = false;
@@ -982,7 +981,7 @@ namespace Server.Mobiles
             m_SpecialAbilityEffectEntriesToRemove = new List<SpecialAbilityEffectEntry>();
 
             m_SpecialAbilityEffectTimer = new SpecialAbilityEffectTimer(this);
-            m_SpecialAbilityEffectTimer.Stop();            
+            m_SpecialAbilityEffectTimer.Stop();
 
             Timer.DelayCall(TimeSpan.FromMilliseconds(3000), delegate
             {
@@ -993,21 +992,35 @@ namespace Server.Mobiles
                 }
             });
 
-            //Set AI
+            SetSpeed();
             PopulateDefaultAI();
-            AICreatureList.GetAI(this);
             UpdateAI(true);
 
             if (Controlled && ControlMaster is PlayerMobile)
                 ApplyExperience();
         }
 
-        public BaseCreature(Serial serial) : base(serial)
+        public BaseCreature(Serial serial)
+            : base(serial)
         {
             m_bDebugAI = false;
 
             if (Controlled && ControlMaster is PlayerMobile)
                 ApplyExperience();
+        }
+
+        public void SetSpeed()
+        {
+            switch (SpeedGroup)
+            {
+                case SpeedGroupType.SuperSlow: ActiveSpeed = 0.8; PassiveSpeed = 0.9; break;
+                case SpeedGroupType.VerySlow: ActiveSpeed = 0.6; PassiveSpeed = 0.7; break;
+                case SpeedGroupType.Slow: ActiveSpeed = 0.5; PassiveSpeed = 0.6; break;
+                case SpeedGroupType.Medium: ActiveSpeed = 0.4; PassiveSpeed = 0.5; break;
+                case SpeedGroupType.Fast: ActiveSpeed = 0.35; PassiveSpeed = 0.45; break;
+                case SpeedGroupType.VeryFast: ActiveSpeed = 0.3; PassiveSpeed = 0.4; break;
+                case SpeedGroupType.SuperFast: ActiveSpeed = 0.25; PassiveSpeed = 0.35; break;
+            }
         }
 
         #region AI Dictionaries
@@ -1242,8 +1255,7 @@ namespace Server.Mobiles
             if (Deleted || !Alive)
                 return;
 
-            AIDefinitions AIObject = new AIDefinitions();
-            AIObject.UpdateAI(this);
+            AIDefinitions.UpdateAI(this);
 
             if (setUniqueAI)
             {
@@ -1402,7 +1414,8 @@ namespace Server.Mobiles
 
         private class AdminProvokeFirstTarget : Target
         {
-            public AdminProvokeFirstTarget(Mobile from) : base(100, false, TargetFlags.None)
+            public AdminProvokeFirstTarget(Mobile from)
+                : base(100, false, TargetFlags.None)
             {
             }
 
@@ -1431,7 +1444,8 @@ namespace Server.Mobiles
         {
             private BaseCreature bc_FirstCreature;
 
-            public InternalSecondTarget(Mobile from, BaseCreature creature) : base(100, false, TargetFlags.None)
+            public InternalSecondTarget(Mobile from, BaseCreature creature)
+                : base(100, false, TargetFlags.None)
             {
                 bc_FirstCreature = creature;
             }
@@ -1476,7 +1490,8 @@ namespace Server.Mobiles
 
         private class AdminTameTarget : Target
         {
-            public AdminTameTarget(Mobile from) : base(100, false, TargetFlags.None)
+            public AdminTameTarget(Mobile from)
+                : base(100, false, TargetFlags.None)
             {
             }
 
@@ -1504,7 +1519,8 @@ namespace Server.Mobiles
         {
             private BaseCreature bc_FirstCreature;
 
-            public AdminTamerTarget(Mobile from, BaseCreature creature) : base(100, false, TargetFlags.None)
+            public AdminTamerTarget(Mobile from, BaseCreature creature)
+                : base(100, false, TargetFlags.None)
             {
                 bc_FirstCreature = creature;
             }
@@ -1556,7 +1572,8 @@ namespace Server.Mobiles
         {
             private PlayerMobile m_Player;
 
-            public GetGotoCurrentWaypointTarget(PlayerMobile player): base(-1, false, TargetFlags.None)
+            public GetGotoCurrentWaypointTarget(PlayerMobile player)
+                : base(-1, false, TargetFlags.None)
             {
                 m_Player = player;
             }
@@ -1600,20 +1617,20 @@ namespace Server.Mobiles
         {
             if (defender == null || damage <= 0)
                 return;
-            
-           if ((this is BladeSpirits || this is EnergyVortex) && SummonMaster is PlayerMobile)
-           {
-               PlayerMobile pm_Controller = SummonMaster as PlayerMobile;
 
-               if (GetDistanceToSqrt(pm_Controller) <= 20)
-               {
-                   if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                       pm_Controller.SendMessage(pm_Controller.PlayerFollowerDamageTextHue, "Follower: " + Name + " attacks " + defender.Name + " for " + damage.ToString() + " damage.");
+            if ((this is BladeSpirits || this is EnergyVortex) && SummonMaster is PlayerMobile)
+            {
+                PlayerMobile pm_Controller = SummonMaster as PlayerMobile;
 
-                   if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                       defender.PrivateOverheadMessage(MessageType.Regular, pm_Controller.PlayerFollowerDamageTextHue, false, "-" + damage.ToString(), pm_Controller.NetState);
-               }
-           }           
+                if (GetDistanceToSqrt(pm_Controller) <= 20)
+                {
+                    if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
+                        pm_Controller.SendMessage(pm_Controller.PlayerFollowerDamageTextHue, "Follower: " + Name + " attacks " + defender.Name + " for " + damage.ToString() + " damage.");
+
+                    if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
+                        defender.PrivateOverheadMessage(MessageType.Regular, pm_Controller.PlayerFollowerDamageTextHue, false, "-" + damage.ToString(), pm_Controller.NetState);
+                }
+            }
 
             if (Controlled && ControlMaster is PlayerMobile)
             {
@@ -1634,7 +1651,8 @@ namespace Server.Mobiles
         {
             private PlayerMobile m_Player;
 
-            public GetDifficultyTarget(PlayerMobile player) : base(-1, false, TargetFlags.None)
+            public GetDifficultyTarget(PlayerMobile player)
+                : base(-1, false, TargetFlags.None)
             {
                 m_Player = player;
             }
@@ -1899,24 +1917,6 @@ namespace Server.Mobiles
             return finalValue;
         }
 
-        public bool SpellCaster
-        {
-            get
-            {
-                return (m_AISubgroup >= AISubgroup.Mage1 && m_AISubgroup <= AISubgroup.Mage6) ||
-                    (m_AISubgroup >= AISubgroup.GroupHealerMage1 && m_AISubgroup <= AISubgroup.GroupHealerMage6);
-            }
-        }
-
-        public bool Hybrid
-        {
-            get
-            {
-                return (m_AISubgroup >= AISubgroup.MeleeMage1 && m_AISubgroup <= AISubgroup.MeleeMage6) ||
-                    (m_AISubgroup >= AISubgroup.GroupHealerMeleeMage1 && m_AISubgroup <= AISubgroup.GroupHealerMeleeMage6);
-            }
-        }
-
         public void ApplyExperience()
         {
             int currentHitPoints = Hits;
@@ -2040,7 +2040,7 @@ namespace Server.Mobiles
                             }
 
                             SpecialAbilities.AddBloodEffect(bc_Creature, minBlood, maxBlood);
-                            
+
                             int finalAdjustedDamage = AOS.Damage(bc_Creature, entry.m_Owner, damage, 0, 100, 0, 0, 0);
 
                             Mobile m_Owner = entry.m_Owner as Mobile;
@@ -2074,7 +2074,7 @@ namespace Server.Mobiles
                                 Effects.SendLocationParticles(EffectItem.Create(bc_Creature.Location, bc_Creature.Map, TimeSpan.FromSeconds(0.25)), 0x376A, 10, 20, 2199, 0, 5029, 0);
 
                                 bc_Creature.PublicOverheadMessage(MessageType.Regular, 1103, false, "*looks violently ill*");
-                                
+
                                 bc_Creature.TakenDamageFromPoison = true;
 
                                 Blood blood = new Blood();
@@ -2255,7 +2255,7 @@ namespace Server.Mobiles
 
             value = totalValue;
         }
-        
+
         private bool m_IsStealthing;
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsStealthing // IsStealthing should be moved to Server.Mobiles
@@ -2286,20 +2286,6 @@ namespace Server.Mobiles
         {
             get { return m_BandageTimeout; }
             set { m_BandageTimeout = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
-        public AIGroup Group
-        {
-            get { return m_AIGroup; }
-            set { m_AIGroup = value; UpdateAI(true); }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
-        public AISubgroup Subgroup
-        {
-            get { return m_AISubgroup; }
-            set { m_AISubgroup = value; UpdateAI(true); }
         }
 
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
@@ -2546,13 +2532,13 @@ namespace Server.Mobiles
             set { m_IsBonded = value; InvalidateProperties(); }
         }
 
-        private bool m_IsDeadPet;  
+        private bool m_IsDeadPet;
         public bool IsDeadPet
         {
             get { return m_IsDeadPet; }
             set { m_IsDeadPet = value; }
         }
-        
+
         private DateTime m_OwnerAbandonTime = DateTime.UtcNow + TimeSpan.FromDays(1000);
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime OwnerAbandonTime
@@ -2616,13 +2602,6 @@ namespace Server.Mobiles
         }
 
         #endregion
-
-        public virtual double WeaponAbilityChance { get { return 0.4; } }
-
-        public virtual WeaponAbility GetWeaponAbility()
-        {
-            return null;
-        }
 
         #region Elemental Resistance/Damage
 
@@ -2950,11 +2929,11 @@ namespace Server.Mobiles
         {
             get { return m_Rare; }
             set
-            { 
+            {
                 m_Rare = value;
 
-                if (m_Rare)                
-                    SetRare();                
+                if (m_Rare)
+                    SetRare();
             }
         }
 
@@ -2973,6 +2952,29 @@ namespace Server.Mobiles
         public DateTime m_NextWeaponChangeAllowed = DateTime.UtcNow;
         public TimeSpan NextWeaponChangeDelay = TimeSpan.FromSeconds(Utility.RandomMinMax(4, 6));
 
+        public virtual SpeedGroupType SpeedGroup { get { return SpeedGroupType.Medium; } }
+
+        public virtual AIGroupType AIBaseGroup { get { return AIGroupType.None; } }
+        public virtual AISubGroupType AIBaseSubGroup { get { return AISubGroupType.None; } }
+
+        private AIGroupType m_AIGroup = AIGroupType.Unspecified;
+        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
+        public AIGroupType AIGroup
+        {
+            get { return m_AIGroup; }
+            set { m_AIGroup = value; UpdateAI(true); }
+        }
+
+        public AISubGroupType m_AISubGroup = AISubGroupType.None;
+        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
+        public AISubGroupType AISubGroup
+        {
+            get { return m_AISubGroup; }
+            set { m_AISubGroup = value; UpdateAI(true); }
+        }
+
+        public virtual SlayerGroupType SlayerGroup { get { return SlayerGroupType.Monstrous; } }
+
         public StamFreeMoveAuraTimer m_StamFreeMoveAuraTimer { get; set; }
 
         public void StartStamFreeMoveAuraTimer()
@@ -2988,7 +2990,8 @@ namespace Server.Mobiles
         {
             BaseCreature bc_Creature;
 
-            public StamFreeMoveAuraTimer(BaseCreature creature) : base(TimeSpan.Zero, BaseCreature.StamFreeAuraInterval)
+            public StamFreeMoveAuraTimer(BaseCreature creature)
+                : base(TimeSpan.Zero, BaseCreature.StamFreeAuraInterval)
             {
                 Priority = TimerPriority.OneSecond;
                 bc_Creature = creature;
@@ -3039,166 +3042,6 @@ namespace Server.Mobiles
         public virtual bool DisplayWeight { get { return Backpack is StrongBackpack; } }
 
         public bool m_ReturnsHome = true; //Set to True, and is Overriden and Set to False for BladeSpirits / EV / and BaseEscortable
-
-        #region Breath ability, like dragon fire breath
-        private long m_NextBreathTime;
-        public long NextBreathTime { get { return m_NextBreathTime; } set { m_NextBreathTime = value; } }
-
-        // Must be overriden in subclass to enable
-        public virtual bool HasBreath { get { return false; } }
-
-        // Base damage given is: CurrentHitPoints * BreathDamageScalar
-        public virtual double BreathDamageScalar { get { return (Core.AOS ? 0.16 : 0.05); } }
-
-        // Min/max seconds until next breath
-        // IPY : Faster breath
-        public virtual double BreathMinDelay { get { return 10.0; } }
-        public virtual double BreathMaxDelay { get { return 15.0; } }
-
-        // Creature stops moving for 1.0 seconds while breathing
-        public virtual double BreathStallTime { get { return 1.0; } }
-
-        // Effect is sent 1.3 seconds after BreathAngerSound and BreathAngerAnimation is played
-        public virtual double BreathEffectDelay { get { return 1.3; } }
-
-        // Damage is given 1.0 seconds after effect is sent
-        public virtual double BreathDamageDelay { get { return 1.0; } }
-
-        public virtual int BreathRange { get { return RangePerception; } }
-
-        // Damage types
-        public virtual int BreathChaosDamage { get { return 0; } }
-        public virtual int BreathPhysicalDamage { get { return 0; } }
-        public virtual int BreathFireDamage { get { return 100; } }
-        public virtual int BreathColdDamage { get { return 0; } }
-        public virtual int BreathPoisonDamage { get { return 0; } }
-        public virtual int BreathEnergyDamage { get { return 0; } }
-
-        // Is immune to breath damages
-        public virtual bool BreathImmune { get { return false; } }
-
-        // Effect details and sound
-        public virtual int BreathEffectItemID { get { return 0x36D4; } }
-        public virtual int BreathEffectSpeed { get { return 5; } }
-        public virtual int BreathEffectDuration { get { return 0; } }
-        public virtual bool BreathEffectExplodes { get { return false; } }
-        public virtual bool BreathEffectFixedDir { get { return false; } }
-        public virtual int BreathEffectHue { get { return 0; } }
-        public virtual int BreathEffectRenderMode { get { return 0; } }
-
-        public virtual int BreathEffectSound { get { return 0x227; } }
-
-        // Anger sound/animations
-        public virtual int BreathAngerSound { get { return GetAngerSound(); } }
-        public virtual int BreathAngerAnimation { get { return 12; } }
-
-        public virtual void BreathStart(Mobile target)
-        {
-            BreathStallMovement();
-            BreathPlayAngerSound();
-            BreathPlayAngerAnimation();
-
-            this.Direction = this.GetDirectionTo(target);
-
-            Timer.DelayCall(TimeSpan.FromSeconds(BreathEffectDelay), new TimerStateCallback(BreathEffect_Callback), target);
-        }
-
-        public virtual void BreathStallMovement()
-        {
-            if (m_AI != null)
-                m_AI.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(1); //Core.TickCount + (int)(BreathStallTime * 1000);
-        }
-
-        public virtual void BreathPlayAngerSound()
-        {
-            PlaySound(BreathAngerSound);
-        }
-
-        public virtual void BreathPlayAngerAnimation()
-        {
-            //High Seas Creature Animation Override            
-            if (IsHighSeasBodyType)
-            {
-                Animate(Utility.RandomList(27), 5, 1, true, false, 0);
-                return;
-            }
-
-            Animate(BreathAngerAnimation, 5, 1, true, false, 0);
-        }
-
-        public virtual void BreathEffect_Callback(object state)
-        {
-            Mobile target = (Mobile)state;
-
-            if (!target.Alive || !CanBeHarmful(target))
-                return;
-
-            BreathPlayEffectSound();
-            BreathPlayEffect(target);
-
-            Timer.DelayCall(TimeSpan.FromSeconds(BreathDamageDelay), new TimerStateCallback(BreathDamage_Callback), target);
-        }
-
-        public virtual void BreathPlayEffectSound()
-        {
-            PlaySound(BreathEffectSound);
-        }
-
-        public virtual void BreathPlayEffect(Mobile target)
-        {
-            Effects.SendMovingEffect(this, target, BreathEffectItemID, -
-                BreathEffectSpeed, BreathEffectDuration, BreathEffectFixedDir,
-                BreathEffectExplodes, BreathEffectHue, BreathEffectRenderMode);
-        }
-
-        public virtual void BreathDamage_Callback(object state)
-        {
-            Mobile target = (Mobile)state;
-
-            if (target is BaseCreature && ((BaseCreature)target).BreathImmune)
-                return;
-
-            if (CanBeHarmful(target))
-            {
-                DoHarmful(target);
-                BreathDealDamage(target);
-            }
-        }
-
-        public virtual void BreathDealDamage(Mobile target)
-        {
-            int physDamage = BreathPhysicalDamage;
-            int fireDamage = BreathFireDamage;
-            int coldDamage = BreathColdDamage;
-            int poisDamage = BreathPoisonDamage;
-            int nrgyDamage = BreathEnergyDamage;
-
-            if (Evasion.CheckSpellEvasion(target))
-                return;
-
-            if (physDamage == 0 && fireDamage == 0 && coldDamage == 0 && poisDamage == 0 && nrgyDamage == 0)
-            { // Unresistable damage even in AOS
-                target.Damage(BreathComputeDamage(target), this);
-            }
-            else
-            {
-                AOS.Damage(target, this, BreathComputeDamage(target), physDamage, fireDamage, coldDamage, poisDamage, nrgyDamage);
-            }
-        }
-
-        public virtual int BreathComputeDamage(Mobile target)
-        {
-            int damage = (int)(Hits * BreathDamageScalar);
-
-            if (IsParagon)
-                damage = (int)(damage / Paragon.MaxHitsScalar);
-
-            if (Controlled && target is PlayerMobile && this is Dragon)
-                damage /= 2;
-
-            return damage;
-        }
-        #endregion
 
         public virtual bool CanFly { get { return false; } }
 
@@ -3311,13 +3154,9 @@ namespace Server.Mobiles
         public BaseAI AIObject { get { return m_AI; } }
 
         public const int MaxOwners = 5;
-
-        public virtual OppositionGroup OppositionGroup
-        {
-            get { return null; }
-        }
         
         #region Allegiance
+
         public virtual Ethics.Ethic EthicAllegiance { get { return null; } }
 
         public enum Allegiance
@@ -3383,11 +3222,6 @@ namespace Server.Mobiles
 
         public virtual bool IsEnemy(Mobile m)
         {
-            OppositionGroup g = this.OppositionGroup;
-
-            if (g != null && g.IsEnemy(this, m))
-                return true;
-
             if (m is BaseGuard)
                 return false;
 
@@ -3410,21 +3244,7 @@ namespace Server.Mobiles
 
             return (m_iTeam != c.m_iTeam || ((m_Summoned || m_bControlled) != (c.m_Summoned || c.m_bControlled))/* || c.Combatant == this*/ );
         }
-
-        public virtual bool IsOppositionGroup(Mobile m)
-        {
-            bool foundEnemy = false;
-
-            OppositionGroup opGroup = this.OppositionGroup;
-
-            if (opGroup != null && opGroup.IsEnemy(this, m))
-            {
-                foundEnemy = true;
-            }
-
-            return foundEnemy;
-        }
-
+        
         public override string ApplyNameSuffix(string suffix)
         {
             if (IsParagon && !GivesMLMinorArtifact)
@@ -3476,7 +3296,7 @@ namespace Server.Mobiles
                 return true;
 
             return false;
-        }        
+        }
 
         public override bool CheckDisrupt(int amount, Mobile from)
         {
@@ -3536,7 +3356,7 @@ namespace Server.Mobiles
         {
             if (!physical)
                 return damage;
-            
+
             int virtualArmor = VirtualArmor + VirtualArmorMod;
 
             if (virtualArmor > 0)
@@ -3581,7 +3401,7 @@ namespace Server.Mobiles
                     if (damage < 0)
                         damage = 0;
                 }
-            }            
+            }
 
             return damage;
         }
@@ -3635,7 +3455,7 @@ namespace Server.Mobiles
                         {
                             pm_Source.PlayerVsPlayerCombatOccured(pm_Controller);
                             pm_Controller.PlayerVsPlayerCombatOccured(pm_Source);
-                        }                        
+                        }
                     }
                 }
 
@@ -3698,7 +3518,7 @@ namespace Server.Mobiles
             {
                 if ((oldHits > (this.HitsMax / 10)) && (this.Hits <= (this.HitsMax / 10)))
                     PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "* The creature has been beaten into subjugation! *");
-            }            
+            }
         }
 
         public virtual bool DeleteCorpseOnDeath
@@ -3729,7 +3549,7 @@ namespace Server.Mobiles
                 IsParagon = true;
 
             if (Tameable && !m_GeneratedTamedStats)
-                GenerateTamedScalars();            
+                GenerateTamedScalars();
 
             base.OnBeforeSpawn(location, m);
         }
@@ -4189,7 +4009,7 @@ namespace Server.Mobiles
 
             return false;
         }
-        
+
         public override bool IsHindered()
         {
             double hinderValue = 0;
@@ -4252,14 +4072,14 @@ namespace Server.Mobiles
                             p = PoisonImpl.DecreaseLevel(p);
                     }
                 }
-                
+
                 defender.ApplyPoison(this, p);
             }
 
             UOACZBaseUndead undeadCreature = this as UOACZBaseUndead;
 
             if (undeadCreature != null)
-                undeadCreature.m_LastActivity = DateTime.UtcNow; 
+                undeadCreature.m_LastActivity = DateTime.UtcNow;
 
             if (bc_Defender != null)
             {
@@ -4281,7 +4101,7 @@ namespace Server.Mobiles
                 bc_Attacker.CheckAutoDispel(this);
             }
         }
-        
+
         public override void OnDamage(int amount, Mobile from, bool willKill)
         {
             if (BardPacified)
@@ -4376,9 +4196,9 @@ namespace Server.Mobiles
                         if (pm_Tamer.m_LastPassiveTamingSkillAttacked != this && !(Controlled && ControlMaster is PlayerMobile) && !Summoned && !NoKillAwards && bc_TamedCreature.m_NextExperienceGain < DateTime.UtcNow && bc_TamedCreature.Experience < bc_TamedCreature.MaxExperience)
                         {
                             bool boostedRate = false;
-                            
-                            bool petInSkillGainRange = pm_Tamer.Skills[Server.SkillName.AnimalTaming].Base < bc_TamedCreature.MinTameSkill + 25.0;                            
-                            
+
+                            bool petInSkillGainRange = pm_Tamer.Skills[Server.SkillName.AnimalTaming].Base < bc_TamedCreature.MinTameSkill + 25.0;
+
                             double nextExperienceGain = (double)MinExpGainActiveDelay;
 
                             if (boostedRate)
@@ -4424,7 +4244,7 @@ namespace Server.Mobiles
 
             if (speechType != null && !willKill)
                 speechType.OnDamage(this, amount);
-            
+
             BaseCreature bc_From = from as BaseCreature;
 
             if (bc_From != null)
@@ -4436,7 +4256,7 @@ namespace Server.Mobiles
             if (!willKill)
             {
             }
-                
+
             base.OnDamage(amount, from, willKill);
 
             if (!willKill)
@@ -4555,7 +4375,7 @@ namespace Server.Mobiles
         public virtual void CheckReflect(Mobile caster, ref bool reflect)
         {
         }
-        
+
         public virtual void OnGotCannonHit(int amount, Mobile from, bool willKill)
         {
         }
@@ -4570,7 +4390,7 @@ namespace Server.Mobiles
             int meat = Meat;
             int hides = Hides;
             int scales = Scales;
-            
+
             if ((feathers == 0 && wool == 0 && meat == 0 && hides == 0 && scales == 0) || Summoned || IsBonded)
             {
                 from.SendLocalizedMessage(500485); // You see nothing useful to carve from the corpse.
@@ -4733,10 +4553,10 @@ namespace Server.Mobiles
             writer.Write(m_ControlTarget);
             writer.Write(m_ControlDest);
             writer.Write((int)m_ControlOrder);
-            writer.Write(m_MinTameSkill);          
+            writer.Write(m_MinTameSkill);
             writer.Write(m_Tameable);
             writer.Write(m_Summoned);
-            writer.Write(m_iControlSlots);            
+            writer.Write(m_iControlSlots);
             writer.Write((Item)m_CurrentWaypoint);
             writer.Write(m_SummonMaster);
             writer.Write(m_HitsMax);
@@ -4746,21 +4566,21 @@ namespace Server.Mobiles
             writer.Write(m_DamageMax);
             writer.Write(m_Owners, true);
             writer.Write(m_IsDeadPet);
-            writer.Write(m_IsBonded);                    
+            writer.Write(m_IsBonded);
             writer.Write(m_Paragon);
             writer.Write(m_RemoveIfUntamed);
-            writer.Write(m_RemoveStep);            
+            writer.Write(m_RemoveStep);
             writer.Write(m_BardImmune);
             writer.Write(m_CorpseNameOverride);
             writer.Write((int)m_AIGroup);
-            writer.Write((int)m_AISubgroup);
+            writer.Write((int)m_AISubGroup);
             writer.Write(m_ControlObject);
-            writer.Write((int)m_WaypointOrder);            
+            writer.Write((int)m_WaypointOrder);
             writer.Write(m_AttackSpeed);
             writer.Write(m_ResolveAcquireTargetDelay);
             writer.Write(m_Experience);
             writer.Write(m_CreaturesKilled);
-            writer.Write(m_TimesTamed);          
+            writer.Write(m_TimesTamed);
             writer.Write(m_TamedBaseMaxHitsCreationScalar);
             writer.Write(m_TamedBaseDexCreationScalar);
             writer.Write(m_TamedBaseMaxManaCreationScalar);
@@ -4798,22 +4618,22 @@ namespace Server.Mobiles
             writer.Write(m_ConvertedParagon);
             writer.Write(m_TakenDamageFromPoison);
             writer.Write(m_TakenDamageFromCreature);
-            writer.Write(m_Rare);            
+            writer.Write(m_Rare);
             writer.Write(m_OwnerAbandonTime);
             writer.Write(m_NextWaypointAction);
             writer.Write(m_NextExperienceGain);
-            writer.Write(m_LastActivated); 
+            writer.Write(m_LastActivated);
             writer.Write(m_BoatOccupied);
-            writer.Write(m_XMLSpawner);            
+            writer.Write(m_XMLSpawner);
 
             if (m_Summoned)
                 writer.WriteDeltaTime(m_SummonEnd);
-            
+
             if (IsStabled || (Controlled && ControlMaster != null))
                 writer.Write(TimeSpan.Zero);
             else
                 writer.Write(DeleteTimeLeft);
-            
+
             if (m_VisitedWaypoints != null)
             {
                 writer.Write(m_VisitedWaypoints.Count);
@@ -4834,7 +4654,7 @@ namespace Server.Mobiles
                 writer.Write(m_SpecialAbilityEffectEntries[a].m_Owner);
                 writer.Write(m_SpecialAbilityEffectEntries[a].m_Value);
                 writer.Write(m_SpecialAbilityEffectEntries[a].m_Expiration);
-            }              
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -4850,7 +4670,7 @@ namespace Server.Mobiles
             //Version 0
             if (version >= 0)
             {
-                m_iRangePerception = reader.ReadInt();                
+                m_iRangePerception = reader.ReadInt();
                 m_pHome.X = reader.ReadInt();
                 m_pHome.Y = reader.ReadInt();
                 m_pHome.Z = reader.ReadInt();
@@ -4873,21 +4693,21 @@ namespace Server.Mobiles
                 m_DamageMax = reader.ReadInt();
                 m_Owners = reader.ReadStrongMobileList();
                 m_IsDeadPet = reader.ReadBool();
-                m_IsBonded = reader.ReadBool();                
+                m_IsBonded = reader.ReadBool();
                 m_Paragon = reader.ReadBool();
                 m_RemoveIfUntamed = reader.ReadBool();
                 m_RemoveStep = reader.ReadInt();
                 m_BardImmune = reader.ReadBool();
                 m_CorpseNameOverride = reader.ReadString();
-                m_AIGroup = (AIGroup)reader.ReadInt();
-                m_AISubgroup = (AISubgroup)reader.ReadInt();
+                m_AIGroup = (AIGroupType)reader.ReadInt();
+                m_AISubGroup = (AISubGroupType)reader.ReadInt();
                 m_ControlObject = (Item)reader.ReadItem();
-                m_WaypointOrder = (WayPointOrder)reader.ReadInt();                
+                m_WaypointOrder = (WayPointOrder)reader.ReadInt();
                 m_AttackSpeed = reader.ReadInt();
                 m_ResolveAcquireTargetDelay = reader.ReadDouble();
-                m_Experience = reader.ReadInt();               
+                m_Experience = reader.ReadInt();
                 m_CreaturesKilled = reader.ReadInt();
-                m_TimesTamed = reader.ReadInt();                
+                m_TimesTamed = reader.ReadInt();
                 m_TamedBaseMaxHitsCreationScalar = reader.ReadDouble();
                 m_TamedBaseDexCreationScalar = reader.ReadDouble();
                 m_TamedBaseMaxManaCreationScalar = reader.ReadDouble();
@@ -4925,20 +4745,20 @@ namespace Server.Mobiles
                 m_ConvertedParagon = reader.ReadBool();
                 m_TakenDamageFromPoison = reader.ReadBool();
                 m_TakenDamageFromCreature = reader.ReadBool();
-                m_Rare = reader.ReadBool();                
+                m_Rare = reader.ReadBool();
                 m_OwnerAbandonTime = reader.ReadDateTime();
                 m_NextWaypointAction = reader.ReadDateTime();
                 m_NextExperienceGain = reader.ReadDateTime();
                 m_LastActivated = reader.ReadDateTime();
                 m_BoatOccupied = reader.ReadItem() as BaseBoat;
                 m_XMLSpawner = reader.ReadItem() as XmlSpawner;
-                
+
                 if (m_Summoned)
                 {
                     m_SummonEnd = reader.ReadDeltaTime();
                     new UnsummonTimer(m_ControlMaster, this, m_SummonEnd - DateTime.UtcNow).Start();
                 }
-                
+
                 TimeSpan deleteTime = reader.ReadTimeSpan();
 
                 if (deleteTime > TimeSpan.Zero || LastOwner != null && !Controlled && !IsStabled)
@@ -4949,14 +4769,14 @@ namespace Server.Mobiles
                     m_DeleteTimer = new DeleteTimer(this, deleteTime);
                     m_DeleteTimer.Start();
                 }
-                                
+
                 int visitedWaypoints = reader.ReadInt();
                 for (int a = 0; a < visitedWaypoints; a++)
                 {
                     WayPoint visitedWaypoint = reader.ReadItem() as WayPoint;
 
-                    if (m_VisitedWaypoints.IndexOf(visitedWaypoint) < 0)                    
-                        m_VisitedWaypoints.Add(visitedWaypoint);                    
+                    if (m_VisitedWaypoints.IndexOf(visitedWaypoint) < 0)
+                        m_VisitedWaypoints.Add(visitedWaypoint);
                 }
 
                 int specialAbilityEntries = reader.ReadInt();
@@ -4970,11 +4790,11 @@ namespace Server.Mobiles
                     SpecialAbilityEffectEntry entry = new SpecialAbilityEffectEntry(effect, owner, value, expiration);
 
                     m_SpecialAbilityEffectEntries.Add(entry);
-                }  
+                }
             }
 
             //------            
-            
+
             if (IsParagon)
                 Hue = Paragon.Hue;
 
@@ -4984,14 +4804,14 @@ namespace Server.Mobiles
 
             AddFollowers();
 
+            SetSpeed();
             PopulateDefaultAI();
-            AICreatureList.GetAI(this);
             UpdateAI(true);
 
             m_SpecialAbilityEffectTimer = new SpecialAbilityEffectTimer(this);
 
             if (m_SpecialAbilityEffectEntries.Count > 0)
-                m_SpecialAbilityEffectTimer.Start();    
+                m_SpecialAbilityEffectTimer.Start();
 
             if (RareTamable)
                 CheckRareTamedScalars();
@@ -5181,7 +5001,7 @@ namespace Server.Mobiles
             // white wyrms eat gold..
             typeof( Gold )
         };
-        
+
         #endregion
 
         public virtual bool OverrideBondingReqs()
@@ -5704,7 +5524,7 @@ namespace Server.Mobiles
                 m_bBardPacified = value;
             }
         }
-        
+
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile BardMaster
         {
@@ -5823,7 +5643,7 @@ namespace Server.Mobiles
 
         public virtual int Scales { get { return 0; } }
         public virtual ScaleType ScaleType { get { return ScaleType.Red; } }
-        #endregion        
+        #endregion
 
         public virtual bool IsScaryToPets { get { return false; } }
         public virtual bool IsScaredOfScaryThings { get { return true; } }
@@ -5900,7 +5720,7 @@ namespace Server.Mobiles
                 m_RemoveSpecialAbilityEffectTimer.Stop();
                 m_RemoveSpecialAbilityEffectTimer = null;
             }
-            
+
             FocusMob = null;
 
             if (IsAnimatedDead)
@@ -6156,7 +5976,7 @@ namespace Server.Mobiles
             maxPointsToLearn *= 3;
 
             TeachResult res = CheckTeachSkills(skill, m, maxPointsToLearn, ref pointsToLearn, doTeach);
-            
+
             switch (res)
             {
                 case TeachResult.KnowsMoreThanMe:
@@ -6232,7 +6052,7 @@ namespace Server.Mobiles
                     }
                 }
             }
-                 
+
             if (Controlled && ControlMaster is PlayerMobile && AIObject != null)
             {
                 if (!(ControlOrder == OrderType.Attack || ControlOrder == OrderType.Guard || ControlOrder == OrderType.Patrol || ControlOrder == OrderType.Stay))
@@ -6241,13 +6061,14 @@ namespace Server.Mobiles
 
             if (this is EnergyVortex || this is BladeSpirits)
             {
-                if (SummonMaster != null)                
-                    SummonMaster.DoHarmful(target);                
-            }           
+                if (SummonMaster != null)
+                    SummonMaster.DoHarmful(target);
+            }
 
             base.AggressiveAction(target, criminal, causeCombat);
 
             //Kin Ally Violation
+            /*
             if (AIKinTeamList.CheckKinTeam(this, target))
             {
                 PlayerMobile pm_Aggresor = target as PlayerMobile;
@@ -6297,6 +6118,7 @@ namespace Server.Mobiles
                     }
                 }
             }
+            */
         }
 
         public override void PushNotoriety(Mobile from, Mobile to, bool aggressor)
@@ -7072,7 +6894,7 @@ namespace Server.Mobiles
         }
 
         #endregion
-        
+
         public static void Cap(ref int val, int min, int max)
         {
             if (val < min)
@@ -7162,7 +6984,7 @@ namespace Server.Mobiles
         }
 
         public void PackMagicItems(int minLevel, int maxLevel)
-        {           
+        {
             float increaseChance = 1.0f;
             float armorChance = .30f * increaseChance;
             float weaponChance = .15f * increaseChance;
@@ -7215,9 +7037,9 @@ namespace Server.Mobiles
                 int gold = GoldWorth;
 
                 double regionMod = 1 + Server.Commands.RegionGoldMod.GetModifier(Region);
-                                
-                gold = (int)Math.Ceiling(((double)gold * regionMod));                
-                
+
+                gold = (int)Math.Ceiling(((double)gold * regionMod));
+
                 if (Region is NewbieDungeonRegion)
                 {
                     gold /= 2;
@@ -7239,7 +7061,7 @@ namespace Server.Mobiles
             if (!spawning)
             {
                 int gold = ModifiedGoldWorth();
-                
+
                 if (gold > 0)
                 {
                     PackGold(gold);
@@ -7418,27 +7240,6 @@ namespace Server.Mobiles
         {
             if (chance <= Utility.RandomDouble())
                 return false;
-
-            if (Utility.RandomBool())
-            {
-                BaseInstrument instrument = Loot.RandomInstrument();
-
-                if (instrument != null)
-                {
-                    instrument.Slayer = SlayerGroup.GetLootSlayerType(GetType());
-                    PackItem(instrument);
-                }
-            }
-            else if (!Core.AOS)
-            {
-                BaseWeapon weapon = Loot.RandomWeapon();
-
-                if (weapon != null)
-                {
-                    weapon.Slayer = SlayerGroup.GetLootSlayerType(GetType());
-                    PackItem(weapon);
-                }
-            }
 
             return true;
         }
@@ -7637,7 +7438,7 @@ namespace Server.Mobiles
                 list.Add(1049646); // (summoned)
 
             else if (Controlled && Commandable)
-            {                
+            {
                 if (IsBonded)   //Intentional difference (showing ONLY bonded when bonded instead of bonded & tame)
                     list.Add(1049608); // (bonded)
                 else
@@ -7741,7 +7542,7 @@ namespace Server.Mobiles
                 double dungeonArmorChance = 1;
                 double dungeonArmorUpgradeHammerChance = 1;
                 double powerScrollChance = 1;
-                
+
                 if (m_AncientMysteryCreature)
                 {
                     powerScrollChance = 0;
@@ -7799,33 +7600,6 @@ namespace Server.Mobiles
 
             if (m_Paragon && !NoKillAwards && !DiedByShipSinking && !(Region is UOACZRegion))
             {
-                SlayerName? slayer = SlayerGroup.GetSlayerForMobType(this.GetType());
-
-                if (slayer != null && Utility.RandomDouble() < 0.20) // 20% chance for slayer tome
-                {
-                    PackItem(new EnhancedSpellbookTome(EnhancedSpellbookType.Slayer, slayer.Value));
-                }
-
-                if (slayer != null && Utility.RandomDouble() < 0.20) // 20% chance for slayer instrument
-                {
-                    BaseInstrument instrument = Loot.RandomInstrument();
-
-                    if (instrument != null)
-                    {
-                        instrument.Slayer = slayer.Value;
-                        PackItem(instrument);
-                    }
-                }
-
-                if (slayer != null && Utility.RandomDouble() < 0.20) // 20% chance to drop a slayer weapon 
-                {
-                    BaseWeapon weap = Loot.RandomWeapon();
-                    weap.Slayer = slayer.Value;
-                    weap.DamageLevel = (WeaponDamageLevel)Math.Min(Utility.Random(6), Utility.Random(6)); //1 in 36 vanq
-                    weap.AccuracyLevel = (WeaponAccuracyLevel)Utility.Random(6);
-                    weap.DurabilityLevel = (WeaponDurabilityLevel)Utility.Random(6);
-                    PackItem(weap);
-                }
             }
 
             if (!Summoned && !NoKillAwards && !IsBonded && TreasureMapLevel >= 0 && !DiedByShipSinking && !(Region is UOACZRegion))
@@ -7837,8 +7611,8 @@ namespace Server.Mobiles
                     PackItem(new TreasureMap(TreasureMapLevel, Map));
             }
 
-            if (!Summoned && !NoKillAwards && !DiedByShipSinking && !(Region is UOACZRegion))            
-                GenerateLoot(false);            
+            if (!Summoned && !NoKillAwards && !DiedByShipSinking && !(Region is UOACZRegion))
+                GenerateLoot(false);
 
             if (IsAnimatedDead)
                 Effects.SendLocationEffect(Location, Map, 0x3728, 13, 1, 0x461, 4);
@@ -7846,8 +7620,8 @@ namespace Server.Mobiles
             InhumanSpeech speechType = this.SpeechType;
 
             if (speechType != null)
-                speechType.OnDeath(this);           
-            
+                speechType.OnDeath(this);
+
             if (IsLoHBoss() && m_OnBeforeDeathCallback != null)
                 m_OnBeforeDeathCallback();
 
@@ -7868,7 +7642,7 @@ namespace Server.Mobiles
 
                         for (int a = 0; a < 4; a++)
                         {
-                            Timer.DelayCall(TimeSpan.FromSeconds(a * 1), delegate ()
+                            Timer.DelayCall(TimeSpan.FromSeconds(a * 1), delegate()
                             {
                                 if (bc_Killer != null)
                                 {
@@ -8217,7 +7991,7 @@ namespace Server.Mobiles
                     }
                 }
             }
-            
+
             if (IsBonded)
             {
                 int sound = this.GetDeathSound();
@@ -8277,7 +8051,7 @@ namespace Server.Mobiles
                     List<DamageStore> list = GetLootingRights(this.DamageEntries, this.HitsMax);
 
                     bool givenQuestKill = false;
-                    bool givenFactionKill = false;                    
+                    bool givenFactionKill = false;
 
                     for (int i = 0; i < list.Count; ++i)
                     {
@@ -8310,7 +8084,7 @@ namespace Server.Mobiles
                         }
 
                         if (givenQuestKill)
-                            continue;                        
+                            continue;
                     }
                 }
 
@@ -8430,7 +8204,7 @@ namespace Server.Mobiles
                             {
                                 if (doubloonAmount < 1)
                                     doubloonAmount = 1;
-                                
+
                                 int finalDoubloonValue = (int)doubloonAmount;
 
                                 if (finalDoubloonValue < 1)
@@ -8687,6 +8461,13 @@ namespace Server.Mobiles
             set { m_Summoning = value; }
         }
 
+        public static SlayerGroupType GetRandomSlayerType()
+        {
+            SlayerGroupType slayerGroupType = (SlayerGroupType)Utility.RandomMinMax(1, Enum.GetNames(typeof(SlayerGroupType)).Length - 1);
+
+            return slayerGroupType;
+        }
+
         public static bool Summon(BaseCreature creature, Mobile caster, Point3D p, int sound, TimeSpan duration)
         {
             return Summon(creature, true, caster, p, sound, duration);
@@ -8746,11 +8527,11 @@ namespace Server.Mobiles
         private const double MinutesToNextChanceMax = 0.75;
 
         private long m_NextRummageTime;
-
-        public virtual bool CanBreath { get { return HasBreath && !Summoned; } }
+       
         public virtual bool IsDispellable { get { return Summoned && !IsAnimatedDead; } }
 
         #region Healing
+
         public virtual double MinHealDelay { get { return 2.0; } }
         public virtual double HealScalar { get { return 1.0; } }
         public virtual bool CanHeal { get { return false; } }
@@ -8836,12 +8617,6 @@ namespace Server.Mobiles
                     }
                 }
             }
-            else if (BleedAttack.IsBleeding(patient))
-            {
-                patient.SendLocalizedMessage(1060167); // The bleeding wounds have healed, you are no longer bleeding!
-                BleedAttack.EndBleed(patient, true);
-                patient.PlaySound(0x57);
-            }
             else
             {
                 double healing = Skills.Healing.Value;
@@ -8914,7 +8689,7 @@ namespace Server.Mobiles
             Custom.BaseHenchman bc_Henchman = this as Custom.BaseHenchman;
 
             //Force Henchmen to Return to Melee Weapons When Not on Boats and Ranged Isn't Their Primary Weapon
-            
+
             if (CanSwitchWeapons && Combatant != null && bc_Henchman != null && BoatOccupied == null && Backpack != null && !BardPacified)
             {
                 if (bc_Henchman.HenchmanHumanoid)
@@ -8922,7 +8697,7 @@ namespace Server.Mobiles
                     if (!bc_Henchman.IsRangedPrimary)
                         forceMelee = true;
                 }
-            }            
+            }
 
             if (forceMelee)
             {
@@ -9056,7 +8831,7 @@ namespace Server.Mobiles
 
                     //Return to Melee When Out of Combat
                     else
-                    {                        
+                    {
                         if (weapon is BaseRanged)
                         {
                             Item meleeWeapon = Backpack.FindItemByType(typeof(BaseMeleeWeapon));
@@ -9223,7 +8998,7 @@ namespace Server.Mobiles
                 if (highestDifficulty >= HighDifficultyThreshold)
                     duration *= ProvocationHighDifficultyDurationScalar;
 
-                
+
                 //Provocation via [Provoke command
                 if (admin)
                     duration = 1800;
@@ -9453,11 +9228,11 @@ namespace Server.Mobiles
         //If they are following a waypoint, they'll continue to follow it even if players aren't around
         public virtual bool PlayerRangeSensitive
         {
-            get 
+            get
             {
                 return true; /*(this.CurrentWaypoint == null);*/
             }
-        }        
+        }
 
         private bool m_ReturnQueued;
 
@@ -9527,19 +9302,19 @@ namespace Server.Mobiles
 
             List<BaseCreature> toRemove = new List<BaseCreature>();
 
-            #if Framework_4_0
-                        Parallel.ForEach(World.Mobiles.Values, m =>
-                        {
-            #else
+#if Framework_4_0
+            Parallel.ForEach(World.Mobiles.Values, m =>
+            {
+#else
                         foreach ( Mobile m in World.Mobiles.Values ) {
-            #endif
-                            if (m is BaseMount && ((BaseMount)m).Rider != null)
-                            {
-            #if Framework_4_0
-                                return;
-            #else
+#endif
+                if (m is BaseMount && ((BaseMount)m).Rider != null)
+                {
+#if Framework_4_0
+                    return;
+#else
                                     continue;
-            #endif
+#endif
                 }
 
                 if (m is BaseCreature)
@@ -9560,9 +9335,9 @@ namespace Server.Mobiles
                         bc_Creature.RemoveStep = 0;
                 }
             }
-            #if Framework_4_0
-                        );
-            #endif
+#if Framework_4_0
+);
+#endif
 
             // added code to handle removing of wild creatures in house regions
             foreach (BaseCreature c in toRemove)

@@ -241,7 +241,7 @@ namespace Server.Engines.XmlSpawner2
             if (!EnableParagon || bc == null)
                 return false;
 
-            if (bc is BaseChampion || bc is Harrower || bc is BaseVendor || bc is BaseEscortable || bc is Clone)
+            if (bc is BaseVendor || bc is BaseEscortable || bc is Clone)
                 return false;
 
             int fame = bc.Fame;

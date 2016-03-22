@@ -10,11 +10,6 @@ namespace Server.Items
 		public OssianGrimoire()
 		{
 			LootType = LootType.Blessed;
-
-			SkillBonuses.SetValues( 0, SkillName.Necromancy, 10.0 );
-			Attributes.RegenMana = 1;
-			Attributes.CastSpeed = 1;
-			Attributes.IncreasedKarmaLoss = 5;
 		}
 
 		public OssianGrimoire( Serial serial ) : base( serial )
@@ -33,9 +28,6 @@ namespace Server.Items
 			base.Deserialize( reader );
 
 			int version = reader.ReadEncodedInt();
-
-			if ( version == 0 )
-				Attributes.IncreasedKarmaLoss = 5;
 		}
 	}
 }

@@ -7,11 +7,6 @@ namespace Server.Mobiles
 	[CorpseName( "a treefellow corpse" )]
 	public class FeralTreefellow : BaseCreature
 	{
-		public override WeaponAbility GetWeaponAbility()
-		{
-			return WeaponAbility.Dismount;
-		}
-
 		[Constructable]
 		public FeralTreefellow() : base( AIType.AI_Melee, FightMode.Evil, 10, 1, 0.2, 0.4 )
 		{

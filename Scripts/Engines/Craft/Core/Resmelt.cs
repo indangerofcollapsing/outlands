@@ -3,6 +3,7 @@ using Server;
 using Server.Targeting;
 using Server.Items;
 using Server.Achievements;
+using Server.Mobiles;
 
 namespace Server.Engines.Craft
 {
@@ -74,7 +75,7 @@ namespace Server.Engines.Craft
 					Type resourceType = info.ResourceTypes[0];
 					Item ingot = (Item)Activator.CreateInstance( resourceType );
 
-					if ( item is DragonBardingDeed || (item is BaseArmor && ((BaseArmor)item).PlayerConstructed) || (item is BaseWeapon && ((BaseWeapon)item).PlayerConstructed) || (item is BaseClothing && ((BaseClothing)item).PlayerConstructed) )
+					if (item.CraftedBy is PlayerMobile && (item is DragonBardingDeed || item is BaseArmor || item is BaseWeapon  || item is BaseClothing))
 						ingot.Amount = craftResource.Amount / 2;
 					else
 						ingot.Amount = 1;
@@ -87,8 +88,7 @@ namespace Server.Engines.Craft
 
 					// IPY ACHIEVEMENT
 					AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_SmeltItem);
-					// IPY ACHIEVEMENT
-					
+					// IPY ACHIEVEMENT				
 					
 					return SmeltResult.Success;
 				}
@@ -119,27 +119,31 @@ namespace Server.Engines.Craft
 
 					from.SendGump( new CraftGump( from, m_CraftSystem, m_Tool, num ) );
 				}
+
 				else
 				{
 					SmeltResult result = SmeltResult.Invalid;
 					bool isStoreBought = false;
 					int message;
 
-					if ( targeted is BaseArmor )
-					{
-						result = Resmelt( from, (BaseArmor)targeted, ((BaseArmor)targeted).Resource );
-						isStoreBought = !((BaseArmor)targeted).PlayerConstructed;
-					}
-					else if ( targeted is BaseWeapon )
-					{
-						result = Resmelt( from, (BaseWeapon)targeted, ((BaseWeapon)targeted).Resource );
-						isStoreBought = !((BaseWeapon)targeted).PlayerConstructed;
-					}
-					else if ( targeted is DragonBardingDeed )
-					{
-						result = Resmelt( from, (DragonBardingDeed)targeted, ((DragonBardingDeed)targeted).Resource );
-						isStoreBought = false;
-					}
+                    Item item = null;
+
+                    if (targeted is Item)
+                    {
+                        item = targeted as Item;
+
+                        if (targeted is BaseArmor)
+                        {
+                            result = Resmelt(from, (BaseArmor)targeted, ((BaseArmor)targeted).Resource);
+                            isStoreBought = item.CrafterName == "";
+                        }
+
+                        else if (targeted is BaseWeapon)
+                        {
+                            result = Resmelt(from, (BaseWeapon)targeted, ((BaseWeapon)targeted).Resource);
+                            isStoreBought = item.CrafterName == "";
+                        }
+                    }
 
 					switch ( result )
 					{

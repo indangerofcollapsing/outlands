@@ -72,7 +72,6 @@ namespace Server.Mobiles
 			Halberd weapon = new Halberd();
 
 			weapon.Movable = false;
-			weapon.Crafter = this;
 			weapon.Quality = WeaponQuality.Exceptional;
 
 			AddItem( weapon );

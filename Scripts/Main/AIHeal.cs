@@ -530,13 +530,13 @@ namespace Server.Mobiles
                         return true;
 
                     //Controller of Target is Teammate
-                    if (AITeamList.CheckTeam(creature, bc_Target.ControlMaster))
-                        return true;
+                    //if (AITeamList.CheckTeam(creature, bc_Target.ControlMaster))
+                        //return true;
                 }
             }
 
-            if (!AITeamList.CheckTeam(creature, target))
-                return false;
+            //if (!AITeamList.CheckTeam(creature, target))
+                //return false;
 
             return true;
         }  

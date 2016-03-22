@@ -377,13 +377,7 @@ namespace Server.Gumps
 				case 0xA6: types.Add( typeof( PeachTrunkDeed ) ); cliloc = 1076786; break;
 			}
 
-			if ( types.Count > 0 && cliloc > 0 )
-			{
-				sender.Mobile.CloseGump( typeof( ConfirmHeritageGump ) );
-				sender.Mobile.SendGump( new ConfirmHeritageGump( m_Token, types.ToArray(), cliloc ) );
-			}
-			else
-				sender.Mobile.SendLocalizedMessage( 501311 ); // This option is currently disabled, while we evaluate it for game balance.
+			sender.Mobile.SendLocalizedMessage( 501311 ); // This option is currently disabled, while we evaluate it for game balance.
 		}
 	}
 }

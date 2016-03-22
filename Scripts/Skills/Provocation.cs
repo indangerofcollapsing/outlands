@@ -143,8 +143,8 @@ namespace Server.SkillHandlers
                             effectiveBardSkill += BaseInstrument.ExceptionalQualitySkillBonus;
 
                         //Slayer Bonuses
-                        double firstCreatureBonus = m_Instrument.GetBonusesFor(bc_FirstCreature);
-                        double secondCreatureBonus = m_Instrument.GetBonusesFor(bc_Target);
+                        double firstCreatureBonus = 0; // m_Instrument.GetBonusesFor(bc_FirstCreature);
+                        double secondCreatureBonus = 0; // m_Instrument.GetBonusesFor(bc_Target);
 
                         double bestBonus = Math.Max(firstCreatureBonus, secondCreatureBonus);
                         effectiveBardSkill += bestBonus;
@@ -251,7 +251,7 @@ namespace Server.SkillHandlers
                             if (m_Instrument.Quality == InstrumentQuality.Exceptional)
                                 effectiveBardSkill += BaseInstrument.ExceptionalQualitySkillBonus;
 
-                            effectiveBardSkill += m_Instrument.GetBonusesFor(bc_FirstCreature);
+                            effectiveBardSkill += 0; //m_Instrument.GetBonusesFor(bc_FirstCreature);
 
                             double effectiveDifficulty = bardingDifficulty * SkillRequiredPerDifficulty;
                             double successChance = (effectiveBardSkill - effectiveDifficulty) * SuccessChanceScalar;

@@ -6,8 +6,8 @@ namespace Server.Items
 {	
 	public class SanguinPike : Pike
 	{
-        public override int DefHitSound { get { return 0x236; } } //0x237, 0x235, //0x3BB
-        public override int DefMissSound { get { return 0x238; } }
+        public override int BaseHitSound { get { return 0x236; } } //0x237, 0x235, //0x3BB
+        public override int BaseMissSound { get { return 0x238; } }
 
 		[Constructable]
 		public SanguinPike() : base()

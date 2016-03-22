@@ -1636,7 +1636,7 @@ namespace Server.Mobiles
 
                 SetSkill(SkillName.MagicResist, 50);
 
-                SetSubGroup(AISubgroup.None);
+                AISubGroup = AISubGroupType.None;
                 UpdateAI(false);
 
                 int maxBloodHarvestable = 30;
@@ -1709,7 +1709,7 @@ namespace Server.Mobiles
                                 SetSkill(SkillName.EvalInt, 100);
                                 SetSkill(SkillName.Meditation, 300);                       
 
-                                SetSubGroup(AISubgroup.Mage4);
+                                AISubGroup = AISubGroupType.Mage4;
                             break;
 
                             case 2:
@@ -1717,7 +1717,7 @@ namespace Server.Mobiles
                                 SetSkill(SkillName.EvalInt, 125);
                                 SetSkill(SkillName.Meditation, 300);
 
-                                SetSubGroup(AISubgroup.Mage5);
+                                AISubGroup = AISubGroupType.Mage5;
                             break;
 
                             case 3:
@@ -1725,7 +1725,7 @@ namespace Server.Mobiles
                                 SetSkill(SkillName.EvalInt, 150);
                                 SetSkill(SkillName.Meditation, 300);                       
 
-                                SetSubGroup(AISubgroup.Mage6);
+                                AISubGroup = AISubGroupType.Mage6;
                             break;
                         }                        
                         

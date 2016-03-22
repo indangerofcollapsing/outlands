@@ -141,8 +141,8 @@ namespace Server.Items
 
                 bool newWeapon = false;
 
-                if (weapon is ButcherKnife || weapon is Cleaver || weapon is Dagger || weapon is SkinningKnife || weapon is MagicWand || weapon is Hatchet
-                || weapon is Pickaxe || weapon is FireworksWand || weapon is ShepherdsCrook || weapon is TrainingHammer || weapon is TrainingBow)
+                if (weapon.TrainingWeapon ||weapon is ButcherKnife || weapon is Cleaver || weapon is Dagger || weapon is SkinningKnife || weapon is MagicWand || weapon is Hatchet
+                || weapon is Pickaxe || weapon is FireworksWand || weapon is ShepherdsCrook)
                 {               
                     player.SendMessage("That type of weapon may not become a dungeon weapon.");
                     return;
@@ -179,7 +179,7 @@ namespace Server.Items
 
                 if (weapon.DungeonTier == 0)
                 {
-                    if (!(weapon.Crafter == null || weapon.Quality == WeaponQuality.Exceptional))
+                    if (weapon.CrafterName == "" || weapon.Quality != WeaponQuality.Exceptional)
                     {
                         player.SendMessage("The weapon you wish to convert must be a gm crafted weapon.");
                         return;
@@ -426,7 +426,6 @@ namespace Server.Items
         public static BaseWeapon CreateDungeonWeapon(BaseWeapon weapon, BaseDungeonArmor.DungeonEnum dungeon)
         {            
             weapon.Quality = WeaponQuality.Regular;
-            weapon.Crafter = null;
             weapon.BlessedCharges = DungeonWeapon.BaseMaxBlessedCharges;
             weapon.Dungeon = dungeon;
             weapon.DungeonTier = 1;
@@ -544,7 +543,7 @@ namespace Server.Items
                 
                 double effectChance = DungeonWeapon.BaseEffectChance + (DungeonWeapon.BaseEffectChancePerTier * (double)weaponTier);
 
-                effectChance *= DungeonWeapon.GetSpeedScalar(m_Weapon.OldSpeed);
+                effectChance *= DungeonWeapon.GetSpeedScalar(m_Weapon.Speed);
 
                 BaseDungeonArmor.DungeonArmorDetail detail = new BaseDungeonArmor.DungeonArmorDetail(m_Dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
 
@@ -998,7 +997,7 @@ namespace Server.Items
                         if (m_Weapon.DungeonTier > 0)
                             weaponValid = false;
 
-                        if (m_Weapon.Crafter == null || m_Weapon.Quality != WeaponQuality.Exceptional)
+                        if (m_Weapon.CrafterName == "" || m_Weapon.Quality != WeaponQuality.Exceptional)
                             weaponValid = false;
 
                         if (m_Weapon.DamageLevel != WeaponDamageLevel.Regular || m_Weapon.AccuracyLevel != WeaponAccuracyLevel.Regular || m_Weapon.DurabilityLevel != WeaponDurabilityLevel.Regular)
@@ -1101,7 +1100,6 @@ namespace Server.Items
                     if (m_NewWeapon)
                     {
                         m_Weapon.Quality = WeaponQuality.Regular;
-                        m_Weapon.Crafter = null;
                         m_Weapon.BlessedCharges = DungeonWeapon.BaseMaxBlessedCharges;
                         m_Weapon.Dungeon = m_Dungeon;
                         m_Weapon.DungeonTier = 1;                                       

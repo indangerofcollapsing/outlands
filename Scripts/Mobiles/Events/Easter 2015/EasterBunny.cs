@@ -212,12 +212,12 @@ namespace Server.Mobiles
                 break;
 
                 case BunnyType.Ferocious:
-                    SetSubGroup(AISubgroup.Duelist);
+                    AISubGroup = AISubGroupType.Duelist;
                     UpdateAI(false);                    
                 break;
 
                 case BunnyType.Mysterious:
-                    SetSubGroup(AISubgroup.Mage4);
+                    AISubGroup = AISubGroupType.Mage4;
                     UpdateAI(false);
 
                     DictCombatRange[CombatRange.Withdraw] = 5;

@@ -37,7 +37,7 @@ namespace Server.Items
         }
 
         [Constructable]
-        public EnhancedSpellbook(EnhancedSpellbookType type, SlayerName slayerType) : this((ulong)0)
+        public EnhancedSpellbook(EnhancedSpellbookType type, SlayerGroupType slayerGroupType) : this((ulong)0)
         {
             Hue = 101;
 
@@ -51,8 +51,8 @@ namespace Server.Items
 
             m_ChargesRemaining = Utility.RandomMinMax(200, 300);
 
-            if (EnhancedType != null && EnhancedType == EnhancedSpellbookType.Slayer && slayerType != null)            
-                Slayer = slayerType;               
+            if (EnhancedType != null && EnhancedType == EnhancedSpellbookType.Slayer)
+                SlayerGroup = slayerGroupType;               
             
             AddEnhancedScrolls();
         }
@@ -187,15 +187,12 @@ namespace Server.Items
         public override void OnSingleClick(Mobile from)
         {
             if (m_EnhancedType == EnhancedSpellbookType.Slayer)            
-                LabelTo(from, EnhancedSpellbookTypeSlayerAsString(Slayer));   
+                LabelTo(from, SlayerGroup.ToString());   
 
             else            
                 LabelTo(from, EnhancedSpellbookTypeAsString(m_EnhancedType));
 
             LabelTo(from, "charges: " + m_ChargesRemaining.ToString());   
-           
-            if ( Crafter != null )            
-				LabelTo( from, 1050043, Crafter.Name );
         }
 
         public override bool OnDragDrop(Mobile from, Item dropped)
@@ -210,12 +207,13 @@ namespace Server.Items
         }
 
         #region Name Conversions
+
         public static string EnhancedSpellbookTypeAsString(EnhancedSpellbookType type)
         {
             switch (type)
             {
                 case EnhancedSpellbookType.Wizard:
-                    return "Wizard's Spellbook";
+                    return "Wizard Spellbook";
 
                 case EnhancedSpellbookType.Warlock:
                     return "Warlock's Spellbook";
@@ -227,117 +225,24 @@ namespace Server.Items
                     return "Energy Spellbook";
 
                 case EnhancedSpellbookType.Summoner:
-                    return "Summoner's Spellbook";
+                    return "Summoner Spellbook";
 
                 case EnhancedSpellbookType.Slayer:
-                    return "Slayer's Spellbook";
+                    return "Slayer Spellbook";
 
                 default: return "Enhanced Spellbook";
             }
         }
 
-        public static string EnhancedSpellbookTypeSlayerAsString(SlayerName name)
-        {
-            switch (name.ToString())
-            {
-                case "":
-                    return "A Slayer Spellbook";
-
-                case "Silver":
-                    return "A Silver Spellbook";
-
-                case "OrcSlaying":
-                    return "An Orc Slaying Spellbook";
-
-                case "TrollSlaughter":
-                    return "A Troll Slaughter Spellbook";
-
-                case "OgreTrashing":
-                    return "An Ogre Trashing Spellbook";
-
-                case "Repond":
-                    return "A Repond Spellbook";
-
-                case "DragonSlaying":
-                    return "A Dragon Slaying Spellbook";
-
-                case "Terathan":
-                    return "A Terathan Spellbook";
-
-                case "SnakesBane":
-                    return "A Snakes Bane Spellbook";
-
-                case "LizardmanSlaughter":
-                    return "A Lizardman Slaughter Spellbook";
-
-                case "ReptilianDeath":
-                    return "A Reptilian Death Spellbook";
-
-                case "DaemonDismissal":
-                    return "A Daemon Dismissal Spellbook";
-
-                case "GargoylesFoe":
-                    return "A Gargoyles Foe Spellbook";
-
-                case "BalronDamnation":
-                    return "A Balron Damnation Spellbook";
-
-                case "Ophidian":
-                    return "An Ophidian Spellbook";
-
-                case "Exorcism":
-                    return "An Exorcism Spellbook";
-
-                case "SpidersDeath":
-                    return "A Spiders Death Spellbook";
-
-                case "ScorpionsBane":
-                    return "A Scorpions Bane Spellbook";
-
-                case "ArachnidDoom":
-                    return "An Arachnid Doom Spellbook";
-
-                case "FlameDousing":
-                    return "A Flame Dousing Spellbook";
-
-                case "WaterDissipation":
-                    return "A Water Dissipation Spellbook";
-
-                case "Vacuum":
-                    return "A Vacuum Spellbook";
-
-                case "ElementalHealth":
-                    return "An Elemental Health Spellbook";
-
-                case "EarthShatter":
-                    return "An Earth Shatter Spellbook";
-
-                case "BloodDrinking":
-                    return "A Blood Drinking Spellbook";
-
-                case "SummerWind":
-                    return "A Summer Wind Spellbook";
-
-                case "ElementalBan":
-                    return "An Elemental Ban Spellbook";
-
-                case "Fey":
-                    return "A Fey Spellbook";
-
-                default: return "A Slayer Spellbook";
-            }
-        }
         #endregion
 
         public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-			writer.WriteEncodedInt( 1 ); // version  
+			writer.WriteEncodedInt( 0 ); // version  
          
             //Version 0
-            writer.Write((byte)m_EnhancedType);  
-            
-            //Version 1
+            writer.Write((int)m_EnhancedType); 
             writer.Write(m_ChargesRemaining);            
 		}
 
@@ -346,11 +251,9 @@ namespace Server.Items
 			base.Deserialize( reader );
 			int version = reader.ReadEncodedInt();
 
-            m_EnhancedType = (EnhancedSpellbookType)reader.ReadByte();
-            LootType = Server.LootType.Regular;
-
-            if (version >= 1)
+            if (version >= 0)
             {
+                m_EnhancedType = (EnhancedSpellbookType)reader.ReadInt();
                 m_ChargesRemaining = reader.ReadInt();
             }
 		}

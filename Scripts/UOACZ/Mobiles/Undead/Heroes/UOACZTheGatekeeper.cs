@@ -125,7 +125,7 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            SetSubGroup(AISubgroup.Mage5);
+            AISubGroup = AISubGroupType.Mage5;
             UpdateAI(false);
 
             base.SetUniqueAI();
@@ -1379,10 +1379,7 @@ namespace Server.Mobiles
                         weapon.AccuracyLevel = (WeaponAccuracyLevel)Utility.RandomMinMax(2, 5);
                         weapon.DamageLevel = (WeaponDamageLevel)Utility.RandomMinMax(2, 5);
                         weapon.DurabilityLevel = (WeaponDurabilityLevel)Utility.RandomMinMax(2, 5);
-
-                        if (Utility.RandomDouble() <= .2)
-                            weapon.Slayer = SlayerName.Silver;
-
+                        
                         weapon.Identified = true;
 
                         c.DropItem(weapon);

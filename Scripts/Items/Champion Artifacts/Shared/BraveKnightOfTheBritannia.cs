@@ -10,19 +10,12 @@ namespace Server.Items
 		public override int InitMinHits{ get{ return 150; } }
 		public override int InitMaxHits{ get{ return 150; } }
 
-		public override bool CanFortify{ get{ return false; } }
+		
 
 		[Constructable]
 		public BraveKnightOfTheBritannia()
 		{
 			Hue = 0x47e;
-
-			Attributes.WeaponSpeed = 30;
-			Attributes.WeaponDamage = 35;
-
-			WeaponAttributes.HitLeechStam = 48;
-			WeaponAttributes.HitHarm = 26;
-			WeaponAttributes.HitLeechHits = 22;
 		}
 
 		public override void GetDamageTypes( Mobile wielder, out int phys, out int fire, out int cold, out int pois, out int nrgy, out int chaos, out int direct )

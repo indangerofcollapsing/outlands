@@ -62,7 +62,7 @@ namespace Server
 
         public override void SetUniqueAI()
         {
-            SetSubGroup(AISubgroup.GroupHealerMage1);
+            AISubGroup = AISubGroupType.GroupHealerMage1;
             UpdateAI(false);
 
             base.SetUniqueAI();

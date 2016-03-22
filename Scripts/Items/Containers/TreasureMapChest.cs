@@ -286,13 +286,7 @@ namespace Server.Items
                         weapon.DamageLevel = (WeaponDamageLevel)Utility.RandomMinMax(minimumMod, maximumMod);
                         weapon.AccuracyLevel = (WeaponAccuracyLevel)Utility.RandomMinMax(minimumMod, maximumMod);
                         weapon.DurabilityLevel = (WeaponDurabilityLevel)Utility.RandomMinMax(minimumMod, maximumMod);
-
-                        // 10% chance for slayers in chests over level 1
-                        if (level > 1 && Utility.RandomDouble() < 0.1)
-                        {
-                            weapon.Slayer = (SlayerName)BaseRunicTool.GetRandomSlayer(Utility.RandomDouble() < SuperSlayerChancePerLevel[level]);
-                        }
-
+                        
                         cont.DropItem(weapon);
                     }
                     else

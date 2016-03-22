@@ -198,7 +198,7 @@ namespace Server.Engines.XmlSpawner2
 
             int range = MaxDistance;
             if (weapon != null && weapon is BaseRanged)
-                range = ((BaseRanged)weapon).DefMaxRange;
+                range = ((BaseRanged)weapon).MaxRange;
 
 			int distance = (int)XmlSiege.GetDistance(from.Location, targetloc);
 
@@ -328,8 +328,9 @@ namespace Server.Engines.XmlSpawner2
 				
 				// compare it against previous locations.  If they have moved then break off the attack
                 int maxRange = 2;
+
                 if (weapon is BaseRanged)
-                    maxRange = ((BaseRanged)weapon).DefMaxRange;
+                    maxRange = ((BaseRanged)weapon).MaxRange;
 
                 int distance = (int)XmlSiege.GetDistance(attackerloc, targetloc);
 

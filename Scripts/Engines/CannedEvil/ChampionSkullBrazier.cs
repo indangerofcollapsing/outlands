@@ -57,10 +57,6 @@ namespace Server.Engines.CannedEvil
 			{
 				from.SendLocalizedMessage( 500446 ); // That is too far away.
 			}
-			else if ( !Harrower.CanSpawn )
-			{
-				from.SendMessage( "The harrower has already been spawned." );
-			}
 			else if ( m_Skull == null )
 			{
 				from.SendLocalizedMessage( 1049485 ); // What would you like to sacrifice?
@@ -83,10 +79,6 @@ namespace Server.Engines.CannedEvil
 			if ( from.Map != this.Map || !from.InRange( GetWorldLocation(), 3 ) )
 			{
 				from.SendLocalizedMessage( 500446 ); // That is too far away.
-			}
-			else if ( !Harrower.CanSpawn )
-			{
-				from.SendMessage( "The harrower has already been spawned." );
 			}
 			else if ( skull == null )
 			{

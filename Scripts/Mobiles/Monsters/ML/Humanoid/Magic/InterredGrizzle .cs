@@ -87,41 +87,7 @@ namespace Server.Mobiles
 		}
 
 		public virtual void DropOoze()
-		{
-			int amount = Utility.RandomMinMax( 1, 3 );
-			bool corrosive = Utility.RandomBool();
-
-			for( int i = 0; i < amount; i++ )
-			{
-				Item ooze = new StainedOoze( corrosive );
-				Point3D p = new Point3D( Location );
-
-				for( int j = 0; j < 5; j++ )
-				{
-					p = GetSpawnPosition( 2 );
-					bool found = false;
-
-					foreach( Item item in Map.GetItemsInRange( p, 0 ) )
-						if( item is StainedOoze )
-						{
-							found = true;
-							break;
-						}
-
-					if( !found )
-						break;
-				}
-
-				ooze.MoveToWorld( p, Map );
-			}
-
-			if( Combatant != null )
-			{
-				if( corrosive )
-					Combatant.SendLocalizedMessage( 1072071 ); // A corrosive gas seeps out of your enemy's skin!
-				else
-					Combatant.SendLocalizedMessage( 1072072 ); // A poisonous gas seeps out of your enemy's skin!
-			}
+		{			
 		}
 
 		public  InterredGrizzle ( Serial serial ) : base( serial )

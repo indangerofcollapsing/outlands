@@ -7,7 +7,6 @@ namespace Server.Mobiles
 	[CorpseName( "a pixie corpse" )]
 	public class ArcaneFey : BaseCreature
 	{
-		public override OppositionGroup OppositionGroup { get { return OppositionGroup.FeyAndUndead; } }
 		public override bool InitialInnocent { get { return true; } }
 
 		[Constructable]

@@ -68,12 +68,9 @@ namespace Server.Items
             }
         }
         #endregion
-
-        public virtual bool CanFortify { get { return true; } }
-
+        
         private int m_MaxHitPoints;
         private int m_HitPoints;
-        private Mobile m_Crafter;
         private ClothingQuality m_Quality;
         private bool m_PlayerConstructed;
         protected CraftResource m_Resource;
@@ -114,14 +111,7 @@ namespace Server.Items
                 }
             }
         }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Crafter
-        {
-            get { return m_Crafter; }
-            set { m_Crafter = value; InvalidateProperties(); }
-        }
-
+        
         [CommandProperty(AccessLevel.GameMaster)]
         public int StrRequirement
         {
@@ -594,10 +584,7 @@ namespace Server.Items
 
         public override void GetProperties(ObjectPropertyList list)
         {
-            base.GetProperties(list);
-
-            if (m_Crafter != null)
-                list.Add(1050043, m_Crafter.Name); // crafted by ~1_NAME~
+            base.GetProperties(list);            
 
             #region Factions
             if (m_FactionState != null)
@@ -730,10 +717,10 @@ namespace Server.Items
             if (DecorativeEquipment)
                 LabelTo(from, "[Decorative]");
 
-            if (attrs.Count == 0 && Crafter == null && Name != null)
-                return;
+            //if (attrs.Count == 0 && Crafter == null && Name != null)
+                //return;
 
-            EquipmentInfo eqInfo = new EquipmentInfo(number, m_Crafter, false, attrs.ToArray());
+            EquipmentInfo eqInfo = new EquipmentInfo(number, CraftedBy, false, attrs.ToArray());
 
             from.Send(new DisplayEquipmentInfo(this, eqInfo));        
         }
@@ -803,7 +790,6 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.MaxHitPoints, m_MaxHitPoints != 0);
             SetSaveFlag(ref flags, SaveFlag.HitPoints, m_HitPoints != 0);
             SetSaveFlag(ref flags, SaveFlag.PlayerConstructed, m_PlayerConstructed != false);
-            SetSaveFlag(ref flags, SaveFlag.Crafter, m_Crafter != null);
             SetSaveFlag(ref flags, SaveFlag.Quality, m_Quality != ClothingQuality.Regular);
             SetSaveFlag(ref flags, SaveFlag.StrReq, m_StrReq != -1);
             SetSaveFlag(ref flags, SaveFlag.IPYInvisible, IsInvisible);
@@ -830,10 +816,7 @@ namespace Server.Items
 
             if (GetSaveFlag(flags, SaveFlag.HitPoints))
                 writer.WriteEncodedInt((int)m_HitPoints);
-
-            if (GetSaveFlag(flags, SaveFlag.Crafter))
-                writer.Write((Mobile)m_Crafter);
-
+            
             if (GetSaveFlag(flags, SaveFlag.Quality))
                 writer.WriteEncodedInt((int)m_Quality);
 
@@ -883,10 +866,7 @@ namespace Server.Items
 
                         if (GetSaveFlag(flags, SaveFlag.HitPoints))
                             m_HitPoints = reader.ReadEncodedInt();
-
-                        if (GetSaveFlag(flags, SaveFlag.Crafter))
-                            m_Crafter = reader.ReadMobile();
-
+                        
                         if (GetSaveFlag(flags, SaveFlag.Quality))
                             m_Quality = (ClothingQuality)reader.ReadEncodedInt();
                         else
@@ -925,14 +905,12 @@ namespace Server.Items
                         goto case 1;
                     }
                 case 1:
-                    {
-                        m_Crafter = reader.ReadMobile();
+                    {                       
                         m_Quality = (ClothingQuality)reader.ReadInt();
                         break;
                     }
                 case 0:
                     {
-                        m_Crafter = null;
                         m_Quality = ClothingQuality.Regular;
                         break;
                     }
@@ -1051,10 +1029,7 @@ namespace Server.Items
         public virtual int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue)
         {
             Quality = (ClothingQuality)quality;
-
-            if (makersMark)
-                Crafter = from;
-
+            
             if (DefaultResource != CraftResource.None)
             {
                 Type resourceType = typeRes;

@@ -14,26 +14,16 @@ namespace Server.Items
 			EventSink.StunRequest += new StunRequestEventHandler( EventSink_StunRequest );
 		}
 
-		public override WeaponAbility PrimaryAbility{ get{ return WeaponAbility.Disarm; } }
-		public override WeaponAbility SecondaryAbility{ get{ return WeaponAbility.ParalyzingBlow; } }
-
-		public override int AosStrengthReq{ get{ return 0; } }
-		public override int AosMinDamage{ get{ return 1; } }
-		public override int AosMaxDamage{ get{ return 4; } }
-		public override int AosSpeed{ get{ return 50; } }
-		public override float MlSpeed{ get{ return 2.50f; } }
-
-		public override int OldStrengthReq{ get{ return 0; } }
-		public override int OldMinDamage{ get{ return 1; } }
-		public override int OldMaxDamage{ get{ return 8; } }
-		public override int OldSpeed{ get{ return 30; } }
+		public override int BaseMinDamage { get { return 1; } }
+        public override int BaseMaxDamage { get { return 8; } }
+        public override int BaseSpeed { get { return 30; } }
 		
-        public override int DefHitSound { get { return -1; } }
-		public override int DefMissSound{ get{ return -1; } }
+        public override int BaseHitSound { get { return -1; } }
+		public override int BaseMissSound{ get{ return -1; } }
 
-		public override SkillName DefSkill{ get{ return SkillName.Wrestling; } }
-		public override WeaponType DefType{ get{ return WeaponType.Fists; } }
-		public override WeaponAnimation DefAnimation{ get{ return WeaponAnimation.Wrestle; } }
+		public override SkillName BaseSkill{ get{ return SkillName.Wrestling; } }
+		public override WeaponType BaseType{ get{ return WeaponType.Fists; } }
+		public override WeaponAnimation BaseAnimation { get{ return WeaponAnimation.Wrestle; } }
 
 		public Fists() : base( 0 )
 		{

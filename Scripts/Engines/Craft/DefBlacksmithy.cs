@@ -641,8 +641,7 @@ namespace Server.Engines.Craft
 			#endregion
 
 			#region Bashing
-
-            AddCraft( typeof( TrainingHammer ), 1011084, "training hammer", 0, 40, typeof(IronIngot), 1044036, 5, 1044037);
+                       
 			AddCraft( typeof( HammerPick ), 1011084, 1025181, 34.2, 84.2, typeof( IronIngot ), 1044036, 16, 1044037 );
 			AddCraft( typeof( Mace ), 1011084, 1023932, 14.5, 64.5, typeof( IronIngot ), 1044036, 6, 1044037 );
 			AddCraft( typeof( Maul ), 1011084, 1025179, 19.4, 69.4, typeof( IronIngot ), 1044036, 10, 1044037 );

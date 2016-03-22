@@ -110,13 +110,7 @@ namespace Server.Items
 				{
 					IDurability wearable = (IDurability) targeted;
 					Item item = (Item) targeted;
-
-					if ( !wearable.CanFortify )
-					{
-						from.SendLocalizedMessage( 1049083 ); // You cannot use the powder on that item.
-						return;
-					}
-
+                    
 					if ( ( item.IsChildOf( from.Backpack ) || ( Core.ML && item.Parent == from ) ) && m_Powder.IsChildOf( from.Backpack ) )
 					{
 						int origMaxHP = wearable.MaxHitPoints;

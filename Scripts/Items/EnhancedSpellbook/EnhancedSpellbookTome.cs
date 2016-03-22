@@ -9,8 +9,6 @@ namespace Server.Items
     public class EnhancedSpellbookTome : Item
 	{
         private EnhancedSpellbookType m_EnhancedSpellbookType;
-        private SlayerName m_Slayer;        
-        
         [CommandProperty(AccessLevel.GameMaster)]
         public EnhancedSpellbookType EnhancedType
         {
@@ -18,15 +16,16 @@ namespace Server.Items
             set { m_EnhancedSpellbookType = value; }
         }
 
+        private SlayerGroupType m_SlayerGroup;  
         [CommandProperty(AccessLevel.GameMaster)]
-        public SlayerName Slayer
+        public SlayerGroupType SlayerGroup
         {
-            get { return m_Slayer; }
-            set { m_Slayer = value;}
+            get { return m_SlayerGroup; }
+            set { m_SlayerGroup = value; }
         }
         
         [Constructable]
-        public EnhancedSpellbookTome(EnhancedSpellbookType tomeType, SlayerName slayerType): base(0x0FBD)
+        public EnhancedSpellbookTome(EnhancedSpellbookType tomeType, SlayerGroupType slayerGroupType): base(0x0FBD)
         {
             Hue = 101;
 
@@ -40,14 +39,14 @@ namespace Server.Items
             else
             {
                 m_EnhancedSpellbookType = tomeType;
-                m_Slayer = slayerType;
+                m_SlayerGroup = slayerGroupType;
             }
 
-            if (m_Slayer == null || m_Slayer == SlayerName.None)            
+            if (m_SlayerGroup == null || m_SlayerGroup == SlayerGroupType.None)            
                 Delete();
             
-            else            
-                m_Slayer = slayerType;            
+            else
+                m_SlayerGroup = slayerGroupType;            
         }
 
         [Constructable]
@@ -64,16 +63,8 @@ namespace Server.Items
 
             m_EnhancedSpellbookType = tomeType;
             
-            if (m_EnhancedSpellbookType == EnhancedSpellbookType.Slayer)
-            {
-                SlayerName slayer = (SlayerName)BaseRunicTool.GetRandomSlayer();
-
-                if (slayer != null && slayer != SlayerName.None)                
-                    m_Slayer = slayer;                
-
-                else                
-                    Delete();                
-            }
+            if (m_EnhancedSpellbookType == EnhancedSpellbookType.Slayer)            
+                m_SlayerGroup = BaseCreature.GetRandomSlayerType();   
         }
 
         [Constructable]
@@ -97,16 +88,8 @@ namespace Server.Items
             else            
                 m_EnhancedSpellbookType = type;           
 
-            if (type == EnhancedSpellbookType.Slayer)
-            {
-                SlayerName slayer = (SlayerName)BaseRunicTool.GetRandomSlayer();           
-
-                if (slayer != null && slayer != SlayerName.None)                
-                    m_Slayer = slayer;                
-
-                else                
-                    Delete();                
-            }
+            if (type == EnhancedSpellbookType.Slayer)            
+                m_SlayerGroup = BaseCreature.GetRandomSlayerType();  
 		}
                 
         public EnhancedSpellbookTome(Serial serial): base(serial)
@@ -134,35 +117,31 @@ namespace Server.Items
 
         private void CraftEnhancedSpellbook_Callback(Mobile from, Item item, bool target)
         {
-            PlayerMobile pm = from as PlayerMobile;
+            PlayerMobile player = from as PlayerMobile;
             Spellbook spellbook = item as Spellbook;
 
             //Player or Item is Invalid
-            if (pm == null || item == null)            
+            if (player == null || item == null)            
                 return;            
 
             //Target Non-Enhanced Spellbook
-            if (spellbook != null && !(item is EnhancedSpellbook))
+            if (spellbook == null || !(item is EnhancedSpellbook))
             {
-            }
-
-            else
-            {
-                pm.SendMessage("You must target a basic spellbook.");
+                player.SendMessage("You must target a basic spellbook.");
                 return;
             }
 
             //Spellbook Isn't In Inventory or Equipped
-            if (!spellbook.IsChildOf(pm))
+            if (!spellbook.IsChildOf(player))
             {
-                pm.SendMessage("You must target a spellbook that you have equipped or that is in your backpack.");
+                player.SendMessage("You must target a spellbook that you have equipped or that is in your backpack.");
                 return;
             }
 
             //Spellbook Has Spells In It
             if (spellbook.SpellCount > 0)
             {
-                pm.SendMessage("You must target an empty spellbook.");
+                player.SendMessage("You must target an empty spellbook.");
                 return;
             }
 
@@ -181,26 +160,26 @@ namespace Server.Items
             }
 
             //Player Has Insufficient Inscription
-            if (pm.Skills[SkillName.Inscribe].Value < inscriptionSkillRequired)
+            if (player.Skills[SkillName.Inscribe].Value < inscriptionSkillRequired)
             {
-                pm.SendMessage("You lack the neccessary Inscription skill to use this tome");
+                player.SendMessage("You lack the neccessary Inscription skill to use this tome");
                 return;
             }
 
             EnhancedSpellbook enhancedSpellbook;
 
             if (m_EnhancedSpellbookType == EnhancedSpellbookType.Slayer)            
-                enhancedSpellbook = new EnhancedSpellbook(EnhancedSpellbookType.Slayer, m_Slayer);            
+                enhancedSpellbook = new EnhancedSpellbook(EnhancedSpellbookType.Slayer, m_SlayerGroup);            
 
             else            
                 enhancedSpellbook = new EnhancedSpellbook(m_EnhancedSpellbookType);            
 
-            enhancedSpellbook.Crafter = pm;
+            enhancedSpellbook.CraftedBy = player;
             enhancedSpellbook.AddEnhancedScrolls();
                       
-            pm.Backpack.AddItem(enhancedSpellbook);
+            player.Backpack.AddItem(enhancedSpellbook);
 
-            pm.SendMessage("You craft an enhanced spellbook");
+            player.SendMessage("You craft an enhanced spellbook");
             from.PlaySound(0x249);
 
             spellbook.Delete();
@@ -215,7 +194,7 @@ namespace Server.Items
                     return "A Blank Tome";                
 
                 else if (this.m_EnhancedSpellbookType == EnhancedSpellbookType.Slayer)                
-                    return EnhancedSpellbookTomeTypeSlayerAsString(this.m_Slayer);                
+                    return SlayerGroup.ToString();                
 
                 else                
                     return EnhancedSpellbookTomeTypeAsString(this.m_EnhancedSpellbookType);                
@@ -246,97 +225,6 @@ namespace Server.Items
             }
         }
 
-        public static string EnhancedSpellbookTomeTypeSlayerAsString(SlayerName name)
-        {
-            switch(name.ToString())
-            {
-                case "":
-                    return "A Slayer Tome";
-                
-                case "Silver":
-                    return "A Silver Tome";
-
-                case "OrcSlaying":
-                    return "An Orc Slaying Tome";
-
-                case "TrollSlaughter":
-                    return "A Troll Slaughter Tome";
-
-                case "OgreTrashing":
-                    return "An Ogre Trashing Tome";
-
-                case "Repond":
-                    return "A Repond Tome";
-
-                case "DragonSlaying":
-                    return "A Dragon Slaying Tome";
-
-                case "Terathan":
-                    return "A Terathan Tome";
-
-                case "SnakesBane":
-                    return "A Snakes Bane Tome";
-
-                case "LizardmanSlaughter":
-                    return "A Lizardman Slaughter Tome";
-
-                case "ReptilianDeath":
-                    return "A Reptilian Death Tome";
-
-                case "DaemonDismissal":
-                    return "A Daemon Dismissal Tome";
-
-                case "GargoylesFoe":
-                    return "A Gargoyles Foe Tome";
-
-                case "BalronDamnation":
-                    return "A Balron Damnation Tome";
-
-                case "Ophidian":
-                    return "An Ophidian Tome";
-
-                case "Exorcism":
-                    return "An Exorcism Tome";
-
-                case "SpidersDeath":
-                    return "A Spiders Death Tome";
-
-                case "ScorpionsBane":
-                    return "A Scorpions Bane Tome";
-
-                case "ArachnidDoom":
-                    return "An Arachnid Doom Tome";
-
-                case "FlameDousing":
-                    return "A Flame Dousing Tome";
-
-                case "WaterDissipation":
-                    return "A Water Dissipation Tome";
-
-                case "Vacuum":
-                    return "A Vacuum Tome";
-
-                case "ElementalHealth":
-                    return "An Elemental Health Tome";
-
-                case "EarthShatter":
-                    return "An Earth Shatter Tome";
-
-                case "BloodDrinking":
-                    return "A Blood Drinking Tome";
-
-                case "SummerWind":
-                    return "A Summer Wind Tome";
-
-                case "ElementalBan":
-                    return "An Elemental Ban Tome";
-
-                case "Fey":
-                    return "A Fey Tome";
-                
-                default: return "A Slayer Tome";
-            }            
-        }
         #endregion
 
         public override void Serialize( GenericWriter writer )
@@ -345,23 +233,22 @@ namespace Server.Items
 
 			writer.WriteEncodedInt( 0 ); // version
 
-            writer.Write((byte)m_Slayer);
-            writer.Write((byte)m_EnhancedSpellbookType);
+            //Version 0
+            writer.Write((int)m_EnhancedSpellbookType);
+            writer.Write((int)m_SlayerGroup);            
 		}
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadEncodedInt();
 
             //Version 0
-            m_Slayer = (SlayerName)reader.ReadByte();
-            m_EnhancedSpellbookType = (EnhancedSpellbookType)reader.ReadByte();           
- 
-            //----------
-
-            Hue = 101;
+            if (version >= 0)
+            {
+                m_EnhancedSpellbookType = (EnhancedSpellbookType)reader.ReadInt();
+                m_SlayerGroup = (SlayerGroupType)reader.ReadInt();
+            }
         }
     }
 }

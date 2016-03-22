@@ -78,7 +78,7 @@ namespace Server.Mobiles
         BlacksmithsGuild,
         DetectivesGuild
     }
-    
+
     public enum BlockMountType
     {
         None = -1,
@@ -86,7 +86,7 @@ namespace Server.Mobiles
         BolaRecovery = 1062910,
         DismountRecovery = 1070859
     }
-    
+
     public enum DamageDisplayMode
     {
         None,
@@ -133,7 +133,7 @@ namespace Server.Mobiles
             Server.RemoteAdmin.ServerInfo.SpoofPlayerCount = !Server.RemoteAdmin.ServerInfo.SpoofPlayerCount;
             e.Mobile.SendMessage("Threshold has been {0}.", Server.RemoteAdmin.ServerInfo.SpoofPlayerCount ? "enabled" : "disabled");
         }
-        
+
         public static void GoToEntranceCommand(CommandEventArgs e)
         {
             PlayerMobile player = e.Mobile as PlayerMobile;
@@ -377,17 +377,17 @@ namespace Server.Mobiles
                 case DamageDisplayMode.None:
                     player.m_ShowHealing = DamageDisplayMode.PrivateMessage;
                     player.SendMessage("Setting healing display mode: System Message");
-                break;
+                    break;
 
                 case DamageDisplayMode.PrivateMessage:
                     player.m_ShowHealing = DamageDisplayMode.PrivateOverhead;
                     player.SendMessage("Setting healing display mode: Overhead Text");
-                break;
+                    break;
 
                 case DamageDisplayMode.PrivateOverhead:
                     player.m_ShowHealing = DamageDisplayMode.None;
                     player.SendMessage("Setting healing display mode: None");
-                break;
+                    break;
             }
         }
 
@@ -402,17 +402,17 @@ namespace Server.Mobiles
                 case StealthStepsDisplayMode.None:
                     player.m_StealthStepsDisplayMode = StealthStepsDisplayMode.PrivateMessage;
                     player.SendMessage("Setting stealth steps display mode: System Message");
-                break;
+                    break;
 
                 case StealthStepsDisplayMode.PrivateMessage:
                     player.m_StealthStepsDisplayMode = StealthStepsDisplayMode.PrivateOverhead;
                     player.SendMessage("Setting stealth steps display mode: Overhead Text");
-                break;
+                    break;
 
                 case StealthStepsDisplayMode.PrivateOverhead:
                     player.m_StealthStepsDisplayMode = StealthStepsDisplayMode.None;
                     player.SendMessage("Setting stealth steps display mode: None");
-                break;
+                    break;
             }
         }
 
@@ -427,37 +427,37 @@ namespace Server.Mobiles
                 case HenchmenSpeechDisplayMode.Normal:
                     player.m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.Infrequent;
                     player.SendMessage("Setting henchmen speech mode: Infrequent");
-                break;
+                    break;
 
                 case HenchmenSpeechDisplayMode.Infrequent:
-                player.m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.IdleOnly;
+                    player.m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.IdleOnly;
                     player.SendMessage("Setting henchmen speech mode: Idle Only");
-                break;
+                    break;
 
                 case HenchmenSpeechDisplayMode.IdleOnly:
                     player.m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.IdleOnlyInfrequent;
                     player.SendMessage("Setting henchmen speech mode: Idle Only - Infrequent");
-                break;
+                    break;
 
                 case HenchmenSpeechDisplayMode.IdleOnlyInfrequent:
                     player.m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.CombatOnly;
                     player.SendMessage("Setting henchmen speech mode: Combat Only");
-                break;
+                    break;
 
                 case HenchmenSpeechDisplayMode.CombatOnly:
                     player.m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.CombatOnlyInfrequent;
                     player.SendMessage("Setting henchmen speech mode: Combat Only - Infrequent");
-                break;
+                    break;
 
                 case HenchmenSpeechDisplayMode.CombatOnlyInfrequent:
                     player.m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.None;
                     player.SendMessage("Setting henchmen speech mode: None");
-                break;
+                    break;
 
                 case HenchmenSpeechDisplayMode.None:
                     player.m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.Normal;
                     player.SendMessage("Setting henchmen speech mode: Normal");
-                break;
+                    break;
             }
         }
 
@@ -498,7 +498,7 @@ namespace Server.Mobiles
                 pm.m_AutoStealth = true;
             }
         }
-        
+
         [Usage("WipePlayerMobiles")]
         [Description("Changes the password of the commanding players account. Requires the same C-class IP address as the account's creator.")]
         public static void WipeAllPlayerMobiles_OnCommand(CommandEventArgs e)
@@ -527,8 +527,8 @@ namespace Server.Mobiles
 
             if (pm != null && pm.Backpack != null)
             {
-                if (pm.m_LastTrapPouchUse + TimeSpan.FromSeconds(0.75) > DateTime.UtcNow)                
-                    pm.SendMessage("You must wait 0.75 seconds between each use of this command");                
+                if (pm.m_LastTrapPouchUse + TimeSpan.FromSeconds(0.75) > DateTime.UtcNow)
+                    pm.SendMessage("You must wait 0.75 seconds between each use of this command");
 
                 else
                 {
@@ -846,7 +846,7 @@ namespace Server.Mobiles
             if (pm != null)
             {
                 pm.m_SessionStart = DateTime.UtcNow;
-                
+
                 pm.BedrollLogout = false;
                 pm.LastOnline = DateTime.UtcNow;
             }
@@ -906,7 +906,7 @@ namespace Server.Mobiles
                 TimeSpan gameTime = DateTime.UtcNow - pm.m_SessionStart;
 
                 pm.m_GameTime += gameTime;
-                
+
                 pm.m_SpeechLog = null;
                 pm.LastOnline = DateTime.UtcNow;
                 pm.SetSallos(false);
@@ -947,7 +947,7 @@ namespace Server.Mobiles
         }
 
         public DateTime m_LastTrapPouchUse = DateTime.UtcNow;
-        
+
         public DateTime m_LastPassiveTamingSkillGain = DateTime.MinValue;
         public BaseCreature m_LastPassiveTamingSkillAttacked; // the controlled pets last target
         public BaseCreature m_LastPassiveExpAttacked; // the controlled pets last target for XP Gain Purposes
@@ -963,7 +963,7 @@ namespace Server.Mobiles
 
         public int ItemsNotCraftedBySold = 0;
         public DateTime ResetItemsNotCraftedByDateTime;
-        
+
         public DamageDisplayMode m_ShowMeleeDamage = DamageDisplayMode.None;
         public DamageDisplayMode m_ShowSpellDamage = DamageDisplayMode.None;
         public DamageDisplayMode m_ShowFollowerDamage = DamageDisplayMode.None;
@@ -985,14 +985,14 @@ namespace Server.Mobiles
         public StealthStepsDisplayMode m_StealthStepsDisplayMode = StealthStepsDisplayMode.PrivateMessage;
         public HenchmenSpeechDisplayMode m_HenchmenSpeechDisplayMode = HenchmenSpeechDisplayMode.Normal;
 
-        public bool m_ShowAdminFilterText = true; 
+        public bool m_ShowAdminFilterText = true;
 
         public bool m_AutoStealth = true;
 
         private BaseBoat m_BoatOccupied = null;
         [CommandProperty(AccessLevel.GameMaster)]
-        public BaseBoat BoatOccupied { get { return m_BoatOccupied; } set { m_BoatOccupied = value; } }        
-        
+        public BaseBoat BoatOccupied { get { return m_BoatOccupied; } set { m_BoatOccupied = value; } }
+
         public PlayerEnhancementAccountEntry m_PlayerEnhancementAccountEntry = null;
         public InfluenceAccountEntry m_InfluenceAccountEntry = null;
         public UOACZAccountEntry m_UOACZAccountEntry = null;
@@ -1005,7 +1005,7 @@ namespace Server.Mobiles
 
         public EventCalendarAccount m_EventCalendarAccount = null;
         public MHSPlayerEntry m_MHSPlayerEntry = null;
-        public WorldChatAccountEntry m_WorldChatAccountEntry = null;        
+        public WorldChatAccountEntry m_WorldChatAccountEntry = null;
 
         public static int SkillCap = 7000;
         public static int MaxBonusSkillCap = 200;
@@ -1025,13 +1025,13 @@ namespace Server.Mobiles
                 SkillCap = SkillCap + m_BonusSkillCap;
             }
         }
-               
-        public int SystemOverloadActions = 0;       
+
+        public int SystemOverloadActions = 0;
         public static int SystemOverloadActionThreshold = 180; //Player flagged if attacking a single target this many times over the SystemOverloadInterval
-        public static TimeSpan SystemOverloadInterval = TimeSpan.FromSeconds(60); 
-                       
+        public static TimeSpan SystemOverloadInterval = TimeSpan.FromSeconds(60);
+
         public DateTime LastTeamSwitch = DateTime.MinValue;
-        
+
         private PokerGame m_PokerGame;
         public PokerGame PokerGame
         {
@@ -1046,7 +1046,7 @@ namespace Server.Mobiles
             get { return m_NumGoldCoinsGenerated; }
             set { m_NumGoldCoinsGenerated = value; }
         }
-        
+
         #region Insta-Hit
 
         private DateTime m_NextInstahit;
@@ -1128,10 +1128,10 @@ namespace Server.Mobiles
             }
         }
 
-        #endregion        
-        
+        #endregion
+
         #region Captcha
-        
+
         private Item m_TempStashedHarvest = null;
         private Server.Engines.Harvest.HarvestDefinition m_TempStashedHarvestDef;
         private List<DateTime> m_FailedHarvestAttempts = new List<DateTime>();
@@ -1147,7 +1147,8 @@ namespace Server.Mobiles
             private DateTime m_Start;
             private static TimeSpan CaptchaTimeLimit = TimeSpan.FromSeconds(45);
 
-            public HarvestTimer(PlayerMobile player, DateTime started): base(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(15))
+            public HarvestTimer(PlayerMobile player, DateTime started)
+                : base(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(15))
             {
                 Priority = TimerPriority.FiveSeconds;
                 m_Player = player;
@@ -1190,7 +1191,7 @@ namespace Server.Mobiles
                     Location = new Point3D(5274, 1164, 0);
                     SendMessage(0x22, "You have been moved to jail for failing the harvest captcha.");
                     FailedHarvestAttempts.Clear();
-                    
+
                     if (Account != null && Account is Account)
                     {
                         (Account as Account).Comments.Add(new AccountComment("Harvest System", string.Format("{0} failed the harvest captcha.", Name)));
@@ -1218,10 +1219,10 @@ namespace Server.Mobiles
         }
 
         private void RefreshFailedHarvests()
-        {           
+        {
             bool already_locked_out = m_FailedHarvestAttempts.Count > s_HarvestFailsForLockout;
             DateTime latest = DateTime.UtcNow.AddMinutes(-s_HarvestLockoutTime * (already_locked_out ? 2 : 1)); // 30 min decay time once you get locked out, 15m otherwise
-            
+
             m_FailedHarvestAttempts.RemoveAll(elem => (elem < latest));
             m_HarvestLockedout = m_FailedHarvestAttempts.Count >= s_HarvestFailsForLockout;
         }
@@ -1342,9 +1343,9 @@ namespace Server.Mobiles
         #endregion
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Murderer 
+        public bool Murderer
         {
-            get 
+            get
             {
                 return (ShortTermMurders >= 5);
             }
@@ -1357,14 +1358,14 @@ namespace Server.Mobiles
             get { return m_LastPlayerKilledBy; }
             set { m_LastPlayerKilledBy = value; }
         }
-        
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool BoatMovement
         {
             get { return GetFlag(PlayerFlag.BoatMovement); }
             set { SetFlag(PlayerFlag.BoatMovement, value); }
         }
-        
+
         private static void CheckAccountAgeAchievements(object mobile)
         {
             if (mobile is PlayerMobile)
@@ -1449,10 +1450,10 @@ namespace Server.Mobiles
 
             return false;
         }
-        
+
         public PlayerTitleColors TitleColorState { get; set; }
         public int SelectedTitleColorIndex;
-        public EColorRarity SelectedTitleColorRarity;        
+        public EColorRarity SelectedTitleColorRarity;
         private int m_CanReprieve;
         private bool CanReprieveBool = false;
         public TimeSpan m_TimeSpanDied;
@@ -1465,7 +1466,7 @@ namespace Server.Mobiles
         private DateTime m_Created = DateTime.UtcNow;
         public DateTime CreatedOn { set { m_Created = value; } get { return m_Created; } }
         public Boolean CloseBankRunebookGump;
-        
+
         public TimeSpan m_ShortTermElapse;
         public TimeSpan m_LongTermElapse;
 
@@ -1509,10 +1510,10 @@ namespace Server.Mobiles
         }
 
         #endregion
-        
+
         public void EnterContestedRegion(bool ressingHere)
-        {            
-        }      
+        {
+        }
 
         private DateTime m_HideRestrictionExpiration = DateTime.MinValue;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -1532,13 +1533,13 @@ namespace Server.Mobiles
 
         public override void DoHarmful(Mobile target, bool indirect)
         {
-            if (target == null)            
-                return;            
+            if (target == null)
+                return;
 
             bool pvpValid = false;
 
             BaseCreature bc_Target = target as BaseCreature;
-            PlayerMobile pm_Target = target as PlayerMobile;            
+            PlayerMobile pm_Target = target as PlayerMobile;
 
             if (target != this)
             {
@@ -1554,14 +1555,14 @@ namespace Server.Mobiles
 
                         bc_Target.LastPlayerCombatTime = DateTime.UtcNow;
 
-                        PlayerVsPlayerCombatOccured(pm_Controller);          
+                        PlayerVsPlayerCombatOccured(pm_Controller);
                         pm_TargetController.PlayerVsPlayerCombatOccured(this);
                     }
                 }
 
                 if (pm_Target != null)
                 {
-                    PlayerVsPlayerCombatOccured(pm_Target);  
+                    PlayerVsPlayerCombatOccured(pm_Target);
                     pm_Target.PlayerVsPlayerCombatOccured(this);
                 }
             }
@@ -1570,7 +1571,7 @@ namespace Server.Mobiles
         }
 
         public void CapStatMods(Mobile mobile)
-        {   
+        {
             //Bring Boosted Stat Durations Down to Normal Maximum If PvP Occurs
             TimeSpan MaximumPvPDuration = TimeSpan.FromMinutes(2);
 
@@ -1593,9 +1594,9 @@ namespace Server.Mobiles
         {
             base.OnHeal(ref amount, from);
 
-            SpecialAbilities.HealingOccured(from, this, amount);            
+            SpecialAbilities.HealingOccured(from, this, amount);
         }
-        
+
         //Easy UO Detection
         private Serial m_LastTarget;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -1618,7 +1619,7 @@ namespace Server.Mobiles
             get { return m_LastDeathByPlayer; }
             set { m_LastDeathByPlayer = value; }
         }
-      
+
         private int m_PirateScore = 0;
         [CommandProperty(AccessLevel.GameMaster)]
         public int PirateScore
@@ -1638,7 +1639,7 @@ namespace Server.Mobiles
             get { return m_LastTownSquareNotification; }
             set { m_LastTownSquareNotification = value; }
         }
-        
+
         private class CountAndTimeStamp
         {
             private int m_Count;
@@ -1667,14 +1668,14 @@ namespace Server.Mobiles
         private NpcGuild m_NpcGuild;
         private DateTime m_NpcGuildJoinTime;
         private DateTime m_NextBODTurnInTime;
-       
+
         private TimeSpan m_NpcGuildGameTime;
 
-        private PlayerFlag m_Flags;                       
+        private PlayerFlag m_Flags;
 
         private bool m_IgnoreMobiles; // IgnoreMobiles should be moved to Server.Mobiles        
         private int m_NonAutoreinsuredItems; // number of items that could not be automatically reinsured because gold in bank was not enough
-        
+
         private DateTime m_LastOnline;
         private Server.Guilds.RankDefinition m_GuildRank = Server.Guilds.RankDefinition.Lowest;
 
@@ -1724,7 +1725,7 @@ namespace Server.Mobiles
             get { return m_LastLocation; }
             set { m_LastLocation = value; }
         }
-        
+
         private BaseInstrument m_LastInstrument;
         [CommandProperty(AccessLevel.GameMaster)]
         public BaseInstrument LastInstrument
@@ -1736,7 +1737,7 @@ namespace Server.Mobiles
         private List<Mobile> m_AutoStabled = new List<Mobile>();
         public List<Mobile> AutoStabled
         {
-            get { return m_AutoStabled; } 
+            get { return m_AutoStabled; }
         }
 
         private List<Mobile> m_AllFollowers;
@@ -1842,7 +1843,7 @@ namespace Server.Mobiles
         {
             get { return m_NpcGuildGameTime; }
             set { m_NpcGuildGameTime = value; }
-        }   
+        }
 
         private DateTime m_AnkhNextUse;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -1865,7 +1866,7 @@ namespace Server.Mobiles
         {
             get { return DisguiseTimers.TimeRemaining(this); }
         }
-        
+
         public static Direction GetDirection4(Point3D from, Point3D to)
         {
             int dx = from.X - to.X;
@@ -1912,8 +1913,8 @@ namespace Server.Mobiles
 
             if (m_UOACZAccountEntry.ActiveProfile == UOACZAccountEntry.ActiveProfileType.Undead)
             {
-                if (item.RootParentEntity is Corpse || item.RootParentEntity is BaseContainer)                
-                    return false;                
+                if (item.RootParentEntity is Corpse || item.RootParentEntity is BaseContainer)
+                    return false;
             }
 
             return base.OnDragLift(item);
@@ -2148,15 +2149,15 @@ namespace Server.Mobiles
         {
             if (dismount)
             {
-                if (Mount != null)                
+                if (Mount != null)
                     Mount.Rider = null;
-                
-                else if (AnimalForm.UnderTransformation(this))                
-                    AnimalForm.RemoveContext(this, true);                
+
+                else if (AnimalForm.UnderTransformation(this))
+                    AnimalForm.RemoveContext(this, true);
             }
 
-            if ((m_MountBlock == null) || !m_MountBlock.m_Timer.Running || (m_MountBlock.m_Timer.Next < (DateTime.UtcNow + duration)))            
-                m_MountBlock = new MountBlock(duration, type, this);            
+            if ((m_MountBlock == null) || !m_MountBlock.m_Timer.Running || (m_MountBlock.m_Timer.Next < (DateTime.UtcNow + duration)))
+                m_MountBlock = new MountBlock(duration, type, this);
         }
 
         public override void OnSkillInvalidated(Skill skill)
@@ -2252,7 +2253,7 @@ namespace Server.Mobiles
                 min = baseMin;
 
             return min;
-        }        
+        }
 
         private bool m_NoDeltaRecursion;
 
@@ -2337,14 +2338,8 @@ namespace Server.Mobiles
                         BaseWeapon weapon = (BaseWeapon)item;
 
                         bool drop = false;
-
-                        if (dex < weapon.DexRequirement)
-                            drop = true;
-                        else if (str < AOS.Scale(weapon.StrRequirement, 100 - weapon.GetLowerStatReq()))
-                            drop = true;
-                        else if (intel < weapon.IntRequirement)
-                            drop = true;
-                        else if (weapon.RequiredRace != null && weapon.RequiredRace != this.Race)
+                       
+                        if (weapon.RequiredRace != null && weapon.RequiredRace != this.Race)
                             drop = true;
 
                         if (drop)
@@ -2489,9 +2484,9 @@ namespace Server.Mobiles
             base.Delta(flag);
 
             if ((flag & MobileDelta.Stat) != 0)
-                ValidateEquipment();           
-        }        
-        
+                ValidateEquipment();
+        }
+
         private bool _Sallos;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -2510,7 +2505,7 @@ namespace Server.Mobiles
             if (m_DesignContext != null)
                 return;
 
-            Spells.Sixth.InvisibilitySpell.RemoveTimer(this);                  
+            Spells.Sixth.InvisibilitySpell.RemoveTimer(this);
 
             base.RevealingAction();
 
@@ -2528,7 +2523,7 @@ namespace Server.Mobiles
                 if (value && HideRestrictionExpiration > DateTime.UtcNow)
                 {
                     string hideRestrictionRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, HideRestrictionExpiration, false, false, false, true, true);
-                    
+
                     SendMessage("You are unable to hide for another " + hideRestrictionRemaining + ".");
 
                     return;
@@ -2538,9 +2533,9 @@ namespace Server.Mobiles
 
                 RemoveBuff(BuffIcon.Invisibility);	//Always remove, default to the hiding icon EXCEPT in the invis spell where it's explicitly set
 
-                if (!Hidden)                
+                if (!Hidden)
                     RemoveBuff(BuffIcon.HidingAndOrStealth);
-                
+
                 else // if( !InvisibilitySpell.HasTimer( this ) )                
                     BuffInfo.AddBuff(this, new BuffInfo(BuffIcon.HidingAndOrStealth, 1075655));	//Hidden/Stealthing & You Are Hidden                
             }
@@ -2603,7 +2598,7 @@ namespace Server.Mobiles
             }
 
             if (NetState != null)
-                CheckLightLevels(false);           
+                CheckLightLevels(false);
         }
 
         public override void OnItemRemoved(Item item)
@@ -2745,10 +2740,10 @@ namespace Server.Mobiles
 
             if (ns != null)
             {
-                if (HasGump(typeof(ResurrectGump)) )
+                if (HasGump(typeof(ResurrectGump)))
                 {
-                    if (Alive)                    
-                        CloseGump(typeof(ResurrectGump));   
+                    if (Alive)
+                        CloseGump(typeof(ResurrectGump));
 
                     else
                     {
@@ -2803,7 +2798,7 @@ namespace Server.Mobiles
             int endY = startY + foundation.Components.Height - 2;
 
             return (newX >= startX && newY >= startY && newX < endX && newY < endY && Map == foundation.Map);
-        }       
+        }
 
         public SkillName[] AnimalFormRestrictedSkills { get { return m_AnimalFormRestrictedSkills; } }
 
@@ -3016,7 +3011,7 @@ namespace Server.Mobiles
 
         private bool CanInsure(Item item)
         {
-            if ((item is Container && !(item is BaseQuiver)) || item is BagOfSending || item is KeyRing || item is PotionKeg)
+            if ((item is Container && !(item is BaseQuiver)) || item is KeyRing || item is PotionKeg)
                 return false;
 
             if (item.Stackable)
@@ -3451,7 +3446,7 @@ namespace Server.Mobiles
                 SendGump(new ReclaimVendorGump(house));
             }
         }
-        
+
         private delegate void ContextCallback();
 
         private class CallbackEntry : ContextMenuEntry
@@ -3739,7 +3734,7 @@ namespace Server.Mobiles
             }
 
             Location = new Point3D(foundation.X, foundation.Y, newZ);
-            Map = foundation.Map;          
+            Map = foundation.Map;
 
             m_NoRecursion = false;
         }
@@ -3770,13 +3765,13 @@ namespace Server.Mobiles
         }
 
         public override bool CheckShove(Mobile shoved)
-        {   
+        {
             bool InStamFreeRange = (int)GetDistanceToSqrt(StamFreeMoveSource) <= BaseCreature.StamFreeMoveRange;
 
             //Currently Allowed Stamina-Free Movement
             if (StamFreeMoveExpiration > DateTime.UtcNow && InStamFreeRange || BoatOccupied != null)
-                return true;            
-            
+                return true;
+
             if (shoved.Blessed)
                 return true;
 
@@ -3805,7 +3800,7 @@ namespace Server.Mobiles
                         if (Stam >= 10)
                         {
                             number = shoved.Hidden ? 1019043 : 1019042;
-                            Stam -= 10;                            
+                            Stam -= 10;
                         }
 
                         else
@@ -3823,9 +3818,9 @@ namespace Server.Mobiles
 
         protected override void OnMapChange(Map oldMap)
         {
-            if (oldMap == Map.Ilshenar)              
+            if (oldMap == Map.Ilshenar)
                 this.LightLevel = 0;
-           
+
             if (AccessLevel == AccessLevel.Player)
                 if (Mount != null)
                     Mount.Rider = null;
@@ -3860,7 +3855,7 @@ namespace Server.Mobiles
                 base.OnBeneficialAction(target, isCriminal);
                 return;
             }
-            
+
             base.OnBeneficialAction(target, isCriminal);
         }
 
@@ -3882,15 +3877,15 @@ namespace Server.Mobiles
                     double disruptChance = (double)damage * bc_From.TamedDamageAgainstPlayerDisruptChance;
 
                     if (Utility.RandomDouble() >= disruptChance)
-                        disrupt = false;                    
+                        disrupt = false;
                 }
             }
 
             return disrupt;
         }
-        
+
         public override void OnDamage(int amount, Mobile from, bool willKill)
-        {            
+        {
             BaseCreature bc_From = from as BaseCreature;
 
             BandageContext bandageContext = BandageContext.GetContext(this);
@@ -3903,27 +3898,28 @@ namespace Server.Mobiles
                 {
                     if (!CheckDisrupt(amount, bc_From))
                         causeSlip = false;
-                }               
+                }
 
                 if (causeSlip)
-                    bandageContext.Slip();              
+                    bandageContext.Slip();
             }
 
             if (Confidence.IsRegenerating(this))
                 Confidence.StopRegenerating(this);
 
             WeightOverloading.FatigueOnDamage(this, amount, 1.0);
-                        
+
             base.OnDamage(amount, from, willKill);
         }
-                
+
         public PlayerCombatTimer m_PlayerCombatTimer;
 
         public class PlayerCombatTimer : Timer
         {
             private PlayerMobile m_Player;
 
-            public PlayerCombatTimer(PlayerMobile player): base(TimeSpan.Zero, TimeSpan.FromSeconds(1))
+            public PlayerCombatTimer(PlayerMobile player)
+                : base(TimeSpan.Zero, TimeSpan.FromSeconds(1))
             {
                 m_Player = player;
                 Priority = TimerPriority.OneSecond;
@@ -3994,14 +3990,14 @@ namespace Server.Mobiles
             //Player Enhancement Customization: Lifegiver
             bool reborn = PlayerEnhancementPersistance.IsCustomizationEntryActive(this, CustomizationType.Reborn);
 
-            if (reborn)            
-                CustomizationAbilities.Reborn(this);            
+            if (reborn)
+                CustomizationAbilities.Reborn(this);
         }
 
         public override void Resurrect()
         {
             m_TimeSpanResurrected = this.GameTime;
-            
+
             if (CloseBankRunebookGump)
             {
                 CloseGump(typeof(RunebookGump));
@@ -4038,7 +4034,7 @@ namespace Server.Mobiles
         public override void OnWarmodeChanged()
         {
             if (!Alive && NetState != null && AccessLevel == Server.AccessLevel.Player)
-            {                
+            {
                 IPooledEnumerable enu = GetClientsInRange(Core.GlobalMaxUpdateRange);
                 try
                 {
@@ -4110,14 +4106,14 @@ namespace Server.Mobiles
             foreach (var young in YoungChatListeners)
                 young.SendMessage(32, message);
         }
-        
+
         public override bool OnBeforeDeath()
         {
             NetState state = NetState;
 
             if (state != null)
                 state.CancelAllTrades();
-            
+
             m_EquipSnapshot = new List<Item>(this.Items);
 
             m_NonAutoreinsuredItems = 0;
@@ -4137,7 +4133,7 @@ namespace Server.Mobiles
 
             if (m_InsuranceAward is PlayerMobile)
                 ((PlayerMobile)m_InsuranceAward).m_InsuranceBonus = 0;
-            
+
             DropHolding();
 
             return base.OnBeforeDeath();
@@ -4223,8 +4219,8 @@ namespace Server.Mobiles
 
             result = base.GetInventoryMoveResultFor(item);
 
-            if (result == DeathMoveResult.MoveToCorpse && item.Movable && (Region.IsBlessedRegion || (Young && !Criminal)))            
-                result = DeathMoveResult.MoveToBackpack;            
+            if (result == DeathMoveResult.MoveToCorpse && item.Movable && (Region.IsBlessedRegion || (Young && !Criminal)))
+                result = DeathMoveResult.MoveToBackpack;
 
             return result;
         }
@@ -4337,13 +4333,13 @@ namespace Server.Mobiles
                                         GreyZoneTotem.InGreyZoneTotemArea(Location, Map) || Hotspot.InHotspotArea(Location, Map, true);
 
             #region UOACZ
-           
+
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
 
             if (IsUOACZHuman)
             {
                 foreach (Mobile mobile in killers)
-                {                
+                {
                     PlayerMobile playerKiller = mobile as PlayerMobile;
 
                     if (playerKiller == null)
@@ -4356,8 +4352,8 @@ namespace Server.Mobiles
 
                         m_UOACZAccountEntry.HumanProfile.CauseOfDeath = UOACZAccountEntry.HumanProfileEntry.CauseOfDeathType.PlayerHuman;
 
-                        UOACZSystem.ChangeStat(playerKiller, UOACZSystem.UOACZStatType.Honor, UOACZSystem.CommitMurderHonorLoss, true);                        
-                        
+                        UOACZSystem.ChangeStat(playerKiller, UOACZSystem.UOACZStatType.Honor, UOACZSystem.CommitMurderHonorLoss, true);
+
                         foreach (NetState state in NetState.Instances)
                         {
                             Mobile m_Mobile = state.Mobile;
@@ -4484,7 +4480,7 @@ namespace Server.Mobiles
             int playerClaimCount = 0;
             int paladinClaimCount = 0;
             int murdererClaimCount = 0;
-            
+
             //Check Player Damage Entries
             foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
             {
@@ -4495,7 +4491,7 @@ namespace Server.Mobiles
                 if (playerDamager == null) continue;
                 if (playerDamager.Deleted) continue;
 
-                int damageAmount = pair.Value;     
+                int damageAmount = pair.Value;
 
                 //Determine Claims
                 totalDamage += damageAmount;
@@ -4509,7 +4505,7 @@ namespace Server.Mobiles
                     if (IsUOACZHuman)
                     {
                         if (playerDamager.IsUOACZUndead)
-                        {   
+                        {
                             UOACZPersistance.CheckAndCreateUOACZAccountEntry(playerDamager);
                             playerDamager.m_UOACZAccountEntry.HumanPlayersKilledAsUndead++;
 
@@ -4517,7 +4513,7 @@ namespace Server.Mobiles
                                 UOACZSystem.ChangeStat(playerDamager, UOACZSystem.UOACZStatType.UndeadScore, UOACZSystem.UndeadPlayerKillFatiguedHumanPlayerScore, true);
                             else
                                 UOACZSystem.ChangeStat(playerDamager, UOACZSystem.UOACZStatType.UndeadScore, UOACZSystem.UndeadPlayerKillHumanPlayerScore, true);
-                            
+
                             foreach (NetState state in NetState.Instances)
                             {
                                 Mobile mobile = state.Mobile;
@@ -4539,7 +4535,7 @@ namespace Server.Mobiles
 
                                 if (IsUOACZUndead)
                                     AchievementSystemImpl.Instance.TickProgressMulti(playerDamager, AchievementTriggers.Trigger_UOACZCauseUndeadTransformation, 1);
-                            });  
+                            });
                         }
                     }
 
@@ -4553,7 +4549,7 @@ namespace Server.Mobiles
                                 UOACZSystem.ChangeStat(playerDamager, UOACZSystem.UOACZStatType.HumanScore, UOACZSystem.HumanPlayerKillUndeadPlayerScore, true);
 
                             UOACZPersistance.CheckAndCreateUOACZAccountEntry(playerDamager);
-                            playerDamager.m_UOACZAccountEntry.UndeadPlayersKilledAsHuman++;                            
+                            playerDamager.m_UOACZAccountEntry.UndeadPlayersKilledAsHuman++;
 
                             foreach (NetState state in NetState.Instances)
                             {
@@ -4576,7 +4572,7 @@ namespace Server.Mobiles
                         highestPlayerDamager = playerDamager;
                         highestPlayerDamage = damageAmount;
                     }
-                }                
+                }
 
                 //Murderer Damage
                 else if (playerDamager.Murderer)
@@ -4624,18 +4620,18 @@ namespace Server.Mobiles
             //Player Enhancement Customization: Carnage and Violent Death
             bool carnage = PlayerEnhancementPersistance.IsCustomizationEntryActive(killer, CustomizationType.Carnage);
             bool violentDeath = PlayerEnhancementPersistance.IsCustomizationEntryActive(this, CustomizationType.ViolentDeath);
-            
+
             if (carnage && Utility.RandomDouble() >= .75)
                 carnage = false;
 
             if (violentDeath && Utility.RandomDouble() >= .75)
-                violentDeath = false;           
+                violentDeath = false;
 
             if ((carnage || violentDeath) && !(Region is UOACZRegion))
-                CustomizationAbilities.PlayerDeathExplosion(Location, Map, carnage, violentDeath);  
-            
+                CustomizationAbilities.PlayerDeathExplosion(Location, Map, carnage, violentDeath);
+
             if (m_DuelContext != null)
-                m_DuelContext.OnDeath(this, c);                     
+                m_DuelContext.OnDeath(this, c);
 
             if (m_BuffTable != null)
             {
@@ -4654,7 +4650,7 @@ namespace Server.Mobiles
                     RemoveBuff(list[i]);
                 }
             }
-            
+
             OnWarmodeChanged();
         }
 
@@ -4792,7 +4788,7 @@ namespace Server.Mobiles
             m_UserOptHideFameTitles = true;
 
             TitleColorState = new PlayerTitleColors();
-            
+
             m_SpecialAbilityEffectEntries = new List<SpecialAbilityEffectEntry>();
             m_SpecialAbilityEffectEntriesToAdd = new List<SpecialAbilityEffectEntry>();
             m_SpecialAbilityEffectEntriesToRemove = new List<SpecialAbilityEffectEntry>();
@@ -4823,9 +4819,9 @@ namespace Server.Mobiles
             {
                 Guilds.Guild g = this.Guild as Guilds.Guild;
 
-                if (g == null)                
+                if (g == null)
                     SendLocalizedMessage(1063142); // You are not in a guild!
-                
+
                 else	//Type == MessageType.Guild
                 {
                     //m_GuildMessageHue = hue;
@@ -4836,11 +4832,11 @@ namespace Server.Mobiles
             }
 
             else if (type == MessageType.Alliance)
-            {               
+            {
             }
 
-            else            
-                base.DoSpeech(text, keywords, type, hue);            
+            else
+                base.DoSpeech(text, keywords, type, hue);
         }
 
         public void SendAllianceMessage(Mobile from, int hue, string text)
@@ -4933,7 +4929,7 @@ namespace Server.Mobiles
         public override bool IsHindered()
         {
             double hinderValue = 0;
-            
+
             GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder, out hinderValue);
 
             if (hinderValue != 0)
@@ -4957,7 +4953,7 @@ namespace Server.Mobiles
 
                 if (weapon != null)
                 {
-                    int weaponSpeedAdjusted = weapon.OldSpeed;
+                    int weaponSpeedAdjusted = weapon.BaseSpeed;
 
                     if (weaponSpeedAdjusted > 60)
                         weaponSpeedAdjusted = 60;
@@ -4974,16 +4970,16 @@ namespace Server.Mobiles
                 int damage = Utility.RandomMinMax(40, 60);
 
                 if (Utility.RandomDouble() <= flamestrikeChance)
-                {                        
+                {
                     Effects.SendLocationParticles(EffectItem.Create(Location, Map, EffectItem.DefaultDuration), 0x376A, 9, 32, effectHue, 0, 5005, 0);
-                    SpecialAbilities.FlamestrikeSpecialAbility(1.0, this, defender, damage, 0, -1, true, "", "");                    
+                    SpecialAbilities.FlamestrikeSpecialAbility(1.0, this, defender, damage, 0, -1, true, "", "");
                 }
 
                 if (Utility.RandomDouble() <= energySiphonChance)
-                {   
+                {
                     Effects.SendLocationParticles(EffectItem.Create(Location, Map, EffectItem.DefaultDuration), 0x376A, 9, 32, effectHue, 0, 5005, 0);
-                    SpecialAbilities.EnergySiphonSpecialAbility(1.0, this, defender, 1.0, 1, -1, true, "You siphon energy from your target.", "");   
-                }                
+                    SpecialAbilities.EnergySiphonSpecialAbility(1.0, this, defender, 1.0, 1, -1, true, "You siphon energy from your target.", "");
+                }
             }
         }
 
@@ -4993,8 +4989,8 @@ namespace Server.Mobiles
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature)
             {
-                double flamestrikeChance = defenderDungeonArmor.DungeonArmorDetail.FlamestrikeOnReceiveMeleeHitChance;                
-                    
+                double flamestrikeChance = defenderDungeonArmor.DungeonArmorDetail.FlamestrikeOnReceiveMeleeHitChance;
+
                 int damage = Utility.RandomMinMax(40, 60);
 
                 if (Utility.RandomDouble() < flamestrikeChance)
@@ -5003,17 +4999,17 @@ namespace Server.Mobiles
 
                     SpecialAbilities.FlamestrikeSpecialAbility(1.0, null, attacker, damage, 0, -1, true, "", "");
                 }
-            }                       
+            }
         }
 
         public void PlayerVsPlayerCombatOccured(PlayerMobile pm_From)
         {
             if (pm_From == null)
-                return;            
+                return;
 
             LastCombatTime = DateTime.UtcNow;
             pm_From.LastCombatTime = DateTime.UtcNow;
-                        
+
             if (Guild != null && pm_From.Guild != null && Guild == pm_From.Guild)
                 return;
 
@@ -5035,7 +5031,7 @@ namespace Server.Mobiles
             }
 
             LastPlayerCombatTime = DateTime.UtcNow;
-            pm_From.LastPlayerCombatTime = DateTime.UtcNow;            
+            pm_From.LastPlayerCombatTime = DateTime.UtcNow;
 
             BaseDungeonArmor.CheckForAndUpdateDungeonArmorProperties(this);
             CapStatMods(this);
@@ -5063,121 +5059,73 @@ namespace Server.Mobiles
 
             BaseCreature bc_Attacker = attacker as BaseCreature;
 
-            //UOACZ Handling
+            double totalValue = 0;
+
+            double adjustedTotalArmor = ArmorRating;
+
             if (IsUOACZUndead)
-            {
-                double adjustedVirtualArmor = (double)m_UOACZAccountEntry.UndeadProfile.VirtualArmor;
-                double totalValue = 0;
-                double pierceScalar = 1;
-                double virtualArmorMultiplier = .0025;
+                adjustedTotalArmor = (double)m_UOACZAccountEntry.UndeadProfile.VirtualArmor;
 
-                GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude, out totalValue);
-                adjustedVirtualArmor += totalValue;
+            double pierceScalar = 1;
 
-                GetSpecialAbilityEntryValue(SpecialAbilityEffect.Pierce, out totalValue);
-                pierceScalar -= totalValue;
+            GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude, out totalValue);
+            adjustedTotalArmor += totalValue;
 
-                if (pierceScalar > 1)
-                    pierceScalar = 1;
+            totalValue = 0;
+            GetSpecialAbilityEntryValue(SpecialAbilityEffect.Pierce, out totalValue);
+            pierceScalar -= totalValue;
 
-                if (pierceScalar < 0)
-                    pierceScalar = 0;
+            if (pierceScalar > 1)
+                pierceScalar = 1;
 
-                int damageReduction = (int)((double)damage * adjustedVirtualArmor * virtualArmorMultiplier * pierceScalar);
+            if (pierceScalar < 0)
+                pierceScalar = 0;
 
-                if (damageReduction > damage)
-                    damageReduction = damage;
+            adjustedTotalArmor *= (1 - pierceScalar);
 
-                damage -= damageReduction;
+            if (adjustedTotalArmor < 0)
+                adjustedTotalArmor = 0;
 
-                totalValue = 0;
+            double minDamageReduction = (adjustedTotalArmor * .25) / 100;
+            double maxDamageReduction = (adjustedTotalArmor * .50) / 100;
 
-                GetSpecialAbilityEntryValue(SpecialAbilityEffect.ShieldOfBones, out totalValue);
+            double damageReduction = 1 - (minDamageReduction + ((maxDamageReduction - minDamageReduction) * Utility.RandomDouble()));
 
-                if (totalValue > 0)
-                {
-                    double damageScalar = 1 - totalValue;
+            damage = (int)(Math.Round((double)damage * damageReduction));
 
-                    if (damageScalar < 0)
-                        damageScalar = 0;
+            if (damage < 1)
+                damage = 1;
 
-                    damage = (int)(Math.Round((double)damage * damageScalar));
+            double chance = Utility.RandomDouble();
 
-                    if (damage < 0)
-                        damage = 0;
-                }
+            Item armorItem;
 
-                return damage;
-            }
-            
-            //Standard OSI Handling: Player vs Player Melee Only
-            if (melee)
-            {
-                //Determine Which Layer of Target Armor Was Hit
-                double chance = Utility.RandomDouble();
+            if (chance < 0.07)
+                armorItem = NeckArmor;
 
-                Item armorItem;
+            else if (chance < 0.14)
+                armorItem = HandArmor;
 
-                if (chance < 0.07)
-                    armorItem = NeckArmor;
+            else if (chance < 0.28)
+                armorItem = ArmsArmor;
 
-                else if (chance < 0.14)
-                    armorItem = HandArmor;
+            else if (chance < 0.43)
+                armorItem = HeadArmor;
 
-                else if (chance < 0.28)
-                    armorItem = ArmsArmor;
+            else if (chance < 0.65)
+                armorItem = LegsArmor;
 
-                else if (chance < 0.43)
-                    armorItem = HeadArmor;
-
-                else if (chance < 0.65)
-                    armorItem = LegsArmor;
-
-                else
-                    armorItem = ChestArmor;
-
-                IWearableDurability armor = armorItem as IWearableDurability;
-
-                if (attacker is PlayerMobile && (armorItem as BaseDungeonArmor) != null)
-                    armor = null;
-
-                if (attacker != null && armor != null)
-                {
-                    BaseWeapon attackerWeapon = attacker.Weapon as BaseWeapon;
-                                       
-                    damage = armor.OnHit(attackerWeapon, damage);
-                }
-            }
-
-            //Any Other Physical Impact
             else
+                armorItem = ChestArmor;
+
+            //Check Durability Loss on Armor Piece Hit
+            BaseArmor armorHit = armorItem as BaseArmor;
+
+            if (armorHit != null)
             {
-                double finalArmorRating = ArmorRating;
+                BaseWeapon attackerWeapon = attacker.Weapon as BaseWeapon;
 
-                double totalValue = 0;
-                
-                if (bc_Attacker != null)
-                    bc_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Pierce, out totalValue);
-
-                if (totalValue < 0)
-                    totalValue = 0;
-
-                if (totalValue > 1)
-                    totalValue = 1;
-
-                finalArmorRating *= (1 - totalValue);
-
-                double minDamageReduction = (finalArmorRating * .33) / 100;
-                double maxDamageReduction = (finalArmorRating * .66) / 100;
-
-                double damageReduction = 1 - (minDamageReduction + ((maxDamageReduction - minDamageReduction) * Utility.RandomDouble()));
-
-                damage = (int)(Math.Round((double)damage * damageReduction));
-
-                if (damage < 1)
-                    damage = 1;
-
-                return damage;
+                armorHit.OnHit(attackerWeapon, damage);
             }
 
             return damage;
@@ -5201,7 +5149,7 @@ namespace Server.Mobiles
                     {
                         if (bc_Source.Controlled && bc_Source.ControlMaster is PlayerMobile && bc_Source.ControlMaster != this)
                         {
-                            PlayerMobile pm_SourceController = bc_Source.ControlMaster as PlayerMobile;                            
+                            PlayerMobile pm_SourceController = bc_Source.ControlMaster as PlayerMobile;
 
                             bc_Source.LastPlayerCombatTime = DateTime.UtcNow;
 
@@ -5258,7 +5206,7 @@ namespace Server.Mobiles
             if (Spells.Necromancy.EvilOmenSpell.TryEndEffect(this))
                 poison = PoisonImpl.IncreaseLevel(poison);
             #endregion
-                        
+
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
             if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)
@@ -5290,10 +5238,11 @@ namespace Server.Mobiles
 
         #endregion
 
-        public PlayerMobile(Serial s): base(s)
+        public PlayerMobile(Serial s)
+            : base(s)
         {
             m_VisList = new List<Mobile>();
-            m_AntiMacroTable = new Hashtable();           
+            m_AntiMacroTable = new Hashtable();
         }
 
         public List<Mobile> VisibilityList
@@ -5328,7 +5277,7 @@ namespace Server.Mobiles
 
                 return false;
             }
-            
+
             if (target is BaseCreature && ((BaseCreature)target).InitialInnocent && !((BaseCreature)target).Controlled)
                 return false;
 
@@ -5382,8 +5331,8 @@ namespace Server.Mobiles
         public Engines.BulkOrders.BOBFilter BOBFilter
         {
             get { return m_BOBFilter; }
-        }        
-        
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             //cleanup our anti-macro table 
@@ -5428,7 +5377,7 @@ namespace Server.Mobiles
             CheckAtrophies(this);
 
             base.Serialize(writer);
-                        
+
             writer.Write((int)0); //Version
 
             //Version 0            
@@ -5440,14 +5389,14 @@ namespace Server.Mobiles
                 writer.Write((double)m_SpecialAbilityEffectEntries[a].m_Value);
                 writer.Write((DateTime)m_SpecialAbilityEffectEntries[a].m_Expiration);
             }
-            
+
             writer.Write(PreviousNames.Count);
             for (int a = 0; a < PreviousNames.Count; a++)
             {
                 writer.Write(PreviousNames[a]);
             }
-            
-            writer.WriteEncodedInt(m_GuildRank.Rank);            
+
+            writer.WriteEncodedInt(m_GuildRank.Rank);
 
             writer.Write(m_EventCalendarAccount);
             writer.Write(m_BonusSkillCap);
@@ -5468,7 +5417,7 @@ namespace Server.Mobiles
             writer.Write((int)m_ShowProvocationDamage);
             writer.Write((int)m_ShowPoisonDamage);
             writer.Write(m_AutoStealth);
-            writer.Write(m_BoatOccupied); 
+            writer.Write(m_BoatOccupied);
             writer.Write(KinPaintHue);
             writer.Write(KinPaintExpiration);
             writer.Write((int)m_ShowMeleeDamage);
@@ -5507,18 +5456,18 @@ namespace Server.Mobiles
             writer.Write(m_LongTermElapse);
             writer.Write(m_ShortTermElapse);
             writer.Write(GameTime);
-            
+
             writer.Write((int)m_HairModID);
             writer.Write((int)m_HairModHue);
             writer.Write((int)m_BeardModID);
-            writer.Write((int)m_BeardModHue);  
+            writer.Write((int)m_BeardModHue);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-                   
+
             //Version 0
             if (version >= 0)
             {
@@ -5540,7 +5489,7 @@ namespace Server.Mobiles
                 {
                     PreviousNames.Add(reader.ReadString());
                 }
-                
+
                 int rank = reader.ReadEncodedInt();
                 int maxRank = Guilds.RankDefinition.Ranks.Length - 1;
 
@@ -5621,10 +5570,10 @@ namespace Server.Mobiles
             Squelched = false;
             Frozen = false;
             CantWalk = false;
-            
+
             if (m_LastOnline == DateTime.MinValue && Account != null)
                 m_LastOnline = ((Account)Account).LastLogin;
-            
+
             if (AccessLevel > AccessLevel.Player)
                 m_IgnoreMobiles = true;
 
@@ -5632,7 +5581,7 @@ namespace Server.Mobiles
                 TitleColorState = new PlayerTitleColors();
 
             List<Mobile> list = Stabled;
-            
+
             for (int i = 0; i < list.Count; ++i)
             {
                 BaseCreature bc = list[i] as BaseCreature;
@@ -5652,8 +5601,8 @@ namespace Server.Mobiles
                 AddBuff(new BuffInfo(BuffIcon.HidingAndOrStealth, 1075655));
 
             //Reapply Kin Paint
-            if (KinPaintHue != -1 && KinPaintExpiration > DateTime.UtcNow)            
-                HueMod = KinPaintHue;            
+            if (KinPaintHue != -1 && KinPaintExpiration > DateTime.UtcNow)
+                HueMod = KinPaintHue;
 
             if (!(Region.Find(LogoutLocation, LogoutMap) is GuardedRegion))
             {
@@ -5672,11 +5621,11 @@ namespace Server.Mobiles
                     m_PlayerCombatTimer = new PlayerCombatTimer(this);
                     m_PlayerCombatTimer.Start();
                 }
-            }            
+            }
         }
 
         public static void CheckAtrophies(Mobile m)
-        {           
+        {
         }
 
         public void CheckKillDecay()
@@ -5694,8 +5643,8 @@ namespace Server.Mobiles
                 {
                     --ShortTermMurders;
 
-                    if (wasMurderer)                    
-                        SendMessage("You are no longer a murderer.");                    
+                    if (wasMurderer)
+                        SendMessage("You are no longer a murderer.");
                 }
             }
         }
@@ -5704,7 +5653,7 @@ namespace Server.Mobiles
         {
             m_ShortTermElapse = this.GameTime + TimeSpan.FromHours(MurderCountDecayHours);
         }
-        
+
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.Developer)]
         public DateTime SessionStart
         {
@@ -5894,12 +5843,12 @@ namespace Server.Mobiles
                 return;
 
             try
-            {                
+            {
                 bool show_guild = GuildClickMessage && Guild != null && (DisplayGuildTitle || (Player && Guild.Type != Guilds.GuildType.Regular));
                 bool show_other_titles = true;
 
                 if (from.Region is UOACZRegion)
-                { 
+                {
                     show_guild = false;
                     show_other_titles = false;
                 }
@@ -5933,7 +5882,7 @@ namespace Server.Mobiles
                     string text = String.Format(title.Length <= 0 ? "[{1}]{2}" : "[{0}, {1}]{2}", title, Guild.Abbreviation, type);
                     PrivateOverheadMessage(MessageType.Regular, SpeechHue, true, text, from.NetState);
                 }
-                
+
                 if (show_other_titles)
                 {
                     string fullname_line = "";
@@ -5943,7 +5892,7 @@ namespace Server.Mobiles
 
                     fullname_line += Name == null ? String.Empty : Name;
                     fullname_line = ApplyNameSuffix(fullname_line); // (Young) for example
-                    
+
                     PrivateOverheadMessage(MessageType.Label, newhue, AsciiClickMessage, fullname_line, from.NetState);
                 }
 
@@ -5955,9 +5904,9 @@ namespace Server.Mobiles
 
                     PrivateOverheadMessage(MessageType.Label, newhue, AsciiClickMessage, fullname_line, from.NetState);
                 }
-            } 
+            }
 
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("OnSingleClick failed {0}", e.Message);
             }
@@ -5975,19 +5924,19 @@ namespace Server.Mobiles
                 }
             }
             #endregion
-            
+
             if (AccessLevel != AccessLevel.Player)
                 return true;
-            
+
             bool stealthMove = false;
 
             bool leaveFootsteps = false;
             double footstepChance = .33;
-            
+
             BaseDungeonArmor.PlayerDungeonArmorProfile stealtherDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(this, null);
 
             if (stealtherDungeonArmor.MatchingSet && stealtherDungeonArmor.DungeonArmorDetail.StealthLeavesFootprints)
-                leaveFootsteps = true;            
+                leaveFootsteps = true;
 
             if (Hidden && DesignContext.Find(this) == null)	//Hidden & NOT customizing a house
             {
@@ -5999,7 +5948,7 @@ namespace Server.Mobiles
                     {
                         AllowedStealthSteps = -1;
                         RevealingAction();
-                        
+
                         return true;
                     }
 
@@ -6048,7 +5997,7 @@ namespace Server.Mobiles
 
                             else if (NetState != null && m_StealthStepsDisplayMode == StealthStepsDisplayMode.PrivateOverhead && AllowedStealthSteps < 100)
                                 PrivateOverheadMessage(MessageType.Regular, 0, false, "You have " + AllowedStealthSteps.ToString() + " stealth steps remaining.", NetState);
-                        }                            
+                        }
                     }
 
                     if (Hidden && leaveFootsteps && Utility.RandomDouble() <= footstepChance)
@@ -6057,7 +6006,7 @@ namespace Server.Mobiles
 
                 else
                     RevealingAction();
-            }            
+            }
 
             if (UOACZSystem.IsUOACZValidMobile(this))
             {
@@ -6227,10 +6176,10 @@ namespace Server.Mobiles
             }
         }
 
-        #endregion      
-  
-        #region MyRunUO Invalidation       
-        
+        #endregion
+
+        #region MyRunUO Invalidation
+
         public override void OnKillsChange(int oldValue)
         {
             if (this.Young && this.ShortTermMurders > oldValue)
@@ -6243,23 +6192,23 @@ namespace Server.Mobiles
         }
 
         public override void OnGenderChanged(bool oldFemale)
-        {           
+        {
         }
 
         public override void OnGuildChange(Server.Guilds.BaseGuild oldGuild)
-        {           
+        {
         }
 
         public override void OnGuildTitleChange(string oldTitle)
-        {           
+        {
         }
 
         public override void OnKarmaChange(int oldValue)
-        {          
+        {
         }
 
         public override void OnFameChange(int oldValue)
-        {          
+        {
         }
 
         public override void OnSkillChange(SkillName skill, double oldBase)
@@ -6297,8 +6246,8 @@ namespace Server.Mobiles
 
                 if (bc_Follower != null)
                 {
-                    if (bc_Follower.AIObject != null)   
-                        toRelease.Add(bc_Follower);                    
+                    if (bc_Follower.AIObject != null)
+                        toRelease.Add(bc_Follower);
                 }
             }
 
@@ -6309,7 +6258,7 @@ namespace Server.Mobiles
         public override void OnDelete()
         {
             ReleaseAllFollowers();
-                        
+
             #region UOACZ
 
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(this);
@@ -6320,11 +6269,11 @@ namespace Server.Mobiles
                 {
                     case UOACZAccountEntry.ActiveProfileType.Human:
                         UOACZSystem.DepositUOACZItems(this, true);
-                    break;
+                        break;
 
                     case UOACZAccountEntry.ActiveProfileType.Undead:
                         UOACZSystem.DepositUOACZItems(this, false);
-                    break;
+                        break;
                 }
             }
 
@@ -6354,7 +6303,7 @@ namespace Server.Mobiles
         {
             if (checkTurning && (dir & Direction.Mask) != (this.Direction & Direction.Mask))
                 return Mobile.RunMount;	// We are NOT actually moving (just a direction change)
-                        
+
             TransformContext context = TransformationSpellHelper.GetContext(this);
 
             if (context != null && context.Type == typeof(ReaperFormSpell))
@@ -6531,7 +6480,7 @@ namespace Server.Mobiles
                 if (Region is UOACZRegion)
                     return false;
 
-                return GetFlag(PlayerFlag.Young); 
+                return GetFlag(PlayerFlag.Young);
             }
 
             set
@@ -6641,49 +6590,49 @@ namespace Server.Mobiles
         }
 
         /*private static Point3D[] m_TrammelDeathDestinations = new Point3D[]
-			{
-				new Point3D( 1481, 1612, 20 ),
-				new Point3D( 2708, 2153,  0 ),
-				new Point3D( 2249, 1230,  0 ),
-				new Point3D( 5197, 3994, 37 ),
-				new Point3D( 1412, 3793,  0 ),
-				new Point3D( 3688, 2232, 20 ),
-				new Point3D( 2578,  604,  0 ),
-				new Point3D( 4397, 1089,  0 ),
-				new Point3D( 5741, 3218, -2 ),
-				new Point3D( 2996, 3441, 15 ),
-				new Point3D(  624, 2225,  0 ),
-				new Point3D( 1916, 2814,  0 ),
-				new Point3D( 2929,  854,  0 ),
-				new Point3D(  545,  967,  0 ),
-				new Point3D( 3665, 2587,  0 )
-			};
+            {
+                new Point3D( 1481, 1612, 20 ),
+                new Point3D( 2708, 2153,  0 ),
+                new Point3D( 2249, 1230,  0 ),
+                new Point3D( 5197, 3994, 37 ),
+                new Point3D( 1412, 3793,  0 ),
+                new Point3D( 3688, 2232, 20 ),
+                new Point3D( 2578,  604,  0 ),
+                new Point3D( 4397, 1089,  0 ),
+                new Point3D( 5741, 3218, -2 ),
+                new Point3D( 2996, 3441, 15 ),
+                new Point3D(  624, 2225,  0 ),
+                new Point3D( 1916, 2814,  0 ),
+                new Point3D( 2929,  854,  0 ),
+                new Point3D(  545,  967,  0 ),
+                new Point3D( 3665, 2587,  0 )
+            };
 
         private static Point3D[] m_IlshenarDeathDestinations = new Point3D[]
-			{
-				new Point3D( 1216,  468, -13 ),
-				new Point3D(  723, 1367, -60 ),
-				new Point3D(  745,  725, -28 ),
-				new Point3D(  281, 1017,   0 ),
-				new Point3D(  986, 1011, -32 ),
-				new Point3D( 1175, 1287, -30 ),
-				new Point3D( 1533, 1341,  -3 ),
-				new Point3D(  529,  217, -44 ),
-				new Point3D( 1722,  219,  96 )
-			};
+            {
+                new Point3D( 1216,  468, -13 ),
+                new Point3D(  723, 1367, -60 ),
+                new Point3D(  745,  725, -28 ),
+                new Point3D(  281, 1017,   0 ),
+                new Point3D(  986, 1011, -32 ),
+                new Point3D( 1175, 1287, -30 ),
+                new Point3D( 1533, 1341,  -3 ),
+                new Point3D(  529,  217, -44 ),
+                new Point3D( 1722,  219,  96 )
+            };
 
         private static Point3D[] m_MalasDeathDestinations = new Point3D[]
-			{
-				new Point3D( 2079, 1376, -70 ),
-				new Point3D(  944,  519, -71 )
-			};
+            {
+                new Point3D( 2079, 1376, -70 ),
+                new Point3D(  944,  519, -71 )
+            };
 
         private static Point3D[] m_TokunoDeathDestinations = new Point3D[]
-			{
-				new Point3D( 1166,  801, 27 ),
-				new Point3D(  782, 1228, 25 ),
-				new Point3D(  268,  624, 15 )
-			};
+            {
+                new Point3D( 1166,  801, 27 ),
+                new Point3D(  782, 1228, 25 ),
+                new Point3D(  268,  624, 15 )
+            };
 
         public bool YoungDeathTeleport()
         {
@@ -6803,7 +6752,7 @@ namespace Server.Mobiles
         }
 
         #endregion
-        
+
         #region Recipes
 
         private Dictionary<int, bool> m_AcquiredRecipes;
@@ -6928,7 +6877,7 @@ namespace Server.Mobiles
                 m_BuffTable = null;
         }
         #endregion
-        
+
         public void AutoStablePets()
         {
             if (Core.SE && AllFollowers.Count > 0)
@@ -7092,7 +7041,7 @@ namespace Server.Mobiles
                     if (entry.m_SpecialAbilityEffect == SpecialAbilityEffect.Petrify)
                     {
                         if (DateTime.UtcNow >= entry.m_Expiration)
-                        {                            
+                        {
                             if (!KinPaint.IsWearingKinPaint(pm_Player))
                                 pm_Player.HueMod = -1;
 
@@ -7115,7 +7064,7 @@ namespace Server.Mobiles
                         if (DateTime.UtcNow >= entry.m_Expiration)
                         {
                             int minBlood = 1;
-                            int maxBlood = 2;                            
+                            int maxBlood = 2;
 
                             if (!pm_Player.Hidden)
                                 SpecialAbilities.AddBloodEffect(pm_Player, minBlood, maxBlood);
@@ -7130,7 +7079,7 @@ namespace Server.Mobiles
 
                             if (bc_Owner != null)
                                 bc_Owner.DisplayFollowerDamage(pm_Player, finalAdjustedDamage);
-                            
+
                             if (pm_Owner != null)
                             {
                                 if (pm_Owner.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
@@ -7147,7 +7096,7 @@ namespace Server.Mobiles
                         if (DateTime.UtcNow >= entry.m_Expiration)
                         {
                             int damage = (int)entry.m_Value;
-                           
+
                             if (!pm_Player.Hidden)
                             {
                                 Effects.PlaySound(pm_Player.Location, pm_Player.Map, 0x5CB);

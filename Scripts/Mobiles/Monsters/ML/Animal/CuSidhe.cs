@@ -48,25 +48,12 @@ namespace Server.Mobiles
 		{
 			if ( from.Race != Race.Elf && from == ControlMaster && from.AccessLevel == AccessLevel.Player )
 			{
-				Item pads = from.FindItemOnLayer( Layer.Shoes );
-				
-				if ( pads is PadsOfTheCuSidhe )
-					from.SendLocalizedMessage( 1071981 ); // Your boots allow you to mount the Cu Sidhe.
-				else
-				{
-					from.SendLocalizedMessage( 1072203 ); // Only Elves may use this.
-					return;
-				}
+				Item pads = from.FindItemOnLayer( Layer.Shoes );				
 			}
 			
 			base.OnDoubleClick( from );
 		}
 		
-		public override WeaponAbility GetWeaponAbility()
-		{
-			return WeaponAbility.BleedAttack;
-		}
-
 		public CuSidhe( Serial serial ) : base( serial )
 		{
 		}

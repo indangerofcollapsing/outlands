@@ -95,8 +95,7 @@ namespace Server.Spells.Chivalry
 					EvilOmenSpell.TryEndEffect( m );
 					StrangleSpell.RemoveCurse( m );
 					CorpseSkinSpell.RemoveCurse( m );
-					CurseSpell.RemoveEffect( m );
-					MortalStrike.EndWound( m );
+					CurseSpell.RemoveEffect( m );					
 					if (Core.ML) { BloodOathSpell.RemoveCurse ( m ); }
 					MindRotSpell.ClearMindRotScalar ( m );
 

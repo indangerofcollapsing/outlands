@@ -185,10 +185,7 @@ namespace Server
                         weapon.AccuracyLevel = (WeaponAccuracyLevel)Utility.RandomMinMax(1, 4);
                         weapon.DamageLevel = (WeaponDamageLevel)Utility.RandomMinMax(1, 4);
                         weapon.DurabilityLevel = (WeaponDurabilityLevel)Utility.RandomMinMax(1, 4);
-
-                        if (Utility.RandomDouble() <= .2)
-                            weapon.Slayer = SlayerName.Silver;
-
+                        
                         weapon.Identified = true;
 
                         c.DropItem(weapon);

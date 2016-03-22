@@ -9,11 +9,6 @@ namespace Server.Mobiles
 	[CorpseName( "a wrinkly yomotsu corpse" )]
 	public class YomotsuElder : BaseCreature
 	{
-		public override WeaponAbility GetWeaponAbility()
-		{
-			return WeaponAbility.DoubleStrike;
-		}
-
 		[Constructable]
 		public YomotsuElder() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{

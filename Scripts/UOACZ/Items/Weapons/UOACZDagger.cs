@@ -8,29 +8,19 @@ namespace Server.Items
 	[FlipableAttribute( 0xF52, 0xF51 )]
 	public class UOACZDagger : BaseKnife
 	{
-		public override WeaponAbility PrimaryAbility{ get{ return WeaponAbility.InfectiousStrike; } }
-		public override WeaponAbility SecondaryAbility{ get{ return WeaponAbility.ShadowStrike; } }
+        public override int BaseMinDamage { get { return 4; } }
+        public override int BaseMaxDamage { get { return 8; } }
+        public override int BaseSpeed { get { return 60; } }
 
-        public override int AosStrengthReq { get { return 10; } }
-        public override int AosMinDamage { get { return 10; } }
-        public override int AosMaxDamage { get { return 12; } }
-        public override int AosSpeed { get { return 53; } }
-        public override float MlSpeed { get { return 2.00f; } }
+        public override int InitMinHits { get { return 40; } }
+        public override int InitMaxHits { get { return 60; } }
 
-        public override int OldStrengthReq { get { return 10; } }
-        public override int OldMinDamage { get { return 6; } }
-        public override int OldMaxDamage { get { return 12; } }
-        public override int OldSpeed { get { return 58; } }
+        public override int BaseHitSound { get { return 0x23C; } }
+        public override int BaseMissSound { get { return 0x238; } }
 
-        public override int DefHitSound { get { return 0x23C; } }
-        public override int DefMissSound { get { return 0x238; } }
-
-        public override int InitMinHits { get { return 31; } }
-        public override int InitMaxHits { get { return 90; } }
-
-        public override SkillName DefSkill { get { return SkillName.Fencing; } }
-        public override WeaponType DefType { get { return WeaponType.Piercing; } }
-        public override WeaponAnimation DefAnimation { get { return WeaponAnimation.Pierce1H; } }
+        public override SkillName BaseSkill { get { return SkillName.Fencing; } }
+        public override WeaponType BaseType { get { return WeaponType.Piercing; } }
+        public override WeaponAnimation BaseAnimation { get { return WeaponAnimation.Pierce1H; } }
 
 		[Constructable]
 		public UOACZDagger() : base( 0xF52 )

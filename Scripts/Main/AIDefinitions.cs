@@ -8,16 +8,23 @@ namespace Server
 {
     public class AIDefinitions
     {
-        public AIDefinitions()
+        public static void UpdateAI(BaseCreature target)
         {
-        }
+            //Base Settings
+            AIGroupType groupType = target.AIBaseGroup;
+            AISubGroupType subGroupType = target.AIBaseSubGroup;
 
-        public void UpdateAI(BaseCreature target)
-        {
-            //BaseAI AIGroup
-            switch (target.Group)
+            //Overrides
+            if (target.AIGroup != AIGroupType.Unspecified)
+                groupType = target.AIGroup;
+
+            if (target.AISubGroup != AISubGroupType.Unspecified)
+                subGroupType = target.AISubGroup;
+
+            //AI Group
+            switch (groupType)
             {
-                case AIGroup.None:
+                case AIGroupType.None:
                     target.DictCombatRange[CombatRange.WeaponAttackRange] = 1;
                     target.DictCombatRange[CombatRange.SpellRange] = 0;
                     target.DictCombatRange[CombatRange.Withdraw] = 0;
@@ -29,29 +36,29 @@ namespace Server
                     target.DictCombatAction[CombatAction.CombatHealOther] = 0;
                     target.DictCombatAction[CombatAction.CombatSpecialAction] = 0;
                     target.DictCombatAction[CombatAction.CombatEpicAction] = 0;
-                break;                
+                    break;
 
-                case AIGroup.EvilMonster:
+                case AIGroupType.EvilMonster:
                     target.DictCombatTargeting[CombatTargeting.PlayerAny] = 1;
 
                     target.DictCombatFlee[CombatFlee.Flee10] = 1;
                     target.DictCombatFlee[CombatFlee.Flee5] = 2;
                     break;
 
-                case AIGroup.NeutralMonster:
+                case AIGroupType.NeutralMonster:
 
                     target.DictCombatFlee[CombatFlee.Flee10] = 1;
                     target.DictCombatFlee[CombatFlee.Flee5] = 2;
                     break;
 
-                case AIGroup.GoodMonster:
+                case AIGroupType.GoodMonster:
                     target.DictCombatTargeting[CombatTargeting.Evil] = 1;
 
                     target.DictCombatFlee[CombatFlee.Flee10] = 1;
                     target.DictCombatFlee[CombatFlee.Flee5] = 2;
                     break;
 
-                case AIGroup.Undead:
+                case AIGroupType.Undead:
                     target.DictCombatTargeting[CombatTargeting.PlayerAny] = 1;
 
                     target.DictCombatFlee[CombatFlee.Flee50] = 0;
@@ -60,69 +67,69 @@ namespace Server
                     target.DictCombatFlee[CombatFlee.Flee5] = 0;
                     break;
 
-                case AIGroup.EvilHuman:
+                case AIGroupType.EvilHuman:
                     target.DictCombatTargeting[CombatTargeting.PlayerAny] = 1;
 
                     target.DictCombatFlee[CombatFlee.Flee10] = 1;
                     target.DictCombatFlee[CombatFlee.Flee5] = 2;
                     break;
 
-                case AIGroup.NeutralHuman:
+                case AIGroupType.NeutralHuman:
                     target.DictCombatFlee[CombatFlee.Flee10] = 1;
                     target.DictCombatFlee[CombatFlee.Flee5] = 2;
                     break;
 
-                case AIGroup.GoodHuman:
+                case AIGroupType.GoodHuman:
                     target.DictCombatTargeting[CombatTargeting.Evil] = 1;
 
                     target.DictCombatFlee[CombatFlee.Flee10] = 1;
                     target.DictCombatFlee[CombatFlee.Flee5] = 2;
                     break;
 
-                case AIGroup.EvilAnimal:
+                case AIGroupType.EvilAnimal:
                     target.DictCombatTargeting[CombatTargeting.PlayerAny] = 1;
 
                     target.DictCombatFlee[CombatFlee.Flee10] = 1;
                     target.DictCombatFlee[CombatFlee.Flee5] = 2;
                     break;
 
-                case AIGroup.NeutralAnimal:
+                case AIGroupType.NeutralAnimal:
                     target.DictCombatFlee[CombatFlee.Flee10] = 2;
                     target.DictCombatFlee[CombatFlee.Flee5] = 3;
                     break;
 
-                case AIGroup.GoodAnimal:
+                case AIGroupType.GoodAnimal:
                     target.DictCombatTargeting[CombatTargeting.Evil] = 1;
 
                     target.DictCombatFlee[CombatFlee.Flee10] = 1;
                     target.DictCombatFlee[CombatFlee.Flee5] = 2;
                     break;
 
-                case AIGroup.FactionMonster:
+                case AIGroupType.FactionMonster:
                     break;
 
-                case AIGroup.FactionHuman:
+                case AIGroupType.FactionHuman:
                     target.DictCombatFlee[CombatFlee.Flee50] = 0;
                     target.DictCombatFlee[CombatFlee.Flee25] = 0;
                     target.DictCombatFlee[CombatFlee.Flee10] = 0;
                     target.DictCombatFlee[CombatFlee.Flee5] = 0;
                     break;
 
-                case AIGroup.FactionAnimal:
+                case AIGroupType.FactionAnimal:
                     break;
 
-                case AIGroup.Summoned:
+                case AIGroupType.Summoned:
                     break;
 
-                case AIGroup.Boss:
+                case AIGroupType.Boss:
                     target.DictCombatTargeting[CombatTargeting.PlayerAny] = 1;
                     break;
             }
 
-            //BaseAI AISubgroup
-            switch (target.Subgroup)
+            //AI SubGroup
+            switch (subGroupType)
             {
-                case AISubgroup.None:
+                case AISubGroupType.None:
                     target.DictCombatRange[CombatRange.WeaponAttackRange] = 1;
                     target.DictCombatRange[CombatRange.SpellRange] = 0;
                     target.DictCombatRange[CombatRange.Withdraw] = 0;
@@ -134,9 +141,9 @@ namespace Server
                     target.DictCombatAction[CombatAction.CombatHealOther] = 0;
                     target.DictCombatAction[CombatAction.CombatSpecialAction] = 0;
                     target.DictCombatAction[CombatAction.CombatEpicAction] = 0;
-                break;
+                    break;
 
-                case AISubgroup.MeleeMage1:
+                case AISubGroupType.MeleeMage1:
                     target.SpellDelayMin = 7;
                     target.SpellDelayMax = 8;
 
@@ -176,7 +183,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.MeleeMage2:
+                case AISubGroupType.MeleeMage2:
                     target.SpellDelayMin = 5;
                     target.SpellDelayMax = 7;
 
@@ -216,7 +223,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.MeleeMage3:
+                case AISubGroupType.MeleeMage3:
                     target.SpellDelayMin = 4;
                     target.SpellDelayMax = 5;
 
@@ -256,7 +263,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.MeleeMage4:
+                case AISubGroupType.MeleeMage4:
                     target.SpellDelayMin = 3;
                     target.SpellDelayMax = 4;
 
@@ -296,7 +303,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.MeleeMage5:
+                case AISubGroupType.MeleeMage5:
                     target.SpellDelayMin = 1;
                     target.SpellDelayMax = 2;
 
@@ -336,7 +343,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.MeleeMage6:
+                case AISubGroupType.MeleeMage6:
                     target.SpellDelayMin = .5;
                     target.SpellDelayMax = 1;
 
@@ -376,7 +383,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.Mage1:
+                case AISubGroupType.Mage1:
                     target.SpellDelayMin = 4.5;
                     target.SpellDelayMax = 5.5;
 
@@ -417,7 +424,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.Mage2:
+                case AISubGroupType.Mage2:
                     target.SpellDelayMin = 3.5;
                     target.SpellDelayMax = 4.5;
 
@@ -459,7 +466,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.Mage3:
+                case AISubGroupType.Mage3:
                     target.SpellDelayMin = 2.5;
                     target.SpellDelayMax = 3.5;
 
@@ -501,7 +508,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.Mage4:
+                case AISubGroupType.Mage4:
                     target.SpellDelayMin = 1.5;
                     target.SpellDelayMax = 2.5;
 
@@ -543,7 +550,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.Mage5:
+                case AISubGroupType.Mage5:
                     target.SpellDelayMin = 0.5;
                     target.SpellDelayMax = 1.5;
 
@@ -585,7 +592,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.Mage6:
+                case AISubGroupType.Mage6:
                     target.SpellDelayMin = 0;
                     target.SpellDelayMax = 1;
 
@@ -627,7 +634,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMeleeMage1:
+                case AISubGroupType.GroupHealerMeleeMage1:
                     target.SpellDelayMin = 7;
                     target.SpellDelayMax = 8;
 
@@ -668,7 +675,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureSelf] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMeleeMage2:
+                case AISubGroupType.GroupHealerMeleeMage2:
                     target.SpellDelayMin = 5;
                     target.SpellDelayMax = 7;
 
@@ -715,7 +722,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMeleeMage3:
+                case AISubGroupType.GroupHealerMeleeMage3:
                     target.SpellDelayMin = 4;
                     target.SpellDelayMax = 5;
 
@@ -760,7 +767,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMeleeMage4:
+                case AISubGroupType.GroupHealerMeleeMage4:
                     target.SpellDelayMin = 2;
                     target.SpellDelayMax = 4;
 
@@ -807,7 +814,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMeleeMage5:
+                case AISubGroupType.GroupHealerMeleeMage5:
                     target.SpellDelayMin = 1;
                     target.SpellDelayMax = 2;
 
@@ -854,7 +861,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMeleeMage6:
+                case AISubGroupType.GroupHealerMeleeMage6:
                     target.SpellDelayMin = .5;
                     target.SpellDelayMax = 1;
 
@@ -901,7 +908,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMage1:
+                case AISubGroupType.GroupHealerMage1:
                     target.SpellDelayMin = 4.5;
                     target.SpellDelayMax = 5.5;
 
@@ -950,7 +957,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMage2:
+                case AISubGroupType.GroupHealerMage2:
                     target.SpellDelayMin = 3.5;
                     target.SpellDelayMax = 4.5;
 
@@ -999,7 +1006,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMage3:
+                case AISubGroupType.GroupHealerMage3:
                     target.SpellDelayMin = 2.5;
                     target.SpellDelayMax = 3.5;
 
@@ -1048,7 +1055,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMage4:
+                case AISubGroupType.GroupHealerMage4:
                     target.SpellDelayMin = 1.5;
                     target.SpellDelayMax = 2.5;
 
@@ -1097,7 +1104,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMage5:
+                case AISubGroupType.GroupHealerMage5:
                     target.SpellDelayMin = 0.5;
                     target.SpellDelayMax = 1.5;
 
@@ -1146,7 +1153,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMage6:
+                case AISubGroupType.GroupHealerMage6:
                     target.SpellDelayMin = 0;
                     target.SpellDelayMax = 1;
 
@@ -1195,7 +1202,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupHealerMelee:
+                case AISubGroupType.GroupHealerMelee:
                     target.SpellDelayMin = 5;
                     target.SpellDelayMax = 7;
 
@@ -1224,7 +1231,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.SpellCureOther] = 1;
                     break;
 
-                case AISubgroup.GroupMedicMelee:
+                case AISubGroupType.GroupMedicMelee:
                     target.SpellDelayMin = 2.5;
                     target.SpellDelayMax = 3.5;
 
@@ -1254,7 +1261,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.BandageCureSelf] = 1;
                     break;
 
-                case AISubgroup.GroupMedicRanged:
+                case AISubGroupType.GroupMedicRanged:
                     target.DictCombatRange[CombatRange.WeaponAttackRange] = 20;
                     target.DictCombatRange[CombatRange.Withdraw] = 1;
 
@@ -1280,7 +1287,7 @@ namespace Server
                     target.DictWanderAction[WanderAction.BandageCureSelf] = 1;
                     break;
 
-                case AISubgroup.WanderingHealer:
+                case AISubGroupType.WanderingHealer:
                     target.SpellDelayMin = 1.5;
                     target.SpellDelayMax = 2.5;
 
@@ -1321,7 +1328,7 @@ namespace Server
                     target.DictCombatFlee[CombatFlee.Flee5] = 0;
                     break;
 
-                case AISubgroup.Hunter:
+                case AISubGroupType.Hunter:
                     target.DictCombatRange[CombatRange.WeaponAttackRange] = 20;
                     target.DictCombatRange[CombatRange.Withdraw] = 1;
 
@@ -1334,7 +1341,7 @@ namespace Server
 
                     break;
 
-                case AISubgroup.SuperPredator:
+                case AISubGroupType.SuperPredator:
                     target.SuperPredator = true;
 
                     target.DictCombatTargeting[CombatTargeting.Aggressor] = 3;
@@ -1344,7 +1351,7 @@ namespace Server
                     target.DictCombatFlee[CombatFlee.Flee5] = 1;
                     break;
 
-                case AISubgroup.Predator:
+                case AISubGroupType.Predator:
                     target.Predator = true;
 
                     target.DictCombatTargeting[CombatTargeting.Aggressor] = 2;
@@ -1354,7 +1361,7 @@ namespace Server
                     target.DictCombatFlee[CombatFlee.Flee5] = 2;
                     break;
 
-                case AISubgroup.Prey:
+                case AISubGroupType.Prey:
                     target.Prey = true;
 
                     target.DictCombatFlee[CombatFlee.Flee25] = 1;
@@ -1362,13 +1369,13 @@ namespace Server
                     target.DictCombatFlee[CombatFlee.Flee5] = 5;
                     break;
 
-                case AISubgroup.Berserk:
+                case AISubGroupType.Berserk:
                     target.DictCombatTargeting[CombatTargeting.Any] = 1;
 
                     target.DictCombatTargetingWeight[CombatTargetingWeight.CurrentCombatant] = 10;
-                break;
+                    break;
 
-                case AISubgroup.MeleePotion:
+                case AISubGroupType.MeleePotion:
                     target.DictCombatAction[CombatAction.AttackOnly] = 8;
                     target.DictCombatAction[CombatAction.CombatHealSelf] = 1;
 
@@ -1380,28 +1387,28 @@ namespace Server
                     target.CombatHealActionMaxDelay = 30;
                     break;
 
-                case AISubgroup.Swarm:
+                case AISubGroupType.Swarm:
                     target.DictCombatTargetingWeight[CombatTargetingWeight.MostCombatants] = 10;
                     break;
 
-                case AISubgroup.Duelist:
+                case AISubGroupType.Duelist:
                     target.DictCombatTargetingWeight[CombatTargetingWeight.LeastCombatants] = 10;
                     break;
 
-                case AISubgroup.AntiArmor:
+                case AISubGroupType.AntiArmor:
                     target.DictCombatTargetingWeight[CombatTargetingWeight.HighestArmor] = 10;
                     break;
 
-                case AISubgroup.MageKiller:
+                case AISubGroupType.MageKiller:
                     target.DictCombatTargetingWeight[CombatTargetingWeight.Spellcaster] = 10;
                     break;
 
-                case AISubgroup.Ranged:
+                case AISubGroupType.Ranged:
                     target.DictCombatRange[CombatRange.WeaponAttackRange] = 20;
                     target.DictCombatRange[CombatRange.Withdraw] = 1;
                     break;
 
-                case AISubgroup.Scout:
+                case AISubGroupType.Scout:
                     target.DictCombatRange[CombatRange.WeaponAttackRange] = 20;
                     target.DictCombatRange[CombatRange.Withdraw] = 1;
 
@@ -1417,14 +1424,14 @@ namespace Server
                     target.ResolveAcquireTargetDelay = 1;
                     break;
 
-                case AISubgroup.Thief:
+                case AISubGroupType.Thief:
                     target.DictCombatRange[CombatRange.WeaponAttackRange] = 5;
 
                     target.DictWanderAction[WanderAction.None] = 1;
                     target.DictWanderAction[WanderAction.Stealth] = 3;
                     break;
 
-                case AISubgroup.Assassin:
+                case AISubGroupType.Assassin:
                     target.DictCombatAction[CombatAction.AttackOnly] = 3;
                     target.DictCombatAction[CombatAction.CombatHealSelf] = 3;
                     target.DictCombatAction[CombatAction.CombatSpecialAction] = 3;
@@ -1437,19 +1444,19 @@ namespace Server
                     target.DictWanderAction[WanderAction.Stealth] = 1;
                     break;
 
-                case AISubgroup.Poisoner:
+                case AISubGroupType.Poisoner:
                     target.DictCombatAction[CombatAction.AttackOnly] = 3;
                     target.DictCombatAction[CombatAction.CombatSpecialAction] = 3;
 
                     target.DictCombatSpecialAction[CombatSpecialAction.ApplyWeaponPoison] = 1;
                     break;
 
-                case AISubgroup.Stealther:
+                case AISubGroupType.Stealther:
                     target.DictWanderAction[WanderAction.None] = 1;
                     target.DictWanderAction[WanderAction.Stealth] = 3;
                     break;
 
-                case AISubgroup.Alchemist:
+                case AISubGroupType.Alchemist:
                     target.DictCombatRange[CombatRange.WeaponAttackRange] = 0;
                     target.DictCombatRange[CombatRange.SpellRange] = 20;
                     target.DictCombatRange[CombatRange.Withdraw] = 1;
@@ -1461,12 +1468,12 @@ namespace Server
                     target.DictCombatHealSelf[CombatHealSelf.PotionCureSelf] = 3;
                     break;
 
-                case AISubgroup.Bomber:
+                case AISubGroupType.Bomber:
                     target.DictCombatAction[CombatAction.AttackOnly] = 5;
                     target.DictCombatAction[CombatAction.CombatSpecialAction] = 1;
                     break;
 
-                case AISubgroup.GuardMelee:
+                case AISubGroupType.GuardMelee:
                     target.DictCombatTargeting[CombatTargeting.PlayerCriminal] = 10;
                     target.DictCombatTargetingWeight[CombatTargetingWeight.Closest] = 5;
                     target.DictCombatTargetingWeight[CombatTargetingWeight.HighestArmor] = 5;
@@ -1487,7 +1494,7 @@ namespace Server
                     target.DictCombatFlee[CombatFlee.Flee5] = 0;
                     break;
 
-                case AISubgroup.GuardRanged:
+                case AISubGroupType.GuardRanged:
                     target.DictCombatTargeting[CombatTargeting.PlayerCriminal] = 10;
                     target.DictCombatTargetingWeight[CombatTargetingWeight.Closest] = 7;
                     target.DictCombatTargetingWeight[CombatTargetingWeight.LowestArmor] = 5;
@@ -1509,7 +1516,7 @@ namespace Server
                     target.DictCombatFlee[CombatFlee.Flee5] = 0;
                     break;
 
-                case AISubgroup.Dispeller:
+                case AISubGroupType.Dispeller:
                     target.SpellDelayMin = 2.5;
                     target.SpellDelayMax = 3.5;
 
@@ -1523,7 +1530,7 @@ namespace Server
                     target.DictCombatSpell[CombatSpell.SpellDispelSummon] = 10;
                     break;
 
-                case AISubgroup.Sailor:
+                case AISubGroupType.Sailor:
                     target.DictCombatFlee[CombatFlee.Flee10] = 0;
                     target.DictCombatFlee[CombatFlee.Flee5] = 0;
 
@@ -1535,9 +1542,9 @@ namespace Server
 
                     target.DictCombatHealSelf[CombatHealSelf.PotionHealSelf50] = 1;
                     target.DictCombatHealSelf[CombatHealSelf.PotionCureSelf] = 5;
-                break;
+                    break;
 
-                case AISubgroup.ShipCaptain:
+                case AISubGroupType.ShipCaptain:
                     target.DictCombatFlee[CombatFlee.Flee10] = 0;
                     target.DictCombatFlee[CombatFlee.Flee5] = 0;
 
@@ -1549,7 +1556,7 @@ namespace Server
 
                     target.DictCombatHealSelf[CombatHealSelf.PotionHealSelf75] = 1;
                     target.DictCombatHealSelf[CombatHealSelf.PotionCureSelf] = 5;
-                break;
+                    break;
             }
         }
     }

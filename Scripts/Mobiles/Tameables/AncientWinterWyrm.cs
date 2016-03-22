@@ -85,7 +85,7 @@ namespace Server.Mobiles
 
         public override void SetTamedAI()
         {
-            SetSubGroup(AISubgroup.MeleeMage2);
+            AISubGroup = AISubGroupType.MeleeMage2;
             UpdateAI(false);
 
             MassiveBreathRange = 6;

@@ -14,12 +14,6 @@ namespace Server.Items
 		public ColdBlood()
 		{
 			Hue = 0x4F2;
-
-			Attributes.WeaponSpeed = 40;
-
-			Attributes.BonusHits = 6;
-			Attributes.BonusStam = 6;
-			Attributes.BonusMana = 6;
 		}
 
 		public override void GetDamageTypes( Mobile wielder, out int phys, out int fire, out int cold, out int pois, out int nrgy, out int chaos, out int direct )

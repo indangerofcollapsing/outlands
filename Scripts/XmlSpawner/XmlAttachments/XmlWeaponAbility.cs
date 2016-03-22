@@ -9,46 +9,15 @@ namespace Server.Engines.XmlSpawner2
 {
 	public class XmlWeaponAbility : XmlAttachment
 	{
-		private WeaponAbility m_Ability = null;    // default data
-
-		public WeaponAbility WeaponAbility
-		{
-			get { return m_Ability;  }
-			set { m_Ability = value;  }
-		}
-
 		[CommandProperty( AccessLevel.GameMaster )]
 		public string Ability 
 		{ 
 			get 
-			{
-				if (m_Ability != null)
-				{
-					return m_Ability.GetType().Name;
-				}
-				else
-				{
-					return null;
-				}
+			{			
+				return null;				
 			} 
 			set 
 			{
-				if (value != null)
-				{
-					FieldInfo finfo = typeof(WeaponAbility).GetField(value);
-					if (finfo != null && finfo.IsStatic && finfo.FieldType == typeof(WeaponAbility))
-					{
-						try
-						{
-							m_Ability = (WeaponAbility)finfo.GetValue(null);
-						}
-						catch { }
-					}
-				}
-				else
-				{
-					m_Ability = null;
-				}
 			} 
 		}
 

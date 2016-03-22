@@ -129,7 +129,7 @@ namespace Server.Items
                 Type resourceType = info.ResourceTypes[ 0 ];
                 Item ingot = (Item)Activator.CreateInstance( resourceType );
 
-                if( item is DragonBardingDeed || ( item is BaseArmor && ( (BaseArmor)item ).PlayerConstructed ) || ( item is BaseWeapon && ( (BaseWeapon)item ).PlayerConstructed ) || ( item is BaseClothing && ( (BaseClothing)item ).PlayerConstructed ) )
+                if( item.CrafterName != null && (item is BaseArmor || item is BaseWeapon ||item is BaseClothing) )
 					{
 						double mining = from.Skills[ SkillName.Mining ].Value;
 						if( mining > 100.0 )

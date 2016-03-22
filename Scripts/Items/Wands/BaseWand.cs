@@ -23,24 +23,14 @@ namespace Server.Items
         ArmsLore
     }
 
-    public abstract class BaseWand : BaseBashing, ITokunoDyable
+    public abstract class BaseWand : BaseBashing
     {
-        public override WeaponAbility PrimaryAbility { get { return WeaponAbility.Dismount; } }
-        public override WeaponAbility SecondaryAbility { get { return WeaponAbility.Disarm; } }
+        public override int BaseMinDamage { get { return 1; } }
+        public override int BaseMaxDamage { get { return 2; } }
+        public override int BaseSpeed { get { return 40; } }
 
-        public override int AosStrengthReq { get { return 5; } }
-        public override int AosMinDamage { get { return 9; } }
-        public override int AosMaxDamage { get { return 11; } }
-        public override int AosSpeed { get { return 40; } }
-        public override float MlSpeed { get { return 2.75f; } }
-
-        public override int OldStrengthReq { get { return 0; } }
-        public override int OldMinDamage { get { return 2; } }
-        public override int OldMaxDamage { get { return 6; } }
-        public override int OldSpeed { get { return 35; } }
-
-        public override int InitMinHits { get { return 31; } }
-        public override int InitMaxHits { get { return 110; } }
+        public override int InitMinHits { get { return 40; } }
+        public override int InitMaxHits { get { return 60; } }
 
         private WandEffect m_WandEffect;
         private int m_Charges;
@@ -67,9 +57,6 @@ namespace Server.Items
             Weight = 1.0;
             Effect = effect;
             Charges = Utility.RandomMinMax(minCharges, maxCharges);
-            Attributes.SpellChanneling = 1;
-            Attributes.CastSpeed = -1;
-            WeaponAttributes.MageWeapon = Utility.RandomMinMax(1, 10);
         }
 
         public void ConsumeCharge(Mobile from)
@@ -214,16 +201,17 @@ namespace Server.Items
             {
                 number = 1017085;
             }
+
             else
             {
                 this.LabelTo(from, Name);
                 number = 1041000;
             }
 
-            if (attrs.Count == 0 && Crafter == null && Name != null)
-                return;
+            //if (attrs.Count == 0 && Crafter == null && Name != null)
+                //return;
 
-            EquipmentInfo eqInfo = new EquipmentInfo(number, Crafter, false, (EquipInfoAttribute[])attrs.ToArray(typeof(EquipInfoAttribute)));
+            EquipmentInfo eqInfo = new EquipmentInfo(number, CraftedBy, false, (EquipInfoAttribute[])attrs.ToArray(typeof(EquipInfoAttribute)));
 
             from.Send(new DisplayEquipmentInfo(this, eqInfo));
         }

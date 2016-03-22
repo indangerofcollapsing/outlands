@@ -56,99 +56,6 @@ namespace Server.Spells.Necromancy
 			}
 		}
 
-		private static CreatureGroup FindGroup( Type type )
-		{
-			for ( int i = 0; i < m_Groups.Length; ++i )
-			{
-				CreatureGroup group = m_Groups[i];
-				Type[] types = group.m_Types;
-
-				bool contains = ( types.Length == 0 );
-
-				for ( int j = 0; !contains && j < types.Length; ++j )
-					contains = types[j].IsAssignableFrom( type );
-
-				if ( contains )
-					return group;
-			}
-
-			return null;
-		}
-
-		private static CreatureGroup[] m_Groups = new CreatureGroup[]
-			{
-				// Undead group--empty
-				new CreatureGroup( SlayerGroup.GetEntryByName( SlayerName.Silver ).Types, new SummonEntry[0] ),
-				// Insects
-				new CreatureGroup( new Type[]
-				{
-					typeof( DreadSpider ), typeof( FrostSpider ), typeof( GiantSpider ), typeof( GiantBlackWidow ),
-					typeof( BlackSolenInfiltratorQueen ), typeof( BlackSolenInfiltratorWarrior ),
-					typeof( BlackSolenQueen ), typeof( BlackSolenWarrior ), typeof( BlackSolenWorker ),
-					typeof( RedSolenInfiltratorQueen ), typeof( RedSolenInfiltratorWarrior ),
-					typeof( RedSolenQueen ), typeof( RedSolenWarrior ), typeof( RedSolenWorker ),
-					typeof( TerathanAvenger ), typeof( TerathanDrone ), typeof( TerathanMatriarch ),
-					typeof( TerathanWarrior )
-					// TODO: Giant beetle? Ant lion? Ophidians?
-				},
-				new SummonEntry[]
-				{
-					new SummonEntry( 0, typeof( MoundOfMaggots ) )
-				} ),
-				// Mounts
-				new CreatureGroup( new Type[]
-				{
-					typeof( Horse ), typeof( Nightmare ), typeof( FireSteed ),
-					typeof( Kirin ), typeof( Unicorn )
-				}, new SummonEntry[]
-				{
-					new SummonEntry( 10000, typeof( HellSteed ) ),
-					new SummonEntry(     0, typeof( SkeletalMount ) )
-				} ),
-				// Elementals
-				new CreatureGroup( new Type[]
-				{
-					typeof( BloodElemental ), typeof( EarthElemental ), typeof( SummonedEarthElemental ),
-					typeof( AgapiteElemental ), typeof( BronzeElemental ), typeof( CopperElemental ),
-					typeof( DullCopperElemental ), typeof( GoldenElemental ), typeof( ShadowIronElemental ),
-					typeof( ValoriteElemental ), typeof( VeriteElemental ), typeof( PoisonElemental ),
-					typeof( FireElemental ), typeof( SummonedFireElemental ), typeof( SnowElemental ),
-					typeof( AirElemental ), typeof( SummonedAirElemental ), typeof( WaterElemental ),
-					typeof( SummonedAirElemental ), typeof ( AcidElemental )
-				}, new SummonEntry[]
-				{
-					new SummonEntry( 5000, typeof( WailingBanshee ) ),
-					new SummonEntry(    0, typeof( Wraith ) )
-				} ),
-				// Dragons
-				new CreatureGroup( new Type[]
-				{
-					typeof( AncientWyrm ), typeof( Dragon ), typeof( GreaterDragon ), typeof( SerpentineDragon ),
-					typeof( ShadowWyrm ), typeof( SkeletalDragon ), typeof( WhiteWyrm ),
-					typeof( Drake ), typeof( Wyvern ), typeof( LesserHiryu ), typeof( Hiryu )
-				}, new SummonEntry[]
-				{
-					new SummonEntry( 18000, typeof( SkeletalDragon ) ),
-					new SummonEntry( 10000, typeof( FleshGolem ) ),
-					new SummonEntry(  5000, typeof( Lich ) ),
-					new SummonEntry(  3000, typeof( SkeletalKnight ), typeof( BoneKnight ) ),
-					new SummonEntry(  2000, typeof( Mummy ) ),
-					new SummonEntry(  1000, typeof( SkeletalMage ), typeof( BoneMagi ) ),
-					new SummonEntry(     0, typeof( PatchworkSkeleton ) )
-				} ),
-				// Default group
-				new CreatureGroup( new Type[0], new SummonEntry[]
-				{
-					new SummonEntry( 18000, typeof( LichLord ) ),
-					new SummonEntry( 10000, typeof( FleshGolem ) ),
-					new SummonEntry(  5000, typeof( Lich ) ),
-					new SummonEntry(  3000, typeof( SkeletalKnight ), typeof( BoneKnight ) ),
-					new SummonEntry(  2000, typeof( Mummy ) ),
-					new SummonEntry(  1000, typeof( SkeletalMage ), typeof( BoneMagi ) ),
-					new SummonEntry(     0, typeof( PatchworkSkeleton ) )
-				} ),
-			};
-
 		public void Target( object obj )
 		{
 			Corpse c = obj as Corpse;
@@ -170,30 +77,9 @@ namespace Server.Spells.Necromancy
 				{
 					Caster.SendLocalizedMessage( 1061085 ); // There's not enough life force there to animate.
 				}
+
 				else
-				{
-					CreatureGroup group = FindGroup( type );
-
-					if( group != null )
-					{
-						if( group.m_Entries.Length == 0 || type == typeof( DemonKnight ) )
-						{
-							Caster.SendLocalizedMessage( 1061086 ); // You cannot animate undead remains.
-						}
-						else if( CheckSequence() )
-						{
-							Point3D p = c.GetWorldLocation();
-							Map map = c.Map;
-
-							if( map != null )
-							{
-								Effects.PlaySound( p, map, 0x1FB );
-								Effects.SendLocationParticles( EffectItem.Create( p, map, EffectItem.DefaultDuration ), 0x3789, 1, 40, 0x3F, 3, 9907, 0 );
-
-								Timer.DelayCall( TimeSpan.FromSeconds( 2.0 ), new TimerStateCallback( SummonDelay_Callback ), new object[] { Caster, c, p, map, group } );
-							}
-						}
-					}
+				{					
 				}
 			}
 

@@ -7850,10 +7850,7 @@ namespace Server.Mobiles
 
             if (weapon == null)
                 return null;
-
-            if (0.05 > Utility.RandomDouble())
-                weapon.Slayer = SlayerName.Silver;
-
+            
             weapon.DamageLevel = (WeaponDamageLevel)BaseCreature.RandomMinMaxScaled(minLevel, maxLevel);
             weapon.AccuracyLevel = (WeaponAccuracyLevel)BaseCreature.RandomMinMaxScaled(minLevel, maxLevel);
             weapon.DurabilityLevel = (WeaponDurabilityLevel)BaseCreature.RandomMinMaxScaled(minLevel, maxLevel);

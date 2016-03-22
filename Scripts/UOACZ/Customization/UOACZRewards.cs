@@ -259,9 +259,7 @@ namespace Server.Custom
                         weapon.AccuracyLevel = (WeaponAccuracyLevel)accuracyLevel;
                         weapon.DamageLevel = (WeaponDamageLevel)damageLevel;
                         weapon.DurabilityLevel = (WeaponDurabilityLevel)durabilityLevel;
-
-                        weapon.Slayer = SlayerName.Silver;
-
+                        
                         madePurchase = true;
 
                         player.Backpack.DropItem(weapon);

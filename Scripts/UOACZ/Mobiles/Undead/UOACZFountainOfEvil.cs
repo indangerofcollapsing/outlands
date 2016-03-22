@@ -63,7 +63,7 @@ namespace Server
 
         public override void SetUniqueAI()
         {
-            SetSubGroup(AISubgroup.MeleeMage2);
+            AISubGroup = AISubGroupType.MeleeMage2;
             UpdateAI(false);
 
             base.SetUniqueAI();

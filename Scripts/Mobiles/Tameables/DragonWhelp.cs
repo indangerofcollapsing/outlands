@@ -81,7 +81,7 @@ namespace Server.Mobiles
 
         public override void SetTamedAI()
         {   
-            SetSubGroup(AISubgroup.MeleeMage1);
+            AISubGroup = AISubGroupType.MeleeMage1;
             UpdateAI(false);
 
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;

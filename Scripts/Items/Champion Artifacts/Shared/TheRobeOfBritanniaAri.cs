@@ -12,8 +12,6 @@ namespace Server.Items
 		public override int InitMinHits{ get{ return 150; } }
 		public override int InitMaxHits{ get{ return 150; } }
 
-		public override bool CanFortify{ get{ return false; } }
-
 		[Constructable]
 		public TheRobeOfBritanniaAri() : base( 0x2684 )
 		{

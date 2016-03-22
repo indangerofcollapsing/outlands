@@ -69,7 +69,7 @@ namespace Server.Mobiles
 
         public override void SetTamedAI()
         {
-            SetSubGroup(AISubgroup.Mage2);
+            AISubGroup = AISubGroupType.Mage2;
             UpdateAI(false);
 
             DictCombatRange[CombatRange.Withdraw] = 0;
