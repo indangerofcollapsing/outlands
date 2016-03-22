@@ -34,25 +34,26 @@ namespace Server.Engines.Craft
 			from.CloseGump( typeof( CraftGumpItem ) );
 
 			AddPage( 0 );
+
 			AddBackground( 0, 0, 530, 417, 5054 );
 			AddImageTiled( 10, 10, 510, 22, 2624 );
 			AddImageTiled( 10, 37, 150, 148, 2624 );
-			AddImageTiled( 165, 37, 355, 90, 2624 );
+			
 			AddImageTiled( 10, 190, 155, 22, 2624 );
-			AddImageTiled( 10, 217, 150, 53, 2624 );
-			AddImageTiled( 165, 132, 355, 80, 2624 );
-			AddImageTiled( 10, 275, 155, 22, 2624 );
-			AddImageTiled( 10, 302, 150, 53, 2624 );
-			AddImageTiled( 165, 217, 355, 80, 2624 );
-			AddImageTiled( 10, 360, 155, 22, 2624 );
-			AddImageTiled( 165, 302, 355, 80, 2624 );
-			AddImageTiled( 10, 387, 510, 22, 2624 );
+            AddImageTiled( 10, 217, 150, 53, 2624 );
+			AddImageTiled( 10, 275, 155, 52, 2624 );
+            AddImageTiled( 10, 330, 510, 50, 2624);
+            AddImageTiled( 10, 387, 510, 22, 2624);
+
+            AddImageTiled( 165, 37, 355, 115, 2624);
+            AddImageTiled( 165, 155, 355, 57, 2624);
+			AddImageTiled( 165, 217, 355, 110, 2624 );
+			
 			AddAlphaRegion( 10, 10, 510, 399 );
 
 			AddHtmlLocalized( 170, 40, 150, 20, 1044053, LabelColor, false, false ); // ITEM
 			AddHtmlLocalized( 10, 192, 150, 22, 1044054, LabelColor, false, false ); // <CENTER>SKILLS</CENTER>
 			AddHtmlLocalized( 10, 277, 150, 22, 1044055, LabelColor, false, false ); // <CENTER>MATERIALS</CENTER>
-			AddHtmlLocalized( 10, 362, 150, 22, 1044056, LabelColor, false, false ); // <CENTER>OTHER</CENTER>
 
 			if ( craftSystem.GumpTitleNumber > 0 )
 				AddHtmlLocalized( 10, 12, 510, 20, craftSystem.GumpTitleNumber, LabelColor, false, false );
@@ -81,7 +82,7 @@ namespace Server.Engines.Craft
 				AddLabel( 330, 40, LabelHue, craftItem.NameString );
 
 			if ( craftItem.UseAllRes )
-				AddHtmlLocalized( 170, 302 + (m_OtherCount++ * 20), 310, 18, 1048176, LabelColor, false, false ); // Makes as many as possible at once
+				AddHtmlLocalized( 20, 335 + (m_OtherCount++ * 20), 310, 18, 1048176, LabelColor, false, false ); // Makes as many as possible at once
 
 			DrawItem();
 			DrawSkill();
@@ -95,12 +96,11 @@ namespace Server.Engines.Craft
 			if( craftItem.RequiredExpansion != Expansion.None )
 			{
 				bool supportsEx = (from.NetState != null && from.NetState.SupportsExpansion( craftItem.RequiredExpansion ));
-				TextDefinition.AddHtmlText( this, 170, 302 + (m_OtherCount++ * 20), 310, 18, RequiredExpansionMessage( craftItem.RequiredExpansion ), false, false, supportsEx ? LabelColor : RedLabelColor, supportsEx ? LabelHue : RedLabelHue );
+				TextDefinition.AddHtmlText( this, 20, 335 + (m_OtherCount++ * 20), 310, 18, RequiredExpansionMessage( craftItem.RequiredExpansion ), false, false, supportsEx ? LabelColor : RedLabelColor, supportsEx ? LabelHue : RedLabelHue );
 			}
 
 			if( needsRecipe )
-				AddHtmlLocalized( 170, 302 + (m_OtherCount++ * 20), 310, 18, 1073620, RedLabelColor, false, false ); // You have not learned this recipe.
-
+				AddHtmlLocalized( 20, 335 + (m_OtherCount++ * 20), 310, 18, 1073620, RedLabelColor, false, false ); // You have not learned this recipe.
 		}
 
 		private TextDefinition RequiredExpansionMessage( Expansion expansion )
@@ -126,7 +126,7 @@ namespace Server.Engines.Craft
 
 			if ( m_CraftItem.IsMarkable( type ) )
 			{
-				AddHtmlLocalized( 170, 302 + (m_OtherCount++ * 20), 310, 18, 1044059, LabelColor, false, false ); // This item may hold its maker's mark
+				AddHtmlLocalized( 20, 335 + (m_OtherCount++ * 20), 310, 18, 1044059, LabelColor, false, false ); // This item may hold its maker's mark
 				m_ShowExceptionalChance = true;
 			}
 		}
@@ -141,8 +141,8 @@ namespace Server.Engines.Craft
 				if ( minSkill < 0 )
 					minSkill = 0;
 
-				AddHtmlLocalized( 170, 132 + (i * 20), 200, 18, AosSkillBonuses.GetLabel( skill.SkillToMake ), LabelColor, false, false );
-				AddLabel( 430, 132 + (i * 20), LabelHue, String.Format( "{0:F1}", minSkill ) );
+				AddHtmlLocalized( 170, 155 + (i * 20), 200, 18, AosSkillBonuses.GetLabel( skill.SkillToMake ), LabelColor, false, false );
+				AddLabel( 430, 155 + (i * 20), LabelHue, String.Format( "{0:F1}", minSkill ) );
 			}
 
 			CraftSubResCol res = ( m_CraftItem.UseSubRes2 ? m_CraftSystem.CraftSubRes2 : m_CraftSystem.CraftSubRes );
@@ -154,27 +154,40 @@ namespace Server.Engines.Craft
 				resIndex = ( m_CraftItem.UseSubRes2 ? context.LastResourceIndex2 : context.LastResourceIndex );
 
 			bool allRequiredSkills = true;
-			double chance = m_CraftItem.GetSuccessChance( m_From, resIndex > -1 ? res.GetAt( resIndex ).ItemType : null, m_CraftSystem, false, ref allRequiredSkills );
+			
+            double chance = m_CraftItem.GetSuccessChance( m_From, resIndex > -1 ? res.GetAt( resIndex ).ItemType : null, m_CraftSystem, false, ref allRequiredSkills );
 			double excepChance = m_CraftItem.GetExceptionalChance( m_CraftSystem, chance, m_From );
 
 			if ( chance < 0.0 )
 				chance = 0.0;
+
 			else if ( chance > 1.0 )
 				chance = 1.0;
 
-			AddHtmlLocalized( 170, 80, 250, 18, 1044057, LabelColor, false, false ); // Success Chance:
-			AddLabel( 430, 80, LabelHue, String.Format( "{0:F1}%", chance * 100 ) );
+            int startY = 80;
+
+            AddHtmlLocalized(170, startY, 250, 18, 1044057, LabelColor, false, false); // Success Chance:
+            AddLabel(430, startY, LabelHue, String.Format("{0:F1}%", chance * 100));
+
+            startY += 20;
 
 			if ( m_ShowExceptionalChance )
 			{
 				if( excepChance < 0.0 )
 					excepChance = 0.0;
 				else if( excepChance > 1.0 )
-					excepChance = 1.0;
+					excepChance = 1.0;               
 
-				AddHtmlLocalized( 170, 100, 250, 18, 1044058, 32767, false, false ); // Exceptional Chance:
-				AddLabel( 430, 100, LabelHue, String.Format( "{0:F1}%", excepChance * 100 ) );
+                AddHtmlLocalized(170, startY, 250, 18, 1044058, 32767, false, false); // Exceptional Chance:
+                AddLabel(430, startY, LabelHue, String.Format("{0:F1}%", excepChance * 100));
+
+                startY += 20;
 			}
+
+            bool skillGainPossible = true;
+
+            if (skillGainPossible)
+                AddLabel(169, startY, 2599, "Skill Gain Possible");            
 		}
 
 		private static Type typeofBlankScroll = typeof( BlankScroll );
@@ -226,7 +239,7 @@ namespace Server.Engines.Craft
 				if ( !retainedColor && m_CraftItem.RetainsColorFrom( m_CraftSystem, type ) )
 				{
 					retainedColor = true;
-					AddHtmlLocalized( 170, 302 + (m_OtherCount++ * 20), 310, 18, 1044152, LabelColor, false, false ); // * The item retains the color of this material
+					AddHtmlLocalized( 20, 335 + (m_OtherCount++ * 20), 310, 18, 1044152, LabelColor, false, false ); // * The item retains the color of this material
 					AddLabel( 500, 219 + (i * 20), LabelHue, "*" );
 				}
 
@@ -245,7 +258,7 @@ namespace Server.Engines.Craft
 			}
 
 			if ( cropScroll )
-				AddHtmlLocalized( 170, 302 + (m_OtherCount++ * 20), 360, 18, 1044379, LabelColor, false, false ); // Inscribing scrolls also requires a blank scroll and mana.
+				AddHtmlLocalized( 20, 335 + (m_OtherCount++ * 20), 360, 18, 1044379, LabelColor, false, false ); // Inscribing scrolls also requires a blank scroll and mana.
 		}
 
 		public override void OnResponse( NetState sender, RelayInfo info )
