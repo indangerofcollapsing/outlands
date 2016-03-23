@@ -2426,7 +2426,7 @@
     <Compile Include="Engines\Craft\Core\QueryMakersMarkGump.cs" />
     <Compile Include="Engines\Craft\Core\Recipes.cs" />
     <Compile Include="Engines\Craft\Core\Repair.cs" />
-    <Compile Include="Engines\Craft\Core\Resmelt.cs" />
+    <Compile Include="Engines\Craft\Core\Recycle.cs" />
     <Compile Include="Engines\Craft\DefAlchemy.cs" />
     <Compile Include="Engines\Craft\DefBlacksmithy.cs" />
     <Compile Include="Engines\Craft\DefBowFletching.cs" />

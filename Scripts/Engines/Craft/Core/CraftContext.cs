@@ -11,6 +11,13 @@ namespace Server.Engines.Craft
 		PromptForMark
 	}
 
+    public enum CraftRecycleOption
+    {
+        RecycleItem,
+        RecycleAllNonExceptional,
+        RecycleAll
+    }
+
 	public class CraftContext
 	{
 		private List<CraftItem> m_Items;
@@ -20,12 +27,18 @@ namespace Server.Engines.Craft
 		private bool m_DoNotColor;
 		private CraftMarkOption m_MarkOption;
 
+        private CraftRecycleOption m_RecycleOption;
+        private bool m_HighlightSkillGainItems = true;
+
 		public List<CraftItem> Items { get { return m_Items; } }
 		public int LastResourceIndex{ get{ return m_LastResourceIndex; } set{ m_LastResourceIndex = value; } }
 		public int LastResourceIndex2{ get{ return m_LastResourceIndex2; } set{ m_LastResourceIndex2 = value; } }
 		public int LastGroupIndex{ get{ return m_LastGroupIndex; } set{ m_LastGroupIndex = value; } }
 		public bool DoNotColor{ get{ return m_DoNotColor; } set{ m_DoNotColor = value; } }
 		public CraftMarkOption MarkOption{ get{ return m_MarkOption; } set{ m_MarkOption = value; } }
+
+        public CraftRecycleOption RecycleOption { get { return m_RecycleOption; } set { m_RecycleOption = value; } }
+        public bool HighlightSkillGainItems { get { return m_HighlightSkillGainItems; } set { m_HighlightSkillGainItems = value; } }
 
 		public CraftContext()
 		{

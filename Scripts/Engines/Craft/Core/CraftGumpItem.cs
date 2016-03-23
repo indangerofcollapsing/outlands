@@ -55,6 +55,10 @@ namespace Server.Engines.Craft
 			AddHtmlLocalized( 10, 192, 150, 22, 1044054, LabelColor, false, false ); // <CENTER>SKILLS</CENTER>
 			AddHtmlLocalized( 10, 277, 150, 22, 1044055, LabelColor, false, false ); // <CENTER>MATERIALS</CENTER>
 
+            //Guide
+            AddButton(10, 0, 2094, 2095, 1000, GumpButtonType.Reply, 0);
+            AddLabel(35, 5, LabelHue, "Guide");
+
 			if ( craftSystem.GumpTitleNumber > 0 )
 				AddHtmlLocalized( 10, 12, 510, 20, craftSystem.GumpTitleNumber, LabelColor, false, false );
 			else
@@ -70,6 +74,7 @@ namespace Server.Engines.Craft
 				AddButton( 270, 387, 4005, 4007, 0, GumpButtonType.Page, 0 );
 				AddHtmlLocalized( 305, 390, 150, 18, 1044151, GreyLabelColor, false, false ); // MAKE NOW
 			}
+
 			else
 			{
 				AddButton( 270, 387, 4005, 4007, 1, GumpButtonType.Reply, 0 );
@@ -78,6 +83,7 @@ namespace Server.Engines.Craft
 
 			if ( craftItem.NameNumber > 0 )
 				AddHtmlLocalized( 330, 40, 180, 18, craftItem.NameNumber, LabelColor, false, false );
+
 			else
 				AddLabel( 330, 40, LabelHue, craftItem.NameString );
 
@@ -87,11 +93,6 @@ namespace Server.Engines.Craft
 			DrawItem();
 			DrawSkill();
 			DrawResource();
-
-			/*
-			if( craftItem.RequiresSE )
-				AddHtmlLocalized( 170, 302 + (m_OtherCount++ * 20), 310, 18, 1063363, LabelColor, false, false ); //* Requires the "Samurai Empire" expansion
-			 * */
 
 			if( craftItem.RequiredExpansion != Expansion.None )
 			{
@@ -234,7 +235,6 @@ namespace Server.Engines.Craft
 					if ( nameNumber <= 0 )
 						nameNumber = subResource.NameNumber;
 				}
-				// ******************
 
 				if ( !retainedColor && m_CraftItem.RetainsColorFrom( m_CraftSystem, type ) )
 				{
@@ -245,6 +245,7 @@ namespace Server.Engines.Craft
 
 				if ( nameNumber > 0 )
 					AddHtmlLocalized( 170, 219 + (i * 20), 310, 18, nameNumber, LabelColor, false, false );
+
 				else
 					AddLabel( 170, 219 + (i * 20), LabelHue, nameString );
 
@@ -263,38 +264,49 @@ namespace Server.Engines.Craft
 
 		public override void OnResponse( NetState sender, RelayInfo info )
 		{
-			// Back Button
+			//Back
 			if ( info.ButtonID == 0 )
 			{
 				CraftGump craftGump = new CraftGump( m_From, m_CraftSystem, m_Tool, null );
 				m_From.SendGump( craftGump );
 			}
-			else // Make Button
-			{
-				int num = m_CraftSystem.CanCraft( m_From, m_Tool, m_CraftItem.ItemType );
 
-				if ( num > 0 )
-				{
-					m_From.SendGump( new CraftGump( m_From, m_CraftSystem, m_Tool, num ) );
-				}
-				else
-				{
-					Type type = null;
+            //Guide
+            else if (info.ButtonID == 1000)
+            {
+                string url = "http://www.uoancorp.com";
+                sender.Mobile.LaunchBrowser(url);
 
-					CraftContext context = m_CraftSystem.GetContext( m_From );
+                m_From.SendGump(new CraftGumpItem(m_From, m_CraftSystem, m_CraftItem, m_Tool));
+                return;
+            }
 
-					if ( context != null )
-					{
-						CraftSubResCol res = ( m_CraftItem.UseSubRes2 ? m_CraftSystem.CraftSubRes2 : m_CraftSystem.CraftSubRes );
-						int resIndex = ( m_CraftItem.UseSubRes2 ? context.LastResourceIndex2 : context.LastResourceIndex );
+            //Make
+            else 
+            {
+                int num = m_CraftSystem.CanCraft(m_From, m_Tool, m_CraftItem.ItemType);
 
-						if ( resIndex > -1 )
-							type = res.GetAt( resIndex ).ItemType;
-					}
+                if (num > 0)
+                    m_From.SendGump(new CraftGump(m_From, m_CraftSystem, m_Tool, num));
 
-					m_CraftSystem.CreateItem( m_From, m_CraftItem.ItemType, type, m_Tool, m_CraftItem );
-				}
-			}
+                else
+                {
+                    Type type = null;
+
+                    CraftContext context = m_CraftSystem.GetContext(m_From);
+
+                    if (context != null)
+                    {
+                        CraftSubResCol res = (m_CraftItem.UseSubRes2 ? m_CraftSystem.CraftSubRes2 : m_CraftSystem.CraftSubRes);
+                        int resIndex = (m_CraftItem.UseSubRes2 ? context.LastResourceIndex2 : context.LastResourceIndex);
+
+                        if (resIndex > -1)
+                            type = res.GetAt(resIndex).ItemType;
+                    }
+
+                    m_CraftSystem.CreateItem(m_From, m_CraftItem.ItemType, type, m_Tool, m_CraftItem);
+                }
+            }
 		}
 	}
 }
