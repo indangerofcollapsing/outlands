@@ -417,16 +417,6 @@ namespace Server.Items
                 new CraftResourceInfo( 2603,  1053101, "Lunite",		CraftAttributeInfo.Lunite,	    CraftResource.Lunite,			typeof( LuniteIngot ),	    typeof( LuniteOre ),		typeof( ValoriteGranite ) ),
 			};
 
-		private static CraftResourceInfo[] m_ScaleInfo = new CraftResourceInfo[]
-			{
-				new CraftResourceInfo( 0x66D, 1053129, "Red Scales",	CraftAttributeInfo.RedScales,		CraftResource.RedScales,		typeof( RedScales ) ),
-				new CraftResourceInfo( 0x8A8, 1053130, "Yellow Scales",	CraftAttributeInfo.YellowScales,	CraftResource.YellowScales,		typeof( YellowScales ) ),
-				new CraftResourceInfo( 0x455, 1053131, "Black Scales",	CraftAttributeInfo.BlackScales,		CraftResource.BlackScales,		typeof( BlackScales ) ),
-				new CraftResourceInfo( 0x851, 1053132, "Green Scales",	CraftAttributeInfo.GreenScales,		CraftResource.GreenScales,		typeof( GreenScales ) ),
-				new CraftResourceInfo( 0x8FD, 1053133, "White Scales",	CraftAttributeInfo.WhiteScales,		CraftResource.WhiteScales,		typeof( WhiteScales ) ),
-				new CraftResourceInfo( 0x8B0, 1053134, "Blue Scales",	CraftAttributeInfo.BlueScales,		CraftResource.BlueScales,		typeof( BlueScales ) )
-			};
-
 		private static CraftResourceInfo[] m_LeatherInfo = new CraftResourceInfo[]
 			{
 				new CraftResourceInfo( 0x000, 1049353, "Normal",		CraftAttributeInfo.Blank,		CraftResource.RegularLeather,	typeof( Leather ),			typeof( Hides ) ),
@@ -502,7 +492,6 @@ namespace Server.Items
 			{
 				case CraftResourceType.Metal: list = m_MetalInfo; break;
 				case CraftResourceType.Leather: list = Core.AOS ? m_AOSLeatherInfo : m_LeatherInfo; break;
-				case CraftResourceType.Scales: list = m_ScaleInfo; break;
 				case CraftResourceType.Wood: list = m_WoodInfo; break;
 			}
 
@@ -527,10 +516,7 @@ namespace Server.Items
 
 			if ( resource >= CraftResource.RegularLeather && resource <= CraftResource.BarbedLeather )
 				return CraftResourceType.Leather;
-
-			if ( resource >= CraftResource.RedScales && resource <= CraftResource.BlueScales )
-				return CraftResourceType.Scales;
-
+            
 			if ( resource >= CraftResource.RegularWood && resource <= CraftResource.Frostwood )
 				return CraftResourceType.Wood;
 
@@ -546,7 +532,6 @@ namespace Server.Items
 			{
 				case CraftResourceType.Metal: return CraftResource.Iron;
 				case CraftResourceType.Leather: return CraftResource.RegularLeather;
-				case CraftResourceType.Scales: return CraftResource.RedScales;
 				case CraftResourceType.Wood: return CraftResource.RegularWood;
 			}
 

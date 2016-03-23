@@ -370,9 +370,9 @@ namespace Server.Engines.Craft
             AddSubRes(typeof(VeriteIngot), 1044029, 95.0, 1044036, 1044268);
             AddSubRes(typeof(ValoriteIngot), 1044030, 99.0, 1044036, 1044268);
 
+            Recycle = true;
             MarkOption = true;
             Repair = true;
-            CanEnhance = Core.AOS;
         }
     }
 

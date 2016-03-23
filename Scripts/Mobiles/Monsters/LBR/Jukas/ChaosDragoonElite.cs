@@ -44,19 +44,7 @@ namespace Server.Mobiles
 
 			Fame = 8000;
 			Karma = -8000;
-
-			CraftResource res = CraftResource.None;;
-
-			switch (Utility.Random(6))
-			{
-				case 0: res = CraftResource.BlackScales; break;
-				case 1: res = CraftResource.RedScales; break;
-				case 2: res = CraftResource.BlueScales; break;
-				case 3: res = CraftResource.YellowScales; break;
-				case 4: res = CraftResource.GreenScales; break;
-				case 5: res = CraftResource.WhiteScales; break;
-			}
-
+            
 			BaseWeapon melee = null;
 
 			switch (Utility.Random(3))
@@ -68,68 +56,6 @@ namespace Server.Mobiles
 
 			melee.Movable = false;
 			AddItem(melee);
-
-			DragonChest Tunic = new DragonChest();
-			Tunic.Resource = res;
-			Tunic.Movable = false;
-			AddItem(Tunic);
-
-			DragonLegs Legs = new DragonLegs();
-			Legs.Resource = res;
-			Legs.Movable = false;
-			AddItem(Legs);
-
-			DragonArms Arms = new DragonArms();
-			Arms.Resource = res;
-			Arms.Movable = false;
-			AddItem(Arms);
-
-			DragonGloves Gloves = new DragonGloves();
-			Gloves.Resource = res;
-			Gloves.Movable = false;
-			AddItem(Gloves);
-
-			DragonHelm Helm = new DragonHelm();
-			Helm.Resource = res;
-			Helm.Movable = false;
-			AddItem(Helm);
-
-			ChaosShield shield = new ChaosShield();
-			shield.Movable = false;
-			AddItem(shield);
-
-			AddItem(new Boots(0x455));
-			AddItem(new Shirt(Utility.RandomMetalHue()));
-
-			int amount = Utility.RandomMinMax(1, 3);
-
-			switch (res)
-			{
-				case CraftResource.BlackScales: AddItem(new BlackScales(amount)); break;
-				case CraftResource.RedScales: AddItem(new RedScales(amount)); break;
-				case CraftResource.BlueScales: AddItem(new BlueScales(amount)); break;
-				case CraftResource.YellowScales: AddItem(new YellowScales(amount)); break;
-				case CraftResource.GreenScales: AddItem(new GreenScales(amount)); break;
-				case CraftResource.WhiteScales: AddItem(new WhiteScales(amount)); break;
-			}
-			switch (Utility.Random(9))
-			{
-				case 0: res = CraftResource.DullCopper; break;
-				case 1: res = CraftResource.ShadowIron; break;
-				case 2: res = CraftResource.Copper; break;
-				case 3: res = CraftResource.Bronze; break;
-				case 4: res = CraftResource.Gold; break;
-				case 5: res = CraftResource.Agapite; break;
-				case 6: res = CraftResource.Verite; break;
-				case 7: res = CraftResource.Valorite; break;
-				case 8: res = CraftResource.Iron; break;
-			}
-
-			SwampDragon mt = new SwampDragon();
-			mt.HasBarding = true;
-			mt.BardingResource = res;
-			mt.BardingHP = mt.BardingMaxHP;
-			mt.Rider = this;
 		}
 
         public override void SetUniqueAI()

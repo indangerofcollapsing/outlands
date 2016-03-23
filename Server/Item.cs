@@ -222,13 +222,6 @@ namespace Server
         HornedLeather,
         BarbedLeather,
 
-        RedScales = 201,
-        YellowScales,
-        BlackScales,
-        GreenScales,
-        WhiteScales,
-        BlueScales,
-
         RegularWood = 301,
         OakWood,
         AshWood,

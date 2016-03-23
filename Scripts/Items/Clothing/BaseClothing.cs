@@ -556,12 +556,6 @@ namespace Server.Items
                 case CraftResource.SpinedLeather: oreType = 1061118; break; // spined
                 case CraftResource.HornedLeather: oreType = 1061117; break; // horned
                 case CraftResource.BarbedLeather: oreType = 1061116; break; // barbed
-                case CraftResource.RedScales: oreType = 1060814; break; // red
-                case CraftResource.YellowScales: oreType = 1060818; break; // yellow
-                case CraftResource.BlackScales: oreType = 1060820; break; // black
-                case CraftResource.GreenScales: oreType = 1060819; break; // green
-                case CraftResource.WhiteScales: oreType = 1060821; break; // white
-                case CraftResource.BlueScales: oreType = 1060815; break; // blue
                 default: oreType = 0; break;
             }
 

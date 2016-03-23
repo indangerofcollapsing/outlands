@@ -281,20 +281,10 @@ namespace Server.Engines.Craft
             AddSubRes(typeof(VeriteIngot), 1044029, 95.0, 1044036, 1044268);
             AddSubRes(typeof(ValoriteIngot), 1044030, 99.0, 1044036, 1044268);
             AddSubRes(typeof(LuniteIngot), "LUNITE", 100.0, 1044268);
-
-            SetSubRes2(typeof(RedScales), 1060875);
-
-            AddSubRes2(typeof(RedScales), 1060875, 0.0, 1053137, 1044268);
-            AddSubRes2(typeof(YellowScales), 1060876, 0.0, 1053137, 1044268);
-            AddSubRes2(typeof(BlackScales), 1060877, 0.0, 1053137, 1044268);
-            AddSubRes2(typeof(GreenScales), 1060878, 0.0, 1053137, 1044268);
-            AddSubRes2(typeof(WhiteScales), 1060879, 0.0, 1053137, 1044268);
-            AddSubRes2(typeof(BlueScales), 1060880, 0.0, 1053137, 1044268);
-
+            
             Recycle = true;
             Repair = true;
             MarkOption = true;
-            CanEnhance = Core.AOS;
         }
     }
 }

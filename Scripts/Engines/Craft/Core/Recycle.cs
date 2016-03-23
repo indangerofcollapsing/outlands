@@ -22,6 +22,50 @@ namespace Server.Engines.Craft
 		{
 		}
 
+        public static bool IsRecycleResource(Type type)
+        {
+            bool recycleable = false;
+
+            if (type == typeof(IronIngot)) return true;
+            if (type == typeof(Leather)) return true;
+            if (type == typeof(Board)) return true;
+            if (type == typeof(Cloth)) return true;
+
+            return recycleable;
+        }
+
+        public static Type GetCraftResourceType(CraftResource craftResource)
+        {            
+            switch (craftResource)
+            {
+                case CraftResource.Iron: return typeof(IronIngot); break;
+                case CraftResource.DullCopper: return typeof(DullCopperIngot); break;
+                case CraftResource.ShadowIron: return typeof(ShadowIronIngot); break;
+                case CraftResource.Copper: return typeof(CopperIngot); break;
+                case CraftResource.Bronze: return typeof(BronzeIngot); break;
+                case CraftResource.Gold: return typeof(GoldIngot); break;
+                case CraftResource.Agapite: return typeof(AgapiteIngot); break;
+                case CraftResource.Verite: return typeof(VeriteIngot); break;
+                case CraftResource.Valorite: return typeof(ValoriteIngot); break;
+                case CraftResource.Lunite: return typeof(LuniteIngot); break;
+
+                case CraftResource.RegularLeather: return typeof(Leather); break;
+                case CraftResource.SpinedLeather: return typeof(SpinedLeather); break;
+                case CraftResource.HornedLeather: return typeof(HornedLeather); break;
+                case CraftResource.BarbedLeather: return typeof(BarbedLeather); break;
+
+                case CraftResource.RegularWood: return typeof(Board); break;
+                case CraftResource.OakWood: return typeof(OakBoard); break;
+                case CraftResource.AshWood: return typeof(AshBoard); break;
+                case CraftResource.YewWood: return typeof(YewBoard); break;
+                case CraftResource.Heartwood: return typeof(HeartwoodBoard); break;
+                case CraftResource.Bloodwood: return typeof(BloodwoodBoard); break;
+                case CraftResource.Frostwood: return typeof(FrostwoodBoard); break;
+            }
+
+            return null;
+        }
+        
 		public static void Do( Mobile from, CraftSystem craftSystem, BaseTool tool )
 		{
 			int num = craftSystem.CanCraft( from, tool, null );
@@ -71,21 +115,18 @@ namespace Server.Engines.Craft
                 if (from == null || item == null || m_CraftSystem == null || m_Tool == null)
                     return RecycleResult.Invalid;
 
-                //TEST: Need to Add and Match Recycling Types to The Different Crafting DEFs
-                //TEST: Need to Have Items Made With Colored Ingots / Boards / Cloth Return Those Color Resources Back
-
                 CraftContext craftContext = m_CraftSystem.GetContext(from);
 
                 if (craftContext == null)
                     return RecycleResult.Invalid;
 
                 Type itemType = item.GetType();
-
+                
                 CraftItem craftItem = m_CraftSystem.CraftItems.SearchFor(itemType); 
 
                 if (craftItem == null || craftItem.Resources.Count == 0)
                     return RecycleResult.Invalid;
-                
+                                
                 Dictionary<Type, int> m_ValidRecipeResources = new Dictionary<Type, int>();
 
                 CraftResCol craftResourceCollection = craftItem.Resources;
@@ -93,20 +134,17 @@ namespace Server.Engines.Craft
                 for (int a = 0; a < craftResourceCollection.Count; a++)
                 {
                     CraftRes craftResource = craftResourceCollection.GetAt(a);
-                    
-                    if (!(craftResource.ItemType == typeof(IronIngot) || craftResource.ItemType == typeof(Leather) || craftResource.ItemType == typeof(Board)))                    
-                        continue;                    
 
-                    if (craftResource.Amount < 2) 
+                    if (!IsRecycleResource(craftResource.ItemType))
                         continue;
                 
                     if (!m_ValidRecipeResources.ContainsKey(craftResource.ItemType))                    
                         m_ValidRecipeResources.Add(craftResource.ItemType, craftResource.Amount);                    
                 }
-
+                
                 if (m_ValidRecipeResources.Count == 0)
                     return RecycleResult.Invalid;
-
+                
                 if (from.Backpack == null)
                     return RecycleResult.Invalid;
 
@@ -163,30 +201,76 @@ namespace Server.Engines.Craft
                     m_Queue.Enqueue(recycleItem);
                 }
 
+                int deletedCount = 0;
+                
                 while (m_Queue.Count > 0)
                 {
                     Item recycleItem = (Item)m_Queue.Dequeue();
-                                       
-                    //Convert to Current Item Materials (Shadow Iron / Frostwood / etc)
 
+                    bool deleteItem = false;
+                                                           
                     foreach (KeyValuePair<Type, int> pair in m_ValidRecipeResources)
                     {
-                        Item newResource = (Item)Activator.CreateInstance(pair.Key);
+                        Type resourceType = pair.Key;
+                        int totalResourceAmount = pair.Value * recycleItem.Amount;
+
+                        if (totalResourceAmount < 2)
+                            continue;
+
+                        //Return Colored Materials
+                        if (resourceType == typeof(IronIngot) && recycleItem.Resource != CraftResource.Iron)
+                        {
+                            resourceType = GetCraftResourceType(recycleItem.Resource);
+
+                            if (resourceType == null)
+                                resourceType = typeof(IronIngot);
+                        }
+
+                        if (resourceType == typeof(Leather) && recycleItem.Resource != CraftResource.RegularLeather)
+                        {
+                            resourceType = GetCraftResourceType(recycleItem.Resource);
+
+                            if (resourceType == null)
+                                resourceType = typeof(Leather);
+                        }
+
+                        if (resourceType == typeof(Board) && recycleItem.Resource != CraftResource.RegularWood)
+                        {
+                            resourceType = GetCraftResourceType(recycleItem.Resource);
+
+                            if (resourceType == null)
+                                resourceType = typeof(Board);
+                        }
+
+                        Item newResource = (Item)Activator.CreateInstance(resourceType);
 
                         if (newResource == null)
                             continue;
 
-                        newResource.Amount = recycleItem.Amount * (int)(Math.Floor((double)pair.Value / 2));
+                        if (resourceType == typeof(Cloth))
+                            newResource.Hue = recycleItem.Hue;
+
+                        deleteItem = true;
+                        deletedCount++;
+
+                        newResource.Amount = (int)(Math.Floor((double)totalResourceAmount / 2));
                         from.AddToBackpack(newResource);
                     }
 
-                    recycleItem.Delete();
+                    if (deleteItem)
+                        recycleItem.Delete();
+                }
+                
+                if (deletedCount > 0)
+                {
+                    from.PlaySound(0x2A);
+                    from.PlaySound(0x240);
+
+                    return RecycleResult.Success;
                 }
 
-                from.PlaySound(0x2A);
-                from.PlaySound(0x240);			
-
-                return RecycleResult.Success;
+                else                
+                    return RecycleResult.Invalid;                
 			}
 
 			protected override void OnTarget( Mobile from, object targeted )

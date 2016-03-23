@@ -39,13 +39,13 @@ namespace Server.Items
 		Leather,
 		Studded,
 		Bone,
-		Spined,
-		Horned,
-		Barbed,
-		Ringmail,
+        Ringmail,
 		Chainmail,
 		Plate,
-		Dragon	// On OSI, Dragon is seen and considered its own type.
+
+		Spined,
+		Horned,
+		Barbed		
 	}
 
 	public enum ArmorMeditationAllowance

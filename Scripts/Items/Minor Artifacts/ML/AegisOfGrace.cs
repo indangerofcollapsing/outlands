@@ -14,7 +14,7 @@ namespace Server.Items
 		public override int BasePoisonResistance{ get{ return 7; } }
 		public override int BaseEnergyResistance{ get{ return 15; } }
 
-		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Dragon; } }
+		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Plate; } }
 		public override CraftResource DefaultResource{ get{ return CraftResource.Iron; } }
 
 		public override int InitMinHits{ get{ return 255; } }

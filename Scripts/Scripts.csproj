@@ -3305,7 +3305,6 @@
     <Compile Include="Items\Resources\Arrows\Shaft.cs" />
     <Compile Include="Items\Resources\Blacksmithing\Ingots.cs" />
     <Compile Include="Items\Resources\Blacksmithing\Ore.cs" />
-    <Compile Include="Items\Resources\Blacksmithing\Scales.cs" />
     <Compile Include="Items\Resources\Fishing\BigFish.cs" />
     <Compile Include="Items\Resources\Fishing\Fish.cs" />
     <Compile Include="Items\Resources\Fishing\MagicFish.cs" />

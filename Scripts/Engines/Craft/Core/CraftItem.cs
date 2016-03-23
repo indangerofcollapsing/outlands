@@ -376,7 +376,6 @@ namespace Server.Engines.Craft
 			typeof( UncutCloth ), 
             typeof( Cloth ),
 			typeof( BaseGranite ),
-            typeof( BaseScales ),
             typeof( BaseResourceBoard )
 		};
 
