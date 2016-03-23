@@ -2,13 +2,6 @@ using System;
 
 namespace Server.Items
 {
-	public enum WeaponQuality
-	{
-		Low,
-		Regular,
-		Exceptional
-	}
-
 	public enum WeaponType
 	{
         None,

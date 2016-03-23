@@ -430,14 +430,14 @@ namespace Server.Items
 						weapon.DamageLevel = (WeaponDamageLevel)Utility.Random(level);
 						weapon.AccuracyLevel = (WeaponAccuracyLevel)Utility.Random(level);
 						weapon.DurabilityLevel = (WeaponDurabilityLevel)Utility.Random(level);
-						weapon.Quality = WeaponQuality.Regular;
 					}
+
 					else if (item is BaseArmor)
 					{
 						BaseArmor armor = (BaseArmor)item;
 						armor.ProtectionLevel = (ArmorProtectionLevel)Utility.Random(level);
 						armor.Durability = (ArmorDurabilityLevel)Utility.Random(level);
-						armor.Quality = ArmorQuality.Regular;
+                        armor.Quality = Quality.Regular;
 					}
 
 					DropItem(item);

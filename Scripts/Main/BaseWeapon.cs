@@ -49,10 +49,13 @@ namespace Server.Items
             {
                 m_Dungeon = value;
 
-                BaseDungeonArmor.DungeonArmorDetail detail = new BaseDungeonArmor.DungeonArmorDetail(m_Dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
+                if (m_Dungeon != BaseDungeonArmor.DungeonEnum.Unspecified)
+                {
+                    BaseDungeonArmor.DungeonArmorDetail detail = new BaseDungeonArmor.DungeonArmorDetail(m_Dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
 
-                if (detail != null)
-                    Hue = detail.Hue;
+                    if (detail != null)
+                        Hue = detail.Hue;
+                }
             }
         }
 
@@ -175,45 +178,34 @@ namespace Server.Items
             set { m_Poison = value; InvalidateProperties(); }
         }
 
-        private WeaponQuality m_Quality;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public WeaponQuality Quality
+        public override void QualityChange()
         {
-            get { return m_Quality; }
-            set
+            UnscaleDurability();
+            ScaleDurability();
+
+            if (UseSkillMod)
             {
-                UnscaleDurability();
-
-                m_Quality = value;
-
-                ScaleDurability();
-
-                if (UseSkillMod)
+                if (Quality == Quality.Low || Quality == Quality.Regular)
                 {
-                    if (m_Quality == WeaponQuality.Low || m_Quality == WeaponQuality.Regular)
-                    {
-                        if (m_SkillMod != null)
-                            m_SkillMod.Remove();
+                    if (m_SkillMod != null)
+                        m_SkillMod.Remove();
 
-                        m_SkillMod = null;
-                    }
-
-                    else if (Parent is Mobile)
-                    {
-                        OnEquip(Parent as Mobile);
-                    }
+                    m_SkillMod = null;
                 }
 
-                InvalidateProperties();
+                else if (Parent is Mobile)                
+                    OnEquip(Parent as Mobile);                
             }
-        }
 
-        private CraftResource m_Resource;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public CraftResource Resource
+            InvalidateProperties();
+        }
+        
+        public override void ResourceChange()
         {
-            get { return m_Resource; }
-            set { UnscaleDurability(); m_Resource = value; Hue = CraftResources.GetHue(m_Resource); InvalidateProperties(); ScaleDurability(); }
+            UnscaleDurability();
+            Hue = CraftResources.GetHue(Resource);
+            InvalidateProperties();
+            ScaleDurability();
         }
 
         private WeaponDurabilityLevel m_DurabilityLevel;
@@ -1494,7 +1486,8 @@ namespace Server.Items
             {
                 double reduction = 0.65; // 35% base reduction
                 // reduce damage 5% further for each mod
-                if (Quality == WeaponQuality.Exceptional)
+
+                if (Quality == Quality.Exceptional)
                     reduction -= 0.12;
 
                 else
@@ -1583,7 +1576,7 @@ namespace Server.Items
         {
             int bonus = 0;
 
-            if (m_Quality == WeaponQuality.Exceptional)
+            if (Quality == Quality.Exceptional)
                 bonus += 20;
 
             switch (m_DurabilityLevel)
@@ -1703,7 +1696,7 @@ namespace Server.Items
 
                 int mod = (int)m_DamageLevel * 5;
 
-                if (m_Quality == WeaponQuality.Exceptional)
+                if (Quality == Quality.Exceptional)
                     mod += 10;
 
                 if (DungeonTier > 0)
@@ -2284,10 +2277,10 @@ namespace Server.Items
         {
             int bonus = VirtualDamageBonus;
 
-            switch (m_Quality)
+            switch (Quality)
             {
-                case WeaponQuality.Low: bonus -= 20; break;
-                case WeaponQuality.Exceptional: bonus += 20; break;
+                case Quality.Low: bonus -= 20; break;
+                case Quality.Exceptional: bonus += 20; break;
             }
 
             switch (m_DamageLevel)
@@ -2633,7 +2626,6 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.DamageLevel, m_DamageLevel != WeaponDamageLevel.Regular);
             SetSaveFlag(ref flags, SaveFlag.AccuracyLevel, m_AccuracyLevel != WeaponAccuracyLevel.Regular);
             SetSaveFlag(ref flags, SaveFlag.DurabilityLevel, m_DurabilityLevel != WeaponDurabilityLevel.Regular);
-            SetSaveFlag(ref flags, SaveFlag.Quality, m_Quality != WeaponQuality.Regular);
             SetSaveFlag(ref flags, SaveFlag.Hits, m_Hits != 0);
             SetSaveFlag(ref flags, SaveFlag.MaxHits, m_MaxHits != 0);
             SetSaveFlag(ref flags, SaveFlag.Poison, m_Poison != null);
@@ -2648,7 +2640,6 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.Skill, m_Skill != (SkillName)(-1));
             SetSaveFlag(ref flags, SaveFlag.Type, m_Type != (WeaponType)(-1));
             SetSaveFlag(ref flags, SaveFlag.Animation, m_Animation != (WeaponAnimation)(-1));
-            SetSaveFlag(ref flags, SaveFlag.Resource, m_Resource != CraftResource.Iron);
 
             writer.Write((int)flags);
 
@@ -2660,10 +2651,7 @@ namespace Server.Items
 
             if (GetSaveFlag(flags, SaveFlag.DurabilityLevel))
                 writer.Write((int)m_DurabilityLevel);
-
-            if (GetSaveFlag(flags, SaveFlag.Quality))
-                writer.Write((int)m_Quality);
-
+            
             if (GetSaveFlag(flags, SaveFlag.Hits))
                 writer.Write((int)m_Hits);
 
@@ -2705,9 +2693,6 @@ namespace Server.Items
 
             if (GetSaveFlag(flags, SaveFlag.Animation))
                 writer.Write((int)m_Animation);
-
-            if (GetSaveFlag(flags, SaveFlag.Resource))
-                writer.Write((int)m_Resource);
 
             //Version 11
             writer.Write((int)m_Dungeon);
@@ -2796,12 +2781,7 @@ namespace Server.Items
 
                             if (m_DurabilityLevel > WeaponDurabilityLevel.Indestructible)
                                 m_DurabilityLevel = WeaponDurabilityLevel.Durable;
-                        }
-
-                        if (GetSaveFlag(flags, SaveFlag.Quality))
-                            m_Quality = (WeaponQuality)reader.ReadInt();
-                        else
-                            m_Quality = WeaponQuality.Regular;
+                        }                        
 
                         if (GetSaveFlag(flags, SaveFlag.Hits))
                             m_Hits = reader.ReadInt();
@@ -2862,14 +2842,7 @@ namespace Server.Items
                             m_Animation = (WeaponAnimation)reader.ReadInt();
                         else
                             m_Animation = (WeaponAnimation)(-1);
-
-                        if (GetSaveFlag(flags, SaveFlag.Resource))
-                            m_Resource = (CraftResource)reader.ReadInt();
-                        else
-                            m_Resource = CraftResource.Iron;
-
-                       
-
+                        
                         if (version >= 10)
                         {
                            
@@ -2885,10 +2858,8 @@ namespace Server.Items
                             OnEquip(Parent as Mobile);
                         }
 
-                        else if (UseSkillMod && m_Quality == WeaponQuality.Exceptional && Parent is Mobile)
-                        {
-                            OnEquip(Parent as Mobile);
-                        }
+                        else if (UseSkillMod && Quality == Quality.Exceptional && Parent is Mobile)                        
+                            OnEquip(Parent as Mobile);                        
 
                         else if (UseSkillMod && DungeonTier > 0 && Parent is Mobile)
                         {
@@ -2929,7 +2900,6 @@ namespace Server.Items
 
                         if (version < 5)
                         {
-                            m_Resource = CraftResource.Iron;
                         }
 
                         m_MinDamage = reader.ReadInt();
@@ -2946,7 +2916,6 @@ namespace Server.Items
                         m_DamageLevel = (WeaponDamageLevel)reader.ReadInt();
                         m_AccuracyLevel = (WeaponAccuracyLevel)reader.ReadInt();
                         m_DurabilityLevel = (WeaponDurabilityLevel)reader.ReadInt();
-                        m_Quality = (WeaponQuality)reader.ReadInt();
                         
                         m_Poison = Poison.Deserialize(reader);
                         m_PoisonCharges = reader.ReadInt();
@@ -3003,7 +2972,7 @@ namespace Server.Items
             if (UseSkillMod && m_DamageLevel != WeaponDamageLevel.Regular && Parent is Mobile)
                 OnEquip(Parent as Mobile);
 
-            if (UseSkillMod && m_Quality == WeaponQuality.Exceptional && Parent is Mobile)
+            if (UseSkillMod && Quality == Quality.Exceptional && Parent is Mobile)
                 OnEquip(Parent as Mobile);
         }
         #endregion
@@ -3013,7 +2982,7 @@ namespace Server.Items
         {
             Layer = (Layer)ItemData.Quality;
 
-            m_Quality = WeaponQuality.Regular;
+            Quality = Quality.Regular;
 
             m_MinDamage = -1;
             m_MaxDamage = -1;
@@ -3027,7 +2996,7 @@ namespace Server.Items
 
             m_Hits = m_MaxHits = Utility.RandomMinMax(InitMinHits, InitMaxHits);
 
-            m_Resource = CraftResource.Iron;
+            Resource = CraftResource.Iron;
         }
 
         public BaseWeapon(Serial serial)
@@ -3044,14 +3013,7 @@ namespace Server.Items
 
             return name;
         }
-
-        [Hue, CommandProperty(AccessLevel.GameMaster)]
-        public override int Hue
-        {
-            get { return base.Hue; }
-            set { base.Hue = value; InvalidateProperties(); }
-        }
-
+        
         public int GetElementalDamageHue()
         {
             int phys, fire, cold, pois, nrgy, chaos, direct;
@@ -3092,7 +3054,7 @@ namespace Server.Items
         {
             int oreType;
 
-            switch (m_Resource)
+            switch (Resource)
             {
                 case CraftResource.DullCopper: oreType = 1053108; break; // dull copper
                 case CraftResource.ShadowIron: oreType = 1053107; break; // shadow iron
@@ -3143,7 +3105,7 @@ namespace Server.Items
 
         public virtual int GetLuckBonus()
         {
-            CraftResourceInfo resInfo = CraftResources.GetInfo(m_Resource);
+            CraftResourceInfo resInfo = CraftResources.GetInfo(Resource);
 
             if (resInfo == null)
                 return 0;
@@ -3253,8 +3215,8 @@ namespace Server.Items
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
-            
-            if (m_Quality == WeaponQuality.Exceptional)
+
+            if (Quality == Quality.Exceptional)
                 list.Add(1060636); // exceptional
 
             if (RequiredRace == Race.Elf)
@@ -3356,9 +3318,8 @@ namespace Server.Items
                     attrs.Add(new EquipInfoAttribute(1049643)); // cursed
             }
 
-
-            if (m_Quality == WeaponQuality.Exceptional)
-                attrs.Add(new EquipInfoAttribute(1018305 - (int)m_Quality));
+            if (Quality == Quality.Exceptional)
+                attrs.Add(new EquipInfoAttribute(1018305 - (int)Quality));
 
             if (m_Identified || from.AccessLevel >= AccessLevel.GameMaster)
             {
@@ -3432,7 +3393,10 @@ namespace Server.Items
 
         public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue)
         {
-            Quality = (WeaponQuality)quality;
+            Quality = (Quality)quality;
+
+            if (makersMark)
+                DisplayCrafter = true;
             
             Type resourceType = typeRes;
 

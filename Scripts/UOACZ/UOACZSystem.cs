@@ -5348,7 +5348,7 @@ namespace Server
             if (weapon != null)
             {
                 weapon.Hue = 2498;
-                weapon.Quality = WeaponQuality.Low;
+                weapon.Quality = Quality.Low;
             }
 
             return weapon;

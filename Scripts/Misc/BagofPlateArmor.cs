@@ -14,32 +14,32 @@ namespace Server.Items
 			Name = "a bag of Plate Armor";
 
 			PlateChest chest = new PlateChest();
-			chest.Quality = ArmorQuality.Exceptional;
+            chest.Quality = Quality.Exceptional;
 			chest.LootType = LootType.Blessed;
 			DropItem( chest );
 
 			PlateArms arms = new PlateArms ();
-			arms.Quality = ArmorQuality.Exceptional;
+            arms.Quality = Quality.Exceptional;
 			arms.LootType = LootType.Blessed;
 			DropItem( arms );
 
 			PlateGloves gloves = new PlateGloves();
-			gloves.Quality = ArmorQuality.Exceptional;
+            gloves.Quality = Quality.Exceptional;
 			gloves.LootType = LootType.Blessed;
 			DropItem( gloves );
 
 			PlateGorget gorget = new PlateGorget();
-			gorget.Quality = ArmorQuality.Exceptional;
+            gorget.Quality = Quality.Exceptional;
 			gorget.LootType = LootType.Blessed;
 			DropItem( gorget );
 
 			PlateLegs legs = new PlateLegs();
-			legs.Quality = ArmorQuality.Exceptional;
+            legs.Quality = Quality.Exceptional;
 			legs.LootType = LootType.Blessed;
 			DropItem( legs );
 
 			PlateHelm helm = new PlateHelm();
-			helm.Quality = ArmorQuality.Exceptional;
+            helm.Quality = Quality.Exceptional;
 			helm.LootType = LootType.Blessed;
 			DropItem( helm );
 		}

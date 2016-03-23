@@ -414,9 +414,9 @@ namespace Server.Engines.Craft
 			AddSubRes( typeof( HornedLeather ),	1049152, 80.0, 1044462, 1049311 );
 			AddSubRes( typeof( BarbedLeather ),	1049153, 99.0, 1044462, 1049311 );
 
+            Recycle = true;
 			MarkOption = true;
 		    Repair = true;
-			CanEnhance = Core.AOS;
 		}
 	}
 }

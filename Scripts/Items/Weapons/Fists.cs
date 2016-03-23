@@ -29,7 +29,6 @@ namespace Server.Items
 		{
 			Visible = false;
 			Movable = false;
-			Quality = WeaponQuality.Regular;
 		}
 
 		public Fists( Serial serial ) : base( serial )

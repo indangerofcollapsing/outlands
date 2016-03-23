@@ -249,9 +249,10 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Ghostweed), "Ghostweed", 3, "You do not have the crafting components required to make this.");
             AddRes(index, typeof(Snakeskin), "Snakeskin", 3, "You do not have the crafting components required to make this.");
             //AddRes(index, typeof(BluecapMushroom), "Bluecap Mushroom", 3, "You do not have the crafting components required to make this.");
-            
+
+            Recycle = true;
             MarkOption = true;
-            Repair = true;// Core.AOS;
+            Repair = true;
 
             SetSubRes(typeof(Board), 1072643);
 

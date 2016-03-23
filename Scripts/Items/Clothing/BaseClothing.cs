@@ -70,8 +70,7 @@ namespace Server.Items
         #endregion
         
         private int m_MaxHitPoints;
-        private int m_HitPoints;
-        private ClothingQuality m_Quality;
+        private int m_HitPoints;       
         private bool m_PlayerConstructed;
         protected CraftResource m_Resource;
         private int m_StrReq = -1;
@@ -117,13 +116,6 @@ namespace Server.Items
         {
             get { return (m_StrReq == -1 ? (Core.AOS ? AosStrReq : OldStrReq) : m_StrReq); }
             set { m_StrReq = value; InvalidateProperties(); }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public ClothingQuality Quality
-        {
-            get { return m_Quality; }
-            set { m_Quality = value; InvalidateProperties(); }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -467,7 +459,6 @@ namespace Server.Items
             Hue = hue;
 
             m_Resource = DefaultResource;
-            m_Quality = ClothingQuality.Regular;
 
             m_HitPoints = m_MaxHitPoints = Utility.RandomMinMax(InitMinHits, InitMaxHits);
 
@@ -591,7 +582,7 @@ namespace Server.Items
                 list.Add(1041350); // faction item
             #endregion
 
-            if (m_Quality == ClothingQuality.Exceptional)
+            if (Quality == Quality.Exceptional)
                 list.Add(1060636); // exceptional
 
             if (RequiredRace == Race.Elf)
@@ -740,8 +731,8 @@ namespace Server.Items
                 attrs.Add(new EquipInfoAttribute(1041350)); // faction item
             #endregion
 
-            if (m_Quality == ClothingQuality.Exceptional)
-                attrs.Add(new EquipInfoAttribute(1018305 - (int)m_Quality));
+            if (Quality == Quality.Exceptional)
+                attrs.Add(new EquipInfoAttribute(1018305 - (int)Quality));
         }
 
         #region Serialization
@@ -790,7 +781,6 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.MaxHitPoints, m_MaxHitPoints != 0);
             SetSaveFlag(ref flags, SaveFlag.HitPoints, m_HitPoints != 0);
             SetSaveFlag(ref flags, SaveFlag.PlayerConstructed, m_PlayerConstructed != false);
-            SetSaveFlag(ref flags, SaveFlag.Quality, m_Quality != ClothingQuality.Regular);
             SetSaveFlag(ref flags, SaveFlag.StrReq, m_StrReq != -1);
             SetSaveFlag(ref flags, SaveFlag.IPYInvisible, IsInvisible);
 
@@ -817,9 +807,6 @@ namespace Server.Items
             if (GetSaveFlag(flags, SaveFlag.HitPoints))
                 writer.WriteEncodedInt((int)m_HitPoints);
             
-            if (GetSaveFlag(flags, SaveFlag.Quality))
-                writer.WriteEncodedInt((int)m_Quality);
-
             if (GetSaveFlag(flags, SaveFlag.StrReq))
                 writer.WriteEncodedInt((int)m_StrReq);
         }
@@ -867,11 +854,6 @@ namespace Server.Items
                         if (GetSaveFlag(flags, SaveFlag.HitPoints))
                             m_HitPoints = reader.ReadEncodedInt();
                         
-                        if (GetSaveFlag(flags, SaveFlag.Quality))
-                            m_Quality = (ClothingQuality)reader.ReadEncodedInt();
-                        else
-                            m_Quality = ClothingQuality.Regular;
-
                         if (GetSaveFlag(flags, SaveFlag.StrReq))
                             m_StrReq = reader.ReadEncodedInt();
                         else
@@ -905,13 +887,11 @@ namespace Server.Items
                         goto case 1;
                     }
                 case 1:
-                    {                       
-                        m_Quality = (ClothingQuality)reader.ReadInt();
+                    {      
                         break;
                     }
                 case 0:
-                    {
-                        m_Quality = ClothingQuality.Regular;
+                    {                      
                         break;
                     }
             }
@@ -1028,7 +1008,10 @@ namespace Server.Items
 
         public virtual int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue)
         {
-            Quality = (ClothingQuality)quality;
+            Quality = (Quality)quality;
+
+            if (makersMark)
+                DisplayCrafter = true;
             
             if (DefaultResource != CraftResource.None)
             {

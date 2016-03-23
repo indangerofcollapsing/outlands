@@ -16,7 +16,7 @@ namespace Server.Engines.Craft
 		private int m_MinCraftEffect;
 		private int m_MaxCraftEffect;
 		private double m_Delay;
-		private bool m_Resmelt;
+		private bool m_Recycle;
 		private bool m_Repair;
 		private bool m_MarkOption;
 		private bool m_CanEnhance;
@@ -82,10 +82,10 @@ namespace Server.Engines.Craft
 				c.OnMade( item );
 		}
 
-		public bool Resmelt
+		public bool Recycle
 		{
-			get { return m_Resmelt; }
-			set { m_Resmelt = value; }
+			get { return m_Recycle; }
+			set { m_Recycle = value; }
 		}
 
 		public bool Repair

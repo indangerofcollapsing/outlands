@@ -50,7 +50,6 @@ namespace Server.Mobiles
 			Bow bow = new Bow();
 
 			bow.Movable = false;
-			bow.Quality = WeaponQuality.Exceptional;
 
 			AddItem( bow );
 

@@ -201,16 +201,17 @@ namespace Server.Engines.BulkOrders
 						bool isExceptional = false;
 
 						if ( o is BaseWeapon )
-							isExceptional = ( ((BaseWeapon)o).Quality == WeaponQuality.Exceptional );
-						else if ( o is BaseArmor )
-							isExceptional = ( ((BaseArmor)o).Quality == ArmorQuality.Exceptional );
-						else if ( o is BaseClothing )
-							isExceptional = ( ((BaseClothing)o).Quality == ClothingQuality.Exceptional );
+                            isExceptional = (((BaseWeapon)o).Quality == Quality.Exceptional);
 
-						if ( m_RequireExceptional && !isExceptional )
-						{
+						else if ( o is BaseArmor )
+                            isExceptional = (((BaseArmor)o).Quality == Quality.Exceptional);
+
+						else if ( o is BaseClothing )
+                            isExceptional = (((BaseClothing)o).Quality == Quality.Exceptional);
+
+						if ( m_RequireExceptional && !isExceptional )						
 							from.SendLocalizedMessage( 1045167 ); // The item must be exceptional.
-						}
+						
 						else
 						{
 							((Item)o).Delete();

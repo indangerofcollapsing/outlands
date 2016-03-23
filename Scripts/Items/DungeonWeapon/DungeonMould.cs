@@ -179,7 +179,7 @@ namespace Server.Items
 
                 if (weapon.DungeonTier == 0)
                 {
-                    if (weapon.CrafterName == "" || weapon.Quality != WeaponQuality.Exceptional)
+                    if (weapon.CrafterName == "" || weapon.Quality != Quality.Exceptional)
                     {
                         player.SendMessage("The weapon you wish to convert must be a gm crafted weapon.");
                         return;
@@ -424,8 +424,8 @@ namespace Server.Items
         }
 
         public static BaseWeapon CreateDungeonWeapon(BaseWeapon weapon, BaseDungeonArmor.DungeonEnum dungeon)
-        {            
-            weapon.Quality = WeaponQuality.Regular;
+        {
+            weapon.Quality = Quality.Regular;
             weapon.BlessedCharges = DungeonWeapon.BaseMaxBlessedCharges;
             weapon.Dungeon = dungeon;
             weapon.DungeonTier = 1;
@@ -997,7 +997,7 @@ namespace Server.Items
                         if (m_Weapon.DungeonTier > 0)
                             weaponValid = false;
 
-                        if (m_Weapon.CrafterName == "" || m_Weapon.Quality != WeaponQuality.Exceptional)
+                        if (m_Weapon.CrafterName == "" || m_Weapon.Quality != Quality.Exceptional)
                             weaponValid = false;
 
                         if (m_Weapon.DamageLevel != WeaponDamageLevel.Regular || m_Weapon.AccuracyLevel != WeaponAccuracyLevel.Regular || m_Weapon.DurabilityLevel != WeaponDurabilityLevel.Regular)
@@ -1099,7 +1099,7 @@ namespace Server.Items
 
                     if (m_NewWeapon)
                     {
-                        m_Weapon.Quality = WeaponQuality.Regular;
+                        m_Weapon.Quality = Quality.Regular;
                         m_Weapon.BlessedCharges = DungeonWeapon.BaseMaxBlessedCharges;
                         m_Weapon.Dungeon = m_Dungeon;
                         m_Weapon.DungeonTier = 1;                                       

@@ -72,7 +72,7 @@ namespace Server.Engines.Craft
             #region Left Side Button Controls    
          
             //Smelt Mode
-            if (craftSystem.Resmelt)
+            if (craftSystem.Recycle)
             {
                 AddButton(15, 342, 4005, 4007, GetButtonID(6, 9), GumpButtonType.Reply, 0);
 
@@ -85,7 +85,7 @@ namespace Server.Engines.Craft
             }
 
             //Smelt Button
-            if (craftSystem.Resmelt)
+            if (craftSystem.Recycle)
             {
                 AddButton(15, 362, 4005, 4007, GetButtonID(6, 1), GumpButtonType.Reply, 0);
 
@@ -178,15 +178,6 @@ namespace Server.Engines.Craft
             //Make Last
             AddButton(270, 402, 4005, 4007, GetButtonID(6, 2), GumpButtonType.Reply, 0);
             AddLabel(305, 405, textHue, "Make Last Item");
-
-            /*
-			// Enhance option
-			if ( craftSystem.CanEnhance )
-			{
-				AddButton( 270, 382, 4005, 4007, GetButtonID( 6, 8 ), GumpButtonType.Reply, 0 );
-				AddHtmlLocalized( 305, 385, 150, 18, 1061001, LabelColor, false, false ); // ENHANCE ITEM
-			}
-            */
 
             #endregion
             
@@ -574,7 +565,7 @@ namespace Server.Engines.Craft
                             //Smelt Item
                             case 1:
                             {
-                                if (system.Resmelt)
+                                if (system.Recycle)
                                     Recycle.Do(m_From, system, m_Tool);
 
                                 break;
@@ -671,7 +662,7 @@ namespace Server.Engines.Craft
                             // Toggle Smelt option
                             case 9:
                             {
-                                if (context == null || !system.Resmelt)
+                                if (context == null || !system.Recycle)
                                     break;
 
                                 switch (context.RecycleOption)

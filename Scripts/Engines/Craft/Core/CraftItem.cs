@@ -357,39 +357,50 @@ namespace Server.Engines.Craft
 			};
 
         private static Type[] m_ColoredItemTable = new Type[]
-			{
-				typeof( BaseWeapon ), typeof( BaseArmor ), typeof( BaseClothing ),
-				typeof( BaseJewel ), typeof( DragonBardingDeed ),
-                typeof( BaseContainer ), typeof( BaseInstrument )
-			};
+		{
+			typeof( BaseWeapon ), 
+            typeof( BaseArmor ),
+            typeof( BaseClothing ),			
+            typeof( BaseContainer ), 
+            typeof( BaseInstrument ),
+            typeof( BaseJewel ), 
+            typeof( DragonBardingDeed ),
+		};
 
         private static Type[] m_ColoredResourceTable = new Type[]
-			{
-				typeof( BaseIngot ), typeof( BaseOre ),
-				typeof( BaseLeather ), typeof( BaseHides ),
-				typeof( UncutCloth ), typeof( Cloth ),
-				typeof( BaseGranite ), typeof( BaseScales ),
-                typeof( BaseResourceBoard )
-			};
+		{
+			typeof( BaseIngot ),
+            typeof( BaseOre ),
+			typeof( BaseLeather ),
+            typeof( BaseHides ),
+			typeof( UncutCloth ), 
+            typeof( Cloth ),
+			typeof( BaseGranite ),
+            typeof( BaseScales ),
+            typeof( BaseResourceBoard )
+		};
 
         private static Type[] m_MarkableTable = new Type[]
-				{
-					typeof( BaseArmor ),
-					typeof( BaseWeapon ),
-					typeof( BaseClothing ),
-					typeof( BaseInstrument ),
-					typeof( DragonBardingDeed ),
-					typeof( BaseTool ),
-					typeof( BaseHarvestTool ),
-					typeof( FukiyaDarts ), typeof( Shuriken ),
-					typeof( Spellbook ), typeof( Runebook ),
-					typeof( BaseQuiver )
-				};
+		{
+			typeof( BaseArmor ),
+			typeof( BaseWeapon ),
+			typeof( BaseClothing ),
+			typeof( BaseInstrument ),					
+			typeof( BaseTool ),
+			typeof( BaseHarvestTool ),
+            typeof( Runebook ),
+            typeof( Spellbook ), 
+			typeof( FukiyaDarts ), 					
+			typeof( BaseQuiver ),
+            typeof( DragonBardingDeed ),
+            typeof( Shuriken )
+		};
 
         private static Type[] m_NeverColorTable = new Type[]
-				{
-					typeof( OrcHelm )
-				};
+		{
+			typeof( OrcHelm )
+		};
+
         #endregion
 
         public bool IsMarkable(Type type)
@@ -1257,7 +1268,6 @@ namespace Server.Engines.Craft
 
                 if (item != null)
                 {
-
                     if (item is ICraftable)
                     {
                         endquality = ((ICraftable)item).OnCraft(quality, makersMark, from, craftSystem, typeRes, tool, this, resHue);

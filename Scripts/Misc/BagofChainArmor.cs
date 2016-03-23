@@ -14,17 +14,17 @@ namespace Server.Items
 			Name = "a bag of Chain Armor";
 
 			ChainChest chest = new ChainChest();
-			chest.Quality = ArmorQuality.Exceptional;
+            chest.Quality = Quality.Exceptional;
 			chest.LootType = LootType.Blessed;
 			DropItem( chest );
 
 			ChainLegs legs = new ChainLegs();
-			legs.Quality = ArmorQuality.Exceptional;
+            legs.Quality = Quality.Exceptional;
 			legs.LootType = LootType.Blessed;
 			DropItem( legs );
 
 			ChainCoif coif = new ChainCoif();
-			coif.Quality = ArmorQuality.Exceptional;
+            coif.Quality = Quality.Exceptional;
 			coif.LootType = LootType.Blessed;
 			DropItem( coif );
 		}

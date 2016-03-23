@@ -196,6 +196,57 @@ namespace Server
         Properties = 0x00000004
     }
 
+    public enum Quality
+    {
+        Low,
+        Regular,
+        Exceptional
+    }
+
+    public enum CraftResource
+    {
+        None = 0,
+        Iron = 1,
+        DullCopper,
+        ShadowIron,
+        Copper,
+        Bronze,
+        Gold,
+        Agapite,
+        Verite,
+        Valorite,
+        Lunite,
+
+        RegularLeather = 101,
+        SpinedLeather,
+        HornedLeather,
+        BarbedLeather,
+
+        RedScales = 201,
+        YellowScales,
+        BlackScales,
+        GreenScales,
+        WhiteScales,
+        BlueScales,
+
+        RegularWood = 301,
+        OakWood,
+        AshWood,
+        YewWood,
+        Heartwood,
+        Bloodwood,
+        Frostwood
+    }
+
+    public enum CraftResourceType
+    {
+        None,
+        Metal,
+        Leather,
+        Scales,
+        Wood
+    }
+
     /// <summary>
     /// Enumeration containing possible ways to handle item ownership on death.
     /// </summary>
@@ -853,6 +904,48 @@ namespace Server
         {
             get { return m_CrafterName; }
             set { m_CrafterName = value; }
+        }
+
+        private bool m_DisplayCrafter = false;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool DisplayCrafter
+        {
+            get { return m_DisplayCrafter; }
+            set { m_DisplayCrafter = value; }
+        }
+
+        private Quality m_Quality = Quality.Regular;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Quality Quality
+        {
+            get { return m_Quality; }
+            set
+            {
+                m_Quality = value;
+
+                QualityChange();  
+            }
+        }
+
+        private CraftResource m_Resource = CraftResource.None;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public CraftResource Resource
+        {
+            get { return m_Resource; }
+            set
+            {
+                m_Resource = value;
+
+                ResourceChange();
+            }
+        }
+
+        public virtual void QualityChange()
+        {
+        }
+
+        public virtual void ResourceChange()
+        {
         }
 
         /// <summary>
@@ -2237,6 +2330,9 @@ namespace Server
             writer.Write(18); // version
 
             //Version 18
+            writer.Write((int)m_Resource);
+            writer.Write(m_DisplayCrafter);
+            writer.Write((int)m_Quality);
             writer.Write(m_DecorativeEquipment);
             writer.Write(m_CraftedBy);
             writer.Write(m_CrafterName);
@@ -2459,6 +2555,9 @@ namespace Server
             {
                 case 18:
                     {
+                        m_Resource = (CraftResource)reader.ReadInt();
+                        m_DisplayCrafter = reader.ReadBool();
+                        m_Quality = (Quality)reader.ReadInt();
                         m_DecorativeEquipment = reader.ReadBool();
 
                         goto case 17;

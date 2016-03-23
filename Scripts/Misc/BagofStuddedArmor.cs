@@ -14,27 +14,27 @@ namespace Server.Items
 			Name = "a bag of Studded Armor";
 
 			StuddedChest chest = new StuddedChest();
-			chest.Quality = ArmorQuality.Exceptional;
+            chest.Quality = Quality.Exceptional;
 			chest.LootType = LootType.Blessed;
 			DropItem( chest );
 
 			StuddedArms arms = new StuddedArms ();
-			arms.Quality = ArmorQuality.Exceptional;
+            arms.Quality = Quality.Exceptional;
 			arms.LootType = LootType.Blessed;
 			DropItem( arms );
 
 			StuddedGloves gloves = new StuddedGloves();
-			gloves.Quality = ArmorQuality.Exceptional;
+            gloves.Quality = Quality.Exceptional;
 			gloves.LootType = LootType.Blessed;
 			DropItem( gloves );
 
 			StuddedGorget gorget = new StuddedGorget();
-			gorget.Quality = ArmorQuality.Exceptional;
+            gorget.Quality = Quality.Exceptional;
 			gorget.LootType = LootType.Blessed;
 			DropItem( gorget );
 
 			StuddedLegs legs = new StuddedLegs();
-			legs.Quality = ArmorQuality.Exceptional;
+            legs.Quality = Quality.Exceptional;
 			legs.LootType = LootType.Blessed;
 			DropItem( legs );
 		}

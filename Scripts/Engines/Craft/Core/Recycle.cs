@@ -111,12 +111,10 @@ namespace Server.Engines.Craft
                     return RecycleResult.Invalid;
 
                 else if (from.Backpack.Deleted)
-                    return RecycleResult.Invalid;   
+                    return RecycleResult.Invalid;
 
-                List<Item> m_ItemsToRecycle = new List<Item>();
-
-                if (craftContext.RecycleOption == CraftRecycleOption.RecycleItem)
-                    m_ItemsToRecycle.Add(item);
+                List<Item> m_Items = new List<Item>();
+                List<Item> m_ItemsToRecycle = new List<Item>();                
 
                 Item[] m_MatchingItems = from.Backpack.FindItemsByType(itemType);
                 
@@ -124,42 +122,35 @@ namespace Server.Engines.Craft
                 {
                     Item targetItem = m_MatchingItems[a];
 
-                    if (craftContext.RecycleOption == CraftRecycleOption.RecycleItem)
+                    if (craftContext.RecycleOption == CraftRecycleOption.RecycleItem && targetItem == item)
+                    {
+                        m_ItemsToRecycle.Add(targetItem);
                         continue;
+                    }
+
+                    if (craftContext.RecycleOption == CraftRecycleOption.RecycleAllNonExceptional && targetItem.Quality != Quality.Exceptional)
+                    {
+                        m_Items.Add(targetItem);
+                        continue;
+                    }  
 
                     if (craftContext.RecycleOption == CraftRecycleOption.RecycleAll)
                     {
-                        m_ItemsToRecycle.Add(m_MatchingItems[a]);
+                        m_ItemsToRecycle.Add(targetItem);
                         continue;
-                    }
+                    }                                                       
+                }
 
-                    if (craftContext.RecycleOption != CraftRecycleOption.RecycleAllNonExceptional)
-                        continue;
+                foreach (Item recycleItem in m_Items)
+                {
+                    if (recycleItem.LootType != LootType.Regular) continue;
+                    if (recycleItem.PlayerClassCurrencyValue > 0) continue;
+                    if (recycleItem.QuestItem) continue;
+                    if (recycleItem.Nontransferable) continue;
+                    if (recycleItem.DonationItem) continue;
+                    if (recycleItem.DecorativeEquipment) continue;
 
-                    BaseWeapon weapon = targetItem as BaseWeapon;
-                    BaseArmor armor = targetItem as BaseArmor;
-                    BaseClothing clothing = targetItem as BaseClothing;
-                    
-                    if (weapon != null)
-                    {
-                        if (weapon.Quality != WeaponQuality.Exceptional)
-                            m_ItemsToRecycle.Add(weapon);
-                    }
-
-                    else if (armor != null)
-                    {
-                        if (armor.Quality != ArmorQuality.Exceptional)
-                            m_ItemsToRecycle.Add(armor);
-                    }
-
-                    else if (clothing != null)
-                    {
-                        if (clothing.Quality != ClothingQuality.Exceptional)
-                            m_ItemsToRecycle.Add(clothing);
-                    }
-
-                    else                    
-                        m_ItemsToRecycle.Add(targetItem);                    
+                    m_ItemsToRecycle.Add(recycleItem);
                 }
 
                 if (m_ItemsToRecycle.Count == 0)                
@@ -175,6 +166,8 @@ namespace Server.Engines.Craft
                 while (m_Queue.Count > 0)
                 {
                     Item recycleItem = (Item)m_Queue.Dequeue();
+                                       
+                    //Convert to Current Item Materials (Shadow Iron / Frostwood / etc)
 
                     foreach (KeyValuePair<Type, int> pair in m_ValidRecipeResources)
                     {
@@ -183,7 +176,7 @@ namespace Server.Engines.Craft
                         if (newResource == null)
                             continue;
 
-                        newResource.Amount = (int)(Math.Floor((double)pair.Value / 2));
+                        newResource.Amount = recycleItem.Amount * (int)(Math.Floor((double)pair.Value / 2));
                         from.AddToBackpack(newResource);
                     }
 
@@ -197,49 +190,34 @@ namespace Server.Engines.Craft
 			}
 
 			protected override void OnTarget( Mobile from, object targeted )
-			{
-				int num = m_CraftSystem.CanCraft( from, m_Tool, null );
+			{                
+                int num = m_CraftSystem.CanCraft( from, m_Tool, null );
 
-				if ( num > 0 )
-				{
-					if ( num == 1044267 )
-					{
-						bool anvil, forge;
-			
-						DefBlacksmithy.CheckAnvilAndForge( from, 2, out anvil, out forge );
+                if (num > 0)
+                {
+                    from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, num));
+                    return;
+                }                 
 
-						if ( !anvil )
-							num = 1044266; // You must be near an anvil
+                RecycleResult result = RecycleResult.Invalid;
+                int message;
+                Item item = targeted as Item;
 
-						else if ( !forge )
-							num = 1044265; // You must be near a forge.
-					}
+                if (item == null)
+                    return;
 
-					from.SendGump( new CraftGump( from, m_CraftSystem, m_Tool, num ) );
-				}
+                else
+                    result = Recycle(from, item);
 
-				else
-				{
-                    RecycleResult result = RecycleResult.Invalid;
-                    int message;
-                    Item item = targeted as Item;
+                switch (result)
+                {
+                    default:
+                    case RecycleResult.Invalid: message = 1044272; break; // You can't melt that down into ingots.
+                    case RecycleResult.NoSkill: message = 1044269; break; // You have no idea how to work this metal.
+                    case RecycleResult.Success: message = 1044270; break; // You melt the item down into ingots.
+                }
 
-                    if (item == null)
-                        return;
-
-                    else
-                        result = Recycle(from, item);	
-
-					switch ( result )
-					{
-						default:
-						case RecycleResult.Invalid: message = 1044272; break; // You can't melt that down into ingots.
-						case RecycleResult.NoSkill: message = 1044269; break; // You have no idea how to work this metal.
-						case RecycleResult.Success: message = 1044270; break; // You melt the item down into ingots.
-					}
-
-					from.SendGump( new CraftGump( from, m_CraftSystem, m_Tool, message ) );
-				}
+                from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, message));
 			}
 		}
 	}

@@ -113,34 +113,35 @@ namespace Server.Items
 						else Amount--;
 					}
 				}
+
 				else if ( from.Skills[SkillName.Tailoring].Value >= 80.0 )
 				{
 					bool isExceptional = false;
 
 					if ( item is BaseClothing )
-						isExceptional = ( ((BaseClothing)item).Quality == ClothingQuality.Exceptional );
+                        isExceptional = (((BaseClothing)item).Quality == Quality.Exceptional);
+
 					else if ( item is BaseArmor )
-						isExceptional = ( ((BaseArmor)item).Quality == ArmorQuality.Exceptional );
+						isExceptional = ( ((BaseArmor)item).Quality == Quality.Exceptional );
+
 					else if ( item is BaseWeapon )
-						isExceptional = ( ((BaseWeapon)item).Quality == WeaponQuality.Exceptional );
+                        isExceptional = (((BaseWeapon)item).Quality == Quality.Exceptional);
 
 					if ( isExceptional )
 					{
 						if ( item is BaseClothing )
 						{
-							((BaseClothing)item).Quality = ClothingQuality.Regular;
+							((BaseClothing)item).Quality = Quality.Regular;
 						}
 
 						else if ( item is BaseArmor )
 						{
-							((BaseArmor)item).Quality = ArmorQuality.Regular;
+                            ((BaseArmor)item).Quality = Quality.Regular;
 							((BaseArmor)item).PhysicalBonus = ((BaseArmor)item).FireBonus = ((BaseArmor)item).ColdBonus = ((BaseArmor)item).PoisonBonus = ((BaseArmor)item).EnergyBonus = 0; // Is there a method to remove bonuses?
 						}
 
-						else if ( item is BaseWeapon ) // Sanity, weapons cannot recieve gems...
-						{
-							((BaseWeapon)item).Quality = WeaponQuality.Regular;
-						}
+						else if ( item is BaseWeapon ) // Sanity, weapons cannot recieve gems...						
+                            ((BaseWeapon)item).Quality = Quality.Regular;						
 
 						eq.CurArcaneCharges = eq.MaxArcaneCharges = charges;
 

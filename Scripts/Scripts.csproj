@@ -3343,7 +3343,7 @@
     <Compile Include="Items\Shields\Artifacts\Aegis.cs" />
     <Compile Include="Items\Shields\Artifacts\ArcaneShield.cs" />
     <Compile Include="Items\Shields\BalanceShield.cs" />
-    <Compile Include="Items\Shields\BaseShield.cs" />
+    <Compile Include="Main\BaseShield.cs" />
     <Compile Include="Items\Shields\BronzeShield.cs" />
     <Compile Include="Items\Shields\Buckler.cs" />
     <Compile Include="Items\Shields\ChaosShield.cs" />
