@@ -110,8 +110,10 @@ namespace Server.Engines.Craft
 			{
 				case Expansion.SE:
 					return 1063363; // * Requires the "Samurai Empire" expansion
+
 				case Expansion.ML:
 					return 1072651; // * Requires the "Mondain's Legacy" expansion
+
 				default:
 					return String.Format( "* Requires the \"{0}\" expansion", ExpansionInfo.GetInfo( expansion ).Name );
 			}
@@ -158,12 +160,17 @@ namespace Server.Engines.Craft
 			
             double chance = m_CraftItem.GetSuccessChance( m_From, resIndex > -1 ? res.GetAt( resIndex ).ItemType : null, m_CraftSystem, false, ref allRequiredSkills );
 			double excepChance = m_CraftItem.GetExceptionalChance( m_CraftSystem, chance, m_From );
+            
+            bool skillGainPossible = false;
 
 			if ( chance < 0.0 )
 				chance = 0.0;
 
 			else if ( chance > 1.0 )
 				chance = 1.0;
+
+            if (chance > 0 && chance < 1.0)
+                skillGainPossible = true;
 
             int startY = 80;
 
@@ -184,8 +191,6 @@ namespace Server.Engines.Craft
 
                 startY += 20;
 			}
-
-            bool skillGainPossible = true;
 
             if (skillGainPossible)
                 AddLabel(169, startY, 2599, "Skill Gain Possible");            

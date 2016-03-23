@@ -140,19 +140,19 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(TrollFat), "troll fat", 1, "You do not have the neccesary crafting component needed to make this");            
             
             // Furniture
-            AddCraft(typeof(FootStool), 1044291, 1022910, 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
-            AddCraft(typeof(Stool), 1044291, 1022602, 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
-            AddCraft(typeof(BambooChair), 1044291, 1044300, 21.0, 46.0, typeof(Board), 1044041, 13, 1044351);
-            AddCraft(typeof(WoodenChair), 1044291, 1044301, 21.0, 46.0, typeof(Board), 1044041, 13, 1044351);
-            AddCraft(typeof(FancyWoodenChairCushion), 1044291, 1044302, 42.1, 67.1, typeof(Board), 1044041, 15, 1044351);
-            AddCraft(typeof(WoodenChairCushion), 1044291, 1044303, 42.1, 67.1, typeof(Board), 1044041, 13, 1044351);
-            AddCraft(typeof(WoodenBench), 1044291, 1022860, 52.6, 77.6, typeof(Board), 1044041, 17, 1044351);
-            AddCraft(typeof(WoodenThrone), 1044291, 1044304, 52.6, 77.6, typeof(Board), 1044041, 17, 1044351);
-            AddCraft(typeof(Throne), 1044291, 1044305, 73.6, 98.6, typeof(Board), 1044041, 19, 1044351);
-            AddCraft(typeof(Nightstand), 1044291, 1044306, 42.1, 67.1, typeof(Board), 1044041, 17, 1044351);
-            AddCraft(typeof(WritingTable), 1044291, 1022890, 63.1, 88.1, typeof(Board), 1044041, 17, 1044351);
-            AddCraft(typeof(YewWoodTable), 1044291, 1044307, 63.1, 88.1, typeof(Board), 1044041, 23, 1044351);
-            AddCraft(typeof(LargeTable), 1044291, 1044308, 84.2, 109.2, typeof(Board), 1044041, 27, 1044351);
+            AddCraft(typeof(FootStool), "Furniture", "Foot Stool", 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
+            AddCraft(typeof(Stool), "Furniture", "Stool", 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
+            AddCraft(typeof(BambooChair), "Furniture", "Bamboo Chair", 21.0, 46.0, typeof(Board), 1044041, 13, 1044351);
+            AddCraft(typeof(WoodenChair), "Furniture", "Wooden Chair", 21.0, 46.0, typeof(Board), 1044041, 13, 1044351);
+            AddCraft(typeof(FancyWoodenChairCushion), "Furniture", "Fancy Wooden Chair Cushion", 42.1, 67.1, typeof(Board), 1044041, 15, 1044351);
+            AddCraft(typeof(WoodenChairCushion), "Furniture", "Wooden Chair Cushion", 42.1, 67.1, typeof(Board), 1044041, 13, 1044351);
+            AddCraft(typeof(WoodenBench), "Furniture", "Wooden Bench", 52.6, 77.6, typeof(Board), 1044041, 17, 1044351);
+            AddCraft(typeof(WoodenThrone), "Furniture", "Wooden Throne", 52.6, 77.6, typeof(Board), 1044041, 17, 1044351);
+            AddCraft(typeof(Throne), "Furniture", "Throne", 73.6, 98.6, typeof(Board), 1044041, 19, 1044351);
+            AddCraft(typeof(Nightstand), "Furniture", "Nightstand", 42.1, 67.1, typeof(Board), 1044041, 17, 1044351);
+            AddCraft(typeof(WritingTable), "Furniture", "Writing Table", 63.1, 88.1, typeof(Board), 1044041, 17, 1044351);
+            AddCraft(typeof(YewWoodTable), "Furniture", "Yew Wood Table", 63.1, 88.1, typeof(Board), 1044041, 23, 1044351);
+            AddCraft(typeof(LargeTable), "Furniture", "Large Table", 84.2, 109.2, typeof(Board), 1044041, 27, 1044351);
             
             // Containers
             AddCraft(typeof(WoodenBox), 1044292, 1023709, 21.0, 46.0, typeof(Board), 1044041, 10, 1044351);

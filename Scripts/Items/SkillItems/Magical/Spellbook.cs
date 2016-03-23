@@ -551,7 +551,7 @@ namespace Server.Items
         public virtual int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue)
         {
             if (makersMark)
-                CraftedBy = from;
+                DisplayCrafter = true;
 
             m_Quality = (BookQuality)(quality - 1);
 

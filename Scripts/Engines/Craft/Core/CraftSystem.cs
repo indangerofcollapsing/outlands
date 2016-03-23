@@ -130,15 +130,11 @@ namespace Server.Engines.Craft
 
 		public void CreateItem( Mobile from, Type type, Type typeRes, BaseTool tool, CraftItem realCraftItem )
 		{	
-			// Verify if the type is in the list of the craftable item
+			
 			CraftItem craftItem = m_CraftItems.SearchFor( type );
+
 			if ( craftItem != null )
-			{
-				// The item is in the list, try to create it
-				// Test code: items like sextant parts can be crafted either directly from ingots, or from different parts
-				realCraftItem.Craft( from, this, typeRes, tool );
-				//craftItem.Craft( from, this, typeRes, tool );
-			}
+				realCraftItem.Craft( from, this, typeRes, tool );			
 		}
 
 		public int RandomRecipe()
@@ -182,6 +178,7 @@ namespace Server.Engines.Craft
 			DoGroup( group, craftItem );
 			return m_CraftItems.Add( craftItem );
 		}
+
         // DungeonMiningSystem extension to support crafting recipes via xmlInit
         public int AddCraft(Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, TextDefinition nameRes, int amount, int xmlInitValue)
         {
@@ -190,9 +187,9 @@ namespace Server.Engines.Craft
             craftItem.m_xmlInit = xmlInitValue;
 
             DoGroup(group, craftItem);
+
             return m_CraftItems.Add(craftItem);
         }
-
 
 		private void DoGroup( TextDefinition groupName, CraftItem craftItem )
 		{
@@ -204,10 +201,9 @@ namespace Server.Engines.Craft
 				craftGroup.AddCraftItem( craftItem );
 				m_CraftGroups.Add( craftGroup );
 			}
-			else
-			{
-				m_CraftGroups.GetAt( index ).AddCraftItem( craftItem );
-			}
+
+			else			
+				m_CraftGroups.GetAt( index ).AddCraftItem( craftItem );			
 		}
 
 
@@ -355,7 +351,6 @@ namespace Server.Engines.Craft
 			CraftSubRes craftSubRes = new CraftSubRes( type, name, reqSkill, message );
 			m_CraftSubRes.Add( craftSubRes );
 		}
-
 
 		public void SetSubRes2( Type type, string name )
 		{

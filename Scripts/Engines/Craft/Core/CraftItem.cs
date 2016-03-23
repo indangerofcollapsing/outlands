@@ -26,7 +26,6 @@ namespace Server.Engines.Craft
 
     public class CraftItem
     {
-        // DungeonMiningSystem
         public int m_xmlInit;
 
         private CraftResCol m_arCraftRes;
@@ -388,11 +387,7 @@ namespace Server.Engines.Craft
 			typeof( BaseTool ),
 			typeof( BaseHarvestTool ),
             typeof( Runebook ),
-            typeof( Spellbook ), 
-			typeof( FukiyaDarts ), 					
-			typeof( BaseQuiver ),
-            typeof( DragonBardingDeed ),
-            typeof( Shuriken )
+            typeof( Spellbook ),
 		};
 
         private static Type[] m_NeverColorTable = new Type[]
@@ -955,6 +950,17 @@ namespace Server.Engines.Craft
             return false;
         }
 
+        public bool SkillGainPossible(Mobile from, Type typeRes, CraftSystem craftSystem, bool gainSkills, ref bool allRequiredSkills)
+        {
+            double successChance = GetSuccessChance(from, typeRes, craftSystem, gainSkills, ref allRequiredSkills);
+            double exceptionalChance = GetExceptionalChance(craftSystem, successChance, from);
+
+            if (successChance > 0 && successChance < 1)
+                return true;
+
+            return false;
+        }
+
         public double GetSuccessChance(Mobile from, Type typeRes, CraftSystem craftSystem, bool gainSkills, ref bool allRequiredSkills)
         {
             double minMainSkill = 0.0;
@@ -989,6 +995,7 @@ namespace Server.Engines.Craft
 
             if (allRequiredSkills)
                 chance = craftSystem.GetChanceAtMin(this) + ((valMainSkill - minMainSkill) / (maxMainSkill - minMainSkill) * (1.0 - craftSystem.GetChanceAtMin(this)));
+            
             else
                 chance = 0.0;
 
@@ -1054,52 +1061,58 @@ namespace Server.Engines.Craft
                                         iRandom += iMin + 1;
                                         new InternalTimer(from, craftSystem, this, typeRes, tool, iRandom).Start();
                                     }
+
                                     else
                                     {
                                         from.EndAction(typeof(CraftSystem));
                                         from.SendGump(new CraftGump(from, craftSystem, tool, message));
                                     }
                                 }
+
                                 else
                                 {
                                     from.EndAction(typeof(CraftSystem));
                                     from.SendGump(new CraftGump(from, craftSystem, tool, message));
                                 }
                             }
+
                             else
                             {
                                 from.EndAction(typeof(CraftSystem));
                                 from.SendGump(new CraftGump(from, craftSystem, tool, badCraft));
                             }
                         }
+
                         else
                         {
                             from.EndAction(typeof(CraftSystem));
                             from.SendGump(new CraftGump(from, craftSystem, tool, 1072847)); // You must learn that recipe from a scroll.
                         }
                     }
+
                     else
                     {
                         from.EndAction(typeof(CraftSystem));
                         from.SendGump(new CraftGump(from, craftSystem, tool, 1044153)); // You don't have the required skills to attempt this item.
                     }
                 }
+
                 else
                 {
                     from.EndAction(typeof(CraftSystem));
                     from.SendGump(new CraftGump(from, craftSystem, tool, RequiredExpansionMessage(RequiredExpansion))); //The {0} expansion is required to attempt this item.
                 }
             }
-            else
-            {
-                from.SendLocalizedMessage(500119); // You must wait to perform another action
-            }
+
+            else            
+                from.SendLocalizedMessage(500119); // You must wait to perform another action            
         }
 
         private void TrackCraftingAchievements(Mobile crafter)
         {
             if (this.ItemType.IsSubclassOf(typeof(BaseWeapon)))
                 AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_CraftWeapon);
+
             else if (this.ItemType.IsSubclassOf(typeof(BaseArmor)))
                 AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_CraftArmor);
         }
@@ -1285,6 +1298,7 @@ namespace Server.Engines.Craft
 
                         else
                         {
+                            //TEST: FIX THIS
                             //Items That Are Made in Multiples
                             if (item is Arrow || item is Bolt)
                                 maxAmount *= 2;
@@ -1454,10 +1468,9 @@ namespace Server.Engines.Craft
 
                 m_From.DisruptiveAction();
 
-                if (m_iCount < m_iCountMax)
-                {
+                if (m_iCount < m_iCountMax)                
                     m_CraftSystem.PlayCraftEffect(m_From);
-                }
+                
                 else
                 {
                     m_From.EndAction(typeof(CraftSystem));
@@ -1468,6 +1481,7 @@ namespace Server.Engines.Craft
                     {
                         if (m_Tool != null && !m_Tool.Deleted && m_Tool.UsesRemaining > 0)
                             m_From.SendGump(new CraftGump(m_From, m_CraftSystem, m_Tool, badCraft));
+
                         else
                             m_From.SendLocalizedMessage(badCraft);
 
@@ -1502,10 +1516,8 @@ namespace Server.Engines.Craft
                     if (quality == 2 && m_From.Skills[m_CraftSystem.MainSkill].Base >= 100.0)
                         makersMark = m_CraftItem.IsMarkable(m_CraftItem.ItemType);
 
-                    if (makersMark && context.MarkOption == CraftMarkOption.PromptForMark)
-                    {
-                        m_From.SendGump(new QueryMakersMarkGump(quality, m_From, m_CraftItem, m_CraftSystem, m_TypeRes, m_Tool));
-                    }
+                    if (makersMark && context.MarkOption == CraftMarkOption.PromptForMark)                    
+                        m_From.SendGump(new QueryMakersMarkGump(quality, m_From, m_CraftItem, m_CraftSystem, m_TypeRes, m_Tool));                    
 
                     else
                     {

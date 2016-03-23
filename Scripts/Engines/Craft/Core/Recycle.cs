@@ -202,6 +202,8 @@ namespace Server.Engines.Craft
                 }
 
                 int deletedCount = 0;
+
+                List<int> m_RecycleSounds = new List<int>();
                 
                 while (m_Queue.Count > 0)
                 {
@@ -217,29 +219,52 @@ namespace Server.Engines.Craft
                         if (totalResourceAmount < 2)
                             continue;
 
-                        //Return Colored Materials
-                        if (resourceType == typeof(IronIngot) && recycleItem.Resource != CraftResource.Iron)
+                        //Ingot
+                        if (resourceType == typeof(IronIngot))
                         {
-                            resourceType = GetCraftResourceType(recycleItem.Resource);
+                            if (!m_RecycleSounds.Contains(0x2A))
+                                m_RecycleSounds.Add(0x2A);
 
-                            if (resourceType == null)
-                                resourceType = typeof(IronIngot);
+                            if (!m_RecycleSounds.Contains(0x240))
+                                m_RecycleSounds.Add(0x240);
+
+                            if (recycleItem.Resource != CraftResource.Iron)
+                            {
+                                resourceType = GetCraftResourceType(recycleItem.Resource);
+
+                                if (resourceType == null)
+                                    resourceType = typeof(IronIngot);
+                            }
                         }
 
-                        if (resourceType == typeof(Leather) && recycleItem.Resource != CraftResource.RegularLeather)
+                        //Leather
+                        if (resourceType == typeof(Leather))
                         {
-                            resourceType = GetCraftResourceType(recycleItem.Resource);
+                            if (!m_RecycleSounds.Contains(0x3E3))
+                                m_RecycleSounds.Add(0x3E3);
 
-                            if (resourceType == null)
-                                resourceType = typeof(Leather);
+                            if (recycleItem.Resource != CraftResource.RegularLeather)
+                            {
+                                resourceType = GetCraftResourceType(recycleItem.Resource);
+
+                                if (resourceType == null)
+                                    resourceType = typeof(Leather);
+                            }
                         }
 
-                        if (resourceType == typeof(Board) && recycleItem.Resource != CraftResource.RegularWood)
+                        //Wood
+                        if (resourceType == typeof(Board))
                         {
-                            resourceType = GetCraftResourceType(recycleItem.Resource);
+                            if (!m_RecycleSounds.Contains(0x23D))
+                                m_RecycleSounds.Add(0x23D);
 
-                            if (resourceType == null)
-                                resourceType = typeof(Board);
+                            if (recycleItem.Resource != CraftResource.RegularWood)
+                            {
+                                resourceType = GetCraftResourceType(recycleItem.Resource);
+
+                                if (resourceType == null)
+                                    resourceType = typeof(Board);
+                            }
                         }
 
                         Item newResource = (Item)Activator.CreateInstance(resourceType);
@@ -247,8 +272,14 @@ namespace Server.Engines.Craft
                         if (newResource == null)
                             continue;
 
+                        //Cloth
                         if (resourceType == typeof(Cloth))
+                        {
+                            if (!m_RecycleSounds.Contains(0x248))
+                                m_RecycleSounds.Add(0x248);
+
                             newResource.Hue = recycleItem.Hue;
+                        }
 
                         deleteItem = true;
                         deletedCount++;
@@ -263,8 +294,10 @@ namespace Server.Engines.Craft
                 
                 if (deletedCount > 0)
                 {
-                    from.PlaySound(0x2A);
-                    from.PlaySound(0x240);
+                    foreach (int sound in m_RecycleSounds)
+                    {
+                        from.PlaySound(sound);
+                    }
 
                     return RecycleResult.Success;
                 }
@@ -284,7 +317,7 @@ namespace Server.Engines.Craft
                 }                 
 
                 RecycleResult result = RecycleResult.Invalid;
-                int message;
+                string message;
                 Item item = targeted as Item;
 
                 if (item == null)
@@ -296,9 +329,9 @@ namespace Server.Engines.Craft
                 switch (result)
                 {
                     default:
-                    case RecycleResult.Invalid: message = 1044272; break; // You can't melt that down into ingots.
-                    case RecycleResult.NoSkill: message = 1044269; break; // You have no idea how to work this metal.
-                    case RecycleResult.Success: message = 1044270; break; // You melt the item down into ingots.
+                    case RecycleResult.Invalid: message = "That cannot be recycled."; break;
+                    case RecycleResult.NoSkill: message = "You do not know how to recycle this material."; break;
+                    case RecycleResult.Success: message = "You recycle the item."; break;
                 }
 
                 from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, message));

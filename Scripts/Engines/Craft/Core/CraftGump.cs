@@ -15,9 +15,9 @@ namespace Server.Engines.Craft
 
 		private CraftPage m_Page;
 
-		private const int LabelHue = 0x480;
-		private const int LabelColor = 0x7FFF;
-		private const int FontColor = 0xFFFFFF;
+		private int LabelHue = 0x480;
+		private int LabelColor = 0x7FFF;
+		private int FontColor = 0xFFFFFF;
 
 		private enum CraftPage
 		{
@@ -64,6 +64,7 @@ namespace Server.Engines.Craft
 			AddHtmlLocalized( 10, 302, 150, 25, 1044012, LabelColor, false, false ); // <CENTER>NOTICES</CENTER>
 
             int textHue = 2499;
+            int highlightColor = 2599;
 
             //Guide
             AddButton(10, 0, 2094, 2095, 1000, GumpButtonType.Reply, 0);
@@ -152,7 +153,7 @@ namespace Server.Engines.Craft
             AddButton(270, 362, 4005, 4007, GetButtonID(6, 10), GumpButtonType.Reply, 0);
 
             if (context.HighlightSkillGainItems)
-                AddLabel(305, 365, textHue, "Highlight Skillgain Items"); 
+                AddLabel(305, 365, highlightColor, "Highlight Skillgain Items"); 
             else
                 AddLabel(305, 365, textHue, "Do Not Highlight Skillgain Items"); 
 
@@ -295,75 +296,116 @@ namespace Server.Engines.Craft
 				AddHtmlLocalized( 230, 62, 200, 22, 1044165, LabelColor, false, false ); // You haven't made anything yet.			
 		}
 
-		public void CreateItemList( int selectedGroup )
-		{
-			if ( selectedGroup == 501 ) // 501 : Last 10
-			{
-				CreateMakeLastList();
-				return;
-			}
-
-			CraftGroupCol craftGroupCol = m_CraftSystem.CraftGroups;
-			CraftGroup craftGroup = craftGroupCol.GetAt( selectedGroup );
-			CraftItemCol craftItemCol = craftGroup.CraftItems;
-
-			for ( int i = 0; i < craftItemCol.Count; ++i )
-			{
-				int index = i % 10;
-
-				CraftItem craftItem = craftItemCol.GetAt( i );
-
-				if ( index == 0 )
-				{
-					if ( i > 0 )
-					{
-						AddButton( 370, 260, 4005, 4007, 0, GumpButtonType.Page, (i / 10) + 1 );
-						AddHtmlLocalized( 405, 263, 100, 18, 1044045, LabelColor, false, false ); // NEXT PAGE
-					}
-
-					AddPage( (i / 10) + 1 );
-
-					if ( i > 0 )
-					{
-						AddButton( 220, 260, 4014, 4015, 0, GumpButtonType.Page, i / 10 );
-						AddHtmlLocalized( 255, 263, 100, 18, 1044044, LabelColor, false, false ); // PREV PAGE
-					}
-				}
-
-				AddButton( 220, 60 + (index * 20), 4005, 4007, GetButtonID( 1, i ), GumpButtonType.Reply, 0 );
-
-				if ( craftItem.NameNumber > 0 )
-					AddHtmlLocalized( 255, 63 + (index * 20), 220, 18, craftItem.NameNumber, LabelColor, false, false );
-
-				else
-					AddLabel( 255, 60 + (index * 20), LabelHue, craftItem.NameString );
-
-				AddButton( 480, 60 + (index * 20), 4011, 4012, GetButtonID( 2, i ), GumpButtonType.Reply, 0 );
-			}
-		}
-
 		public int CreateGroupList()
 		{
 			CraftGroupCol craftGroupCol = m_CraftSystem.CraftGroups;
 
+            CraftContext context = m_CraftSystem.GetContext(m_From);
+
 			AddButton( 15, 60, 4005, 4007, GetButtonID( 6, 3 ), GumpButtonType.Reply, 0 );
 			AddHtmlLocalized( 50, 63, 150, 18, 1044014, LabelColor, false, false ); // LAST TEN
-
-			for ( int i = 0; i < craftGroupCol.Count; i++ )
+            
+			for ( int a = 0; a < craftGroupCol.Count; a++ )
 			{
-				CraftGroup craftGroup = craftGroupCol.GetAt( i );
+				CraftGroup craftGroup = craftGroupCol.GetAt( a );
 
-				AddButton( 15, 80 + (i * 20), 4005, 4007, GetButtonID( 0, i ), GumpButtonType.Reply, 0 );
+                bool skillGainPossible = false;
+                bool allRequiredSkills = true;
 
-				if ( craftGroup.NameNumber > 0 )
-					AddHtmlLocalized( 50, 83 + (i * 20), 150, 18, craftGroup.NameNumber, LabelColor, false, false );
+                int skillGainPossibleHue = 2599;
 
-				else
-					AddLabel( 50, 80 + (i * 20), LabelHue, craftGroup.NameString );
+                if (context != null)
+                {
+                     CraftItemCol craftItemCol = craftGroup.CraftItems;
+                     Type resourceType = m_CraftSystem.CraftSubRes.ResType;
+
+                     for (int b = 0; b < craftItemCol.Count; ++b)
+                     {
+                         CraftItem craftItem = craftItemCol.GetAt(b);
+                         
+                         if (craftItem.SkillGainPossible(m_From, resourceType, m_CraftSystem, false, ref allRequiredSkills))
+                             skillGainPossible = true;
+                     }
+
+                    if (!context.HighlightSkillGainItems)
+                        skillGainPossible = false;
+                }
+
+				AddButton( 15, 80 + (a * 20), 4005, 4007, GetButtonID( 0, a ), GumpButtonType.Reply, 0 );
+                
+                if (skillGainPossible)
+                    AddLabel(50, 80 + (a * 20), skillGainPossibleHue, craftGroup.NameString);
+
+                else
+                    AddLabel(50, 80 + (a * 20), LabelHue, craftGroup.NameString);
 			}
 
 			return craftGroupCol.Count;
 		}
+
+        public void CreateItemList(int selectedGroup)
+        {
+            if (selectedGroup == 501) // 501 : Last 10
+            {
+                CreateMakeLastList();
+                return;
+            }
+
+            CraftGroupCol craftGroupCol = m_CraftSystem.CraftGroups;
+            CraftGroup craftGroup = craftGroupCol.GetAt(selectedGroup);
+            CraftItemCol craftItemCol = craftGroup.CraftItems;
+
+            CraftContext context = m_CraftSystem.GetContext(m_From);
+
+            for (int i = 0; i < craftItemCol.Count; ++i)
+            {
+                int index = i % 10;
+
+                CraftItem craftItem = craftItemCol.GetAt(i);
+
+                if (index == 0)
+                {
+                    if (i > 0)
+                    {
+                        AddButton(370, 260, 4005, 4007, 0, GumpButtonType.Page, (i / 10) + 1);
+                        AddHtmlLocalized(405, 263, 100, 18, 1044045, LabelColor, false, false); // NEXT PAGE
+                    }
+
+                    AddPage((i / 10) + 1);
+
+                    if (i > 0)
+                    {
+                        AddButton(220, 260, 4014, 4015, 0, GumpButtonType.Page, i / 10);
+                        AddHtmlLocalized(255, 263, 100, 18, 1044044, LabelColor, false, false); // PREV PAGE
+                    }
+                }
+
+                AddButton(220, 60 + (index * 20), 4005, 4007, GetButtonID(1, i), GumpButtonType.Reply, 0);
+
+                bool skillGainPossible = false;
+                bool allRequiredSkills = true;
+
+                int skillGainPossibleHue = 2599;
+
+                if (context != null)
+                {
+                    Type resourceType = m_CraftSystem.CraftSubRes.ResType;
+
+                    skillGainPossible = craftItem.SkillGainPossible(m_From, resourceType, m_CraftSystem, false, ref allRequiredSkills);
+
+                    if (!context.HighlightSkillGainItems)
+                        skillGainPossible = false;
+                }
+
+                if (skillGainPossible)
+                    AddLabel(255, 60 + (index * 20), skillGainPossibleHue, craftItem.NameString);
+
+                else
+                    AddLabel(255, 60 + (index * 20), LabelHue, craftItem.NameString);
+
+                AddButton(480, 60 + (index * 20), 4011, 4012, GetButtonID(2, i), GumpButtonType.Reply, 0);
+            }
+        }
 
 		public static int GetButtonID( int type, int index )
 		{
@@ -386,7 +428,8 @@ namespace Server.Engines.Craft
 				if ( context != null )
 				{
 					CraftSubResCol res = ( item.UseSubRes2 ? m_CraftSystem.CraftSubRes2 : m_CraftSystem.CraftSubRes );
-					int resIndex = ( item.UseSubRes2 ? context.LastResourceIndex2 : context.LastResourceIndex );
+					
+                    int resIndex = ( item.UseSubRes2 ? context.LastResourceIndex2 : context.LastResourceIndex );
 
 					if ( resIndex >= 0 && resIndex < res.Count )
 						type = res.GetAt( resIndex ).ItemType;
@@ -492,7 +535,7 @@ namespace Server.Engines.Craft
                         break;
                     }
 
-                    //Item Details: Last 10
+                    //Item Details: Last Ten
                     case 4:
                     {
                         if (context == null)
@@ -587,7 +630,7 @@ namespace Server.Engines.Craft
                                 break;
                             }
 
-                            //Last 10
+                            //Last Ten
                             case 3:
                             {
                                 if (context == null)
@@ -621,7 +664,7 @@ namespace Server.Engines.Craft
                                 break;
                             }
 
-                            // Toggle Mark Option
+                            //Toggle Mark Option
                             case 6:
                             {
                                 if (context == null || !system.MarkOption)
@@ -639,27 +682,7 @@ namespace Server.Engines.Craft
                                 break;
                             }
 
-                            /*
-                            //Secondary Resource
-                            case 7:
-                            {
-                                if (system.CraftSubRes2.Init)
-                                    m_From.SendGump(new CraftGump(m_From, system, m_Tool, null, CraftPage.PickResource2));
-
-                                break;
-                            }
-                            */
-
-                            //Enhance Item
-                            case 8:
-                            {
-                                if (system.CanEnhance)
-                                    Enhance.BeginTarget(m_From, system, m_Tool);
-
-                                break;
-                            }
-
-                            // Toggle Smelt option
+                            //Toggle Smelt option
                             case 9:
                             {
                                 if (context == null || !system.Recycle)

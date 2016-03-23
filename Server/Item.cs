@@ -1,23 +1,3 @@
-/***************************************************************************
- *                                  Item.cs
- *                            -------------------
- *   begin                : May 1, 2002
- *   copyright            : (C) The RunUO Software Team
- *   email                : info@runuo.com
- *
- *   $Id$
- *
- ***************************************************************************/
-
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-
 using System;
 using System.IO;
 using System.Collections;
@@ -33,6 +13,7 @@ using Server.ContextMenus;
 
 namespace Server
 {
+    #region Layer
     /// <summary>
     /// Enumeration of item layer values.
     /// </summary>
@@ -172,6 +153,8 @@ namespace Server
         LastValid = 0x1D
     }
 
+    #endregion
+
     /// <summary>
     /// Internal flags used to signal how the item should be updated and resent to nearby clients.
     /// </summary>
@@ -195,6 +178,7 @@ namespace Server
         /// </summary>
         Properties = 0x00000004
     }
+
 
     public enum Quality
     {
@@ -236,7 +220,6 @@ namespace Server
         None,
         Metal,
         Leather,
-        Scales,
         Wood
     }
 

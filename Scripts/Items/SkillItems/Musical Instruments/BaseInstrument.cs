@@ -287,7 +287,7 @@ namespace Server.Items
             Quality = (InstrumentQuality)quality;
 
             if (makersMark)
-                CraftedBy = from;
+                DisplayCrafter = true;
 
             return quality;
         }
