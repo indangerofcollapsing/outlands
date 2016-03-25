@@ -37,7 +37,8 @@ namespace Server.Engines.Craft
             return 0.0; // 0%
         }
 
-        private DefInscription() : base(1, 1, 1.25)// base( 1, 1, 3.0 )
+        private DefInscription()
+            : base(1, 1, 1.25)// base( 1, 1, 3.0 )
         {
         }
 
@@ -45,22 +46,17 @@ namespace Server.Engines.Craft
         {
             if (tool == null || tool.Deleted || tool.UsesRemaining < 0)
                 return 1044038; // You have worn out your tool!
+
             else if (!BaseTool.CheckAccessible(tool, from))
                 return 1044263; // The tool must be on your person to use.
 
             if (typeItem != null)
             {
-                object o = Activator.CreateInstance(typeItem);
+                object item = Activator.CreateInstance(typeItem);
 
-                if (o is SpellScroll)
+                if (item is SpellScroll)
                 {
-                    SpellScroll scroll = (SpellScroll)o;
-                    if (scroll is ResurrectionScroll || scroll is ManaVampireScroll)
-                    {
-                        scroll.Delete();
-                        return 0;
-                    }
-
+                    SpellScroll scroll = (SpellScroll)item;
                     Spellbook book = Spellbook.Find(from, scroll.SpellID);
 
                     bool hasSpell = (book != null && book.HasSpell(scroll.SpellID));
@@ -68,10 +64,12 @@ namespace Server.Engines.Craft
                     if (scroll.SpellID >= 48 && scroll.SpellID <= 63)
                     {
                         Item[] packScrolls = from.Backpack.FindItemsByType(typeof(SpellScroll));
+
                         for (int i = 0; i < packScrolls.Length; i++)
                         {
-                            SpellScroll ss = (SpellScroll)packScrolls[i];
-                            if (ss != null && ss.SpellID == scroll.SpellID && ss.MasterStatus > 0)
+                            SpellScroll spellScroll = (SpellScroll)packScrolls[i];
+
+                            if (spellScroll != null && spellScroll.SpellID == scroll.SpellID && spellScroll.MasterStatus > 0)
                             {
                                 scroll.Delete();
                                 return 0;
@@ -80,17 +78,20 @@ namespace Server.Engines.Craft
 
                         scroll.Delete();
                         from.SendMessage("You must have a master copy of the scroll in your pack in order to inscribe this spell");
+
                         return 1042404;
                     }
+
                     else
                     {
                         scroll.Delete();
                         return (hasSpell ? 0 : 1042404); // null : You don't have that spell!
                     }
                 }
-                else if (o is Item)
+
+                else if (item is Item)
                 {
-                    ((Item)o).Delete();
+                    ((Item)item).Delete();
                 }
             }
 
@@ -115,9 +116,11 @@ namespace Server.Engines.Craft
                 {
                     if (lostMaterial)
                         return 1044043; // You failed to create the item, and some of your materials are lost.
+
                     else
                         return 1044157; // You failed to create the item, but no materials were lost.
                 }
+
                 else
                 {
                     if (quality == 0)
@@ -134,21 +137,25 @@ namespace Server.Engines.Craft
 
                     else if (quality == 2)
                         return 1044155; // You create an exceptional quality item.
+
                     else
                         return 1044154; // You create the item.
                 }
             }
+
             else
             {
                 Type[] types = Loot.RegularScrollTypes;
                 int ID = Array.IndexOf(types, item.ItemType);
 
-                if (ID >= 48 && ID <= 63 && !(item.ItemType == typeof(ResurrectionScroll)) && !(item.ItemType == typeof(ManaVampireScroll)))
+                if (ID >= 48 && ID <= 63)
                 {
                     Item[] packScrolls = from.Backpack.FindItemsByType(typeof(SpellScroll));
+
                     for (int i = 0; i < packScrolls.Length; i++)
                     {
                         SpellScroll ss = (SpellScroll)packScrolls[i];
+
                         if (ss != null && ss.SpellID == ID && ss.MasterStatus > 0)
                         {
                             if (--ss.UsesRemaining <= 0)
@@ -156,6 +163,7 @@ namespace Server.Engines.Craft
                                 from.SendMessage("The master scroll is destroyed during the inscription process.");
                                 ss.Delete();
                             }
+
                             break;
                         }
                     }
@@ -206,7 +214,12 @@ namespace Server.Engines.Craft
                 case 7: minSkill = 75.0; maxSkill = 125.0; break;
             }
 
-            int index = AddCraft(type, 1044369 + m_Circle, 1044381 + m_Index++, minSkill, maxSkill, m_RegTypes[(int)regs[0]], 1044353 + (int)regs[0], 1, 1044361 + (int)regs[0]);
+            string groupName = "Circle 1-6 Spells";
+
+            if (m_Circle >= 6)
+                groupName = "Circle 7-8 Spells";
+
+            int index = AddCraft(type, groupName, 1044381 + m_Index++, minSkill, maxSkill, m_RegTypes[(int)regs[0]], 1044353 + (int)regs[0], 1, 1044361 + (int)regs[0]);
 
             double ChanceOffset = 20.0, ChanceLength = 100.0 / 7.5;
 
@@ -226,7 +239,7 @@ namespace Server.Engines.Craft
         {
             int id = CraftItem.ItemIDOf(regs[0]);
 
-            int index = AddCraft(type, 1061677, 1060509 + spell, minSkill, minSkill + 1.0, regs[0], id < 0x4000 ? 1020000 + id : 1078872 + id, 1, 501627);  //Yes, on OSI it's only 1.0 skill diff'.  Don't blame me, blame OSI.
+            int index = AddCraft(type, 1061677, 1060509 + spell, minSkill, minSkill + 1.0, regs[0], id < 0x4000 ? 1020000 + id : 1078872 + id, 1, 501627);
 
             for (int i = 1; i < regs.Length; ++i)
             {
@@ -241,9 +254,24 @@ namespace Server.Engines.Craft
 
         public override void InitCraftList()
         {
-            m_Circle = 0;
-            m_Mana = 4;
+            int index;
 
+            m_Circle = 0;
+            m_Mana = 2;
+
+            //Utility
+            index = AddCraft(typeof(Spellbook), "Utility", "Spellbook", 25.0, 50.0, typeof(BlankScroll), 1044377, 2, 1044378);
+            ForceNonExceptional(index);
+
+            index = AddCraft(typeof(Runebook), "Utility", "Runebook", 45.0, 95.0, typeof(BlankScroll), 1044377, 8, 1044378);
+            AddRes(index, typeof(RecallScroll), 1044445, 1, 1044253);
+            AddRes(index, typeof(ResurrectionScroll), 1044439, 1, 1044253);
+            AddCraft(typeof(Engines.BulkOrders.BulkOrderBook), 1044294, 1028793, 65.0, 115.0, typeof(BlankScroll), 1044377, 10, 1044378);
+
+            index = AddCraft(typeof(AncientMystery.AncientMysteryScroll), "Utility", "Ancient Mystery Scroll", 80.0, 120.0, typeof(BlankScroll), 1044377, 25, 1044378);
+            AddRes(index, typeof(GhoulHide), "Ghoul Hide", 2, "You do not have the neccesary crafting component needed to make this");
+
+            //Circle 1-6 Spells
             AddSpell(typeof(ReactiveArmorScroll), Reg.Garlic, Reg.SpidersSilk, Reg.SulfurousAsh);
             AddSpell(typeof(ClumsyScroll), Reg.Bloodmoss, Reg.Nightshade);
             AddSpell(typeof(CreateFoodScroll), Reg.Garlic, Reg.Ginseng, Reg.MandrakeRoot);
@@ -254,7 +282,7 @@ namespace Server.Engines.Craft
             AddSpell(typeof(WeakenScroll), Reg.Garlic, Reg.Nightshade);
 
             m_Circle = 1;
-            m_Mana = 6;
+            m_Mana = 3;
 
             AddSpell(typeof(AgilityScroll), Reg.Bloodmoss, Reg.MandrakeRoot);
             AddSpell(typeof(CunningScroll), Reg.Nightshade, Reg.MandrakeRoot);
@@ -266,7 +294,7 @@ namespace Server.Engines.Craft
             AddSpell(typeof(StrengthScroll), Reg.Nightshade, Reg.MandrakeRoot);
 
             m_Circle = 2;
-            m_Mana = 9;
+            m_Mana = 4;
 
             AddSpell(typeof(BlessScroll), Reg.Garlic, Reg.MandrakeRoot);
             AddSpell(typeof(FireballScroll), Reg.BlackPearl);
@@ -278,7 +306,7 @@ namespace Server.Engines.Craft
             AddSpell(typeof(WallOfStoneScroll), Reg.Bloodmoss, Reg.Garlic);
 
             m_Circle = 3;
-            m_Mana = 11;
+            m_Mana = 6;
 
             AddSpell(typeof(ArchCureScroll), Reg.Garlic, Reg.Ginseng, Reg.MandrakeRoot);
             AddSpell(typeof(ArchProtectionScroll), Reg.Garlic, Reg.Ginseng, Reg.MandrakeRoot, Reg.SulfurousAsh);
@@ -290,7 +318,7 @@ namespace Server.Engines.Craft
             AddSpell(typeof(RecallScroll), Reg.BlackPearl, Reg.Bloodmoss, Reg.MandrakeRoot);
 
             m_Circle = 4;
-            m_Mana = 14;
+            m_Mana = 7;
 
             AddSpell(typeof(BladeSpiritsScroll), Reg.BlackPearl, Reg.Nightshade, Reg.MandrakeRoot);
             AddSpell(typeof(DispelFieldScroll), Reg.BlackPearl, Reg.Garlic, Reg.SpidersSilk, Reg.SulfurousAsh);
@@ -302,7 +330,7 @@ namespace Server.Engines.Craft
             AddSpell(typeof(SummonCreatureScroll), Reg.Bloodmoss, Reg.MandrakeRoot, Reg.SpidersSilk);
 
             m_Circle = 5;
-            m_Mana = 20;
+            m_Mana = 10;
 
             AddSpell(typeof(DispelScroll), Reg.Garlic, Reg.MandrakeRoot, Reg.SulfurousAsh);
             AddSpell(typeof(EnergyBoltScroll), Reg.BlackPearl, Reg.Nightshade);
@@ -313,8 +341,9 @@ namespace Server.Engines.Craft
             AddSpell(typeof(ParalyzeFieldScroll), Reg.BlackPearl, Reg.Ginseng, Reg.SpidersSilk);
             AddSpell(typeof(RevealScroll), Reg.Bloodmoss, Reg.SulfurousAsh);
 
+            //Circle 7-8 Spells
             m_Circle = 6;
-            m_Mana = 40;
+            m_Mana = 20;
 
             AddSpell(typeof(ChainLightningScroll), Reg.BlackPearl, Reg.Bloodmoss, Reg.MandrakeRoot, Reg.SulfurousAsh);
             AddSpell(typeof(EnergyFieldScroll), Reg.BlackPearl, Reg.MandrakeRoot, Reg.SpidersSilk, Reg.SulfurousAsh);
@@ -326,7 +355,7 @@ namespace Server.Engines.Craft
             AddSpell(typeof(PolymorphScroll), Reg.Bloodmoss, Reg.MandrakeRoot, Reg.SpidersSilk);
 
             m_Circle = 7;
-            m_Mana = 50;
+            m_Mana = 25;
 
             AddSpell(typeof(EarthquakeScroll), Reg.Bloodmoss, Reg.MandrakeRoot, Reg.Ginseng, Reg.SulfurousAsh);
             AddSpell(typeof(EnergyVortexScroll), Reg.BlackPearl, Reg.Bloodmoss, Reg.MandrakeRoot, Reg.Nightshade);
@@ -336,102 +365,6 @@ namespace Server.Engines.Craft
             AddSpell(typeof(SummonEarthElementalScroll), Reg.Bloodmoss, Reg.MandrakeRoot, Reg.SpidersSilk);
             AddSpell(typeof(SummonFireElementalScroll), Reg.Bloodmoss, Reg.MandrakeRoot, Reg.SpidersSilk, Reg.SulfurousAsh);
             AddSpell(typeof(SummonWaterElementalScroll), Reg.Bloodmoss, Reg.MandrakeRoot, Reg.SpidersSilk);
-
-            if (Core.SE)
-            {
-                AddNecroSpell(0, 23, 39.6, typeof(AnimateDeadScroll), Reagent.GraveDust, Reagent.DaemonBlood);
-                AddNecroSpell(1, 13, 19.6, typeof(BloodOathScroll), Reagent.DaemonBlood);
-                AddNecroSpell(2, 11, 19.6, typeof(CorpseSkinScroll), Reagent.BatWing, Reagent.GraveDust);
-                AddNecroSpell(3, 7, 19.6, typeof(CurseWeaponScroll), Reagent.PigIron);
-                AddNecroSpell(4, 11, 19.6, typeof(EvilOmenScroll), Reagent.BatWing, Reagent.NoxCrystal);
-                AddNecroSpell(5, 11, 39.6, typeof(HorrificBeastScroll), Reagent.BatWing, Reagent.DaemonBlood);
-                AddNecroSpell(6, 23, 69.6, typeof(LichFormScroll), Reagent.GraveDust, Reagent.DaemonBlood, Reagent.NoxCrystal);
-                AddNecroSpell(7, 17, 29.6, typeof(MindRotScroll), Reagent.BatWing, Reagent.DaemonBlood, Reagent.PigIron);
-                AddNecroSpell(8, 5, 19.6, typeof(PainSpikeScroll), Reagent.GraveDust, Reagent.PigIron);
-                AddNecroSpell(9, 17, 49.6, typeof(PoisonStrikeScroll), Reagent.NoxCrystal);
-                AddNecroSpell(10, 29, 64.6, typeof(StrangleScroll), Reagent.DaemonBlood, Reagent.NoxCrystal);
-                AddNecroSpell(11, 17, 29.6, typeof(SummonFamiliarScroll), Reagent.BatWing, Reagent.GraveDust, Reagent.DaemonBlood);
-                AddNecroSpell(12, 23, 98.6, typeof(VampiricEmbraceScroll), Reagent.BatWing, Reagent.NoxCrystal, Reagent.PigIron);
-                AddNecroSpell(13, 41, 79.6, typeof(VengefulSpiritScroll), Reagent.BatWing, Reagent.GraveDust, Reagent.PigIron);
-                AddNecroSpell(14, 23, 59.6, typeof(WitherScroll), Reagent.GraveDust, Reagent.NoxCrystal, Reagent.PigIron);
-                AddNecroSpell(15, 17, 79.6, typeof(WraithFormScroll), Reagent.NoxCrystal, Reagent.PigIron);
-                AddNecroSpell(16, 40, 79.6, typeof(ExorcismScroll), Reagent.NoxCrystal, Reagent.GraveDust);
-            }
-
-            int index;
-
-            if (Core.ML)
-            {
-                index = AddCraft(typeof(EnchantedSwitch), 1044294, 1072893, 45.0, 95.0, typeof(BlankScroll), 1044377, 1, 1044378);
-                AddRes(index, typeof(SpidersSilk), 1044360, 1, 1044253);
-                AddRes(index, typeof(BlackPearl), 1044353, 1, 1044253);
-                AddRes(index, typeof(SwitchItem), 1073464, 1, 1044253);
-                ForceNonExceptional(index);
-                SetNeededExpansion(index, Expansion.ML);
-
-                index = AddCraft(typeof(RunedPrism), 1044294, 1073465, 45.0, 95.0, typeof(BlankScroll), 1044377, 1, 1044378);
-                AddRes(index, typeof(SpidersSilk), 1044360, 1, 1044253);
-                AddRes(index, typeof(BlackPearl), 1044353, 1, 1044253);
-                AddRes(index, typeof(HollowPrism), 1072895, 1, 1044253);
-                ForceNonExceptional(index);
-                SetNeededExpansion(index, Expansion.ML);
-            }
-
-            //Emote Deeds
-            /*
-            AddCraft(typeof(EmoteYesDeed), "Emote Customization Deeds", "Emote: Yes", 80.0, 120.0, typeof(BluecapMushroom), "Bluecap Mushroom", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteNoDeed), "Emote Customization Deeds", "Emote: No", 80.0, 120.0, typeof(BluecapMushroom), "Bluecap Mushroom", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteHiccupDeed), "Emote Customization Deeds", "Emote: Hiccup", 80.0, 120.0, typeof(CockatriceEgg), "Cockatrice Egg", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteConfusedDeed), "Emote Customization Deeds", "Emote: Confused", 80.0, 120.0, typeof(CockatriceEgg), "Cockatrice Egg", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteGroanDeed), "Emote Customization Deeds", "Emote: Groan", 80.0, 120.0, typeof(Creepervine), "Creepervine", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteBurpDeed), "Emote Customization Deeds", "Emote: Burp", 80.0, 120.0, typeof(Creepervine), "Creepervine", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteGreetDeed), "Emote Customization Deeds", "Emote: Greet", 80.0, 120.0, typeof(FireEssence), "Fire Essence", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteLaughDeed), "Emote Customization Deeds", "Emote: Laugh", 80.0, 120.0, typeof(FireEssence), "Fire Essence", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteClapDeed), "Emote Customization Deeds", "Emote: Clap", 80.0, 120.0, typeof(Ghostweed), "Ghostweed", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteCoughDeed), "Emote Customization Deeds", "Emote: Cough", 80.0, 120.0, typeof(Ghostweed), "Ghostweed", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteCryDeed), "Emote Customization Deeds", "Emote: Cry", 80.0, 120.0, typeof(GhoulHide), "Ghoul Hide", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteFartDeed), "Emote Customization Deeds", "Emote: Fart", 80.0, 120.0, typeof(GhoulHide), "Ghoul Hide", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteSurprisedDeed), "Emote Customization Deeds", "Emote: Surprised", 80.0, 120.0, typeof(LuniteHeart), "Lunite Heart", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteAngerDeed), "Emote Customization Deeds", "Emote: Anger", 80.0, 120.0, typeof(LuniteHeart), "Lunite Heart", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteKissDeed), "Emote Customization Deeds", "Emote: Kiss", 80.0, 120.0, typeof(ObsidianShard), "Obsidian Shard", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteHurtDeed), "Emote Customization Deeds", "Emote: Hurt", 80.0, 120.0, typeof(ObsidianShard), "Obsidian Shard", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteOopsDeed), "Emote Customization Deeds", "Emote: Oops", 80.0, 120.0, typeof(Quartzstone), "Quartzstone", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmotePukeDeed), "Emote Customization Deeds", "Emote: Puke", 80.0, 120.0, typeof(Quartzstone), "Quartzstone", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteYellDeed), "Emote Customization Deeds", "Emote: Yell", 80.0, 120.0, typeof(ShatteredCrystal), "Shattered Crystal", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteShushDeed), "Emote Customization Deeds", "Emote: Shush", 80.0, 120.0, typeof(ShatteredCrystal), "Shattered Crystal", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteSickDeed), "Emote Customization Deeds", "Emote: Sick", 80.0, 120.0, typeof(Snakeskin), "Snakeskin", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteSleepDeed), "Emote Customization Deeds", "Emote: Sleep", 80.0, 120.0, typeof(Snakeskin), "Snakeskin", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteWhistleDeed), "Emote Customization Deeds", "Emote: Whistle", 80.0, 120.0, typeof(TrollFat), "Troll Fat", 50, "You do not have the crafting components neccessary in order to craft that.");
-            AddCraft(typeof(EmoteSpitDeed), "Emote Customization Deeds", "Emote: Spit", 80.0, 120.0, typeof(TrollFat), "Troll Fat", 50, "You do not have the crafting components neccessary in order to craft that.");
-            */
-
-            // OTHER
-            index = AddCraft(typeof(Runebook), 1044294, 1041267, 45.0, 95.0, typeof(BlankScroll), 1044377, 8, 1044378);
-            AddRes(index, typeof(RecallScroll), 1044445, 1, 1044253);
-            AddRes(index, typeof(ResurrectionScroll), 1044439, 1, 1044253);
-            AddCraft(typeof(Engines.BulkOrders.BulkOrderBook), 1044294, 1028793, 65.0, 115.0, typeof(BlankScroll), 1044377, 10, 1044378);
-
-            index = AddCraft(typeof(AncientMystery.AncientMysteryScroll), 1044294, "Ancient Mystery Scroll", 80.0, 120.0, typeof(BlankScroll), 1044377, 25, 1044378);
-            AddRes(index, typeof(GhoulHide), "Ghoul Hide", 2, "You do not have the neccesary crafting component needed to make this");
-
-            //if (Core.SE)
-            //{
-            index = AddCraft(typeof(Spellbook), 1044294, 1023834, 25.0, 50.0, typeof(BlankScroll), 1044377, 2, 1044378);
-            ForceNonExceptional(index);
-            //}
-
-            /* TODO
-			if ( Core.ML )
-			{
-				index = AddCraft( typeof( ScrappersCompendium ), 1044294, 1072940, 75.0, 125.0, typeof( BlankScroll ), 1044377, 100, 1044378 );
-				AddRes( index, typeof( DreadHornMane ), 1032682, 1, 1044253 );
-				AddRes( index, typeof( Taint ), 1032679, 10, 1044253 );
-				AddRes( index, typeof( Corruption ), 1032676, 10, 1044253 );
-				AddRareRecipe( index, 400 );
-				ForceNonExceptional( index );
-				SetNeededExpansion( index, Expansion.ML );
-			}
-			*/
 
             MarkOption = true;
         }

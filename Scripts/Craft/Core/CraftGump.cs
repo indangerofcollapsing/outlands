@@ -140,13 +140,8 @@ namespace Server.Engines.Craft
                         resourceCount += items[i].Amount;
                 }
 
-                AddButton(270, 342, 4005, 4007, GetButtonID(6, 0), GumpButtonType.Reply, 0);
-
-                if (nameNumber > 0)
-                    AddHtmlLocalized(305, 345, 250, 18, nameNumber, resourceCount.ToString(), LabelColor, false, false);
-
-                else
-                    AddLabel(305, 345, textHue, nameString + "(" + resourceCount + ")");
+                AddButton(270, 342, 4005, 4007, GetButtonID(6, 0), GumpButtonType.Reply, 0);                
+                AddLabel(305, 345, textHue, nameString + " (" + resourceCount + " Available)");
             }
 
             // Highlight Skillgain            
@@ -237,12 +232,7 @@ namespace Server.Engines.Craft
 				}
 
 				AddButton( 220, 60 + (index * 20), 4005, 4007, GetButtonID( 5, i ), GumpButtonType.Reply, 0 );
-
-				if ( subResource.NameNumber > 0 )
-					AddHtmlLocalized( 255, 63 + (index * 20), 250, 18, subResource.NameNumber, resourceCount.ToString(), LabelColor, false, false );
-
-				else
-					AddLabel( 255, 60 + ( index * 20 ), LabelHue, String.Format( "{0} ({1})", subResource.NameString, resourceCount ) );
+			    AddLabel( 255, 60 + ( index * 20 ), LabelHue, subResource.NameString + " (" +  resourceCount + " Available)" );
 			}
 		}
 
