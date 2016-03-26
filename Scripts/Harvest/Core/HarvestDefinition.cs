@@ -65,6 +65,7 @@ namespace Server.Engines.Harvest
 		{
 			if ( message is int )
 				from.SendLocalizedMessage( (int)message );
+
 			else if ( message is string )
 				from.SendMessage( (string)message );
 		}
@@ -78,6 +79,7 @@ namespace Server.Engines.Harvest
 			y /= m_BankHeight;
 
 			Dictionary<Point2D, HarvestBank> banks = null;
+
 			m_BanksByMap.TryGetValue( map, out banks );
 
 			if ( banks == null )
@@ -85,6 +87,7 @@ namespace Server.Engines.Harvest
 
 			Point2D key = new Point2D( x, y );
 			HarvestBank bank = null;
+
 			banks.TryGetValue( key, out bank );
 
 			if ( bank == null )
@@ -100,10 +103,9 @@ namespace Server.Engines.Harvest
 
 			double randomValue;
 
-			if ( m_RandomizeVeins )
-			{
+			if ( m_RandomizeVeins )			
 				randomValue = Utility.RandomDouble();
-			}
+			
 			else
 			{
 				Random random = new Random( ( x * 12 ) + ( y * 8 ) + ( map.MapID * 3 ) );
@@ -165,6 +167,7 @@ namespace Server.Engines.Harvest
 
 				return contains;
 			}
+
 			else
 			{
 				int dist = -1;

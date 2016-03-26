@@ -16,24 +16,7 @@ namespace Server.Items
 
 	public abstract class BaseHarvestTool : Item, IUsesRemaining, ICraftable
 	{
-		private Mobile m_Crafter;
-		private ToolQuality m_Quality;
-		private int m_UsesRemaining;
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public Mobile Crafter
-		{
-			get{ return m_Crafter; }
-			set{ m_Crafter = value; InvalidateProperties(); }
-		}
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public ToolQuality Quality
-		{
-			get{ return m_Quality; }
-			set{ UnscaleUses(); m_Quality = value; InvalidateProperties(); ScaleUses(); }
-		}
-
+        private int m_UsesRemaining;
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int UsesRemaining
 		{
@@ -54,7 +37,7 @@ namespace Server.Items
 
 		public int GetUsesScalar()
 		{
-			if ( m_Quality == ToolQuality.Exceptional )
+			if ( Quality == Quality.Exceptional )
 				return 200;
 
 			return 100;
@@ -71,18 +54,14 @@ namespace Server.Items
 		public BaseHarvestTool( int usesRemaining, int itemID ) : base( itemID )
 		{
 			m_UsesRemaining = usesRemaining;
-			m_Quality = ToolQuality.Regular;
+            Quality = Quality.Regular;
 		}
 
 		public override void GetProperties( ObjectPropertyList list )
 		{
 			base.GetProperties( list );
 
-			// Makers mark not displayed on OSI
-			//if ( m_Crafter != null )
-			//	list.Add( 1050043, m_Crafter.Name ); // crafted by ~1_NAME~
-
-			if ( m_Quality == ToolQuality.Exceptional )
+            if (Quality == Quality.Exceptional)
 				list.Add( 1060636 ); // exceptional
 
 			list.Add( 1060584, m_UsesRemaining.ToString() ); // uses remaining: ~1_val~
@@ -104,6 +83,7 @@ namespace Server.Items
 		{
 			if ( IsChildOf( from.Backpack ) || Parent == from )
 				HarvestSystem.BeginHarvesting( from, this );
+
 			else
 				from.SendLocalizedMessage( 1042001 ); // That must be in your pack for you to use it.
 		}
@@ -129,6 +109,7 @@ namespace Server.Items
 				return;
 
 			ContextMenuEntry miningEntry = new ContextMenuEntry( pm.ToggleMiningStone ? 6179 : 6178 );
+
 			miningEntry.Color = 0x421F;
 			list.Add( miningEntry );
 
@@ -158,20 +139,19 @@ namespace Server.Items
 
 				if ( m_Value )
 				{
-					if ( oldValue )
-					{
+					if ( oldValue )					
 						m_Mobile.SendLocalizedMessage( 1054023 ); // You are already set to mine both ore and stone!
-					}
-					else if ( !m_Mobile.StoneMining || m_Mobile.Skills[SkillName.Mining].Base < 100.0 )
-					{
+					
+					else if ( !m_Mobile.StoneMining || m_Mobile.Skills[SkillName.Mining].Base < 100.0 )					
 						m_Mobile.SendLocalizedMessage( 1054024 ); // You have not learned how to mine stone or you do not have enough skill!
-					}
+					
 					else
 					{
 						m_Mobile.ToggleMiningStone = true;
 						m_Mobile.SendLocalizedMessage( 1054022 ); // You are now set to mine both ore and stone.
 					}
 				}
+
 				else
 				{
 					if ( oldValue )
@@ -179,10 +159,9 @@ namespace Server.Items
 						m_Mobile.ToggleMiningStone = false;
 						m_Mobile.SendLocalizedMessage( 1054020 ); // You are now set to mine only ore.
 					}
-					else
-					{
-						m_Mobile.SendLocalizedMessage( 1054021 ); // You are already set to mine only ore!
-					}
+
+					else					
+						m_Mobile.SendLocalizedMessage( 1054021 ); // You are already set to mine only ore!					
 				}
 			}
 		}
@@ -195,11 +174,9 @@ namespace Server.Items
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 1 ); // version
+			writer.Write( (int) 0 ); // version
 
-			writer.Write( (Mobile) m_Crafter );
-			writer.Write( (int) m_Quality );
-
+            //Version 0
 			writer.Write( (int) m_UsesRemaining );
 		}
 
@@ -209,34 +186,21 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 
-			switch ( version )
-			{
-				case 1:
-				{
-					m_Crafter = reader.ReadMobile();
-					m_Quality = (ToolQuality) reader.ReadInt();
-					goto case 0;
-				}
-				case 0:
-				{
-					m_UsesRemaining = reader.ReadInt();
-					break;
-				}
-			}
+            //Version 0
+            if (version >= 0)
+            {
+                m_UsesRemaining = reader.ReadInt();
+            }
 		}
-
-		#region ICraftable Members
-
+        
 		public int OnCraft( int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue )
 		{
-			Quality = (ToolQuality)quality;
+			Quality = (Quality)quality;
 
-			if ( makersMark )
-				Crafter = from;
+            if (makersMark)
+                DisplayCrafter = true;
 
 			return quality;
 		}
-
-		#endregion
 	}
 }

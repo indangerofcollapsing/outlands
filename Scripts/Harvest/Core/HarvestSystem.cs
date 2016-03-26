@@ -14,8 +14,10 @@ namespace Server.Engines.Harvest
     public abstract class HarvestSystem
     {
         private List<HarvestDefinition> m_Definitions;
-
-        public List<HarvestDefinition> Definitions { get { return m_Definitions; } }
+        public List<HarvestDefinition> Definitions         
+        { 
+            get { return m_Definitions; } 
+        }
 
         public HarvestSystem()
         {
@@ -55,6 +57,7 @@ namespace Server.Engines.Harvest
         public virtual bool CheckResources(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, bool timed)
         {
             HarvestBank bank = def.GetBank(map, loc.X, loc.Y);
+
             bool available = (bank != null && bank.Current >= def.ConsumedPerHarvest);
 
             if (!available)
@@ -69,14 +72,6 @@ namespace Server.Engines.Harvest
 
         public virtual object GetLock(Mobile from, Item tool, HarvestDefinition def, object toHarvest)
         {
-            /* Here we prevent multiple harvesting.
-             * 
-             * Some options:
-             *  - 'return tool;' : This will allow the player to harvest more than once concurrently, but only if they use multiple tools. This seems to be as OSI.
-             *  - 'return GetType();' : This will disallow multiple harvesting of the same type. That is, we couldn't mine more than once concurrently, but we could be both mining and lumberjacking.
-             *  - 'return typeof( HarvestSystem );' : This will completely restrict concurrent harvesting.
-             */
-
             return typeof(HarvestSystem);
         }
 
@@ -93,6 +88,8 @@ namespace Server.Engines.Harvest
             if (!CheckHarvest(from, tool))
                 return false;
 
+            from.RevealingAction();
+
             from.Target = new HarvestTarget(tool, this);
             return true;
         }
@@ -100,6 +97,7 @@ namespace Server.Engines.Harvest
         public virtual void FinishHarvesting(Mobile from, Item tool, HarvestDefinition def, object toHarvest, object locked)
         {
             from.EndAction(locked);
+            from.RevealingAction();
 
             if (!CheckHarvest(from, tool))
                 return;
@@ -113,6 +111,7 @@ namespace Server.Engines.Harvest
                 OnBadHarvestTarget(from, tool, toHarvest);
                 return;
             }
+
             else if (!def.Validate(tileID))
             {
                 OnBadHarvestTarget(from, tool, toHarvest);
@@ -121,8 +120,10 @@ namespace Server.Engines.Harvest
 
             if (!CheckRange(from, tool, def, map, loc, true))
                 return;
+
             else if (!CheckResources(from, tool, def, map, loc, true))
                 return;
+
             else if (!CheckHarvest(from, tool, def, toHarvest))
                 return;
 
@@ -162,15 +163,12 @@ namespace Server.Engines.Harvest
                 {
                     Item item = Construct(type, from, tool, def, bank, resource);
 
-                    if (item == null)
-                    {
+                    if (item == null)                    
                         type = null;
-                    }
+                    
                     else
                     {
                         BaseBoat ownerBoat = BaseBoat.FindBoatAt(from.Location, from.Map);
-
-                        // IPY ACHIEVEMENTS		- This should go to fishing.SendSuccessTo instead
 
                         if (item is PrizedFish)
                         {
@@ -232,8 +230,6 @@ namespace Server.Engines.Harvest
                             }
                         }
 
-                        // IPY ACHIEVEMENTS
-                        //The whole harvest system is kludgy and I'm sure this is just adding to it.
                         if (item.Stackable)
                         {
                             int amount = def.ConsumedPerHarvest;
@@ -247,20 +243,22 @@ namespace Server.Engines.Harvest
 
                             if (eligableForRacialBonus && inFelucca && bank.Current >= feluccaRacialAmount && 0.1 > Utility.RandomDouble())
                                 item.Amount = feluccaRacialAmount;
+
                             else if (inFelucca && bank.Current >= feluccaAmount)
                                 item.Amount = feluccaAmount;
+
                             else if (eligableForRacialBonus && bank.Current >= racialAmount && 0.1 > Utility.RandomDouble())
                                 item.Amount = racialAmount;
+
                             else
                                 item.Amount = amount;
                         }
 
                         bank.Consume(item.Amount, from);
-
+                        
                         if (Give(from, item, def.PlaceAtFeetIfFull))
-                        {
                             SendSuccessTo(from, item, resource);
-                        }
+
                         else
                         {
                             SendPackFullTo(from, item, def, resource);
@@ -273,34 +271,42 @@ namespace Server.Engines.Harvest
                         {
                             Item bonusItem = Construct(bonus.Type, from, tool, def, bank, resource);
 
-                            if (Give(from, bonusItem, true))	//Bonuses always allow placing at feet, even if pack is full irregardless of def
-                            {
+                            if (Give(from, bonusItem, true))                            
                                 bonus.SendSuccessTo(from);
-                            }
-                            else
-                            {
-                                item.Delete();
-                            }
+                            
+                            else                            
+                                item.Delete();                            
                         }
 
                         WearTool(from, tool, def);
                     }
                 }
+
                 if (type == null)
-                {	// The only reason  for LJ/Mining to have a null type here is because of the custom harvesting for them
-                    if ((def.Skill != SkillName.Mining && def.Skill != SkillName.Lumberjacking) || !Mining.NewIPYMining)
+                {	
+                    if ((def.Skill != SkillName.Mining && def.Skill != SkillName.Lumberjacking) || !Mining.UseMiningCaptcha)
                     {
-                        def.SendMessageTo(from, def.FailMessage);	// NOTE: Implemented as "failed any sort of harvesting"
+                        def.SendMessageTo(from, def.FailMessage);
                         AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_FailMiningAttempt);
+
+                        FailHarvest(from, def);
                     }
                 }
             }
+
             else
-            {	// Failed
-                def.SendMessageTo(from, def.FailMessage);	// NOTE: Implemented as "failed any sort of harvesting"
+            {
+                def.SendMessageTo(from, def.FailMessage);
                 AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_FailMiningAttempt);
+
+                FailHarvest(from, def);
             }
+
             OnHarvestFinished(from, tool, def, vein, bank, resource, toHarvest);
+        }
+
+        public virtual void FailHarvest(Mobile from, HarvestDefinition def)
+        {
         }
 
         public static void WearTool(Mobile from, Item tool, HarvestDefinition def)
@@ -363,6 +369,7 @@ namespace Server.Engines.Harvest
             {
                 if (item is LargeBOD)
                     m.SendGump(new LargeBODAcceptGump(m, (LargeBOD)item));
+
                 else if (item is SmallBOD)
                     m.SendGump(new SmallBODAcceptGump(m, (SmallBOD)item));
 
@@ -384,18 +391,23 @@ namespace Server.Engines.Harvest
             {
                 var chest = item as BaseTreasureChest;
                 chest.UsedCaptcha = true;
+
                 for (int i = chest.Items.Count - 1; i >= 0; i--)
                 {
                     Item obj = chest.Items[i];
                     obj.Movable = true;
                 }
+
                 chest.OnDoubleClick(m);
                 return true;
             }
+
             else if (m.PlaceInBackpack(item))
                 return true;
+
             else
                 item.MoveToWorld(m.Location, m.Map);
+
             return true;
         }
 
@@ -419,9 +431,7 @@ namespace Server.Engines.Harvest
 
         public virtual HarvestResource MutateResource(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestVein vein, HarvestResource primary, HarvestResource fallback)
         {
-            bool racialBonus = (def.RaceBonus && from.Race == Race.Elf);
-
-            if (vein.ChanceToFallback > (Utility.RandomDouble() + (racialBonus ? .20 : 0)))
+            if (vein.ChanceToFallback > (Utility.RandomDouble()))
                 return fallback;
 
             double skillValue = from.Skills[def.Skill].Value;
@@ -448,27 +458,36 @@ namespace Server.Engines.Harvest
             {
                 from.EndAction(locked);
                 OnBadHarvestTarget(from, tool, toHarvest);
+
                 return false;
             }
+
             else if (!def.Validate(tileID))
             {
                 from.EndAction(locked);
                 OnBadHarvestTarget(from, tool, toHarvest);
+
                 return false;
             }
+
             else if (!CheckRange(from, tool, def, map, loc, true))
             {
                 from.EndAction(locked);
+
                 return false;
             }
+
             else if (!CheckResources(from, tool, def, map, loc, true))
             {
                 from.EndAction(locked);
+
                 return false;
             }
+
             else if (!CheckHarvest(from, tool, def, toHarvest))
             {
                 from.EndAction(locked);
+
                 return false;
             }
 
@@ -480,8 +499,7 @@ namespace Server.Engines.Harvest
         }
 
         public virtual void DoHarvestingSound(Mobile from, Item tool, HarvestDefinition def, object toHarvest)
-        {
-            //Changed from "from.PlaySound" to "Effects.PlaySound" - Sean
+        {           
             if (def.EffectSounds.Length > 0)
                 Effects.PlaySound(from.Location, from.Map, Utility.RandomList(def.EffectSounds));
         }
@@ -509,14 +527,104 @@ namespace Server.Engines.Harvest
             return def;
         }
 
-        public virtual void StartHarvesting(Mobile from, Item tool, object toHarvest)
+        public int GetSearchRange(Item tool)
+        {
+            if (tool is FishingPole)
+                return Fishing.HarvestRange;
+
+            return 2;
+        }
+
+        public virtual object SearchForNearbyNode(Point3D location, Map map, int range)
+        {
+            int rows = (range * 2) + 1;
+            int columns = (range * 2) + 1;
+
+            bool foundValidNode = false;
+
+            HarvestBank harvestBank = null;
+            
+            for (int a = 1; a < rows + 1; a++)
+            {
+                for (int b = 1; b < columns + 1; b++)
+                {
+                    Point3D newPoint = new Point3D(location.X + (-1 * (range + 1)) + a, location.Y + (-1 * (range + 1)) + b, location.Z);
+                    
+                    //Land Target on Tile
+                    LandTarget landTarget = new LandTarget(newPoint, map);
+
+                    if (landTarget != null)
+                    {
+                        HarvestDefinition landTargetHarvestDefinition = GetDefinition(landTarget.TileID);
+
+                        if (landTargetHarvestDefinition != null)
+                        {
+                            harvestBank = landTargetHarvestDefinition.GetBank(map, newPoint.X, newPoint.Y);
+
+                            if (harvestBank != null)
+                            {
+                                if (harvestBank.Current >= landTargetHarvestDefinition.ConsumedPerHarvest)
+                                    return landTarget;
+                            }
+                        }
+                    }
+                    
+                    StaticTile[] staticTiles = map.Tiles.GetStaticTiles(newPoint.X, newPoint.Y, false);
+                    
+                    if (staticTiles == null)
+                        continue;
+                    
+                    foreach (StaticTile staticTile in staticTiles)
+                    {
+                        StaticTarget staticTarget = new StaticTarget(newPoint, staticTile.ID);
+                        
+                        if (staticTarget == null)
+                            continue;
+
+                        int tileID = (staticTarget.ItemID & 0x3FFF) | 0x4000;
+                        
+                        HarvestDefinition staticTargetHarvestDefinition = GetDefinition(tileID);
+
+                        if (staticTargetHarvestDefinition == null)
+                            continue;
+
+                        harvestBank = staticTargetHarvestDefinition.GetBank(map, newPoint.X, newPoint.Y);
+
+                        if (harvestBank == null)
+                            continue;
+
+                        if (harvestBank.Current >= staticTargetHarvestDefinition.ConsumedPerHarvest)                        
+                            return staticTarget;                        
+                    }                    
+                }
+            }
+            
+            return null;
+        }        
+
+        public virtual void StartHarvesting(Mobile from, Item tool, object toHarvest, bool searchForNearbyNode)
         {
             if (!CheckHarvest(from, tool))
                 return;
 
             int tileID;
             Map map;
-            Point3D loc;
+            Point3D loc;            
+
+            object nearbyNode = null;
+
+            if (searchForNearbyNode && tool != null)
+            {
+                int searchRange = GetSearchRange(tool);
+
+                toHarvest = SearchForNearbyNode(from.Location, from.Map, searchRange);
+
+                if (toHarvest == null)
+                {   
+                    from.SendMessage("You do not see any harvestable resources nearby.");
+                    return;
+                }
+            }
 
             if (!GetHarvestDetails(from, tool, toHarvest, out tileID, out map, out loc))
             {
@@ -534,9 +642,14 @@ namespace Server.Engines.Harvest
 
             if (!CheckRange(from, tool, def, map, loc, false))
                 return;
+
             else if (!CheckResources(from, tool, def, map, loc, false))
                 return;
+
             else if (!CheckHarvest(from, tool, def, toHarvest))
+                return;            
+
+            if (def == null)
                 return;
 
             object toLock = GetLock(from, tool, def, toHarvest);
@@ -561,6 +674,7 @@ namespace Server.Engines.Harvest
                 map = obj.Map;
                 loc = obj.GetWorldLocation();
             }
+
             else if (toHarvest is StaticTarget)
             {
                 StaticTarget obj = (StaticTarget)toHarvest;
@@ -569,6 +683,7 @@ namespace Server.Engines.Harvest
                 map = from.Map;
                 loc = obj.Location;
             }
+
             else if (toHarvest is LandTarget)
             {
                 LandTarget obj = (LandTarget)toHarvest;
@@ -577,6 +692,7 @@ namespace Server.Engines.Harvest
                 map = from.Map;
                 loc = obj.Location;
             }
+
             else
             {
                 tileID = 0;
@@ -584,7 +700,7 @@ namespace Server.Engines.Harvest
                 loc = Point3D.Zero;
                 return false;
             }
-
+            
             return (map != null && map != Map.Internal);
         }
     }

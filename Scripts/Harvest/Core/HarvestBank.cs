@@ -3,19 +3,17 @@ using System;
 namespace Server.Engines.Harvest
 {
 	public class HarvestBank
-	{
-		private int m_Current;
-		private int m_Maximum;
-		private DateTime m_NextRespawn;
-		private HarvestVein m_Vein, m_DefaultVein;
+	{		
+        private DateTime m_NextRespawn;
 
-		HarvestDefinition m_Definition;
-
+        HarvestDefinition m_Definition;
 		public HarvestDefinition Definition
 		{
 			get { return m_Definition; }
 		}
 
+        private int m_Current;
+        private int m_Maximum;
 		public int Current
 		{
 			get
@@ -25,6 +23,7 @@ namespace Server.Engines.Harvest
 			}
 		}
 
+        private HarvestVein m_Vein;
 		public HarvestVein Vein
 		{
 			get
@@ -32,12 +31,14 @@ namespace Server.Engines.Harvest
 				CheckRespawn();
 				return m_Vein;
 			}
+
 			set
 			{
 				m_Vein = value;
 			}
 		}
 
+        private HarvestVein m_DefaultVein;
 		public HarvestVein DefaultVein
 		{
 			get
@@ -54,10 +55,8 @@ namespace Server.Engines.Harvest
 
 			m_Current = m_Maximum;
 
-			if ( m_Definition.RandomizeVeins )
-			{
-				m_DefaultVein = m_Definition.GetVeinFrom( Utility.RandomDouble() );
-			}
+			if ( m_Definition.RandomizeVeins )			
+				m_DefaultVein = m_Definition.GetVeinFrom( Utility.RandomDouble() );			
 
 			m_Vein = m_DefaultVein;
 		}
@@ -75,15 +74,12 @@ namespace Server.Engines.Harvest
 				m_Current = m_Maximum - amount;
 
 				double minutes = min + (rnd * (max - min));
-				if ( m_Definition.RaceBonus && from.Race == Race.Elf )	//def.RaceBonus = Core.ML
-					minutes *= .75;	//25% off the time.  
 
 				m_NextRespawn = DateTime.UtcNow + TimeSpan.FromMinutes( minutes );
 			}
-			else
-			{
-				m_Current -= amount;
-			}
+
+			else			
+				m_Current -= amount;			
 
 			if ( m_Current < 0 )
 				m_Current = 0;

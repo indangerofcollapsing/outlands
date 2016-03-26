@@ -175,7 +175,7 @@ namespace Server.Engines.Harvest
             return true;
         }
 
-        public override void StartHarvesting(Mobile from, Item tool, object toHarvest)
+        public override void StartHarvesting(Mobile from, Item tool, object toHarvest, bool searchForNearbyNode)
         {
             if (!CheckTool(from, tool))
                 return;

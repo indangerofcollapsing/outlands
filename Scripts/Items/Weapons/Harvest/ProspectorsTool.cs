@@ -8,7 +8,6 @@ namespace Server.Items
 	public class ProspectorsTool : BaseBashing, IUsesRemaining
 	{
 		private int m_UsesRemaining;
-
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int UsesRemaining
 		{
@@ -89,6 +88,7 @@ namespace Server.Items
 				from.SendLocalizedMessage( 1049048 ); // You cannot use your prospector tool on that.
 				return;
 			}
+
 			else if ( vein != defaultVein )
 			{
 				from.SendLocalizedMessage( 1049049 ); // That ore looks to be prospected already.
@@ -97,14 +97,12 @@ namespace Server.Items
 
 			int veinIndex = Array.IndexOf( def.Veins, vein );
 
-			if ( veinIndex < 0 )
-			{
-				from.SendLocalizedMessage( 1049048 ); // You cannot use your prospector tool on that.
-			}
-			else if ( veinIndex >= (def.Veins.Length - 1) )
-			{
-				from.SendLocalizedMessage( 1049061 ); // You cannot improve valorite ore through prospecting.
-			}
+			if ( veinIndex < 0 )			
+				from.SendLocalizedMessage( 1049048 ); // You cannot use your prospector tool on that.			
+
+			else if ( veinIndex >= (def.Veins.Length - 1) )			
+				from.SendLocalizedMessage( 1049061 ); // You cannot improve valorite ore through prospecting.			
+
 			else
 			{
 				bank.Vein = def.Veins[veinIndex + 1];
@@ -124,7 +122,7 @@ namespace Server.Items
 		{
 			base.Serialize( writer );
 
-			writer.Write( (int) 1 ); // version
+			writer.Write( (int) 0 ); // version
 			writer.Write( (int) m_UsesRemaining );
 		}
 
@@ -134,19 +132,11 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 
-			switch ( version )
-			{
-				case 1:
-				{
-					m_UsesRemaining = reader.ReadInt();
-					break;
-				}
-				case 0:
-				{
-					m_UsesRemaining = 50;
-					break;
-				}
-			}
+            //Version 0
+            if (version >= 0)
+            {
+                m_UsesRemaining = reader.ReadInt();
+            }
 		}
 
 		private class InternalTarget : Target
