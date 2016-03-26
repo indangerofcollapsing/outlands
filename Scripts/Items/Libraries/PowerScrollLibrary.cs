@@ -46,7 +46,6 @@ namespace Server.Items
                 case SkillName.EvalInt: name = "Eval Int"; break;
                 case SkillName.Fencing: name = "Fencing"; break;
                 case SkillName.Fishing: name = "Fishing"; break;
-                case SkillName.Fletching: name = "Fletching"; break;
                 case SkillName.Forensics: name = "Forensic Eval"; break;
                 case SkillName.Healing: name = "Healing"; break;
                 case SkillName.Herding: name = "Herding"; break;

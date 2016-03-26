@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Server;
 using Server.Gumps;
 using Server.Network;
-using Server.Spells.Necromancy;
 using Server.Spells;
 using Server.Regions;
 
@@ -232,16 +231,9 @@ namespace Server.SkillHandlers
             int hiding = m.Skills[SkillName.Hiding].Fixed;
             int stealth = m.Skills[SkillName.Stealth].Fixed;
             int divisor = hiding + stealth;
-
-            // Necromancy forms affect tracking difficulty 
-            if (TransformationSpellHelper.UnderTransformation(m, typeof(HorrificBeastSpell)))
-                divisor -= 200;
-            else if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)) && divisor < 500)
-                divisor = 500;
-            else if (TransformationSpellHelper.UnderTransformation(m, typeof(WraithFormSpell)) && divisor <= 2000)
-                divisor += 200;
-
+            
             int chance;
+
             if (divisor > 0)
             {
                 if (Core.SE)
@@ -249,6 +241,7 @@ namespace Server.SkillHandlers
                 else
                     chance = 50 * (tracking + detectHidden + 10 * Utility.RandomMinMax(1, 20)) / divisor;
             }
+
             else
                 chance = 100;
 

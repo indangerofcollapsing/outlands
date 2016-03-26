@@ -1,8 +1,6 @@
 using System;
 using Server.ContextMenus;
 using Server.Mobiles;
-using Server.Spells.Necromancy;
-using Server.Spells.Ninjitsu;
 using Server.Targeting;
 
 /*
@@ -183,10 +181,10 @@ namespace Server.Items
 		{
 			BaseWeapon defWeapon = defender.Weapon as BaseWeapon;
 
-			Skill atkSkill = defender.Skills.Ninjitsu;
+			Skill atkSkill = defender.Skills.Tactics;
 			Skill defSkill = defender.Skills[defWeapon.Skill];
 
-			double atSkillValue = attacker.Skills.Ninjitsu.Value;
+			double atSkillValue = attacker.Skills.Tactics.Value;
 			double defSkillValue = defWeapon.GetDefendSkillValue(attacker, defender);
 
 			double attackValue = AosAttributes.GetValue(attacker, AosAttribute.AttackChance);
@@ -195,17 +193,7 @@ namespace Server.Items
 			{
 				defSkillValue = -19.9;
 			}
-
-			if (Spells.Chivalry.DivineFurySpell.UnderEffect(attacker))
-			{
-				attackValue += 10;
-			}
-
-			if (AnimalForm.UnderTransformation(attacker, typeof(GreyWolf)) || AnimalForm.UnderTransformation(attacker, typeof(BakeKitsune)))
-			{
-				attackValue += 20;
-			}
-
+            
 			if (HitLower.IsUnderAttackEffect(attacker))
 			{
 				attackValue -= 25;
@@ -219,12 +207,7 @@ namespace Server.Items
 			attackValue = (atSkillValue + 20.0) * (100 + attackValue);
 
 			double defenseValue = AosAttributes.GetValue(defender, AosAttribute.DefendChance);
-
-			if (Spells.Chivalry.DivineFurySpell.UnderEffect(defender))
-			{
-				defenseValue -= 20;
-			}
-
+            
 			if (HitLower.IsUnderDefenseEffect(defender))
 			{
 				defenseValue -= 25;
@@ -267,15 +250,8 @@ namespace Server.Items
 				AOS.Damage(target, from, weapon.WeaponDamage, 100, 0, 0, 0, 0);
 
 				if (weapon.Poison != null && weapon.PoisonCharges > 0)
-				{
-					if (EvilOmenSpell.TryEndEffect(target))
-					{
-						target.ApplyPoison(from, Poison.GetPoison(weapon.Poison.Level + 1));
-					}
-					else
-					{
-						target.ApplyPoison(from, weapon.Poison);
-					}
+				{					
+					target.ApplyPoison(from, weapon.Poison);					
 
 					weapon.PoisonCharges--;
 

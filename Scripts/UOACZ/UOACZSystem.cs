@@ -1215,12 +1215,6 @@ namespace Server
                     tongs.X = 105;
                     tongs.Y = 75;
 
-                    UOACZFletcherTools fletcherTools = new UOACZFletcherTools();
-                    fletcherTools.LootType = Server.LootType.Blessed;
-                    survivalBackpack.DropItem(fletcherTools);
-                    fletcherTools.X = 139;
-                    fletcherTools.Y = 65;
-
                     UOACZSaw saw = new UOACZSaw();
                     saw.LootType = Server.LootType.Blessed;
                     survivalBackpack.DropItem(saw);

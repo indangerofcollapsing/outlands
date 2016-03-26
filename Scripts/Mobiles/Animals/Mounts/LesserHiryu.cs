@@ -77,9 +77,7 @@ namespace Server.Mobiles
 
 
 		public override bool OverrideBondingReqs()
-		{
-			if ( ControlMaster.Skills[SkillName.Bushido].Base >= 90.0 )
-				return true;
+		{			
 			return false;
 		}
 

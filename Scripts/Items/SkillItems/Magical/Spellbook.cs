@@ -136,22 +136,14 @@ namespace Server.Items
                 book = Find(from, spellID);                       
 
             if (book != null && book.HasSpell(spellID))
-            {
-                SpecialMove move = SpellRegistry.GetSpecialMove(spellID);
+            {                
+                Spell spell = SpellRegistry.NewSpell(spellID, from, null);
 
-                if (move != null)                
-                    SpecialMove.SetCurrentMove(from, move);                
+                if (spell != null)
+                    spell.Cast();
 
                 else
-                {
-                    Spell spell = SpellRegistry.NewSpell(spellID, from, null);
-
-                    if (spell != null)
-                        spell.Cast();
-
-                    else
-                        from.SendLocalizedMessage(502345); // This spell has been temporarily disabled.
-                }
+                    from.SendLocalizedMessage(502345); // This spell has been temporarily disabled.                
             }
 
             else                          

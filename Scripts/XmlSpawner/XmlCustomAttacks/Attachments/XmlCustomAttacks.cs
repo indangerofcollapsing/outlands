@@ -108,7 +108,7 @@ namespace Server.Engines.XmlSpawner2
                 SpecialAttacks.ParalyzingFear, 0x500d, TimeSpan.FromSeconds(3.5),
                 10, 10, 5, 10,
                 0, 0, 40,
-                new SkillName [] { SkillName.Necromancy },
+                new SkillName[] { SkillName.Magery },
                 new int [] { 30 },
                 new Type [] {typeof(Head)},
                 new int [] { 1 }

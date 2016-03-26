@@ -1288,7 +1288,6 @@ namespace Server
 				SkillName.Parry,
 				SkillName.Begging,
 				SkillName.Blacksmith,
-				SkillName.Fletching,
 				SkillName.Peacemaking,
 				SkillName.Camping,
 				SkillName.Carpentry,
@@ -1329,12 +1328,6 @@ namespace Server
 				SkillName.Meditation,
 				SkillName.Stealth,
 				SkillName.RemoveTrap,
-				SkillName.Necromancy,
-				SkillName.Focus,
-				SkillName.Chivalry,
-				SkillName.Bushido,
-				SkillName.Ninjitsu,
-				SkillName.Spellweaving
 			};
 
 		private static SkillName[] m_CombatSkills = new SkillName[]
@@ -1350,7 +1343,6 @@ namespace Server
 			{
 				SkillName.Alchemy,
 				SkillName.Blacksmith,
-				SkillName.Fletching,
 				SkillName.Carpentry,
 				SkillName.Cartography,
 				SkillName.Cooking,

@@ -483,7 +483,6 @@ namespace Server.Items
 		private double m_ParryMaximum;
 		private double m_BeggingMaximum;
 		private double m_BlacksmithMaximum;
-		private double m_FletchingMaximum;
 		private double m_PeacemakingMaximum;
 		private double m_CampingMaximum;
 		private double m_CarpentryMaximum;
@@ -524,9 +523,6 @@ namespace Server.Items
 		private double m_MeditationMaximum;
 		private double m_StealthMaximum;
 		private double m_RemoveTrapMaximum;
-		private double m_NecromancyMaximum;
-		private double m_FocusMaximum;
-		private double m_ChivalryMaximum;
 		
 		private string m_MessageString;
 		private int m_MessageNumber;
@@ -588,14 +584,7 @@ namespace Server.Items
 			get{ return m_BlacksmithMaximum; }
 			set{ m_BlacksmithMaximum = value; m_SkillsActive.Add( SkillName.Blacksmith ); InvalidateProperties(); }
 		}
-		
-		[CommandProperty( AccessLevel.GameMaster )]
-		public double FletchingMaximum
-		{
-			get{ return m_FletchingMaximum; }
-			set{ m_FletchingMaximum = value; m_SkillsActive.Add( SkillName.Fletching ); InvalidateProperties(); }
-		}
-		
+				
 		[CommandProperty( AccessLevel.GameMaster )]
 		public double PeacemakingMaximum
 		{
@@ -875,27 +864,6 @@ namespace Server.Items
 			get{ return m_RemoveTrapMaximum; }
 			set{ m_RemoveTrapMaximum = value; m_SkillsActive.Add( SkillName.RemoveTrap ); InvalidateProperties(); }
 		}
-		
-		[CommandProperty( AccessLevel.GameMaster )]
-		public double NecromancyMaximum
-		{
-			get{ return m_NecromancyMaximum; }
-			set{ m_NecromancyMaximum = value; m_SkillsActive.Add( SkillName.Necromancy ); InvalidateProperties(); }
-		}
-		
-		[CommandProperty( AccessLevel.GameMaster )]
-		public double FocusMaximum
-		{
-			get{ return m_FocusMaximum; }
-			set{ m_FocusMaximum = value; m_SkillsActive.Add( SkillName.Focus ); InvalidateProperties(); }
-		}
-		
-		[CommandProperty( AccessLevel.GameMaster )]
-		public double ChivalryMaximum
-		{
-			get{ return m_ChivalryMaximum; }
-			set{ m_ChivalryMaximum = value; m_SkillsActive.Add( SkillName.Chivalry ); InvalidateProperties(); }
-		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public string MessageString
@@ -968,7 +936,6 @@ namespace Server.Items
 				case SkillName.Parry:         return value <= m_ParryMaximum;
 				case SkillName.Begging:       return value <= m_BeggingMaximum;
 				case SkillName.Blacksmith:    return value <= m_BlacksmithMaximum;
-				case SkillName.Fletching:     return value <= m_FletchingMaximum;
 				case SkillName.Peacemaking:   return value <= m_PeacemakingMaximum;
 				case SkillName.Camping:       return value <= m_CampingMaximum;
 				case SkillName.Carpentry:     return value <= m_CarpentryMaximum;
@@ -1009,9 +976,6 @@ namespace Server.Items
 				case SkillName.Meditation:    return value <= m_MeditationMaximum;
 				case SkillName.Stealth:       return value <= m_StealthMaximum;
 				case SkillName.RemoveTrap:    return value <= m_RemoveTrapMaximum;
-				case SkillName.Necromancy:    return value <= m_NecromancyMaximum;
-				case SkillName.Focus:         return value <= m_FocusMaximum;
-				case SkillName.Chivalry:      return value <= m_ChivalryMaximum;
 				
 				default: return false;
 			}
@@ -1033,7 +997,6 @@ namespace Server.Items
 				case SkillName.Parry:         return m_ParryMaximum;
 				case SkillName.Begging:       return m_BeggingMaximum;
 				case SkillName.Blacksmith:    return m_BlacksmithMaximum;
-				case SkillName.Fletching:     return m_FletchingMaximum;
 				case SkillName.Peacemaking:   return m_PeacemakingMaximum;
 				case SkillName.Camping:       return m_CampingMaximum;
 				case SkillName.Carpentry:     return m_CarpentryMaximum;
@@ -1074,9 +1037,6 @@ namespace Server.Items
 				case SkillName.Meditation:    return m_MeditationMaximum;
 				case SkillName.Stealth:       return m_StealthMaximum;
 				case SkillName.RemoveTrap:    return m_RemoveTrapMaximum;
-				case SkillName.Necromancy:    return m_NecromancyMaximum;
-				case SkillName.Focus:         return m_FocusMaximum;
-				case SkillName.Chivalry:      return m_ChivalryMaximum;
 				
 				default: return 0.0;
 			}
@@ -1099,7 +1059,6 @@ namespace Server.Items
 				case SkillName.Parry:         m_ParryMaximum         = value; break;
 				case SkillName.Begging:       m_BeggingMaximum       = value; break;
 				case SkillName.Blacksmith:    m_BlacksmithMaximum    = value; break;
-				case SkillName.Fletching:     m_FletchingMaximum     = value; break;
 				case SkillName.Peacemaking:   m_PeacemakingMaximum   = value; break;
 				case SkillName.Camping:       m_CampingMaximum       = value; break;
 				case SkillName.Carpentry:     m_CarpentryMaximum     = value; break;
@@ -1140,9 +1099,6 @@ namespace Server.Items
 				case SkillName.Meditation:    m_MeditationMaximum    = value; break;
 				case SkillName.Stealth:       m_StealthMaximum       = value; break;
 				case SkillName.RemoveTrap:    m_RemoveTrapMaximum    = value; break;
-				case SkillName.Necromancy:    m_NecromancyMaximum    = value; break;
-				case SkillName.Focus:         m_FocusMaximum         = value; break;
-				case SkillName.Chivalry:      m_ChivalryMaximum      = value; break;
 				
 				default: return;
 			}

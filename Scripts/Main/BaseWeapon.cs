@@ -608,11 +608,6 @@ namespace Server.Items
 
             //Stealth Attack Cancel
             attacker.StealthAttackActive = false;
-            
-            SpecialMove move = SpecialMove.GetCurrentMove(attacker);
-
-            if (move != null)
-                move.OnMiss(attacker, defender);
         }
 
         #endregion
@@ -3511,7 +3506,7 @@ namespace Server.Items
             }
 
             //Add small chance of obtain slayer archery wep from colored woods
-            else if (from is PlayerMobile && (craftSystem is DefBowFletching || craftSystem is DefCarpentry))
+            else if (from is PlayerMobile && craftSystem is DefCarpentry)
             {
                 CraftResource thisResource = CraftResources.GetFromType(resourceType);
                 Resource = thisResource;
@@ -3519,11 +3514,7 @@ namespace Server.Items
                 PlayerMobile crafter = from as PlayerMobile;
                 Double crafterSkill = 0.0;
 
-                if (craftSystem is DefBowFletching)
-                    crafterSkill = crafter.Skills.Fletching.Value;
-
-                else //if (craftSystem is DefCarpentry)
-                    crafterSkill = crafter.Skills.Carpentry.Value;
+                crafterSkill = crafter.Skills.Carpentry.Value;
 
                 Double slayerCraftChance = 0.03; //3%
 

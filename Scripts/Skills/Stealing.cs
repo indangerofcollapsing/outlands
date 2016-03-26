@@ -9,7 +9,6 @@ using Server.Network;
 using Server.Factions;
 using Server.Spells.Seventh;
 using Server.Spells.Fifth;
-using Server.Spells.Necromancy;
 using Server.Spells;
 
 namespace Server.SkillHandlers
@@ -18,7 +17,7 @@ namespace Server.SkillHandlers
     {
         public static void Initialize()
         {
-            SkillInfo.Table[33].Callback = new SkillUseCallback(OnUse);
+            SkillInfo.Table[(int)SkillName.Stealing].Callback = new SkillUseCallback(OnUse);
         }
 
         public static readonly bool ClassicMode = true;

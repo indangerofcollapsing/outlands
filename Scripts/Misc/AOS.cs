@@ -9,7 +9,6 @@ using Server.Network;
 using Server.Spells;
 using Server.Spells.Fifth;
 using Server.Spells.Seventh;
-using Server.Spells.Ninjitsu;
 
 namespace Server
 {
@@ -859,25 +858,20 @@ namespace Server
 				return;
 
 			double minSkill, maxSkill;
-
-			AnimalFormContext acontext = AnimalForm.GetContext( m );
+			
 			TransformContext context = TransformationSpellHelper.GetContext( m );
 
-			if ( context != null ) {
+			if ( context != null ) 
+            {
 				Spell spell = context.Spell as Spell;
 				spell.GetCastSkills ( out minSkill, out maxSkill );
-				if ( m.Skills[spell.CastSkill].Value < minSkill )
+				
+                if ( m.Skills[spell.CastSkill].Value < minSkill )
 					TransformationSpellHelper.RemoveContext( m, context, true );
 			}
-			if ( acontext != null ) {
-				int i;
-				for ( i = 0; i < AnimalForm.Entries.Length; ++i )
-					if ( AnimalForm.Entries[i].Type == acontext.Type )
-						break;
-				if ( m.Skills[SkillName.Ninjitsu].Value < AnimalForm.Entries[i].ReqSkill )
-					AnimalForm.RemoveContext( m, true );
-			}
-			if ( !m.CanBeginAction ( typeof ( PolymorphSpell ) ) && m.Skills[SkillName.Magery].Value < 66.1 ) {
+            
+			if ( !m.CanBeginAction ( typeof ( PolymorphSpell ) ) && m.Skills[SkillName.Magery].Value < 66.1 )
+            {
 				m.BodyMod = 0;
 				m.HueMod = -1;
 				m.NameMod = null;
@@ -885,6 +879,7 @@ namespace Server
 				BaseArmor.ValidateMobile( m );
 				BaseClothing.ValidateMobile( m );
 			}
+
 			if ( !m.CanBeginAction ( typeof ( IncognitoSpell ) ) && m.Skills[SkillName.Magery].Value < 38.1 ) {
 				if ( m is PlayerMobile )
 					((PlayerMobile)m).SetHairMods( -1, -1 );

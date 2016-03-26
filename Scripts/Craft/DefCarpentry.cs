@@ -135,23 +135,23 @@ namespace Server.Engines.Craft
             int index = -1;
 
             //Fletching
-            index = AddCraft(typeof(Kindling), "Fletching", "Kindling", 0.0, 00.0, typeof(Board), 1044041, 1, 1044351);
+            index = AddCraft(typeof(Kindling), "Bowcraft and Fletching", "Kindling", 0.0, 00.0, typeof(Board), 1044041, 1, 1044351);
             SetUseAllRes(index, true);
 
-            index = AddCraft(typeof(Shaft), "Fletching", "Shaft", 0.0, 40.0, typeof(Board), 1044041, 1, 1044351);
+            index = AddCraft(typeof(Shaft), "Bowcraft and Fletching", "Shaft", 0.0, 40.0, typeof(Board), 1044041, 1, 1044351);
             SetUseAllRes(index, true);
 
-            index = AddCraft(typeof(Arrow), "Fletching", "Arrow", 0.0, 40.0, typeof(Shaft), 1044560, 1, 1044561);
+            index = AddCraft(typeof(Arrow), "Bowcraft and Fletching", "Arrow", 0.0, 40.0, typeof(Shaft), 1044560, 1, 1044561);
             AddRes(index, typeof(Feather), 1044562, 1, 1044563);
             SetUseAllRes(index, true);
 
-            index = AddCraft(typeof(Bolt), "Fletching", "Bolt", 0.0, 40.0, typeof(Shaft), 1044560, 1, 1044561);
+            index = AddCraft(typeof(Bolt), "Bowcraft and Fletching", "Bolt", 0.0, 40.0, typeof(Shaft), 1044560, 1, 1044561);
             AddRes(index, typeof(Feather), 1044562, 1, 1044563);
             SetUseAllRes(index, true);
 
-            AddCraft(typeof(Bow), "Fletching", "Bow", 30.0, 70.0, typeof(Board), 1044041, 7, 1044351);
-            AddCraft(typeof(Crossbow), "Fletching", "Crossbow", 60.0, 100.0, typeof(Board), 1044041, 7, 1044351);
-            AddCraft(typeof(HeavyCrossbow), "Fletching", "Heavy Crossbow", 80.0, 120.0, typeof(Board), 1044041, 10, 1044351);
+            AddCraft(typeof(Bow), "Bowcraft and Fletching", "Bow", 30.0, 70.0, typeof(Board), 1044041, 7, 1044351);
+            AddCraft(typeof(Crossbow), "Bowcraft and Fletching", "Crossbow", 60.0, 100.0, typeof(Board), 1044041, 7, 1044351);
+            AddCraft(typeof(HeavyCrossbow), "Bowcraft and Fletching", "Heavy Crossbow", 80.0, 120.0, typeof(Board), 1044041, 10, 1044351);
 
             //Weapons and Shields
             AddCraft(typeof(Club), "Weapons and Shields", "Club", 65, 100, typeof(Board), 1044041, 10, 1044351);

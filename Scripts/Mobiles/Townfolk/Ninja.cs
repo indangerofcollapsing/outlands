@@ -20,7 +20,6 @@ namespace Server.Mobiles
 
 			SetSkill( SkillName.Fencing, 64.0, 80.0 );
 			SetSkill( SkillName.Macing, 64.0, 80.0 );
-			SetSkill( SkillName.Ninjitsu, 60.0, 80.0 );
 			SetSkill( SkillName.Parry, 64.0, 80.0 );
 			SetSkill( SkillName.Tactics, 64.0, 85.0 );
 			SetSkill( SkillName.Swords, 64.0, 85.0 );

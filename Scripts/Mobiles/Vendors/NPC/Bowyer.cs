@@ -13,7 +13,7 @@ namespace Server.Mobiles
 		[Constructable]
 		public Bowyer() : base( "the bowyer" )
 		{
-			SetSkill( SkillName.Fletching, 80.0, 100.0 );
+			SetSkill( SkillName.Carpentry, 80.0, 100.0 );
 			SetSkill( SkillName.Archery, 80.0, 100.0 );
 		}
 

@@ -1,23 +1,3 @@
-/***************************************************************************
- *                                 Skills.cs
- *                            -------------------
- *   begin                : May 1, 2002
- *   copyright            : (C) The RunUO Software Team
- *   email                : info@runuo.com
- *
- *   $Id$
- *
- ***************************************************************************/
-
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,7 +27,7 @@ namespace Server
 		Parry = 5,
 		Begging = 6,
 		Blacksmith = 7,
-		Fletching = 8,
+        Bowcraft = 8,
 		Peacemaking = 9,
 		Camping = 10,
 		Carpentry = 11,
@@ -87,16 +67,7 @@ namespace Server
 		Mining = 45,
 		Meditation = 46,
 		Stealth = 47,
-		RemoveTrap = 48,
-		Necromancy = 49,
-		Focus = 50,
-		Chivalry = 51,
-		Bushido = 52,
-		Ninjitsu = 53,
-		Spellweaving = 54,
-		Mysticism = 55,
-		Imbuing = 56,
-		Throwing = 57
+		RemoveTrap = 48
 	}
 
 	[PropertyObject]
@@ -615,66 +586,57 @@ namespace Server
 			}
 		}
 
-		private static SkillInfo[] m_Table = new SkillInfo[58]
+		private static SkillInfo[] m_Table = new SkillInfo[49]
 			{
-				new SkillInfo(  0, "Alchemy",			0.0,	5.0,	5.0,	"Alchemist",	null,	0.0,	0.5,	0.5,	1.0 ),
-				new SkillInfo(  1, "Anatomy",			0.0,	0.0,	0.0,	"Biologist",	null,	0.15,	0.15,	0.7,	1.0 ),
-				new SkillInfo(  2, "Animal Lore",		0.0,	0.0,	0.0,	"Naturalist",	null,	0.0,	0.0,	1.0,	1.0 ),
-				new SkillInfo(  3, "Item Identification",	0.0,	0.0,	0.0,	"Merchant",	null,	0.0,	0.0,	1.0,	1.0 ),
-				new SkillInfo(  4, "Arms Lore",			0.0,	0.0,	0.0,	"Weapon Master",	null,	0.75,	0.15,	0.1,	1.0 ),
-				new SkillInfo(  5, "Parrying",			7.5,	2.5,	0.0,	"Duelist",	null,	0.75,	0.25,	0.0,	1.0 ),
-				new SkillInfo(  6, "Begging",			0.0,	0.0,	0.0,	"Beggar",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo(  7, "Blacksmithy",		10.0,	0.0,	0.0,	"Blacksmith",	null,	1.5,	0.0,	0.0,	1.0 ),
-				new SkillInfo(  8, "Bowcraft/Fletching",	6.0,	16.0,	0.0,	"Bowyer",	null,	0.6,	1.6,	0.0,	1.0 ),
-				new SkillInfo(  9, "Peacemaking",		0.0,	0.0,	0.0,	"Pacifier",		null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 10, "Camping",			20.0,	15.0,	15.0,	"Explorer",	null,	2.0,	1.5,	1.5,	1.0 ),
-				new SkillInfo( 11, "Carpentry",			20.0,	5.0,	0.0,	"Carpenter",	null,	2.0,	0.5,	0.0,	1.0 ),
-				new SkillInfo( 12, "Cartography",		0.0,	7.5,	7.5,	"Cartographer",	null,	0.0,	0.75,	0.75,	1.0 ),
-				new SkillInfo( 13, "Cooking",			0.0,	20.0,	30.0,	"Chef",		null,	0.0,	2.0,	3.0,	1.0 ),
-				new SkillInfo( 14, "Detecting Hidden",		0.0,	0.0,	0.0,	"Scout",	null,	0.0,	0.4,	0.9,	1.0 ),
-				new SkillInfo( 15, "Discordance",		0.0,	2.5,	2.5,	"Demoralizer",		null,	0.0,	0.25,	0.25,	1.0 ),
-				new SkillInfo( 16, "Evaluating Intelligence",	0.0,	0.0,	0.0,	"Scholar",	null,	0.0,	0.0,	1.0,	1.0 ),
-				new SkillInfo( 17, "Healing",			6.0,	6.0,	8.0,	"Healer",	null,	0.6,	0.6,	0.8,	1.0 ),
-				new SkillInfo( 18, "Fishing",			0.0,	0.0,	0.0,	"Fisherman",	null,	0.5,	0.5,	0.0,	1.0 ),
-				new SkillInfo( 19, "Forensic Evaluation",	0.0,	0.0,	0.0,	"Detective",	null,	0.0,	0.2,	0.8,	1.0 ),
-				new SkillInfo( 20, "Herding",			16.25,	6.25,	2.5,	"Shepherd",	null,	1.625,	0.625,	0.25,	1.0 ),
-				new SkillInfo( 21, "Hiding",			0.0,	0.0,	0.0,	"Shade",	null,	0.0,	0.8,	0.2,	1.0 ),
-				new SkillInfo( 22, "Provocation",		0.0,	4.5,	0.5,	"Rouser",		null,	0.0,	0.45,	0.05,	1.0 ),
-				new SkillInfo( 23, "Inscription",		0.0,	2.0,	8.0,	"Scribe",	null,	0.0,	0.2,	0.8,	1.0 ),
-				new SkillInfo( 24, "Lockpicking",		0.0,	25.0,	0.0,	"Infiltrator",	null,	0.0,	2.0,	0.0,	1.0 ),
-				new SkillInfo( 25, "Magery",			0.0,	0.0,	15.0,	"Mage",		null,	0.0,	0.0,	1.5,	1.0 ),
-				new SkillInfo( 26, "Resisting Spells",		0.0,	0.0,	0.0,	"Warder",		null,	0.25,	0.5,	1.0,	1.0 ),
-				new SkillInfo( 27, "Tactics",			0.0,	0.0,	0.0,	"Warrior",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 28, "Snooping",			0.0,	25.0,	0.0,	"Spy",	null,	0.0,	2.5,	0.0,	1.0 ),
-				new SkillInfo( 29, "Musicianship",		0.0,	0.0,	0.0,	"Bard",		null,	0.0,	0.8,	0.2,	1.0 ),
-				new SkillInfo( 30, "Poisoning",			0.0,	4.0,	16.0,	"Assassin",	null,	0.0,	0.4,	1.6,	1.0 ),
-				new SkillInfo( 31, "Archery",			2.5,	7.5,	0.0,	"Archer",	null,	0.25,	0.75,	0.0,	1.0 ),
-				new SkillInfo( 32, "Spirit Speak",		0.0,	0.0,	0.0,	"Medium",	null,	0.0,	0.0,	1.0,	1.0 ),
-				new SkillInfo( 33, "Stealing",			0.0,	10.0,	0.0,	"Pickpocket",	null,	0.0,	1.0,	0.0,	1.0 ),
-				new SkillInfo( 34, "Tailoring",			3.75,	16.25,	5.0,	"Tailor",	null,	0.38,	1.63,	0.5,	1.0 ),
-				new SkillInfo( 35, "Animal Taming",		14.0,	2.0,	4.0,	"Tamer",	null,	1.4,	0.2,	0.4,	1.0 ),
-				new SkillInfo( 36, "Taste Identification",	0.0,	0.0,	0.0,	"Praegustator",		null,	0.2,	0.0,	0.8,	1.0 ),
-				new SkillInfo( 37, "Tinkering",			5.0,	2.0,	3.0,	"Tinker",	null,	0.5,	0.2,	0.3,	1.0 ),
-				new SkillInfo( 38, "Tracking",			0.0,	0,	    0,	    "Ranger",	null,	0.0,	1.25,	1.25,	1.0 ),
-				new SkillInfo( 39, "Veterinary",		8.0,	4.0,	8.0,	"Veterinarian",	null,	0.8,	0.4,	0.8,	1.0 ),
-				new SkillInfo( 40, "Swordsmanship",		7.5,	2.5,	0.0,	"Swordsman",	null,	1.9,	0.25,	0.0,	1.0 ),
-				new SkillInfo( 41, "Mace Fighting",		9.0,	1.0,	0.0,	"Armsman",	null,	2.2,	0.1,	0.0,	1.0 ),
-				new SkillInfo( 42, "Fencing",			4.5,	5.5,	0.0,	"Fencer",	null,	1.55,	1.0,	0.0,	1.0 ),
-				new SkillInfo( 43, "Wrestling",			9.0,	1.0,	0.0,	"Wrestler",	null,	1.55,	0.5,	0.0,	1.0 ),
-				new SkillInfo( 44, "Lumberjacking",		20.0,	0.0,	0.0,	"Lumberjack",	null,	2.5,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 45, "Mining",			20.0,	0.0,	0.0,	"Miner",	null,	2.5,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 46, "Meditation",		0.0,	0.0,	0.0,	"Stoic",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 47, "Stealth",			0.0,	0.0,	0.0,	"Rogue",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 48, "Remove Trap",		0.0,	0.0,	0.0,	"Trap Specialist",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 49, "Necromancy",		0.0,	0.0,	0.0,	"Necromancer",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 50, "Focus",			0.0,	0.0,	0.0,	"Driven",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 51, "Chivalry",			0.0,	0.0,	0.0,	"Paladin",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 52, "Bushido",			0.0,	0.0,	0.0,	"Samurai",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 53, "Ninjitsu",			0.0,	0.0,	0.0,	"Ninja",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 54, "Spellweaving",		0.0,	0.0,	0.0,	"Arcanist",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 55, "Mysticism",			0.0,	0.0,	0.0,	"Mystic",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 56, "Imbuing",			0.0,	0.0,	0.0,	"Artificer",	null,	0.0,	0.0,	0.0,	1.0 ),
-				new SkillInfo( 57, "Throwing",			0.0,	0.0,	0.0,	"Bladeweaver",	null,	0.0,	0.0,	0.0,	1.0 ),
+				new SkillInfo(  0, "Alchemy",			        0.0,	0.0,	0.0,	"Alchemist",	    null,	0.0,	0.5,	0.5,	1.0 ),
+				new SkillInfo(  1, "Anatomy",			        0.0,	0.0,	0.0,	"Biologist",	    null,	0.15,	0.15,	0.7,	1.0 ),
+				new SkillInfo(  2, "Animal Lore",		        0.0,	0.0,	0.0,	"Naturalist",	    null,	0.0,	0.0,	1.0,	1.0 ),
+				new SkillInfo(  3, "Item Identification",	    0.0,	0.0,	0.0,	"Merchant",	        null,	0.0,	0.0,	1.0,	1.0 ),
+				new SkillInfo(  4, "Arms Lore",			        0.0,	0.0,	0.0,	"Weapon Master",	null,	0.75,	0.15,	0.1,	1.0 ),
+				new SkillInfo(  5, "Parrying",			        0.0,	0.0,	0.0,	"Duelist",	        null,	0.75,	0.25,	0.0,	1.0 ),
+				new SkillInfo(  6, "Begging",			        0.0,	0.0,	0.0,	"Beggar",	        null,	0.0,	0.0,	0.0,	1.0 ),
+				new SkillInfo(  7, "Blacksmithy",		        0.0,	0.0,	0.0,	"Blacksmith",	    null,	1.5,	0.0,	0.0,	1.0 ),
+				new SkillInfo(  8, "Bowcraft/Fletching",	    0.0,	0.0,	0.0,	"Bowyer",	        null,	0.0,	0.0,	0.0,	1.0 ),
+                new SkillInfo(  9, "Peacemaking",		        0.0,	0.0,	0.0,	"Pacifier",		    null,	0.0,	0.0,	0.0,	1.0 ),
+				new SkillInfo(  10, "Camping",			        0.0,	0.0,	0.0,	"Explorer",	        null,	2.0,	1.5,	1.5,	1.0 ),
+				new SkillInfo( 11, "Carpentry",			        0.0,	0.0,	0.0,	"Carpenter",	    null,	2.0,	0.5,	0.0,	1.0 ),
+				new SkillInfo( 12, "Cartography",		        0.0,	0.0,	0.0,	"Cartographer",	    null,	0.0,	0.75,	0.75,	1.0 ),
+				new SkillInfo( 13, "Cooking",			        0.0,	0.0,	0.0,	"Chef",		        null,	0.0,	2.0,	3.0,	1.0 ),
+				new SkillInfo( 14, "Detecting Hidden",	        0.0,	0.0,	0.0,	"Scout",	        null,	0.0,	0.4,	0.9,	1.0 ),
+				new SkillInfo( 15, "Discordance",		        0.0,	0.0,	0.0,	"Demoralizer",		null,	0.0,	0.25,	0.25,	1.0 ),
+				new SkillInfo( 16, "Evaluating Intelligence",	0.0,	0.0,	0.0,	"Scholar",	        null,	0.0,	0.0,	1.0,	1.0 ),
+				new SkillInfo( 17, "Healing",			        0.0,	0.0,	0.0,	"Healer",	        null,	0.6,	0.6,	0.8,	1.0 ),
+				new SkillInfo( 18, "Fishing",			        0.0,	0.0,	0.0,	"Fisherman",	    null,	0.5,	0.5,	0.0,	1.0 ),
+				new SkillInfo( 19, "Forensic Evaluation",	    0.0,	0.0,	0.0,	"Detective",	    null,	0.0,	0.2,	0.8,	1.0 ),
+				new SkillInfo( 20, "Herding",			        0.0,	0.0,	0.0,	"Shepherd",	        null,	1.625,	0.625,	0.25,	1.0 ),
+				new SkillInfo( 21, "Hiding",			        0.0,	0.0,	0.0,	"Shade",	        null,	0.0,	0.8,	0.2,	1.0 ),
+				new SkillInfo( 22, "Provocation",		        0.0,	0.0,	0.0,	"Rouser",		    null,	0.0,	0.45,	0.05,	1.0 ),
+				new SkillInfo( 23, "Inscription",		        0.0,	0.0,	0.0,	"Scribe",	        null,	0.0,	0.2,	0.8,	1.0 ),
+				new SkillInfo( 24, "Lockpicking",		        0.0,	0.0,	0.0,	"Infiltrator",	    null,	0.0,	2.0,	0.0,	1.0 ),
+				new SkillInfo( 25, "Magery",			        0.0,	0.0,	0.0,	"Mage",		        null,	0.0,	0.0,	1.5,	1.0 ),
+				new SkillInfo( 26, "Resisting Spells",	        0.0,	0.0,	0.0,	"Warder",		    null,	0.25,	0.5,	1.0,	1.0 ),
+				new SkillInfo( 27, "Tactics",			        0.0,	0.0,	0.0,	"Warrior",	        null,	0.0,	0.0,	0.0,	1.0 ),
+				new SkillInfo( 28, "Snooping",			        0.0,	0.0,	0.0,	"Spy",	            null,	0.0,	2.5,	0.0,	1.0 ),
+				new SkillInfo( 29, "Musicianship",		        0.0,	0.0,	0.0,	"Bard",		        null,	0.0,	0.8,	0.2,	1.0 ),
+				new SkillInfo( 30, "Poisoning",			        0.0,	0.0,	0.0,	"Assassin",	        null,	0.0,	0.4,	1.6,	1.0 ),
+				new SkillInfo( 31, "Archery",			        0.0,	0.0,	0.0,	"Archer",	        null,	0.25,	0.75,	0.0,	1.0 ),
+				new SkillInfo( 32, "Spirit Speak",		        0.0,	0.0,	0.0,	"Medium",	        null,	0.0,	0.0,	1.0,	1.0 ),
+				new SkillInfo( 33, "Stealing",			        0.0,	0.0,	0.0,	"Pickpocket",	    null,	0.0,	1.0,	0.0,	1.0 ),
+				new SkillInfo( 34, "Tailoring",			        0.0,	0.0,	0.0,	"Tailor",	        null,	0.38,	1.63,	0.5,	1.0 ),
+				new SkillInfo( 35, "Animal Taming",		        0.0,	0.0,	0.0,	"Tamer",	        null,	1.4,	0.2,	0.4,	1.0 ),
+				new SkillInfo( 36, "Taste Identification",	    0.0,	0.0,	0.0,	"Praegustator",		null,	0.2,	0.0,	0.8,	1.0 ),
+				new SkillInfo( 37, "Tinkering",			        0.0,	0.0,	0.0,	"Tinker",	        null,	0.5,	0.2,	0.3,	1.0 ),
+				new SkillInfo( 38, "Tracking",			        0.0,	0.0,	0.0,	"Ranger",	        null,	0.0,	1.25,	1.25,	1.0 ),
+				new SkillInfo( 39, "Veterinary",		        0.0,	0.0,	0.0,	"Veterinarian",	    null,	0.8,	0.4,	0.8,	1.0 ),
+				new SkillInfo( 40, "Swordsmanship",		        0.0,	0.0,	0.0,	"Swordsman",	    null,	1.9,	0.25,	0.0,	1.0 ),
+				new SkillInfo( 41, "Mace Fighting",		        0.0,	0.0,	0.0,	"Armsman",	        null,	2.2,	0.1,	0.0,	1.0 ),
+				new SkillInfo( 42, "Fencing",			        0.0,	0.0,	0.0,	"Fencer",	        null,	1.55,	1.0,	0.0,	1.0 ),
+				new SkillInfo( 43, "Wrestling",			        0.0,	0.0,	0.0,	"Wrestler",	        null,	1.55,	0.5,	0.0,	1.0 ),
+				new SkillInfo( 44, "Lumberjacking",		        0.0,	0.0,	0.0,	"Lumberjack",	    null,	2.5,	0.0,	0.0,	1.0 ),
+				new SkillInfo( 45, "Mining",			        0.0,	0.0,	0.0,	"Miner",	        null,	2.5,	0.0,	0.0,	1.0 ),
+				new SkillInfo( 46, "Meditation",		        0.0,	0.0,	0.0,	"Stoic",	        null,	0.0,	0.0,	0.0,	1.0 ),
+				new SkillInfo( 47, "Stealth",			        0.0,	0.0,	0.0,	"Rogue",	        null,	0.0,	0.0,	0.0,	1.0 ),
+				new SkillInfo( 48, "Remove Trap",		        0.0,	0.0,	0.0,	"Trap Specialist",	null,	0.0,	0.0,	0.0,	1.0 ),				
 			};
 
 		public static SkillInfo[] Table
@@ -722,10 +684,7 @@ namespace Server
 
 		[CommandProperty( AccessLevel.Counselor )]
 		public Skill Blacksmith{ get{ return this[SkillName.Blacksmith]; } set{} }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Fletching{ get{ return this[SkillName.Fletching]; } set{} }
-
+        
 		[CommandProperty( AccessLevel.Counselor )]
 		public Skill Peacemaking{ get{ return this[SkillName.Peacemaking]; } set{} }
 
@@ -845,34 +804,7 @@ namespace Server
 
 		[CommandProperty( AccessLevel.Counselor )]
 		public Skill RemoveTrap{ get{ return this[SkillName.RemoveTrap]; } set{} }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Necromancy{ get{ return this[SkillName.Necromancy]; } set{} }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Focus{ get{ return this[SkillName.Focus]; } set{} }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Chivalry{ get{ return this[SkillName.Chivalry]; } set{} }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Bushido{ get{ return this[SkillName.Bushido]; } set{} }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Ninjitsu{ get{ return this[SkillName.Ninjitsu]; } set{} }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Spellweaving { get { return this[SkillName.Spellweaving]; } set { } }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Mysticism { get { return this[SkillName.Mysticism]; } set { } }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Imbuing { get { return this[SkillName.Imbuing]; } set { } }
-
-		[CommandProperty( AccessLevel.Counselor )]
-		public Skill Throwing { get { return this[SkillName.Throwing]; } set { } }
-
+        
 		#endregion
 
 		[CommandProperty( AccessLevel.Counselor, AccessLevel.GameMaster )]
@@ -931,10 +863,12 @@ namespace Server
 
 		public static bool UseSkill( Mobile from, int skillID )
 		{
-			if ( !from.CheckAlive() )
+            if ( !from.CheckAlive() )
 				return false;
+
 			else if ( !from.Region.OnSkillUse( from, skillID ) )
 				return false;
+
 			else if ( !from.AllowSkillUse( (SkillName)skillID ) )
 				return false;
 
@@ -952,15 +886,13 @@ namespace Server
 
 						return true;
 					}
-					else
-					{
-						from.SendSkillMessage();
-					}
+
+					else					
+						from.SendSkillMessage();					
 				}
-				else
-				{
-					from.SendLocalizedMessage( 500014 ); // That skill cannot be used directly.
-				}
+
+				else				
+					from.SendLocalizedMessage( 500014 ); // That skill cannot be used directly.				
 			}
 
 			return false;
@@ -1009,10 +941,9 @@ namespace Server
 			{
 				Skill sk = m_Skills[i];
 
-				if ( sk == null )
-				{
+				if ( sk == null )				
 					writer.Write( (byte) 0xFF );
-				}
+				
 				else
 				{
 					sk.Serialize( writer );
@@ -1029,9 +960,6 @@ namespace Server
 			SkillInfo[] info = SkillInfo.Table;
 
 			m_Skills = new Skill[info.Length];
-
-			//for ( int i = 0; i < info.Length; ++i )
-			//	m_Skills[i] = new Skill( this, info[i], 0, 1000, SkillLock.Up );
 		}
 
 		public Skills( Mobile owner, GenericReader reader )
@@ -1049,13 +977,14 @@ namespace Server
 
 					goto case 1;
 				}
+
 				case 1:
 				{
 					if ( version < 2 )
 						m_Cap = 7000;
 
 					if ( version < 3 )
-						/*m_Total =*/ reader.ReadInt();
+						reader.ReadInt();
 
 					SkillInfo[] info = SkillInfo.Table;
 
@@ -1075,17 +1004,14 @@ namespace Server
 								m_Total += sk.BaseFixedPoint;
 							}
 						}
-						else
-						{
-							new Skill( this, null, reader );
-						}
+
+						else						
+							new Skill( this, null, reader );						
 					}
-
-					//for ( int i = count; i < info.Length; ++i )
-					//	m_Skills[i] = new Skill( this, info[i], 0, 1000, SkillLock.Up );
-
+                    
 					break;
 				}
+
 				case 0:
 				{
 					reader.ReadInt();
@@ -1097,8 +1023,9 @@ namespace Server
 
 		public void OnSkillChange( Skill skill )
 		{
-			if ( skill == m_Highest ) // could be downgrading the skill, force a recalc
+			if ( skill == m_Highest )
 				m_Highest = null;
+
 			else if ( m_Highest != null && skill.BaseFixedPoint > m_Highest.BaseFixedPoint )
 				m_Highest = skill;
 
@@ -1107,7 +1034,6 @@ namespace Server
             // IPY ACHIEVEMENT
             if (skill.BaseFixedPoint == 1000 && m_Owner.Player)
                 OnGMReached(skill, m_Owner);
-            // IPY ACHIEVEMENT
 
 			NetState ns = m_Owner.NetState;
 
@@ -1124,8 +1050,7 @@ namespace Server
 		{
 			return m_Skills.GetEnumerator();
 		}
-
-
+        
         // IPY ACHIEVEMENTS
         private static List<AchievementTriggers> m_SkillToAchievementIDLookup = new List<AchievementTriggers> 
         { 

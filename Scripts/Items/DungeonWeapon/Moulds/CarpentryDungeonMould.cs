@@ -11,7 +11,7 @@ namespace Server.Items
         [Constructable]
         public CarpentryDungeonMould(): base()
         {
-            MouldType = MouldSkillType.Bowcraft;
+            MouldType = MouldSkillType.Carpentry;
         }
 
         public CarpentryDungeonMould(Serial serial): base(serial)

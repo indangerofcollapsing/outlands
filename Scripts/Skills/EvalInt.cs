@@ -10,7 +10,7 @@ namespace Server.SkillHandlers
 	{
 		public static void Initialize()
 		{
-			SkillInfo.Table[16].Callback = new SkillUseCallback( OnUse );
+            SkillInfo.Table[(int)SkillName.EvalInt].Callback = new SkillUseCallback(OnUse);
 		}
 
 		public static TimeSpan OnUse( Mobile m )

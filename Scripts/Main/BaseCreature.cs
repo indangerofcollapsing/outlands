@@ -18,9 +18,6 @@ using Server.ContextMenus;
 using Server.Engines.PartySystem;
 using Server.Factions;
 using Server.SkillHandlers;
-using Server.Spells.Bushido;
-using Server.Spells.Spellweaving;
-using Server.Spells.Necromancy;
 using Server.Achievements;
 using Server.Guilds;
 using Server.Commands;
@@ -3236,10 +3233,7 @@ namespace Server.Mobiles
 
             if (!(m is BaseCreature))
                 return true;
-
-            if (TransformationSpellHelper.UnderTransformation(m, typeof(EtherealVoyageSpell)))
-                return false;
-
+            
             BaseCreature c = (BaseCreature)m;
 
             return (m_iTeam != c.m_iTeam || ((m_Summoned || m_bControlled) != (c.m_Summoned || c.m_bControlled))/* || c.Combatant == this*/ );
@@ -3344,9 +3338,6 @@ namespace Server.Mobiles
             {
                 if (!Summoned)
                     return false;
-
-                if (m_ControlMaster != null && SummonFamiliarSpell.Table.Contains(m_ControlMaster))
-                    return SummonFamiliarSpell.Table[m_ControlMaster] == this;
 
                 return false;
             }
@@ -3558,10 +3549,7 @@ namespace Server.Mobiles
         {
             if (!Alive || IsDeadPet)
                 return ApplyPoisonResult.Immune;
-
-            if (Spells.Necromancy.EvilOmenSpell.TryEndEffect(this))
-                poison = PoisonImpl.IncreaseLevel(poison);
-
+            
             BaseCreature bc_From = from as BaseCreature;
 
             if (bc_From != null)
@@ -4233,10 +4221,7 @@ namespace Server.Mobiles
                     }
                 }
             }
-
-            if (Confidence.IsRegenerating(this))
-                Confidence.StopRegenerating(this);
-
+            
             if (from != this && from != null)
                 WeightOverloading.FatigueOnDamage(this, amount, 0.5);
 
@@ -4877,7 +4862,7 @@ namespace Server.Mobiles
 
                         // IPY ACHIEVEMENT 
                         if (the_skill == SkillName.Alchemy || the_skill == SkillName.Blacksmith || the_skill == SkillName.Carpentry || the_skill == SkillName.Cooking ||
-                            the_skill == SkillName.Fletching || the_skill == SkillName.Inscribe || the_skill == SkillName.Mining || the_skill == SkillName.Poisoning ||
+                            the_skill == SkillName.Inscribe || the_skill == SkillName.Mining || the_skill == SkillName.Poisoning ||
                             the_skill == SkillName.Tailoring || the_skill == SkillName.Tinkering)
                         {
                             AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_TrainCraftingSkillFromNPC);
@@ -4904,7 +4889,7 @@ namespace Server.Mobiles
 
                     // IPY ACHIEVEMENT 
                     if (the_skill == SkillName.Alchemy || the_skill == SkillName.Blacksmith || the_skill == SkillName.Carpentry || the_skill == SkillName.Cooking ||
-                        the_skill == SkillName.Fletching || the_skill == SkillName.Inscribe || the_skill == SkillName.Mining || the_skill == SkillName.Poisoning ||
+                        the_skill == SkillName.Inscribe || the_skill == SkillName.Mining || the_skill == SkillName.Poisoning ||
                         the_skill == SkillName.Tailoring || the_skill == SkillName.Tinkering)
                     {
                         AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_TrainCraftingSkillFromNPC);
@@ -5722,10 +5707,7 @@ namespace Server.Mobiles
             }
 
             FocusMob = null;
-
-            if (IsAnimatedDead)
-                Spells.Necromancy.AnimateDeadSpell.Unregister(m_SummonMaster, this);
-
+            
             base.OnAfterDelete();
         }
 
@@ -5843,9 +5825,6 @@ namespace Server.Mobiles
                 return false;
 
             if (skill == SkillName.Stealth && from.Skills[SkillName.Hiding].Base < Stealth.HidingRequirement)
-                return false;
-
-            if (!Core.AOS && (skill == SkillName.Focus || skill == SkillName.Chivalry || skill == SkillName.Necromancy))
                 return false;
 
             return true;
@@ -7399,12 +7378,9 @@ namespace Server.Mobiles
             {
                 if (m_Charmed.Combatant != null || !from.CanBeHarmful(m_Charmed, false))
                     return;
-
-                DeathAdder da = Spells.Necromancy.SummonFamiliarSpell.Table[from] as DeathAdder;
-                if (da == null || da.Deleted)
-                    return;
-
+                
                 Mobile targ = targeted as Mobile;
+
                 if (targ == null || !from.CanBeHarmful(targ, false))
                     return;
 
@@ -7434,7 +7410,7 @@ namespace Server.Mobiles
                     list.Add(1080078); // guarding
             }
 
-            if (Summoned && !IsAnimatedDead && !IsNecroFamiliar && !(this is Clone))
+            if (Summoned && !IsAnimatedDead && !IsNecroFamiliar)
                 list.Add(1049646); // (summoned)
 
             else if (Controlled && Commandable)
@@ -8035,9 +8011,7 @@ namespace Server.Mobiles
                     if (info.Defender.Combatant == this)
                         info.Defender.Combatant = null;
                 }
-
-                GiftOfLifeSpell.HandleDeath(this);
-
+                
                 CheckStatTimers();
             }
 

@@ -4,12 +4,7 @@ using Server.Network;
 using Server.Targeting;
 using Server.Mobiles;
 using Server.Spells.Second;
-using Server.Spells.Necromancy;
-using Server.Spells.Ninjitsu;
 using System.Collections.Generic;
-using Server.Spells.Spellweaving;
-using Server.Spells.Bushido;
-
 
 namespace Server.Spells
 {
@@ -146,10 +141,7 @@ namespace Server.Spells
 
             damageBonus += sdiBonus;
 
-            TransformContext context = TransformationSpellHelper.GetContext(Caster);
-
-            if (context != null && context.Spell is ReaperFormSpell)
-                damageBonus += ((ReaperFormSpell)context.Spell).SpellDamageBonus;
+            TransformContext context = TransformationSpellHelper.GetContext(Caster);           
 
             damage = AOS.Scale(damage, 100 + damageBonus);
 
@@ -616,11 +608,6 @@ namespace Server.Spells
                 m_Caster.SendLocalizedMessage(502642); // You are already casting a spell.
             }
 
-            else if (BlockedByHorrificBeast && TransformationSpellHelper.UnderTransformation(m_Caster, typeof(HorrificBeastSpell)) || (BlockedByAnimalForm && AnimalForm.UnderTransformation(m_Caster)))
-            {
-                m_Caster.SendLocalizedMessage(1061091); // You cannot cast that spell in this form.
-            }
-
             else if (!(m_Scroll is BaseWand) && (m_Caster.Paralyzed || m_Caster.Frozen))
             {
                 m_Caster.SendLocalizedMessage(502643); // You can not cast a spell while frozen.
@@ -797,11 +784,7 @@ namespace Server.Spells
         public virtual int ScaleMana(int mana)
         {
             double scalar = 1.0;
-
-            if (!Necromancy.MindRotSpell.GetMindRotScalar(Caster, ref scalar))
-                scalar = 1.0;
-
-            //IPY
+            
             scalar -= (double)AosAttributes.GetValue(m_Caster, AosAttribute.LowerManaCost) / 100;
 
             return (int)(mana * scalar);
@@ -833,9 +816,7 @@ namespace Server.Spells
                 return NextSpellDelay;
 
             int fcr = AosAttributes.GetValue(m_Caster, AosAttribute.CastRecovery);
-
-            fcr -= ThunderstormSpell.GetCastRecoveryMalus(m_Caster);
-
+            
             int fcrDelay = -(CastRecoveryFastScalar * fcr);
 
             int delay = CastRecoveryBase + fcrDelay;
@@ -863,15 +844,8 @@ namespace Server.Spells
             if (m_Scroll is BaseWand)
                 return Core.ML ? CastDelayBase : TimeSpan.Zero; // TODO: Should FC apply to wands?
 
-            // Faster casting cap of 2 (if not using the protection spell) 
-            // Faster casting cap of 0 (if using the protection spell) 
-            // Paladin spells are subject to a faster casting cap of 4 
-            // Paladins with magery of 70.0 or above are subject to a faster casting cap of 2 
             int fcMax = 2;
-
-            if (CastSkill == SkillName.Chivalry && m_Caster.Skills[SkillName.Magery].Value < 70.0)
-                fcMax = 4;
-
+            
             int fc = AosAttributes.GetValue(m_Caster, AosAttribute.CastSpeed);
 
             if (fc > fcMax)
@@ -879,9 +853,6 @@ namespace Server.Spells
 
             if (ProtectionSpell.Registry.Contains(m_Caster))
                 fc -= 2;
-
-            if (EssenceOfWindSpell.IsDebuffed(m_Caster))
-                fc -= EssenceOfWindSpell.GetFCMalus(m_Caster);
 
             TimeSpan baseDelay = CastDelayBase;
 
@@ -1036,20 +1007,6 @@ namespace Server.Spells
 
                 if (karma != 0)
                     Misc.FameKarmaTitles.AwardKarma(Caster, karma, true);
-
-                if (TransformationSpellHelper.UnderTransformation(m_Caster, typeof(VampiricEmbraceSpell)))
-                {
-                    bool garlic = false;
-
-                    for (int i = 0; !garlic && i < m_Info.Reagents.Length; ++i)
-                        garlic = (m_Info.Reagents[i] == Reagent.Garlic);
-
-                    if (garlic)
-                    {
-                        m_Caster.SendLocalizedMessage(1061651); // The garlic burns you!
-                        AOS.Damage(m_Caster, Utility.RandomMinMax(17, 23), 100, 0, 0, 0, 0);
-                    }
-                }
 
                 return true;
             }

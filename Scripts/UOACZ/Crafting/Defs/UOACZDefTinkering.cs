@@ -150,7 +150,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(UOACZTongs), "Crafting Tools", "Tongs", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(UOACZSewingKit), "Crafting Tools", "Sewing Kit", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(UOACZSkillet), "Crafting Tools", "Skillet", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(UOACZFletcherTools), "Crafting Tools", "Fletcher Tools", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(UOACZTinkersTools), "Crafting Tools", "Tinker Tools", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
 
             //Utility Tools

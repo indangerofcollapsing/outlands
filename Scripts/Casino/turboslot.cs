@@ -2335,11 +2335,11 @@ namespace Server.Items
         private Item CreatePowerScroll(int type, int level)
         {
             PowerScroll ps = null;
+
             SkillName[] skillNames = new SkillName[]
-			{ SkillName.Bushido, SkillName.Ninjitsu, SkillName.Necromancy, SkillName.Chivalry, SkillName.Focus,
+			{
                 SkillName.Magery, SkillName.Swords, SkillName.Fencing, SkillName.Macing, SkillName.Archery,
                 SkillName.Blacksmith, SkillName.Musicianship, SkillName.AnimalTaming};
-            //10923,10924,10925,10926,10927,10928,10929,10930,10931,10932,10933,10934,10935
             try
             {
                 SkillName skillName = skillNames[type - 10923];

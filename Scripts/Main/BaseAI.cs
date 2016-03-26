@@ -23,7 +23,6 @@ using Server.Spells.Fifth;
 using Server.Spells.Sixth;
 using Server.Spells.Seventh;
 using Server.Spells.Eighth;
-using Server.Spells.Spellweaving;
 using Server.Custom;
 using Server.Multis;
 
@@ -5948,7 +5947,6 @@ namespace Server.Mobiles
 			SkillName.ArmsLore,
 			SkillName.Begging,
 			SkillName.Blacksmith,
-			SkillName.Fletching,
 			SkillName.Peacemaking,
 			SkillName.Camping,
 			SkillName.Carpentry,

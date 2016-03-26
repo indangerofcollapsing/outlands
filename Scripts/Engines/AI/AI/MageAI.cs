@@ -16,7 +16,6 @@ using Server.Spells.Seventh;
 using Server.Misc;
 using Server.Regions;
 using Server.SkillHandlers;
-using Server.Spells.Necromancy;
 
 namespace Server.Mobiles
 {

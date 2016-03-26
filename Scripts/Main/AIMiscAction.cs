@@ -23,7 +23,6 @@ using Server.Spells.Fifth;
 using Server.Spells.Sixth;
 using Server.Spells.Seventh;
 using Server.Spells.Eighth;
-using Server.Spells.Spellweaving;
 using MoveImpl = Server.Movement.MovementImpl;
 using Server.Custom;
 

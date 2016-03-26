@@ -1284,7 +1284,7 @@ namespace Server.Engines.Craft
                     {
                         endquality = ((ICraftable)item).OnCraft(quality, makersMark, from, craftSystem, typeRes, tool, this, resHue);
                         
-                        if (craftSystem is DefCarpentry || craftSystem is DefBowFletching)
+                        if (craftSystem is DefCarpentry)
                             item.Hue = resHue;
                     }
 

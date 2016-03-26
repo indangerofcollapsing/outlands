@@ -64,7 +64,7 @@ namespace Server.Custom.RaresCrafting
 		{
 			return new CraftableRare()
 			{
-				FirstReqSkillId = SkillName.Fletching,
+				FirstReqSkillId = SkillName.Carpentry,
 				Result = new CraftableEntry() { m_Name = "decorative weapons", m_ItemId = 0x155c },
 				Ingredients = new CraftableEntry[4]
 				{	
@@ -81,7 +81,7 @@ namespace Server.Custom.RaresCrafting
 		{
 			return new CraftableRare()
 			{
-				FirstReqSkillId = SkillName.Fletching,
+				FirstReqSkillId = SkillName.Carpentry,
 				Result = new CraftableEntry() { m_Name = "bundle of arrows", m_ItemId = 0x0f41 },
 				Ingredients = new CraftableEntry[2]
 				{	
@@ -94,7 +94,7 @@ namespace Server.Custom.RaresCrafting
 		{
 			return new CraftableRare()
 			{
-				FirstReqSkillId = SkillName.Fletching,
+				FirstReqSkillId = SkillName.Carpentry,
 				Result = new CraftableEntry() { m_Name = "bundle of bolts", m_ItemId = 0x1bfd },
 				Ingredients = new CraftableEntry[2]
 				{	
@@ -467,7 +467,7 @@ namespace Server.Custom.RaresCrafting
 	class CraftableRare : ICraftableRare
 	{
 		// total hack, using ninjutsu as the "not set" value. Because ninjas are cool.
-		private static SkillName NO_SKILL_REQUIREMENT = SkillName.Ninjitsu;
+		private static SkillName NO_SKILL_REQUIREMENT = SkillName.ItemID;
 		private SkillName m_FirstRequiredSkillId;
 		private SkillName m_SecondRequiredSkillId;
 		private int m_NumDustsRequired;
@@ -477,11 +477,9 @@ namespace Server.Custom.RaresCrafting
 			set
 			{
 				m_FirstRequiredSkillId = value;
-				m_FirstRequiredSkill = value != NO_SKILL_REQUIREMENT ? SkillInfo.Table[(int)value].Name : "";
-				// hax, real name is too long for the gump
-				if (m_FirstRequiredSkillId == SkillName.Fletching)
-					m_FirstRequiredSkill = "Bowcraft";
+				m_FirstRequiredSkill = value != NO_SKILL_REQUIREMENT ? SkillInfo.Table[(int)value].Name : "";				
 			}
+
 			get
 			{
 				return m_FirstRequiredSkillId;
@@ -492,11 +490,9 @@ namespace Server.Custom.RaresCrafting
 			set
 			{
 				m_SecondRequiredSkillId = value;
-				m_SecondRequiredSkill = value != NO_SKILL_REQUIREMENT ? SkillInfo.Table[(int)value].Name : "";
-				// hax, real name is too long for the gump
-				if (m_FirstRequiredSkillId == SkillName.Fletching)
-					m_FirstRequiredSkill = "Bowcraft";
+				m_SecondRequiredSkill = value != NO_SKILL_REQUIREMENT ? SkillInfo.Table[(int)value].Name : "";				
 			}
+
 			get
 			{
 				return m_SecondRequiredSkillId;

@@ -12,12 +12,7 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
-using Server.Spells.Bushido;
-using Server.Spells.Chivalry;
-using Server.Spells.Necromancy;
-using Server.Spells.Ninjitsu;
 using Server.Spells.Seventh;
-using Server.Spells.Spellweaving;
 
 namespace Server.Engines.ConPVP
 {
@@ -74,47 +69,6 @@ namespace Server.Engines.ConPVP
             Timer.DelayCall(ts, new TimerStateCallback(DelayBounce_Callback), new object[] { mob, corpse });
         }
 
-        public static bool AllowSpecialMove(Mobile from, string name, SpecialMove move)
-        {
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (pm == null)
-                return true;
-
-            DuelContext dc = pm.DuelContext;
-
-            return (dc == null || dc.InstAllowSpecialMove(from, name, move));
-        }
-
-        public bool InstAllowSpecialMove(Mobile from, string name, SpecialMove move)
-        {
-
-            if (!m_StartedBeginCountdown)
-                return true;
-
-            DuelPlayer pl = Find(from);
-
-            if (pl == null || pl.Eliminated)
-                return true;
-
-            if (CantDoAnything(from))
-                return false;
-
-            string title = null;
-
-            if (move is NinjaMove)
-                title = "Bushido";
-            else if (move is SamuraiMove)
-                title = "Ninjitsu";
-
-
-            if (title == null || name == null || m_Ruleset.GetOption(title, name))
-                return true;
-
-            from.SendMessage("The dueling ruleset prevents you from using this move.");
-            return false;
-        }
-
         public bool AllowSpellCast(Mobile from, Spell spell)
         {
             if (!m_StartedBeginCountdown)
@@ -133,32 +87,7 @@ namespace Server.Engines.ConPVP
 
             string title = null, option = null;
 
-            if (spell is ArcanistSpell)
-            {
-                title = "Spellweaving";
-                option = spell.Name;
-            }
-            else if (spell is PaladinSpell)
-            {
-                title = "Chivalry";
-                option = spell.Name;
-            }
-            else if (spell is NecromancerSpell)
-            {
-                title = "Necromancy";
-                option = spell.Name;
-            }
-            else if (spell is NinjaSpell)
-            {
-                title = "Ninjitsu";
-                option = spell.Name;
-            }
-            else if (spell is SamuraiSpell)
-            {
-                title = "Bushido";
-                option = spell.Name;
-            }
-            else if (spell is MagerySpell)
+            if (spell is MagerySpell)
             {
                 switch (((MagerySpell)spell).Circle)
                 {
@@ -1702,7 +1631,6 @@ namespace Server.Engines.ConPVP
             }
 
             TransformationSpellHelper.RemoveContext(mob, true);
-            AnimalForm.RemoveContext(mob, true);
 
             if (DisguiseTimers.IsDisguised(mob))
                 DisguiseTimers.StopTimer(mob);

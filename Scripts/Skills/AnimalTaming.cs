@@ -6,7 +6,7 @@ using Server.Network;
 using Server.Mobiles;
 using Server.Factions;
 using Server.Spells;
-using Server.Spells.Spellweaving;
+using Server.Spells;
 using Server.Achievements;
 
 namespace Server.SkillHandlers

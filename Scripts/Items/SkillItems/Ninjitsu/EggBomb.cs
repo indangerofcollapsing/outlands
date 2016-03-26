@@ -29,11 +29,6 @@ namespace Server.Items
 				// The item must be in your backpack to use it.
 				from.SendLocalizedMessage( 1060640 );
 			}
-			else if ( from.Skills.Ninjitsu.Value < 50.0 )
-			{
-				// You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that ability.
-				from.SendLocalizedMessage( 1063013, "50\tNinjitsu" );
-			}
 			else if (Core.TickCount - from.NextSkillTime < 0)
 			{
 				// You must wait a few seconds before you can use that item.

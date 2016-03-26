@@ -187,7 +187,6 @@ namespace Server
                     upgradeDetail.m_Skills[SkillName.Archery] = 2;
 
                     upgradeDetail.m_Skills[SkillName.Tailoring] = 5;
-                    upgradeDetail.m_Skills[SkillName.Fletching] = 5;
                     upgradeDetail.m_Skills[SkillName.Tracking] = 5;
 
                     upgradeDetail.m_Abilities.Add(UOACZHumanAbilityType.Hamstring);
@@ -209,7 +208,6 @@ namespace Server
                     upgradeDetail.m_Skills[SkillName.Tactics] = 1;
 
                     upgradeDetail.m_Skills[SkillName.Carpentry] = 10;
-                    upgradeDetail.m_Skills[SkillName.Fletching] = 10;
                     upgradeDetail.m_Skills[SkillName.Lumberjacking] = 10;
                     upgradeDetail.m_Skills[SkillName.Tinkering] = 5;
 
@@ -233,7 +231,6 @@ namespace Server
                     upgradeDetail.m_Skills[SkillName.Archery] = 1;
 
                     upgradeDetail.m_Skills[SkillName.Carpentry] = 10;
-                    upgradeDetail.m_Skills[SkillName.Fletching] = 10;
                     upgradeDetail.m_Skills[SkillName.Lumberjacking] = 5;
 
                     upgradeDetail.m_Abilities.Add(UOACZHumanAbilityType.Longshot);
@@ -255,7 +252,6 @@ namespace Server
 
                     upgradeDetail.m_Skills[SkillName.Archery] = 2;
 
-                    upgradeDetail.m_Skills[SkillName.Fletching] = 5;
                     upgradeDetail.m_Skills[SkillName.Carpentry] = 5;
                     upgradeDetail.m_Skills[SkillName.Camping] = 5;
                     upgradeDetail.m_Skills[SkillName.Tracking] = 5;
@@ -281,7 +277,6 @@ namespace Server
 
                     upgradeDetail.m_Skills[SkillName.Anatomy] = 10;
                     upgradeDetail.m_Skills[SkillName.ArmsLore] = 5;
-                    upgradeDetail.m_Skills[SkillName.Fletching] = 5;
 
                     upgradeDetail.m_Abilities.Add(UOACZHumanAbilityType.MarkTarget);
                     break;
@@ -736,7 +731,6 @@ namespace Server
 
                     upgradeDetail.m_Skills[SkillName.Blacksmith] = 5;
                     upgradeDetail.m_Skills[SkillName.Tailoring] = 5;
-                    upgradeDetail.m_Skills[SkillName.Fletching] = 5;
                     upgradeDetail.m_Skills[SkillName.Alchemy] = 5;
                     upgradeDetail.m_Skills[SkillName.Carpentry] = 5;
                     upgradeDetail.m_Skills[SkillName.Cooking] = 5;
@@ -861,7 +855,6 @@ namespace Server
                 m_Skills.Add(SkillName.Blacksmith);
                 m_Skills.Add(SkillName.Carpentry);
                 m_Skills.Add(SkillName.Cooking);
-                m_Skills.Add(SkillName.Fletching);
                 m_Skills.Add(SkillName.Tailoring);
                 m_Skills.Add(SkillName.Tinkering);
 

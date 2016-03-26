@@ -7,7 +7,6 @@ using Server.Network;
 using Server.Spells;
 using Server.Spells.Fourth;
 using Server.Spells.Seventh;
-using Server.Spells.Chivalry;
 using Server.Prompts;
 
 namespace Server.Gumps
@@ -426,30 +425,8 @@ namespace Server.Gumps
                             }
                         case 5: // Sacred Journey
                             {
-                                if (Core.AOS)
-                                {
-                                    if (HasSpell(from, 209))
-                                    {
-                                        int xLong = 0, yLat = 0;
-                                        int xMins = 0, yMins = 0;
-                                        bool xEast = false, ySouth = false;
-
-                                        if (Sextant.Format(e.Location, e.Map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
-                                        {
-                                            string location = String.Format("{0}° {1}'{2}, {3}° {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
-                                            from.SendMessage(location);
-                                        }
-
-                                        m_Book.OnTravel();
-                                        new SacredJourneySpell(from, null, e, null).Cast();
-                                    }
-                                    else
-                                    {
-                                        from.SendLocalizedMessage(500015); // You do not have that spell!
-                                    }
-                                }
-
                                 m_Book.Openers.Remove(from);
+
                                 if (from.Player)
                                     ((Mobiles.PlayerMobile)from).CloseBankRunebookGump = false;
 

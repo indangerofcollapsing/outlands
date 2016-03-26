@@ -128,7 +128,7 @@ namespace Server.Mobiles
 
         public static bool CheckConvert(BaseCreature bc, Point3D location, Map m)
         {
-            if (!bc.AllowParagon || bc.Difficulty >= 50 || bc.Difficulty <= 0.5 || bc is BaseVendor || bc is BaseEscortable || bc is Clone || bc.IsParagon || bc.Rare)
+            if (!bc.AllowParagon || bc.Difficulty >= 50 || bc.Difficulty <= 0.5 || bc is BaseVendor || bc is BaseEscortable || bc.IsParagon || bc.Rare)
                 return false;
 
             double regionMod = Server.Commands.RegionParagonMod.GetModifier(Region.Find(location, m));

@@ -1,6 +1,6 @@
 using System;
 using Server;
-using Server.Spells.Spellweaving;
+using Server.Spells;
 using Server.Mobiles;
 using Server.Custom;
 

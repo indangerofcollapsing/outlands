@@ -24,8 +24,6 @@ namespace Server.Items
 				SkillName.Healing,
 				SkillName.MagicResist,
 				SkillName.Peacemaking,
-				SkillName.Chivalry,
-				SkillName.Ninjitsu
 			};
 
 		public TheDryadBow( Serial serial ) : base( serial )

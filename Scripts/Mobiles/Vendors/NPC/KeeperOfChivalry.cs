@@ -16,7 +16,6 @@ namespace Server.Mobiles
 			SetSkill( SkillName.Fencing, 75.0, 85.0 );
 			SetSkill( SkillName.Macing, 75.0, 85.0 );
 			SetSkill( SkillName.Swords, 75.0, 85.0 );
-			SetSkill( SkillName.Chivalry, 100.0 );
 		}
 
 		public override void InitSBInfo()

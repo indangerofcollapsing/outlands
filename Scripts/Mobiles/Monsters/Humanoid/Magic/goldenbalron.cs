@@ -2,7 +2,7 @@ using System;
 using Server;
 using Server.Items;
 using Server.Targeting;
-using Server.Spells.Spellweaving;
+using Server.Spells;
 using System.Collections.Generic;
 using Server.Spells;
 

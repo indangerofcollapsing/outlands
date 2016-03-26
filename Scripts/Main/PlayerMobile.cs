@@ -15,15 +15,11 @@ using Server.Spells;
 using Server.Spells.Fifth;
 using Server.Spells.Sixth;
 using Server.Spells.Seventh;
-using Server.Spells.Necromancy;
-using Server.Spells.Ninjitsu;
-using Server.Spells.Bushido;
 using Server.Targeting;
 using Server.Regions;
 using Server.Accounting;
 using Server.Engines.CannedEvil;
 using Server.Engines.Craft;
-using Server.Spells.Spellweaving;
 using Server.Engines.PartySystem;
 using Server.Commands;
 using Server.Achievements;
@@ -852,17 +848,8 @@ namespace Server.Mobiles
             }
 
             DisguiseTimers.StartTimer(e.Mobile);
-
-            Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(ClearSpecialMovesCallback), e.Mobile);
         }
-
-        private static void ClearSpecialMovesCallback(object state)
-        {
-            Mobile from = (Mobile)state;
-
-            SpecialMove.ClearAllMoves(from);
-        }
-
+        
         private static void EventSink_Disconnected(DisconnectedEventArgs e)
         {
             Mobile from = e.Mobile;
@@ -870,10 +857,8 @@ namespace Server.Mobiles
 
             if (context != null)
             {
-                // Remove design context
                 DesignContext.Remove(from);
 
-                // Eject all from house
                 from.RevealingAction();
 
                 foreach (Item item in context.Foundation.GetItems())
@@ -882,7 +867,6 @@ namespace Server.Mobiles
                 foreach (Mobile mobile in context.Foundation.GetMobiles())
                     mobile.Location = context.Foundation.BanLocation;
 
-                // Restore relocated entities
                 context.Foundation.RestoreRelocatedEntities();
             }
 
@@ -2151,9 +2135,6 @@ namespace Server.Mobiles
             {
                 if (Mount != null)
                     Mount.Rider = null;
-
-                else if (AnimalForm.UnderTransformation(this))
-                    AnimalForm.RemoveContext(this, true);
             }
 
             if ((m_MountBlock == null) || !m_MountBlock.m_Timer.Running || (m_MountBlock.m_Timer.Next < (DateTime.UtcNow + duration)))
@@ -2811,23 +2792,9 @@ namespace Server.Mobiles
 		};
 
         public override bool AllowSkillUse(SkillName skill)
-        {
-            if (AnimalForm.UnderTransformation(this))
-            {
-                for (int i = 0; i < m_AnimalFormRestrictedSkills.Length; i++)
-                {
-                    if (m_AnimalFormRestrictedSkills[i] == skill)
-                    {
-                        SendLocalizedMessage(1070771); // You cannot use that skill in this form.
-                        return false;
-                    }
-                }
-            }
-
-            #region Dueling
+        {       
             if (m_DuelContext != null && !m_DuelContext.AllowSkillUse(this, skill))
-                return false;
-            #endregion
+                return false;        
 
             return DesignContext.Check(this);
         }
@@ -3775,9 +3742,6 @@ namespace Server.Mobiles
             if (shoved.Blessed)
                 return true;
 
-            else if (TransformationSpellHelper.UnderTransformation(this, typeof(WraithFormSpell)))
-                return true;
-
             else if (UOACZSystem.IsUOACZValidMobile(this))
             {
                 if (!shoved.Alive || !Alive || shoved.IsDeadBondedPet || IsDeadBondedPet)
@@ -3903,10 +3867,7 @@ namespace Server.Mobiles
                 if (causeSlip)
                     bandageContext.Slip();
             }
-
-            if (Confidence.IsRegenerating(this))
-                Confidence.StopRegenerating(this);
-
+            
             WeightOverloading.FatigueOnDamage(this, amount, 1.0);
 
             base.OnDamage(amount, from, willKill);
@@ -4671,7 +4632,6 @@ namespace Server.Mobiles
 
         private List<Mobile> m_PermaFlags = new List<Mobile>();
         private List<Mobile> m_VisList;
-        private Hashtable m_AntiMacroTable;
         private TimeSpan m_GameTime;
         private DateTime m_SessionStart;
         private DateTime m_LastEscortTime;
@@ -4776,7 +4736,6 @@ namespace Server.Mobiles
 
             m_VisList = new List<Mobile>();
             m_PermaFlags = new List<Mobile>();
-            m_AntiMacroTable = new Hashtable();
 
             m_BOBFilter = new Engines.BulkOrders.BOBFilter();
 
@@ -5201,18 +5160,11 @@ namespace Server.Mobiles
         {
             if (!Alive)
                 return ApplyPoisonResult.Immune;
-
-            #region AOS - NOT USED
-            if (Spells.Necromancy.EvilOmenSpell.TryEndEffect(this))
-                poison = PoisonImpl.IncreaseLevel(poison);
-            #endregion
-
+            
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
-            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)
-            {
-                (PoisonTimer as PoisonImpl.PoisonTimer).From = from;
-            }
+            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)            
+                (PoisonTimer as PoisonImpl.PoisonTimer).From = from;            
 
             return result;
         }
@@ -5238,11 +5190,9 @@ namespace Server.Mobiles
 
         #endregion
 
-        public PlayerMobile(Serial s)
-            : base(s)
+        public PlayerMobile(Serial s): base(s)
         {
             m_VisList = new List<Mobile>();
-            m_AntiMacroTable = new Hashtable();
         }
 
         public List<Mobile> VisibilityList
@@ -5287,41 +5237,6 @@ namespace Server.Mobiles
             return base.IsHarmfulCriminal(target);
         }
 
-        public bool AntiMacroCheck(Skill skill, object obj)
-        {
-            if (obj == null || m_AntiMacroTable == null || this.AccessLevel != AccessLevel.Player)
-                return true;
-
-            Hashtable tbl = (Hashtable)m_AntiMacroTable[skill];
-            if (tbl == null)
-                m_AntiMacroTable[skill] = tbl = new Hashtable();
-
-            CountAndTimeStamp count = (CountAndTimeStamp)tbl[obj];
-            if (count != null)
-            {
-                if (count.TimeStamp + SkillCheck.AntiMacroExpire <= DateTime.UtcNow)
-                {
-                    count.Count = 1;
-                    return true;
-                }
-                else
-                {
-                    ++count.Count;
-                    if (count.Count <= SkillCheck.Allowance)
-                        return true;
-                    else
-                        return false;
-                }
-            }
-            else
-            {
-                tbl[obj] = count = new CountAndTimeStamp();
-                count.Count = 1;
-
-                return true;
-            }
-        }
-
         private void RevertHair()
         {
             SetHairMods(-1, -1);
@@ -5335,20 +5250,6 @@ namespace Server.Mobiles
 
         public override void Serialize(GenericWriter writer)
         {
-            //cleanup our anti-macro table 
-            foreach (Hashtable t in m_AntiMacroTable.Values)
-            {
-                ArrayList remove = new ArrayList();
-                foreach (CountAndTimeStamp time in t.Values)
-                {
-                    if (time.TimeStamp + SkillCheck.AntiMacroExpire <= DateTime.UtcNow)
-                        remove.Add(time);
-                }
-
-                for (int i = 0; i < remove.Count; ++i)
-                    t.Remove(remove[i]);
-            }
-
             CheckKillDecay();
 
             if (KinPaintHue != -1)
@@ -6305,17 +6206,14 @@ namespace Server.Mobiles
                 return Mobile.RunMount;	// We are NOT actually moving (just a direction change)
 
             TransformContext context = TransformationSpellHelper.GetContext(this);
-
-            if (context != null && context.Type == typeof(ReaperFormSpell))
-                return Mobile.WalkFoot;
-
+            
             bool running = ((dir & Direction.Running) != 0);
 
-            bool onHorse = (this.Mount != null);
+            //TEST: Mount Speeds
 
-            AnimalFormContext animalContext = AnimalForm.GetContext(this);
+            bool onHorse = (Mount != null);
 
-            if (onHorse || (animalContext != null && animalContext.SpeedBoost))
+            if (onHorse)
                 return (running ? Mobile.RunMount : Mobile.WalkMount);
 
             return (running ? Mobile.RunFoot : Mobile.WalkFoot);

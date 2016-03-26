@@ -19,8 +19,7 @@ namespace Server.Mobiles
 		public class InternalBuyInfo : List<GenericBuyInfo>
 		{
 			public InternalBuyInfo()
-			{
-				Add( new GenericBuyInfo( typeof( FletcherTools ), 20, 20, 0x1022, 0 ) );
+			{				
 			}
 		}
 
@@ -28,7 +27,6 @@ namespace Server.Mobiles
 		{
 			public InternalSellInfo()
 			{
-				Add( typeof( FletcherTools ), 10 );
 			}
 		}
 	}

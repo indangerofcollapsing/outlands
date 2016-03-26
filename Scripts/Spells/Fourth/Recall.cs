@@ -5,7 +5,6 @@ using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
 using Server.Regions;
-using Server.Spells.Necromancy;
 
 using Server.Custom.Items;
 using System.Collections;
@@ -48,10 +47,9 @@ namespace Server.Spells.Fourth
 
 		public override void GetCastSkills( out double min, out double max )
 		{
-			if ( TransformationSpellHelper.UnderTransformation( Caster, typeof( WraithFormSpell ) ) )
+			if( m_Book != null )	//recall using Runebook charge
 				min = max = 0;
-			else if( m_Book != null )	//recall using Runebook charge
-				min = max = 0;
+
 			else
 				base.GetCastSkills( out min, out max );
 		}

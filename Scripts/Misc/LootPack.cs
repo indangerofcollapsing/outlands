@@ -230,12 +230,13 @@ namespace Server
         {
             // only one of each entry
 
+            new LootPackItem(typeof(RareArrowBundle), 1),
+            new LootPackItem(typeof(RareBoltBundle), 1),
+
             // alchemy
             new LootPackItem(typeof(RareVial), 1),
             new LootPackItem(typeof(RareFlask), 1),
-            // bowcraft
-            new LootPackItem(typeof(RareArrowBundle), 1),
-            new LootPackItem(typeof(RareBoltBundle), 1),
+
             // blacksmith
             new LootPackItem(typeof(Rope), 1),
             new LootPackItem(typeof(RarePegboard), 1),

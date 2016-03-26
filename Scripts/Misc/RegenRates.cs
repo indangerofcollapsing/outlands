@@ -2,8 +2,6 @@ using System;
 using Server;
 using Server.Items;
 using Server.Spells;
-using Server.Spells.Necromancy;
-using Server.Spells.Ninjitsu;
 using Server.Mobiles;
 
 namespace Server.Misc
@@ -40,12 +38,7 @@ namespace Server.Misc
 		{
 			return TransformationSpellHelper.UnderTransformation( m, type );
 		}
-
-		private static bool CheckAnimal( Mobile m, Type type )
-		{
-			return AnimalForm.UnderTransformation( m, type );
-		}
-
+        
 		private static TimeSpan Mobile_HitsRegenRate( Mobile from )
 		{            
             PlayerMobile player = from as PlayerMobile;

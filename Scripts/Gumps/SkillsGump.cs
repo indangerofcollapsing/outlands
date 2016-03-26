@@ -73,23 +73,22 @@ namespace Server.Gumps
 							CommandLogging.LogChangeProperty( m_From, m_Target, String.Format( "{0}.Base", m_Skill ), m_Skill.Base.ToString() );
 						}
 					}
-					else
-					{
-						m_From.SendMessage( "You may not change that." );
-					}
+
+					else					
+						m_From.SendMessage( "You may not change that." );					
 
 					m_From.SendGump( new SkillsGump( m_From, m_Target, m_Selected ) );
 				}
+
 				catch
 				{
 					m_From.SendMessage( "Bad format. ###.# expected." );
 					m_From.SendGump( new EditSkillGump( m_From, m_Target, m_Skill, m_Selected ) );
 				}
 			}
-			else
-			{
-				m_From.SendGump( new SkillsGump( m_From, m_Target, m_Selected ) );
-			}
+
+			else			
+				m_From.SendGump( new SkillsGump( m_From, m_Target, m_Selected ) );			
 		}
 
 		public EditSkillGump( Mobile from, Mobile target, Skill skill, SkillsGumpGroup selected ) : base( GumpOffsetX, GumpOffsetY )
@@ -165,18 +164,7 @@ namespace Server.Gumps
 
 		public static readonly int EntryHeight = PropsConfig.EntryHeight;
 		public static readonly int BorderSize = PropsConfig.BorderSize;
-
-		/*
-		private static bool PrevLabel = OldStyle, NextLabel = OldStyle;
-
-		private static readonly int PrevLabelOffsetX = PrevWidth + 1;
-		
-		private static readonly int PrevLabelOffsetY = 0;
-
-		private static readonly int NextLabelOffsetX = -29;
-		private static readonly int NextLabelOffsetY = 0;
-		 * */
-
+        
 		private static readonly int NameWidth = 107;
 		private static readonly int ValueWidth = 128;
 
@@ -215,12 +203,14 @@ namespace Server.Gumps
 
 						if ( m_Selected != newSelection )
 							m_From.SendGump( new SkillsGump( m_From, m_Target, newSelection ) );
+
 						else
 							m_From.SendGump( new SkillsGump( m_From, m_Target, null ) );
 					}
 
 					break;
 				}
+
 				case 1:
 				{
 					if ( m_Selected != null && index >= 0 && index < m_Selected.Skills.Length )
@@ -229,24 +219,23 @@ namespace Server.Gumps
 
 						if ( sk != null )
 						{
-							if ( m_From.AccessLevel >= AccessLevel.GameMaster )
-							{
+							if ( m_From.AccessLevel >= AccessLevel.GameMaster )							
 								m_From.SendGump( new EditSkillGump( m_From, m_Target, sk, m_Selected ) );
-							}
+							
 							else
 							{
 								m_From.SendMessage( "You may not change that." );
 								m_From.SendGump( new SkillsGump( m_From, m_Target, m_Selected ) );
 							}
 						}
-						else
-						{
-							m_From.SendGump( new SkillsGump( m_From, m_Target, m_Selected ) );
-						}
+
+						else						
+							m_From.SendGump( new SkillsGump( m_From, m_Target, m_Selected ) );						
 					}
 
 					break;
 				}
+
 				case 2:
 				{
 					if ( m_Selected != null && index >= 0 && index < m_Selected.Skills.Length )
@@ -264,10 +253,9 @@ namespace Server.Gumps
 									case SkillLock.Locked: sk.SetLockNoRelay( SkillLock.Up ); sk.Update(); break;
 								}
 							}
-							else
-							{
-								m_From.SendMessage( "You may not change that." );
-							}
+
+							else							
+								m_From.SendMessage( "You may not change that." );							
 
 							m_From.SendGump( new SkillsGump( m_From, m_Target, m_Selected ) );
 						}
@@ -314,6 +302,7 @@ namespace Server.Gumps
 
 			if ( OldStyle )
 				AddImageTiled( x, y, TotalWidth - (OffsetSize * 3) - SetWidth, EntryHeight, HeaderGumpID );
+
 			else
 				AddImageTiled( x, y, PrevWidth, EntryHeight, HeaderGumpID );
 
@@ -338,7 +327,8 @@ namespace Server.Gumps
 
 				if ( group == selected )
 					AddButton( x + PrevOffsetX, y + PrevOffsetY, 0x15E2, 0x15E6, GetButtonID( 0, i ), GumpButtonType.Reply, 0 );
-				else
+				
+                else
 					AddButton( x + PrevOffsetX, y + PrevOffsetY, 0x15E1, 0x15E5, GetButtonID( 0, i ), GumpButtonType.Reply, 0 );
 
 				x += PrevWidth + OffsetSize;
@@ -468,12 +458,11 @@ namespace Server.Gumps
 					SkillName.Cartography,
 					SkillName.Carpentry,
 					SkillName.Cooking,
-					SkillName.Fletching,
 					SkillName.Inscribe,
 					SkillName.Tailoring,
 					SkillName.Tinkering,
-					SkillName.Imbuing
 				} ),
+
 				new SkillsGumpGroup( "Bardic", new SkillName[]
 				{
 					SkillName.Discordance,
@@ -481,25 +470,20 @@ namespace Server.Gumps
 					SkillName.Peacemaking,
 					SkillName.Provocation
 				} ),
+
 				new SkillsGumpGroup( "Magical", new SkillName[]
 				{
-					SkillName.Chivalry,
 					SkillName.EvalInt,
 					SkillName.Magery,
 					SkillName.MagicResist,
 					SkillName.Meditation,
-					SkillName.Necromancy,
 					SkillName.SpiritSpeak,
-					SkillName.Ninjitsu,
-					SkillName.Bushido,
-					SkillName.Spellweaving,
-					SkillName.Mysticism
 				} ),
+
 				new SkillsGumpGroup( "Miscellaneous", new SkillName[]
 				{
 					SkillName.Camping,
 					SkillName.Fishing,
-					SkillName.Focus,
 					SkillName.Healing,
 					SkillName.Herding,
 					SkillName.Lockpicking,
@@ -508,6 +492,7 @@ namespace Server.Gumps
 					SkillName.Snooping,
 					SkillName.Veterinary
 				} ),
+
 				new SkillsGumpGroup( "Combat Ratings", new SkillName[]
 				{
 					SkillName.Archery,
@@ -517,8 +502,8 @@ namespace Server.Gumps
 					SkillName.Swords,
 					SkillName.Tactics,
 					SkillName.Wrestling,
-					SkillName.Throwing
 				} ),
+
 				new SkillsGumpGroup( "Actions", new SkillName[]
 				{
 					SkillName.AnimalTaming,
@@ -531,6 +516,7 @@ namespace Server.Gumps
 					SkillName.Stealth,
 					SkillName.Tracking
 				} ),
+
 				new SkillsGumpGroup( "Lore & Knowledge", new SkillName[]
 				{
 					SkillName.Anatomy,

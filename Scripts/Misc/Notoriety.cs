@@ -7,8 +7,6 @@ using Server.Guilds;
 using Server.Multis;
 using Server.Mobiles;
 using Server.Engines.PartySystem;
-using Server.Spells.Necromancy;
-using Server.Spells.Ninjitsu;
 using Server.Spells;
 using Server.Network;
 
@@ -837,7 +835,7 @@ namespace Server.Misc
                 {
                 }
 
-                else if (!target.Body.IsHuman && !target.Body.IsGhost && !IsPet(bc_Target) && !TransformationSpellHelper.UnderTransformation(target) && !AnimalForm.UnderTransformation(target))
+                else if (!target.Body.IsHuman && !target.Body.IsGhost && !IsPet(bc_Target) && !TransformationSpellHelper.UnderTransformation(target))
                     return Notoriety.CanBeAttacked;
             }
 

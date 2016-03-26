@@ -10,7 +10,7 @@ namespace Server.SkillHandlers
 	{
 		public static void Initialize()
 		{
-			SkillInfo.Table[32].Callback = new SkillUseCallback( OnUse );
+            SkillInfo.Table[(int)SkillName.SpiritSpeak].Callback = new SkillUseCallback(OnUse);
 		}
 
 		public static TimeSpan OnUse( Mobile m )

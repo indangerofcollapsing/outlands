@@ -2,7 +2,6 @@ using System;
 using Server.Mobiles;
 using Server.Targeting;
 using Server.Network;
-using Server.Spells.Chivalry;
 using Server.Items;
 using Server.Custom;
 

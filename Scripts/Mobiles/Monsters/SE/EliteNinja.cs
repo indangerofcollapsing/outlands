@@ -46,7 +46,6 @@ namespace Server.Mobiles
 			SetSkill( SkillName.Fencing, 95.0, 120.0 );
 			SetSkill( SkillName.Macing, 95.0, 120.0 );
 			SetSkill( SkillName.Swords, 95.0, 120.0 );
-			SetSkill( SkillName.Ninjitsu, 95.0, 120.0 );
 
 
 			Fame = 8500;

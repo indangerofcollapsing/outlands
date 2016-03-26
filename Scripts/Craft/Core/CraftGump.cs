@@ -257,16 +257,16 @@ namespace Server.Engines.Craft
 					{
 						if ( i > 0 )
 						{
-							AddButton( 370, 260, 4005, 4007, 0, GumpButtonType.Page, (i / 10) + 1 );
-							AddHtmlLocalized( 405, 263, 100, 18, 1044045, LabelColor, false, false ); // NEXT PAGE
+							AddButton( 395, 265, 4005, 4007, 0, GumpButtonType.Page, (i / 10) + 1 );
+							AddHtmlLocalized( 430, 268, 100, 18, 1044045, LabelColor, false, false ); // NEXT PAGE
 						}
 
 						AddPage( (i / 10) + 1 );
 
 						if ( i > 0 )
 						{
-							AddButton( 220, 260, 4014, 4015, 0, GumpButtonType.Page, i / 10 );
-							AddHtmlLocalized( 255, 263, 100, 18, 1044044, LabelColor, false, false ); // PREV PAGE
+							AddButton( 245, 265, 4014, 4015, 0, GumpButtonType.Page, i / 10 );
+							AddHtmlLocalized( 280, 268, 100, 18, 1044044, LabelColor, false, false ); // PREV PAGE
 						}
 					}
 
@@ -357,16 +357,16 @@ namespace Server.Engines.Craft
                 {
                     if (i > 0)
                     {
-                        AddButton(370, 260, 4005, 4007, 0, GumpButtonType.Page, (i / 10) + 1);
-                        AddHtmlLocalized(405, 263, 100, 18, 1044045, LabelColor, false, false); // NEXT PAGE
+                        AddButton(395, 265, 4005, 4007, 0, GumpButtonType.Page, (i / 10) + 1);
+                        AddHtmlLocalized(430, 268, 100, 18, 1044045, LabelColor, false, false); // NEXT PAGE
                     }
 
                     AddPage((i / 10) + 1);
 
                     if (i > 0)
                     {
-                        AddButton(220, 260, 4014, 4015, 0, GumpButtonType.Page, i / 10);
-                        AddHtmlLocalized(255, 263, 100, 18, 1044044, LabelColor, false, false); // PREV PAGE
+                        AddButton(245, 265, 4014, 4015, 0, GumpButtonType.Page, i / 10);
+                        AddHtmlLocalized(280, 268, 100, 18, 1044044, LabelColor, false, false); // PREV PAGE
                     }
                 }
 

@@ -204,17 +204,16 @@ namespace Server.Custom
 
                 else if (itemResult <= .98)
                 {
-                    switch (Utility.RandomMinMax(1, 9))
-                    {                        
-                        case 1: DropItem(new UOACZFletcherTools()); break;
-                        case 2: DropItem(new UOACZMortarPestle()); break;
-                        case 3: DropItem(new UOACZSaw()); break;
-                        case 4: DropItem(new UOACZSkillet()); break;
-                        case 5: DropItem(new UOACZTinkersTools()); break;
-                        case 6: DropItem(new UOACZTongs()); break;
-                        case 7: DropItem(new UOACZRepairHammer()); break;
-                        case 8: DropItem(new UOACZLockpickKit()); break;
-                        case 9: DropItem(new UOACZFishingPole()); break;
+                    switch (Utility.RandomMinMax(1, 8))
+                    {           
+                        case 1: DropItem(new UOACZMortarPestle()); break;
+                        case 2: DropItem(new UOACZSaw()); break;
+                        case 3: DropItem(new UOACZSkillet()); break;
+                        case 4: DropItem(new UOACZTinkersTools()); break;
+                        case 5: DropItem(new UOACZTongs()); break;
+                        case 6: DropItem(new UOACZRepairHammer()); break;
+                        case 7: DropItem(new UOACZLockpickKit()); break;
+                        case 8: DropItem(new UOACZFishingPole()); break;
                     }
                 }   
 

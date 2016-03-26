@@ -186,7 +186,6 @@ namespace Server.ArenaSystem
                     Add(new GenericBuyInfo(typeof(Tongs), 9, 20, 0xFBB, 0));
                     Add(new GenericBuyInfo(typeof(MortarPestle), 8, 10, 0xE9B, 0));
                     Add(new GenericBuyInfo(typeof(SewingKit), 3, 20, 0xF9D, 0));
-                    Add(new GenericBuyInfo(typeof(FletcherTools), 20, 20, 0x1022, 0));
                     Add(new GenericBuyInfo(typeof(MapmakersPen), 8, 20, 0x0FBF, 0));
                     Add(new GenericBuyInfo(typeof(ScribesPen), 8, Utility.Random(8, 15), 0xFBF, 0));
                     Add(new GenericBuyInfo(typeof(BlankMap), 5, 40, 0x14EC, 0));

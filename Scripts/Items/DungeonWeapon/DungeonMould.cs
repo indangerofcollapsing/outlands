@@ -15,8 +15,7 @@ namespace Server.Items
         public enum MouldSkillType
         {
             Blacksmithy,
-            Carpentry,
-            Bowcraft
+            Carpentry
         }
 
         private MouldSkillType m_MouldType = MouldSkillType.Blacksmithy;
@@ -31,7 +30,6 @@ namespace Server.Items
                 switch (m_MouldType)
                 {
                     case MouldSkillType.Blacksmithy: Hue = 2500; break;
-                    case MouldSkillType.Bowcraft: Hue = 2208; break;
                     case MouldSkillType.Carpentry: Hue = 2311; break;
                 }
             }
@@ -47,8 +45,6 @@ namespace Server.Items
             if (mouldTypeResult <= 65)
                 MouldType = MouldSkillType.Blacksmithy;
 
-            else if (mouldTypeResult <= 85)
-                MouldType = MouldSkillType.Bowcraft;
 
             else
                 MouldType = MouldSkillType.Carpentry;
@@ -73,7 +69,6 @@ namespace Server.Items
             switch (m_MouldType)
             {
                 case MouldSkillType.Blacksmithy: LabelTo(from, "(blacksmithy)"); break;
-                case MouldSkillType.Bowcraft: LabelTo(from, "(bowcraft)"); break;
                 case MouldSkillType.Carpentry: LabelTo(from, "(carpentry)"); break;
             }            
         }
@@ -93,11 +88,7 @@ namespace Server.Items
                 case MouldSkillType.Blacksmithy:
                     from.SendMessage("Target a gm crafted blacksmithy-made weapon to create a new dungeon weapon. Or target an existing one to upgrade it's tier.");
                 break;
-
-                case MouldSkillType.Bowcraft:
-                    from.SendMessage("Target a gm crafted bowcraft-made weapon to create a new dungeon weapon. Or target an existing one to upgrade it's tier.");
-                break;
-
+                    
                 case MouldSkillType.Carpentry:
                     from.SendMessage("Target a gm crafted carpentry-made weapon to create a new dungeon weapon. Or target an existing one to upgrade it's tier.");
                 break;
@@ -200,6 +191,8 @@ namespace Server.Items
                     return;
                 }
 
+                //TEST: Fix (Use Lookups in CraftItem to determine which mould to use)
+
                 switch (m_DungeonMould.MouldType)
                 {
                     case MouldSkillType.Blacksmithy:
@@ -222,23 +215,7 @@ namespace Server.Items
                             player.SendMessage("You must have " + craftingSkillRequired.ToString() + " blacksmithy skill in order to perform that.");
                             return;
                         }
-                    break;
-
-                    case MouldSkillType.Bowcraft:
-                        if (!(weapon is Bow || weapon is Crossbow || weapon is HeavyCrossbow))
-                        {
-                            player.SendMessage("You must target a bowcraft-made weapon with this mould.");
-                            return;
-                        }
-
-                        craftingSkillRequired = (double)DungeonWeapon.BaseCraftingSkillNeeded + ((double)(weapon.DungeonTier + 1) * (double)DungeonWeapon.ExtraCraftingSkillNeededPerTier);
-
-                        if (from.Skills.Fletching.Value < craftingSkillRequired)
-                        {
-                            player.SendMessage("You must have " + craftingSkillRequired.ToString() + " bowcraft skill in order to perform that.");
-                            return;
-                        }
-                    break;
+                    break;                   
 
                     case MouldSkillType.Carpentry:
                         if (!(weapon is Club || weapon is QuarterStaff || weapon is BlackStaff || weapon is GnarledStaff))

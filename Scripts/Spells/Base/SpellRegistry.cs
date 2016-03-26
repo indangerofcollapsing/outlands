@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Server.Spells.Bushido;
-using Server.Spells.Chivalry;
 using Server.Items;
-using Server.Spells.Necromancy;
-using Server.Spells.Ninjitsu;
 
 namespace Server.Spells
 {
@@ -46,18 +42,11 @@ namespace Server.Spells
 
 		private static Dictionary<Type, Int32> m_IDsFromTypes = new Dictionary<Type, Int32>( m_Types.Length );
 		
-		private static Dictionary<Int32, SpecialMove> m_SpecialMoves = new Dictionary<Int32, SpecialMove>();
-		public static Dictionary<Int32, SpecialMove> SpecialMoves { get { return m_SpecialMoves; } }
-
 		public static int GetRegistryNumber( ISpell s )
 		{
 			return GetRegistryNumber( s.GetType() );
 		}
 
-		public static int GetRegistryNumber( SpecialMove s )
-		{
-			return GetRegistryNumber( s.GetType() );
-		}
 
 		public static int GetRegistryNumber( Type type )
 		{
@@ -79,40 +68,8 @@ namespace Server.Spells
 
 			if( !m_IDsFromTypes.ContainsKey( type ) )
 				m_IDsFromTypes.Add( type, spellID );
-
-			//IPY doesnt have Special Moves
-            /*
-			if( type.IsSubclassOf( typeof( SpecialMove ) ) )
-			{
-				SpecialMove spm = null;
-
-				try
-				{
-					spm = Activator.CreateInstance( type ) as SpecialMove;
-				}
-				catch
-				{
-				}
-
-				if( spm != null )
-					m_SpecialMoves.Add( spellID, spm );
-			}
-			*/
 		}
-
-		public static SpecialMove GetSpecialMove( int spellID )
-		{
-			if ( spellID < 0 || spellID >= m_Types.Length )
-				return null;
-
-			Type t = m_Types[spellID];
-
-			if ( t == null || !t.IsSubclassOf( typeof( SpecialMove ) ) || !m_SpecialMoves.ContainsKey( spellID ) )
-				return null;
-
-			return m_SpecialMoves[spellID];
-		}
-
+		
 		private static object[] m_Params = new object[2];
 
 		public static Spell NewSpell( int spellID, Mobile caster, Item scroll )
