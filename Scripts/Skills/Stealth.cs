@@ -44,7 +44,7 @@ namespace Server.SkillHandlers
 
             else
             {
-                if (mobile.CheckSkill(SkillName.Stealth, 0, 100))
+                if (mobile.CheckSkill(SkillName.Stealth, 0, 100, 1.0))
                 {
                     int steps = (int)(mobile.Skills[SkillName.Stealth].Value / 10);
 

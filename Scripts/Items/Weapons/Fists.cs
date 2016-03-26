@@ -37,20 +37,7 @@ namespace Server.Items
 
 		public override double GetDefendSkillValue( Mobile attacker, Mobile defender )
 		{
-            //Added by IPY
 			return defender.Skills[SkillName.Wrestling].Value;
-			/*double wresValue = defender.Skills[SkillName.Wrestling].Value;
-			double anatValue = defender.Skills[SkillName.Anatomy].Value;
-			double evalValue = defender.Skills[SkillName.EvalInt].Value;
-			double incrValue = (anatValue + evalValue + 20.0) * 0.5;
-
-			if ( incrValue > 120.0 )
-				incrValue = 120.0;
-
-			if ( wresValue > incrValue )
-				return wresValue;
-			else
-				return incrValue;*/
 		}
 
 		private void CheckPreAOSMoves( Mobile attacker, Mobile defender )

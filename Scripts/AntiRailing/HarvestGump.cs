@@ -207,10 +207,10 @@ namespace Server.Custom.AntiRailing
 	class PostSuccessTimer : Timer
 	{
 		private PlayerMobile m_Harvester;
-		public PostSuccessTimer(PlayerMobile pm ,int anim_count, TimeSpan tick_time)
-			: base(tick_time, tick_time, anim_count - 1)
+		public PostSuccessTimer(PlayerMobile pm ,int anim_count, TimeSpan tick_time): base(tick_time, tick_time, anim_count - 1)
 		{
 			m_Harvester = pm;
+
 			if (pm.TempStashedHarvest != null && pm.TempStashedHarvestDef != null)
 			{
 				pm.Animate(Utility.RandomList(pm.TempStashedHarvestDef.EffectActions), 5, anim_count, true, false, 0);
@@ -225,15 +225,17 @@ namespace Server.Custom.AntiRailing
 				m_Harvester.SendLocalizedMessage(500446); // That is too far away
 				Stop();
 			}
+
 			else if (Running)
 			{
                 if (m_Harvester.TempStashedHarvestDef != null)
                 {
                     Effects.PlaySound(m_Harvester.Location, m_Harvester.Map, Utility.RandomList(m_Harvester.TempStashedHarvestDef.EffectSounds));
-                    m_Harvester.CheckSkill(m_Harvester.TempStashedHarvestDef.Skill, 0.0, 100.0); // TODO : This should be resource.MinSkill / MaxSkill
+                    m_Harvester.CheckSkill(m_Harvester.TempStashedHarvestDef.Skill, 0.0, 100.0, 1.0); // TODO : This should be resource.MinSkill / MaxSkill
                     // Check skill each tick
                 }
 			}
+
 			else
 			{
 				Item i = m_Harvester.TempStashedHarvest;

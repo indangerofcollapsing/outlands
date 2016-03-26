@@ -162,7 +162,7 @@ namespace Server.SkillHandlers
 
                         //Skill Gain Check
                         if (successChance > 0 && successChance < 1.25)
-                            from.CheckSkill(SkillName.Provocation, 0.0, 120.0);
+                            from.CheckSkill(SkillName.Provocation, 0.0, 120.0, 1.0);
 
                         PlayerMobile pm_From = from as PlayerMobile;
 
@@ -260,7 +260,7 @@ namespace Server.SkillHandlers
 
                             //Skill Gain Check
                             if (successChance > 0 && successChance < 1.0)
-                                from.CheckSkill(SkillName.Provocation, 0.0, 120.0);
+                                from.CheckSkill(SkillName.Provocation, 0.0, 120.0, 1.0);
 
                             PlayerMobile pm_From = from as PlayerMobile;
 

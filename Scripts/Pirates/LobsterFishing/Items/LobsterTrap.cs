@@ -178,7 +178,7 @@ namespace Server.Items
 
                     for (int j = 0; j < types.Length; j++)
                         if (type == types[j])
-                            from.CheckSkill(LobsterFishing.System.Definition.Skill, resource.MinSkill, resource.MaxSkill);
+                            from.CheckSkill(LobsterFishing.System.Definition.Skill, resource.MinSkill, resource.MaxSkill, 1.0);
                 }
            }
         }

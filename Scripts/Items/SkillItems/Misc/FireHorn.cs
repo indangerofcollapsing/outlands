@@ -71,7 +71,7 @@ namespace Server.Items
 			int sucChance = 500 + ( music - 775 ) * 2;
 			double dSucChance = ((double)sucChance) / 1000.0;
 
-			if ( !from.CheckSkill( SkillName.Musicianship, dSucChance ) )
+			if ( !from.CheckSkill( SkillName.Musicianship, dSucChance, 1.0) )
 			{
 				from.SendLocalizedMessage( 1049618 ); // The horn emits a pathetic squeak.
 				from.PlaySound( 0x18A );
@@ -155,7 +155,7 @@ namespace Server.Items
 
 					double toDeal = damage;
 
-					if ( !Core.AOS && m.CheckSkill( SkillName.MagicResist, 0.0, 120.0 ) )
+					if ( !Core.AOS && m.CheckSkill( SkillName.MagicResist, 0.0, 120.0, 1.0 ) )
 					{
 						toDeal *= 0.5;
 						m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.

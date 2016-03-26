@@ -112,7 +112,7 @@ namespace Server.Items
                 chance = 0.01;            
 
             //Successful Parry Check
-            if (owner.CheckSkill(SkillName.Parry, chance))
+            if (owner.CheckSkill(SkillName.Parry, chance, 1.0))
             {
                 double reduction = 0.40; // 50% base reduction
 

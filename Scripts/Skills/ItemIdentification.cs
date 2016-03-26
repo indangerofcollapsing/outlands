@@ -49,7 +49,7 @@ namespace Server.Items
                 }
                 else if (o is Item)
                 {
-                    if (from.CheckTargetSkill(SkillName.ItemID, o, 0, 100))
+                    if (from.CheckTargetSkill(SkillName.ItemID, o, 0, 100, 1.0))
                     {
                         if (o is BaseWeapon)
                             ((BaseWeapon)o).Identified = true;

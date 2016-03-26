@@ -54,7 +54,7 @@ namespace Server.Engines.Craft
 			{
 				double difficulty = GetRepairDifficulty( curHits, maxHits ) * 0.1;
 				
-				return mob.CheckSkill( skill, difficulty - 25.0, difficulty + 25.0 );				
+				return mob.CheckSkill( skill, difficulty - 25.0, difficulty + 25.0, 1.0 );				
 			}
 
 			private bool IsSpecialClothing( BaseClothing clothing )

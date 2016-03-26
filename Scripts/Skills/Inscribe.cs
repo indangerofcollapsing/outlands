@@ -133,7 +133,7 @@ namespace Server.SkillHandlers
 					from.SendLocalizedMessage( 501621 ); // Someone else is inscribing that item.
 				else
 				{
-					if ( from.CheckTargetSkill( SkillName.Inscribe, bookDst, 0, 50 ) )
+					if ( from.CheckTargetSkill( SkillName.Inscribe, bookDst, 0, 50, 1.0 ) )
 					{
 						Inscribe.Copy( m_BookSrc, bookDst );
 

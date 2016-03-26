@@ -2002,10 +2002,9 @@ namespace Server
                     Delta(ItemDelta.Properties);
                 }
             }
-            else
-            {
-                ClearProperties();
-            }
+
+            else            
+                ClearProperties();            
         }
 
         private object _wpl = new object();

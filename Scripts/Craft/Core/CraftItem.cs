@@ -987,8 +987,8 @@ namespace Server.Engines.Craft
                     valMainSkill = valSkill;
                 }
 
-                if (gainSkills) // This is a passive check. Success chance is entirely dependant on the main skill
-                    from.CheckSkill(craftSkill.SkillToMake, minSkill, maxSkill);
+                if (gainSkills)
+                    from.CheckSkill(craftSkill.SkillToMake, minSkill, maxSkill, 1.0);
             }
 
             double chance;

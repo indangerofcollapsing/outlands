@@ -6,15 +6,12 @@ using Server.Multis;
 using Server.Spells;
 using Server.Achievements;
 using Server.Regions;
+using Server.Network;
 
 namespace Server.Misc
 {
     public class SkillCheck
-    {   
-        public static TimeSpan PowerHourResetTime = TimeSpan.FromHours(23);
-
-        public static int BoostSkillMinimumLevel = 0;
-
+    {
         public static void Initialize()
         {
             Mobile.SkillCheckLocationHandler = new SkillCheckLocationHandler(XmlSpawnerSkillCheck.Mobile_SkillCheckLocation);
@@ -22,291 +19,97 @@ namespace Server.Misc
 
             Mobile.SkillCheckTargetHandler = new SkillCheckTargetHandler(XmlSpawnerSkillCheck.Mobile_SkillCheckTarget);
             Mobile.SkillCheckDirectTargetHandler = new SkillCheckDirectTargetHandler(XmlSpawnerSkillCheck.Mobile_SkillCheckDirectTarget);
-
-            SetGainFactors();
         }
 
-        public static void SetGainFactors()
+        public static double HousingSkillGainModifier = .25;
+
+        public static double SkillSpeedScalar(Mobile from, SkillName skillName)
         {
-            foreach(SkillInfo skillInfo in SkillInfo.Table)
+            //Weapon Swings
+            if (skillName == SkillName.Archery || skillName == SkillName.Fencing || skillName == SkillName.Macing ||
+                skillName == SkillName.Swords || skillName == SkillName.Tactics || skillName == SkillName.Wrestling)
             {
-                switch (skillInfo.Name)
+                int weaponSpeed = BaseWeapon.PlayerFistSpeed;
+
+                if (from.Weapon != null)
                 {
-                    case "Alchemy": skillInfo.GainFactor = .055; break;
-                    case "Anatomy": skillInfo.GainFactor = .03; break;
-                    case "Animal Lore": skillInfo.GainFactor = .07; break;
-                    case "Item Identification": skillInfo.GainFactor = .09; break;
-                    case "Arms Lore": skillInfo.GainFactor = .1; break;
-                    case "Parrying": skillInfo.GainFactor = .034; break;
-                    case "Begging": skillInfo.GainFactor = .1; break;
-                    case "Blacksmithy": skillInfo.GainFactor = .03; break;
-                    case "Peacemaking": skillInfo.GainFactor = .2; break;
-                    case "Camping": skillInfo.GainFactor = .2; break;
-                    case "Carpentry": skillInfo.GainFactor = .04; break;
-                    case "Cartography": skillInfo.GainFactor = .07; break;
-                    case "Cooking": skillInfo.GainFactor = .14; break;
-                    case "Detecting Hidden": skillInfo.GainFactor = .15; break;
-                    case "Discordance": skillInfo.GainFactor = .06; break;
-                    case "Evaluating Intelligence": skillInfo.GainFactor = .062; break;
-                    case "Healing": skillInfo.GainFactor = .099; break;
-                    case "Fishing": skillInfo.GainFactor = .1; break;
-                    case "Forensic Evaluation": skillInfo.GainFactor = .085; break;
-                    case "Herding": skillInfo.GainFactor = .05; break;
-                    case "Hiding": skillInfo.GainFactor = .11; break;
-                    case "Provocation": skillInfo.GainFactor = .11; break;
-                    case "Inscription": skillInfo.GainFactor = .035; break;
-                    case "Lockpicking": skillInfo.GainFactor = .25; break;
-                    case "Magery": skillInfo.GainFactor = .22; break;
-                    case "Resisting Spells": skillInfo.GainFactor = .084; break;
-                    case "Tactics": skillInfo.GainFactor = .075; break;
-                    case "Snooping": skillInfo.GainFactor = .05; break;
-                    case "Musicianship": skillInfo.GainFactor = .11; break;
-                    case "Poisoning": skillInfo.GainFactor = .113; break;
-                    case "Archery": skillInfo.GainFactor = .062; break;
-                    case "Spirit Speak": skillInfo.GainFactor = .05; break;
-                    case "Stealing": skillInfo.GainFactor = .085; break;
-                    case "Tailoring": skillInfo.GainFactor = .075; break;
-                    case "Animal Taming": skillInfo.GainFactor = .17; break;
-                    case "Taste Identification": skillInfo.GainFactor = .15; break;
-                    case "Tinkering": skillInfo.GainFactor = .032; break;
-                    case "Tracking": skillInfo.GainFactor = .25; break;
-                    case "Veterinary": skillInfo.GainFactor = .1; break;
-                    case "Swordsmanship": skillInfo.GainFactor = .045; break;
-                    case "Mace Fighting": skillInfo.GainFactor = .055; break;
-                    case "Fencing": skillInfo.GainFactor = .045; break;
-                    case "Wrestling": skillInfo.GainFactor = .07; break;
-                    case "Lumberjacking": skillInfo.GainFactor = .15; break;
-                    case "Mining": skillInfo.GainFactor = .057; break;
-                    case "Meditation": skillInfo.GainFactor = .025; break;
-                    case "Stealth": skillInfo.GainFactor = .11; break;
-                    case "Remove Trap": skillInfo.GainFactor = .1; break;
+                    BaseWeapon weapon = from.Weapon as BaseWeapon;
 
-                    default: skillInfo.GainFactor = .1; break;
+                    weaponSpeed = weapon.Speed;
                 }
-            }
-        }
+                                
+                double playerSwing = 15000.0 / (int)(((double)from.Stam + 100) * weaponSpeed);
+                double fastestSwingPossible = 15000.0 / (int)(((double)100 + 100) * 60);
+                
+                double weaponSwingScalar = playerSwing / fastestSwingPossible;
 
-        public static bool IsDungeonBoostedSkill(SkillName skillName)
+                return weaponSwingScalar;
+            }
+
+            return 1.0;
+        }
+        
+        public static double DungeonSkillScalar(SkillName skillName)
         {
             switch (skillName)
             {
-                case SkillName.Alchemy: return false; break;
-                case SkillName.Anatomy: return false; break;
-                case SkillName.AnimalLore: return false; break;
-                case SkillName.AnimalTaming: return false; break;
-                case SkillName.Archery: return false; break;
-                case SkillName.ArmsLore: return false; break;
-                case SkillName.Begging: return false; break;
-                case SkillName.Blacksmith: return false; break;
-                case SkillName.Camping: return false; break;
-                case SkillName.Carpentry: return false; break;
-                case SkillName.Cartography: return false; break;
-                case SkillName.Cooking: return false; break;
-                case SkillName.DetectHidden: return false; break;
-                case SkillName.Discordance: return false; break;
-                case SkillName.EvalInt: return false; break;
-                case SkillName.Fencing: return false; break;
-                case SkillName.Fishing: return false; break;
-                case SkillName.Forensics: return false; break;
-                case SkillName.Healing: return false; break;
-                case SkillName.Herding: return false; break;
-                case SkillName.Hiding: return false; break;
-                case SkillName.Inscribe: return false; break;
-                case SkillName.ItemID: return false; break;
-                case SkillName.Lockpicking: return false; break;
-                case SkillName.Lumberjacking: return false; break;
-                case SkillName.Macing: return false; break;
-                case SkillName.Magery: return false; break;
-                case SkillName.MagicResist: return false; break;
-                case SkillName.Meditation: return false; break;
-                case SkillName.Mining: return false; break;
-                case SkillName.Musicianship: return false; break;
-                case SkillName.Parry: return false; break;
-                case SkillName.Peacemaking: return false; break;
-                case SkillName.Poisoning: return false; break;
-                case SkillName.Provocation: return false; break;
-                case SkillName.RemoveTrap: return false; break;
-                case SkillName.Snooping: return false; break;
-                case SkillName.SpiritSpeak: return false; break;
-                case SkillName.Stealing: return false; break;
-                case SkillName.Stealth: return false; break;
-                case SkillName.Swords: return false; break;
-                case SkillName.Tactics: return false; break;
-                case SkillName.Tailoring: return false; break;
-                case SkillName.TasteID: return false; break;
-                case SkillName.Tinkering: return false; break;
-                case SkillName.Tracking: return false; break;
-                case SkillName.Veterinary: return false; break;
-                case SkillName.Wrestling: return false; break;
-            }
-
-            return false;
-        }
-
-        public static double GetSkillChanceMultiplier(Skill s, Mobile from)
-        {
-            //TEST: Adjust This (To Interval System)
-
-            switch (s.SkillName)
-            {
-                case SkillName.Blacksmith:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.3;
-                    if (s.Base > 91.0) return 1.2;      
-                break;
-
-                case SkillName.Tinkering:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.3;
-                    if (s.Base > 91.0) return 1.2;      
-                break;
-
-                case SkillName.Cooking:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.3;
-                    if (s.Base > 91.0) return 1.2;                   
-                break;
-
-                case SkillName.Magery:
-                    if (s.Base <= 60.0) return 6.0;	
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 2.0;
-                    if (s.Base <= 95.0 && s.Base > 91.0) return 1.0;
-                    if (s.Base <= 99.0 && s.Base > 95.0) return 1.0 / 1.2;
-                    if (s.Base > 99.0) return 1.0 / 3.0;
-                break;
-
-                case SkillName.MagicResist:
-                    double multip = from.IncomingResistCheckFromMonster ? (Math.Max(s.Base, 30.0)) / 15.0 : 1.0;
-                    if (s.Base <= 60.0) return 6.0 * multip;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0 * multip;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.8 * multip;
-                    if (s.Base > 91.0) return 1.8 * multip;                    
-                break;
-
-                case SkillName.Carpentry:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.0;
-                    if (s.Base > 91.0) return 1.0 / 1.5;                   
-                break;
-
-                case SkillName.Cartography:
-                    if (s.Base <= 60.0) return 3.0;
-                    if (s.Base > 60.0) return 1.5;
-                break;
-
-                case SkillName.Inscribe:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base > 80.0) return 1.0;                   
-                break;
-
-                case SkillName.Healing:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.0;
-                    if (s.Base <= 95.0 && s.Base > 91.0) return 1.0;
-                    if (s.Base <= 99.0 && s.Base > 95.0) return 1.0;
-                    if (s.Base > 99.0) return 1.0 / 4.0;
-                break;
-
-                case SkillName.Veterinary:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.0;
-                    if (s.Base <= 95.0 && s.Base > 91.0) return 1.0;
-                    if (s.Base <= 99.0 && s.Base > 95.0) return 1.0;
-                    if (s.Base > 99.0) return 1.0 / 4.0;
-                break;
-
-                case SkillName.Poisoning:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 2.0;
-                    if (s.Base <= 95.0 && s.Base > 91.0) return 1.0;
-                    if (s.Base <= 99.0 && s.Base > 95.0) return 1.0;
-                    if (s.Base > 99.0) return 1.0;
-                break;
-
-                case SkillName.AnimalTaming:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.0;
-                    if (s.Base <= 95.0 && s.Base > 91.0) return 0.9;
-                    if (s.Base <= 99.0 && s.Base > 95.0) return 0.8;
-                    if (s.Base > 99.0) return 0.7;
-                break;
-
-                case SkillName.Lockpicking:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.0;
-                    if (s.Base <= 95.0 && s.Base > 91.0) return 1.0 / 3.0;
-                    if (s.Base <= 99.0 && s.Base > 95.0) return 1.0 / 3.5;
-                    if (s.Base > 99.0) return 1.0 / 3.0;
-                break;
-
-                case SkillName.Alchemy:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.0;
-                    if (s.Base > 91.0) return 1.0 / 2.0;                   
-                break;
-
-                case SkillName.Meditation:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.8;
-                    if (s.Base > 91.0) return 1.0;                   
-                break;
-
-                case SkillName.Mining:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 3.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 2.0;
-                    if (s.Base > 91.0) return 1.0;                   
-                break;
-
-                case SkillName.Fishing:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 3.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 2.0;
-                    if (s.Base > 91.0) return 1.0;
-                break;
-
-                case SkillName.Lumberjacking:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 3.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 2.0;
-                    if (s.Base > 91.0) return 1.0;
-                break;
-
-                case SkillName.Stealing:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.0;
-                    if (s.Base <= 95.0 && s.Base > 91.0) return 1.0;
-                    if (s.Base <= 99.0 && s.Base > 95.0) return 0.88;
-                    if (s.Base > 99.0) return 1.0 / 2.0;
-                break;
-
-                default:
-                    if (s.Base <= 60.0) return 6.0;
-                    if (s.Base <= 80.0 && s.Base > 60.0) return 2.0;
-                    if (s.Base <= 91.0 && s.Base > 80.0) return 1.0;
-                    if (s.Base <= 95.0 && s.Base > 91.0) return 1.0 / 2.0;
-                    if (s.Base > 95.0) return 1.0 / 3.0;
-                break;
+                //Dungeon Boosted
+                case SkillName.Archery:         return 2.0; break;
+                case SkillName.Fencing:         return 2.0; break;
+                case SkillName.Macing:          return 2.0; break;
+                case SkillName.Swords:          return 2.0; break;
+                case SkillName.Wrestling:       return 2.0; break;
+                case SkillName.Tactics:         return 2.0; break;
+                case SkillName.Parry:           return 2.0; break;
+                case SkillName.MagicResist:     return 2.0; break;
+                case SkillName.Healing:         return 2.0; break;
+                case SkillName.Anatomy:         return 2.0; break;
+                case SkillName.Veterinary:      return 2.0; break;
+                case SkillName.AnimalLore:      return 2.0; break;
+                case SkillName.Herding:         return 2.0; break;
+                case SkillName.ArmsLore:        return 2.0; break;
+                case SkillName.Magery:          return 2.0; break;
+                case SkillName.EvalInt:         return 2.0; break;
+                case SkillName.Meditation:      return 2.0; break;
+                case SkillName.Musicianship:    return 2.0; break;
+                case SkillName.Provocation:     return 2.0; break;
+                case SkillName.Peacemaking:     return 2.0; break;
+                case SkillName.Discordance:     return 2.0; break;
+                case SkillName.SpiritSpeak:     return 2.0; break;
+                case SkillName.Tracking:        return 2.0; break;
+                case SkillName.Forensics:       return 2.0; break;
+                case SkillName.Hiding:          return 2.0; break;
+                case SkillName.Stealth:         return 2.0; break;
+                case SkillName.DetectHidden:    return 2.0; break;
+                case SkillName.Lockpicking:     return 2.0; break;
+                case SkillName.RemoveTrap:      return 2.0; break;
+                case SkillName.AnimalTaming:    return 2.0; break;
+                
+                //No Boost
+                case SkillName.Blacksmith:      return 1.0; break;
+                case SkillName.Carpentry:       return 1.0; break;
+                case SkillName.Tailoring:       return 1.0; break;
+                case SkillName.Tinkering:       return 1.0; break;
+                case SkillName.Alchemy:         return 1.0; break;
+                case SkillName.Cartography:     return 1.0; break;
+                case SkillName.Cooking:         return 1.0; break;
+                case SkillName.Poisoning:       return 1.0; break;
+                case SkillName.Begging:         return 1.0; break;
+                case SkillName.Camping:         return 1.0; break;
+                case SkillName.Fishing:         return 1.0; break;
+                case SkillName.Inscribe:        return 1.0; break;
+                case SkillName.ItemID:          return 1.0; break;
+                case SkillName.Lumberjacking:   return 1.0; break;
+                case SkillName.Mining:          return 1.0; break;
+                case SkillName.Snooping:        return 1.0; break;
+                case SkillName.Stealing:        return 1.0; break;
+                case SkillName.TasteID:         return 1.0; break;
             }
 
             return 1.0;
         }
 
-        public static bool Mobile_SkillCheckLocation(Mobile from, SkillName skillName, double minSkill, double maxSkill)
+        public static bool Mobile_SkillCheckLocation(Mobile from, SkillName skillName, double minSkill, double maxSkill, double skillGainScalar)
         {
             Skill skill = from.Skills[skillName];
 
@@ -323,11 +126,10 @@ namespace Server.Misc
 
             double chance = (value - minSkill) / (maxSkill - minSkill);
 
-            Point2D loc = new Point2D(from.Location.X, from.Location.Y);
-            return CheckSkill(from, skill, loc, chance);
+            return CheckSkill(from, skill, chance, skillGainScalar);
         }
 
-        public static bool Mobile_SkillCheckDirectLocation(Mobile from, SkillName skillName, double chance)
+        public static bool Mobile_SkillCheckDirectLocation(Mobile from, SkillName skillName, double chance, double skillGainScalar)
         {
             Skill skill = from.Skills[skillName];
 
@@ -340,138 +142,142 @@ namespace Server.Misc
             else if (chance >= 1.0)
                 return true;
 
-            Point2D loc = new Point2D(from.Location.X, from.Location.Y);
-            return CheckSkill(from, skill, loc, chance);
+            return CheckSkill(from, skill, chance, skillGainScalar);
         }
 
-        public static bool CheckSkill(Mobile from, Skill skill, object amObj, double chance)
+        public static bool Mobile_SkillCheckTarget(Mobile from, SkillName skillName, object target, double minSkill, double maxSkill, double skillGainScalar)
         {
-            //TEST: Adjust This
+            Skill skill = from.Skills[skillName];
+
+            if (skill == null)
+                return false;
+
+            double value = skill.Value;
+
+            if (value < minSkill)
+                return false;
+
+            else if (value >= maxSkill)
+                return true;
+
+            double chance = (value - minSkill) / (maxSkill - minSkill);
+
+            return CheckSkill(from, skill, chance, skillGainScalar);
+        }
+
+        public static bool Mobile_SkillCheckDirectTarget(Mobile from, SkillName skillName, object target, double chance, double skillGainScalar)
+        {
+            Skill skill = from.Skills[skillName];
+
+            if (skill == null)
+                return false;
+
+            if (chance < 0.0)
+                return false;
+
+            else if (chance >= 1.0)
+                return true;
+
+            return CheckSkill(from, skill, chance, skillGainScalar);
+        }
+
+        public static bool CheckSkill(Mobile from, Skill skill, double chance, double skillGainScalar)
+        {           
             Skill mobileSkill = from.Skills[skill.SkillName];
+            SkillName skillName = skill.SkillName;
+            
+            double skillValue = mobileSkill.Base;
 
             if (from.Skills.Cap == 0)
                 return false;
-
-            bool success = (chance >= Utility.RandomDouble());
-            double gc = 0.5;
-
-            gc += (skill.Cap - skill.Base) / skill.Cap;
-            gc /= 2;
-
-            gc += (1.0 - chance) * (success ? 0.5 : 0.2);
-            gc /= 2;
             
-            gc *= skill.Info.GainFactor;
+            bool success = chance >= Utility.RandomDouble();
 
-            if (skill.Base <= 30.0)
-                gc *= 10.0;
+            if (from is BaseCreature)
+                return success;
+            
+            //Check For Stat Gain            
+            CheckStatGain(from, skill);
+            
+            SkillGainRange skillGainRange = m_SkillGainRanges[(int)skill.SkillName];
 
-            gc *= GetSkillChanceMultiplier(skill, from);
+            double rangeIncrement = 5.0;
 
-            if (from.Player)
+            int requiredUses = skillGainRange.m_UsesPerRange[0];
+
+            for (int a = 0; a < skillGainRange.m_UsesPerRange.Length; a++)
             {
-                //Region Skillgain Adjustments
-                HouseModifier(from, ref gc); 
-                Items.TownSquare.TownSquareModifier(from, skill, ref gc);
-                Items.BritainTownSquare.BritainTownSquareModifier(from, skill, ref gc);
-                DungeonModifier(from, skill.SkillName, ref gc);
+                double rangeBottom = a * rangeIncrement;
+                double rangeTop = (a * rangeIncrement) + rangeIncrement;
+
+                if (skillValue >= rangeBottom && skillValue < rangeTop)
+                {
+                    requiredUses = skillGainRange.m_UsesPerRange[a];
+                    break;
+                }
             }
 
-            bool gainOccurred = gc >= Utility.RandomDouble();
-            bool allowGain = AllowGain(from, skill, amObj);
+            double baseSkillGainScalar = skillGainScalar;
+            double dungeonModifier = 1.0;
+            double skillSpeedModifier = 1.0;
+            double housingModifier = 1.0;
+            double perkBonus = 1.0;
+            double townBonus = 1.0;
+            double craftingSquareBonus = 1.0;
 
-            if (from.Alive && ((gainOccurred && allowGain) || skill.Base < 10.0))
-                Gain(from, skill);
+            //Dungeon
+            if (from.Region is DungeonRegion || from.Region is NewbieDungeonRegion)
+                dungeonModifier = DungeonSkillScalar(skillName);
+
+            //Skill Speed
+            skillSpeedModifier = SkillSpeedScalar(from, skillName);
+            
+            //Housing
+            BaseHouse house = BaseHouse.FindHouseAt(from.Location, from.Map, 16);
+
+            if (house != null)
+                housingModifier = HousingSkillGainModifier;
+            
+
+            double finalSkillGainScalar = baseSkillGainScalar * dungeonModifier * skillSpeedModifier * housingModifier * perkBonus * townBonus * craftingSquareBonus;
+
+            if (requiredUses == 0)
+                return success;
+
+            if (finalSkillGainScalar == 0)
+                return success;           
+
+            double skillGainChance = 1.0 / ((double)requiredUses / finalSkillGainScalar);
+            bool allowGain = AllowGain(from, skill);
+
+            if (from.AccessLevel > AccessLevel.Player && from.NetState != null)            
+                from.PrivateOverheadMessage(MessageType.Regular, 2550, false, skillName.ToString() + " " + skillGainChance.ToString(), from.NetState);            
+
+            if (allowGain && from.Alive && Utility.RandomDouble() <= skillGainChance)            
+                Gain(from, skill);       
 
             return success;
         }
 
-        //TEST: Town Skills?
-        public static SkillName[] BuffBoostedSkills = new SkillName[] 
+        public static void CheckStatGain(Mobile from, Skill skill)
         {
-            SkillName.Blacksmith,
-            SkillName.Carpentry,
-            SkillName.Tinkering,
-            SkillName.Tailoring,
-            SkillName.Inscribe,
-            SkillName.Alchemy,
-        };        
+            SkillInfo info = skill.Info;
 
-        public static void HouseModifier(Mobile from, ref double gc)
-        {
-            if (from == null || from.Map == null || from.Map == Map.Internal)
-                return;
-
-            PlayerMobile pm = from as PlayerMobile;
+            double strGainChance = info.StrGain / 50;
+            double dexGainChance = info.DexGain / 50;
+            double intGainChance = info.IntGain / 50;
             
-            if (pm == null)
-                return;
+            if (from.StrLock == StatLockType.Up && strGainChance > Utility.RandomDouble())
+                GainStat(from, Stat.Str);
 
-            Sector sector = from.Map.GetSector(from.X, from.Y);
+            else if (from.DexLock == StatLockType.Up && dexGainChance > Utility.RandomDouble())
+                GainStat(from, Stat.Dex);
 
-            //TEST: Adjust This
-            for (int i = 0; i < sector.Multis.Count; ++i)
-            {
-                BaseMulti multi = (BaseMulti)sector.Multis[i];
-
-                if (multi is BaseHouse && ((BaseHouse)multi).IsInside(from.Location, 16))
-                {
-                    gc *= 0.5;
-
-                    return;
-                }
-            }
+            else if (from.IntLock == StatLockType.Up && intGainChance > Utility.RandomDouble())
+                GainStat(from, Stat.Int);
         }
-
-        public static void DungeonModifier(Mobile from, SkillName skillName, ref double gc)
-        {
-            if (IsDungeonBoostedSkill(skillName))
-            {
-                if (from.Region.IsPartOf(typeof(NewbieDungeonRegion)))
-                    gc *= 3.15;
-
-                else if (from.Region.IsPartOf(typeof(DungeonRegion)) && !SpellHelper.IsBritainSewers(from.Map, from.Location))
-                    gc *= 3.0;
-            }
-        }
-
-        public static bool Mobile_SkillCheckTarget(Mobile from, SkillName skillName, object target, double minSkill, double maxSkill)
-        {
-            Skill skill = from.Skills[skillName];
-
-            if (skill == null)
-                return false;
-
-            double value = skill.Value;
-
-            if (value < minSkill)
-                return false;
-
-            else if (value >= maxSkill)
-                return true;
-
-            double chance = (value - minSkill) / (maxSkill - minSkill);
-
-            return CheckSkill(from, skill, target, chance);
-        }
-
-        public static bool Mobile_SkillCheckDirectTarget(Mobile from, SkillName skillName, object target, double chance)
-        {
-            Skill skill = from.Skills[skillName];
-
-            if (skill == null)
-                return false;
-
-            if (chance < 0.0)
-                return false;
-
-            else if (chance >= 1.0)
-                return true;
-
-            return CheckSkill(from, skill, target, chance);
-        }
-
-        private static bool AllowGain(Mobile from, Skill skill, object obj)
+        
+        private static bool AllowGain(Mobile from, Skill skill)
         {
             if (from.Region is NewbieDungeonRegion)
             {
@@ -489,19 +295,19 @@ namespace Server.Misc
 
         public static void Gain(Mobile from, Skill skill)
         {
-            PlayerMobile pm = from as PlayerMobile;
-            BaseCreature bc = from as BaseCreature;
+            PlayerMobile player = from as PlayerMobile;
+            BaseCreature bc_Creature = from as BaseCreature;
 
             //Tamed Creature
-            if (bc != null)
+            if (bc_Creature != null)
             {
-                if (bc.Controlled && bc.ControlMaster is PlayerMobile)
+                if (bc_Creature.Controlled && bc_Creature.ControlMaster is PlayerMobile)
                     return;
             }
            
-            if (pm != null)
+            if (player != null)
             {
-                if (pm.Region is UOACZRegion)
+                if (player.Region is UOACZRegion)
                     return;
             }
 
@@ -511,13 +317,10 @@ namespace Server.Misc
             if (from is BaseCreature && ((BaseCreature)from).IsDeadPet)
                 return;
 
-            int toGain = 1;
+            int skillIncrease = 1;
             
             if (skill.Base < skill.Cap && skill.Lock == SkillLock.Up)
             {
-                if (skill.Base <= 10.0)
-                    toGain = Utility.Random(4) + 1;
-
                 Skills skills = from.Skills;
 
                 if ((skills.Total / skills.Cap) >= Utility.RandomDouble())
@@ -526,58 +329,20 @@ namespace Server.Misc
                     {
                         Skill toLower = skills[i];
 
-                        if (toLower != skill && toLower.Lock == SkillLock.Down && toLower.BaseFixedPoint >= toGain)
+                        if (toLower != skill && toLower.Lock == SkillLock.Down && toLower.BaseFixedPoint >= skillIncrease)
                         {
-                            toLower.BaseFixedPoint -= toGain;
+                            toLower.BaseFixedPoint -= skillIncrease;
                             break;
                         }
                     }
-                }                
+                }
+
+                if ((skills.Total + skillIncrease) <= skills.Cap)
+                    skill.BaseFixedPoint += skillIncrease;                
             }
 
             if (from.Player)
-                DailyAchievement.TickProgress(Category.Newb, (PlayerMobile)from, NewbCategory.GainSkill, toGain);
-
-            if (skill.Base < 10.0)
-                return;
-
-            if (skill.Lock == SkillLock.Up)
-            {
-                SkillInfo info = skill.Info;
-
-                double gc = 1.0;
-                
-                StatScaleModifier(from, skill.Value, ref gc);
-
-                if (from.StrLock == StatLockType.Up && (gc * info.StrGain / 12.0) > Utility.RandomDouble()) //33.3
-                    GainStat(from, Stat.Str);
-
-                else if (from.DexLock == StatLockType.Up && (gc * info.DexGain / 12.0) > Utility.RandomDouble()) //33.3
-                    GainStat(from, Stat.Dex);
-
-                else if (from.IntLock == StatLockType.Up && (gc * info.IntGain / 12.0) > Utility.RandomDouble()) //33.3
-                    GainStat(from, Stat.Int);
-            }
-        }
-
-        public static void StatScaleModifier(Mobile from, double skillValue, ref double gc)
-        {
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (pm == null)
-                return;
-
-            if (skillValue < 20.0)
-                gc *= 0.4;
-
-            else if (skillValue < 30.0)
-                gc *= 0.7;
-
-            else if (skillValue < 60.0)
-                gc *= 1.0;
-
-            else if (skillValue < 100.0)
-                gc *= 2;
+                DailyAchievement.TickProgress(Category.Newb, (PlayerMobile)from, NewbCategory.GainSkill, skillIncrease);
         }
 
         public static bool CanLower(Mobile from, Stat stat)
@@ -622,6 +387,7 @@ namespace Server.Misc
                     {
                         if (CanLower(from, Stat.Dex) && (from.RawDex < from.RawInt || !CanLower(from, Stat.Int)))
                             --from.RawDex;
+
                         else if (CanLower(from, Stat.Int))
                             --from.RawInt;
                     }
@@ -710,5 +476,661 @@ namespace Server.Misc
 
             IncreaseStat(from, stat, atrophy);
         }
+
+        #region SkillGainRanges
+
+        public class SkillGainRange
+        {
+            public SkillName m_SkillName;
+            public int[] m_UsesPerRange = new int[] { };
+
+            public SkillGainRange(SkillName skillName, int[] usesPerRange)
+            {
+                m_SkillName = skillName;
+                m_UsesPerRange = usesPerRange;
+            }
+        }
+
+        private static SkillGainRange[] m_SkillGainRanges = new SkillGainRange[49]
+		{
+            new SkillGainRange(SkillName.Archery, new int[]{        10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+            new SkillGainRange(SkillName.Anatomy, new int[]{        1, 2,     //0-5, 5-10
+                                                                    3, 4,     //10-15, 15-20
+                                                                    5, 6,     //20-25, 25-30
+                                                                    7, 8,     //30-35, 30-40
+                                                                    9, 10,     //40-45, 45-50
+                                                                    11, 12,     //50-55, 55-60
+                                                                    13, 14,     //60-65, 65-70
+                                                                    15, 16,     //70-75, 75-80
+                                                                    17, 18,     //80-85, 85-90
+                                                                    19, 20,     //90-95, 95-100
+                                                                    21, 22,     //100-105, 105-110
+                                                                    22, 23}),   //110-115, 115-120
+
+            new SkillGainRange(SkillName.AnimalLore, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+            new SkillGainRange(SkillName.AnimalTaming, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+            new SkillGainRange(SkillName.Archery, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+            new SkillGainRange(SkillName.ArmsLore, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+            new SkillGainRange(SkillName.Begging, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+            new SkillGainRange(SkillName.Blacksmith, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+            new SkillGainRange(SkillName.Bowcraft, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Camping, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Carpentry, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Cartography, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Cooking, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.DetectHidden, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Discordance, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.EvalInt, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Fencing, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Fishing, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Forensics, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Healing, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Herding, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Hiding, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Inscribe, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.ItemID, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Lockpicking, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Lumberjacking, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Macing, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Magery, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.MagicResist, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Meditation, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Mining, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Musicianship, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Parry, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Peacemaking, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Poisoning, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Provocation, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.RemoveTrap, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Snooping, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.SpiritSpeak, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Stealing, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Stealth, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Swords, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Tactics, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Tailoring, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.TasteID, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Tinkering, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Tracking, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Veterinary, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+
+        new SkillGainRange(SkillName.Wrestling, new int[]{  10, 10,     //0-5, 5-10
+                                                                    10, 10,     //10-15, 15-20
+                                                                    10, 10,     //20-25, 25-30
+                                                                    10, 10,     //30-35, 30-40
+                                                                    10, 10,     //40-45, 45-50
+                                                                    10, 10,     //50-55, 55-60
+                                                                    10, 10,     //60-65, 65-70
+                                                                    10, 10,     //70-75, 75-80
+                                                                    10, 10,     //80-85, 85-90
+                                                                    10, 10,     //90-95, 95-100
+                                                                    10, 10,     //100-105, 105-110
+                                                                    10, 10}),   //110-115, 115-120
+        };
+
+        #endregion
     }
 }

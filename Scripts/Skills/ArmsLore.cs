@@ -39,14 +39,14 @@ namespace Server.SkillHandlers
 
                     if (weapon.DungeonTier > 0)
                     {
-                        bool skillSuccess = from.CheckTargetSkill( SkillName.ArmsLore, targeted, 0, 120 );
+                        bool skillSuccess = from.CheckTargetSkill( SkillName.ArmsLore, targeted, 0, 120, 1.0 );
 
                         from.SendGump(new DungeonWeaponGump(from, weapon, skillSuccess));
 
                         return;
                     }
 
-					if (from.CheckTargetSkill( SkillName.ArmsLore, targeted, 0, 120 ) )
+					if (from.CheckTargetSkill( SkillName.ArmsLore, targeted, 0, 120, 1.0 ) )
 					{
 						from.SendMessage("You estimate this weapon is at " + weapon.HitPoints.ToString() + " of " + weapon.MaxHitPoints.ToString() + " durability.");
                     }
@@ -59,7 +59,7 @@ namespace Server.SkillHandlers
 
 				else if (targeted is BaseArmor)
 				{
-					if (from.CheckTargetSkill(SkillName.ArmsLore, targeted, 0, 120))
+					if (from.CheckTargetSkill(SkillName.ArmsLore, targeted, 0, 120, 1.0))
 					{
 						BaseArmor arm = (BaseArmor)targeted;
 

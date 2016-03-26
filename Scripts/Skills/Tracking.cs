@@ -87,7 +87,7 @@ namespace Server.SkillHandlers
             : base(20, 30)
         {
             m_From = from;
-            m_Success = from.CheckSkill(SkillName.Tracking, 0.0, 21.1);
+            m_Success = from.CheckSkill(SkillName.Tracking, 0.0, 21.1, 1.0);
 
             AddPage(0);
 
@@ -172,7 +172,7 @@ namespace Server.SkillHandlers
 
             TrackTypeDelegate check = m_Delegates[type];
 
-            from.CheckSkill(SkillName.Tracking, 21.1, 100.0); // Passive gain
+            from.CheckSkill(SkillName.Tracking, 21.1, 100.0, 1.0); // Passive gain
 
             int range = (4 + (int)(from.Skills[SkillName.Tracking].Value / 5.0)) * 3;
 

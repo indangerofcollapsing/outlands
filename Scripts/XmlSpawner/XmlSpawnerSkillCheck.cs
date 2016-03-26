@@ -23,70 +23,69 @@ namespace Server.Mobiles
     public class XmlSpawnerSkillCheck
     {
         // alternate skillcheck hooks to replace those in SkillCheck.cs
-        public static bool Mobile_SkillCheckLocation( Mobile from, SkillName skillName, double minSkill, double maxSkill )
-		{
-			Skill skill = from.Skills[skillName];
+        public static bool Mobile_SkillCheckLocation(Mobile from, SkillName skillName, double minSkill, double maxSkill, double skillGainScalar)
+        {
+            Skill skill = from.Skills[skillName];
 
-			if ( skill == null )
-				return false;
-
-			// call the default skillcheck handler
-            bool success = SkillCheck.Mobile_SkillCheckLocation(  from,  skillName,  minSkill,  maxSkill );
-
-            // call the xmlspawner skillcheck handler
-			CheckSkillUse(from, skill, success);
-
-			return success;
-		}
-
-		public static bool Mobile_SkillCheckDirectLocation( Mobile from, SkillName skillName, double chance )
-		{
-			Skill skill = from.Skills[skillName];
-
-			if ( skill == null )
-				return false;
+            if (skill == null)
+                return false;
 
             // call the default skillcheck handler
-            bool success = SkillCheck.Mobile_SkillCheckDirectLocation(  from,  skillName,  chance );
-            
-            // call the xmlspawner skillcheck handler
-			CheckSkillUse(from, skill, success);
+            bool success = SkillCheck.Mobile_SkillCheckLocation(from, skillName, minSkill, maxSkill, skillGainScalar);
 
-			return success;
-		}
-		
-		public static bool Mobile_SkillCheckTarget( Mobile from, SkillName skillName, object target, double minSkill, double maxSkill )
-		{
-			Skill skill = from.Skills[skillName];
-
-			if ( skill == null )
-				return false;
-
-            // call the default skillcheck handler
-            bool success = SkillCheck.Mobile_SkillCheckTarget(  from,  skillName,  target,  minSkill,  maxSkill );
-
-            // call the xmlspawner skillcheck handler
-			CheckSkillUse(from, skill, success);
-
-			return success;
-		}
-
-		public static bool Mobile_SkillCheckDirectTarget( Mobile from, SkillName skillName, object target, double chance )
-		{
-			Skill skill = from.Skills[skillName];
-
-			if ( skill == null )
-				return false;
-
-            // call the default skillcheck handler
-            bool success = SkillCheck.Mobile_SkillCheckDirectTarget(  from,  skillName,  target,  chance );
-            
             // call the xmlspawner skillcheck handler
             CheckSkillUse(from, skill, success);
 
-			return success;
-		}
+            return success;
+        }
 
+        public static bool Mobile_SkillCheckDirectLocation(Mobile from, SkillName skillName, double chance, double skillGainScalar)
+        {
+            Skill skill = from.Skills[skillName];
+
+            if (skill == null)
+                return false;
+
+            // call the default skillcheck handler
+            bool success = SkillCheck.Mobile_SkillCheckDirectLocation(from, skillName, chance, skillGainScalar);
+
+            // call the xmlspawner skillcheck handler
+            CheckSkillUse(from, skill, success);
+
+            return success;
+        }
+
+        public static bool Mobile_SkillCheckTarget(Mobile from, SkillName skillName, object target, double minSkill, double maxSkill, double skillGainScalar)
+        {
+            Skill skill = from.Skills[skillName];
+
+            if (skill == null)
+                return false;
+
+            // call the default skillcheck handler
+            bool success = SkillCheck.Mobile_SkillCheckTarget(from, skillName, target, minSkill, maxSkill, skillGainScalar);
+
+            // call the xmlspawner skillcheck handler
+            CheckSkillUse(from, skill, success);
+
+            return success;
+        }
+
+        public static bool Mobile_SkillCheckDirectTarget(Mobile from, SkillName skillName, object target, double chance, double skillGainScalar)
+        {
+            Skill skill = from.Skills[skillName];
+
+            if (skill == null)
+                return false;
+
+            // call the default skillcheck handler
+            bool success = SkillCheck.Mobile_SkillCheckDirectTarget(from, skillName, target, chance, skillGainScalar);
+
+            // call the xmlspawner skillcheck handler
+            CheckSkillUse(from, skill, success);
+
+            return success;
+        }
 
 		public class RegisteredSkill
         {

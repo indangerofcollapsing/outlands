@@ -14,6 +14,9 @@ namespace Server.Items
         public override int InitMinHits { get { return 40; } }
         public override int InitMaxHits { get { return 60; } }
 
+        public override int BaseHitSound { get { return 0x23C; } }
+        public override int BaseMissSound { get { return 0x238; } }
+
 		public override SkillName BaseSkill{ get{ return SkillName.Fencing; } }
 		public override WeaponType BaseType{ get{ return WeaponType.Piercing; } }
 		public override WeaponAnimation BaseAnimation { get{ return WeaponAnimation.Pierce1H; } }

@@ -83,9 +83,8 @@ namespace Server.Items
 			from.Direction = from.GetDirectionTo( GetWorldLocation() );
 			weapon.PlaySwingAnimation( from );
 
-			from.CheckSkill( weapon.Skill, m_MinSkill, m_MaxSkill );
-			//Added by IPY
-            from.CheckSkill( SkillName.Tactics, m_MinSkill, m_MaxSkill );
+			from.CheckSkill( weapon.Skill, m_MinSkill, m_MaxSkill, 1.0 );
+            from.CheckSkill( SkillName.Tactics, m_MinSkill, m_MaxSkill, 1.0 );
 		}
 
 		public override void OnDoubleClick( Mobile from )

@@ -36,7 +36,7 @@ namespace Server.SkillHandlers
 			{
 				if ( target is Mobile )
 				{
-					if ( from.CheckTargetSkill( SkillName.Forensics, target, 40.0, 100.0 ) )
+					if ( from.CheckTargetSkill( SkillName.Forensics, target, 40.0, 100.0, 1.0 ) )
 					{
 						if ( target is PlayerMobile && ((PlayerMobile)target).NpcGuild == NpcGuild.ThievesGuild )
 							from.SendLocalizedMessage( 501004 );//That individual is a thief!
@@ -106,7 +106,7 @@ namespace Server.SkillHandlers
 
                 else if (target is Corpse)
                 {
-                    if (from.CheckTargetSkill(SkillName.Forensics, target, 0.0, 100.0))
+                    if (from.CheckTargetSkill(SkillName.Forensics, target, 0.0, 100.0, 1.0))
                     {
                         Corpse c = (Corpse)target;
 
@@ -160,7 +160,7 @@ namespace Server.SkillHandlers
                             return;
                         }
 
-                        if (from.CheckSkill(SkillName.Forensics, 95, 120))
+                        if (from.CheckSkill(SkillName.Forensics, 95, 120, 1.0))
                         {
                             from.SendSound(0x652);
                             from.SendMessage("You learn many a great secret whilst scrying the words held within. You may now apply this researched master scroll to an ancient mystery scroll.");

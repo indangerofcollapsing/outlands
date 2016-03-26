@@ -245,7 +245,7 @@ namespace Server.Spells
         public virtual double GetInscribeSkill(Mobile m)
         {
             // There is no chance to gain
-            // m.CheckSkill( SkillName.Inscribe, 0.0, 120.0 );
+            // m.CheckSkill( SkillName.Inscribe, 0.0, 120.0, 1.0 );
 
             return m.Skills[SkillName.Inscribe].Value;
         }
@@ -260,14 +260,14 @@ namespace Server.Spells
 
         public virtual int GetDamageFixed(Mobile m)
         {
-            m.CheckSkill(DamageSkill, 0.0, 100.0);
+            m.CheckSkill(DamageSkill, 0.0, 100.0, 1.0);
 
             return m.Skills[DamageSkill].Fixed;
         }
 
         public virtual double GetDamageSkill(Mobile m)
         {
-            m.CheckSkill(DamageSkill, 0.0, 100.0);
+            m.CheckSkill(DamageSkill, 0.0, 100.0, 1.0);
 
             return m.Skills[DamageSkill].Value;
         }
@@ -328,7 +328,7 @@ namespace Server.Spells
                         
             double spiritSpeakBonus = (0.2 * (m_Caster.Skills[SkillName.SpiritSpeak].Value / 100));           
 
-            m_Caster.CheckSkill(DamageSkill, 0.0, 100.0);          
+            m_Caster.CheckSkill(DamageSkill, 0.0, 100.0, 1.0);          
             
             //Eval Int
             if (PlayerCaster && CreatureTarget)
@@ -776,7 +776,7 @@ namespace Server.Spells
             if (Caster is BaseCreature)
                 return true;
 
-            return Caster.CheckSkill(CastSkill, minSkill, maxSkill);
+            return Caster.CheckSkill(CastSkill, minSkill, maxSkill, 1.0);
         }
         //This IPY method is now on MagerySpell
         public abstract int GetMana();

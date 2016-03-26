@@ -30,15 +30,11 @@ namespace Server.SkillHandlers
 
 			protected override void OnTarget( Mobile from, object targeted )
 			{
-				if ( from == targeted )
-				{                  
-                    from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 500324); // You know yourself quite well enough already.
-				}
+				if ( from == targeted )				           
+                    from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 500324); // You know yourself quite well enough already.				
 
-				else if ( targeted is BaseVendor && ((BaseVendor)targeted).IsInvulnerable )
-				{
-					((BaseVendor)targeted).PrivateOverheadMessage( MessageType.Regular, 0x3B2, 500326, from.NetState ); // That can not be inspected.
-				}
+				else if ( targeted is BaseVendor && ((BaseVendor)targeted).IsInvulnerable )				
+					((BaseVendor)targeted).PrivateOverheadMessage( MessageType.Regular, 0x3B2, 500326, from.NetState ); // That can not be inspected.				
 
 				else if ( targeted is Mobile )
 				{
@@ -54,14 +50,23 @@ namespace Server.SkillHandlers
 					int dexMod = dex / 10;
 					int stmMod = stm / 10;
 
-					if ( strMod < 0 ) strMod = 0;
-					else if ( strMod > 10 ) strMod = 10;
+					if ( strMod < 0 )
+                        strMod = 0;
 
-					if ( dexMod < 0 ) dexMod = 0;
-					else if ( dexMod > 10 ) dexMod = 10;
+					else if ( strMod > 10 ) 
+                        strMod = 10;
 
-					if ( stmMod > 10 ) stmMod = 10;
-					else if ( stmMod < 0 ) stmMod = 0;
+					if ( dexMod < 0 )
+                        dexMod = 0;
+
+					else if ( dexMod > 10 )
+                        dexMod = 10;
+
+					if ( stmMod > 10 ) 
+                        stmMod = 10;
+
+					else if ( stmMod < 0 )
+                        stmMod = 0;
 
                     from.NextSkillTime = Core.TickCount + 2000;
 
@@ -75,7 +80,7 @@ namespace Server.SkillHandlers
                             gumpSuccess = true;
                     }
 
-					if ( from.CheckTargetSkill( SkillName.Anatomy, targ, 0, 100 ) )
+					if ( from.CheckTargetSkill( SkillName.Anatomy, targ, 0, 100, 1.0))
 					{
                         if (!gumpSuccess)
                         {

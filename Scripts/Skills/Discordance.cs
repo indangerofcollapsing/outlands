@@ -214,7 +214,7 @@ namespace Server.SkillHandlers
 
                         //Skill Gain Check
                         if (successChance > 0 && successChance < 1.40)
-                            from.CheckSkill(SkillName.Discordance, 0.0, 120.0);
+                            from.CheckSkill(SkillName.Discordance, 0.0, 120.0, 1.0);
 
                         PlayerMobile pm_From = from as PlayerMobile;
 

@@ -97,7 +97,7 @@ namespace Server.SkillHandlers
                     eable.Free();
 				}
 			
-				ok = ( !badCombat && mobile.CheckSkill( SkillName.Hiding, 0.0 - bonus, 100.0 - bonus ) );
+				ok = ( !badCombat && mobile.CheckSkill( SkillName.Hiding, 0.0 - bonus, 100.0 - bonus, 1.0 ) );
 			}
 
 			if ( badCombat )

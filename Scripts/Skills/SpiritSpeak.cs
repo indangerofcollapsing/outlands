@@ -29,7 +29,7 @@ namespace Server.SkillHandlers
 
 			m.RevealingAction();
 
-			if ( m.CheckSkill( SkillName.SpiritSpeak, 0, 120 ) )
+			if ( m.CheckSkill( SkillName.SpiritSpeak, 0, 120, 1.0 ) )
 			{	
 				if ( !m.CanHearGhosts )
 				{
@@ -158,7 +158,7 @@ namespace Server.SkillHandlers
 				{
 					Caster.SendLocalizedMessage( 1061285 ); // You lack the mana required to use this skill.
 				}
-				else if ( !Caster.CheckSkill( SkillName.SpiritSpeak, 0.0, 120.0 ) )
+				else if ( !Caster.CheckSkill( SkillName.SpiritSpeak, 0.0, 120.0, 1.0 ) )
 				{
 					Caster.SendLocalizedMessage( 502443 ); // You fail your attempt at contacting the netherworld.
 				}

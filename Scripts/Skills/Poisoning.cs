@@ -116,7 +116,7 @@ namespace Server.SkillHandlers
 
 					protected override void OnTick()
 					{
-						if ( m_From.CheckTargetSkill( SkillName.Poisoning, m_Target, m_MinSkill, m_MaxSkill ) )
+						if ( m_From.CheckTargetSkill( SkillName.Poisoning, m_Target, m_MinSkill, m_MaxSkill, 1.0 ) )
 						{
 							if ( m_Target is Food )
 							{

@@ -48,7 +48,7 @@ namespace Server.SkillHandlers
                         gumpSuccess = true;
 
                     //Passive Skill Check
-                    if (from.CheckTargetSkill(SkillName.AnimalLore, bc_Creature, 0.0, 120.0))
+                    if (from.CheckTargetSkill(SkillName.AnimalLore, bc_Creature, 0.0, 120.0, 1.0))
                     {
                         try {                
                             from.SendGump(new AnimalLoreGump(bc_Creature));

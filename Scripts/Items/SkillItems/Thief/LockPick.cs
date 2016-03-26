@@ -181,14 +181,15 @@ namespace Server.Items
                     {
                         /*
                         // Do some training to gain skills
-                        m_From.CheckSkill( SkillName.Lockpicking, 0, m_Item.LockLevel );*/
+                        m_From.CheckSkill( SkillName.Lockpicking, 0, m_Item.LockLevel , 1.0);*/
 
                         // The LockLevel is higher thant the LockPicking of the player
                         item.SendLocalizedMessageTo(m_From, 502072); // You don't see how that lock can be manipulated.
                         return;
                     }
+
                     // allow players to gm from crafted lockboxes
-                    if (m_From.CheckTargetSkill(SkillName.Lockpicking, m_Item, m_Item.LockLevel, m_Item.MaxLockLevel))
+                    if (m_From.CheckTargetSkill(SkillName.Lockpicking, m_Item, m_Item.LockLevel, m_Item.MaxLockLevel, 1.0))
                     {
                         // Success! Pick the lock!
                         item.SendLocalizedMessageTo(m_From, 502076); // The lock quickly yields to your skill.

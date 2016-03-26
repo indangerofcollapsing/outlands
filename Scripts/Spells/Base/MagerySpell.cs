@@ -56,7 +56,7 @@ namespace Server.Spells
             maxSkill += (1 + ((int)Circle / 6)) * 25;
 
             if (m.Skills[SkillName.MagicResist].Value < maxSkill)
-                m.CheckSkill(SkillName.MagicResist, 0.0, 100.0);
+                m.CheckSkill(SkillName.MagicResist, 0.0, 100.0, 1.0);
 
             return m.Skills[SkillName.MagicResist].Value;
         }
@@ -78,7 +78,7 @@ namespace Server.Spells
                 target.IncomingResistCheckFromMonster = true;
 
             if (target.Skills[SkillName.MagicResist].Value <= maxSkill)
-                target.CheckSkill(SkillName.MagicResist, 0.0, 100.0);
+                target.CheckSkill(SkillName.MagicResist, 0.0, 100.0, 1.0);
 
             if (monster_to_player)
                 target.IncomingResistCheckFromMonster = false;

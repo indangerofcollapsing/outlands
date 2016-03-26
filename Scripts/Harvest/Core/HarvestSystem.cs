@@ -152,7 +152,7 @@ namespace Server.Engines.Harvest
 
             Type type = null;
 
-            if (skillBase >= resource.ReqSkill && from.CheckSkill(def.Skill, resource.MinSkill, resource.MaxSkill))
+            if (skillBase >= resource.ReqSkill && from.CheckSkill(def.Skill, resource.MinSkill, resource.MaxSkill, 1.0))
             {
                 type = GetResourceType(from, tool, def, map, loc, resource);
 

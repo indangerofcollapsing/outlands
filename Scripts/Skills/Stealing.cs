@@ -107,7 +107,7 @@ namespace Server.SkillHandlers
                 }
                 else if (toSteal.Stealable && !toSteal.AlreadyStolen)
                 {
-                    if (m_Thief.CheckTargetSkill(SkillName.Stealing, toSteal, toSteal.MinimumStealing, toSteal.MaximumStealing))
+                    if (m_Thief.CheckTargetSkill(SkillName.Stealing, toSteal, toSteal.MinimumStealing, toSteal.MaximumStealing, 1.0))
                     {
                         toSteal.AlreadyStolen = true;
                         stolen = toSteal;
@@ -154,7 +154,7 @@ namespace Server.SkillHandlers
                                 int pileWeight = (int)Math.Ceiling(toSteal.Weight * toSteal.Amount);
                                 pileWeight *= 10;
 
-                                if (m_Thief.CheckTargetSkill(SkillName.Stealing, toSteal, pileWeight - 22.5, pileWeight + 27.5))
+                                if (m_Thief.CheckTargetSkill(SkillName.Stealing, toSteal, pileWeight - 22.5, pileWeight + 27.5, 1.0))
                                     stolen = toSteal;
 
                             }
@@ -163,7 +163,7 @@ namespace Server.SkillHandlers
                                 int pileWeight = (int)Math.Ceiling(toSteal.Weight * amount);
                                 pileWeight *= 10;
 
-                                if (m_Thief.CheckTargetSkill(SkillName.Stealing, toSteal, pileWeight - 22.5, pileWeight + 27.5))
+                                if (m_Thief.CheckTargetSkill(SkillName.Stealing, toSteal, pileWeight - 22.5, pileWeight + 27.5, 1.0))
                                 {
                                     stolen = Mobile.LiftItemDupe(toSteal, toSteal.Amount - amount);
 
@@ -180,7 +180,7 @@ namespace Server.SkillHandlers
                             int iw = (int)Math.Ceiling(w);
                             iw *= 10;
 
-                            if (m_Thief.CheckTargetSkill(SkillName.Stealing, toSteal, iw - 22.5, iw + 27.5))
+                            if (m_Thief.CheckTargetSkill(SkillName.Stealing, toSteal, iw - 22.5, iw + 27.5, 1.0))
                                 stolen = toSteal;
                         }
 

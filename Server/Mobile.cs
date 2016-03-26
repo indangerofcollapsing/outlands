@@ -476,8 +476,7 @@ namespace Server
     [Serializable]
     public class MobileNotConnectedException : Exception
     {
-        public MobileNotConnectedException(Mobile source, string message)
-            : base(message)
+        public MobileNotConnectedException(Mobile source, string message): base(message)
         {
             this.Source = source.ToString();
         }
@@ -485,11 +484,11 @@ namespace Server
 
     #region Delegates
 
-    public delegate bool SkillCheckTargetHandler(Mobile from, SkillName skill, object target, double minSkill, double maxSkill);
-    public delegate bool SkillCheckLocationHandler(Mobile from, SkillName skill, double minSkill, double maxSkill);
+    public delegate bool SkillCheckTargetHandler(Mobile from, SkillName skill, object target, double minSkill, double maxSkill, double skillGainChance);
+    public delegate bool SkillCheckLocationHandler(Mobile from, SkillName skill, double minSkill, double maxSkill, double skillGainChance);
 
-    public delegate bool SkillCheckDirectTargetHandler(Mobile from, SkillName skill, object target, double chance);
-    public delegate bool SkillCheckDirectLocationHandler(Mobile from, SkillName skill, double chance);
+    public delegate bool SkillCheckDirectTargetHandler(Mobile from, SkillName skill, object target, double chance, double skillGainChance);
+    public delegate bool SkillCheckDirectLocationHandler(Mobile from, SkillName skill, double chance, double skillGainChance);
 
     public delegate TimeSpan RegenRateHandler(Mobile from);
 
@@ -11983,48 +11982,55 @@ namespace Server
 
             if (prefix.Length > 0 && suffix.Length > 0)
                 val = String.Concat(prefix, " ", name, " ", suffix);
+
             else if (prefix.Length > 0)
                 val = String.Concat(prefix, " ", name);
+
             else if (suffix.Length > 0)
                 val = String.Concat(name, " ", suffix);
+
             else
                 val = name;
 
             PrivateOverheadMessage(MessageType.Label, hue, m_AsciiClickMessage, val, from.NetState);
         }
-
-        public bool CheckSkill(SkillName skill, double minSkill, double maxSkill)
+        
+        public bool CheckSkill(SkillName skill, double minSkill, double maxSkill, double skillGainScalar)
         {
             if (m_SkillCheckLocationHandler == null)
                 return false;
+
             else
-                return m_SkillCheckLocationHandler(this, skill, minSkill, maxSkill);
+                return m_SkillCheckLocationHandler(this, skill, minSkill, maxSkill, skillGainScalar);
         }
 
-        public bool CheckSkill(SkillName skill, double chance)
+        public bool CheckSkill(SkillName skill, double chance, double skillGainScalar)
         {
             if (m_SkillCheckDirectLocationHandler == null)
                 return false;
+
             else
-                return m_SkillCheckDirectLocationHandler(this, skill, chance);
+                return m_SkillCheckDirectLocationHandler(this, skill, chance, skillGainScalar);
         }
 
-        public bool CheckTargetSkill(SkillName skill, object target, double minSkill, double maxSkill)
+        public bool CheckTargetSkill(SkillName skill, object target, double minSkill, double maxSkill, double skillGainScalar)
         {
             if (m_SkillCheckTargetHandler == null)
                 return false;
+
             else
-                return m_SkillCheckTargetHandler(this, skill, target, minSkill, maxSkill);
+                return m_SkillCheckTargetHandler(this, skill, target, minSkill, maxSkill, skillGainScalar);
         }
 
-        public bool CheckTargetSkill(SkillName skill, object target, double chance)
+        public bool CheckTargetSkill(SkillName skill, object target, double chance, double skillGainScalar)
         {
             if (m_SkillCheckDirectTargetHandler == null)
                 return false;
-            else
-                return m_SkillCheckDirectTargetHandler(this, skill, target, chance);
-        }
 
+            else
+                return m_SkillCheckDirectTargetHandler(this, skill, target, chance, skillGainScalar);
+        }
+        
         public virtual void DisruptiveAction()
         {
             if (Meditating)

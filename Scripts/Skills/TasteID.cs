@@ -72,7 +72,7 @@ namespace Server.SkillHandlers
                         break;
                     }
 
-                    if (from.CheckTargetSkill(SkillName.TasteID, 0, 100))
+                    if (from.CheckTargetSkill(SkillName.TasteID, 0, 100, 1.0))
                     {
                         customAlchemyPotion.Identified = true;
                         from.SendMessage("You analyze the potion and determine its composition: " + name + ".");
@@ -91,7 +91,7 @@ namespace Server.SkillHandlers
                 {
                     Food food = (Food)targeted;
 
-                    if (from.CheckTargetSkill(SkillName.TasteID, food, 0, 100))
+                    if (from.CheckTargetSkill(SkillName.TasteID, food, 0, 100, 1.0))
                     {
                         if (food.Poison != null)
                         {

@@ -7,6 +7,9 @@ namespace Server.Items
 {
     public abstract class BaseSword : BaseMeleeWeapon
     {
+        public override int BaseHitSound { get { return 0x237; } }
+        public override int BaseMissSound { get { return 0x23A; } }
+
         public override SkillName BaseSkill { get { return SkillName.Swords; } }
         public override WeaponType BaseType { get { return WeaponType.Slashing; } }
         public override WeaponAnimation BaseAnimation { get { return WeaponAnimation.Slash1H; } }

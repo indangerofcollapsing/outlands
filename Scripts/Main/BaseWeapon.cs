@@ -22,8 +22,8 @@ namespace Server.Items
         public virtual int BaseMaxDamage { get { return 2; } }
         public virtual int BaseSpeed { get { return 30; } }
         public virtual int BaseMaxRange { get { return 1; } }
-        public virtual int BaseHitSound { get { return 0; } }
-        public virtual int BaseMissSound { get { return 0; } }
+        public virtual int BaseHitSound { get { return 0x237; } }
+        public virtual int BaseMissSound { get { return 0x23A; } }
         public virtual SkillName BaseSkill { get { return SkillName.Swords; } }
         public virtual WeaponType BaseType { get { return WeaponType.Slashing; } }
         public virtual WeaponAnimation BaseAnimation { get { return WeaponAnimation.Slash1H; } }
@@ -259,22 +259,20 @@ namespace Server.Items
             set { m_Type = value; }
         }        
 
-        private SkillName m_Skill = SkillName.Alchemy;
+        private SkillName m_Skill = SkillName.Wrestling;
         [CommandProperty(AccessLevel.GameMaster)]
         public SkillName Skill
         {
             get 
             {
-                if (m_Skill == SkillName.Alchemy)
+                if (m_Skill == SkillName.Wrestling)
                     return BaseSkill;
 
                 return m_Skill;
             }
 
-            set { m_Skill = value; InvalidateProperties(); }
-        }
-
-        
+            set { m_Skill = value; }
+        }        
 
         private int m_HitSound = -1;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -447,6 +445,8 @@ namespace Server.Items
 
         #region GetDelay
 
+        public static int PlayerFistSpeed = 50;
+
         public virtual TimeSpan GetDelay(Mobile mobile, bool useRawValues)
         {
             int speed = this.Speed;
@@ -459,7 +459,7 @@ namespace Server.Items
 
             //Player: Wrestling Speed Override
             if (pm_Mobile != null && this is Fists)
-                speed = 50;
+                speed = PlayerFistSpeed;
 
             //Creature Override for Combat Speed
             if (bc_Creature != null)
@@ -1477,7 +1477,7 @@ namespace Server.Items
                 chance = 0.01;
 
             //Successful Parry Check
-            if (owner.CheckSkill(SkillName.Parry, chance))
+            if (owner.CheckSkill(SkillName.Parry, chance, 1.0))
             {
                 double reduction = 0.65; // 35% base reduction
                 // reduce damage 5% further for each mod
@@ -1759,7 +1759,7 @@ namespace Server.Items
             SkillName sk = Skill;
 
             if (sk != SkillName.Wrestling && !m.Player && !m.Body.IsHuman && m.Skills[SkillName.Wrestling].Value > m.Skills[sk].Value)
-                sk = SkillName.Wrestling;
+                sk = SkillName.Wrestling;            
 
             return sk;
         }
@@ -1783,13 +1783,13 @@ namespace Server.Items
         {
             BaseWeapon atkWeapon = attacker.Weapon as BaseWeapon;
             BaseWeapon defWeapon = defender.Weapon as BaseWeapon;
-
+                        
             Skill atkSkill = attacker.Skills[atkWeapon.Skill];
-            Skill defSkill = defender.Skills[defWeapon.Skill];
-
+            Skill defSkill = defender.Skills[defWeapon.Skill];           
+            
             double atkValue = atkWeapon.GetAttackSkillValue(attacker, defender);
             double defValue = defWeapon.GetDefendSkillValue(attacker, defender);
-
+            
             PlayerMobile pm_Attacker = attacker as PlayerMobile;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
@@ -1802,7 +1802,7 @@ namespace Server.Items
             bool CreatureDefender = (bc_Defender != null);
             bool TamedAttacker = false;
             bool TamedDefender = false;
-
+            
             if (CreatureAttacker)
             {
                 if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile)
@@ -1814,7 +1814,7 @@ namespace Server.Items
                 if (bc_Defender.Controlled && bc_Defender.ControlMaster is PlayerMobile)
                     TamedDefender = true;
             }
-
+            
             //Tamed Creature Skill Caps for Combat
             if (bc_Attacker != null && defender is PlayerMobile)
             {
@@ -1843,13 +1843,13 @@ namespace Server.Items
             //UOACZ Defensive Wrestling PvP Cap
             if (UOACZSystem.IsUOACZValidMobile(attacker) && UOACZSystem.IsUOACZValidMobile(defender))
             {
-                if ((PlayerAttacker || TamedAttacker) && PlayerDefender)
+                if ((pm_Attacker != null || TamedAttacker) && pm_Defender != null)
                 {
                     if (defValue > 100)
                         defValue = 100;
                 }
             }
-
+            
             #region Weapon Special Attack: Stun ToHit Bonuses/Penalties
 
             //Special Ability Effect on Creature: Stun
@@ -1878,8 +1878,9 @@ namespace Server.Items
             }
 
             #endregion
-
-            double ourValue, theirValue;
+            
+            double ourValue;
+            double theirValue;
 
             if (atkValue <= -50.0)
                 atkValue = -49.9;
@@ -1910,7 +1911,7 @@ namespace Server.Items
                 pm_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Courage, out courageBonus);
                 chance += (int)(courageBonus * 100);
             }
-
+            
             //Special Ability Effect: Evasion
             double evasionBonus = 0;
 
@@ -1925,16 +1926,16 @@ namespace Server.Items
                 pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Evasion, out evasionBonus);
                 chance -= (int)(evasionBonus * 100);
             }
-
+            
             #region StealthAttack ToHit Bonus
 
             //Stealth Attack Accuracy Bonus
             if (attacker.StealthAttackActive)
             {
                 //Player Attacking
-                if (PlayerAttacker)
+                if (pm_Attacker != null)
                 {
-                    if (PlayerDefender)
+                    if (pm_Defender != null)
                         chance += 0;
 
                     else if (TamedDefender)
@@ -1947,7 +1948,7 @@ namespace Server.Items
                 //Tamed Creature Attacking
                 else if (TamedAttacker)
                 {
-                    if (PlayerDefender)
+                    if (pm_Defender != null)
                         chance += 0;
 
                     else if (TamedDefender)
@@ -1960,7 +1961,7 @@ namespace Server.Items
                 //Normal Creature Attacking
                 else
                 {
-                    if (PlayerDefender)
+                    if (pm_Defender != null)
                         chance += .25;
 
                     else if (TamedDefender)
@@ -1969,7 +1970,7 @@ namespace Server.Items
             }
 
             #endregion
-
+            
             //Dungeon Weapon
             if (DungeonTier > 0 && pm_Defender == null)
                 chance += DungeonWeapon.BaseAccuracy * (DungeonWeapon.AccuracyPerTier * (double)DungeonTier);
@@ -1977,8 +1978,8 @@ namespace Server.Items
             if (defender is PlayerMobile && ((PlayerMobile)defender).m_DateTimeDied + TimeSpan.FromSeconds(60) > DateTime.UtcNow)
                 return (Utility.RandomDouble() < chance);
 
-            else
-                return attacker.CheckSkill(atkSkill.SkillName, chance);
+            else                            
+                return attacker.CheckSkill(atkSkill.SkillName, chance, 1.0);            
         }
 
         #region Sounds
@@ -2062,14 +2063,14 @@ namespace Server.Items
             {
                 double chance = parry / 200;
 
-                return defender.CheckSkill(SkillName.Parry, chance);
+                return defender.CheckSkill(SkillName.Parry, chance, 1.0);
             }
 
             else if (!(defender.Weapon is Fists) && !(defender.Weapon is BaseRanged))
             {
                 double chance = parry / 200;
 
-                return defender.CheckSkill(SkillName.Parry, chance);
+                return defender.CheckSkill(SkillName.Parry, chance, 1.0);
             }
 
             return false;
@@ -2304,13 +2305,13 @@ namespace Server.Items
         {
             if (checkSkills)
             {
-                attacker.CheckSkill(SkillName.Tactics, 0.0, 100.0); // Passively check tactics for gain
-                attacker.CheckSkill(SkillName.Anatomy, 0.0, attacker.Skills[SkillName.Anatomy].Cap); // Passively check Anatomy for gain
-                attacker.CheckSkill(SkillName.ArmsLore, 0.0, attacker.Skills[SkillName.ArmsLore].Cap); // Passively check Arms Lore for gain
+                attacker.CheckSkill(SkillName.Tactics, 0.0, 100.0, 1.0); // Passively check tactics for gain
+                attacker.CheckSkill(SkillName.Anatomy, 0.0, attacker.Skills[SkillName.Anatomy].Cap, 1.0); // Passively check Anatomy for gain
+                attacker.CheckSkill(SkillName.ArmsLore, 0.0, attacker.Skills[SkillName.ArmsLore].Cap, 1.0); // Passively check Arms Lore for gain
 
                 /*
                 if (Type == WeaponType.Axe)
-                    attacker.CheckSkill(SkillName.Lumberjacking, 0.0, 100.0); // Passively check Lumberjacking for gain
+                    attacker.CheckSkill(SkillName.Lumberjacking, 0.0, 100.0, 1.0); // Passively check Lumberjacking for gain
                 */
             }
 
@@ -2357,9 +2358,9 @@ namespace Server.Items
         {
             if (checkSkills)
             {
-                attacker.CheckSkill(SkillName.Tactics, 0.0, 125.0); // Passively check tactics for gain
-                attacker.CheckSkill(SkillName.Anatomy, 0.0, attacker.Skills[SkillName.Anatomy].Cap); // Passively check Anatomy for gain
-                attacker.CheckSkill(SkillName.ArmsLore, 0.0, attacker.Skills[SkillName.ArmsLore].Cap); // Passively check Arms Lore for gain
+                attacker.CheckSkill(SkillName.Tactics, 0.0, 125.0, 1.0); // Passively check tactics for gain
+                attacker.CheckSkill(SkillName.Anatomy, 0.0, attacker.Skills[SkillName.Anatomy].Cap, 1.0); // Passively check Anatomy for gain
+                attacker.CheckSkill(SkillName.ArmsLore, 0.0, attacker.Skills[SkillName.ArmsLore].Cap, 1.0); // Passively check Arms Lore for gain
             }
 
             double tacticsBase = attacker.Skills[SkillName.Tactics].Value;
@@ -2930,34 +2931,7 @@ namespace Server.Items
             }
 
             //-----
-
-            if (m_MinDamage == BaseMinDamage)
-                m_MinDamage = -1;
-
-            if (m_MaxDamage == BaseMaxDamage)
-                m_MaxDamage = -1;
-
-            if (m_HitSound == BaseHitSound)
-                m_HitSound = -1;
-
-            if (m_MissSound == BaseMissSound)
-                m_MissSound = -1;
-
-            if (m_Speed == BaseSpeed)
-                m_Speed = -1;
-
-            if (m_MaxRange == BaseMaxRange)
-                m_MaxRange = -1;
-
-            if (m_Skill == BaseSkill)
-                m_Skill = (SkillName)(-1);
-
-            if (m_Type == BaseType)
-                m_Type = (WeaponType)(-1);
-
-            if (m_Animation == BaseAnimation)
-                m_Animation = (WeaponAnimation)(-1);
-
+            
             if (Parent is Mobile)
                 ((Mobile)Parent).CheckStatTimers();
 
@@ -2972,23 +2946,12 @@ namespace Server.Items
         }
         #endregion
 
-        public BaseWeapon(int itemID)
-            : base(itemID)
+        public BaseWeapon(int itemID): base(itemID)
         {
             Layer = (Layer)ItemData.Quality;
 
             Quality = Quality.Regular;
-
-            m_MinDamage = -1;
-            m_MaxDamage = -1;
-            m_HitSound = -1;
-            m_MissSound = -1;
-            m_Speed = -1;
-            m_MaxRange = -1;
-            m_Skill = (SkillName)(-1);
-            m_Type = (WeaponType)(-1);
-            m_Animation = (WeaponAnimation)(-1);
-
+            
             m_Hits = m_MaxHits = Utility.RandomMinMax(InitMinHits, InitMaxHits);
 
             Resource = CraftResource.Iron;

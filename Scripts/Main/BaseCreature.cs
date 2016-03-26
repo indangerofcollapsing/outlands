@@ -8586,8 +8586,8 @@ namespace Server.Mobiles
                         patient.SendLocalizedMessage(1010059); // You have been cured of all poisons.                       
                         patient.PlaySound(0x57);
 
-                        CheckSkill(SkillName.Healing, 0.0, 100.0);
-                        CheckSkill(SkillName.Anatomy, 0.0, 100.0);
+                        CheckSkill(SkillName.Healing, 0.0, 100.0, 1.0);
+                        CheckSkill(SkillName.Anatomy, 0.0, 100.0, 1.0);
                     }
                 }
             }
@@ -8614,8 +8614,8 @@ namespace Server.Mobiles
                     patient.Heal((int)toHeal);
                     patient.PlaySound(0x57);
 
-                    CheckSkill(SkillName.Healing, 0.0, 100.0);
-                    CheckSkill(SkillName.Anatomy, 0.0, 100.0);
+                    CheckSkill(SkillName.Healing, 0.0, 100.0, 1.0);
+                    CheckSkill(SkillName.Anatomy, 0.0, 100.0, 1.0);
                 }
             }
 

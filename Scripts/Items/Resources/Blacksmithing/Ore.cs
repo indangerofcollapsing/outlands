@@ -208,7 +208,7 @@ namespace Server.Items
 						return;
 					}
 
-					if ( from.CheckTargetSkill( SkillName.Mining, targeted, minSkill, maxSkill ) )
+					if ( from.CheckTargetSkill( SkillName.Mining, targeted, minSkill, maxSkill, 1.0 ) )
 					{
 						int toConsume = m_Ore.Amount;
 

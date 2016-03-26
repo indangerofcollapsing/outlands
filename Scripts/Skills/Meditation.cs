@@ -68,24 +68,8 @@ namespace Server.SkillHandlers
 
                     return TimeSpan.FromSeconds(2.5);
                 }
-                //RUNUO 2.x MEDITATION REPLACED WITH IPY 1: SEAN
-                /*
-				double skillVal = m.Skills[SkillName.Meditation].Value;
-				double chance = (50.0 + (( skillVal - ( m.ManaMax - m.Mana ) ) * 2)) / 100;
 
-				if ( chance > Utility.RandomDouble() )
-				{
-					m.CheckSkill( SkillName.Meditation, 0.0, 100.0 );
-
-					m.SendLocalizedMessage( 501851 ); // You enter a meditative trance.
-					m.Meditating = true;
-					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.ActiveMeditation, 1075657 ) );
-
-					if ( m.Player || m.Body.IsHuman )
-						m.PlaySound( 0xF9 );
-				} 
-				*/
-                if (m.CheckSkill(SkillName.Meditation, 0, 100))
+                if (m.CheckSkill(SkillName.Meditation, 0, 100, 1.0))
                 {
                     m.SendLocalizedMessage(501851); // You enter a meditative trance.
                     m.Meditating = true;

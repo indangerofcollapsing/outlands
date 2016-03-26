@@ -1550,7 +1550,7 @@ namespace Server.Items
                         }
                     }
 
-                    from.CheckSkill(SkillName.ArmsLore, 0, 100);
+                    from.CheckSkill(SkillName.ArmsLore, 0, 100, 1.0);
                 }
             }
             

@@ -102,7 +102,7 @@ namespace Server.SkillHandlers
 
                         if (from.Skills.RemoveTrap.Value < minSkill && (int)tchest.Level == 1)
                         {
-                            from.CheckTargetSkill(SkillName.RemoveTrap, targ, 0, 100);
+                            from.CheckTargetSkill(SkillName.RemoveTrap, targ, 0, 100, 1.0);
                             from.SendMessage("You fail to safely remove the trap.");
 
                             return;
@@ -114,7 +114,7 @@ namespace Server.SkillHandlers
                             return;
                         }
 
-                        if (from.CheckTargetSkill(SkillName.RemoveTrap, targ, minSkill, maxSkill))                        
+                        if (from.CheckTargetSkill(SkillName.RemoveTrap, targ, minSkill, maxSkill, 1.0))                        
                             RemoveTrap(from, targ);                        
                         else                 
 						    from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off					
@@ -134,13 +134,13 @@ namespace Server.SkillHandlers
                             return;
                         }
 
-                        if (from.CheckTargetSkill(SkillName.RemoveTrap, targ, minSkill, maxSkill))                        
+                        if (from.CheckTargetSkill(SkillName.RemoveTrap, targ, minSkill, maxSkill, 1.0))                        
                             RemoveTrap(from, targ);                        
                         else                 
 						    from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off		
                     }
 
-					else if ( from.CheckTargetSkill( SkillName.RemoveTrap, targ, targ.TrapPower, targ.TrapPower + 40 ) )					
+					else if ( from.CheckTargetSkill( SkillName.RemoveTrap, targ, targ.TrapPower, targ.TrapPower + 40, 1.0 ) )					
                         RemoveTrap(from, targ);
 					
 					else					

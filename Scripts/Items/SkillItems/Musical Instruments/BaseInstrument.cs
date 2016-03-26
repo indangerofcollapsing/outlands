@@ -250,7 +250,7 @@ namespace Server.Items
 
         public static bool CheckMusicianship(Mobile m)
         {
-            m.CheckSkill(SkillName.Musicianship, 0.0, 120.0);
+            m.CheckSkill(SkillName.Musicianship, 0.0, 120.0, 1.0);
 
             return ((m.Skills[SkillName.Musicianship].Value / 100) > Utility.RandomDouble());
         }

@@ -197,7 +197,7 @@ namespace Server.Items
 
 			ScoreEntry se = GetEntryFor( from );
 
-			if ( !from.CheckSkill( bow.Skill, m_MinSkill, m_MaxSkill ) )
+			if ( !from.CheckSkill( bow.Skill, m_MinSkill, m_MaxSkill, 1.0 ) )
 			{
 				from.PlaySound( bow.MissSound );
 

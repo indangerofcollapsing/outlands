@@ -209,7 +209,7 @@ namespace Server.Items
 						return;
 					}
 
-					if ( m_From.CheckSkill( SkillName.Cooking, 0, 10 ) )
+					if ( m_From.CheckSkill( SkillName.Cooking, 0, 10, 1.0 ) )
 					{
 						if ( m_From.AddToBackpack( new Muffins() ) )
 							m_From.PlaySound( 0x57 );

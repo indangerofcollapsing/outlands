@@ -88,7 +88,7 @@ namespace Server.SkillHandlers
                             m_Instrument.ConsumeUse(from);
                         }
 
-                        else if (!from.CheckSkill(SkillName.Peacemaking, 0.0, 120.0))
+                        else if (!from.CheckSkill(SkillName.Peacemaking, 0.0, 120.0, 1.0))
                         {
                             from.NextSkillTime = Core.TickCount + 5000;
 
@@ -245,7 +245,7 @@ namespace Server.SkillHandlers
                             double chanceResult = Utility.RandomDouble();
 
                             //Skill Gain Check
-                            from.CheckTargetSkill(SkillName.Peacemaking, target, effectiveDifficulty - 25.0, effectiveDifficulty + 25.0);
+                            from.CheckTargetSkill(SkillName.Peacemaking, target, effectiveDifficulty - 25.0, effectiveDifficulty + 25.0, 1.0);
 
                             PlayerMobile pm_From = from as PlayerMobile;
 

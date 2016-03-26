@@ -102,7 +102,7 @@ namespace Server.SkillHandlers
 				double srcSkill = from.Skills[SkillName.DetectHidden].Value;
 				int range = (int)(srcSkill / 10.0);
 
-                if (!from.CheckSkill(SkillName.DetectHidden, 0.0, 100.0))
+                if (!from.CheckSkill(SkillName.DetectHidden, 0.0, 100.0, 1.0))
                     range /= 2;
 
                 BaseHouse house = BaseHouse.FindHouseAt( p, from.Map, 16 );                

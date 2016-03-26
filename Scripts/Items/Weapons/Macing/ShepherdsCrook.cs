@@ -175,7 +175,7 @@ namespace Server.Items
 				{
 					if ( targ is IPoint2D )
 					{
-						if ( from.CheckTargetSkill( SkillName.Herding, m_Creature, 0, 100 ) )
+						if ( from.CheckTargetSkill( SkillName.Herding, m_Creature, 0, 100, 1.0 ) )
 						{
 							m_Creature.TargetLocation = new Point2D( (IPoint2D)targ );
 							from.SendLocalizedMessage( 502479 ); // The animal walks where it was instructed to.

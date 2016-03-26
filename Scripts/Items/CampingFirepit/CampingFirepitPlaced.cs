@@ -128,7 +128,7 @@ namespace Server.Custom
 
         public void Light(Mobile from)
         {
-            bool success = from.CheckSkill(SkillName.Camping, 0.0, 120.0);
+            bool success = from.CheckSkill(SkillName.Camping, 0.0, 120.0, 1.0);
 
             string response = "Despite your limited knowledge of the outdoors, you fashion a crude campsite.";
 

@@ -562,8 +562,8 @@ namespace Server.Items
 
             if (checkSkills)
             {
-                m_Healer.CheckSkill(secondarySkill, 0.0, 120.0);
-                m_Healer.CheckSkill(primarySkill, 0.0, 120.0);
+                m_Healer.CheckSkill(secondarySkill, 0.0, 120.0, 1.0);
+                m_Healer.CheckSkill(primarySkill, 0.0, 120.0, 1.0);
             }
         }
 

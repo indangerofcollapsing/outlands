@@ -79,7 +79,7 @@ namespace Server.Custom
                 return;
             }
 
-            if (from.CheckTargetSkill(SkillName.Forensics, this, 95, 110.0))      
+            if (from.CheckTargetSkill(SkillName.Forensics, this, 95, 110.0, 1.0))      
             {
                 Researched = true;            
 

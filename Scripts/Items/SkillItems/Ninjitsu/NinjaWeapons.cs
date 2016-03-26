@@ -234,7 +234,7 @@ namespace Server.Items
 				chance = 0.02;
 			}
 
-			return attacker.CheckSkill(atkSkill.SkillName, chance);
+			return attacker.CheckSkill(atkSkill.SkillName, chance, 1.0);
 		}
 
 		private static void OnHit(object[] states)

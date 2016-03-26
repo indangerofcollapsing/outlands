@@ -60,7 +60,7 @@ namespace Server.Items
 
             if (from.Region is UOACZRegion)
             {
-                if (!from.CheckSkill(SkillName.Camping, 0.0, 25))
+                if (!from.CheckSkill(SkillName.Camping, 0.0, 25, 1.0))
                 {
                     if (Utility.RandomDouble() <= .5)
                     {
@@ -77,7 +77,7 @@ namespace Server.Items
 
             else
             {
-                if (!from.CheckSkill(SkillName.Camping, 0.0, 120.0))
+                if (!from.CheckSkill(SkillName.Camping, 0.0, 120.0, 1.0))
                 {
                     from.SendLocalizedMessage(501696); // You fail to ignite the campfire.
                     return;
