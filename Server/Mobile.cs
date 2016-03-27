@@ -786,10 +786,7 @@ namespace Server
         private VirtueInfo m_Virtues;
         private object m_Party;
         private List<SkillMod> m_SkillMods;
-        private Body m_BodyMod;
-        private DateTime m_LastStrGain;
-        private DateTime m_LastIntGain;
-        private DateTime m_LastDexGain;
+        private Body m_BodyMod;      
         private Race m_Race;
 
         public HidingTimer m_HidingTimer;
@@ -801,6 +798,12 @@ namespace Server
         private bool m_StealthAttackActive;
 
         private DateTime m_NextBoardingAttemptAllowed = DateTime.UtcNow;
+
+        public DateTime NextStrGainAllowed = DateTime.UtcNow;
+        public DateTime NextDexGainAllowed = DateTime.UtcNow;
+        public DateTime NextIntGainAllowed = DateTime.UtcNow;
+
+        public Dictionary<Skill, DateTime> NextSkillGainAllowed = new Dictionary<Skill, DateTime>();
 
         #endregion
 
@@ -6051,10 +6054,6 @@ namespace Server
                     }
                 case 31:
                     {
-                        m_LastStrGain = reader.ReadDeltaTime();
-                        m_LastIntGain = reader.ReadDeltaTime();
-                        m_LastDexGain = reader.ReadDeltaTime();
-
                         goto case 30;
                     }
                 case 30:
@@ -6075,9 +6074,6 @@ namespace Server
                     }
                 case 28:
                     {
-                        if (version <= 30)
-                            LastStatGain = reader.ReadDeltaTime();
-
                         goto case 27;
                     }
                 case 27:
@@ -6523,9 +6519,6 @@ namespace Server
             writer.Write((Item)FindLogoutRetainer());
 
             //version 31
-            writer.WriteDeltaTime(m_LastStrGain);
-            writer.WriteDeltaTime(m_LastIntGain);
-            writer.WriteDeltaTime(m_LastDexGain);
 
             byte hairflag = 0x00;
 
@@ -9160,68 +9153,7 @@ namespace Server
         public virtual void OnAfterNameChange(string oldName, string newName)
         {
         }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime LastStrGain
-        {
-            get
-            {
-                return m_LastStrGain;
-            }
-            set
-            {
-                m_LastStrGain = value;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime LastIntGain
-        {
-            get
-            {
-                return m_LastIntGain;
-            }
-            set
-            {
-                m_LastIntGain = value;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime LastDexGain
-        {
-            get
-            {
-                return m_LastDexGain;
-            }
-            set
-            {
-                m_LastDexGain = value;
-            }
-        }
-
-        public DateTime LastStatGain
-        {
-            get
-            {
-                DateTime d = m_LastStrGain;
-
-                if (m_LastIntGain > d)
-                    d = m_LastIntGain;
-
-                if (m_LastDexGain > d)
-                    d = m_LastDexGain;
-
-                return d;
-            }
-            set
-            {
-                m_LastStrGain = value;
-                m_LastIntGain = value;
-                m_LastDexGain = value;
-            }
-        }
-
+        
         public BaseGuild Guild
         {
             get
