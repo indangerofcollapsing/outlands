@@ -24,8 +24,7 @@ namespace Server.Items
         [PlayerVendorTarget]
         private class InternalTarget : Target
         {
-            public InternalTarget()
-                : base(8, false, TargetFlags.None)
+            public InternalTarget(): base(8, false, TargetFlags.None)
             {
                 AllowNonlocal = true;
             }
@@ -35,45 +34,50 @@ namespace Server.Items
                 if (o is Container && from.Skills.ItemID.Base >= 100.0)
                 {
                     var container = o as Container;
+
                     foreach (var item in container.Items)
                     {
                         if (item is BaseWeapon)
                             ((BaseWeapon)item).Identified = true;
+
                         else if (item is BaseArmor)
                             ((BaseArmor)item).Identified = true;
+
                         else if (item is Seed)
                             ((Seed)item).ShowType = true;
                     }
 
                     from.SendMessage("You identify the bag of goods.");
                 }
+
                 else if (o is Item)
                 {
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ItemIDCooldown * 1000);
+
                     if (from.CheckTargetSkill(SkillName.ItemID, o, 0, 100, 1.0))
                     {
                         if (o is BaseWeapon)
                             ((BaseWeapon)o).Identified = true;
+
                         else if (o is BaseArmor)
                             ((BaseArmor)o).Identified = true;
+
                         else if (o is Seed && from.Skills.ItemID.Base >= 100.0)
                             ((Seed)o).ShowType = true;
 
                         if (!Core.AOS)
                             ((Item)o).OnSingleClick(from);
                     }
-                    else
-                    {
-                        from.SendLocalizedMessage(500353); // You are not certain...
-                    }
+
+                    else                    
+                        from.SendLocalizedMessage(500353); // You are not certain...                    
                 }
-                else if (o is Mobile)
-                {
+
+                else if (o is Mobile)                
                     ((Mobile)o).OnSingleClick(from);
-                }
-                else
-                {
-                    from.SendLocalizedMessage(500353); // You are not certain...
-                }
+                
+                else                
+                    from.SendLocalizedMessage(500353); // You are not certain...                
             }
         }
     }

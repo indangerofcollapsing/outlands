@@ -99,6 +99,8 @@ namespace Server.SkillHandlers
                     }
                 }
 
+                from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.DetectHiddenCooldown * 1000);
+
 				double srcSkill = from.Skills[SkillName.DetectHidden].Value;
 				int range = (int)(srcSkill / 10.0);
 

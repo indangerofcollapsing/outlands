@@ -30,8 +30,7 @@ namespace Server.SkillHandlers
         {
             private bool m_SetSkillTime = true;
 
-            public InternalTarget()
-                : base(12, false, TargetFlags.None)
+            public InternalTarget(): base(12, false, TargetFlags.None)
             {
             }
 
@@ -51,15 +50,12 @@ namespace Server.SkillHandlers
                 {
                     Mobile targ = (Mobile)targeted;
 
-                    if (targ.Player) // We can't beg from players
-                    {
-                        number = 500398; // Perhaps just asking would work better.
-                    }
+                    if (targ.Player) // We can't beg from players                    
+                        number = 500398; // Perhaps just asking would work better.                    
 
-                    else if (!targ.Body.IsHuman) // Make sure the NPC is human
-                    {
+                    else if (!targ.Body.IsHuman) // Make sure the NPC is human                    
                         number = 500399; // There is little chance of getting money from that!
-                    }
+                    
                     else if (!from.InRange(targ, 2))
                     {
                         if (!targ.Female)
@@ -67,10 +63,10 @@ namespace Server.SkillHandlers
                         else
                             number = 500402; // You are too far away to beg from her.
                     }
-                    else if (!Core.ML && from.Mounted) // If we're on a mount, who would give us money? TODO: guessed it's removed since ML
-                    {
+                    
+                    else if (!Core.ML && from.Mounted) // If we're on a mount, who would give us money? TODO: guessed it's removed since ML                    
                         number = 500404; // They seem unwilling to give you any money.
-                    }
+                    
                     else
                     {
                         // Face eachother
@@ -84,10 +80,9 @@ namespace Server.SkillHandlers
                         m_SetSkillTime = false;
                     }
                 }
-                else // Not a Mobile
-                {
-                    number = 500399; // There is little chance of getting money from that!
-                }
+
+                else // Not a Mobile                
+                    number = 500399; // There is little chance of getting money from that!                
 
                 if (number != -1)
                     from.SendLocalizedMessage(number);
@@ -97,8 +92,7 @@ namespace Server.SkillHandlers
             {
                 private Mobile m_From, m_Target;
 
-                public InternalTimer(Mobile from, Mobile target)
-                    : base(TimeSpan.FromSeconds(2.0))
+                public InternalTimer(Mobile from, Mobile target): base(TimeSpan.FromSeconds(2.0))
                 {
                     m_From = from;
                     m_Target = target;
@@ -109,17 +103,8 @@ namespace Server.SkillHandlers
                 {
                     Container theirPack = m_Target.Backpack;
 
-                    //double badKarmaChance = 0.5 - ((double)m_From.Karma / 8570);
-
                     if (theirPack == null)                    
-                        m_From.SendLocalizedMessage(500404); // They seem unwilling to give you any money.                    
-
-                    /*
-                    else if (m_From.Karma < 0 && badKarmaChance > Utility.RandomDouble())
-                    {
-                        m_Target.PublicOverheadMessage(MessageType.Regular, m_Target.SpeechHue, 500406); // Thou dost not look trustworthy... no gold for thee today!
-                    }
-                    */
+                        m_From.SendLocalizedMessage(500404); // They seem unwilling to give you any money. 
 
                     else if (m_From.CheckTargetSkill(SkillName.Begging, m_Target, 0.0, 120.0, 1.0))
                     {
@@ -146,15 +131,17 @@ namespace Server.SkillHandlers
                                 Gold gold = new Gold(consumed);
 
                                 m_From.AddToBackpack(gold);
-                                
+
                                 if (m_From.Skills.Begging.Value == 100)
                                 {
                                     var randomNumber = Utility.RandomMinMax(1, 100);
+
                                     if (randomNumber <= 75) //75% chance
                                     {
                                         switch (Utility.Random(2))
                                         {
                                             case 0: m_From.AddToBackpack(new Pitcher(BeverageType.Water)); break;
+
                                             default: m_From.AddToBackpack(new FrenchBread()); break;
                                         }
                                     }
@@ -169,6 +156,7 @@ namespace Server.SkillHandlers
                                             case 3: m_From.AddToBackpack(new CheeseWedge()); break;
                                             case 4: m_From.AddToBackpack(new Dates()); break;
                                             case 5: m_From.AddToBackpack(new Shirt()); break;
+
                                             default: m_From.AddToBackpack(new Pitcher(BeverageType.Liquor)); break;
                                         }
                                     }
@@ -185,6 +173,7 @@ namespace Server.SkillHandlers
                                             case 5: m_From.AddToBackpack(new FishingPole()); break;
                                             case 6: m_From.AddToBackpack(new FishSteak()); break;
                                             case 7: m_From.AddToBackpack(new SakeArtifact()); break;
+
                                             default: m_From.AddToBackpack(new Turnip()); break;
                                         }
                                     }
@@ -205,19 +194,19 @@ namespace Server.SkillHandlers
 
                             else                            
                                 m_Target.PublicOverheadMessage(MessageType.Regular, m_Target.SpeechHue, 500407); // I have not enough money to give thee any!
-                            
                         }
 
                         else                        
-                            m_Target.PublicOverheadMessage(MessageType.Regular, m_Target.SpeechHue, 500407); // I have not enough money to give thee any!
-                        
+                            m_Target.PublicOverheadMessage(MessageType.Regular, m_Target.SpeechHue, 500407); // I have not enough money to give thee any! 
+
+                        m_From.NextSkillTime = Core.TickCount + (int)(SkillCooldown.BeggingSuccessCooldown * 1000);
                     }
 
-                    else                    
+                    else
+                    {
                         m_From.SendLocalizedMessage(500404); // They seem unwilling to give you any money.
-                    
-
-                    m_From.NextSkillTime = Core.TickCount + (10 * 1000); // 10 sec
+                        m_From.NextSkillTime = Core.TickCount + (int)(SkillCooldown.BeggingFailureCooldown * 1000);
+                    }
                 }
             }
         }

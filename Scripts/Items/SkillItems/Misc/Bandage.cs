@@ -625,7 +625,7 @@ namespace Server.Items
 
                 if (onSelf)
                 {
-                    seconds = 9.4 + (0.6 * ((double)(120 - dex) / 10));
+                    seconds = SkillCooldown.HealingSelfCooldown;
 
                     BaseDungeonArmor.PlayerDungeonArmorProfile bandagerDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(healer, null);
 
@@ -634,7 +634,7 @@ namespace Server.Items
                 }
 
                 else
-                    seconds = 5 - (2 * ((double)dex / 100)) + resDelay;
+                    seconds = SkillCooldown.HealingOtherCooldown + resDelay;
 
                 BandageContext context = GetContext(healer);
 

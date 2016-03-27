@@ -39,6 +39,8 @@ namespace Server.SkillHandlers
 
                     if (weapon.DungeonTier > 0)
                     {
+                        from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ArmsLoreCooldown * 1000);
+
                         bool skillSuccess = from.CheckTargetSkill( SkillName.ArmsLore, targeted, 0, 120, 1.0 );
 
                         from.SendGump(new DungeonWeaponGump(from, weapon, skillSuccess));
@@ -46,36 +48,31 @@ namespace Server.SkillHandlers
                         return;
                     }
 
-					if (from.CheckTargetSkill( SkillName.ArmsLore, targeted, 0, 120, 1.0 ) )
-					{
-						from.SendMessage("You estimate this weapon is at " + weapon.HitPoints.ToString() + " of " + weapon.MaxHitPoints.ToString() + " durability.");
-                    }
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ArmsLoreCooldown * 1000);
 
-					else
-					{
-						from.SendLocalizedMessage( 500353 ); // You are not certain...
-					}
+					if (from.CheckTargetSkill( SkillName.ArmsLore, targeted, 0, 120, 1.0 ) )					
+						from.SendMessage("You estimate this weapon is at " + weapon.HitPoints.ToString() + " of " + weapon.MaxHitPoints.ToString() + " durability.");                    
+
+					else					
+						from.SendLocalizedMessage( 500353 ); // You are not certain...					
 				}
 
 				else if (targeted is BaseArmor)
 				{
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ArmsLoreCooldown * 1000);
+
 					if (from.CheckTargetSkill(SkillName.ArmsLore, targeted, 0, 120, 1.0))
 					{
 						BaseArmor arm = (BaseArmor)targeted;
-
                         from.SendMessage("You estimate this armor is at " + arm.HitPoints.ToString() + " of " + arm.MaxHitPoints.ToString() + " durability.");
                     }
 
-					else
-					{
-						from.SendLocalizedMessage( 500353 ); // You are not certain...
-					}
+					else					
+						from.SendLocalizedMessage( 500353 ); // You are not certain...					
 				}
 
-				else
-				{
-					from.SendLocalizedMessage( 500352 ); // This is neither weapon nor armor.
-				}
+				else				
+					from.SendLocalizedMessage( 500352 ); // This is neither weapon nor armor.				
 			}
 		}
 	}

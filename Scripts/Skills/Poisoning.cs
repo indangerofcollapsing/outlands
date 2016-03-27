@@ -17,7 +17,6 @@ namespace Server.SkillHandlers
 		public static TimeSpan OnUse( Mobile m )
 		{
 			m.Target = new InternalTargetPoison();
-
 			m.SendLocalizedMessage( 502137 ); // Select the poison you wish to use
             		
 			return TimeSpan.FromSeconds( 5.0 );
@@ -37,10 +36,8 @@ namespace Server.SkillHandlers
 					from.Target = new InternalTarget( (BasePoisonPotion)targeted );
 				}
 
-				else // Not a Poison Potion
-				{
-					from.SendLocalizedMessage( 502139 ); // That is not a poison potion.
-				}
+				else		
+					from.SendLocalizedMessage( 502139 ); // That is not a poison potion.				
 			}
 
 			private class InternalTarget : Target
@@ -88,13 +85,9 @@ namespace Server.SkillHandlers
 						}
 					}
 
-					else // Target can't be poisoned
-					{
-						if ( Core.AOS )
-							from.SendLocalizedMessage( 1060204 ); // You cannot poison that! You can only poison infectious weapons, food or drink.
-						else
-							from.SendLocalizedMessage( 502145 ); // You cannot poison that! You can only poison bladed or piercing weapons, food or drink.
-					}
+					else
+						from.SendLocalizedMessage( 502145 ); // You cannot poison that! You can only poison bladed or piercing weapons, food or drink.
+					
 				}
 
 				private class InternalTimer : Timer
@@ -116,6 +109,8 @@ namespace Server.SkillHandlers
 
 					protected override void OnTick()
 					{
+                        m_From.NextSkillTime = Core.TickCount + (int)(SkillCooldown.PoisoningCooldown * 1000);
+
 						if ( m_From.CheckTargetSkill( SkillName.Poisoning, m_Target, m_MinSkill, m_MaxSkill, 1.0 ) )
 						{
 							if ( m_Target is Food )
@@ -127,20 +122,7 @@ namespace Server.SkillHandlers
 							{
 								((BaseWeapon)m_Target).Poison = m_Poison;
 								((BaseWeapon)m_Target).PoisonCharges = 18 - (m_Poison.Level * 2);
-                            }
-
-                            #region AOS - Not Used
-                            else if ( m_Target is FukiyaDarts )
-							{
-								((FukiyaDarts)m_Target).Poison = m_Poison;
-								((FukiyaDarts)m_Target).PoisonCharges = Math.Min( 18 - (m_Poison.Level * 2), ((FukiyaDarts)m_Target).UsesRemaining );
-							}
-							else if ( m_Target is Shuriken )
-							{
-								((Shuriken)m_Target).Poison = m_Poison;
-								((Shuriken)m_Target).PoisonCharges = Math.Min( 18 - (m_Poison.Level * 2), ((Shuriken)m_Target).UsesRemaining );
-                            }
-                            #endregion 
+                            }                            
 
                             m_From.SendLocalizedMessage( 1010517 ); // You apply the poison
 
@@ -151,8 +133,7 @@ namespace Server.SkillHandlers
 						}
 
 						else // Failed
-						{
-							// IPY : 5% of chance of getting poisoned if failed
+						{							
 							if ( Utility.Random( 20 ) == 0 )
 							{
 								m_From.SendLocalizedMessage( 502148 ); // You make a grave mistake while applying the poison.
@@ -161,24 +142,18 @@ namespace Server.SkillHandlers
 
 							else
 							{
-								if ( m_Target is Food )
-								{
-									m_From.SendLocalizedMessage( 1010518 ); // You fail to apply a sufficient dose of poison
-								}
+								if ( m_Target is Food )								
+									m_From.SendLocalizedMessage( 1010518 ); // You fail to apply a sufficient dose of poison								
 
 								else if ( m_Target is BaseWeapon )
 								{
 									BaseWeapon weapon = (BaseWeapon)m_Target;
 
-									if ( weapon.Type == WeaponType.Slashing )
-									{
-										m_From.SendLocalizedMessage( 1010516 ); // You fail to apply a sufficient dose of poison on the blade
-									}
+									if ( weapon.Type == WeaponType.Slashing )									
+										m_From.SendLocalizedMessage( 1010516 ); // You fail to apply a sufficient dose of poison on the blade									
 
-									else
-									{
-										m_From.SendLocalizedMessage( 1010518 ); // You fail to apply a sufficient dose of poison
-									}
+									else									
+										m_From.SendLocalizedMessage( 1010518 ); // You fail to apply a sufficient dose of poison									
 								}
 							}
 						}

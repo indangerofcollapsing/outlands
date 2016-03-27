@@ -760,7 +760,7 @@ namespace Server.Engines.Harvest
             base.OnHarvestFinished(from, tool, def, vein, bank, resource, harvested);
 
             from.RevealingAction();
-            from.NextSkillTime = Core.TickCount + 10000;
+            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.FishingCooldown * 1000);
         }
 
         public override object GetLock(Mobile from, Item tool, HarvestDefinition def, object toHarvest)

@@ -162,6 +162,7 @@ namespace Server.SkillHandlers
                         m_BeingTamed.Remove(m_Creature);
                         m_Tamer.NextSkillTime = Core.TickCount;
                         m_Creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502795, m_Tamer.NetState); // You are too far away to continue taming.
+                        
                         Stop();
                     }
 
@@ -170,6 +171,7 @@ namespace Server.SkillHandlers
                         m_BeingTamed.Remove(m_Creature);
                         m_Tamer.NextSkillTime = Core.TickCount;
                         m_Creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502796, m_Tamer.NetState); // You are dead, and cannot continue taming.
+                        
                         Stop();
                     }
 
@@ -178,6 +180,7 @@ namespace Server.SkillHandlers
                         m_BeingTamed.Remove(m_Creature);
                         m_Tamer.NextSkillTime = Core.TickCount;
                         m_Tamer.SendLocalizedMessage(1049654); // You do not have a clear path to the animal you are taming, and must cease your attempt.
+                        
                         Stop();
                     }
 
@@ -186,6 +189,7 @@ namespace Server.SkillHandlers
                         m_BeingTamed.Remove(m_Creature);
                         m_Tamer.NextSkillTime = Core.TickCount;
                         m_Creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1049655, m_Tamer.NetState); // That creature cannot be tamed.
+                        
                         Stop();
                     }
 
@@ -194,6 +198,7 @@ namespace Server.SkillHandlers
                         m_BeingTamed.Remove(m_Creature);
                         m_Tamer.NextSkillTime = Core.TickCount;
                         m_Creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1049655, m_Tamer.NetState); // That creature cannot be tamed.
+                        
                         Stop();
                     }
 
@@ -202,6 +207,7 @@ namespace Server.SkillHandlers
                         m_BeingTamed.Remove(m_Creature);
                         m_Tamer.NextSkillTime = Core.TickCount;
                         m_Creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502804, m_Tamer.NetState); // That animal looks tame already.
+                        
                         Stop();
                     }
 
@@ -218,6 +224,7 @@ namespace Server.SkillHandlers
                         m_BeingTamed.Remove(m_Creature);
                         m_Tamer.NextSkillTime = Core.TickCount;
                         m_Creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1054025, m_Tamer.NetState); // You must subdue this creature before you can tame it!
+                        
                         Stop();
                     }
 
@@ -226,6 +233,7 @@ namespace Server.SkillHandlers
                         m_BeingTamed.Remove(m_Creature);
                         m_Tamer.NextSkillTime = Core.TickCount;
                         m_Creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502794, m_Tamer.NetState); // The animal is too angry to continue taming.
+
                         Stop();
                     }
 

@@ -36,6 +36,8 @@ namespace Server.SkillHandlers
 			{
 				if ( target is Mobile )
 				{
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ForensicsCooldown * 1000);
+
 					if ( from.CheckTargetSkill( SkillName.Forensics, target, 40.0, 100.0, 1.0 ) )
 					{
 						if ( target is PlayerMobile && ((PlayerMobile)target).NpcGuild == NpcGuild.ThievesGuild )
@@ -106,6 +108,8 @@ namespace Server.SkillHandlers
 
                 else if (target is Corpse)
                 {
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ForensicsCooldown * 1000);
+
                     if (from.CheckTargetSkill(SkillName.Forensics, target, 0.0, 100.0, 1.0))
                     {
                         Corpse c = (Corpse)target;
@@ -159,6 +163,8 @@ namespace Server.SkillHandlers
                             from.SendMessage("You do not have enough forensics evaluation skill to make an appropriate research attempt on that.");
                             return;
                         }
+
+                        from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ForensicsCooldown * 1000);
 
                         if (from.CheckSkill(SkillName.Forensics, 95, 120, 1.0))
                         {

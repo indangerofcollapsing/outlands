@@ -23,7 +23,7 @@ namespace Server.SkillHandlers
 
                 m.Target = new InternalTarget();
 
-                return TimeSpan.FromSeconds(3.0);
+                return TimeSpan.FromSeconds(SkillCooldown.RemoveTrapCooldown);
             }
 
 			if ( m.Skills[SkillName.Lockpicking].Value < 50 )			
@@ -35,7 +35,7 @@ namespace Server.SkillHandlers
 				m.SendLocalizedMessage( 502368 ); // Wich trap will you attempt to disarm?
 			}
 
-			return TimeSpan.FromSeconds( 3.0 );
+			return TimeSpan.FromSeconds( SkillCooldown.RemoveTrapCooldown );
 		}
 
 		private class InternalTarget : Target
@@ -102,6 +102,8 @@ namespace Server.SkillHandlers
 
                         if (from.Skills.RemoveTrap.Value < minSkill && (int)tchest.Level == 1)
                         {
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.RemoveTrapCooldown * 1000);
+
                             from.CheckTargetSkill(SkillName.RemoveTrap, targ, 0, 100, 1.0);
                             from.SendMessage("You fail to safely remove the trap.");
 
@@ -114,8 +116,11 @@ namespace Server.SkillHandlers
                             return;
                         }
 
+                        from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.RemoveTrapCooldown * 1000);
+
                         if (from.CheckTargetSkill(SkillName.RemoveTrap, targ, minSkill, maxSkill, 1.0))                        
-                            RemoveTrap(from, targ);                        
+                            RemoveTrap(from, targ);    
+                    
                         else                 
 						    from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off					
                     }
@@ -134,17 +139,26 @@ namespace Server.SkillHandlers
                             return;
                         }
 
+                        from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.RemoveTrapCooldown * 1000);
+
                         if (from.CheckTargetSkill(SkillName.RemoveTrap, targ, minSkill, maxSkill, 1.0))                        
-                            RemoveTrap(from, targ);                        
+                            RemoveTrap(from, targ); 
+                       
                         else                 
 						    from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off		
                     }
 
-					else if ( from.CheckTargetSkill( SkillName.RemoveTrap, targ, targ.TrapPower, targ.TrapPower + 40, 1.0 ) )					
+                    else if (from.CheckTargetSkill(SkillName.RemoveTrap, targ, targ.TrapPower, targ.TrapPower + 40, 1.0))
+                    {
                         RemoveTrap(from, targ);
-					
-					else					
-						from.SendLocalizedMessage( 502372 ); // You fail to disarm the trap... but you don't set it off					
+                        from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.RemoveTrapCooldown * 1000);
+                    }
+
+                    else
+                    {
+                        from.SendLocalizedMessage(502372); // You fail to disarm the trap... but you don't set it off		
+                        from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.RemoveTrapCooldown * 1000);
+                    }
 				}
 				
 				else				

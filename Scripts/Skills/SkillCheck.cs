@@ -7,6 +7,7 @@ using Server.Spells;
 using Server.Achievements;
 using Server.Regions;
 using Server.Network;
+using Server.SkillHandlers;
 
 namespace Server.Misc
 {
@@ -32,11 +33,31 @@ namespace Server.Misc
             Int 
         }
 
+        private static SkillName[] m_CombatSkills = new SkillName[]
+		{
+            SkillName.Archery, 
+            SkillName.Fencing, 
+            SkillName.Macing, 
+            SkillName.Swords,
+            SkillName.Wrestling, 
+            SkillName.Tactics
+        };
+
+        public static bool IsCombatSkill(SkillName skillName)
+        {
+            for (int a = 0; a < m_CombatSkills.Length; a++)
+            {
+                if (m_CombatSkills[a] == skillName)                
+                    return true;                
+            }
+
+            return false;
+        }
+
         public static double SkillSpeedScalar(Mobile from, SkillName skillName)
         {
             //Weapon Swings
-            if (skillName == SkillName.Archery || skillName == SkillName.Fencing || skillName == SkillName.Macing ||
-                skillName == SkillName.Swords || skillName == SkillName.Tactics || skillName == SkillName.Wrestling)
+            if (IsCombatSkill(skillName))
             {
                 int weaponSpeed = BaseWeapon.PlayerFistSpeed;
 
@@ -44,7 +65,8 @@ namespace Server.Misc
                 {
                     BaseWeapon weapon = from.Weapon as BaseWeapon;
 
-                    weaponSpeed = weapon.Speed;
+                    if (!(weapon is Fists))
+                        weaponSpeed = weapon.Speed;
                 }
                                 
                 double playerSwing = 15000.0 / (int)(((double)from.Stam + 100) * weaponSpeed);
@@ -55,6 +77,54 @@ namespace Server.Misc
                 return weaponSwingScalar;
             }
 
+            //Other Skills
+            switch (skillName)
+            {
+                case SkillName.Parry: return SkillCooldown.ParryCooldown; break;
+                case SkillName.MagicResist: return SkillCooldown.MagicResistCooldown; break;
+                case SkillName.Healing: return (SkillCooldown.HealingSelfCooldown + SkillCooldown.HealingOtherCooldown) / 2; break;
+                case SkillName.Anatomy: return SkillCooldown.AnatomyCooldown; break;
+                case SkillName.Veterinary: return SkillCooldown.HealingOtherCooldown; break;
+                case SkillName.AnimalLore: return SkillCooldown.AnimalLoreCooldown; break;
+                case SkillName.Herding: return (SkillCooldown.HerdingSuccessCooldown + SkillCooldown.HerdingFailureCooldown) / 2; break;
+                case SkillName.ArmsLore: return SkillCooldown.ArmsLoreCooldown; break;
+                case SkillName.Magery: return SkillCooldown.MageryCooldown; break;
+                case SkillName.EvalInt: return SkillCooldown.EvalIntCooldown; break;
+                case SkillName.Meditation: return SkillCooldown.MeditationValidCooldown; break;
+                case SkillName.Musicianship: return SkillCooldown.MusicianshipCooldown; break;
+                case SkillName.Provocation: return (SkillCooldown.ProvocationSuccessCooldown + SkillCooldown.ProvocationFailureCooldown) / 2; break;
+                case SkillName.Peacemaking: return (SkillCooldown.PeacemakingSuccessCooldown + SkillCooldown.PeacemakingFailureCooldown) / 2; break;
+                case SkillName.Discordance: return (SkillCooldown.DiscordanceSuccessCooldown + SkillCooldown.DiscordanceFailureCooldown) / 2; break;
+                case SkillName.SpiritSpeak: return SkillCooldown.SpiritSpeakCooldown; break;
+                case SkillName.Tracking: return SkillCooldown.TrackingCooldown; break;
+                case SkillName.Forensics: return SkillCooldown.ForensicsCooldown; break;
+                case SkillName.Hiding: return SkillCooldown.HidingCooldown; break;
+                case SkillName.Stealth: return SkillCooldown.StealthCooldown; break;
+                case SkillName.DetectHidden: return SkillCooldown.DetectHiddenCooldown; break;
+                case SkillName.Lockpicking: return SkillCooldown.LockpickingCooldown; break;
+                case SkillName.RemoveTrap: return SkillCooldown.RemoveTrapCooldown; break;
+                case SkillName.AnimalTaming: return SkillCooldown.AnimalTamingCooldown; break;
+
+                case SkillName.Blacksmith: return SkillCooldown.BlacksmithCooldown; break;
+                case SkillName.Carpentry: return SkillCooldown.CarpentryCooldown; break;
+                case SkillName.Tailoring: return SkillCooldown.TailoringCooldown; break;
+                case SkillName.Tinkering: return SkillCooldown.TinkeringCooldown; break;
+                case SkillName.Alchemy: return SkillCooldown.AlchemyCooldown; break;
+                case SkillName.Cartography: return SkillCooldown.CartographyCooldown; break;
+                case SkillName.Cooking: return SkillCooldown.CookingCooldown; break;
+                case SkillName.Poisoning: return SkillCooldown.PoisoningCooldown; break;
+                case SkillName.Begging: return (SkillCooldown.BeggingSuccessCooldown + SkillCooldown.BeggingFailureCooldown) / 2; break;
+                case SkillName.Camping: return SkillCooldown.CampingCooldown; break;
+                case SkillName.Fishing: return SkillCooldown.FishingCooldown; break;
+                case SkillName.Inscribe: return SkillCooldown.InscribeCooldown; break;
+                case SkillName.ItemID: return SkillCooldown.ItemIDCooldown; break;
+                case SkillName.Lumberjacking: return SkillCooldown.LumberjackingCooldown; break;
+                case SkillName.Mining: return SkillCooldown.MiningCooldown; break;
+                case SkillName.Snooping: return SkillCooldown.SnoopingCooldown; break;
+                case SkillName.Stealing: return SkillCooldown.StealingCooldown; break;
+                case SkillName.TasteID: return SkillCooldown.TasteIDCooldown; break;
+            }
+
             return 1.0;
         }
         
@@ -63,36 +133,36 @@ namespace Server.Misc
             switch (skillName)
             {
                 //Dungeon Boosted
-                case SkillName.Archery:         return 2.0; break;
-                case SkillName.Fencing:         return 2.0; break;
-                case SkillName.Macing:          return 2.0; break;
-                case SkillName.Swords:          return 2.0; break;
-                case SkillName.Wrestling:       return 2.0; break;
-                case SkillName.Tactics:         return 2.0; break;
-                case SkillName.Parry:           return 2.0; break;
-                case SkillName.MagicResist:     return 2.0; break;
-                case SkillName.Healing:         return 2.0; break;
-                case SkillName.Anatomy:         return 2.0; break;
-                case SkillName.Veterinary:      return 2.0; break;
-                case SkillName.AnimalLore:      return 2.0; break;
-                case SkillName.Herding:         return 2.0; break;
-                case SkillName.ArmsLore:        return 2.0; break;
-                case SkillName.Magery:          return 2.0; break;
-                case SkillName.EvalInt:         return 2.0; break;
-                case SkillName.Meditation:      return 2.0; break;
-                case SkillName.Musicianship:    return 2.0; break;
-                case SkillName.Provocation:     return 2.0; break;
-                case SkillName.Peacemaking:     return 2.0; break;
-                case SkillName.Discordance:     return 2.0; break;
-                case SkillName.SpiritSpeak:     return 2.0; break;
-                case SkillName.Tracking:        return 2.0; break;
-                case SkillName.Forensics:       return 2.0; break;
-                case SkillName.Hiding:          return 2.0; break;
-                case SkillName.Stealth:         return 2.0; break;
-                case SkillName.DetectHidden:    return 2.0; break;
-                case SkillName.Lockpicking:     return 2.0; break;
-                case SkillName.RemoveTrap:      return 2.0; break;
-                case SkillName.AnimalTaming:    return 2.0; break;
+                case SkillName.Archery:         return 4.0; break;
+                case SkillName.Fencing:         return 4.0; break;
+                case SkillName.Macing:          return 4.0; break;
+                case SkillName.Swords:          return 4.0; break;
+                case SkillName.Wrestling:       return 4.0; break;
+                case SkillName.Tactics:         return 4.0; break;
+                case SkillName.Parry:           return 4.0; break;
+                case SkillName.MagicResist:     return 4.0; break;
+                case SkillName.Healing:         return 4.0; break;
+                case SkillName.Anatomy:         return 4.0; break;
+                case SkillName.Veterinary:      return 4.0; break;
+                case SkillName.AnimalLore:      return 4.0; break;
+                case SkillName.Herding:         return 4.0; break;
+                case SkillName.ArmsLore:        return 4.0; break;
+                case SkillName.Magery:          return 4.0; break;
+                case SkillName.EvalInt:         return 4.0; break;
+                case SkillName.Meditation:      return 4.0; break;
+                case SkillName.Musicianship:    return 4.0; break;
+                case SkillName.Provocation:     return 4.0; break;
+                case SkillName.Peacemaking:     return 4.0; break;
+                case SkillName.Discordance:     return 4.0; break;
+                case SkillName.SpiritSpeak:     return 4.0; break;
+                case SkillName.Tracking:        return 4.0; break;
+                case SkillName.Forensics:       return 4.0; break;
+                case SkillName.Hiding:          return 4.0; break;
+                case SkillName.Stealth:         return 4.0; break;
+                case SkillName.DetectHidden:    return 4.0; break;
+                case SkillName.Lockpicking:     return 4.0; break;
+                case SkillName.RemoveTrap:      return 4.0; break;
+                case SkillName.AnimalTaming:    return 4.0; break;
                 
                 //No Boost
                 case SkillName.Blacksmith:      return 1.0; break;
@@ -120,9 +190,10 @@ namespace Server.Misc
 
         public static double StatGainCooldown(double statValue)
         {
-            double statGainCooldown = 0; //In Minutes
+            double statGainCooldown = 0; //Minutes That Must Pass Between Stat Gain Increases For Each Stat
 
-            double[] cooldown = new double[] {          .05, .05,    //0-5, 5-10
+            double[] cooldown = new double[] {          
+                                                        .05, .05,    //0-5, 5-10
                                                         .1,  .15,    //10-15, 15-20
                                                         .2,  .25,    //20-25, 25-30
                                                         .3,  .35,    //30-35, 30-40
@@ -151,9 +222,10 @@ namespace Server.Misc
 
         public static double SkillGainCooldown(SkillName skillName, double skillValue)
         {
-            double skillGainCooldown = 0; //In Minutes
+            double skillGainCooldown = 0; //Minutes That Must Pass Between Skill Gain Increases For Each Skill
 
-            double[] cooldown = new double[] {          .05, .05,    //0-5, 5-10
+            double[] cooldown = new double[] {          
+                                                        .05, .05,    //0-5, 5-10
                                                         .1,  .15,    //10-15, 15-20
                                                         .2,  .25,    //20-25, 25-30
                                                         .3,  .35,    //30-35, 30-40
@@ -173,7 +245,8 @@ namespace Server.Misc
            
             if (craftingSKill)
             {
-                cooldown = new double[] {               .05,  .05,   //0-5, 5-10
+                cooldown = new double[] {               
+                                                        .05,  .05,   //0-5, 5-10
                                                         .1,   .1,    //10-15, 15-20
                                                         .15,  .15,   //20-25, 25-30
                                                         .2,   .2,    //30-35, 30-40
@@ -329,8 +402,9 @@ namespace Server.Misc
             if (from.Region is DungeonRegion || from.Region is NewbieDungeonRegion)
                 dungeonModifier = DungeonSkillScalar(skillName);
 
-            //Skill Speed
-            skillSpeedModifier = SkillSpeedScalar(from, skillName);
+            //If Weapon Skill: Scale for Relative Speed
+            if (IsCombatSkill(skillName))
+                skillSpeedModifier = SkillSpeedScalar(from, skillName);
             
             //Housing
             BaseHouse house = BaseHouse.FindHouseAt(from.Location, from.Map, 16);
@@ -375,19 +449,19 @@ namespace Server.Misc
             switch (stat)
             {
                 case Stat.Str:
-                    if (from.NextStrGainAllowed <= DateTime.UtcNow)
-                        return true;
-                    break;
+                    if (from.NextStrGainAllowed > DateTime.UtcNow)
+                        return false;
+                break;
 
                 case Stat.Dex:
-                    if (from.NextDexGainAllowed <= DateTime.UtcNow)
-                        return true;
-                    break;
+                    if (from.NextDexGainAllowed > DateTime.UtcNow)
+                        return false;
+                break;
 
                 case Stat.Int:
-                    if (from.NextIntGainAllowed <= DateTime.UtcNow)
-                        return true;
-                    break;
+                    if (from.NextIntGainAllowed > DateTime.UtcNow)
+                        return false;
+                break;
             }
 
             return true;
@@ -420,9 +494,11 @@ namespace Server.Misc
         {
             SkillInfo info = skill.Info;
 
-            double strGainChance = info.StrGain / 50;
-            double dexGainChance = info.DexGain / 50;
-            double intGainChance = info.IntGain / 50;
+            double skillSpeedScalar = SkillSpeedScalar(from, skill.SkillName);
+
+            double strGainChance = info.StrGain * skillSpeedScalar;
+            double dexGainChance = info.DexGain * skillSpeedScalar;
+            double intGainChance = info.IntGain * skillSpeedScalar;
             
             if (from.StrLock == StatLockType.Up && strGainChance > Utility.RandomDouble())
                 GainStat(from, Stat.Str);
@@ -613,7 +689,8 @@ namespace Server.Misc
 
         private static SkillGainRange[] m_SkillGainRanges = new SkillGainRange[49]
 		{
-            new SkillGainRange(SkillName.Alchemy, new double[]{     10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Alchemy, new double[]{     
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -626,7 +703,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.Anatomy, new double[]{     10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Anatomy, new double[]{     
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -639,7 +717,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.AnimalLore, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.AnimalLore, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -652,7 +731,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.ItemID, new double[]{      10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.ItemID, new double[]{      
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -665,7 +745,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-                new SkillGainRange(SkillName.ArmsLore, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.ArmsLore, new double[]{
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -678,7 +759,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-                new SkillGainRange(SkillName.Parry, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Parry, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -691,7 +773,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-                new SkillGainRange(SkillName.Begging, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Begging, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -704,7 +787,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-                new SkillGainRange(SkillName.Blacksmith, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Blacksmith, new double[]{ 
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -717,7 +801,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.Bowcraft, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Bowcraft, new double[]{ 
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -730,7 +815,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.Peacemaking, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Peacemaking, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -743,7 +829,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.Camping, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Camping, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -756,7 +843,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.Carpentry, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Carpentry, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -769,7 +857,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.Cartography, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Cartography, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -782,7 +871,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.Cooking, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Cooking, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -795,7 +885,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.DetectHidden, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.DetectHidden, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -808,7 +899,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.Discordance, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Discordance, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -821,7 +913,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.EvalInt, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.EvalInt, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -834,7 +927,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-            new SkillGainRange(SkillName.Healing, new double[]{  10, 10,     //0-5, 5-10
+            new SkillGainRange(SkillName.Healing, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -847,7 +941,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-         new SkillGainRange(SkillName.Fishing, new double[]{  10, 10,     //0-5, 5-10
+         new SkillGainRange(SkillName.Fishing, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -860,7 +955,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-         new SkillGainRange(SkillName.Forensics, new double[]{  10, 10,     //0-5, 5-10
+         new SkillGainRange(SkillName.Forensics, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -873,7 +969,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Herding, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Herding, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -886,7 +983,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Hiding, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Hiding, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -899,7 +997,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Provocation, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Provocation, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -912,7 +1011,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Inscribe, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Inscribe, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -925,7 +1025,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Lockpicking, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Lockpicking, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -939,7 +1040,8 @@ namespace Server.Misc
                                                                     10, 10}),   //110-115, 115-120
 
         
-        new SkillGainRange(SkillName.Magery, new double[]{           10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Magery, new double[]{          
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -952,7 +1054,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.MagicResist, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.MagicResist, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -965,7 +1068,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Tactics, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Tactics, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -978,7 +1082,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Snooping, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Snooping, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -991,7 +1096,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Musicianship, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Musicianship, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1004,7 +1110,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Poisoning, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Poisoning, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1017,7 +1124,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Archery, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Archery, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1030,7 +1138,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120 
    
-        new SkillGainRange(SkillName.SpiritSpeak, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.SpiritSpeak, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1043,7 +1152,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Stealing, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Stealing, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1056,7 +1166,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Tailoring, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Tailoring, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1069,7 +1180,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-         new SkillGainRange(SkillName.AnimalTaming, new double[]{  10, 10,     //0-5, 5-10
+         new SkillGainRange(SkillName.AnimalTaming, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1082,7 +1194,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.TasteID, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.TasteID, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1095,7 +1208,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Tinkering, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Tinkering, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1108,7 +1222,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-         new SkillGainRange(SkillName.Tracking, new double[]{  10, 10,     //0-5, 5-10
+         new SkillGainRange(SkillName.Tracking, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1121,7 +1236,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Veterinary, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Veterinary, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1134,7 +1250,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Swords, new double[]{          1, 1,     //0-5, 5-10
+        new SkillGainRange(SkillName.Swords, new double[]{          
+                                                                    1, 1,     //0-5, 5-10
                                                                     2, 2,     //10-15, 15-20
                                                                     3, 3,     //20-25, 25-30
                                                                     4, 4,     //30-35, 30-40
@@ -1147,7 +1264,8 @@ namespace Server.Misc
                                                                     35, 40,     //100-105, 105-110
                                                                     45, 50}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Macing, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Macing, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1160,7 +1278,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.Fencing, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.Fencing, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1173,7 +1292,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-    new SkillGainRange(SkillName.Wrestling, new double[]{  10, 10,     //0-5, 5-10
+    new SkillGainRange(SkillName.Wrestling, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1186,7 +1306,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-    new SkillGainRange(SkillName.Lumberjacking, new double[]{  10, 10,     //0-5, 5-10
+    new SkillGainRange(SkillName.Lumberjacking, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1199,7 +1320,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-    new SkillGainRange(SkillName.Mining, new double[]{  10, 10,     //0-5, 5-10
+    new SkillGainRange(SkillName.Mining, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1212,7 +1334,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-    new SkillGainRange(SkillName.Meditation, new double[]{  10, 10,     //0-5, 5-10
+    new SkillGainRange(SkillName.Meditation, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1225,7 +1348,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-    new SkillGainRange(SkillName.Stealth, new double[]{  10, 10,     //0-5, 5-10
+    new SkillGainRange(SkillName.Stealth, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40
@@ -1238,7 +1362,8 @@ namespace Server.Misc
                                                                     10, 10,     //100-105, 105-110
                                                                     10, 10}),   //110-115, 115-120
 
-        new SkillGainRange(SkillName.RemoveTrap, new double[]{  10, 10,     //0-5, 5-10
+        new SkillGainRange(SkillName.RemoveTrap, new double[]{  
+                                                                    10, 10,     //0-5, 5-10
                                                                     10, 10,     //10-15, 15-20
                                                                     10, 10,     //20-25, 25-30
                                                                     10, 10,     //30-35, 30-40

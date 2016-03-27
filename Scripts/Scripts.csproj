@@ -1188,6 +1188,7 @@
     <Compile Include="Poker\PokerPlayer.cs" />
     <Compile Include="Items\PotionKegCombiningDeed.cs" />
     <Compile Include="PvELeaderboards\GoldCoinTracker.cs" />
+    <Compile Include="Skills\SkillCooldown.cs" />
     <Compile Include="UOACZ\Abilities\UOACZHumanAbilities.cs" />
     <Compile Include="UOACZ\Abilities\UOACZUndeadAbilities.cs" />
     <Compile Include="UOACZ\Customization\UOACZLotteryTicket.cs" />

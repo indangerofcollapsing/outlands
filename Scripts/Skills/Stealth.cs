@@ -26,7 +26,7 @@ namespace Server.SkillHandlers
                     pm.SendMessage("You must hide first using the Hiding skill.");
                     pm.RevealingAction();
 
-                    return TimeSpan.FromSeconds(10.0);
+                    return TimeSpan.FromSeconds(SkillCooldown.StealthCooldown);
                 }
             }
 
@@ -95,10 +95,10 @@ namespace Server.SkillHandlers
                     mobile.SendMessage("You begin to move quietly.");                    
 
                     mobile.BeginAction((typeof(Hiding)));
-                    Timer.DelayCall(TimeSpan.FromSeconds(9.9), delegate { mobile.EndAction(typeof(Hiding)); });
+                    Timer.DelayCall(TimeSpan.FromSeconds(SkillCooldown.StealthCooldown - .1), delegate { mobile.EndAction(typeof(Hiding)); });
 
                     mobile.BeginAction((typeof(Stealth)));
-                    Timer.DelayCall(TimeSpan.FromSeconds(9.9), delegate { mobile.EndAction(typeof(Stealth)); });
+                    Timer.DelayCall(TimeSpan.FromSeconds(SkillCooldown.StealthCooldown - .1), delegate { mobile.EndAction(typeof(Stealth)); });
 
                     mobile.m_StealthMovementTimer = null;
                     mobile.m_StealthMovementTimer = new Mobile.StealthMovementTimer(mobile);
@@ -108,7 +108,7 @@ namespace Server.SkillHandlers
                     mobile.m_HidingTimer = new Mobile.HidingTimer(mobile, DateTime.UtcNow, true);
                     mobile.m_HidingTimer.Start();
 
-                    return TimeSpan.FromSeconds(10.0);
+                    return TimeSpan.FromSeconds(SkillCooldown.StealthCooldown);
                 }
 
                 else
@@ -118,7 +118,7 @@ namespace Server.SkillHandlers
                 }
             }
 
-            return TimeSpan.FromSeconds(10.0);
+            return TimeSpan.FromSeconds(SkillCooldown.StealthCooldown);
         }
     }
 }

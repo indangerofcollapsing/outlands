@@ -13,18 +13,11 @@ using Server.Items;
 namespace Server.Items
 {
     public delegate void InstrumentPickedCallback(Mobile from, BaseInstrument instrument);
-
-    public enum InstrumentQuality
-    {
-        Low,
-        Regular,
-        Exceptional
-    }
-
+    
     public abstract class BaseInstrument : Item, ICraftable
     {
-        public virtual int InitMinUses { get { return 350; } }
-        public virtual int InitMaxUses { get { return 450; } }
+        public virtual int InitMinUses { get { return 200; } }
+        public virtual int InitMaxUses { get { return 300; } }
 
         public static double ExceptionalQualitySkillBonus = 5;
         public static double SlayerSkillBonus = 15;
@@ -52,45 +45,38 @@ namespace Server.Items
             get { return m_SlayerGroup; }
             set { m_SlayerGroup = value; InvalidateProperties(); }
         }
-
-        private InstrumentQuality m_Quality;   
-        [CommandProperty(AccessLevel.GameMaster)]
-        public InstrumentQuality Quality
-        {
-            get { return m_Quality; }
-            set { UnscaleUses(); m_Quality = value; InvalidateProperties(); ScaleUses(); }
-        }
-
+        
         private int m_UsesRemaining;
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
             get { return m_UsesRemaining; }
             set { m_UsesRemaining = value; InvalidateProperties(); }
-        }        
+        }
 
         public void ScaleUses()
         {
-            UsesRemaining = (UsesRemaining * GetUsesScalar()) / 100;
+            UsesRemaining = (int)((double)UsesRemaining * GetUsesScalar());
         }
 
         public void UnscaleUses()
         {
-            UsesRemaining = (UsesRemaining * 100) / GetUsesScalar();
+            UsesRemaining = (int)((double)UsesRemaining * GetUsesScalar());
         }
 
-        public int GetUsesScalar()
+        public double GetUsesScalar()
         {
-            if (m_Quality == InstrumentQuality.Exceptional)
-                return 200;
+            if (Quality == Quality.Exceptional)
+                return 1.5;
 
-            return 100;
+            return 1;
         }
 
         public void ConsumeUse(Mobile from)
         {
-            if (UsesRemaining > 1)            
-                --UsesRemaining;            
+            if (UsesRemaining > 1)
+                --UsesRemaining;
+
             else
             {
                 if (from != null)
@@ -125,7 +111,7 @@ namespace Server.Items
 
         public static int GetBardRange(Mobile bard, SkillName skill)
         {
-            return 8 + (int)(bard.Skills[skill].Value / 15);
+            return 12;
         }
 
         public static void PickInstrument(Mobile from, InstrumentPickedCallback callback)
@@ -180,21 +166,21 @@ namespace Server.Items
 
         public override void GetProperties(ObjectPropertyList list)
         {
-            int oldUses = m_UsesRemaining;           
+            int oldUses = m_UsesRemaining;
 
-            base.GetProperties(list);                        
+            base.GetProperties(list);
 
-            if (m_Quality == InstrumentQuality.Exceptional)
+            if (Quality == Quality.Exceptional)
                 list.Add(1060636); // exceptional
 
             list.Add(1060584, m_UsesRemaining.ToString()); // uses remaining: ~1_val~
 
             if (m_UsesRemaining != oldUses)
-                Timer.DelayCall(TimeSpan.Zero, new TimerCallback(InvalidateProperties));
+                Timer.DelayCall(TimeSpan.Zero, new TimerCallback(InvalidateProperties));            
         }
 
         public override void OnSingleClick(Mobile from)
-        {
+        {            
             ArrayList attrs = new ArrayList();
 
             if (DisplayLootType)
@@ -205,13 +191,13 @@ namespace Server.Items
                     attrs.Add(new EquipInfoAttribute(1049643)); // cursed
             }
 
-            if (m_Quality == InstrumentQuality.Exceptional)
-                attrs.Add(new EquipInfoAttribute(1018305 - (int)m_Quality));          
+            if (Quality == Quality.Exceptional)
+                attrs.Add(new EquipInfoAttribute(1018305 - (int)Quality));
 
             int number;
 
-            if (Name == null)            
-                number = LabelNumber;            
+            if (Name == null)
+                number = LabelNumber;
 
             else
             {
@@ -220,11 +206,11 @@ namespace Server.Items
             }
 
             //if (attrs.Count == 0 && CraftedBy == null  Name != null)
-                //return;
+            //return;
 
             EquipmentInfo eqInfo = new EquipmentInfo(number, CraftedBy, false, (EquipInfoAttribute[])attrs.ToArray(typeof(EquipInfoAttribute)));
 
-            from.Send(new DisplayEquipmentInfo(this, eqInfo));
+            from.Send(new DisplayEquipmentInfo(this, eqInfo));            
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -269,8 +255,7 @@ namespace Server.Items
         {
             private Mobile m_From;
 
-            public InternalTimer(Mobile from)
-                : base(TimeSpan.FromSeconds(6.0))
+            public InternalTimer(Mobile from): base(TimeSpan.FromSeconds(6.0))
             {
                 m_From = from;
                 Priority = TimerPriority.TwoFiftyMS;
@@ -284,7 +269,7 @@ namespace Server.Items
 
         public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue)
         {
-            Quality = (InstrumentQuality)quality;
+            Quality = (Quality)quality;
 
             if (makersMark)
                 DisplayCrafter = true;
@@ -306,12 +291,12 @@ namespace Server.Items
             base.Serialize(writer);
 
             writer.Write((int)0); // version
-
-            writer.WriteEncodedInt((int)m_Quality);
-            writer.WriteEncodedInt((int)m_SlayerGroup);
-            writer.WriteEncodedInt((int)UsesRemaining);
-            writer.WriteEncodedInt((int)m_SuccessSound);
-            writer.WriteEncodedInt((int)m_FailureSound);
+            
+            //Version 0
+            writer.Write((int)m_SlayerGroup);
+            writer.Write(UsesRemaining);
+            writer.Write(m_SuccessSound);
+            writer.Write(m_FailureSound);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -323,12 +308,11 @@ namespace Server.Items
             //Version 0
             if (version >= 0)
             {
-                m_Quality = (InstrumentQuality)reader.ReadInt();
                 m_SlayerGroup = (SlayerGroupType)reader.ReadInt();
                 m_UsesRemaining = reader.ReadInt();
                 m_SuccessSound = reader.ReadInt();
                 m_FailureSound = reader.ReadInt();
             }
-        }        
+        }
     }
 }

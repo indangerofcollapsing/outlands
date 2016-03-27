@@ -30,7 +30,7 @@ namespace Server.SkillHandlers
 
                 if (mobile.m_HidingTimer != null)
                 {
-                    double secondsRemaining = ((mobile.m_HidingTimer.m_StartTime + TimeSpan.FromSeconds(10)) - DateTime.UtcNow).TotalSeconds;
+                    double secondsRemaining = ((mobile.m_HidingTimer.m_StartTime + TimeSpan.FromSeconds(SkillCooldown.HidingCooldown)) - DateTime.UtcNow).TotalSeconds;
                     
                     return TimeSpan.FromSeconds(secondsRemaining);
                 }
@@ -128,10 +128,10 @@ namespace Server.SkillHandlers
                         Spells.Sixth.InvisibilitySpell.RemoveTimer(mobile);
 
                     mobile.BeginAction((typeof(Hiding)));
-                    Timer.DelayCall(TimeSpan.FromSeconds(9.9), delegate { mobile.EndAction(typeof(Hiding)); });
+                    Timer.DelayCall(TimeSpan.FromSeconds(SkillCooldown.HidingCooldown - .1), delegate { mobile.EndAction(typeof(Hiding)); });
 
                     mobile.BeginAction((typeof(Stealth)));
-                    Timer.DelayCall(TimeSpan.FromSeconds(9.9), delegate { mobile.EndAction(typeof(Stealth)); });
+                    Timer.DelayCall(TimeSpan.FromSeconds(SkillCooldown.HidingCooldown - .1), delegate { mobile.EndAction(typeof(Stealth)); });
 
                     mobile.m_HidingTimer = null;
                     mobile.m_HidingTimer = new Mobile.HidingTimer(mobile, DateTime.UtcNow, false);
@@ -144,7 +144,7 @@ namespace Server.SkillHandlers
 					mobile.LocalOverheadMessage( MessageType.Regular, 0x22, 501241 ); // You can't seem to hide here.
 				}
 
-				return TimeSpan.FromSeconds( 10.0 );
+				return TimeSpan.FromSeconds( SkillCooldown.HidingCooldown );
 			}
 		}
 	}

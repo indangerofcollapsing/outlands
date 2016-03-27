@@ -21,68 +21,49 @@ namespace Server.SkillHandlers
             return false;
         }
 
-        public static TimeSpan OnUse(Mobile m)
+        public static TimeSpan OnUse(Mobile from)
         {
-            m.RevealingAction();
+            from.RevealingAction();
 
-            if (m.Target != null)
+            if (from.Target != null)
             {
-                m.SendLocalizedMessage(501845); // You are busy doing something else and cannot focus.
+                from.SendLocalizedMessage(501845); // You are busy doing something else and cannot focus.
 
-                return TimeSpan.FromSeconds(5.0);
+                return TimeSpan.FromSeconds(SkillCooldown.MeditationInvalidCooldown);
             }
-            else if (!Core.AOS && m.Hits < (m.HitsMax / 10)) // Less than 10% health
+
+            else if (from.Mana >= from.ManaMax)
             {
-                m.SendLocalizedMessage(501849); // The mind is strong but the body is weak.
+                from.SendLocalizedMessage(501846); // You are at peace.
 
-                return TimeSpan.FromSeconds(5.0);
+                return TimeSpan.FromSeconds(SkillCooldown.MeditationInvalidCooldown);
             }
-            else if (m.Mana >= m.ManaMax)
-            {
-                m.SendLocalizedMessage(501846); // You are at peace.
 
-                return TimeSpan.FromSeconds(Core.AOS ? 10.0 : 5.0);
-            }
-            else if (Core.AOS && Server.Misc.RegenRates.GetArmorOffset(m) > 0)
-            {
-                m.SendLocalizedMessage(500135); // Regenative forces cannot penetrate your armor!
-
-                return TimeSpan.FromSeconds(10.0);
-            }
             else
             {
-                Item oneHanded = m.FindItemOnLayer(Layer.OneHanded);
-                Item twoHanded = m.FindItemOnLayer(Layer.TwoHanded);
+                Item oneHanded = from.FindItemOnLayer(Layer.OneHanded);
+                Item twoHanded = from.FindItemOnLayer(Layer.TwoHanded);
 
-                if (Core.AOS && m.Player)
+                if (!CheckOkayHolding(oneHanded) || !CheckOkayHolding(twoHanded))
                 {
-                    if (!CheckOkayHolding(oneHanded))
-                        m.AddToBackpack(oneHanded);
-
-                    if (!CheckOkayHolding(twoHanded))
-                        m.AddToBackpack(twoHanded);
-                }
-                else if (!CheckOkayHolding(oneHanded) || !CheckOkayHolding(twoHanded))
-                {
-                    m.SendLocalizedMessage(502626); // Your hands must be free to cast spells or meditate.
+                    from.SendLocalizedMessage(502626); // Your hands must be free to cast spells or meditate.
 
                     return TimeSpan.FromSeconds(2.5);
                 }
 
-                if (m.CheckSkill(SkillName.Meditation, 0, 100, 1.0))
+                if (from.CheckSkill(SkillName.Meditation, 0, 100, 1.0))
                 {
-                    m.SendLocalizedMessage(501851); // You enter a meditative trance.
-                    m.Meditating = true;
+                    from.SendLocalizedMessage(501851); // You enter a meditative trance.
+                    from.Meditating = true;
 
-                    if (m.Player || m.Body.IsHuman)
-                        m.PlaySound(0xF9);
-                }
-                else
-                {
-                    m.SendLocalizedMessage(501850); // You cannot focus your concentration.
+                    if (from.Player || from.Body.IsHuman)
+                        from.PlaySound(0xF9);
                 }
 
-                return TimeSpan.FromSeconds(10.0);
+                else                
+                    from.SendLocalizedMessage(501850); // You cannot focus your concentration.                
+
+                return TimeSpan.FromSeconds(SkillCooldown.MeditationValidCooldown);
             }
         }
     }

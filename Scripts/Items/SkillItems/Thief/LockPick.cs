@@ -22,8 +22,7 @@ namespace Server.Items
     public class Lockpick : Item
     {
         [Constructable]
-        public Lockpick()
-            : this(1)
+        public Lockpick(): this(1)
         {
         }
 
@@ -58,6 +57,12 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
+            if (!from.BeginAction(typeof(Lockpick)))
+            {
+                from.SendMessage("You must wait a few moments before attempting to pick another lock.");
+                return;
+            }
+
             from.SendLocalizedMessage(502068); // What do you want to pick?
             from.Target = new InternalTarget(this);
         }
@@ -112,7 +117,15 @@ namespace Server.Items
                 if (targeted is ILockpickable)
                 {
                     Item item = (Item)targeted;
-                    from.Direction = from.GetDirectionTo(item);                    
+                    from.Direction = from.GetDirectionTo(item);
+
+                    from.BeginAction(typeof(Lockpick));
+
+                    Timer.DelayCall(TimeSpan.FromSeconds(SkillCooldown.LockpickingCooldown), delegate
+                    {
+                        if (from != null)
+                            from.EndAction(typeof(Lockpick));
+                    });
 
                     if (((ILockpickable)targeted).Locked)
                     {
@@ -127,10 +140,8 @@ namespace Server.Items
                     }
                 }
 
-                else
-                {
-                    from.SendLocalizedMessage(501666); // You can't unlock that!
-                }
+                else                
+                    from.SendLocalizedMessage(501666); // You can't unlock that!                
             }
 
             private class InternalTimer : Timer
@@ -139,8 +150,7 @@ namespace Server.Items
                 private ILockpickable m_Item;
                 private Lockpick m_Lockpick;
 
-                public InternalTimer(Mobile from, ILockpickable item, Lockpick lockpick)
-                    : base(TimeSpan.FromSeconds(3.0))
+                public InternalTimer(Mobile from, ILockpickable item, Lockpick lockpick): base(TimeSpan.FromSeconds(3.0))
                 {
                     m_From = from;
                     m_Item = item;

@@ -123,7 +123,7 @@ namespace Server.SkillHandlers
                                 m_Instrument.PlayInstrumentBadly(from);
                                 m_Instrument.ConsumeUse(from);
 
-                                from.NextSkillTime = Core.TickCount + 5000;
+                                from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationFailureCooldown * 1000);
 
                                 return;
                             }
@@ -139,8 +139,8 @@ namespace Server.SkillHandlers
 
                         double effectiveBardSkill = from.Skills[SkillName.Provocation].Value;
 
-                        if (m_Instrument.Quality == InstrumentQuality.Exceptional)
-                            effectiveBardSkill += BaseInstrument.ExceptionalQualitySkillBonus;
+                        //if (m_Instrument.Quality == Quality.Exceptional)
+                            //effectiveBardSkill += BaseInstrument.ExceptionalQualitySkillBonus;
 
                         //Slayer Bonuses
                         double firstCreatureBonus = 0; // m_Instrument.GetBonusesFor(bc_FirstCreature);
@@ -180,7 +180,7 @@ namespace Server.SkillHandlers
                             m_Instrument.ConsumeUse(from);
                             bc_FirstCreature.Provoke(from, bc_Target, true, false);
 
-                            from.NextSkillTime = Core.TickCount + 10000;
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationSuccessCooldown * 1000);
                         }
 
                         else
@@ -188,7 +188,7 @@ namespace Server.SkillHandlers
                             m_Instrument.PlayInstrumentBadly(from);
                             m_Instrument.ConsumeUse(from);
 
-                            from.NextSkillTime = Core.TickCount + 5000;
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationFailureCooldown * 1000);
 
                             string failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be beyond your skill.";
 
@@ -239,7 +239,7 @@ namespace Server.SkillHandlers
                                 m_Instrument.PlayInstrumentBadly(from);
                                 m_Instrument.ConsumeUse(from);
 
-                                from.NextSkillTime = Core.TickCount + 5000;
+                                from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationFailureCooldown * 1000);
 
                                 return;
                             }
@@ -248,8 +248,8 @@ namespace Server.SkillHandlers
 
                             double effectiveBardSkill = from.Skills[SkillName.Provocation].Value;
 
-                            if (m_Instrument.Quality == InstrumentQuality.Exceptional)
-                                effectiveBardSkill += BaseInstrument.ExceptionalQualitySkillBonus;
+                            //if (m_Instrument.Quality == Quality.Exceptional)
+                                //effectiveBardSkill += BaseInstrument.ExceptionalQualitySkillBonus;
 
                             effectiveBardSkill += 0; //m_Instrument.GetBonusesFor(bc_FirstCreature);
 
@@ -278,7 +278,7 @@ namespace Server.SkillHandlers
                                 m_Instrument.ConsumeUse(from);
                                 bc_FirstCreature.Provoke(from, player, true, false);
 
-                                from.NextSkillTime = Core.TickCount + 10000;
+                                from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationSuccessCooldown * 1000);
                             }
 
                             else
@@ -286,7 +286,7 @@ namespace Server.SkillHandlers
                                 m_Instrument.PlayInstrumentBadly(from);
                                 m_Instrument.ConsumeUse(from);
 
-                                from.NextSkillTime = Core.TickCount + 5000;
+                                from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationFailureCooldown * 1000);
 
                                 string failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be beyond your skill.";
 

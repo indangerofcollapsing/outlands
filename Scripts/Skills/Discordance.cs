@@ -187,7 +187,7 @@ namespace Server.SkillHandlers
                             m_Instrument.PlayInstrumentBadly(from);
                             m_Instrument.ConsumeUse(from);
 
-                            from.NextSkillTime = Core.TickCount + 5000;
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.DiscordanceFailureCooldown * 1000);
 
                             return;
                         }
@@ -195,9 +195,9 @@ namespace Server.SkillHandlers
                         double creatureDifficulty = bc_Target.InitialDifficulty;
 
                         double effectiveBardSkill = from.Skills[SkillName.Discordance].Value;
-
-                        if (m_Instrument.Quality == InstrumentQuality.Exceptional)
-                            effectiveBardSkill += 5;
+                        
+                        //if (m_Instrument.Quality == Quality.Exceptional)
+                            //effectiveBardSkill += 5;
 
                         effectiveBardSkill += 0; //m_Instrument.GetBonusesFor(bc_Target);
 
@@ -267,7 +267,7 @@ namespace Server.SkillHandlers
 
                             Discordance.InsertDiscordanceInfo(bc_Target, info);
 
-                            from.NextSkillTime = Core.TickCount + 10000;
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.DiscordanceSuccessCooldown * 1000);
                         }
 
                         else
@@ -275,7 +275,7 @@ namespace Server.SkillHandlers
                             m_Instrument.PlayInstrumentBadly(from);
                             m_Instrument.ConsumeUse(from);
 
-                            from.NextSkillTime = Core.TickCount + 5000;
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.DiscordanceFailureCooldown * 1000);
 
                             string failureMessage = "You fail to disrupt your opponent. You estimate the task to be beyond your skill.";
 

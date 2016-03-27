@@ -23,7 +23,7 @@ namespace Server.SkillHandlers
 
 		public static bool CheckSnoopAllowed( Mobile from, Mobile to )
 		{
-				Map map = from.Map;
+		    Map map = from.Map;
 
 			if ( to.Player )
 				return from.CanBeHarmful( to, false, true ); // normal restrictions
@@ -46,10 +46,10 @@ namespace Server.SkillHandlers
 
 		public static void Container_Snoop( Container cont, Mobile from )
 		{
-            //Added by IPY
-			if ( !from.BeginAction( typeof( Snooping ) ) ) return;
+			if (!from.BeginAction(typeof(Snooping)))
+                return;
 
-			Timer.DelayCall( TimeSpan.FromSeconds( 1.5 ), new TimerStateCallback( ReleaseSnoopingLock_Callback ), from );
+			Timer.DelayCall( TimeSpan.FromSeconds( SkillCooldown.SnoopingCooldown ), new TimerStateCallback( ReleaseSnoopingLock_Callback ), from );
 
 			if ( from.AccessLevel > AccessLevel.Player || from.InRange( cont.GetWorldLocation(), 1 ) )
 			{
@@ -93,6 +93,8 @@ namespace Server.SkillHandlers
 				if ( from.AccessLevel == AccessLevel.Player )
 					FameKarmaTitles.AwardKarma( from, -4, true );
 
+
+
 				if ( from.AccessLevel > AccessLevel.Player || from.CheckTargetSkill( SkillName.Snooping, cont, 0.0, 100.0, 1.0 ) )
 				{
 					if ( cont is TrapableContainer && ((TrapableContainer)cont).ExecuteTrap( from ) )
@@ -100,15 +102,13 @@ namespace Server.SkillHandlers
 
 					cont.DisplayTo( from );
 				}
-				else
-				{
-					from.SendLocalizedMessage( 500210 ); // You failed to peek into the container.
-				}
+
+				else				
+					from.SendLocalizedMessage( 500210 ); // You failed to peek into the container.				
 			}
-			else
-			{
-				from.SendLocalizedMessage( 500446 ); // That is too far away.
-			}
+
+			else			
+				from.SendLocalizedMessage( 500446 ); // That is too far away.			
 		}
 	}
 }

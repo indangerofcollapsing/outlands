@@ -42,23 +42,12 @@ namespace Server.Items
 			{
 				if (attacker.FindItemOnLayer(Layer.TwoHanded) != null)
 				{
-					switch (Utility.Random(4))
+					switch (Utility.RandomMinMax(1,4))
 					{
-						case 0:
-							animation = WeaponAnimation.Bash2H;
-							break;
-
-						case 1:
-							animation = WeaponAnimation.Bash2H;
-							break;
-
-						case 2:
-							animation = WeaponAnimation.Slash2H;
-							break;
-
-						case 3:
-							animation = WeaponAnimation.Pierce2H;
-							break;
+						case 1: animation = WeaponAnimation.Bash2H;break;
+						case 2: animation = WeaponAnimation.Bash2H;break;
+						case 3: animation = WeaponAnimation.Slash2H;break;
+						case 4: animation = WeaponAnimation.Pierce2H;break;
 					}
 				}
 			}
@@ -69,18 +58,13 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
-
-			if ( Weight == 2.0 )
-				Weight = 4.0;
 		}
 
 		public override void OnDoubleClick( Mobile from )
@@ -103,36 +87,24 @@ namespace Server.Items
 
 					if ( IsHerdable( bc ) )
 					{
-						if ( bc.Controlled )
-						{
+						if ( bc.Controlled )						
 							bc.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502467, from.NetState ); // That animal looks tame already.
-						}
+						
 						else 
 						{
 							from.SendLocalizedMessage( 502475 ); // Click where you wish the animal to go.
 							from.Target = new InternalTarget( bc );
 						}
 					}
-					else
-					{
-						from.SendLocalizedMessage( 502468 ); // That is not a herdable animal.
-					}
+
+					else					
+						from.SendLocalizedMessage( 502468 ); // That is not a herdable animal.					
 				}
-				else
-				{
-					from.SendLocalizedMessage( 502472 ); // You don't seem to be able to persuade that to move.
-				}
+
+				else				
+					from.SendLocalizedMessage( 502472 ); // You don't seem to be able to persuade that to move.				
 			}
-
-			private static Type[] m_ChampTamables = new Type[]
-			{
-				typeof( StrongMongbat ), typeof( Imp ), typeof( Scorpion ), typeof( GiantSpider ),
-				typeof( Snake ), typeof( LavaLizard ), typeof( Drake ), typeof( Dragon ),
-				typeof( Kirin ), typeof( Unicorn ), typeof( GiantRat ), typeof( Slime ),
-				typeof( DireWolf ), typeof( HellHound ), typeof( DeathwatchBeetle ), 
-				typeof( LesserHiryu ), typeof( Hiryu )
-			};
-
+            
 			private bool IsHerdable( BaseCreature bc )
 			{
 				if ( bc.IsParagon )
@@ -142,22 +114,6 @@ namespace Server.Items
 					return true;
 
 				Map map = bc.Map;
-
-				ChampionSpawnRegion region = Region.Find( bc.Home, map ) as ChampionSpawnRegion;
-
-				if ( region != null )
-				{
-					ChampionSpawn spawn = region.ChampionSpawn;
-
-					if ( spawn != null && spawn.IsChampionSpawn( bc ) )
-					{
-						Type t = bc.GetType();
-
-						foreach ( Type type in m_ChampTamables )
-							if ( type == t )
-								return true;
-					}
-				}
 
 				return false;
 			}
@@ -175,14 +131,18 @@ namespace Server.Items
 				{
 					if ( targ is IPoint2D )
 					{
-						if ( from.CheckTargetSkill( SkillName.Herding, m_Creature, 0, 100, 1.0 ) )
+						if ( from.CheckTargetSkill( SkillName.Herding, m_Creature, 0, 120, 1.0 ) )
 						{
 							m_Creature.TargetLocation = new Point2D( (IPoint2D)targ );
 							from.SendLocalizedMessage( 502479 ); // The animal walks where it was instructed to.
+
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.HerdingSuccessCooldown * 1000);
 						}
+
 						else
 						{
 							from.SendLocalizedMessage( 502472 ); // You don't seem to be able to persuade that to move.
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.HerdingFailureCooldown * 1000);
 						}
 					}
 				}

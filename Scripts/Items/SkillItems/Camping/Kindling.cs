@@ -44,6 +44,12 @@ namespace Server.Items
 			if ( !this.VerifyMove( from ) )
 				return;
 
+            if (!from.BeginAction(typeof(Kindling)))
+            {
+                from.SendMessage("You must wait a few moments before attempting to create another campfire.");
+                return;
+            }
+
 			if ( !from.InRange( this.GetWorldLocation(), 2 ) )
 			{
 				from.LocalOverheadMessage( MessageType.Regular, 0x3B2, 1019045 ); // I can't reach that.
@@ -77,6 +83,14 @@ namespace Server.Items
 
             else
             {
+                from.BeginAction(typeof(Kindling));
+
+                Timer.DelayCall(TimeSpan.FromSeconds(SkillCooldown.CampingCooldown), delegate
+                {
+                    if (from != null)
+                        from.EndAction(typeof(Kindling));
+                });
+
                 if (!from.CheckSkill(SkillName.Camping, 0.0, 120.0, 1.0))
                 {
                     from.SendLocalizedMessage(501696); // You fail to ignite the campfire.
@@ -125,10 +139,9 @@ namespace Server.Items
 
 			Point3D loc = new Point3D( x, y, from.Z );
 
-			if ( map.CanFit( loc, 1 ) && from.InLOS( loc ) )
-			{
+			if ( map.CanFit( loc, 1 ) && from.InLOS( loc ) )			
 				list.Add( loc );
-			}
+			
 			else
 			{
 				loc = new Point3D( x, y, map.GetAverageZ( x, y ) );

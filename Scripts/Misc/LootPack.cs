@@ -493,15 +493,7 @@ namespace Server
                         if (0.40 > Utility.RandomDouble() + (luckChance / 10000))
                             armor.Durability = (ArmorDurabilityLevel)GetRandomBonus(luckChance);
                     }
-                }
-
-                else if (item is BaseInstrument)
-                {
-
-                    BaseInstrument instr = (BaseInstrument)item;
-
-                    instr.Quality = InstrumentQuality.Regular;
-                }
+                }              
 
                 if (item.Stackable)
                     item.Amount = m_Quantity.Roll();

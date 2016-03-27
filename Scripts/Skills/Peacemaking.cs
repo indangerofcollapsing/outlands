@@ -80,7 +80,7 @@ namespace Server.SkillHandlers
                     {
                         if (!BaseInstrument.CheckMusicianship(from))
                         {
-                            from.NextSkillTime = Core.TickCount + 5000;
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.PeacemakingFailureCooldown * 1000);
 
                             from.SendMessage("You struggle with basic musicianship and your song has no effect.");
 
@@ -90,7 +90,7 @@ namespace Server.SkillHandlers
 
                         else if (!from.CheckSkill(SkillName.Peacemaking, 0.0, 120.0, 1.0))
                         {
-                            from.NextSkillTime = Core.TickCount + 5000;
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.PeacemakingFailureCooldown * 1000);
 
                             from.SendLocalizedMessage(500613); // You attempt to calm everyone, but fail.
 
@@ -100,13 +100,7 @@ namespace Server.SkillHandlers
 
                         else
                         {
-                            from.NextSkillTime = Core.TickCount + 10000;
-                            ////Set cool down base on the tune/peacemaking mode
-                            ////If this is a crowd control mode, then set to 6 sec, otherwise set to 10 sec as usual.
-                            //if (from is PlayerMobile && ((PlayerMobile)from).PeacemakingMode == PeacemakingModeEnum.CrowdControl)
-                            //    from.NextSkillTime = Core.TickCount + 6000;
-                            //else
-                            //from.NextSkillTime = Core.TickCount + 10000;
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.PeacemakingSuccessCooldown * 1000);
 
                             m_Instrument.PlayInstrumentWell(from);
                             m_Instrument.ConsumeUse(from);
@@ -213,8 +207,8 @@ namespace Server.SkillHandlers
 
                             m_Instrument.PlayInstrumentBadly(from);
                             m_Instrument.ConsumeUse(from);
-
-                            from.NextSkillTime = Core.TickCount + 5000;
+                            
+                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.PeacemakingFailureCooldown * 1000);
                         }
 
                         else
@@ -228,8 +222,8 @@ namespace Server.SkillHandlers
 
                             double effectiveBardSkill = from.Skills[SkillName.Peacemaking].Value;
 
-                            if (m_Instrument.Quality == InstrumentQuality.Exceptional)
-                                effectiveBardSkill += 5;
+                            //if (m_Instrument.Quality == Quality.Exceptional)
+                                //effectiveBardSkill += 5;
 
                             effectiveBardSkill += 0; //m_Instrument.GetBonusesFor(target);
 
@@ -260,7 +254,7 @@ namespace Server.SkillHandlers
                                 m_Instrument.PlayInstrumentWell(from);
                                 m_Instrument.ConsumeUse(from);
 
-                                from.NextSkillTime = Core.TickCount + 10000;
+                                from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.PeacemakingSuccessCooldown * 1000);
 
                                 /*
 
@@ -305,8 +299,8 @@ namespace Server.SkillHandlers
                             {
                                 m_Instrument.PlayInstrumentBadly(from);
                                 m_Instrument.ConsumeUse(from);
-
-                                from.NextSkillTime = Core.TickCount + 5000;
+                                
+                                from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.PeacemakingFailureCooldown * 1000);
 
                                 string failureMessage = "You fail to pacify your opponent. You estimate the task to be beyond your skill.";
 

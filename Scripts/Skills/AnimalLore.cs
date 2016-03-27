@@ -47,24 +47,35 @@ namespace Server.SkillHandlers
                     if (bc_Creature.Controlled && bc_Creature.ControlMaster == from)
                         gumpSuccess = true;
 
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.AnimalLoreCooldown * 1000);
+
                     //Passive Skill Check
                     if (from.CheckTargetSkill(SkillName.AnimalLore, bc_Creature, 0.0, 120.0, 1.0))
                     {
-                        try {                
+                        try
+                        {                
                             from.SendGump(new AnimalLoreGump(bc_Creature));
-                        } catch (Exception ex) {
+                        } 
+
+                        catch (Exception ex)
+                        {
                             Console.WriteLine(ex.Message);
                         }
+
                         gumpSuccess = false;
                     }
 
                     else if (!gumpSuccess)
                         from.SendMessage("You can't think of anything in particular about that creature.");
 
-                    try {
+                    try
+                    {
                         if (gumpSuccess)
                             from.SendGump(new AnimalLoreGump(bc_Creature));
-                    } catch (Exception ex) {
+                    } 
+
+                    catch (Exception ex) 
+                    {
                         Console.WriteLine(ex.Message);
                     }
                 }
@@ -77,8 +88,7 @@ namespace Server.SkillHandlers
 
     public class AnimalLoreGump : Gump
     {
-        public AnimalLoreGump(BaseCreature bc_Creature)
-            : base(50, 50)
+        public AnimalLoreGump(BaseCreature bc_Creature): base(50, 50)
         {
             this.Closable = true;
             this.Disposable = true;

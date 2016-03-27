@@ -32,10 +32,8 @@ namespace Server.SkillHandlers
 
 			protected override void OnTarget( Mobile from, object targeted )
 			{
-				if ( targeted is Mobile )
-				{
-					from.SendLocalizedMessage( 502816 ); // You feel that such an action would be inappropriate.
-				}
+				if ( targeted is Mobile )				
+					from.SendLocalizedMessage( 502816 ); // You feel that such an action would be inappropriate.				
 
                 else if (targeted is CustomAlchemyPotion)
                 {
@@ -72,6 +70,8 @@ namespace Server.SkillHandlers
                         break;
                     }
 
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.TasteIDCooldown * 1000);
+
                     if (from.CheckTargetSkill(SkillName.TasteID, 0, 100, 1.0))
                     {
                         customAlchemyPotion.Identified = true;
@@ -91,24 +91,21 @@ namespace Server.SkillHandlers
                 {
                     Food food = (Food)targeted;
 
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.TasteIDCooldown * 1000);
+
                     if (from.CheckTargetSkill(SkillName.TasteID, food, 0, 100, 1.0))
                     {
-                        if (food.Poison != null)
-                        {
+                        if (food.Poison != null)                        
                             food.SendLocalizedMessageTo(from, 1038284); // It appears to have poison smeared on it.
-                        }
+                        
                         else
-                        {
-                            // No poison on the food
-                            food.SendLocalizedMessageTo(from, 1010600); // You detect nothing unusual about this substance.
-                        }
+                            food.SendLocalizedMessageTo(from, 1010600); // You detect nothing unusual about this substance.                        
                     }
+
                     else
-                    {
-                        // Skill check failed
-                        food.SendLocalizedMessageTo(from, 502823); // You cannot discern anything about this substance.
-                    }
+                        food.SendLocalizedMessageTo(from, 502823); // You cannot discern anything about this substance.                    
                 }
+
                 else if (targeted is BasePotion)
                 {
                     BasePotion potion = (BasePotion)targeted;
@@ -116,20 +113,21 @@ namespace Server.SkillHandlers
                     potion.SendLocalizedMessageTo(from, 502813); // You already know what kind of potion that is.
                     potion.SendLocalizedMessageTo(from, potion.LabelNumber);
                 }
+
                 else if (targeted is PotionKeg)
                 {
                     PotionKeg keg = (PotionKeg)targeted;
 
-                    if (keg.Held <= 0)
-                    {
+                    if (keg.Held <= 0)                    
                         keg.SendLocalizedMessageTo(from, 502228); // There is nothing in the keg to taste!
-                    }
+                    
                     else
                     {
                         keg.SendLocalizedMessageTo(from, 502229); // You are already familiar with this keg's contents.
                         keg.SendLocalizedMessageTo(from, keg.LabelNumber);
                     }
                 }
+
                 else
                 {
                     // The target is not food or potion or potion keg.

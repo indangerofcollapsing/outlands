@@ -23,7 +23,7 @@ namespace Server.SkillHandlers
             m.CloseGump(typeof(TrackWhoGump));
             m.SendGump(new TrackWhatGump(m));
 
-            return TimeSpan.FromSeconds(10.0); // 10 second delay before beign able to re-use a skill
+            return TimeSpan.FromSeconds(SkillCooldown.TrackingCooldown);
         }
 
         public class TrackingInfo

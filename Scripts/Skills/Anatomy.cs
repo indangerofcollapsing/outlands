@@ -11,7 +11,7 @@ namespace Server.SkillHandlers
 		public static void Initialize()
 		{
 			SkillInfo.Table[(int)SkillName.Anatomy].Callback = new SkillUseCallback( OnUse );
-		}
+		}        
 
 		public static TimeSpan OnUse( Mobile m )
 		{
@@ -19,7 +19,7 @@ namespace Server.SkillHandlers
 
 			m.SendLocalizedMessage( 500321 ); // Whom shall I examine?
 
-			return TimeSpan.FromSeconds( 2.5 );
+            return TimeSpan.FromSeconds(2.5);
 		}
 
 		private class InternalTarget : Target
@@ -68,8 +68,6 @@ namespace Server.SkillHandlers
 					else if ( stmMod < 0 )
                         stmMod = 0;
 
-                    from.NextSkillTime = Core.TickCount + 2000;
-
                     bool gumpSuccess = false;
 
                     BaseCreature bc_Creature = targ as BaseCreature;
@@ -79,6 +77,8 @@ namespace Server.SkillHandlers
                         if (bc_Creature.IsHenchman)
                             gumpSuccess = true;
                     }
+
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.AnatomyCooldown * 1000);
 
 					if ( from.CheckTargetSkill( SkillName.Anatomy, targ, 0, 100, 1.0))
 					{
