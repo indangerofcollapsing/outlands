@@ -5098,9 +5098,9 @@ namespace Server
                     case LootType.Newbied: LabelTo(from, "(newbied)"); break;
                     case LootType.Cursed: LabelTo(from, "(cursed)"); break;
                 }
-            }                       
+            }
 
-            if (DisplayCrafter && CrafterName != "")
+            if (DisplayCrafter && CrafterName != "")            
                 LabelTo(from, "[crafted by " + CrafterName + "]");            
         }
 

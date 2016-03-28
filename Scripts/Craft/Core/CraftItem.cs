@@ -399,7 +399,7 @@ namespace Server.Engines.Craft
 
         public bool IsMarkable(Type type)
         {
-            if (m_ForceNonExceptional)	//Don't even display the stuff for marking if it can't ever be exceptional.
+            if (m_ForceNonExceptional)
                 return false;
 
             for (int i = 0; i < m_MarkableTable.Length; ++i)

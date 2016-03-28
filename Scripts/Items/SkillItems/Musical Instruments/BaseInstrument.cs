@@ -21,6 +21,33 @@ namespace Server.Items
 
         public static double ExceptionalQualitySkillBonus = 5;
         public static double SlayerSkillBonus = 15;
+                
+        private InstrumentDurabilityLevel m_DurabilityLevel;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public InstrumentDurabilityLevel DurabilityLevel
+        {
+            get { return m_DurabilityLevel; }
+            set
+            {
+                bool changeOcurred = (m_DurabilityLevel == value);
+
+                m_DurabilityLevel = value;
+
+                if (changeOcurred)
+                {
+                    UnscaleUses();
+                    ScaleUses();
+                }
+            }
+        }
+        
+        private InstrumentArtistryLevel m_ArtistryLevel;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public InstrumentArtistryLevel ArtistryLevel
+        {
+            get { return m_ArtistryLevel; }
+            set { m_ArtistryLevel = value; }
+        }         
 
         private int m_SuccessSound;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -54,22 +81,55 @@ namespace Server.Items
             set { m_UsesRemaining = value; InvalidateProperties(); }
         }
 
-        public void ScaleUses()
+        public override void QualityChange()
         {
-            UsesRemaining = (int)((double)UsesRemaining * GetUsesScalar());
+            UnscaleUses();
+            ScaleUses();
+        }
+
+        public override void ResourceChange()
+        {
+            UnscaleUses();
+            ScaleUses();
         }
 
         public void UnscaleUses()
         {
-            UsesRemaining = (int)((double)UsesRemaining * GetUsesScalar());
+            UsesRemaining = Utility.RandomMinMax(InitMinUses, InitMaxUses);
         }
 
-        public double GetUsesScalar()
+        public void ScaleUses()
         {
-            if (Quality == Quality.Exceptional)
-                return 1.5;
+            double baseUsesRemaining = (double)(UsesRemaining = Utility.RandomMinMax(InitMinUses, InitMaxUses));
 
-            return 1;
+            switch(Quality)
+            {
+                case Quality.Low: baseUsesRemaining -= 50; break;
+                case Quality.Regular: baseUsesRemaining += 0; break;
+                case Quality.Exceptional: baseUsesRemaining += 100; break;
+            }
+
+            switch(Resource)
+            {
+                case CraftResource.RegularWood: baseUsesRemaining += 0; break;
+                case CraftResource.OakWood: baseUsesRemaining += 100; break;
+                case CraftResource.AshWood: baseUsesRemaining += 200; break;
+                case CraftResource.YewWood: baseUsesRemaining += 300; break;
+                case CraftResource.Heartwood: baseUsesRemaining += 400; break;
+                case CraftResource.Bloodwood: baseUsesRemaining += 500; break;
+                case CraftResource.Frostwood: baseUsesRemaining += 600; break;
+            }
+
+            switch(m_DurabilityLevel)
+            {
+                case InstrumentDurabilityLevel.Durable: baseUsesRemaining += 100; break;
+                case InstrumentDurabilityLevel.Substantial: baseUsesRemaining += 150; break;
+                case InstrumentDurabilityLevel.Massive: baseUsesRemaining += 200; break;
+                case InstrumentDurabilityLevel.Fortified: baseUsesRemaining += 250; break;
+                case InstrumentDurabilityLevel.Indestructible: baseUsesRemaining += 300; break;
+            }  
+          
+            UsesRemaining = (int)(Math.Ceiling((double)baseUsesRemaining));
         }
 
         public void ConsumeUse(Mobile from)
@@ -179,38 +239,49 @@ namespace Server.Items
                 Timer.DelayCall(TimeSpan.Zero, new TimerCallback(InvalidateProperties));            
         }
 
-        public override void OnSingleClick(Mobile from)
-        {            
-            ArrayList attrs = new ArrayList();
+        public override void DisplayLabelName(Mobile from)
+        {
+            if (from == null)
+                return;
 
-            if (DisplayLootType)
-            {
-                if (LootType == LootType.Blessed)
-                    attrs.Add(new EquipInfoAttribute(1038021)); // blessed
-                else if (LootType == LootType.Cursed)
-                    attrs.Add(new EquipInfoAttribute(1049643)); // cursed
-            }
+            bool isMagical = SlayerGroup != SlayerGroupType.None || m_DurabilityLevel != InstrumentDurabilityLevel.Regular || m_ArtistryLevel != InstrumentArtistryLevel.Regular;
 
-            if (Quality == Quality.Exceptional)
-                attrs.Add(new EquipInfoAttribute(1018305 - (int)Quality));
+            string displayName = "";
 
-            int number;
-
-            if (Name == null)
-                number = LabelNumber;
+            if (isMagical && !Identified && from.AccessLevel == AccessLevel.Player)
+                LabelTo(from, "unidentified " + Name);
 
             else
             {
-                this.LabelTo(from, Name);
-                number = 1041000;
+                if (Quality == Quality.Exceptional)
+                    displayName += "exceptional ";
+                
+                if (DurabilityLevel != InstrumentDurabilityLevel.Regular)
+                    displayName += DurabilityLevel.ToString().ToLower() + " ";
+
+                switch (ArtistryLevel)
+                {
+                    case InstrumentArtistryLevel.Melodist: displayName += "melodist "; break;
+                    case InstrumentArtistryLevel.Jongleur: displayName += "jongleur "; break;
+                    case InstrumentArtistryLevel.Minstrel: displayName += "minstrel "; break;
+                    case InstrumentArtistryLevel.Troubadour: displayName += "troubadour "; break;
+                    case InstrumentArtistryLevel.Balladeer: displayName += "balladeer "; break;
+                }    
+
+                displayName += Name;
+
+                if (SlayerGroup != SlayerGroupType.None)
+                    displayName += " of " + SlayerGroup.ToString().ToLower() + " enticement";
+
+                LabelTo(from, displayName);
             }
 
-            //if (attrs.Count == 0 && CraftedBy == null  Name != null)
-            //return;
+            LabelTo(from, UsesRemaining.ToString() + " uses remaining");  
+        }
 
-            EquipmentInfo eqInfo = new EquipmentInfo(number, CraftedBy, false, (EquipInfoAttribute[])attrs.ToArray(typeof(EquipInfoAttribute)));
-
-            from.Send(new DisplayEquipmentInfo(this, eqInfo));            
+        public override void OnSingleClick(Mobile from)
+        {
+            base.OnSingleClick(from);
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -274,6 +345,13 @@ namespace Server.Items
             if (makersMark)
                 DisplayCrafter = true;
 
+            Type resourceType = typeRes;
+
+            if (resourceType == null)
+                resourceType = craftItem.Resources.GetAt(0).ItemType;
+
+            Resource = CraftResources.GetFromType(resourceType);
+
             return quality;
         }
 
@@ -293,6 +371,8 @@ namespace Server.Items
             writer.Write((int)0); // version
             
             //Version 0
+            writer.Write((int)m_DurabilityLevel);
+            writer.Write((int)m_ArtistryLevel);
             writer.Write((int)m_SlayerGroup);
             writer.Write(UsesRemaining);
             writer.Write(m_SuccessSound);
@@ -308,6 +388,8 @@ namespace Server.Items
             //Version 0
             if (version >= 0)
             {
+                m_DurabilityLevel = (InstrumentDurabilityLevel)reader.ReadInt();
+                m_ArtistryLevel = (InstrumentArtistryLevel)reader.ReadInt();
                 m_SlayerGroup = (SlayerGroupType)reader.ReadInt();
                 m_UsesRemaining = reader.ReadInt();
                 m_SuccessSound = reader.ReadInt();
@@ -315,4 +397,24 @@ namespace Server.Items
             }
         }
     }
+
+    public enum InstrumentDurabilityLevel
+    {
+        Regular,
+        Durable,
+        Substantial,
+        Massive,
+        Fortified,
+        Indestructible
+    }
+
+    public enum InstrumentArtistryLevel
+    {
+        Regular,
+        Melodist,
+        Jongleur,
+        Minstrel,
+        Troubadour,
+        Balladeer
+    }    
 }

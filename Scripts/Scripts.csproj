@@ -2826,7 +2826,6 @@
     <Compile Include="Items\Addons\WaterTroughEastAddon.cs" />
     <Compile Include="Items\Addons\WaterTroughSouthAddon.cs" />
     <Compile Include="Items\Addons\WaterVat.cs" />
-    <Compile Include="Items\Armor\ArmorEnums.cs" />
     <Compile Include="Items\Armor\Artifacts\ArmorOfFortune.cs" />
     <Compile Include="Items\Armor\Artifacts\Craftable\BrambleCoat.cs" />
     <Compile Include="Items\Armor\Artifacts\Craftable\IronwoodCrown.cs" />
@@ -3637,7 +3636,6 @@
     <Compile Include="Items\Weapons\Swordsmanship\Scimitar.cs" />
     <Compile Include="Items\Weapons\Swordsmanship\ThinLongsword.cs" />
     <Compile Include="Items\Weapons\Swordsmanship\VikingSword.cs" />
-    <Compile Include="Items\Weapons\WeaponEnums.cs" />
     <Compile Include="Misc\AccountPrompt.cs" />
     <Compile Include="Misc\Animations.cs" />
     <Compile Include="Misc\AOS.cs" />

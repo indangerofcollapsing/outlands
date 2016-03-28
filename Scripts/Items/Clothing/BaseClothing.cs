@@ -683,53 +683,19 @@ namespace Server.Items
                 list.Add(1060639, "{0}\t{1}", m_HitPoints, m_MaxHitPoints); // durability ~1_val~ / ~2_val~
         }
 
-        public override void OnSingleClick(Mobile from)
+        public override void DisplayLabelName(Mobile from)
         {
-            List<EquipInfoAttribute> attrs = new List<EquipInfoAttribute>();
-
-            AddEquipInfoAttributes(from, attrs);
-
-            int number;
-
-            if (Name == null)            
-                number = LabelNumber;            
-            else
-            {
-                this.LabelTo(from, Name);
-                number = 1041000;
-            }
-
-            if (DecorativeEquipment)
-                LabelTo(from, "[Decorative]");
-
-            //if (attrs.Count == 0 && Crafter == null && Name != null)
-                //return;
-
-            EquipmentInfo eqInfo = new EquipmentInfo(number, CraftedBy, false, attrs.ToArray());
-
-            from.Send(new DisplayEquipmentInfo(this, eqInfo));        
+            if (from == null)
+                return;
         }
 
-        public virtual void AddEquipInfoAttributes(Mobile from, List<EquipInfoAttribute> attrs)
+        public override void OnSingleClick(Mobile from)
         {
-            if (DisplayLootType)
-            {
-                if (LootType == LootType.Blessed)
-                    attrs.Add(new EquipInfoAttribute(1038021)); // blessed
-                else if (LootType == LootType.Cursed)
-                    attrs.Add(new EquipInfoAttribute(1049643)); // cursed
-            }
-
-            #region Factions
-            if (m_FactionState != null)
-                attrs.Add(new EquipInfoAttribute(1041350)); // faction item
-            #endregion
-
-            if (Quality == Quality.Exceptional)
-                attrs.Add(new EquipInfoAttribute(1018305 - (int)Quality));
+            base.OnSingleClick(from);
         }
 
         #region Serialization
+
         private static void SetSaveFlag(ref SaveFlag flags, SaveFlag toSet, bool setIf)
         {
             if (setIf)
