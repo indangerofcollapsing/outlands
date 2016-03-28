@@ -11,7 +11,7 @@ namespace Server.Items
 		{
             Name = "ice dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Ice;
+            Dungeon = DungeonEnum.Ice;
 		}
 
         [Constructable]
@@ -19,7 +19,7 @@ namespace Server.Items
 		{
             Name = "ice dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Ice;
+            Dungeon = DungeonEnum.Ice;
 		}
 
         public IceDungeonCore(Serial serial): base(serial)

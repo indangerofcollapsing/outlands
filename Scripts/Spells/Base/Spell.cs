@@ -336,8 +336,8 @@ namespace Server.Spells
             else            
                 scalar *= 1 + ((casterEI - targetRS) / 100 * .2);
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(m_Caster, null);
-            BaseDungeonArmor.PlayerDungeonArmorProfile targetDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(target, null);
+            DungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(m_Caster, null);
+            DungeonArmor.PlayerDungeonArmorProfile targetDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(target, null);
 
             double SpellDamageInflictedScalar = 1.0;
             double SpellDamageReceivedScalar = 1.0;
@@ -960,7 +960,7 @@ namespace Server.Spells
                     }
                 }
 
-                BaseDungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(m_Caster, null);
+                DungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(m_Caster, null);
 
                 if (casterDungeonArmor.MatchingSet && !casterDungeonArmor.InPlayerCombat)
                 {

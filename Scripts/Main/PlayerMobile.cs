@@ -618,18 +618,18 @@ namespace Server.Mobiles
 
                     pm_Target.Backpack.DropItem(spellbook);
 
-                    int dungeonCount = Enum.GetNames(typeof(BaseDungeonArmor.DungeonEnum)).Length;
+                    int dungeonCount = Enum.GetNames(typeof(DungeonEnum)).Length;
 
-                    BaseDungeonArmor.DungeonEnum dungeon = (BaseDungeonArmor.DungeonEnum)Utility.RandomMinMax(1, dungeonCount - 1);
+                    DungeonEnum dungeon = (DungeonEnum)Utility.RandomMinMax(1, dungeonCount - 1);
 
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Helmet));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Gorget));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Arms));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Gloves));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Chest));
-                    pm_Target.AddItem(BaseDungeonArmor.CreateDungeonArmor(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Legs));
+                    DungeonArmor.DungeonArmorDetail dungeonArmorDetail = new DungeonArmor.DungeonArmorDetail(dungeon, 1);    
 
-                    BaseDungeonArmor.DungeonArmorDetail dungeonArmorDetail = new BaseDungeonArmor.DungeonArmorDetail(dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
+                    pm_Target.AddItem(new PlateHelm() { Dungeon = dungeon, TierLevel = 1 });
+                    pm_Target.AddItem(new PlateGorget() { Dungeon = dungeon, TierLevel = 1 });
+                    pm_Target.AddItem(new PlateArms() { Dungeon = dungeon, TierLevel = 1 });
+                    pm_Target.AddItem(new PlateGloves() { Dungeon = dungeon, TierLevel = 1 });
+                    pm_Target.AddItem(new PlateChest() { Dungeon = dungeon, TierLevel = 1 });
+                    pm_Target.AddItem(new PlateLegs() { Dungeon = dungeon, TierLevel = 1 });                    
 
                     pm_Target.AddItem(new Cloak(dungeonArmorDetail.Hue));
                 }
@@ -811,7 +811,7 @@ namespace Server.Mobiles
             EventCalendarPersistance.CheckAndCreateEventCalendarAccount(pm_From);
 
             //Dungeon Armor
-            BaseDungeonArmor.CheckForAndUpdateDungeonArmorProperties(pm_From);
+            DungeonArmor.CheckForAndUpdateDungeonArmorProperties(pm_From);
 
             //OverloadProtectionSystem
             pm_From.SystemOverloadActions = 0;
@@ -3896,7 +3896,7 @@ namespace Server.Mobiles
 
                 if (m_Player.LastPlayerCombatTime + m_Player.PlayerCombatExpirationDelay < DateTime.UtcNow)
                 {
-                    BaseDungeonArmor.CheckForAndUpdateDungeonArmorProperties(m_Player);
+                    DungeonArmor.CheckForAndUpdateDungeonArmorProperties(m_Player);
                     Stop();
                 }
             }
@@ -4899,7 +4899,7 @@ namespace Server.Mobiles
 
         public virtual void OnGaveMeleeAttack(Mobile defender)
         {
-            BaseDungeonArmor.PlayerDungeonArmorProfile attackerDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(this, null);
+            DungeonArmor.PlayerDungeonArmorProfile attackerDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(this, null);
 
             if (attackerDungeonArmor.MatchingSet && !attackerDungeonArmor.InPlayerCombat && defender is BaseCreature)
             {
@@ -4944,7 +4944,7 @@ namespace Server.Mobiles
 
         public virtual void OnGotMeleeAttack(Mobile attacker)
         {
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(this, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(this, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature)
             {
@@ -4992,7 +4992,7 @@ namespace Server.Mobiles
             LastPlayerCombatTime = DateTime.UtcNow;
             pm_From.LastPlayerCombatTime = DateTime.UtcNow;
 
-            BaseDungeonArmor.CheckForAndUpdateDungeonArmorProperties(this);
+            DungeonArmor.CheckForAndUpdateDungeonArmorProperties(this);
             CapStatMods(this);
 
             if (m_PlayerCombatTimer == null)
@@ -5834,7 +5834,7 @@ namespace Server.Mobiles
             bool leaveFootsteps = false;
             double footstepChance = .33;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile stealtherDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(this, null);
+            DungeonArmor.PlayerDungeonArmorProfile stealtherDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(this, null);
 
             if (stealtherDungeonArmor.MatchingSet && stealtherDungeonArmor.DungeonArmorDetail.StealthLeavesFootprints)
                 leaveFootsteps = true;

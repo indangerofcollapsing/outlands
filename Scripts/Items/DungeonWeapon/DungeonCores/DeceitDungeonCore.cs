@@ -11,7 +11,7 @@ namespace Server.Items
 		{
             Name = "deceit dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Deceit;
+            Dungeon = DungeonEnum.Deceit;
 		}
 
         [Constructable]
@@ -19,7 +19,7 @@ namespace Server.Items
 		{
             Name = "deceit dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Deceit;
+            Dungeon = DungeonEnum.Deceit;
 		}
 
         public DeceitDungeonCore(Serial serial): base(serial)

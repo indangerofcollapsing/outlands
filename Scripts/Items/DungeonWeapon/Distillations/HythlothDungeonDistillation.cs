@@ -11,7 +11,7 @@ namespace Server.Items
         [Constructable]
         public HythlothDungeonDistillation(): base()
         {
-            Dungeon = BaseDungeonArmor.DungeonEnum.Hythloth;            
+            Dungeon = DungeonEnum.Hythloth;            
         }
 
         public HythlothDungeonDistillation(Serial serial): base(serial)

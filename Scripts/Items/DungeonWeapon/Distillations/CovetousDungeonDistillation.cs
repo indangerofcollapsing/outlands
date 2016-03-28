@@ -11,7 +11,7 @@ namespace Server.Items
         [Constructable]
         public CovetousDungeonDistillation(): base()
         {
-            Dungeon = BaseDungeonArmor.DungeonEnum.Covetous;            
+            Dungeon = DungeonEnum.Covetous;            
         }
 
         public CovetousDungeonDistillation(Serial serial): base(serial)

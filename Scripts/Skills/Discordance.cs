@@ -239,7 +239,7 @@ namespace Server.SkillHandlers
 
                             double adjustedDiscordanceModifier = DiscordanceModifier;
 
-                            BaseDungeonArmor.PlayerDungeonArmorProfile bardDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(from, null);
+                            DungeonArmor.PlayerDungeonArmorProfile bardDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(from, null);
 
                             if (bardDungeonArmor.MatchingSet && !bardDungeonArmor.InPlayerCombat)                            
                                 adjustedDiscordanceModifier += bardDungeonArmor.DungeonArmorDetail.DiscordanceEffectBonus;                            

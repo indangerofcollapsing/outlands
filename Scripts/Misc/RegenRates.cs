@@ -136,7 +136,7 @@ namespace Server.Misc
             if (player == null)
                 return effectiveMeditationScalar;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile playerDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(player, null);
+            DungeonArmor.PlayerDungeonArmorProfile playerDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(player, null);
 
             //Player Is Wearing Dungeon Armor
             if (playerDungeonArmor.MatchingSet)

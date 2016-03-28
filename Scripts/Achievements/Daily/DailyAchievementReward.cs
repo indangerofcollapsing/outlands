@@ -42,9 +42,6 @@ namespace Server.Achievements
             }
             else if (97 > seed)
             {	// 12% glove chance.
-
-                DropItem(BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Unspecified, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Gloves));
-                DropItem(new ArcaneDust());
             }
             else if (99 > seed)
             {	// 2%

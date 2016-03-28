@@ -11,7 +11,7 @@ namespace Server.Items
 		{
             Name = "despise dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Despise;
+            Dungeon = DungeonEnum.Despise;
 		}
 
         [Constructable]
@@ -19,7 +19,7 @@ namespace Server.Items
 		{
             Name = "despise dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Despise;
+            Dungeon = DungeonEnum.Despise;
 		}
 
         public DespiseDungeonCore(Serial serial): base(serial)

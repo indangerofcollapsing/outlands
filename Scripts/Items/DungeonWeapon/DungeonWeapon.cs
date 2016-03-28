@@ -34,7 +34,7 @@ namespace Server.Items
 
         public static int MaxDungeonTier = 10;
         public static int MaxDungeonExperience = 250;
-        public static int BaseMaxBlessedCharges = 3;
+        public static int ArcaneMaxCharges = 200;
 
         public static double BaseAccuracy = .05;
         public static double AccuracyPerTier = .02;
@@ -71,61 +71,61 @@ namespace Server.Items
             return scalar;
         }
 
-        public static DungeonWeaponDetail GetDungeonWeaponDetail(BaseDungeonArmor.DungeonEnum dungeon)
+        public static DungeonWeaponDetail GetDungeonWeaponDetail(DungeonEnum dungeon)
         {
             DungeonWeaponDetail detail = new DungeonWeaponDetail();
 
             switch (dungeon)
             {
-                case BaseDungeonArmor.DungeonEnum.Covetous:
+                case DungeonEnum.Covetous:
                     detail.m_SpecialEffect = SpecialEffectType.PoisonWind;
                     detail.m_EffectDisplayName = "Poison Wind";
                     detail.m_EffectDescription = "";
                 break;
 
-                case BaseDungeonArmor.DungeonEnum.Deceit:
+                case DungeonEnum.Deceit:
                     detail.m_SpecialEffect = SpecialEffectType.ShockStorm;
                     detail.m_EffectDisplayName = "Shock Storm";
                     detail.m_EffectDescription = "";
                 break;
 
-                case BaseDungeonArmor.DungeonEnum.Despise:
+                case DungeonEnum.Despise:
                     detail.m_SpecialEffect = SpecialEffectType.Command;
                     detail.m_EffectDisplayName = "Command";
                     detail.m_EffectDescription = "";
                 break;
 
-                case BaseDungeonArmor.DungeonEnum.Destard:
+                case DungeonEnum.Destard:
                     detail.m_SpecialEffect = SpecialEffectType.Whirlwind;
                     detail.m_EffectDisplayName = "Whirlwind";
                     detail.m_EffectDescription = "";
                 break;
 
-                case BaseDungeonArmor.DungeonEnum.Fire:
+                case DungeonEnum.Fire:
                     detail.m_SpecialEffect = SpecialEffectType.Firestorm;
                     detail.m_EffectDisplayName = "Firestorm";
                     detail.m_EffectDescription = "";
                 break;
 
-                case BaseDungeonArmor.DungeonEnum.Hythloth:
+                case DungeonEnum.Hythloth:
                     detail.m_SpecialEffect = SpecialEffectType.Execute;
                     detail.m_EffectDisplayName = "Execute";
                     detail.m_EffectDescription = "";
                 break;
 
-                case BaseDungeonArmor.DungeonEnum.Ice:
+                case DungeonEnum.Ice:
                     detail.m_SpecialEffect = SpecialEffectType.FrostNova;
                     detail.m_EffectDisplayName = "Frost Nova";
                     detail.m_EffectDescription = "";
                 break;
 
-                case BaseDungeonArmor.DungeonEnum.Shame:
+                case DungeonEnum.Shame:
                     detail.m_SpecialEffect = SpecialEffectType.ArcaneSurge;
                     detail.m_EffectDisplayName = "Arcane Surge";
                     detail.m_EffectDescription = "";
                 break;
 
-                case BaseDungeonArmor.DungeonEnum.Wrong:
+                case DungeonEnum.Wrong:
                     detail.m_SpecialEffect = SpecialEffectType.Shadows;
                     detail.m_EffectDisplayName = "Shadows";
                     detail.m_EffectDescription = "";
@@ -147,7 +147,7 @@ namespace Server.Items
             if (player == null || weapon == null || damage == 0) return;
             if (weapon.Deleted) return;
 
-            if (weapon.DungeonExperience == MaxDungeonExperience)
+            if (weapon.Experience == MaxDungeonExperience)
                 return;
 
             double baseGainChance = BaseXPGainScalar * creature.InitialDifficulty;           
@@ -186,14 +186,14 @@ namespace Server.Items
 
             if (Utility.RandomDouble() <= finalChance)
             {
-                weapon.DungeonExperience += xpGain;
+                weapon.Experience += xpGain;
 
                 player.SendMessage("Your dungeon weapon has gained " + xpGain.ToString() + " experience.");
 
-                if (weapon.DungeonExperience > MaxDungeonExperience)
-                    weapon.DungeonExperience = MaxDungeonExperience;
+                if (weapon.Experience > MaxDungeonExperience)
+                    weapon.Experience = MaxDungeonExperience;
 
-                if (weapon.DungeonExperience == MaxDungeonExperience && weapon.DungeonTier < MaxDungeonTier)
+                if (weapon.Experience == MaxDungeonExperience && weapon.TierLevel < MaxDungeonTier)
                 {
                     player.SendMessage(0x3F, "Your dungeon weapon has acquired enough experience to increase it's tier.");
                     player.SendSound(0x5A7);
@@ -204,9 +204,10 @@ namespace Server.Items
         public static void CheckResolveSpecialEffect(BaseWeapon weapon, PlayerMobile attacker, BaseCreature defender)
         {
             if (weapon == null || attacker == null || defender == null) return;
-            if (weapon.DungeonTier == 0) return;
+            if (weapon.Dungeon == DungeonEnum.None) return;
+            if (weapon.TierLevel == 0) return;
 
-            double effectChance = BaseEffectChance + ((double)weapon.DungeonTier * BaseEffectChancePerTier);
+            double effectChance = BaseEffectChance + ((double)weapon.TierLevel * BaseEffectChancePerTier);
             double speedScalar = GetSpeedScalar(weapon.Speed);
 
             double finalChance = effectChance * speedScalar;
@@ -233,7 +234,7 @@ namespace Server.Items
             m_ArmsLoreSuccess = armsLoreSuccess;
 
             if (weapon == null) return;
-            if (weapon.DungeonTier == 0) return;
+            if (weapon.TierLevel == 0 || weapon.Dungeon == DungeonEnum.None) return;
 
             Closable = true;
             Disposable = true;
@@ -243,12 +244,12 @@ namespace Server.Items
             int WhiteTextHue = 2655;
             int DetailHue = 149;         
 
-            int weaponTier = m_Weapon.DungeonTier;
-            string dungeonName = BaseDungeonArmor.GetDungeonName(m_Weapon.Dungeon) + " Dungeon";
+            int weaponTier = m_Weapon.TierLevel;
+            string dungeonName = BaseWeapon.GetDungeonName(m_Weapon.Dungeon) + " Dungeon";
             string weaponName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(m_Weapon.Name);
             int newDurability = DungeonWeapon.BaselineDurability + (DungeonWeapon.IncreasedDurabilityPerTier * weaponTier);
 
-            int adjustedBlessedCharges = DungeonWeapon.BaseMaxBlessedCharges;
+            int adjustedBlessedCharges = DungeonWeapon.ArcaneMaxCharges;
 
             double accuracy = 100 * (DungeonWeapon.BaseAccuracy + (DungeonWeapon.AccuracyPerTier * (double)weaponTier));
             double tactics = DungeonWeapon.BaseTactics + (DungeonWeapon.TacticsPerTier * (double)weaponTier);
@@ -257,7 +258,7 @@ namespace Server.Items
 
             effectChance *= DungeonWeapon.GetSpeedScalar(m_Weapon.Speed);
 
-            BaseDungeonArmor.DungeonArmorDetail detail = new BaseDungeonArmor.DungeonArmorDetail(m_Weapon.Dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
+            DungeonArmor.DungeonArmorDetail detail = new DungeonArmor.DungeonArmorDetail(m_Weapon.Dungeon, m_Weapon.TierLevel);
 
             int itemId = weapon.ItemID;
             int itemHue = detail.Hue - 1;
@@ -290,7 +291,7 @@ namespace Server.Items
             AddLabel(69, 140, DetailHue, "Tier 1");
 
             string chargesText = adjustedBlessedCharges.ToString();
-            string experienceText = weapon.DungeonExperience + "/" + DungeonWeapon.MaxDungeonExperience.ToString();
+            string experienceText = weapon.Experience + "/" + DungeonWeapon.MaxDungeonExperience.ToString();
             string durabilityText = weapon.HitPoints + "/" + weapon.MaxHitPoints;
             string accuracyText = "+" + accuracy.ToString() + "%";
             string tacticsText = "+" + tactics.ToString();
@@ -330,8 +331,8 @@ namespace Server.Items
             if (m_GumpTarget == null || m_Weapon == null) return;
             if (m_Weapon.Deleted) return;
 
-            if (m_Weapon.DungeonTier == 0) return;
-            if (m_Weapon.Dungeon == BaseDungeonArmor.DungeonEnum.Unspecified) return;
+            if (m_Weapon.TierLevel == 0) return;
+            if (m_Weapon.Dungeon == DungeonEnum.None) return;
 
             bool closeGump = true;
 

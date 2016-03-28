@@ -71,7 +71,7 @@ namespace Server.Items
             protected override void OnTarget(Mobile from, object targeted)
             {
                 // can't rename dungeon armor or armored hats
-                if ((!(targeted is BaseArmor) && !(targeted is BaseWeapon)) || targeted is BaseDungeonArmor || !(targeted is Item))
+                if ((!(targeted is BaseArmor) && !(targeted is BaseWeapon)) || targeted is DungeonArmor || !(targeted is Item))
                 {
                     from.SendMessage("You cannot rename that.");
                     return;

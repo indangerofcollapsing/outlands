@@ -79,7 +79,6 @@ namespace Server.Items
             
             //Ultra Rares
             DictTemp.Add("PlayerCustomizationDeed", ultraRareValue);
-            DictTemp.Add("DungeonArmorUpgradeHammer", ultraRareValue);
             DictTemp.Add("AntiqueStandingClock", ultraRareValue);
             DictTemp.Add("CityLampPost", ultraRareValue);
             DictTemp.Add("LuniteIngots", ultraRareValue);
@@ -164,13 +163,8 @@ namespace Server.Items
                         case "PlayerCustomizationDeed":
                             item = new Custom.PlayerCustomizationDeed();
                             rewardText = "You receive a player customization deed.";
-                        break;                            
-
-                        case "DungeonArmorUpgradeHammer":
-                            item = new DungeonArmorUpgradeHammer();
-                            rewardText = "You receive dungeon armor upgrade hammer.";
-                        break;
-
+                        break;    
+                        
                         case "AntiqueStandingClock":
                             item = new AntiqueStandingClock();
                             rewardText = "You receive an antique standing clock.";

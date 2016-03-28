@@ -11,7 +11,7 @@ namespace Server.Items
 		{
             Name = "hythloth dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Hythloth;
+            Dungeon = DungeonEnum.Hythloth;
 		}
 
         [Constructable]
@@ -19,7 +19,7 @@ namespace Server.Items
 		{
             Name = "hythloth dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Hythloth;
+            Dungeon = DungeonEnum.Hythloth;
 		}
 
         public HythlothDungeonCore(Serial serial): base(serial)

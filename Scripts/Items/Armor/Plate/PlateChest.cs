@@ -30,6 +30,7 @@ namespace Server.Items
 		[Constructable]
 		public PlateChest() : base( 0x1415 )
 		{
+            Name = "platemail chest";
 			Weight = 10.0;
 		}
 

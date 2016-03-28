@@ -119,7 +119,7 @@ namespace Server
                 {
                     double poisonDamageScalar = 1.0;
 
-                    BaseDungeonArmor.PlayerDungeonArmorProfile poisonerDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(pm_From, null);
+                    DungeonArmor.PlayerDungeonArmorProfile poisonerDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_From, null);
 
                     if (poisonerDungeonArmor.MatchingSet && !poisonerDungeonArmor.InPlayerCombat)
                         poisonDamageScalar = poisonerDungeonArmor.DungeonArmorDetail.PoisonDamageInflictedScalar;
@@ -132,7 +132,7 @@ namespace Server
                 {
                     double poisonDamageScalar = 1.0;
 
-                    BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(pm_Target, null);
+                    DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Target, null);
 
                     if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)                    
                         poisonDamageScalar = defenderDungeonArmor.DungeonArmorDetail.PoisonDamageReceivedScalar;

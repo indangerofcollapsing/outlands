@@ -276,7 +276,7 @@ namespace Server.Items
             double BandageHealThroughPoisonScalar = 0;
             int effectHue = 0;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile bandagerDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(m_Healer, null);
+            DungeonArmor.PlayerDungeonArmorProfile bandagerDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(m_Healer, null);
 
             if (bandagerDungeonArmor.MatchingSet && !bandagerDungeonArmor.InPlayerCombat)
             {
@@ -627,7 +627,7 @@ namespace Server.Items
                 {
                     seconds = SkillCooldown.HealingSelfCooldown;
 
-                    BaseDungeonArmor.PlayerDungeonArmorProfile bandagerDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(healer, null);
+                    DungeonArmor.PlayerDungeonArmorProfile bandagerDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(healer, null);
 
                     if (bandagerDungeonArmor.MatchingSet && !bandagerDungeonArmor.InPlayerCombat)                    
                         seconds -= bandagerDungeonArmor.DungeonArmorDetail.BandageSelfTimeReduction;                    

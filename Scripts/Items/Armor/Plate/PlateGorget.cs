@@ -29,6 +29,7 @@ namespace Server.Items
 		[Constructable]
 		public PlateGorget() : base( 0x1413 )
 		{
+            Name = "platemail gorget";
 			Weight = 2.0;
 		}
 

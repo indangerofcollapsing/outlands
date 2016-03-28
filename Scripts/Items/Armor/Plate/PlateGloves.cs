@@ -30,6 +30,7 @@ namespace Server.Items
 		[Constructable]
 		public PlateGloves() : base( 0x1414 )
 		{
+            Name = "platemail gloves";
 			Weight = 2.0;
 		}
 

@@ -30,6 +30,7 @@ namespace Server.Items
 		[Constructable]
 		public PlateArms() : base( 0x1410 )
 		{
+            Name = "platemail arms";
 			Weight = 5.0;
 		}
 

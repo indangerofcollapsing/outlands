@@ -210,9 +210,9 @@ namespace Server.Custom
                         }
                     break;
                     case 4: item = new MiniatureTree(); break;  
-                    case 5: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Unspecified, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
+                    //case 5: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.None, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
                     case 6: item = new MiniatureFountain(); break;
-                    case 7: item = new DungeonArmorUpgradeHammer(); break;
+                    //case 7: item = new DungeonArmorUpgradeHammer(); break;
                     
                         
                     break;

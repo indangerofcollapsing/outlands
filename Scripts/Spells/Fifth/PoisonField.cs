@@ -102,7 +102,7 @@ namespace Server.Spells.Fifth
                         item.m_Enhanced = true;                    
                 }
 
-                BaseDungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(Caster, null);
+                DungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(Caster, null);
 
                 if (casterDungeonArmor.MatchingSet && !casterDungeonArmor.InPlayerCombat)
                 {

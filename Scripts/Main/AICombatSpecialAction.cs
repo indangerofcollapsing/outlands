@@ -427,7 +427,7 @@ namespace Server.Mobiles
                                 baseDamage *= BaseCreature.BreathDamageToCreatureScalar;
                         }
 
-                        BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(target, null);
+                        DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(target, null);
 
                         if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
                             baseDamage *= defenderDungeonArmor.DungeonArmorDetail.BreathDamageReceivedScalar;

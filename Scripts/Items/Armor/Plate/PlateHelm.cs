@@ -29,6 +29,7 @@ namespace Server.Items
 		[Constructable]
 		public PlateHelm() : base( 0x1412 )
 		{
+            Name = "platemail helm";
 			Weight = 5.0;
 		}
 

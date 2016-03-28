@@ -74,7 +74,7 @@ namespace Server.SkillHandlers
                         }
                     }
 
-                    BaseDungeonArmor.PlayerDungeonArmorProfile stealtherDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(mobile, null);
+                    DungeonArmor.PlayerDungeonArmorProfile stealtherDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(mobile, null);
 
                     if (stealtherDungeonArmor.MatchingSet && !stealtherDungeonArmor.InPlayerCombat)                    
                         steps += 6 + stealtherDungeonArmor.DungeonArmorDetail.BonusStealthSteps;                    

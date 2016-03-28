@@ -99,27 +99,28 @@ namespace Server
 
                 switch (regionName)
                 {
-                    case IndexedRegionName.Deceit: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Deceit, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
-                    case IndexedRegionName.Destard: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Destard, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
-                    case IndexedRegionName.Shame: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Shame, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
-                    case IndexedRegionName.Hythloth: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Hythloth, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
+                    /*
+                    case IndexedRegionName.Deceit: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.Deceit, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
+                    case IndexedRegionName.Destard: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.Destard, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
+                    case IndexedRegionName.Shame: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.Shame, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
+                    case IndexedRegionName.Hythloth: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.Hythloth, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
 
 
                     //Luthius Expansion                    
-                    case IndexedRegionName.Covetous: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Covetous, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
-                    case IndexedRegionName.Wrong: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Wrong, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
-                    case IndexedRegionName.Despise: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Despise, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
-                    case IndexedRegionName.IceDungeon: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Ice, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
-                    case IndexedRegionName.FireDungeon: item = BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Fire, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified); break;
-                    
+                    case IndexedRegionName.Covetous: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.Covetous, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
+                    case IndexedRegionName.Wrong: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.Wrong, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
+                    case IndexedRegionName.Despise: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.Despise, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
+                    case IndexedRegionName.IceDungeon: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.Ice, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
+                    case IndexedRegionName.FireDungeon: item = DungeonArmor.CreateDungeonArmor(DungeonEnum.Fire, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified); break;
+                    */
                 }
 
                 if (item != null)
                     mob.PackItem(item);
             }
 
-            if (getArmor)
-                mob.PackItem(new ArcaneDust());
+            //if (getArmor)
+                //mob.PackItem(new ArcaneDust());
         }
 
         public static void AddTieredLoot(BaseCreature mob)

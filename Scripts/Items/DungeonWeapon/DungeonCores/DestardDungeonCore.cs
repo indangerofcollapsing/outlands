@@ -11,7 +11,7 @@ namespace Server.Items
 		{
             Name = "destard dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Destard;
+            Dungeon = DungeonEnum.Destard;
 		}
 
         [Constructable]
@@ -19,7 +19,7 @@ namespace Server.Items
 		{
             Name = "destard dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Destard;
+            Dungeon = DungeonEnum.Destard;
 		}
 
         public DestardDungeonCore(Serial serial): base(serial)

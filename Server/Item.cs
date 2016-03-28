@@ -223,6 +223,21 @@ namespace Server
         Wood
     }
 
+    public enum DungeonEnum
+    {
+        None,
+
+        Shame,
+        Deceit,
+        Destard,
+        Hythloth,
+        Covetous,
+        Wrong,
+        Despise,
+        Ice,
+        Fire
+    }
+
     /// <summary>
     /// Enumeration containing possible ways to handle item ownership on death.
     /// </summary>
@@ -814,38 +829,54 @@ namespace Server
             set { m_MaximumStealing = value; }
         }
 
-        #region Arcane Dust Generic Charge Handling
- 
-        private bool m_IsArcaneDustRechargable = false;
+        #region Arcane Charges
+
+        private bool m_Identified;
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsArcaneDustRechargable
+        public bool Identified
         {
-            get { return m_IsArcaneDustRechargable; }
-            set { m_IsArcaneDustRechargable = value; }
+            get { return m_Identified; }
+            set { m_Identified = value; InvalidateProperties(); }
+        }        
+
+        private bool m_ArcaneRechargable = false;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool ArcaneRechargable
+        {
+            get { return m_ArcaneRechargable; }
+            set { m_ArcaneRechargable = value; }
         }
 
-        private int m_ArcaneDustBasedChargesRemaining = 0;
+        private int m_ArcaneCharges = 0;
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ArcaneDustBasedChargesRemaining
+        public int ArcaneCharges
         {
-            get { return m_ArcaneDustBasedChargesRemaining; }
-            set { m_ArcaneDustBasedChargesRemaining = value; }
+            get { return m_ArcaneCharges; }
+            set { m_ArcaneCharges = value; }
         }
 
-        private int m_ArcaneDustBasedChargesMaximumCharges = 0;
+        private int m_ArcaneChargesMax = 0;
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ArcaneDustBasedChargesMaximumCharges
+        public int ArcaneChargesMax
         {
-            get { return m_ArcaneDustBasedChargesMaximumCharges; }
-            set { m_ArcaneDustBasedChargesMaximumCharges = value; }
+            get { return m_ArcaneChargesMax; }
+            set { m_ArcaneChargesMax = value; }
         }
 
-        private int m_ArcaneDustBasedChargesRegainedPerArcaneDust = 0;
+        private int m_TierLevel = 0;
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ArcaneDustBasedChargesRegainedPerArcaneDust
+        public int TierLevel
         {
-            get { return m_ArcaneDustBasedChargesRegainedPerArcaneDust; }
-            set { m_ArcaneDustBasedChargesRegainedPerArcaneDust = value; }
+            get { return m_TierLevel; }
+            set { m_TierLevel = value; }
+        }
+
+        private int m_Experience = 0;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int Experience
+        {
+            get { return m_Experience; }
+            set { m_Experience = value; }
         }
 
         #endregion
@@ -916,6 +947,19 @@ namespace Server
             }
         }
 
+        private DungeonEnum m_Dungeon = DungeonEnum.None;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DungeonEnum Dungeon
+        {
+            get { return m_Dungeon; }
+            set
+            {
+                m_Dungeon = value;
+
+                DungeonChange();
+            }
+        }      
+
         public virtual void QualityChange()
         {
         }
@@ -923,6 +967,28 @@ namespace Server
         public virtual void ResourceChange()
         {
         }
+
+        public virtual void DungeonChange()
+        {
+        }
+
+        public static string GetDungeonName(DungeonEnum dungeon)
+        {
+            switch (dungeon)
+            {
+                case DungeonEnum.Shame: return "Shame";
+                case DungeonEnum.Deceit: return "Deceit";
+                case DungeonEnum.Destard: return "Destard";
+                case DungeonEnum.Hythloth: return "Hythloth";
+                case DungeonEnum.Covetous: return "Covetous";
+                case DungeonEnum.Wrong: return "Wrong";
+                case DungeonEnum.Despise: return "Despise";
+                case DungeonEnum.Ice: return "Ice";
+                case DungeonEnum.Fire: return "Fire";
+            }
+
+            return "";
+        } 
 
         /// <summary>
         /// The <see cref="Mobile" /> who is currently <see cref="Mobile.Holding">holding</see> this item.
@@ -2305,16 +2371,19 @@ namespace Server
             writer.Write(18); // version
 
             //Version 18
+            writer.Write(m_Identified);
+            writer.Write((int)m_Dungeon);
+            writer.Write(m_ArcaneRechargable);
+            writer.Write(m_ArcaneCharges);
+            writer.Write(m_ArcaneChargesMax);
+            writer.Write(m_TierLevel);
+            writer.Write(m_Experience);
             writer.Write((int)m_Resource);
             writer.Write(m_DisplayCrafter);
             writer.Write((int)m_Quality);
             writer.Write(m_DecorativeEquipment);
             writer.Write(m_CraftedBy);
             writer.Write(m_CrafterName);
-            writer.Write(m_IsArcaneDustRechargable);
-            writer.Write(m_ArcaneDustBasedChargesRemaining);
-            writer.Write(m_ArcaneDustBasedChargesMaximumCharges);
-            writer.Write(m_ArcaneDustBasedChargesRegainedPerArcaneDust);
             writer.Write(m_Stealable);
             writer.Write(m_AlreadyStolen);
             writer.Write(m_MinimumStealing);
@@ -2327,9 +2396,7 @@ namespace Server
             writer.Write((int)BreakChanceFromReforge);
             writer.Write((byte)Acquisition);
             writer.Write(AcquisitionData);
-
-            // writer.Write((int)0); // legacy for arena hues that used to be serialized.. HIJACKED
-
+            
             SaveFlag flags = SaveFlag.None;
 
             int x = m_Location.m_X, y = m_Location.m_Y, z = m_Location.m_Z;
@@ -2530,6 +2597,14 @@ namespace Server
             {
                 case 18:
                     {
+                        m_Identified = reader.ReadBool();
+                        m_Dungeon = (DungeonEnum)reader.ReadInt();
+                        m_ArcaneRechargable = reader.ReadBool();
+                        m_ArcaneCharges = reader.ReadInt();
+                        m_ArcaneChargesMax = reader.ReadInt();
+                        m_TierLevel = reader.ReadInt();
+                        m_Experience = reader.ReadInt();
+
                         m_Resource = (CraftResource)reader.ReadInt();
                         m_DisplayCrafter = reader.ReadBool();
                         m_Quality = (Quality)reader.ReadInt();
@@ -2548,11 +2623,6 @@ namespace Server
 
                 case 16:
                     {
-                        m_IsArcaneDustRechargable = reader.ReadBool();
-                        m_ArcaneDustBasedChargesRemaining = reader.ReadInt();
-                        m_ArcaneDustBasedChargesMaximumCharges = reader.ReadInt();
-                        m_ArcaneDustBasedChargesRegainedPerArcaneDust = reader.ReadInt();
-
                         goto case 15;
                     }
                 case 15:
@@ -4973,35 +5043,66 @@ namespace Server
                 from.Send(new MessageLocalized(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, opl.Header, this.Name, opl.HeaderArgs));
         }
 
+        public virtual void DisplayLabelName(Mobile from)
+        {
+            if (from == null)
+                return;
+
+            if (Name == null)
+            {
+                NetState netstate = from.NetState;
+
+                if (netstate != null)
+                {
+                    if (m_Amount <= 1)
+                        netstate.Send(new MessageLocalized(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, LabelNumber, "", ""));
+
+                    else
+                        netstate.Send(new MessageLocalizedAffix(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, LabelNumber, "", AffixType.Append, String.Format(" : {0}", m_Amount), ""));
+                }
+            }
+
+            else
+            {
+                if (Amount > 1)
+                    LabelTo(from, Name + " : " + Amount);
+
+                else
+                    LabelTo(from, Name);
+            }
+        }
+
         public virtual void OnSingleClick(Mobile from)
         {
             if (Deleted || !from.CanSee(this))
                 return;
 
-            if (DisplayLootType)
-                LabelLootTypeTo(from);            
+            DisplayLabelName(from);
 
-            NetState ns = from.NetState;
-
-            if (ns != null)
+            if (DecorativeEquipment)
             {
-                if (this.Name == null)
+                switch (LootType)
                 {
-                    if (m_Amount <= 1)
-                        ns.Send(new MessageLocalized(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, LabelNumber, "", ""));
-                    else
-                        ns.Send(new MessageLocalizedAffix(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, LabelNumber, "", AffixType.Append, String.Format(" : {0}", m_Amount), ""));
-                }
-
-                else
-                {
-                    ns.Send(new UnicodeMessage(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, "ENU", "", this.Name + (m_Amount > 1 ? " : " + m_Amount : "")));
+                    case LootType.Regular: LabelTo(from, "(decorative)"); break;
+                    case LootType.Blessed: LabelTo(from, "(blessed decorative)"); break;
+                    case LootType.Newbied: LabelTo(from, "(newbied decorative)"); break;
+                    case LootType.Cursed: LabelTo(from, "(cursed decorative)"); break;
                 }
             }
 
-            if (DecorativeEquipment)
-                LabelTo(from, "[Decorative]");
-        }        
+            else
+            {
+                switch (LootType)
+                {
+                    case LootType.Blessed: LabelTo(from, "(blessed)"); break;
+                    case LootType.Newbied: LabelTo(from, "(newbied)"); break;
+                    case LootType.Cursed: LabelTo(from, "(cursed)"); break;
+                }
+            }                       
+
+            if (DisplayCrafter && CrafterName != "")
+                LabelTo(from, "[crafted by " + CrafterName + "]");            
+        }
 
         private static bool m_ScissorCopyLootType;
 

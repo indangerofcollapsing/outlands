@@ -11,7 +11,7 @@ namespace Server.Items
 		{
             Name = "shame dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Shame;
+            Dungeon = DungeonEnum.Shame;
 		}
 
         [Constructable]
@@ -19,7 +19,7 @@ namespace Server.Items
 		{
             Name = "shame dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Shame;
+            Dungeon = DungeonEnum.Shame;
 		}
 
         public ShameDungeonCore(Serial serial): base(serial)

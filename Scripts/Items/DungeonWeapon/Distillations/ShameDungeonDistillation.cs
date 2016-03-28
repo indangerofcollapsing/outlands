@@ -11,7 +11,7 @@ namespace Server.Items
         [Constructable]
         public ShameDungeonDistillation(): base()
         {
-            Dungeon = BaseDungeonArmor.DungeonEnum.Shame;            
+            Dungeon = DungeonEnum.Shame;            
         }
 
         public ShameDungeonDistillation(Serial serial): base(serial)

@@ -7528,12 +7528,12 @@ namespace Server.Mobiles
 
                 if (Utility.RandomDouble() < dungeonArmorChance)
                 {
-                    PackItem(BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Unspecified, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified));
-                    PackItem(new ArcaneDust());
+                    //PackItem(DungeonArmor.CreateDungeonArmor(DungeonEnum.None, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified));
+                    //PackItem(new ArcaneDust());
                 }
 
-                if (Utility.RandomDouble() < dungeonArmorUpgradeHammerChance)
-                    PackItem(new DungeonArmorUpgradeHammer());
+                //if (Utility.RandomDouble() < dungeonArmorUpgradeHammerChance)
+                    //PackItem(new DungeonArmorUpgradeHammer());
 
                 if (Utility.RandomDouble() < powerScrollChance)
                     HandoutPowerScrolls(Utility.RandomMinMax(1, 3), true);
@@ -7555,12 +7555,12 @@ namespace Server.Mobiles
 
                 if (Utility.RandomDouble() < dungeonArmorChance)
                 {
-                    PackItem(BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Unspecified, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified));
-                    PackItem(new ArcaneDust());
+                    //PackItem(DungeonArmor.CreateDungeonArmor(DungeonEnum.None, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified));
+                    //PackItem(new ArcaneDust());
                 }
 
-                if (Utility.RandomDouble() < dungeonArmorUpgradeHammerChance)
-                    PackItem(new DungeonArmorUpgradeHammer());
+                //if (Utility.RandomDouble() < dungeonArmorUpgradeHammerChance)
+                    //PackItem(new DungeonArmorUpgradeHammer());
 
                 if (Utility.RandomDouble() < powerScrollChance)
                     HandoutPowerScrolls(Utility.RandomMinMax(1, 2), false);

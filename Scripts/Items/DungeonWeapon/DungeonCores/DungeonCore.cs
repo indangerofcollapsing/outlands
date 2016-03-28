@@ -8,16 +8,16 @@ namespace Server.Items
 {
     public class DungeonCore : Item
     {
-        private BaseDungeonArmor.DungeonEnum m_Dungeon = BaseDungeonArmor.DungeonEnum.Shame;
+        private DungeonEnum m_Dungeon = DungeonEnum.Shame;
         [CommandProperty(AccessLevel.GameMaster)]
-        public BaseDungeonArmor.DungeonEnum Dungeon
+        public DungeonEnum Dungeon
         {
             get { return m_Dungeon; }
             set
             {
                 m_Dungeon = value;
 
-                BaseDungeonArmor.DungeonArmorDetail detail = new BaseDungeonArmor.DungeonArmorDetail(m_Dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
+                DungeonArmor.DungeonArmorDetail detail = new DungeonArmor.DungeonArmorDetail(m_Dungeon, 1);
 
                 if (detail != null)
                     Hue = detail.Hue;
@@ -46,7 +46,7 @@ namespace Server.Items
 
         public override void OnSingleClick(Mobile from)
         {
-            LabelTo(from, BaseDungeonArmor.GetDungeonName(Dungeon).ToLower() + " dungeon core : " + Amount.ToString());
+            LabelTo(from, GetDungeonName(Dungeon).ToLower() + " dungeon core : " + Amount.ToString());
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -99,7 +99,7 @@ namespace Server.Items
             //Version 0
             if (version >= 0)
             {
-                Dungeon = (BaseDungeonArmor.DungeonEnum)reader.ReadInt();
+                Dungeon = (DungeonEnum)reader.ReadInt();
             }
         }
     }

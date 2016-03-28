@@ -8,16 +8,16 @@ namespace Server.Items
 {
     public class DungeonDistillation : Item
     {
-        private BaseDungeonArmor.DungeonEnum m_Dungeon = BaseDungeonArmor.DungeonEnum.Shame;
+        private DungeonEnum m_Dungeon = DungeonEnum.Shame;
         [CommandProperty(AccessLevel.GameMaster)]
-        public BaseDungeonArmor.DungeonEnum Dungeon
+        public DungeonEnum Dungeon
         {
             get { return m_Dungeon; }
             set
             {
                 m_Dungeon = value;
 
-                BaseDungeonArmor.DungeonArmorDetail detail = new BaseDungeonArmor.DungeonArmorDetail(m_Dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
+                DungeonArmor.DungeonArmorDetail detail = new DungeonArmor.DungeonArmorDetail(m_Dungeon, 1);
 
                 if (detail != null)
                     Hue = detail.Hue;
@@ -29,13 +29,13 @@ namespace Server.Items
         {
             Name = "dungeon distillation";
 
-            int dungeonCount = Enum.GetNames(typeof(BaseDungeonArmor.DungeonEnum)).Length;
+            int dungeonCount = Enum.GetNames(typeof(DungeonEnum)).Length;
 
-            Dungeon = (BaseDungeonArmor.DungeonEnum)Utility.RandomMinMax(1, dungeonCount - 1);
+            Dungeon = (DungeonEnum)Utility.RandomMinMax(1, dungeonCount - 1);
         }
 
         [Constructable]
-        public DungeonDistillation(BaseDungeonArmor.DungeonEnum dungeonType): base(6198)
+        public DungeonDistillation(DungeonEnum dungeonType): base(6198)
         {
             Name = "dungeon distillation";
 
@@ -48,7 +48,7 @@ namespace Server.Items
 
         public override void OnSingleClick(Mobile from)
         {
-            LabelTo(from, BaseDungeonArmor.GetDungeonName(Dungeon).ToLower() + " dungeon distillation");
+            LabelTo(from, GetDungeonName(Dungeon).ToLower() + " dungeon distillation");
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -75,7 +75,7 @@ namespace Server.Items
             //Version 0
             if (version >= 0)
             {
-                Dungeon = (BaseDungeonArmor.DungeonEnum)reader.ReadInt();
+                Dungeon = (DungeonEnum)reader.ReadInt();
             }
         }
     }

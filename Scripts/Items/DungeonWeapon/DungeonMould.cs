@@ -168,7 +168,7 @@ namespace Server.Items
                     }
                 }
 
-                if (weapon.DungeonTier == 0)
+                if (weapon.Dungeon == DungeonEnum.None && weapon .TierLevel == 0)
                 {
                     if (weapon.CrafterName == "" || weapon.Quality != Quality.Exceptional)
                     {
@@ -185,7 +185,7 @@ namespace Server.Items
                     newWeapon = true;
                 }
 
-                else if (weapon.DungeonTier == DungeonWeapon.MaxDungeonTier)
+                else if (weapon.TierLevel == DungeonWeapon.MaxDungeonTier)
                 {
                     player.SendMessage("That weapon is at its maximum tier.");
                     return;
@@ -208,7 +208,7 @@ namespace Server.Items
                             return;
                         }
 
-                        double craftingSkillRequired = (double)DungeonWeapon.BaseCraftingSkillNeeded + ((double)(weapon.DungeonTier + 1) * (double)DungeonWeapon.ExtraCraftingSkillNeededPerTier);
+                        double craftingSkillRequired = (double)DungeonWeapon.BaseCraftingSkillNeeded + ((double)(weapon.TierLevel) * (double)DungeonWeapon.ExtraCraftingSkillNeededPerTier);
 
                         if (from.Skills.Blacksmith.Value < craftingSkillRequired)
                         {
@@ -224,7 +224,7 @@ namespace Server.Items
                             return;
                         }
 
-                        craftingSkillRequired = (double)DungeonWeapon.BaseCraftingSkillNeeded + ((double)(weapon.DungeonTier + 1) * (double)DungeonWeapon.ExtraCraftingSkillNeededPerTier);
+                        craftingSkillRequired = (double)DungeonWeapon.BaseCraftingSkillNeeded + ((double)(weapon.TierLevel) * (double)DungeonWeapon.ExtraCraftingSkillNeededPerTier);
 
                         if (from.Skills.Carpentry.Value < craftingSkillRequired)
                         {
@@ -240,7 +240,7 @@ namespace Server.Items
                     if (newWeapon)
                     {         
                         from.CloseGump(typeof(DungeonMouldWeaponGump));
-                        from.SendGump(new DungeonMouldWeaponGump(from, from, from, m_DungeonMould, newWeapon, weapon, BaseDungeonArmor.DungeonEnum.Covetous, 0, false));
+                        from.SendGump(new DungeonMouldWeaponGump(from, from, from, m_DungeonMould, newWeapon, weapon, DungeonEnum.Covetous, 0, false));
                     }
 
                     else
@@ -256,10 +256,10 @@ namespace Server.Items
                     if (newWeapon)
                     {
                         from.CloseGump(typeof(DungeonMouldWeaponGump));
-                        from.SendGump(new DungeonMouldWeaponGump(from, from, mobileParent, m_DungeonMould, newWeapon, weapon, BaseDungeonArmor.DungeonEnum.Covetous, 0, false));
+                        from.SendGump(new DungeonMouldWeaponGump(from, from, mobileParent, m_DungeonMould, newWeapon, weapon, DungeonEnum.Covetous, 0, false));
 
                         mobileParent.CloseGump(typeof(DungeonMouldWeaponGump));
-                        mobileParent.SendGump(new DungeonMouldWeaponGump(mobileParent, from, mobileParent, m_DungeonMould, newWeapon, weapon, BaseDungeonArmor.DungeonEnum.Covetous, 0, false));                
+                        mobileParent.SendGump(new DungeonMouldWeaponGump(mobileParent, from, mobileParent, m_DungeonMould, newWeapon, weapon, DungeonEnum.Covetous, 0, false));                
                     }
 
                     else
@@ -274,7 +274,7 @@ namespace Server.Items
             }
         }
 
-        public static bool HasRequiredMaterials(Mobile from, Mobile mobileTarget, DungeonMould dungeonMould, bool newWeapon, BaseDungeonArmor.DungeonEnum dungeon)
+        public static bool HasRequiredMaterials(Mobile from, Mobile mobileTarget, DungeonMould dungeonMould, bool newWeapon, DungeonEnum dungeon)
         {
             if (from == null) return false;
             if (from.Backpack == null) return false;
@@ -325,7 +325,7 @@ namespace Server.Items
             return false;
         }
 
-        public static void ConsumeMaterials(Mobile from, Mobile mobileTarget, DungeonMould dungeonMould, bool newWeapon, BaseDungeonArmor.DungeonEnum dungeon)
+        public static void ConsumeMaterials(Mobile from, Mobile mobileTarget, DungeonMould dungeonMould, bool newWeapon, DungeonEnum dungeon)
         {
             if (from == null || mobileTarget == null)
                 return;
@@ -400,13 +400,14 @@ namespace Server.Items
                 dungeonMould.Delete();
         }
 
-        public static BaseWeapon CreateDungeonWeapon(BaseWeapon weapon, BaseDungeonArmor.DungeonEnum dungeon)
+        public static BaseWeapon CreateDungeonWeapon(BaseWeapon weapon, DungeonEnum dungeon)
         {
             weapon.Quality = Quality.Regular;
-            weapon.BlessedCharges = DungeonWeapon.BaseMaxBlessedCharges;
+            weapon.ArcaneCharges = DungeonWeapon.ArcaneMaxCharges;
+            weapon.ArcaneChargesMax = DungeonWeapon.ArcaneMaxCharges;
             weapon.Dungeon = dungeon;
-            weapon.DungeonTier = 1;
-            weapon.DungeonExperience = 0;
+            weapon.TierLevel = 1;
+            weapon.Experience = 0;
 
             return weapon;
         }
@@ -419,11 +420,11 @@ namespace Server.Items
             public DungeonMould m_DungeonMould;
             public bool m_NewWeapon;
             public BaseWeapon m_Weapon;
-            public BaseDungeonArmor.DungeonEnum m_Dungeon;
+            public DungeonEnum m_Dungeon;
             public int m_AmountDemanded;
             public bool m_Confirmed;
 
-            public DungeonMouldWeaponGump(Mobile gumpTarget, Mobile crafter, Mobile mobileTarget, DungeonMould mould, bool newWeapon, BaseWeapon weapon, BaseDungeonArmor.DungeonEnum dungeon, int amountDemanded, bool confirmed): base(10, 10)
+            public DungeonMouldWeaponGump(Mobile gumpTarget, Mobile crafter, Mobile mobileTarget, DungeonMould mould, bool newWeapon, BaseWeapon weapon, DungeonEnum dungeon, int amountDemanded, bool confirmed): base(10, 10)
             {
                 m_GumpTarget = gumpTarget;
                 m_Crafter = crafter;
@@ -507,13 +508,12 @@ namespace Server.Items
                 }
 
                 //Weapon Info
-
-                int weaponTier = m_Weapon.DungeonTier + 1;
-                string dungeonName = BaseDungeonArmor.GetDungeonName(m_Dungeon) + " Dungeon";
+                int weaponTier = m_Weapon.TierLevel;
+                string dungeonName = GetDungeonName(m_Dungeon) + " Dungeon";
                 string weaponName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(m_Weapon.Name);
                 int newDurability = DungeonWeapon.BaselineDurability + (DungeonWeapon.IncreasedDurabilityPerTier * weaponTier);
 
-                int adjustedBlessedCharges = DungeonWeapon.BaseMaxBlessedCharges;
+                int adjustedBlessedCharges = DungeonWeapon.ArcaneMaxCharges;
 
                 double accuracy = 100 * (DungeonWeapon.BaseAccuracy + (DungeonWeapon.AccuracyPerTier * (double)weaponTier));
                 double tactics = DungeonWeapon.BaseTactics + (DungeonWeapon.TacticsPerTier * (double)weaponTier);
@@ -522,7 +522,7 @@ namespace Server.Items
 
                 effectChance *= DungeonWeapon.GetSpeedScalar(m_Weapon.Speed);
 
-                BaseDungeonArmor.DungeonArmorDetail detail = new BaseDungeonArmor.DungeonArmorDetail(m_Dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
+                DungeonArmor.DungeonArmorDetail detail = new DungeonArmor.DungeonArmorDetail(m_Dungeon, 1);
 
                 EffectHue = detail.Hue - 1;
 
@@ -579,47 +579,47 @@ namespace Server.Items
                         AddLabel(265, 340, WhiteTextHue, "Shame");
                         AddLabel(265, 375, WhiteTextHue, "Wrong");
 
-                        if (m_Dungeon == BaseDungeonArmor.DungeonEnum.Covetous)
+                        if (m_Dungeon == DungeonEnum.Covetous)
                             AddButton(228, 90, 9724, 9721, 10, GumpButtonType.Reply, 0);
                         else
                             AddButton(228, 90, 9721, 9724, 10, GumpButtonType.Reply, 0);
 
-                        if (m_Dungeon == BaseDungeonArmor.DungeonEnum.Deceit)
+                        if (m_Dungeon == DungeonEnum.Deceit)
                             AddButton(228, 125, 9724, 9721, 11, GumpButtonType.Reply, 0);
                         else
                             AddButton(228, 125, 9721, 9724, 11, GumpButtonType.Reply, 0);
 
-                        if (m_Dungeon == BaseDungeonArmor.DungeonEnum.Despise)
+                        if (m_Dungeon == DungeonEnum.Despise)
                             AddButton(228, 160, 9724, 9721, 12, GumpButtonType.Reply, 0);
                         else
                             AddButton(228, 160, 9721, 9724, 12, GumpButtonType.Reply, 0);
 
-                        if (m_Dungeon == BaseDungeonArmor.DungeonEnum.Destard)
+                        if (m_Dungeon == DungeonEnum.Destard)
                             AddButton(228, 195, 9724, 9721, 13, GumpButtonType.Reply, 0);
                         else
                             AddButton(228, 195, 9721, 9724, 13, GumpButtonType.Reply, 0);
 
-                        if (m_Dungeon == BaseDungeonArmor.DungeonEnum.Fire)
+                        if (m_Dungeon == DungeonEnum.Fire)
                             AddButton(228, 230, 9724, 9721, 14, GumpButtonType.Reply, 0);
                         else
                             AddButton(228, 230, 9721, 9724, 14, GumpButtonType.Reply, 0);
 
-                        if (m_Dungeon == BaseDungeonArmor.DungeonEnum.Hythloth)
+                        if (m_Dungeon == DungeonEnum.Hythloth)
                             AddButton(228, 265, 9724, 9721, 15, GumpButtonType.Reply, 0);
                         else
                             AddButton(228, 265, 9721, 9724, 15, GumpButtonType.Reply, 0);
 
-                        if (m_Dungeon == BaseDungeonArmor.DungeonEnum.Ice)
+                        if (m_Dungeon == DungeonEnum.Ice)
                             AddButton(228, 300, 9724, 9721, 16, GumpButtonType.Reply, 0);
                         else
                             AddButton(228, 300, 9721, 9724, 16, GumpButtonType.Reply, 0);
 
-                        if (m_Dungeon == BaseDungeonArmor.DungeonEnum.Shame)
+                        if (m_Dungeon == DungeonEnum.Shame)
                             AddButton(228, 335, 9724, 9721, 17, GumpButtonType.Reply, 0);
                         else
                             AddButton(228, 335, 9721, 9724, 17, GumpButtonType.Reply, 0);
 
-                        if (m_Dungeon == BaseDungeonArmor.DungeonEnum.Wrong)
+                        if (m_Dungeon == DungeonEnum.Wrong)
                             AddButton(228, 370, 9724, 9721, 18, GumpButtonType.Reply, 0); 
                         else
                             AddButton(228, 370, 9721, 9724, 18, GumpButtonType.Reply, 0); 
@@ -893,15 +893,15 @@ namespace Server.Items
                         {
                             switch (info.ButtonID)
                             {
-                                case 10: m_Dungeon = BaseDungeonArmor.DungeonEnum.Covetous; break;
-                                case 11: m_Dungeon = BaseDungeonArmor.DungeonEnum.Deceit; break;
-                                case 12: m_Dungeon = BaseDungeonArmor.DungeonEnum.Despise; break;
-                                case 13: m_Dungeon = BaseDungeonArmor.DungeonEnum.Destard; break;
-                                case 14: m_Dungeon = BaseDungeonArmor.DungeonEnum.Fire; break;
-                                case 15: m_Dungeon = BaseDungeonArmor.DungeonEnum.Hythloth; break;
-                                case 16: m_Dungeon = BaseDungeonArmor.DungeonEnum.Ice; break;
-                                case 17: m_Dungeon = BaseDungeonArmor.DungeonEnum.Shame; break;
-                                case 18: m_Dungeon = BaseDungeonArmor.DungeonEnum.Wrong; break;
+                                case 10: m_Dungeon = DungeonEnum.Covetous; break;
+                                case 11: m_Dungeon = DungeonEnum.Deceit; break;
+                                case 12: m_Dungeon = DungeonEnum.Despise; break;
+                                case 13: m_Dungeon = DungeonEnum.Destard; break;
+                                case 14: m_Dungeon = DungeonEnum.Fire; break;
+                                case 15: m_Dungeon = DungeonEnum.Hythloth; break;
+                                case 16: m_Dungeon = DungeonEnum.Ice; break;
+                                case 17: m_Dungeon = DungeonEnum.Shame; break;
+                                case 18: m_Dungeon = DungeonEnum.Wrong; break;
                             }
                         }                      
                     }
@@ -966,12 +966,12 @@ namespace Server.Items
                             weaponValid = false;
                     }
 
-                    if (m_Weapon.DungeonTier == DungeonWeapon.MaxDungeonTier)
+                    if (m_Weapon.TierLevel == DungeonWeapon.MaxDungeonTier)
                         weaponValid = false;
 
                     if (m_NewWeapon)
                     {
-                        if (m_Weapon.DungeonTier > 0)
+                        if (m_Weapon.TierLevel > 0)
                             weaponValid = false;
 
                         if (m_Weapon.CrafterName == "" || m_Weapon.Quality != Quality.Exceptional)
@@ -1077,17 +1077,18 @@ namespace Server.Items
                     if (m_NewWeapon)
                     {
                         m_Weapon.Quality = Quality.Regular;
-                        m_Weapon.BlessedCharges = DungeonWeapon.BaseMaxBlessedCharges;
+                        m_Weapon.ArcaneCharges = DungeonWeapon.ArcaneMaxCharges;
+                        m_Weapon.ArcaneChargesMax = DungeonWeapon.ArcaneMaxCharges;
                         m_Weapon.Dungeon = m_Dungeon;
-                        m_Weapon.DungeonTier = 1;                                       
+                        m_Weapon.TierLevel = 1;                                       
                     }
 
-                    else                    
-                        m_Weapon.DungeonTier++;
+                    else
+                        m_Weapon.TierLevel++;
 
-                    m_Weapon.DungeonExperience = 0;
+                    m_Weapon.Experience = 0;
 
-                    m_Weapon.MaxHitPoints = DungeonWeapon.BaselineDurability + (DungeonWeapon.IncreasedDurabilityPerTier * m_Weapon.DungeonTier);
+                    m_Weapon.MaxHitPoints = DungeonWeapon.BaselineDurability + (DungeonWeapon.IncreasedDurabilityPerTier * m_Weapon.TierLevel);
                     m_Weapon.HitPoints = m_Weapon.MaxHitPoints;
 
                     return;

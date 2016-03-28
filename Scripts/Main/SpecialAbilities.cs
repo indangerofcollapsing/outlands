@@ -919,7 +919,7 @@ namespace Server.Mobiles
                                 damage *= BaseCreature.BreathDamageToCreatureScalar;
                         }
 
-                        BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(mobile, null);
+                        DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(mobile, null);
 
                         if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
                             damage *= defenderDungeonArmor.DungeonArmorDetail.BreathDamageReceivedScalar;
@@ -2057,7 +2057,7 @@ namespace Server.Mobiles
             BaseCreature bc_Defender = defender as BaseCreature;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
             {
@@ -2201,7 +2201,7 @@ namespace Server.Mobiles
             BaseCreature bc_Defender = defender as BaseCreature;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
             {
@@ -2337,7 +2337,7 @@ namespace Server.Mobiles
             BaseCreature bc_Defender = defender as BaseCreature;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
             {
@@ -2392,7 +2392,7 @@ namespace Server.Mobiles
             BaseCreature bc_Defender = defender as BaseCreature;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
             {
@@ -2446,7 +2446,7 @@ namespace Server.Mobiles
             BaseCreature bc_Defender = defender as BaseCreature;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
             {
@@ -2595,7 +2595,7 @@ namespace Server.Mobiles
             BaseCreature bc_Defender = defender as BaseCreature;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
             {
@@ -2671,7 +2671,7 @@ namespace Server.Mobiles
                     value *= bc_Attacker.PvPAbilityDamageScalar;
             }
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(defender, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
                 value *= defenderDungeonArmor.DungeonArmorDetail.BleedDamageReceivedScalar;
@@ -2748,7 +2748,7 @@ namespace Server.Mobiles
                     value *= bc_Attacker.PvPAbilityDamageScalar;
             }
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(defender, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
                 value *= defenderDungeonArmor.DungeonArmorDetail.DiseaseDamageReceivedScalar;
@@ -2833,7 +2833,7 @@ namespace Server.Mobiles
             BaseCreature bc_Defender = defender as BaseCreature;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
 
             if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
             {

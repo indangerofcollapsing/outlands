@@ -37,7 +37,7 @@ namespace Server.SkillHandlers
 				{
                     BaseWeapon weapon = (BaseWeapon)targeted;
 
-                    if (weapon.DungeonTier > 0)
+                    if (weapon.Dungeon != DungeonEnum.None && weapon.TierLevel > 0)
                     {
                         from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ArmsLoreCooldown * 1000);
 

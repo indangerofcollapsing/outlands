@@ -687,7 +687,7 @@ namespace Server.Misc
             }
         }
 
-        private static SkillGainRange[] m_SkillGainRanges = new SkillGainRange[49]
+        private static SkillGainRange[] m_SkillGainRanges = new SkillGainRange[]
 		{
             new SkillGainRange(SkillName.Alchemy, new double[]{     
                                                                     10, 10,     //0-5, 5-10

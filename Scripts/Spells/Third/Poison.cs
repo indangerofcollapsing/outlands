@@ -162,7 +162,7 @@ namespace Server.Spells.Third
                     mobile.PlaySound(0x474);
                 }
 
-                BaseDungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(Caster, null);
+                DungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(Caster, null);
 
                 if (casterDungeonArmor.MatchingSet && !casterDungeonArmor.InPlayerCombat && mobile is BaseCreature)
                 {

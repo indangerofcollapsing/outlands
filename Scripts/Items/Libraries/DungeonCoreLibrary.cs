@@ -97,18 +97,18 @@ namespace Server.Items
 
         public void CreateDungeonEntries()
         {
-            int dungeonCount = Enum.GetNames(typeof(BaseDungeonArmor.DungeonEnum)).Length;
+            int dungeonCount = Enum.GetNames(typeof(DungeonEnum)).Length;
 
             for (int a = 1; a < dungeonCount; a++)
             {
                 DungeonCoreLibraryEntry entry = new DungeonCoreLibraryEntry();
-                entry.Dungeon = (BaseDungeonArmor.DungeonEnum)a;
+                entry.Dungeon = (DungeonEnum)a;
 
                 m_LibraryEntries.Add(entry);
             }
         }
 
-        public DungeonCoreLibraryEntry GetEntryDetail(BaseDungeonArmor.DungeonEnum dungeon)
+        public DungeonCoreLibraryEntry GetEntryDetail(DungeonEnum dungeon)
         {
             DungeonCoreLibraryEntry targetEntry = null;
 
@@ -167,7 +167,7 @@ namespace Server.Items
                 from.SendMessage("You do not have any dungeon cores in your backpack.");
         }
 
-        public void EjectDungeonCore(Mobile from, BaseDungeonArmor.DungeonEnum dungeon, bool removeAll)
+        public void EjectDungeonCore(Mobile from, DungeonEnum dungeon, bool removeAll)
         {
             if (from == null || dungeon == null)
                 return;
@@ -377,7 +377,7 @@ namespace Server.Items
                 {
                     DungeonCoreLibraryEntry entry = new DungeonCoreLibraryEntry();
 
-                    entry.Dungeon = (BaseDungeonArmor.DungeonEnum)reader.ReadInt();
+                    entry.Dungeon = (DungeonEnum)reader.ReadInt();
                     entry.Count = reader.ReadInt();
 
                     m_LibraryEntries.Add(entry);                    
@@ -388,7 +388,7 @@ namespace Server.Items
 
     public class DungeonCoreLibraryEntry
     {
-        public BaseDungeonArmor.DungeonEnum Dungeon = BaseDungeonArmor.DungeonEnum.Shame;
+        public DungeonEnum Dungeon = DungeonEnum.Shame;
         public int Count = 0;
     }
 
@@ -510,7 +510,7 @@ namespace Server.Items
                     //Left Side
                     if (entryCount < EntriesPerSide)
                     {
-                        AddLabel(60, leftStartY, 2599, BaseDungeonArmor.GetDungeonName(entry.Dungeon));
+                        AddLabel(60, leftStartY, 2599, BaseWeapon.GetDungeonName(entry.Dungeon));
                         AddLabel(174, leftStartY, 2615, "Count");
                         AddButton(231, leftStartY + 3, 2118, 2118, 10 + entryCount, GumpButtonType.Reply, 0);
                         AddLabel(249, leftStartY, WhiteTextHue, entry.Count.ToString());
@@ -521,7 +521,7 @@ namespace Server.Items
                     //Right Side
                     else
                     {
-                        AddLabel(317, rightStartY, 2599, BaseDungeonArmor.GetDungeonName(entry.Dungeon));
+                        AddLabel(317, rightStartY, 2599, BaseWeapon.GetDungeonName(entry.Dungeon));
                         AddLabel(431, rightStartY, 2615, "Count");
                         AddButton(488, rightStartY + 3, 2118, 2118, 10 + entryCount, GumpButtonType.Reply, 0);
                         AddLabel(506, rightStartY, WhiteTextHue, entry.Count.ToString());                

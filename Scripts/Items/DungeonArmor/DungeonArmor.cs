@@ -14,193 +14,8 @@ using Server.Gumps;
 
 namespace Server.Items
 {
-    public abstract class BaseDungeonArmor : BaseArmor
-    {        
-        public enum DungeonEnum
-        {
-            Unspecified,
-
-            Shame,
-            Deceit,
-            Destard,
-            Hythloth,  
-            Covetous,
-            Wrong,
-            Despise,
-            Ice,
-            Fire
-        }
-
-        public enum ArmorTierEnum
-        {
-            Unspecified,
-            Tier1,
-            Tier2,
-            Tier3,
-            Tier4
-        }
-
-        public enum ArmorLocation
-        {
-            Unspecified,
-            Helmet,
-            Gorget,
-            Chest,
-            Arms,
-            Gloves,
-            Legs
-        }
-
-        private int m_BlessedCharges = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int BlessedCharges
-        {
-            get { return m_BlessedCharges; }
-            set
-            { 
-                m_BlessedCharges = value;
-
-                if (m_BlessedCharges > m_MaxBlessedCharges)
-                    m_BlessedCharges = m_MaxBlessedCharges;
-            }
-        }
-
-        private int m_MaxBlessedCharges = 5;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int MaxBlessedCharges
-        {
-            get { return m_MaxBlessedCharges; }
-            set 
-            { 
-                m_MaxBlessedCharges = value;
-
-                if (m_BlessedCharges > m_MaxBlessedCharges)
-                    m_BlessedCharges = m_MaxBlessedCharges;
-            }
-        }
-
-        private DungeonEnum m_Dungeon;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DungeonEnum Dungeon
-        {
-            get { return m_Dungeon; }
-            set 
-            {                
-                m_Dungeon = value;
-
-                DungeonArmorDetail detail = new DungeonArmorDetail(m_Dungeon, m_Tier);
-
-                if (detail != null)
-                    Hue = detail.Hue;
-            }
-        }
-
-        private ArmorTierEnum m_Tier;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public ArmorTierEnum Tier
-        {
-            get { return m_Tier; }
-            set { m_Tier = value; }
-        }
-
-        public override bool AlwaysAllowDoubleClick { get { return true; } }
-
-        [Constructable]
-        public BaseDungeonArmor(int itemId, DungeonEnum dungeon, ArmorTierEnum armorTier) : base(itemId)
-        {           
-            Dungeon = dungeon;
-            Tier = armorTier;
-        }
-
-        public static BaseDungeonArmor CreateDungeonArmor(DungeonEnum dungeon, ArmorTierEnum armorTier, ArmorLocation armorLocation)
-        {
-            BaseDungeonArmor armorPiece = null;
-
-            if (dungeon == DungeonEnum.Unspecified)
-            {
-                int dungeonCount = Enum.GetNames(typeof(DungeonEnum)).Length;
-                
-                dungeon = (DungeonEnum)Utility.RandomMinMax(1, dungeonCount - 1);
-            }
-
-            if (armorTier == ArmorTierEnum.Unspecified)
-            {
-                int armorTierCount = Enum.GetNames(typeof(ArmorTierEnum)).Length;
-                armorTier = (ArmorTierEnum)Utility.RandomMinMax(1, armorTierCount - 1);
-            }
-
-            if (armorLocation == ArmorLocation.Unspecified)
-            {
-                int armorLocationCount = Enum.GetNames(typeof(ArmorLocation)).Length;
-                armorLocation = (ArmorLocation)Utility.RandomMinMax(1, armorLocationCount - 1);
-            }
-
-            switch (armorLocation)
-            {
-                case ArmorLocation.Helmet: armorPiece = new DungeonArmorPlateHelm(dungeon, armorTier); break;
-                case ArmorLocation.Gorget: armorPiece = new DungeonArmorPlateGorget(dungeon, armorTier); break;
-                case ArmorLocation.Chest: armorPiece = new DungeonArmorPlateChest(dungeon, armorTier); break;
-                case ArmorLocation.Arms: armorPiece = new DungeonArmorPlateArms(dungeon, armorTier); break;
-                case ArmorLocation.Gloves: armorPiece = new DungeonArmorPlateGloves(dungeon, armorTier); break;
-                case ArmorLocation.Legs: armorPiece = new DungeonArmorPlateLegs(dungeon, armorTier); break;
-            }
-
-            DungeonArmorDetail detail = new DungeonArmorDetail(dungeon, armorTier);
-
-            if (armorTier != null && detail != null)
-                armorPiece.Hue = detail.Hue;
-
-            return armorPiece;
-        }
-
-        public BaseDungeonArmor(Serial serial): base(serial)
-        {
-        }
-
-        public static string GetDungeonName(DungeonEnum dungeon)
-        {
-            switch (dungeon)
-            {
-                case DungeonEnum.Shame: return "Shame";
-                case DungeonEnum.Deceit: return "Deceit";
-                case DungeonEnum.Destard: return "Destard";
-                case DungeonEnum.Hythloth: return "Hythloth";
-                case DungeonEnum.Covetous: return "Covetous";
-                case DungeonEnum.Wrong: return "Wrong";
-                case DungeonEnum.Despise: return "Despise";
-                case DungeonEnum.Ice: return "Ice";
-                case DungeonEnum.Fire: return "Fire";
-            }
-
-            return "";
-        }
-
-        public override void OnSingleClick(Mobile from)
-        {
-            string sName = m_Dungeon.ToString().ToLower() + " dungeon ";
-                        
-            switch (Layer)
-            {
-                case Layer.Helm: sName += "helm"; break;
-                case Layer.Neck: sName += "gorget"; break;
-                case Layer.InnerTorso: sName += "chest"; break;
-                case Layer.Arms: sName += "arms"; break;
-                case Layer.Gloves: sName += "gloves"; break;
-                case Layer.Pants: sName += "leggings"; break;
-            }
-
-            sName += ": tier " + ((int)Tier).ToString();
-
-            LabelTo(from, sName);
-            LabelTo(from, String.Format("[blessed charges: {0}/{1}]", BlessedCharges, MaxBlessedCharges));
-        }
-
-        public override void OnDoubleClick(Mobile from)
-        {
-            from.CloseGump(typeof(DungeonArmorGump));
-            from.SendGump(new DungeonArmorGump(this, from));
-        }
-
+    public class DungeonArmor
+    {
         public static void CheckForAndUpdateDungeonArmorProperties(PlayerMobile player)
         {
             List<Layer> m_Layers = new List<Layer>();
@@ -212,31 +27,36 @@ namespace Server.Items
             m_Layers.Add(Layer.Gloves);
             m_Layers.Add(Layer.Pants);
 
-            BaseDungeonArmor dungeonArmor = null;
+            BaseArmor armorPiece = null;
 
             for (int a = 0; a < m_Layers.Count; a++)
             {
-                dungeonArmor = player.FindItemOnLayer(m_Layers[a]) as BaseDungeonArmor;
-                                
-                if (dungeonArmor != null)
-                    break;
+                armorPiece = player.FindItemOnLayer(m_Layers[a]) as BaseArmor;
+
+                if (armorPiece != null)
+                {
+                    if (armorPiece.Dungeon != DungeonEnum.None && armorPiece.TierLevel > 0)                    
+                        break;                    
+                }
+
+                armorPiece = null;
             }
 
             //Only Need to Initiate The Update With Single Piece Player is Wearing
-            if (dungeonArmor != null)
-                dungeonArmor.UpdateProperties(player);
+            if (armorPiece != null)
+                UpdateProperties(player);
         }
 
-        public void UpdateProperties(Mobile from)
+        public static void UpdateProperties(Mobile from)
         {
             if (from == null)
                 return;
 
-            PlayerDungeonArmorProfile dungeonArmor = new PlayerDungeonArmorProfile(from, null);
-                
+            PlayerDungeonArmorProfile dungeonArmorSet = new PlayerDungeonArmorProfile(from, null);
+
             bool matchingSet = false;
 
-            if (dungeonArmor.MatchingSet)
+            if (dungeonArmorSet.MatchingSet)
                 matchingSet = true;
 
             List<Layer> m_Layers = new List<Layer>();
@@ -257,38 +77,38 @@ namespace Server.Items
                     string modName = armor.Serial.ToString();
 
                     from.RemoveStatMod(modName + "Dex");
-                                        
+
                     armor.BaseArmorRating = armor.ArmorBase;
                     armor.MeditationAllowance = armor.DefMedAllowance;
 
-                    if (matchingSet && !dungeonArmor.InPlayerCombat)
+                    if (matchingSet && !dungeonArmorSet.InPlayerCombat)
                     {
-                        armor.BaseArmorRating = dungeonArmor.DungeonArmorDetail.TieredArmorRating;
+                        armor.BaseArmorRating = dungeonArmorSet.DungeonArmorDetail.TieredArmorRating;
 
                         //Assign All of the Suit's Dex Penalty to The Chest Piece (Dex Will Be Automatically Recalculated if Any Piece is Removed)
                         if (armor.Layer == Layer.InnerTorso)
-                            from.AddStatMod(new StatMod(StatType.Dex, modName + "Dex", dungeonArmor.DungeonArmorDetail.DexPenalty, TimeSpan.Zero));
+                            from.AddStatMod(new StatMod(StatType.Dex, modName + "Dex", dungeonArmorSet.DungeonArmorDetail.DexPenalty, TimeSpan.Zero));
 
-                        armor.MeditationAllowance = dungeonArmor.DungeonArmorDetail.MeditationAllowance;
+                        armor.MeditationAllowance = dungeonArmorSet.DungeonArmorDetail.MeditationAllowance;
                     }
 
-                    else                                      
-                        from.AddStatMod(new StatMod(StatType.Dex, modName + "Dex", armor.OldDexBonus, TimeSpan.Zero));                    
+                    else
+                        from.AddStatMod(new StatMod(StatType.Dex, modName + "Dex", armor.OldDexBonus, TimeSpan.Zero));
                 }
             }
 
             PlayerMobile player = from as PlayerMobile;
 
-            if (player != null)            
-                player.ResetRegenTimers();            
+            if (player != null)
+                player.ResetRegenTimers();
         }
         
-        public override bool OnEquip(Mobile from)
+        public static void OnEquip(Mobile from, BaseArmor armor)
         {
             Timer.DelayCall(TimeSpan.FromMilliseconds(50), delegate
             {
-                if (this == null) return;
-                if (Deleted) return;
+                if (armor == null) return;
+                if (armor.Deleted) return;
                 if (from == null) return;
                 if (from.Deleted) return;
                 if (!from.Alive) return;
@@ -297,7 +117,7 @@ namespace Server.Items
 
                 if (dungeonArmor.MatchingSet)
                 {
-                    BaseArmorRating = dungeonArmor.DungeonArmorDetail.TieredArmorRating;
+                    armor.BaseArmorRating = dungeonArmor.DungeonArmorDetail.TieredArmorRating;
 
                     int hue = dungeonArmor.DungeonArmorDetail.Hue;
                     int effectHue = dungeonArmor.DungeonArmorDetail.EffectHue;
@@ -331,16 +151,12 @@ namespace Server.Items
                         case "Ice": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_IceArmor); break;
                         case "Fire": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_FireArmor); break;
                     }
-                }    
+                }
             });
-
-            return base.OnEquip(from);
         }
 
-        public override void OnRemoved(object parent)
+        public static void OnRemoved(object parent, BaseArmor armor)
         {
-            base.OnRemoved(parent);
-
             if (parent is PlayerMobile)
             {
                 PlayerMobile player = parent as PlayerMobile;
@@ -363,60 +179,8 @@ namespace Server.Items
                     player.PublicOverheadMessage(MessageType.Emote, 0, false, "*a magical aura fades from " + player.Name + "*");
                 }
             }
-        }
-
-        public override bool CheckBlessed(Mobile mobile, bool isOnDeath = false)
-        {
-            PlayerMobile player = mobile as PlayerMobile;
-
-            if (player == null)
-                return false;
-
-            if (BlessedCharges > 0)
-            {
-                if (isOnDeath)
-                    BlessedCharges--;
-
-                return true;
-            }
-
-            else
-                return false;
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write((int)2); //Version
-
-            writer.Write((int)m_Dungeon);
-            writer.Write((int)m_Tier);  
+        }        
         
-            //Version 1
-            writer.Write((int)m_BlessedCharges);
-
-            //Version 2
-            writer.Write((int)m_MaxBlessedCharges);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version >= 1)
-            {
-                m_Dungeon = (DungeonEnum)reader.ReadInt();
-                m_Tier = (ArmorTierEnum)reader.ReadInt();
-                m_BlessedCharges = reader.ReadInt();
-            }
-
-            if (version >= 2)
-            {
-                m_MaxBlessedCharges = reader.ReadInt();
-            }           
-        }
-
         public class PlayerDungeonArmorProfile
         {
             public DungeonArmorDetail DungeonArmorDetail = null;
@@ -426,23 +190,23 @@ namespace Server.Items
             public bool MatchingSet = false;            
             public int Pieces = 0;
 
-            BaseDungeonArmor lowestTierPiece = null;
+            BaseArmor lowestTierPiece = null;
 
-            public PlayerDungeonArmorProfile(Mobile wearer, BaseDungeonArmor armorPiece)
+            public PlayerDungeonArmorProfile(Mobile wearer, BaseArmor armorPiece)
             {
                 Player = wearer as PlayerMobile;
 
                 if (Player == null)
                 {
-                    DungeonArmorDetail = new DungeonArmorDetail(DungeonEnum.Unspecified, ArmorTierEnum.Unspecified);
+                    DungeonArmorDetail = new DungeonArmorDetail(DungeonEnum.None, 1);
                     return;
                 }
 
                 if (Player.LastPlayerCombatTime + Player.PlayerCombatExpirationDelay > DateTime.UtcNow)
                     InPlayerCombat = true;
 
-                DungeonEnum currentDungeon = DungeonEnum.Unspecified;
-                ArmorTierEnum lowestTier = (ArmorTierEnum)Enum.GetNames(typeof(ArmorTierEnum)).Length - 1;
+                DungeonEnum currentDungeon = DungeonEnum.None;
+                int lowestTier = 1000;
                 
                 List<Layer> m_Layers = new List<Layer>();
 
@@ -457,15 +221,22 @@ namespace Server.Items
 
                 for (int a = 0; a < m_Layers.Count; a++)
                 {
-                    BaseDungeonArmor dungeonArmor = Player.FindItemOnLayer(m_Layers[a]) as BaseDungeonArmor;
+                    BaseArmor dungeonArmor = Player.FindItemOnLayer(m_Layers[a]) as BaseArmor;
 
                     if (dungeonArmor == null)
+                    {
                         MatchingSet = false;
+                        continue;
+                    }
+
+                    if (dungeonArmor.Dungeon == DungeonEnum.None || dungeonArmor.TierLevel == 0)
+                        MatchingSet = false;
+
                     else
                     {
                         Pieces++;
 
-                        if (currentDungeon == DungeonEnum.Unspecified)
+                        if (currentDungeon == DungeonEnum.None)
                         {
                             currentDungeon = dungeonArmor.Dungeon;
                             lowestTierPiece = dungeonArmor;
@@ -477,9 +248,9 @@ namespace Server.Items
                                 MatchingSet = false;
                         }
 
-                        if (dungeonArmor.Tier < lowestTier)
+                        if (dungeonArmor.TierLevel < lowestTier)
                         {
-                            lowestTier = dungeonArmor.Tier;
+                            lowestTier = dungeonArmor.TierLevel;
                             lowestTierPiece = dungeonArmor;
                         }   
                     }                   
@@ -489,8 +260,11 @@ namespace Server.Items
                 if (armorPiece != null)
                 {
                     currentDungeon = armorPiece.Dungeon;
-                    lowestTier = armorPiece.Tier;                
+                    lowestTier = armorPiece.TierLevel;                
                 }
+
+                if (lowestTier == 1000)
+                    lowestTier = 1;
                
                 DungeonArmorDetail = new DungeonArmorDetail(currentDungeon, lowestTier);
             }            
@@ -499,7 +273,7 @@ namespace Server.Items
         public class DungeonArmorDetail
         {
             public DungeonEnum Dungeon;
-            public ArmorTierEnum Tier;
+            public int TierLevel;
 
             public string DungeonName = "";
             public int Hue = 0;
@@ -550,16 +324,14 @@ namespace Server.Items
             
             public string[] gumpText = new string[0];
 
-            public DungeonArmorDetail(DungeonEnum dungeonType, ArmorTierEnum tierType)
+            public DungeonArmorDetail(DungeonEnum dungeonType, int tierLevel)
             {
                 Dungeon = dungeonType;
-                Tier = tierType;
-
-                int tierLevel = (int)Tier;                
+                TierLevel = tierLevel;              
                 
                 switch (Dungeon)
                 {
-                    case DungeonEnum.Unspecified:
+                    case DungeonEnum.None:
                     break;
 
                     case DungeonEnum.Deceit:                      
@@ -821,19 +593,18 @@ namespace Server.Items
 
         public class DungeonArmorGump : Gump
         {
-            BaseDungeonArmor m_BaseDungeonArmor;
+            BaseArmor m_BaseArmor;
 
-            public DungeonArmorGump(BaseDungeonArmor baseDungeonArmor, Mobile from): base(10, 10)
+            public DungeonArmorGump(BaseArmor baseArmor, Mobile from): base(10, 10)
             {
-                if (baseDungeonArmor == null || from == null)
-                    return;
+                if (baseArmor == null || from == null) return;
+                if (baseArmor.Dungeon == DungeonEnum.None || baseArmor.TierLevel == 0) return;
 
-                m_BaseDungeonArmor = baseDungeonArmor;
+                m_BaseArmor = baseArmor;
 
-                PlayerDungeonArmorProfile dungeonArmor = new PlayerDungeonArmorProfile(from, baseDungeonArmor);
+                PlayerDungeonArmorProfile dungeonArmor = new PlayerDungeonArmorProfile(from, m_BaseArmor);
 
-                if (dungeonArmor.DungeonArmorDetail == null)
-                    return;
+                if (dungeonArmor.DungeonArmorDetail == null)  return;
 
                 Closable = true;
                 Disposable = true;

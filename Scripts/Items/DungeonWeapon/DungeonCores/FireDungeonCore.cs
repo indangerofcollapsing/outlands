@@ -11,7 +11,7 @@ namespace Server.Items
 		{
             Name = "fire dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Fire;
+            Dungeon = DungeonEnum.Fire;
 		}
 
         [Constructable]
@@ -19,7 +19,7 @@ namespace Server.Items
 		{
             Name = "fire dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Fire;
+            Dungeon = DungeonEnum.Fire;
 		}
 
         public FireDungeonCore(Serial serial): base(serial)

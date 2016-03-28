@@ -40,100 +40,13 @@ namespace Server.Items
 
         private SkillMod m_SkillMod;
 
-        private BaseDungeonArmor.DungeonEnum m_Dungeon = BaseDungeonArmor.DungeonEnum.Unspecified;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BaseDungeonArmor.DungeonEnum Dungeon
-        {
-            get { return m_Dungeon; }
-            set
-            {
-                m_Dungeon = value;
-
-                if (m_Dungeon != BaseDungeonArmor.DungeonEnum.Unspecified)
-                {
-                    BaseDungeonArmor.DungeonArmorDetail detail = new BaseDungeonArmor.DungeonArmorDetail(m_Dungeon, BaseDungeonArmor.ArmorTierEnum.Tier1);
-
-                    if (detail != null)
-                        Hue = detail.Hue;
-                }
-            }
-        }
-
-        private int m_DungeonTier = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int DungeonTier
-        {
-            get { return m_DungeonTier; }
-            set { m_DungeonTier = value; }
-        }
-
-        private int m_DungeonExperience = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int DungeonExperience
-        {
-            get { return m_DungeonExperience; }
-            set { m_DungeonExperience = value; }
-        }
-
-        private int m_BlessedCharges = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int BlessedCharges
-        {
-            get { return m_BlessedCharges; }
-            set
-            {
-                m_BlessedCharges = value;
-
-                if (m_BlessedCharges > m_MaxBlessedCharges)
-                    m_BlessedCharges = m_MaxBlessedCharges;
-            }
-        }
-
-        private int m_MaxBlessedCharges = DungeonWeapon.BaseMaxBlessedCharges;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int MaxBlessedCharges
-        {
-            get { return m_MaxBlessedCharges; }
-            set
-            {
-                m_MaxBlessedCharges = value;
-
-                if (m_BlessedCharges > m_MaxBlessedCharges)
-                    m_BlessedCharges = m_MaxBlessedCharges;
-            }
-        }        
-
         private SlayerGroupType m_SlayerGroup = SlayerGroupType.None;
         [CommandProperty(AccessLevel.GameMaster)]
         public SlayerGroupType SlayerGroup
         {
             get { return m_SlayerGroup; }
             set { m_SlayerGroup = value; }
-        }
-
-        private bool m_Cursed;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Cursed
-        {
-            get { return m_Cursed; }
-            set { m_Cursed = value; }
-        }
-
-        private bool m_Consecrated;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Consecrated
-        {
-            get { return m_Consecrated; }
-            set { m_Consecrated = value; }
-        }
-
-        private bool m_Identified;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Identified
-        {
-            get { return m_Identified; }
-            set { m_Identified = value; InvalidateProperties(); }
-        }
+        }    
 
         private int m_Hits;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -206,6 +119,17 @@ namespace Server.Items
             Hue = CraftResources.GetHue(Resource);
             InvalidateProperties();
             ScaleDurability();
+        }
+
+        public override void DungeonChange()
+        {
+            if (Dungeon != DungeonEnum.None)
+            {
+                DungeonArmor.DungeonArmorDetail detail = new DungeonArmor.DungeonArmorDetail(Dungeon, TierLevel);
+
+                if (detail != null)
+                    Hue = detail.Hue;
+            }
         }
 
         private WeaponDurabilityLevel m_DurabilityLevel;
@@ -638,8 +562,8 @@ namespace Server.Items
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(pm_Attacker);
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(pm_Defender);
 
-            BaseDungeonArmor.PlayerDungeonArmorProfile attackerDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(attacker, null);
-            BaseDungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(defender, null);
+            DungeonArmor.PlayerDungeonArmorProfile attackerDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(attacker, null);
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(defender, null);
 
             bool dungeonArmorStealth = false;
             int effectHue = 0;
@@ -1112,7 +1036,7 @@ namespace Server.Items
 
                 if (bc_Attacker.BardMaster != null)
                 {
-                    BaseDungeonArmor.PlayerDungeonArmorProfile bardMasterDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(bc_Attacker.BardMaster, null);
+                    DungeonArmor.PlayerDungeonArmorProfile bardMasterDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(bc_Attacker.BardMaster, null);
 
                     if (bardMasterDungeonArmor.MatchingSet && !bardMasterDungeonArmor.InPlayerCombat)
                         ProvokedCreatureDamageInflictedScalar = bardMasterDungeonArmor.DungeonArmorDetail.ProvokedCreatureDamageInflictedScalar;
@@ -1391,7 +1315,7 @@ namespace Server.Items
             damageGiven = AOS.Damage(defender, attacker, damage, false, 100, 0, 0, 0, 0);
 
             //Dungeon Weapon
-            if (DungeonTier > 0 && allowDungeonBonuses && pm_Attacker != null && bc_Defender != null)
+            if ((Dungeon != DungeonEnum.None && TierLevel > 0) && allowDungeonBonuses && pm_Attacker != null && bc_Defender != null)
             {
                 //Damage Tracking: Used for Experience Gains
                 bool entryFound = false;
@@ -1694,8 +1618,8 @@ namespace Server.Items
                 if (Quality == Quality.Exceptional)
                     mod += 10;
 
-                if (DungeonTier > 0)
-                    mod += DungeonWeapon.BaseTactics + (DungeonTier * DungeonWeapon.TacticsPerTier);
+                if (Dungeon != DungeonEnum.None && TierLevel > 0)
+                    mod += DungeonWeapon.BaseTactics + (TierLevel * DungeonWeapon.TacticsPerTier);
 
                 if (mod > 0)
                 {
@@ -1972,8 +1896,8 @@ namespace Server.Items
             #endregion
             
             //Dungeon Weapon
-            if (DungeonTier > 0 && pm_Defender == null)
-                chance += DungeonWeapon.BaseAccuracy * (DungeonWeapon.AccuracyPerTier * (double)DungeonTier);
+            if (Dungeon != DungeonEnum.None && TierLevel > 0 && pm_Defender == null)
+                chance += DungeonWeapon.BaseAccuracy * (DungeonWeapon.AccuracyPerTier * (double)TierLevel);
 
             if (defender is PlayerMobile && ((PlayerMobile)defender).m_DateTimeDied + TimeSpan.FromSeconds(60) > DateTime.UtcNow)
                 return (Utility.RandomDouble() < chance);
@@ -2372,7 +2296,7 @@ namespace Server.Items
             {
                 //Remove Dungeon Weapon Tactics Bonus Impact in PvP
                 if (pm_Attacker.LastPlayerCombatTime + pm_Attacker.PlayerCombatExpirationDelay > DateTime.UtcNow)
-                    tacticsBase -= DungeonWeapon.BaseTactics + (DungeonTier * DungeonWeapon.TacticsPerTier);
+                    tacticsBase -= DungeonWeapon.BaseTactics + (TierLevel * DungeonWeapon.TacticsPerTier);
             }
 
             if (tacticsBase > 100)
@@ -2626,7 +2550,6 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.MaxHits, m_MaxHits != 0);
             SetSaveFlag(ref flags, SaveFlag.Poison, m_Poison != null);
             SetSaveFlag(ref flags, SaveFlag.PoisonCharges, m_PoisonCharges != 0);
-            SetSaveFlag(ref flags, SaveFlag.Identified, m_Identified != false);
             SetSaveFlag(ref flags, SaveFlag.MinDamage, m_MinDamage != -1);
             SetSaveFlag(ref flags, SaveFlag.MaxDamage, m_MaxDamage != -1);
             SetSaveFlag(ref flags, SaveFlag.HitSound, m_HitSound != -1);
@@ -2658,10 +2581,7 @@ namespace Server.Items
                 Poison.Serialize(m_Poison, writer);
 
             if (GetSaveFlag(flags, SaveFlag.PoisonCharges))
-                writer.Write((int)m_PoisonCharges);
-            
-            if (GetSaveFlag(flags, SaveFlag.Identified))
-                writer.Write((bool)m_Identified);            
+                writer.Write((int)m_PoisonCharges);        
 
             if (GetSaveFlag(flags, SaveFlag.MinDamage))
                 writer.Write((int)m_MinDamage);
@@ -2688,14 +2608,7 @@ namespace Server.Items
                 writer.Write((int)m_Type);
 
             if (GetSaveFlag(flags, SaveFlag.Animation))
-                writer.Write((int)m_Animation);
-
-            //Version 11
-            writer.Write((int)m_Dungeon);
-            writer.Write(m_DungeonTier);
-            writer.Write(m_DungeonExperience);
-            writer.Write(m_BlessedCharges);
-            writer.Write(m_MaxBlessedCharges);
+                writer.Write((int)m_Animation);  
         }
 
         [Flags]
@@ -2791,9 +2704,6 @@ namespace Server.Items
                         if (GetSaveFlag(flags, SaveFlag.PoisonCharges))
                             m_PoisonCharges = reader.ReadInt();
                         
-                        if (GetSaveFlag(flags, SaveFlag.Identified))
-                            m_Identified = (version <= 6 || reader.ReadBool());                        
-
                         if (GetSaveFlag(flags, SaveFlag.MinDamage))
                             m_MinDamage = reader.ReadInt();
                         else
@@ -2857,7 +2767,7 @@ namespace Server.Items
                         else if (UseSkillMod && Quality == Quality.Exceptional && Parent is Mobile)                        
                             OnEquip(Parent as Mobile);                        
 
-                        else if (UseSkillMod && DungeonTier > 0 && Parent is Mobile)
+                        else if (UseSkillMod && (Dungeon != DungeonEnum.None && TierLevel > 0) && Parent is Mobile)
                         {
                             OnEquip(Parent as Mobile);
                         }
@@ -2869,8 +2779,6 @@ namespace Server.Items
                     }
                 case 4:
                     {
-                       
-
                         goto case 3;
                     }
                 case 3:
@@ -2879,8 +2787,6 @@ namespace Server.Items
                     }
                 case 2:
                     {
-                        m_Identified = reader.ReadBool();
-
                         goto case 1;
                     }
                 case 1:
@@ -2923,11 +2829,6 @@ namespace Server.Items
             //Version 11
             if (version >= 11)
             {
-                Dungeon = (BaseDungeonArmor.DungeonEnum)reader.ReadInt();
-                DungeonTier = reader.ReadInt();
-                DungeonExperience = reader.ReadInt();
-                BlessedCharges = reader.ReadInt();
-                MaxBlessedCharges = reader.ReadInt();
             }
 
             //-----
@@ -3107,7 +3008,7 @@ namespace Server.Items
 
                         if (defender is BaseCreature)
                         {
-                            BaseDungeonArmor.PlayerDungeonArmorProfile attackerDungeonArmor = new BaseDungeonArmor.PlayerDungeonArmorProfile(attacker, null);
+                            DungeonArmor.PlayerDungeonArmorProfile attackerDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(attacker, null);
 
                             if (attackerDungeonArmor.MatchingSet && !attackerDungeonArmor.InPlayerCombat)
                             {
@@ -3238,10 +3139,13 @@ namespace Server.Items
                 list.Add(1060639, "{0}\t{1}", m_Hits, m_MaxHits); // durability ~1_val~ / ~2_val~
         }
 
-        public override void OnSingleClick(Mobile from)
+        public override void DisplayLabelName(Mobile from)
         {
+            if (from == null)
+                return;
+
             //Dungeon Weapon
-            if (DungeonTier > 0)
+            if (Dungeon != DungeonEnum.None && TierLevel > 0)
             {
                 string name = "";
 
@@ -3253,63 +3157,60 @@ namespace Server.Items
                 else
                     base.OnSingleClick(from);
 
-                LabelTo(from, BaseDungeonArmor.GetDungeonName(Dungeon) + " Dungeon: Tier " + DungeonTier.ToString());
-                LabelTo(from, "(" + DungeonExperience.ToString() + "/" + DungeonWeapon.MaxDungeonExperience.ToString() + " xp) " + " Charges: " + BlessedCharges.ToString());
+                LabelTo(from, GetDungeonName(Dungeon) + " Dungeon: Tier " + TierLevel.ToString());
+                LabelTo(from, "(" + Experience.ToString() + "/" + DungeonWeapon.MaxDungeonExperience.ToString() + " xp) " + " Charges: " + ArcaneCharges.ToString());
 
                 return;
             }
 
-            List<EquipInfoAttribute> attrs = new List<EquipInfoAttribute>();
+            bool isMagical = SlayerGroup != SlayerGroupType.None || DurabilityLevel != WeaponDurabilityLevel.Regular || AccuracyLevel != WeaponAccuracyLevel.Regular || DamageLevel != WeaponDamageLevel.Regular;
 
-            if (DisplayLootType)
-            {
-                if (LootType == LootType.Blessed)
-                    attrs.Add(new EquipInfoAttribute(1038021)); // blessed
-                else if (LootType == LootType.Cursed)
-                    attrs.Add(new EquipInfoAttribute(1049643)); // cursed
-            }
+            string displayName = "";
 
-            if (Quality == Quality.Exceptional)
-                attrs.Add(new EquipInfoAttribute(1018305 - (int)Quality));
+            if (isMagical && !Identified && from.AccessLevel == AccessLevel.Player)
+                LabelTo(from, "unidentified " + Name);
 
-            if (m_Identified || from.AccessLevel >= AccessLevel.GameMaster)
-            {
-
-                if (m_DurabilityLevel != WeaponDurabilityLevel.Regular)
-                    attrs.Add(new EquipInfoAttribute(1038000 + (int)m_DurabilityLevel));
-
-                if (m_DamageLevel != WeaponDamageLevel.Regular)
-                    attrs.Add(new EquipInfoAttribute(1038015 + (int)m_DamageLevel));
-
-                if (m_AccuracyLevel != WeaponAccuracyLevel.Regular)
-                    attrs.Add(new EquipInfoAttribute(1038010 + (int)m_AccuracyLevel));
-            }
-
-            int number;
-
-            if (Name == null)
-                number = LabelNumber;
             else
             {
-                this.LabelTo(from, Name);
-                number = 1041000;
+                if (Quality == Quality.Exceptional)
+                    displayName += "exceptional ";
+
+                if (DurabilityLevel != WeaponDurabilityLevel.Regular)
+                    displayName += DurabilityLevel.ToString().ToLower() + " ";
+
+                switch (AccuracyLevel)
+                {
+                    case WeaponAccuracyLevel.Accurate: displayName += "accurate "; break;
+                    case WeaponAccuracyLevel.Surpassingly: displayName += "surpassingly accurate "; break;
+                    case WeaponAccuracyLevel.Eminently: displayName += "eminently accurate "; break;
+                    case WeaponAccuracyLevel.Exceedingly: displayName += "exceedingly accurate "; break;
+                    case WeaponAccuracyLevel.Supremely: displayName += "supremely accurate "; break;
+                }
+
+                switch (DamageLevel)
+                {
+                    case WeaponDamageLevel.Ruin: displayName += "ruin "; break;
+                    case WeaponDamageLevel.Might: displayName += "might "; break;
+                    case WeaponDamageLevel.Force: displayName += "force "; break;
+                    case WeaponDamageLevel.Power: displayName += "power "; break;
+                    case WeaponDamageLevel.Vanq: displayName += "vanquishing "; break;
+                }
+                
+                displayName += Name;
+
+                if (SlayerGroup != SlayerGroupType.None)
+                    displayName += " of " + SlayerGroup.ToString().ToLower() + " slaying";
+
+                LabelTo(from, displayName);
             }
 
-            if (DecorativeEquipment)
-                LabelTo(from, "[Decorative]");
+            if (m_Poison != null && m_PoisonCharges > 0)            
+                LabelTo(from, m_Poison.Name.ToLower() + " poison: " + m_PoisonCharges.ToString());            
+        }
 
-            EquipmentInfo eqInfo = new EquipmentInfo(number, CraftedBy, false, attrs.ToArray());
-
-            from.Send(new DisplayEquipmentInfo(this, eqInfo));
-
-            if (m_Poison != null && m_PoisonCharges > 0)
-            {
-                if (m_PoisonCharges == 1)
-                    LabelTo(from, m_Poison.Name + " Poison: " + m_PoisonCharges.ToString());
-
-                else
-                    LabelTo(from, m_Poison.Name + " Poison: " + m_PoisonCharges.ToString());
-            }
+        public override void OnSingleClick(Mobile from)
+        {
+            base.OnSingleClick(from);
         }
 
         public void GetWrestlingSounds(Mobile attacker, Mobile defender, bool hit)

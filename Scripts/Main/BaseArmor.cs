@@ -12,6 +12,7 @@ using Server.Custom;
 using Server.Spells;
 using Server.Mobiles;
 using Server.Guilds;
+using System.Globalization;
 
 namespace Server.Items
 {
@@ -56,8 +57,7 @@ namespace Server.Items
         private int m_MaxHitPoints;
         private int m_HitPoints;        
         private ArmorDurabilityLevel m_Durability;
-        private ArmorProtectionLevel m_Protection;        
-        private bool m_Identified;
+        private ArmorProtectionLevel m_Protection;   
         private int m_PhysicalBonus, m_FireBonus, m_ColdBonus, m_PoisonBonus, m_EnergyBonus;
 
         private AosAttributes m_AosAttributes;
@@ -238,25 +238,6 @@ namespace Server.Items
             set { m_IntReq = value; InvalidateProperties(); }
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Identified
-        {
-            get { return m_Identified; }
-            set { m_Identified = value; InvalidateProperties(); }
-        }
-        
-        public override void ResourceChange()
-        {
-            if (CraftItem.RetainsColor(this.GetType()))            
-                Hue = CraftResources.GetHue(Resource);            
-
-            Invalidate();
-            InvalidateProperties();
-
-            if (Parent is Mobile)
-                ((Mobile)Parent).UpdateResistances(); 
-        }
-
         public virtual double ArmorScalar
         {
             get
@@ -298,8 +279,7 @@ namespace Server.Items
                     InvalidateProperties();
                 }
             }
-        }
-
+        }        
 
         public override void QualityChange()
         {
@@ -307,6 +287,29 @@ namespace Server.Items
             ScaleDurability();
 
             InvalidateProperties();
+        }
+
+        public override void ResourceChange()
+        {
+            if (CraftItem.RetainsColor(this.GetType()))
+                Hue = CraftResources.GetHue(Resource);
+
+            Invalidate();
+            InvalidateProperties();
+
+            if (Parent is Mobile)
+                ((Mobile)Parent).UpdateResistances();
+        }
+
+        public override void DungeonChange()
+        {
+            if (Dungeon != DungeonEnum.None)
+            {
+                DungeonArmor.DungeonArmorDetail detail = new DungeonArmor.DungeonArmorDetail(Dungeon, TierLevel);
+
+                if (detail != null)
+                    Hue = detail.Hue;
+            }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -388,8 +391,10 @@ namespace Server.Items
         {
             if (type == StatType.Str)
                 return StrBonus + Attributes.BonusStr;
+
             else if (type == StatType.Dex)
                 return DexBonus + Attributes.BonusDex;
+
             else
                 return IntBonus + Attributes.BonusInt;
         }
@@ -748,7 +753,6 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.ColdBonus, m_ColdBonus != 0);
             SetSaveFlag(ref flags, SaveFlag.PoisonBonus, m_PoisonBonus != 0);
             SetSaveFlag(ref flags, SaveFlag.EnergyBonus, m_EnergyBonus != 0);
-            SetSaveFlag(ref flags, SaveFlag.Identified, m_Identified != false);
             SetSaveFlag(ref flags, SaveFlag.MaxHitPoints, m_MaxHitPoints != 0);
             SetSaveFlag(ref flags, SaveFlag.HitPoints, m_HitPoints != 0);
             SetSaveFlag(ref flags, SaveFlag.Durability, m_Durability != ArmorDurabilityLevel.Regular);
@@ -785,11 +789,7 @@ namespace Server.Items
 
             if (GetSaveFlag(flags, SaveFlag.EnergyBonus))
                 writer.WriteEncodedInt((int)m_EnergyBonus);
-
-            //Added by IPY
-            if (GetSaveFlag(flags, SaveFlag.Identified))
-                writer.Write((bool)m_Identified);
-
+            
             if (GetSaveFlag(flags, SaveFlag.MaxHitPoints))
                 writer.WriteEncodedInt((int)m_MaxHitPoints);
 
@@ -878,11 +878,7 @@ namespace Server.Items
 
                         if (GetSaveFlag(flags, SaveFlag.EnergyBonus))
                             m_EnergyBonus = reader.ReadEncodedInt();
-
-                        if (GetSaveFlag(flags, SaveFlag.Identified))
-                            //Changed by IPY
-                            m_Identified = reader.ReadBool();
-
+                        
                         if (GetSaveFlag(flags, SaveFlag.MaxHitPoints))
                             m_MaxHitPoints = reader.ReadEncodedInt();
 
@@ -957,7 +953,6 @@ namespace Server.Items
                 case 2:
                 case 1:
                     {
-                        m_Identified = reader.ReadBool();
                         goto case 0;
                     }
                 case 0:
@@ -1191,6 +1186,9 @@ namespace Server.Items
                     from.AddStatMod(new StatMod(StatType.Int, modName + "Int", intBonus, TimeSpan.Zero));
             }
 
+            if (Dungeon != DungeonEnum.None && TierLevel > 0)
+                DungeonArmor.OnEquip(from, this);
+
             return base.OnEquip(from);
         }
 
@@ -1198,18 +1196,19 @@ namespace Server.Items
         {
             if (parent is Mobile)
             {
-                Mobile m = (Mobile)parent;
+                Mobile mobile = (Mobile)parent;
+
+                if (Dungeon != DungeonEnum.None && TierLevel > 0)
+                    DungeonArmor.OnRemoved(mobile, this);
+
                 string modName = this.Serial.ToString();
 
-                m.RemoveStatMod(modName + "Str");
-                m.RemoveStatMod(modName + "Dex");
-                m.RemoveStatMod(modName + "Int");
-
-                if (Core.AOS)
-                    m_AosSkillBonuses.Remove();
-
+                mobile.RemoveStatMod(modName + "Str");
+                mobile.RemoveStatMod(modName + "Dex");
+                mobile.RemoveStatMod(modName + "Int");
+                
                 ((Mobile)parent).Delta(MobileDelta.Armor); // Tell them armor rating has changed
-                m.CheckStatTimers();
+                mobile.CheckStatTimers();
             }
 
             base.OnRemoved(parent);
@@ -1456,56 +1455,54 @@ namespace Server.Items
                 list.Add(1060639, "{0}\t{1}", m_HitPoints, m_MaxHitPoints); // durability ~1_val~ / ~2_val~
         }
 
-        public override void OnSingleClick(Mobile from)
+        public override void DisplayLabelName(Mobile from)
         {
-            List<EquipInfoAttribute> attrs = new List<EquipInfoAttribute>();
+            if (from == null)
+                return;
 
-            if (DisplayLootType)
+            if (Dungeon != DungeonEnum.None && TierLevel > 0)
             {
-                if (LootType == LootType.Blessed)
-                    attrs.Add(new EquipInfoAttribute(1038021)); // blessed
+                string name = "";
 
-                else if (LootType == LootType.Cursed)
-                    attrs.Add(new EquipInfoAttribute(1049643)); // cursed
+                if (Name != null)
+                    name = Name;
+
+                if (name != "")
+                    LabelTo(from, CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name));               
+
+                LabelTo(from, GetDungeonName(Dungeon) + " Dungeon: Tier " + TierLevel.ToString());
+                LabelTo(from, "(" + Experience.ToString() + "/" + DungeonWeapon.MaxDungeonExperience.ToString() + " xp) " + " Charges: " + ArcaneCharges.ToString());
+
+                return;
             }
 
-            if (m_FactionState != null)
-                attrs.Add(new EquipInfoAttribute(1041350)); // faction item          
+            bool isMagical = Durability != ArmorDurabilityLevel.Regular || ProtectionLevel != ArmorProtectionLevel.Regular;
 
-            if (Quality == Quality.Exceptional)
-                attrs.Add(new EquipInfoAttribute(1018305 - (int)Quality));
+            string displayName = "";
 
-            if (m_Identified || from.AccessLevel >= AccessLevel.GameMaster)
-            {
-                if (m_Durability != ArmorDurabilityLevel.Regular)
-                    attrs.Add(new EquipInfoAttribute(1038000 + (int)m_Durability));
+            if (isMagical && !Identified && from.AccessLevel == AccessLevel.Player)
+                LabelTo(from, "unidentified " + Name);
 
-                if (m_Protection > ArmorProtectionLevel.Regular && m_Protection <= ArmorProtectionLevel.Invulnerability)
-                    attrs.Add(new EquipInfoAttribute(1038005 + (int)m_Protection));
-            }
-
-            else if (m_Durability != ArmorDurabilityLevel.Regular || (m_Protection > ArmorProtectionLevel.Regular && m_Protection <= ArmorProtectionLevel.Invulnerability))
-                attrs.Add(new EquipInfoAttribute(1038000)); // Unidentified
-
-            int number;
-
-            if (Name == null)
-                number = LabelNumber;
             else
             {
-                this.LabelTo(from, Name);
-                number = 1041000;
+                if (Quality == Quality.Exceptional)
+                    displayName += "exceptional ";
+
+                if (Durability != ArmorDurabilityLevel.Regular)
+                    displayName += Durability.ToString().ToLower() + " ";
+
+                if (ProtectionLevel != ArmorProtectionLevel.Regular)
+                    displayName += ProtectionLevel.ToString().ToLower() + " ";
+
+                displayName += Name;
+
+                LabelTo(from, displayName);
             }
+        }
 
-            if (DecorativeEquipment)
-                LabelTo(from, "[Decorative]");
-
-            //if (attrs.Count == 0 && Crafter == null && Name != null)
-                //return;
-
-            //EquipmentInfo eqInfo = new EquipmentInfo(number, m_Crafter, false, attrs.ToArray());
-
-            //from.Send(new DisplayEquipmentInfo(this, eqInfo));
+        public override void OnSingleClick(Mobile from)
+        {
+            base.OnSingleClick(from);
         }
 
         #region ICraftable Members

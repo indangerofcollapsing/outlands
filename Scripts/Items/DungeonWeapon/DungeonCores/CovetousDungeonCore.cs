@@ -11,7 +11,7 @@ namespace Server.Items
 		{
             Name = "covetous dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Covetous;
+            Dungeon = DungeonEnum.Covetous;
 		}
 
         [Constructable]
@@ -19,7 +19,7 @@ namespace Server.Items
 		{
             Name = "covetous dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Covetous;
+            Dungeon = DungeonEnum.Covetous;
 		}
 
         public CovetousDungeonCore(Serial serial): base(serial)

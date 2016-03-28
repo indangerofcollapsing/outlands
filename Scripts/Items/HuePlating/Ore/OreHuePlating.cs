@@ -83,7 +83,7 @@ namespace Server.Items
 
                     if (item is BaseWeapon || item is BaseArmor || item is BaseShield)
                     {
-                        if (item is BaseDungeonArmor)
+                        if (item is DungeonArmor)
                         {
                             from.SendMessage("Dungeon armor may not be hued with this item.");
                             return;

@@ -1213,8 +1213,8 @@ namespace Server.Mobiles
         {
             base.OnDeath(c);
                         
-            c.DropItem(BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Shame, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified));
-            c.DropItem(BaseDungeonArmor.CreateDungeonArmor(BaseDungeonArmor.DungeonEnum.Shame, BaseDungeonArmor.ArmorTierEnum.Tier1, BaseDungeonArmor.ArmorLocation.Unspecified));        
+            //c.DropItem(DungeonArmor.CreateDungeonArmor(DungeonEnum.Shame, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified));
+            //c.DropItem(DungeonArmor.CreateDungeonArmor(DungeonEnum.Shame, DungeonArmor.ArmorTierEnum.Tier1, DungeonArmor.ArmorLocation.Unspecified));        
         }
 
         public override int GetAngerSound() { return 0x2A9; }

@@ -11,7 +11,7 @@ namespace Server.Items
 		{
             Name = "wrong dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Wrong;
+            Dungeon = DungeonEnum.Wrong;
 		}
 
         [Constructable]
@@ -19,7 +19,7 @@ namespace Server.Items
 		{
             Name = "wrong dungeon core";
 
-            Dungeon = BaseDungeonArmor.DungeonEnum.Wrong;
+            Dungeon = DungeonEnum.Wrong;
 		}
 
         public WrongDungeonCore(Serial serial): base(serial)
