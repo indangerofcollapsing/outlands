@@ -29,7 +29,7 @@ namespace Server.Items
         public virtual WeaponAnimation BaseAnimation { get { return WeaponAnimation.Slash1H; } }
 
         public virtual int InitMinHits { get { return 40; } }
-        public virtual int InitMaxHits { get { return 60; } }        
+        public virtual int InitMaxHits { get { return 60; } }
 
         public virtual bool TrainingWeapon { get { return false; } }
 
@@ -46,7 +46,7 @@ namespace Server.Items
         {
             get { return m_SlayerGroup; }
             set { m_SlayerGroup = value; }
-        }    
+        }
 
         private int m_Hits;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -106,13 +106,13 @@ namespace Server.Items
                     m_SkillMod = null;
                 }
 
-                else if (Parent is Mobile)                
-                    OnEquip(Parent as Mobile);                
+                else if (Parent is Mobile)
+                    OnEquip(Parent as Mobile);
             }
 
             InvalidateProperties();
         }
-        
+
         public override void ResourceChange()
         {
             UnscaleDurability();
@@ -149,11 +149,11 @@ namespace Server.Items
                 if (m_MaxRange == -1)
                     return BaseMaxRange;
 
-                return m_MaxRange; 
+                return m_MaxRange;
             }
 
             set { m_MaxRange = value; InvalidateProperties(); }
-        }        
+        }
 
         private WeaponAnimation m_Animation = WeaponAnimation.None;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -164,7 +164,7 @@ namespace Server.Items
                 if (m_Animation == WeaponAnimation.None)
                     return BaseAnimation;
 
-                return m_Animation; 
+                return m_Animation;
             }
             set { m_Animation = value; }
         }
@@ -173,21 +173,21 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public WeaponType Type
         {
-            get 
+            get
             {
                 if (m_Type == WeaponType.None)
                     return BaseType;
 
-                return m_Type; 
+                return m_Type;
             }
             set { m_Type = value; }
-        }        
+        }
 
         private SkillName m_Skill = SkillName.Wrestling;
         [CommandProperty(AccessLevel.GameMaster)]
         public SkillName Skill
         {
-            get 
+            get
             {
                 if (m_Skill == SkillName.Wrestling)
                     return BaseSkill;
@@ -196,7 +196,7 @@ namespace Server.Items
             }
 
             set { m_Skill = value; }
-        }        
+        }
 
         private int m_HitSound = -1;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -212,7 +212,7 @@ namespace Server.Items
 
             set { m_HitSound = value; }
         }
-        
+
         private int m_MissSound = -1;
         [CommandProperty(AccessLevel.GameMaster)]
         public int MissSound
@@ -222,7 +222,7 @@ namespace Server.Items
                 if (m_MissSound == -1)
                     return BaseMissSound;
 
-                return m_MissSound; 
+                return m_MissSound;
             }
             set { m_MissSound = value; }
         }
@@ -267,7 +267,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Speed
         {
-            get 
+            get
             {
                 if (m_Speed == -1)
                     return BaseSpeed;
@@ -467,25 +467,15 @@ namespace Server.Items
             //Cripple Effect
             if (bc_Creature != null)
             {
-                double totalValue;
+                double crippleModifier;
 
-                bc_Creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple, out totalValue);
-
-                double speedMultiplier = 1;
-
-                speedMultiplier += totalValue;
-
-                delayInSeconds *= speedMultiplier;
+                bc_Creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple, out crippleModifier);
+                delayInSeconds *= 1 + crippleModifier;
             }
 
             //Discordance Effect
-            if (bc_Creature != null)
-            {
-                int discordancePenalty = 1;
-
-                if (SkillHandlers.Discordance.GetEffect(bc_Creature, ref discordancePenalty))
-                    delayInSeconds *= (1 + (double)(Math.Abs(discordancePenalty)) / 100);
-            }
+            if (bc_Creature != null)            
+                delayInSeconds *= 1 + bc_Creature.DiscordEffect;            
 
             return TimeSpan.FromSeconds(delayInSeconds);
         }
@@ -1196,8 +1186,7 @@ namespace Server.Items
             if (bc_Defender != null)
             {
                 //Discordance
-                if (SkillHandlers.Discordance.GetEffect(bc_Defender, ref discordancePenalty))
-                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + (double)(Math.Abs(discordancePenalty)) / 100));
+                adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Defender.DiscordEffect));
 
                 //Ship Combat
                 if (BaseBoat.UseShipBasedDamageModifer(attacker, bc_Defender))
@@ -1683,7 +1672,7 @@ namespace Server.Items
             SkillName sk = Skill;
 
             if (sk != SkillName.Wrestling && !m.Player && !m.Body.IsHuman && m.Skills[SkillName.Wrestling].Value > m.Skills[sk].Value)
-                sk = SkillName.Wrestling;            
+                sk = SkillName.Wrestling;
 
             return sk;
         }
@@ -1707,13 +1696,13 @@ namespace Server.Items
         {
             BaseWeapon atkWeapon = attacker.Weapon as BaseWeapon;
             BaseWeapon defWeapon = defender.Weapon as BaseWeapon;
-                        
+
             Skill atkSkill = attacker.Skills[atkWeapon.Skill];
-            Skill defSkill = defender.Skills[defWeapon.Skill];           
-            
+            Skill defSkill = defender.Skills[defWeapon.Skill];
+
             double atkValue = atkWeapon.GetAttackSkillValue(attacker, defender);
             double defValue = defWeapon.GetDefendSkillValue(attacker, defender);
-            
+
             PlayerMobile pm_Attacker = attacker as PlayerMobile;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
@@ -1726,7 +1715,7 @@ namespace Server.Items
             bool CreatureDefender = (bc_Defender != null);
             bool TamedAttacker = false;
             bool TamedDefender = false;
-            
+
             if (CreatureAttacker)
             {
                 if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile)
@@ -1738,7 +1727,7 @@ namespace Server.Items
                 if (bc_Defender.Controlled && bc_Defender.ControlMaster is PlayerMobile)
                     TamedDefender = true;
             }
-            
+
             //Tamed Creature Skill Caps for Combat
             if (bc_Attacker != null && defender is PlayerMobile)
             {
@@ -1773,7 +1762,7 @@ namespace Server.Items
                         defValue = 100;
                 }
             }
-            
+
             #region Weapon Special Attack: Stun ToHit Bonuses/Penalties
 
             //Special Ability Effect on Creature: Stun
@@ -1802,7 +1791,7 @@ namespace Server.Items
             }
 
             #endregion
-            
+
             double ourValue;
             double theirValue;
 
@@ -1835,7 +1824,7 @@ namespace Server.Items
                 pm_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Courage, out courageBonus);
                 chance += (int)(courageBonus * 100);
             }
-            
+
             //Special Ability Effect: Evasion
             double evasionBonus = 0;
 
@@ -1850,7 +1839,7 @@ namespace Server.Items
                 pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Evasion, out evasionBonus);
                 chance -= (int)(evasionBonus * 100);
             }
-            
+
             #region StealthAttack ToHit Bonus
 
             //Stealth Attack Accuracy Bonus
@@ -1894,7 +1883,7 @@ namespace Server.Items
             }
 
             #endregion
-            
+
             //Dungeon Weapon
             if (Dungeon != DungeonEnum.None && TierLevel > 0 && pm_Defender == null)
                 chance += DungeonWeapon.BaseAccuracy * (DungeonWeapon.AccuracyPerTier * (double)TierLevel);
@@ -1902,8 +1891,8 @@ namespace Server.Items
             if (defender is PlayerMobile && ((PlayerMobile)defender).m_DateTimeDied + TimeSpan.FromSeconds(60) > DateTime.UtcNow)
                 return (Utility.RandomDouble() < chance);
 
-            else                            
-                return attacker.CheckSkill(atkSkill.SkillName, chance, 1.0);            
+            else
+                return attacker.CheckSkill(atkSkill.SkillName, chance, 1.0);
         }
 
         #region Sounds
@@ -2254,13 +2243,7 @@ namespace Server.Items
             #region Modifiers
 
             int damageBonus = AosAttributes.GetValue(attacker, AosAttribute.WeaponDamage);
-
-            int discordanceEffect = 0;
-
-            // Discordance gives a -2%/-48% malus to damage.
-            if (SkillHandlers.Discordance.GetEffect(attacker, ref discordanceEffect))
-                damageBonus -= discordanceEffect * 2;
-
+            
             if (damageBonus > 100)
                 damageBonus = 100;
 
@@ -2570,18 +2553,18 @@ namespace Server.Items
 
             if (GetSaveFlag(flags, SaveFlag.DurabilityLevel))
                 writer.Write((int)m_DurabilityLevel);
-            
+
             if (GetSaveFlag(flags, SaveFlag.Hits))
                 writer.Write((int)m_Hits);
 
             if (GetSaveFlag(flags, SaveFlag.MaxHits))
                 writer.Write((int)m_MaxHits);
-            
+
             if (GetSaveFlag(flags, SaveFlag.Poison))
                 Poison.Serialize(m_Poison, writer);
 
             if (GetSaveFlag(flags, SaveFlag.PoisonCharges))
-                writer.Write((int)m_PoisonCharges);        
+                writer.Write((int)m_PoisonCharges);
 
             if (GetSaveFlag(flags, SaveFlag.MinDamage))
                 writer.Write((int)m_MinDamage);
@@ -2608,7 +2591,7 @@ namespace Server.Items
                 writer.Write((int)m_Type);
 
             if (GetSaveFlag(flags, SaveFlag.Animation))
-                writer.Write((int)m_Animation);  
+                writer.Write((int)m_Animation);
         }
 
         [Flags]
@@ -2690,20 +2673,20 @@ namespace Server.Items
 
                             if (m_DurabilityLevel > WeaponDurabilityLevel.Indestructible)
                                 m_DurabilityLevel = WeaponDurabilityLevel.Durable;
-                        }                        
+                        }
 
                         if (GetSaveFlag(flags, SaveFlag.Hits))
                             m_Hits = reader.ReadInt();
 
                         if (GetSaveFlag(flags, SaveFlag.MaxHits))
                             m_MaxHits = reader.ReadInt();
-                        
+
                         if (GetSaveFlag(flags, SaveFlag.Poison))
                             m_Poison = Poison.Deserialize(reader);
 
                         if (GetSaveFlag(flags, SaveFlag.PoisonCharges))
                             m_PoisonCharges = reader.ReadInt();
-                        
+
                         if (GetSaveFlag(flags, SaveFlag.MinDamage))
                             m_MinDamage = reader.ReadInt();
                         else
@@ -2748,15 +2731,15 @@ namespace Server.Items
                             m_Animation = (WeaponAnimation)reader.ReadInt();
                         else
                             m_Animation = (WeaponAnimation)(-1);
-                        
+
                         if (version >= 10)
                         {
-                           
+
                         }
 
                         else
                         {
-                           
+
                         }
 
                         if (UseSkillMod && (m_DamageLevel != WeaponDamageLevel.Regular) && Parent is Mobile)
@@ -2764,8 +2747,8 @@ namespace Server.Items
                             OnEquip(Parent as Mobile);
                         }
 
-                        else if (UseSkillMod && Quality == Quality.Exceptional && Parent is Mobile)                        
-                            OnEquip(Parent as Mobile);                        
+                        else if (UseSkillMod && Quality == Quality.Exceptional && Parent is Mobile)
+                            OnEquip(Parent as Mobile);
 
                         else if (UseSkillMod && (Dungeon != DungeonEnum.None && TierLevel > 0) && Parent is Mobile)
                         {
@@ -2818,7 +2801,7 @@ namespace Server.Items
                         m_DamageLevel = (WeaponDamageLevel)reader.ReadInt();
                         m_AccuracyLevel = (WeaponAccuracyLevel)reader.ReadInt();
                         m_DurabilityLevel = (WeaponDurabilityLevel)reader.ReadInt();
-                        
+
                         m_Poison = Poison.Deserialize(reader);
                         m_PoisonCharges = reader.ReadInt();
 
@@ -2832,13 +2815,13 @@ namespace Server.Items
             }
 
             //-----
-            
+
             if (Parent is Mobile)
                 ((Mobile)Parent).CheckStatTimers();
 
             if (m_Hits <= 0 && m_MaxHits <= 0)
                 m_Hits = m_MaxHits = Utility.RandomMinMax(InitMinHits, InitMaxHits);
-            
+
             if (UseSkillMod && m_DamageLevel != WeaponDamageLevel.Regular && Parent is Mobile)
                 OnEquip(Parent as Mobile);
 
@@ -2847,12 +2830,13 @@ namespace Server.Items
         }
         #endregion
 
-        public BaseWeapon(int itemID): base(itemID)
+        public BaseWeapon(int itemID)
+            : base(itemID)
         {
             Layer = (Layer)ItemData.Quality;
 
             Quality = Quality.Regular;
-            
+
             m_Hits = m_MaxHits = Utility.RandomMinMax(InitMinHits, InitMaxHits);
 
             Resource = CraftResource.Iron;
@@ -2872,7 +2856,7 @@ namespace Server.Items
 
             return name;
         }
-        
+
         public int GetElementalDamageHue()
         {
             int phys, fire, cold, pois, nrgy, chaos, direct;
@@ -3195,7 +3179,7 @@ namespace Server.Items
                     case WeaponDamageLevel.Power: displayName += "power "; break;
                     case WeaponDamageLevel.Vanq: displayName += "vanquishing "; break;
                 }
-                
+
                 displayName += Name;
 
                 if (SlayerGroup != SlayerGroupType.None)
@@ -3204,8 +3188,8 @@ namespace Server.Items
                 LabelTo(from, displayName);
             }
 
-            if (m_Poison != null && m_PoisonCharges > 0)            
-                LabelTo(from, m_PoisonCharges.ToString() + " " + m_Poison.Name.ToLower() + " poison charges");            
+            if (m_Poison != null && m_PoisonCharges > 0)
+                LabelTo(from, m_PoisonCharges.ToString() + " " + m_Poison.Name.ToLower() + " poison charges");
         }
 
         public override void OnSingleClick(Mobile from)
@@ -3241,7 +3225,7 @@ namespace Server.Items
             set { m_Fists = value; }
         }
 
-        #region ICraftable Members        
+        #region ICraftable Members
 
         public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue)
         {
@@ -3624,5 +3608,5 @@ namespace Server.Items
         Wrestle = 31,
         Block = 30,
         Crossbow = 19
-    } 
+    }
 }

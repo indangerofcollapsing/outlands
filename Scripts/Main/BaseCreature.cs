@@ -438,18 +438,6 @@ namespace Server.Mobiles
         public static double StealthFootprintChance = .33; //Chance on Stealth Movement of Leaving Footprint Image Behind
         public static double StealthFootprintRevealImmuneChance = .05; //Chance on Stealth Movement for Creatures Immune to Reveal to Leave Footprint Image Behind
 
-        public static int ProvocationCreatureDuration = 60; //Length of Time of Provocation Between Creatures
-        public static int PeacemakingCreatureDuration = 60; //Length of Time of Peacemaking Works On Creatures
-        public static int DiscordanceCreatureDuration = 60; //Length of Time of Discordance Works On Creatures
-
-        public static double ProvocationHighDifficultyDurationScalar = 1.0; //Duration Modifier for Provocation Between High Difficulty Creatures
-        public static double PeacemakingHighDifficultyDurationScalar = 1.0; //Duration Modifier for Peacemaking On High Difficulty Creatures
-        public static double DiscordanceHighDifficultyDurationScalar = 1.0; //Duration Modifier for Discordance On High Difficulty Creatures
-
-        public static int ProvocationFollowerDuration = 30; //Length of Time of Provocation When Tamed Creature is Involved
-        public static int PeacemakingFollowerDurationLimit = 30; //Length of Time of Peacemaking When Tamed Creature is Involved
-        public static int DiscordanceFollowerDurationLimit = 30; //Length of Time of Discordance When When Tamed Creature is Involved
-
         public double TamedDamageAgainstPlayerDisruptChance = .02; //Tamed Creature Chance to Disrupt a Player Per Point of Damage Inflicted (Effects Bandages / Spells / Meditation)
 
         public bool m_WasFishedUp = false;
@@ -1411,8 +1399,7 @@ namespace Server.Mobiles
 
         private class AdminProvokeFirstTarget : Target
         {
-            public AdminProvokeFirstTarget(Mobile from)
-                : base(100, false, TargetFlags.None)
+            public AdminProvokeFirstTarget(Mobile from): base(100, false, TargetFlags.None)
             {
             }
 
@@ -1460,7 +1447,7 @@ namespace Server.Mobiles
                         if (m_Target is BaseCreature)
                             m_Target.RevealingAction();
 
-                        bc_FirstCreature.Provoke(from, m_Target, true, true);
+                        bc_FirstCreature.Provoke(from, m_Target, true, TimeSpan.FromHours(24), true);
                     }
 
                     else
@@ -3151,7 +3138,7 @@ namespace Server.Mobiles
         public BaseAI AIObject { get { return m_AI; } }
 
         public const int MaxOwners = 5;
-        
+
         #region Allegiance
 
         public virtual Ethics.Ethic EthicAllegiance { get { return null; } }
@@ -3233,12 +3220,12 @@ namespace Server.Mobiles
 
             if (!(m is BaseCreature))
                 return true;
-            
+
             BaseCreature c = (BaseCreature)m;
 
             return (m_iTeam != c.m_iTeam || ((m_Summoned || m_bControlled) != (c.m_Summoned || c.m_bControlled))/* || c.Combatant == this*/ );
         }
-        
+
         public override string ApplyNameSuffix(string suffix)
         {
             if (IsParagon && !GivesMLMinorArtifact)
@@ -3461,13 +3448,11 @@ namespace Server.Mobiles
                 if (bc_From != null)
                 {
                     //Damage is Coming from a Creature That is Discorded
-                    if (SkillHandlers.Discordance.GetEffect(bc_From, ref discordancePenalty))
-                        damage *= (1 - (double)(Math.Abs(discordancePenalty)) / 100);
+                    damage *= 1 - bc_From.DiscordEffect;
                 }
 
                 //This Creature is Discorded
-                if (SkillHandlers.Discordance.GetEffect(this, ref discordancePenalty))
-                    damage *= (1 + (double)(Math.Abs(discordancePenalty)) / 100);
+                damage *= 1 + DiscordEffect;
             }
 
             //Ship-Based Combat
@@ -3549,7 +3534,7 @@ namespace Server.Mobiles
         {
             if (!Alive || IsDeadPet)
                 return ApplyPoisonResult.Immune;
-            
+
             BaseCreature bc_From = from as BaseCreature;
 
             if (bc_From != null)
@@ -3866,17 +3851,12 @@ namespace Server.Mobiles
 
             BardEndTime = DateTime.UtcNow;
             NextCombatTime = DateTime.UtcNow;
-            m_LastBreakPeaceCheck = DateTime.MinValue;
 
             PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "*breaks from trance*");
         }
 
         public static double MediumDifficultyThreshold = 30; //Creatures over this difficulty will autodispel
         public static double HighDifficultyThreshold = 45; //Creatures over this difficulty will autodispel more frequently and have special effects reduced     
-
-        private DateTime m_LastBreakPeaceCheck = DateTime.MinValue;
-        private static TimeSpan TimeBetweenPacifyBreak = TimeSpan.FromSeconds(1.5);
-        private static TimeSpan InitialPacifyBreakDelay = TimeSpan.FromSeconds(3);
 
         public double BaseDispelDamagePercent = .60; //Non-Player Casted Dispel or AutoDispel Deals This Percentage of Creature's MaxHits as Damage
 
@@ -3924,6 +3904,33 @@ namespace Server.Mobiles
                     return TimeSpan.FromSeconds(10);
 
                 return TimeSpan.FromSeconds(12);
+            }
+        }
+
+        public DateTime NextBardingEffectAllowed = DateTime.UtcNow;
+        public virtual TimeSpan BardingEffectCooldown
+        {
+            get
+            {
+                if (IsParagon)
+                    return TimeSpan.FromSeconds(30);
+
+                if (Rare)
+                    return TimeSpan.FromSeconds(30);
+
+                if (IsMiniBoss())
+                    return TimeSpan.FromSeconds(45);
+
+                if (IsBoss())
+                    return TimeSpan.FromSeconds(60);
+
+                if (IsLoHBoss())
+                    return TimeSpan.FromSeconds(60);
+
+                if (IsEventBoss())
+                    return TimeSpan.FromSeconds(90);
+
+                return TimeSpan.FromSeconds(0);
             }
         }
 
@@ -4221,7 +4228,7 @@ namespace Server.Mobiles
                     }
                 }
             }
-            
+
             if (from != this && from != null)
                 WeightOverloading.FatigueOnDamage(this, amount, 0.5);
 
@@ -5511,6 +5518,74 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
+        public bool BardDiscorded
+        {
+            get
+            {
+                Discordance.DiscordanceInfo discordInfo = SkillHandlers.Discordance.GetInfo(this);
+
+                if (discordInfo == null)
+                    return false;
+
+                if (discordInfo.m_EndTime > DateTime.UtcNow && discordInfo.m_Effect > 0)
+                    return true;
+
+                return false;
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Mobile DiscordMaster
+        {
+            get
+            {
+                Discordance.DiscordanceInfo discordInfo = SkillHandlers.Discordance.GetInfo(this);
+
+                if (discordInfo == null)
+                    return null;
+
+                if (discordInfo.m_From != null && discordInfo.m_EndTime > DateTime.UtcNow && discordInfo.m_Effect > 0)
+                    return discordInfo.m_From;                
+
+                return null;
+            }
+        }
+        
+        [CommandProperty(AccessLevel.GameMaster)]
+        public double DiscordEffect
+        {
+            get
+            {
+                Discordance.DiscordanceInfo discordInfo = SkillHandlers.Discordance.GetInfo(this);
+
+                if (discordInfo == null)
+                    return 0;
+
+                if (discordInfo.m_EndTime > DateTime.UtcNow && discordInfo.m_Effect > 0)
+                    return discordInfo.m_Effect;
+
+                return 0;
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime DiscordEndTime
+        {
+            get
+            {
+                Discordance.DiscordanceInfo discordInfo = SkillHandlers.Discordance.GetInfo(this);
+
+                if (discordInfo == null)
+                    return DateTime.UtcNow;
+
+                if (discordInfo.m_EndTime > DateTime.UtcNow && discordInfo.m_Effect > 0)
+                    return discordInfo.m_EndTime;
+
+                return DateTime.UtcNow;
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
         public Mobile BardMaster
         {
             get
@@ -5707,7 +5782,7 @@ namespace Server.Mobiles
             }
 
             FocusMob = null;
-            
+
             base.OnAfterDelete();
         }
 
@@ -7378,7 +7453,7 @@ namespace Server.Mobiles
             {
                 if (m_Charmed.Combatant != null || !from.CanBeHarmful(m_Charmed, false))
                     return;
-                
+
                 Mobile targ = targeted as Mobile;
 
                 if (targ == null || !from.CanBeHarmful(targ, false))
@@ -7424,14 +7499,58 @@ namespace Server.Mobiles
 
         public override void OnSingleClick(Mobile from)
         {
+            string pacifiedMessage = "";
+            string provokedMessage = "";
+            string discordedMessage = "";
+
             if (BardPacified)
             {
-                PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*pacified*", from.NetState);
+                string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, BardEndTime, true, false, false, true, true);
+
+                if (DateTime.UtcNow + TimeSpan.FromHours(1) <= BardEndTime || from != BardMaster)
+                    pacifiedMessage = "pacified";
+                else
+                    pacifiedMessage = "pacified " + timeRemaining;
             }
 
-            else if (BardProvoked)
+            if (BardProvoked)
             {
-                PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*provoked*", from.NetState);
+                string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, BardEndTime, true, false, false, true, true);
+
+                if (DateTime.UtcNow + TimeSpan.FromHours(1) <= BardEndTime || from != BardMaster)
+                    provokedMessage = "provoked";
+
+                else
+                    provokedMessage = "provoked " + timeRemaining;
+            }
+
+            if (BardDiscorded)
+            {
+                string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, DiscordEndTime, true, false, false, true, true);
+
+                if (DateTime.UtcNow + TimeSpan.FromHours(1) <= DiscordEndTime || from != DiscordMaster)
+                    discordedMessage = "discorded";
+
+                else
+                    discordedMessage = "discorded " + timeRemaining;
+            }
+
+            if (from.NetState != null)
+            {
+                if (pacifiedMessage != "" && discordedMessage == "")
+                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + pacifiedMessage + "*", from.NetState);
+
+                else if (provokedMessage != "" && discordedMessage == "")
+                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + provokedMessage + "*", from.NetState);
+
+                else if (pacifiedMessage != "" && discordedMessage != "")
+                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + pacifiedMessage + " " + discordedMessage + "*", from.NetState);
+
+                else if (provokedMessage != "" && discordedMessage != "")
+                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + provokedMessage + " " + discordedMessage + "*", from.NetState);
+
+                else if (discordedMessage != "")
+                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + discordedMessage + "*", from.NetState);
             }
 
             if (Controlled && Commandable)
@@ -7533,7 +7652,7 @@ namespace Server.Mobiles
                 }
 
                 //if (Utility.RandomDouble() < dungeonArmorUpgradeHammerChance)
-                    //PackItem(new DungeonArmorUpgradeHammer());
+                //PackItem(new DungeonArmorUpgradeHammer());
 
                 if (Utility.RandomDouble() < powerScrollChance)
                     HandoutPowerScrolls(Utility.RandomMinMax(1, 3), true);
@@ -7560,7 +7679,7 @@ namespace Server.Mobiles
                 }
 
                 //if (Utility.RandomDouble() < dungeonArmorUpgradeHammerChance)
-                    //PackItem(new DungeonArmorUpgradeHammer());
+                //PackItem(new DungeonArmorUpgradeHammer());
 
                 if (Utility.RandomDouble() < powerScrollChance)
                     HandoutPowerScrolls(Utility.RandomMinMax(1, 2), false);
@@ -8011,7 +8130,7 @@ namespace Server.Mobiles
                     if (info.Defender.Combatant == this)
                         info.Defender.Combatant = null;
                 }
-                
+
                 CheckStatTimers();
             }
 
@@ -8501,7 +8620,7 @@ namespace Server.Mobiles
         private const double MinutesToNextChanceMax = 0.75;
 
         private long m_NextRummageTime;
-       
+
         public virtual bool IsDispellable { get { return Summoned && !IsAnimatedDead; } }
 
         #region Healing
@@ -8893,20 +9012,9 @@ namespace Server.Mobiles
             return base.GetDamageMaster(damagee);
         }
 
-        public void Pacify(Mobile master, DateTime endtime, bool message)
+        public void Pacify(Mobile master, TimeSpan duration, bool message)
         {
-            /*
-            if (message)
-            {
-                PublicOverheadMessage(MessageType.Emote, EmoteHue, false,
-                    mode == PeacemakingModeEnum.Combat
-                        ? "*looks calmed and mesmerized*"
-                        : "*looks calmed and distracted*");
-            }
-
             PlaySound(GetIdleSound());
-
-            BardPacifiedMode = mode;
 
             BardPacified = true;
             BardProvoked = false;
@@ -8914,70 +9022,64 @@ namespace Server.Mobiles
             BardMaster = master;
             BardTarget = null;
 
-            PlayerMobile pm_Master = master as PlayerMobile;            
+            PlayerMobile pm_Master = master as PlayerMobile;
 
             Warmode = false;
             Combatant = null;
 
-            BardEndTime = endtime;
-            NextCombatTime = endtime;
-            m_LastBreakPeaceCheck = DateTime.UtcNow + InitialPacifyBreakDelay;
+            BardEndTime = DateTime.UtcNow + duration;
+            NextCombatTime = DateTime.UtcNow + duration;
 
-            //Put Creature In Trance
+            if (message)
+                PublicOverheadMessage(MessageType.Emote, EmoteHue, false, "*looks calmed*");
+
+            NextBardingEffectAllowed = DateTime.UtcNow + BardingEffectCooldown;
+
             if (Controlled && ControlMaster != null)
             {
                 if (AIObject != null)
                 {
-                    this.ControlOrder = OrderType.Stop;
+                    ControlOrder = OrderType.Stop;
                     AIObject.DoOrderStop();
                 }
             }
-            */
         }
 
-        public void Provoke(Mobile master, Mobile target, bool bSuccess, bool admin)
+        public void Provoke(Mobile bardMaster, Mobile target, bool bSuccess, TimeSpan duration, bool fromAdmin)
         {
-            if (master == null)
-                return;
-
-            if (target == null)
-                return;
+            if (bardMaster == null) return;
+            if (target == null) return;
 
             if (bSuccess)
             {
                 BardProvoked = true;
                 BardPacified = false;
 
-                PublicOverheadMessage(MessageType.Emote, EmoteHue, false, "*looks furious*");
+                if (!fromAdmin)
+                    
 
                 PlaySound(GetIdleSound());
 
-                BardMaster = master;
+                BardMaster = bardMaster;
                 BardTarget = target;
 
-                master.DoHarmful(this);
-                master.DoHarmful(target);
+                bardMaster.DoHarmful(this);
+                bardMaster.DoHarmful(target);
 
-                PlayerMobile pm_Master = master as PlayerMobile;
+                PlayerMobile pm_Master = bardMaster as PlayerMobile;
                 BaseCreature bc_Target = target as BaseCreature;
 
-                double duration = BaseCreature.ProvocationCreatureDuration;
+                if (fromAdmin)
+                    duration = TimeSpan.FromHours(12);
 
-                //Adjust Duration For High Difficulty Creatures
-                double highestDifficulty = InitialDifficulty;
+                else
+                {
+                    NextBardingEffectAllowed = DateTime.UtcNow + BardingEffectCooldown;
 
-                if (bc_Target != null)
-                    highestDifficulty = Math.Max(highestDifficulty, bc_Target.InitialDifficulty);
+                    PublicOverheadMessage(MessageType.Emote, EmoteHue, false, "*looks furious*");
+                }
 
-                if (highestDifficulty >= HighDifficultyThreshold)
-                    duration *= ProvocationHighDifficultyDurationScalar;
-
-
-                //Provocation via [Provoke command
-                if (admin)
-                    duration = 1800;
-
-                BardEndTime = DateTime.UtcNow + TimeSpan.FromSeconds(duration);
+                BardEndTime = DateTime.UtcNow + duration;
 
                 if (AIObject != null)
                 {
@@ -9001,15 +9103,18 @@ namespace Server.Mobiles
                 {
                     bc_Target.BardProvoked = true;
 
-                    bc_Target.BardMaster = master;
+                    bc_Target.BardMaster = bardMaster;
                     bc_Target.BardTarget = this;
-                    bc_Target.BardEndTime = DateTime.UtcNow + TimeSpan.FromSeconds(duration);
+                    bc_Target.BardEndTime = DateTime.UtcNow + duration;
 
-                    bc_Target.PublicOverheadMessage(MessageType.Emote, EmoteHue, false, "*looks furious*");
+                    if (!fromAdmin)
+                    {
+                        bc_Target.NextBardingEffectAllowed = DateTime.UtcNow + bc_Target.BardingEffectCooldown;
+                        bc_Target.PublicOverheadMessage(MessageType.Emote, EmoteHue, false, "*looks furious*");
+                    }
 
                     if (bc_Target.AIObject != null)
                     {
-                        //Controlled Creature
                         if (bc_Target.Controlled && bc_Target.ControlMaster != null)
                         {
                             bc_Target.ControlTarget = this;
@@ -9017,7 +9122,6 @@ namespace Server.Mobiles
                             bc_Target.AIObject.DoOrderAttack();
                         }
 
-                        //Normal Creature
                         else
                         {
                             bc_Target.Combatant = this;
@@ -9031,11 +9135,11 @@ namespace Server.Mobiles
             {
                 PlaySound(GetAngerSound());
 
-                BardMaster = master;
+                BardMaster = bardMaster;
                 BardTarget = target;
 
-                master.DoHarmful(this);
-                master.DoHarmful(target);
+                bardMaster.DoHarmful(this);
+                bardMaster.DoHarmful(target);
             }
         }
 

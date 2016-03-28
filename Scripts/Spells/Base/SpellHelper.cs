@@ -1684,8 +1684,7 @@ namespace Server.Spells
                             if (bc_Target != null)
                             {
                                 //Discordance
-                                if (SkillHandlers.Discordance.GetEffect(bc_Target, ref discordancePenalty))
-                                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + (double)(Math.Abs(discordancePenalty)) / 100));
+                                adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect));
 
                                 //Ship Combat
                                 if (BaseBoat.UseShipBasedDamageModifer(from, bc_Target))
@@ -1780,9 +1779,8 @@ namespace Server.Spells
                 if (bc_Target != null)
                 {
                     //Discordance
-                    if (SkillHandlers.Discordance.GetEffect(bc_Target, ref discordancePenalty))
-                        adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + (double)(Math.Abs(discordancePenalty)) / 100));
-
+                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect));
+                    
                     //Ship Combat
                     if (BaseBoat.UseShipBasedDamageModifer(from, bc_Target))
                         adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToCreatureScalar);
@@ -1931,10 +1929,9 @@ namespace Server.Spells
                     int adjustedDamageDisplayed = m_Damage;
 
                     if (bc_Target != null)
-                    {
+                    {                        
                         //Discordance
-                        if (SkillHandlers.Discordance.GetEffect(bc_Target, ref discordancePenalty))
-                            adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + (double)(Math.Abs(discordancePenalty)) / 100));
+                        adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect));
 
                         //Ship Combat
                         if (BaseBoat.UseShipBasedDamageModifer(m_From, bc_Target))

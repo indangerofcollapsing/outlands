@@ -3483,7 +3483,7 @@
     <Compile Include="Items\SkillItems\Misc\FireHorn.cs" />
     <Compile Include="Items\SkillItems\Misc\RecipeScroll.cs" />
     <Compile Include="Items\SkillItems\Musical Instruments\BambooFlute.cs" />
-    <Compile Include="Items\SkillItems\Musical Instruments\BaseInstrument.cs" />
+    <Compile Include="Main\BaseInstrument.cs" />
     <Compile Include="Items\SkillItems\Musical Instruments\Drums.cs" />
     <Compile Include="Items\SkillItems\Musical Instruments\Harp.cs" />
     <Compile Include="Items\SkillItems\Musical Instruments\LapHarp.cs" />

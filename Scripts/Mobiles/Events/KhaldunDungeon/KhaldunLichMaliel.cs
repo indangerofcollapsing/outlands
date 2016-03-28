@@ -624,7 +624,7 @@ namespace Server.Mobiles
                     BaseCreature bc_Creature = mobile as BaseCreature;
 
                     if (bc_Creature != null)
-                        bc_Creature.Pacify(this, DateTime.UtcNow + TimeSpan.FromSeconds(duration), false);
+                        bc_Creature.Pacify(this, TimeSpan.FromSeconds(duration), false);
                     
                     TimedStatic calibration = new TimedStatic(6225, 2);
                     calibration.Name = "Calibration";

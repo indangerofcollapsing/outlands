@@ -169,8 +169,6 @@ namespace Server.Mobiles
 					if ( c == this || c == target || c.Unprovokable || c.IsParagon ||  c.BardProvoked || c.AccessLevel != AccessLevel.Player || !c.CanBeHarmful( target ) )
 						continue;
 
-					c.Provoke( this, target, true , false);
-
 					if ( target.Player )
 						target.SendLocalizedMessage( 1072062 ); // You hear angry music, and start to fight.
 

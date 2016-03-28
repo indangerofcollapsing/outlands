@@ -5131,8 +5131,7 @@ namespace Server.Mobiles
                 if (bc_From != null)
                 {
                     //Damage is Coming from a Creature that is Discorded
-                    if (SkillHandlers.Discordance.GetEffect(bc_From, ref discordancePenalty))
-                        damage *= (1 - (double)(Math.Abs(discordancePenalty)) / 100);
+                    damage *= (1 - bc_From.DiscordEffect);
                 }
             }
 

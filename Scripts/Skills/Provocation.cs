@@ -9,13 +9,6 @@ namespace Server.SkillHandlers
 {
     public class Provocation
     {
-        public static double PlayerDifficulty = 20;
-        public static double MaxDifficulty = 35;
-        public static double SkillRequiredPerDifficulty = 120 / MaxDifficulty;
-        public static double SuccessChanceScalar = .05;
-        public static double EasiestCreatureDifficultyScalar = .25;
-        public static double MinimumSkillDivisorChance = 20; //5% at GM
-
         public static void Initialize()
         {
             SkillInfo.Table[(int)SkillName.Provocation].Callback = new SkillUseCallback(OnUse);
@@ -27,7 +20,7 @@ namespace Server.SkillHandlers
 
             BaseInstrument.PickInstrument(m, new InstrumentPickedCallback(OnPickedInstrument));
 
-            return TimeSpan.FromSeconds(1.0); // Cannot use another skill for 1 second
+            return TimeSpan.FromSeconds(1.0);
         }
 
         public static void OnPickedInstrument(Mobile from, BaseInstrument instrument)
@@ -40,7 +33,8 @@ namespace Server.SkillHandlers
         {
             private BaseInstrument m_Instrument;
 
-            public InternalFirstTarget(Mobile from, BaseInstrument instrument): base(BaseInstrument.GetBardRange(from, SkillName.Provocation), false, TargetFlags.None)
+            public InternalFirstTarget(Mobile from, BaseInstrument instrument)
+                : base(BaseInstrument.GetBardRange(from, SkillName.Provocation), false, TargetFlags.None)
             {
                 m_Instrument = instrument;
             }
@@ -54,9 +48,6 @@ namespace Server.SkillHandlers
                     if (!m_Instrument.IsChildOf(from.Backpack))
                         from.SendLocalizedMessage(1062488); // The instrument you are trying to play is no longer in your backpack!	
 
-                    else if (creature.IsMiniBoss() || creature.IsBoss() || creature.IsLoHBoss() || creature.IsEventBoss())					
-                        from.SendMessage("You have no chance of provoking that.");
-
                     else if (creature.Unprovokable)
                         from.SendMessage("That creature is not provokable.");
 
@@ -68,6 +59,14 @@ namespace Server.SkillHandlers
 
                     else
                     {
+                        if (creature.NextBardingEffectAllowed > DateTime.UtcNow)
+                        {
+                            string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, creature.NextBardingEffectAllowed, false, true, true, true, true);
+
+                            from.SendMessage("That target is not vulnerable to barding attempts for another " + timeRemaining + ".");
+                            return;
+                        }
+
                         from.SendMessage("Whom do you wish them to attack?");
                         from.Target = new InternalSecondTarget(from, m_Instrument, creature);
                     }
@@ -83,7 +82,8 @@ namespace Server.SkillHandlers
             private BaseCreature bc_FirstCreature;
             private BaseInstrument m_Instrument;
 
-            public InternalSecondTarget(Mobile from, BaseInstrument instrument, BaseCreature creature): base(BaseInstrument.GetBardRange(from, SkillName.Provocation), false, TargetFlags.None)
+            public InternalSecondTarget(Mobile from, BaseInstrument instrument, BaseCreature creature)
+                : base(BaseInstrument.GetBardRange(from, SkillName.Provocation), false, TargetFlags.None)
             {
                 m_Instrument = instrument;
                 bc_FirstCreature = creature;
@@ -100,9 +100,6 @@ namespace Server.SkillHandlers
                     if (!m_Instrument.IsChildOf(from.Backpack))
                         from.SendLocalizedMessage(1062488); // The instrument you are trying to play is no longer in your backpack!				
 
-                    else if (bc_Target.IsMiniBoss() || bc_Target.IsBoss() || bc_Target.IsLoHBoss() || bc_Target.IsEventBoss())
-                        from.SendMessage("You have no chance of provoking that.");
-
                     else if (bc_Target.Unprovokable)
                         from.SendMessage("That creature is not provokable.");
 
@@ -116,6 +113,22 @@ namespace Server.SkillHandlers
                     {
                         if (from.CanBeHarmful(bc_FirstCreature, true) && from.CanBeHarmful(bc_Target, true))
                         {
+                            if (bc_FirstCreature.NextBardingEffectAllowed > DateTime.UtcNow)
+                            {
+                                string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, bc_FirstCreature.NextBardingEffectAllowed, false, true, true, true, true);
+
+                                from.SendMessage("Your original target is not vulnerable to barding attempts for another " + timeRemaining + ".");
+                                return;
+                            }
+
+                            if (bc_Target.NextBardingEffectAllowed > DateTime.UtcNow)
+                            {
+                                string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, bc_Target.NextBardingEffectAllowed, false, true, true, true, true);
+
+                                from.SendMessage("That target is not vulnerable to barding attempts for another " + timeRemaining + ".");
+                                return;
+                            }
+
                             if (!BaseInstrument.CheckMusicianship(from))
                             {
                                 from.SendMessage("You struggle with basic musicianship and your song has no effect.");
@@ -132,53 +145,27 @@ namespace Server.SkillHandlers
                         else
                             return;
 
-                        double hardestTargetDifficulty = Math.Max(bc_FirstCreature.InitialDifficulty, bc_Target.InitialDifficulty);
-                        double easiestTargetDifficulty = Math.Min(bc_FirstCreature.InitialDifficulty, bc_Target.InitialDifficulty);
+                        double creatureDifficulty = Math.Max(bc_FirstCreature.InitialDifficulty, bc_Target.InitialDifficulty);
+                        double firstEffectiveBardSkill = from.Skills[SkillName.Peacemaking].Value + BaseInstrument.GetBardBonusSkill(from, bc_FirstCreature, m_Instrument);
+                        double secondEffectiveBardSkill = from.Skills[SkillName.Peacemaking].Value + BaseInstrument.GetBardBonusSkill(from, bc_Target, m_Instrument);
+                        double effectiveBardSkill = Math.Max(firstEffectiveBardSkill, secondEffectiveBardSkill);
 
-                        double bardingDifficulty = hardestTargetDifficulty + (easiestTargetDifficulty * EasiestCreatureDifficultyScalar);
+                        double successChance = BaseInstrument.GetBardSuccessChance(effectiveBardSkill, creatureDifficulty);
+                        TimeSpan effectDuration = BaseInstrument.GetBardDuration(bc_Target, creatureDifficulty);
 
-                        double effectiveBardSkill = from.Skills[SkillName.Provocation].Value;
-
-                        //if (m_Instrument.Quality == Quality.Exceptional)
-                            //effectiveBardSkill += BaseInstrument.ExceptionalQualitySkillBonus;
-
-                        //Slayer Bonuses
-                        double firstCreatureBonus = 0; // m_Instrument.GetBonusesFor(bc_FirstCreature);
-                        double secondCreatureBonus = 0; // m_Instrument.GetBonusesFor(bc_Target);
-
-                        double bestBonus = Math.Max(firstCreatureBonus, secondCreatureBonus);
-                        effectiveBardSkill += bestBonus;
-
-                        double effectiveDifficulty = bardingDifficulty * SkillRequiredPerDifficulty;
-                        double successChance = (effectiveBardSkill - effectiveDifficulty) * SuccessChanceScalar;
-
-                        double minimumSuccessChance = (effectiveBardSkill / MinimumSkillDivisorChance) / 100.0;
-
-                        //Only GM+ Provo can have min chance perk
-                        if (successChance < minimumSuccessChance && from.Skills[SkillName.Provocation].Value >= 100)
-                            successChance = minimumSuccessChance;
-
-                        double chanceResult = Utility.RandomDouble();
-
-                        //Skill Gain Check
-                        if (successChance > 0 && successChance < 1.25)
+                        if (BaseInstrument.CheckSkillGain(successChance))
                             from.CheckSkill(SkillName.Provocation, 0.0, 120.0, 1.0);
 
-                        PlayerMobile pm_From = from as PlayerMobile;
+                        if (from.AccessLevel > AccessLevel.Player)
+                            from.SendMessage("Chance of success was: " + Math.Round(successChance * 100, 3).ToString() + "%");
 
-                        if (pm_From != null)
-                        {
-                            if (pm_From.AccessLevel > AccessLevel.Player)
-                                pm_From.SendMessage("Chance of success was: " + Math.Round(successChance * 100, 3).ToString() + "%");
-                        }                        
-
-                        if (chanceResult <= successChance)
+                        if (Utility.RandomDouble() <= successChance)
                         {
                             from.SendLocalizedMessage(501602); // Your music succeeds, as you start a fight.
 
                             m_Instrument.PlayInstrumentWell(from);
                             m_Instrument.ConsumeUse(from);
-                            bc_FirstCreature.Provoke(from, bc_Target, true, false);
+                            bc_FirstCreature.Provoke(from, bc_Target, true, effectDuration, false);
 
                             from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationSuccessCooldown * 1000);
                         }
@@ -190,25 +177,7 @@ namespace Server.SkillHandlers
 
                             from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationFailureCooldown * 1000);
 
-                            string failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be beyond your skill.";
-
-                            if (successChance > 0)
-                                failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be near impossible.";
-
-                            if (successChance >= .05)
-                                failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be very difficult.";
-
-                            if (successChance >= .25)
-                                failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be somewhat challenging.";
-
-                            if (successChance >= .50)
-                                failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be fairly reasonable.";
-
-                            if (successChance >= .75)
-                                failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be easy.";
-
-                            if (successChance >= .95)
-                                failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be trivial.";
+                            string failureMessage = BaseInstrument.GetFailureMessage(successChance, SkillName.Provocation);
 
                             from.SendMessage(failureMessage);
                         }
@@ -232,6 +201,14 @@ namespace Server.SkillHandlers
                     {
                         if (from.CanBeHarmful(bc_FirstCreature, true) && from.CanBeHarmful(player, true))
                         {
+                            if (bc_FirstCreature.NextBardingEffectAllowed > DateTime.UtcNow)
+                            {
+                                string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, bc_FirstCreature.NextBardingEffectAllowed, false, true, true, true, true);
+
+                                from.SendMessage("That target is not vulnerable to barding attempts for another " + timeRemaining + ".");
+                                return;
+                            }
+
                             if (!BaseInstrument.CheckMusicianship(from))
                             {
                                 from.SendLocalizedMessage(500612); // You play poorly, and there is no effect. 
@@ -244,39 +221,25 @@ namespace Server.SkillHandlers
                                 return;
                             }
 
-                            double bardingDifficulty = bc_FirstCreature.InitialDifficulty;
+                            double creatureDifficulty = bc_FirstCreature.InitialDifficulty;
+                            double effectiveBardSkill = from.Skills[SkillName.Peacemaking].Value + BaseInstrument.GetBardBonusSkill(from, bc_FirstCreature, m_Instrument);
 
-                            double effectiveBardSkill = from.Skills[SkillName.Provocation].Value;
+                            double successChance = BaseInstrument.GetBardSuccessChance(effectiveBardSkill, creatureDifficulty);
+                            TimeSpan effectDuration = BaseInstrument.GetBardDuration(bc_FirstCreature, creatureDifficulty);
 
-                            //if (m_Instrument.Quality == Quality.Exceptional)
-                                //effectiveBardSkill += BaseInstrument.ExceptionalQualitySkillBonus;
-
-                            effectiveBardSkill += 0; //m_Instrument.GetBonusesFor(bc_FirstCreature);
-
-                            double effectiveDifficulty = bardingDifficulty * SkillRequiredPerDifficulty;
-                            double successChance = (effectiveBardSkill - effectiveDifficulty) * SuccessChanceScalar;
-
-                            double chanceResult = Utility.RandomDouble();
-
-                            //Skill Gain Check
-                            if (successChance > 0 && successChance < 1.0)
+                            if (BaseInstrument.CheckSkillGain(successChance))
                                 from.CheckSkill(SkillName.Provocation, 0.0, 120.0, 1.0);
 
-                            PlayerMobile pm_From = from as PlayerMobile;
+                            if (from.AccessLevel > AccessLevel.Player)
+                                from.SendMessage("Chance of success was: " + Math.Round(successChance * 100, 3).ToString() + "%");
 
-                            if (pm_From != null)
-                            {
-                                if (pm_From.AccessLevel > AccessLevel.Player)
-                                    pm_From.SendMessage("Chance of success was: " + Math.Round(successChance * 100, 3).ToString() + "%");
-                            }
-
-                            if (chanceResult <= successChance)
+                            if (Utility.RandomDouble() <= successChance)
                             {
                                 from.SendLocalizedMessage(501602); // Your music succeeds, as you start a fight.
 
                                 m_Instrument.PlayInstrumentWell(from);
                                 m_Instrument.ConsumeUse(from);
-                                bc_FirstCreature.Provoke(from, player, true, false);
+                                bc_FirstCreature.Provoke(from, player, true, effectDuration, false);
 
                                 from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationSuccessCooldown * 1000);
                             }
@@ -288,25 +251,7 @@ namespace Server.SkillHandlers
 
                                 from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ProvocationFailureCooldown * 1000);
 
-                                string failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be beyond your skill.";
-
-                                if (successChance > 0)
-                                    failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be near impossible.";
-
-                                if (successChance >= .05)
-                                    failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be very difficult.";
-
-                                if (successChance >= .25)
-                                    failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be somewhat challenging.";
-
-                                if (successChance >= .50)
-                                    failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be fairly reasonable.";
-
-                                if (successChance >= .75)
-                                    failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be easy.";
-
-                                if (successChance >= .95)
-                                    failureMessage = "You fail to incite anger amongst your opponents. You estimate the task to be trivial.";
+                                string failureMessage = BaseInstrument.GetFailureMessage(successChance, SkillName.Provocation);
 
                                 from.SendMessage(failureMessage);
                             }

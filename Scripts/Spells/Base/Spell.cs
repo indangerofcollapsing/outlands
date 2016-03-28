@@ -682,17 +682,17 @@ namespace Server.Spells
                             }
 
                             //Special Weapon Attack Increasing Delay
-                            double speedMultiplier = 0;
-                            int discordancePenalty = 1;
+                            double speedScalar = 1;
+                            double crippleModifier = 0;
+                            double discordModifier = 0;
 
                             //Cripple Effect on Creature
-                            creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple, out speedMultiplier);
+                            creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple, out crippleModifier);
 
-                            //Discordance Effect on Creature
-                            if (SkillHandlers.Discordance.GetEffect(creature, ref discordancePenalty))
-                                speedMultiplier += (double)(Math.Abs(discordancePenalty)) / 100;
+                            //Discord
+                            discordModifier = creature.DiscordEffect;
 
-                            speedMultiplier += 1;
+                            speedScalar += crippleModifier + discordModifier;
 
                             double mageryModifier = 1.0;
                             double experienceModifier = 1.0;
@@ -704,7 +704,7 @@ namespace Server.Spells
                             }
 
                             //Set Delay Before Next Creature Spellcast
-                            double SpellDelay = (creature.SpellDelayMin + ((creature.SpellDelayMax - creature.SpellDelayMin) * Utility.RandomDouble())) * speedMultiplier * mageryModifier * experienceModifier;
+                            double SpellDelay = (creature.SpellDelayMin + ((creature.SpellDelayMax - creature.SpellDelayMin) * Utility.RandomDouble())) * speedScalar * mageryModifier * experienceModifier;
 
                             if (SpellDelay < .1)
                                 SpellDelay = .1;

@@ -96,7 +96,7 @@ namespace Server.Items
                 {
                     BaseCreature bc_Creature = (BaseCreature)m_Queue.Dequeue();
                     
-                    bc_Creature.Pacify(from, DateTime.UtcNow + TimeSpan.FromSeconds(duration), false);
+                    bc_Creature.Pacify(from, TimeSpan.FromSeconds(duration), false);
                 }
 
                 for (int a = 0; a < 30; a++)

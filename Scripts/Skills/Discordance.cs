@@ -8,15 +8,6 @@ namespace Server.SkillHandlers
 {
     public class Discordance
     {
-        public static double MaxDifficulty = 45;
-        public static double ReducedDifficultyThreshold = 75;
-        public static double SkillRequiredPerDifficulty = 120 / MaxDifficulty;
-        public static double MinimumSkillDivisorChance = 6.7; // 15% at GM
-        public static double SuccessChanceScalar = .05;
-
-        public static double DiscordanceModifier = .25; //Percent penalty to Dex, Skills, Damage Dealt By Creature as well as Percent Increased in Damage Taken by Creature
-        public static double ReducedEffectModifier = .20;
-
         public static void Initialize()
         {
             SkillInfo.Table[(int)SkillName.Discordance].Callback = new SkillUseCallback(OnUse);
@@ -42,54 +33,19 @@ namespace Server.SkillHandlers
         {
             public Mobile m_From;
             public Mobile m_Creature;
+            public TimeSpan m_Duration;
             public DateTime m_EndTime;
             public bool m_Ending;
             public Timer m_Timer;
-            public int m_Effect;
-            public ArrayList m_Mods;
+            public double m_Effect;
 
-            public DiscordanceInfo(Mobile from, Mobile creature, int effect, ArrayList mods)
+            public DiscordanceInfo(Mobile from, Mobile creature, double effect)
             {
                 m_From = from;
                 m_Creature = creature;
                 m_EndTime = DateTime.UtcNow;
                 m_Ending = false;
                 m_Effect = effect;
-                m_Mods = mods;
-            }
-
-            public void Apply()
-            {
-                for (int i = 0; i < m_Mods.Count; ++i)
-                {
-                    object mod = m_Mods[i];
-
-                    if (mod is ResistanceMod)
-                        m_Creature.AddResistanceMod((ResistanceMod)mod);
-
-                    else if (mod is StatMod)
-                        m_Creature.AddStatMod((StatMod)mod);
-
-                    else if (mod is SkillMod)
-                        m_Creature.AddSkillMod((SkillMod)mod);
-                }
-            }
-
-            public void Clear()
-            {
-                for (int i = 0; i < m_Mods.Count; ++i)
-                {
-                    object mod = m_Mods[i];
-
-                    if (mod is ResistanceMod)
-                        m_Creature.RemoveResistanceMod((ResistanceMod)mod);
-
-                    else if (mod is StatMod)
-                        m_Creature.RemoveStatMod(((StatMod)mod).Name);
-
-                    else if (mod is SkillMod)
-                        m_Creature.RemoveSkillMod((SkillMod)mod);
-                }
             }
         }
 
@@ -102,19 +58,23 @@ namespace Server.SkillHandlers
                 var targetInfo = m_Table[target] as DiscordanceInfo;
 
                 if (targetInfo != null)
-                    targetInfo.m_EndTime = DateTime.UtcNow + TimeSpan.FromSeconds(BaseCreature.DiscordanceCreatureDuration);
+                    targetInfo.m_EndTime = DateTime.UtcNow + targetInfo.m_Duration;
 
                 info.m_Timer.Stop();
             }
 
             else
-            {
                 m_Table[target] = info;
-                info.Apply();
-            }
         }
 
-        public static bool GetEffect(Mobile targ, ref int effect)
+        public static DiscordanceInfo GetInfo(Mobile target)
+        {
+            DiscordanceInfo info = m_Table[target] as DiscordanceInfo;
+
+            return info;
+        }
+
+        public static bool GetEffect(Mobile targ, ref double effect)
         {
             DiscordanceInfo info = m_Table[targ] as DiscordanceInfo;
 
@@ -150,7 +110,6 @@ namespace Server.SkillHandlers
                 if (info.m_Timer != null)
                     info.m_Timer.Stop();
 
-                info.Clear();
                 m_Table.Remove(targ);
             }
 
@@ -181,6 +140,14 @@ namespace Server.SkillHandlers
 
                     if (from.CanBeHarmful(bc_Target, true))
                     {
+                        if (bc_Target.NextBardingEffectAllowed > DateTime.UtcNow)
+                        {
+                            string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, bc_Target.NextBardingEffectAllowed, false, true, true, true, true);
+
+                            from.SendMessage("That target is not vulnerable to barding attempts for another " + timeRemaining + ".");
+                            return;
+                        }
+
                         if (!BaseInstrument.CheckMusicianship(from))
                         {
                             from.SendMessage("You struggle with basic musicianship and your song has no effect.");
@@ -193,38 +160,18 @@ namespace Server.SkillHandlers
                         }
 
                         double creatureDifficulty = bc_Target.InitialDifficulty;
+                        double effectiveBardSkill = from.Skills[SkillName.Discordance].Value + BaseInstrument.GetBardBonusSkill(from, bc_Target, m_Instrument);
 
-                        double effectiveBardSkill = from.Skills[SkillName.Discordance].Value;
-                        
-                        //if (m_Instrument.Quality == Quality.Exceptional)
-                            //effectiveBardSkill += 5;
+                        double successChance = BaseInstrument.GetBardSuccessChance(effectiveBardSkill, creatureDifficulty);
+                        TimeSpan effectDuration = BaseInstrument.GetBardDuration(bc_Target, creatureDifficulty);
 
-                        effectiveBardSkill += 0; //m_Instrument.GetBonusesFor(bc_Target);
-
-                        double effectiveDifficulty = creatureDifficulty * SkillRequiredPerDifficulty;
-                        double successChance = (effectiveBardSkill - effectiveDifficulty) * SuccessChanceScalar;
-
-                        double minimumSuccessChance = (effectiveBardSkill / MinimumSkillDivisorChance) / 100.0;
-
-                        //Only GM+ Discord can have min chance perk
-                        if (successChance < minimumSuccessChance && from.Skills[SkillName.Discordance].Value >= 90)
-                            successChance = minimumSuccessChance;
-
-                        double chanceResult = Utility.RandomDouble();
-
-                        //Skill Gain Check
-                        if (successChance > 0 && successChance < 1.40)
+                        if (BaseInstrument.CheckSkillGain(successChance))
                             from.CheckSkill(SkillName.Discordance, 0.0, 120.0, 1.0);
 
-                        PlayerMobile pm_From = from as PlayerMobile;
+                        if (from.AccessLevel > AccessLevel.Player)
+                            from.SendMessage("Chance of success was: " + Math.Round(successChance * 100, 3).ToString() + "%");
 
-                        if (pm_From != null)
-                        {
-                            if (pm_From.AccessLevel > AccessLevel.Player)
-                                pm_From.SendMessage("Chance of success was: " + Math.Round(successChance * 100, 3).ToString() + "%");
-                        }
-
-                        if (chanceResult <= successChance)
+                        if (Utility.RandomDouble() <= successChance)
                         {
                             from.DoHarmful(bc_Target, true);
 
@@ -232,42 +179,24 @@ namespace Server.SkillHandlers
                             m_Instrument.PlayInstrumentWell(from);
                             m_Instrument.ConsumeUse(from);
 
-                            ArrayList mods = new ArrayList();
-
-                            int effect;
-                            double scalar;
-
-                            double adjustedDiscordanceModifier = DiscordanceModifier;
+                            double discordanceModifier = BaseInstrument.DiscordanceModifier;
 
                             DungeonArmor.PlayerDungeonArmorProfile bardDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(from, null);
 
-                            if (bardDungeonArmor.MatchingSet && !bardDungeonArmor.InPlayerCombat)                            
-                                adjustedDiscordanceModifier += bardDungeonArmor.DungeonArmorDetail.DiscordanceEffectBonus;                            
+                            if (bardDungeonArmor.MatchingSet && !bardDungeonArmor.InPlayerCombat)
+                                discordanceModifier += bardDungeonArmor.DungeonArmorDetail.DiscordanceEffectBonus;
 
-                            effect = (int)(-100 * adjustedDiscordanceModifier);
-                            scalar = -1 * adjustedDiscordanceModifier;
+                            DiscordanceInfo info = new DiscordanceInfo(from, bc_Target, discordanceModifier);
 
-                            if (bc_Target.InitialDifficulty >= MaxDifficulty)
-                            {
-                                effect = (int)((double)effect * ReducedEffectModifier);
-                                scalar *= ReducedEffectModifier;
-                            }
-
-                            for (int i = 0; i < bc_Target.Skills.Length; ++i)
-                            {
-                                if (bc_Target.Skills[i].Value > 0)
-                                    mods.Add(new DefaultSkillMod((SkillName)i, true, bc_Target.Skills[i].Base * scalar));
-                            }
-
-                            double duration = BaseCreature.DiscordanceCreatureDuration;
-                            
-                            DiscordanceInfo info = new DiscordanceInfo(from, bc_Target, Math.Abs(effect), mods);
-                            info.m_EndTime = DateTime.UtcNow + TimeSpan.FromSeconds(duration);
+                            info.m_Duration = effectDuration;
+                            info.m_EndTime = DateTime.UtcNow + effectDuration;
                             info.m_Timer = Timer.DelayCall<DiscordanceInfo>(TimeSpan.Zero, TimeSpan.FromSeconds(1), new TimerStateCallback<DiscordanceInfo>(ProcessDiscordance), info);
 
                             Discordance.InsertDiscordanceInfo(bc_Target, info);
 
                             from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.DiscordanceSuccessCooldown * 1000);
+                            
+                            bc_Target.NextBardingEffectAllowed = DateTime.UtcNow + bc_Target.BardingEffectCooldown;
                         }
 
                         else
@@ -277,25 +206,7 @@ namespace Server.SkillHandlers
 
                             from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.DiscordanceFailureCooldown * 1000);
 
-                            string failureMessage = "You fail to disrupt your opponent. You estimate the task to be beyond your skill.";
-
-                            if (successChance > 0)
-                                failureMessage = "You fail to disrupt your opponent. You estimate the task to be near impossible.";
-
-                            if (successChance >= .05)
-                                failureMessage = "You fail to disrupt your opponent. You estimate the task to be very difficult.";
-
-                            if (successChance >= .25)
-                                failureMessage = "You fail to disrupt your opponent. You estimate the task to be somewhat challenging.";
-
-                            if (successChance >= .50)
-                                failureMessage = "You fail to disrupt your opponent. You estimate the task to be fairly reasonable.";
-
-                            if (successChance >= .75)
-                                failureMessage = "You fail to disrupt your opponent. You estimate the task to be easy.";
-
-                            if (successChance >= .95)
-                                failureMessage = "You fail to disrupt your opponent. You estimate the task to be trivial.";
+                            string failureMessage = BaseInstrument.GetFailureMessage(successChance, SkillName.Discordance);
 
                             from.SendMessage(failureMessage);
                         }

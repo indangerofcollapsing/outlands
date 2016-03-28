@@ -168,9 +168,8 @@ namespace Server
                 
                 if (bc_Target != null)
                 {    
-                    //Discordance
-                    if (SkillHandlers.Discordance.GetEffect(bc_Target, ref discordancePenalty))
-                        adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + (double)(Math.Abs(discordancePenalty)) / 100));
+                    //Discordance                    
+                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect)); 
 
                     //Ship Combat
                     if (BaseBoat.UseShipBasedDamageModifer(m_From, bc_Target))

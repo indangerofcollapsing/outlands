@@ -179,7 +179,6 @@ namespace Server
         Properties = 0x00000004
     }
 
-
     public enum Quality
     {
         Low,
@@ -236,6 +235,28 @@ namespace Server
         Despise,
         Ice,
         Fire
+    }
+
+    public enum ItemGroupType
+    {
+        None,
+        Regular,
+        Crafted,
+        Donation,
+        Achievement,
+        Loot,
+        EventLoot,
+        CurrencyReward
+    }
+
+    public enum ItemRarityType
+    {
+        None,
+        Common,
+        Uncommon,
+        Rare,
+        VeryRare,
+        UltraRare
     }
 
     /// <summary>
@@ -746,6 +767,26 @@ namespace Server
             VendorBought = 2
         }
 
+        public virtual ItemGroupType BaseItemGroup { get { return ItemGroupType.Regular; } }
+
+        private ItemGroupType m_ItemGroup = ItemGroupType.None;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public ItemGroupType ItemGroup
+        {
+            get { return m_ItemGroup; }
+            set { m_ItemGroup = value; }
+        }
+
+        public virtual ItemRarityType BaseItemRarity { get { return ItemRarityType.Common; } }
+
+        private ItemRarityType m_ItemRarity = ItemRarityType.None;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public ItemRarityType ItemRarity
+        {
+            get { return m_ItemRarity; }
+            set { m_ItemRarity = value; }
+        }
+
         private bool m_DecorativeEquipment = false;
         [CommandProperty(AccessLevel.GameMaster)]
         public bool DecorativeEquipment
@@ -758,7 +799,7 @@ namespace Server
 
         public virtual bool TelekinesisImmune
         {
-            get {  return false; }
+            get { return false; }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -792,7 +833,7 @@ namespace Server
         public bool Stealable
         {
             get { return m_Stealable; }
-            set 
+            set
             {
                 m_Stealable = value;
                 if (value)
@@ -805,8 +846,8 @@ namespace Server
         public bool AlreadyStolen
         {
             get { return m_AlreadyStolen; }
-            set 
-            { 
+            set
+            {
                 m_AlreadyStolen = value;
                 if (value)
                     Movable = true;
@@ -837,7 +878,7 @@ namespace Server
         {
             get { return m_Identified; }
             set { m_Identified = value; InvalidateProperties(); }
-        }        
+        }
 
         private bool m_ArcaneRechargable = false;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -930,7 +971,7 @@ namespace Server
             {
                 m_Quality = value;
 
-                QualityChange();  
+                QualityChange();
             }
         }
 
@@ -958,7 +999,7 @@ namespace Server
 
                 DungeonChange();
             }
-        }      
+        }
 
         public virtual void QualityChange()
         {
@@ -988,7 +1029,7 @@ namespace Server
             }
 
             return "";
-        } 
+        }
 
         /// <summary>
         /// The <see cref="Mobile" /> who is currently <see cref="Mobile.Holding">holding</see> this item.
@@ -2069,8 +2110,8 @@ namespace Server
                 }
             }
 
-            else            
-                ClearProperties();            
+            else
+                ClearProperties();
         }
 
         private object _wpl = new object();
@@ -2221,7 +2262,7 @@ namespace Server
             }
         }
 
-        public virtual bool ForceShowProperties  { get  { return false; }  }
+        public virtual bool ForceShowProperties { get { return false; } }
 
         public virtual int GetPacketFlags()
         {
@@ -2231,7 +2272,7 @@ namespace Server
                 flags |= 0x80;
 
             if (Movable || ForceShowProperties)
-                flags |= 0x20;            
+                flags |= 0x20;
 
             return flags;
         }
@@ -2371,6 +2412,8 @@ namespace Server
             writer.Write(18); // version
 
             //Version 18
+            writer.Write((int)m_ItemGroup);
+            writer.Write((int)m_ItemRarity);
             writer.Write(m_Identified);
             writer.Write((int)m_Dungeon);
             writer.Write(m_ArcaneRechargable);
@@ -2387,7 +2430,7 @@ namespace Server
             writer.Write(m_Stealable);
             writer.Write(m_AlreadyStolen);
             writer.Write(m_MinimumStealing);
-            writer.Write(m_MaximumStealing);  
+            writer.Write(m_MaximumStealing);
             writer.Write(m_OceanStatic);
             writer.Write(m_ShipItem);
             writer.Write((int)m_PlayerClass);
@@ -2396,7 +2439,7 @@ namespace Server
             writer.Write((int)BreakChanceFromReforge);
             writer.Write((byte)Acquisition);
             writer.Write(AcquisitionData);
-            
+
             SaveFlag flags = SaveFlag.None;
 
             int x = m_Location.m_X, y = m_Location.m_Y, z = m_Location.m_Z;
@@ -2597,6 +2640,9 @@ namespace Server
             {
                 case 18:
                     {
+                        m_ItemGroup = (ItemGroupType)reader.ReadInt();
+                        m_ItemRarity = (ItemRarityType)reader.ReadInt();
+
                         m_Identified = reader.ReadBool();
                         m_Dungeon = (DungeonEnum)reader.ReadInt();
                         m_ArcaneRechargable = reader.ReadBool();
@@ -4462,7 +4508,7 @@ namespace Server
             else if (!from.CanSee(target) || !from.InLOS(target))
                 return false;
             else if (!target.IsAccessibleTo(from))
-                return false;          
+                return false;
             else if (root is Mobile && !((Mobile)root).CheckNonlocalDrop(from, this, target))
                 return false;
             else if (!from.OnDroppedItemToItem(this, target, p))
@@ -5100,8 +5146,8 @@ namespace Server
                 }
             }
 
-            if (DisplayCrafter && CrafterName != "")            
-                LabelTo(from, "[crafted by " + CrafterName + "]");            
+            if (DisplayCrafter && CrafterName != "")
+                LabelTo(from, "[crafted by " + CrafterName + "]");
         }
 
         private static bool m_ScissorCopyLootType;

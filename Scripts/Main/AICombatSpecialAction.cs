@@ -95,19 +95,19 @@ namespace Server.Mobiles
                     }
 
                     //Specia Increasing Delay
-                    double speedMultiplier = 0;
-                    int discordancePenalty = 1;
+                    double speedScalar = 1;
+                    double crippleModifier = 0;
+                    double discordModifier = 0;
 
                     //Cripple Effect on Creature
-                    creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple, out speedMultiplier);
+                    creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple, out crippleModifier);
 
-                    speedMultiplier += 1;
+                    //Discordance Effect on Creature                   
+                    discordModifier = creature.DiscordEffect;
 
-                    //Discordance Effect on Creature
-                    if (SkillHandlers.Discordance.GetEffect(creature, ref discordancePenalty))
-                        speedMultiplier *= (1 + (double)(Math.Abs(discordancePenalty)) / 100);
+                    speedScalar += crippleModifier + discordModifier;
 
-                    int specialActionDelay = (int)((double)Utility.RandomMinMax(creature.CombatSpecialActionMinDelay, creature.CombatSpecialActionMaxDelay) * speedMultiplier); 
+                    int specialActionDelay = (int)((double)Utility.RandomMinMax(creature.CombatSpecialActionMinDelay, creature.CombatSpecialActionMaxDelay) * speedScalar); 
 
                     creature.NextCombatSpecialActionAllowed = DateTime.UtcNow + TimeSpan.FromSeconds(specialActionDelay);
                     creature.NextCombatEpicActionAllowed = creature.NextCombatEpicActionAllowed.AddSeconds(5);

@@ -214,11 +214,6 @@ namespace Server.Items
 			}
 
 			int refBonus = 0;
-            
-			if (SkillHandlers.Discordance.GetEffect(attacker, ref refBonus))
-			{
-				defenseValue -= refBonus;
-			}
 
 			if (defenseValue > 45)
 			{
