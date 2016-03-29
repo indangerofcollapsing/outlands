@@ -773,7 +773,14 @@ namespace Server
         [CommandProperty(AccessLevel.GameMaster)]
         public ItemGroupType ItemGroup
         {
-            get { return m_ItemGroup; }
+            get
+            {
+                if (m_ItemGroup == ItemGroupType.None)
+                    return BaseItemGroup;
+
+                return m_ItemGroup; 
+            }
+
             set { m_ItemGroup = value; }
         }
 
@@ -783,7 +790,14 @@ namespace Server
         [CommandProperty(AccessLevel.GameMaster)]
         public ItemRarityType ItemRarity
         {
-            get { return m_ItemRarity; }
+            get 
+            {
+                if (m_ItemRarity == ItemRarityType.None)
+                    return BaseItemRarity; 
+
+                return m_ItemRarity; 
+            }
+
             set { m_ItemRarity = value; }
         }
 
