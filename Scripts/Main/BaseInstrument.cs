@@ -24,6 +24,10 @@ namespace Server.Items
         public static double ExceptionalQualitySkillBonus = 5;
         public static double SlayerSkillBonus = 15;
 
+        public static int PacifiedTextHue = 2599;
+        public static int ProvokedTextHue = 149;
+        public static int DiscordedTextHue = 2601;
+
         private InstrumentDurabilityLevel m_DurabilityLevel;
         [CommandProperty(AccessLevel.GameMaster)]
         public InstrumentDurabilityLevel DurabilityLevel

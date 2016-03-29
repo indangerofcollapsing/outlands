@@ -90,7 +90,7 @@ namespace Server.SkillHandlers
         {
             Mobile from = info.m_From;
             Mobile targ = info.m_Creature;
-
+            
             bool ends = false;
 
             if (!targ.Alive || targ.Deleted || !from.Alive || from.Hidden)
@@ -187,6 +187,9 @@ namespace Server.SkillHandlers
                                 discordanceModifier += bardDungeonArmor.DungeonArmorDetail.DiscordanceEffectBonus;
 
                             DiscordanceInfo info = new DiscordanceInfo(from, bc_Target, discordanceModifier);
+
+                            //TEST
+                            from.Say("Discord Duration: " + effectDuration.ToString());
 
                             info.m_Duration = effectDuration;
                             info.m_EndTime = DateTime.UtcNow + effectDuration;

@@ -7535,26 +7535,26 @@ namespace Server.Mobiles
                     discordedMessage = "discorded " + timeRemaining;
             }
 
-            if (from.NetState != null)
-            {
-                if (pacifiedMessage != "" && discordedMessage == "")
-                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + pacifiedMessage + "*", from.NetState);
-
-                else if (provokedMessage != "" && discordedMessage == "")
-                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + provokedMessage + "*", from.NetState);
-
-                else if (pacifiedMessage != "" && discordedMessage != "")
-                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + pacifiedMessage + " " + discordedMessage + "*", from.NetState);
-
-                else if (provokedMessage != "" && discordedMessage != "")
-                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + provokedMessage + " " + discordedMessage + "*", from.NetState);
-
-                else if (discordedMessage != "")
-                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "*" + discordedMessage + "*", from.NetState);
-            }
-
             if (Controlled && Commandable)
             {
+                if (from.NetState != null)
+                {
+                    if (pacifiedMessage != "" && discordedMessage == "")
+                        PrivateOverheadMessage(MessageType.Regular, BaseInstrument.PacifiedTextHue, false, "*" + pacifiedMessage + "*", from.NetState);
+
+                    else if (provokedMessage != "" && discordedMessage == "")
+                        PrivateOverheadMessage(MessageType.Regular, BaseInstrument.ProvokedTextHue, false, "*" + provokedMessage + "*", from.NetState);
+
+                    else if (pacifiedMessage != "" && discordedMessage != "")
+                        PrivateOverheadMessage(MessageType.Regular, BaseInstrument.PacifiedTextHue, false, "*" + pacifiedMessage + " " + discordedMessage + "*", from.NetState);
+
+                    else if (provokedMessage != "" && discordedMessage != "")
+                        PrivateOverheadMessage(MessageType.Regular, BaseInstrument.ProvokedTextHue, false, "*" + provokedMessage + " " + discordedMessage + "*", from.NetState);
+
+                    else if (discordedMessage != "")
+                        PrivateOverheadMessage(MessageType.Regular, BaseInstrument.DiscordedTextHue, false, "*" + discordedMessage + "*", from.NetState);
+                }
+
                 if (IsHenchman)
                 {
                     PrivateOverheadMessage(MessageType.Regular, 0x3B2, false, "(follower)", from.NetState);
@@ -7588,6 +7588,21 @@ namespace Server.Mobiles
                     }
 
                     PrivateOverheadMessage(MessageType.Regular, 0x3B2, number, from.NetState);
+                }
+            }
+
+            else
+            {
+                if (from.NetState != null)
+                {
+                    if (pacifiedMessage != "")
+                        PrivateOverheadMessage(MessageType.Regular, BaseInstrument.PacifiedTextHue, false, "*" + pacifiedMessage + "*", from.NetState);
+
+                    if (provokedMessage != "")
+                        PrivateOverheadMessage(MessageType.Regular, BaseInstrument.ProvokedTextHue, false, "*" + provokedMessage + "*", from.NetState);
+
+                    if (discordedMessage != "")
+                        PrivateOverheadMessage(MessageType.Regular, BaseInstrument.DiscordedTextHue, false, "*" + discordedMessage + "*", from.NetState);
                 }
             }
 
