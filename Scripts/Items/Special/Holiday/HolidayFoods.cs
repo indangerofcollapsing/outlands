@@ -107,7 +107,7 @@ namespace Server.Items
 			LootType = LootType.Blessed;
 		}
 
-		public override bool CheckHunger( Mobile from )
+        public override bool CanEat(Mobile from)
 		{
 			EnsureTimer( from ).Eaten += 32;
 

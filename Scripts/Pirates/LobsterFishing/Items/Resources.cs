@@ -51,10 +51,8 @@ namespace Server.Items
         public override string DefaultName { get { return "cooked lobster"; } }
 
         [Constructable]
-        public Lobster()
-            : base(0x44D3)
+        public Lobster(): base(0x44D3)
         {
-            FillFactor = 1;
             Weight = 1;
             Stackable = true;
         }
@@ -116,10 +114,8 @@ namespace Server.Items
         public override string DefaultName { get { return "cooked crab"; } }
 
         [Constructable]
-        public Crab()
-            : base(0x44D1)
+        public Crab(): base(0x44D1)
         {
-            FillFactor = 1;
             Weight = 1;
             Stackable = true;
         }

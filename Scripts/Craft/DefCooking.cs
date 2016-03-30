@@ -36,7 +36,7 @@ namespace Server.Engines.Craft
             return 0.0; // 0%
         }
 
-        private DefCooking() : base(1, 1, 1.25)// base( 1, 1, 1.5 )
+        private DefCooking() : base(1, 1, 1.25)
         {
         }
 
@@ -44,6 +44,7 @@ namespace Server.Engines.Craft
         {
             if (tool == null || tool.Deleted || tool.UsesRemaining < 0)
                 return 1044038; // You have worn out your tool!
+
             else if (!BaseTool.CheckAccessible(tool, from))
                 return 1044263; // The tool must be on your person to use.
 
@@ -54,6 +55,7 @@ namespace Server.Engines.Craft
         {
             if (resourceType == typeof(Server.Custom.Items.RareBerries))
                 return false;
+
             else
                 return base.ConsumeOnFailure(from, resourceType, craftItem);
         }
@@ -72,13 +74,16 @@ namespace Server.Engines.Craft
             {
                 if (lostMaterial)
                     return 1044043; // You failed to create the item, and some of your materials are lost.
+
                 else
                     return 1044157; // You failed to create the item, but no materials were lost.
             }
+
             else
             {
                 if (quality == 0)
                     return 502785; // You were barely able to make this item.  It's quality is below average.
+
                 else if (makersMark && quality == 2)
                 {
                     //Player Enhancement Customization: Artisan
@@ -87,8 +92,10 @@ namespace Server.Engines.Craft
 
                     return 1044156; // You create an exceptional quality item and affix your maker's mark.
                 }
+
                 else if (quality == 2)
                     return 1044155; // You create an exceptional quality item.
+
                 else
                     return 1044154; // You create the item.
             }
@@ -98,7 +105,10 @@ namespace Server.Engines.Craft
         {
             int index = -1;
 
-            /* Begin Ingredients */
+            index = AddCraft(typeof(Dough), 1044495, 1024157, 0.0, 100.0, typeof(SackFlour), 1044468, 1, 1044253);
+            AddRes(index, typeof(BaseBeverage), 1046458, 1, 1044253);
+
+            /*
             index = AddCraft(typeof(SackFlour), 1044495, 1024153, 0.0, 100.0, typeof(WheatSheaf), 1044489, 2, 1044490);
             SetNeedMill(index, true);
 
@@ -127,9 +137,7 @@ namespace Server.Engines.Craft
                 SetNeededExpansion(index, Expansion.ML);
                 SetNeedOven(index, true);
             }
-            /* End Ingredients */
 
-            /* Begin Preparations */
             index = AddCraft(typeof(UnbakedQuiche), 1044496, 1041339, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
             AddRes(index, typeof(Eggs), 1044477, 1, 1044253);
 
@@ -182,9 +190,6 @@ namespace Server.Engines.Craft
                 SetNeededExpansion(index, Expansion.SE);
             }
 
-            /* End Preparations */
-
-            /* Begin Baking */
             index = AddCraft(typeof(BreadLoaf), 1044497, 1024156, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
             SetNeedOven(index, true);
 
@@ -243,9 +248,7 @@ namespace Server.Engines.Craft
                 SetNeededExpansion(index, Expansion.SE);
                 SetNeedOven(index, true);
             }
-            /* End Baking */
 
-            /* Begin Barbecue */
             index = AddCraft(typeof(CookedBird), 1044498, 1022487, 0.0, 100.0, typeof(RawBird), 1044470, 1, 1044253);
             SetNeedHeat(index, true);
             SetUseAllRes(index, true);
@@ -275,7 +278,6 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(Ribs), 1044498, "cut of ribs (single)", 0.0, 120.0, typeof(RawRibs), 1044485, 1, 1044253);
             SetNeedHeat(index, true);
-            /* End Barbecue */
 
             index = AddCraft(typeof(Lobster), 1044498, "lobster", 0.0, 100.0, typeof(RawLobster), "Raw Lobster", 1, 1044253);
             SetNeedHeat(index, true);
@@ -284,7 +286,6 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(Crab), 1044498, "crab", 0.0, 100.0, typeof(RawCrab), "Raw Crab", 1, 1044253);
             SetNeedHeat(index, true);
             SetUseAllRes(index, true);
-            /* End Barbecue */
 
             //Specialty Items
             index = AddCraft(typeof(Server.Custom.Items.VeterinarySalts), "Specialty Items", "Veterinary Salts", 88.0, 100.0, typeof(Server.Custom.Items.RareBerries), "rare berries", 1, "You do not have the neccessary rare berries required to cook this.");
@@ -316,6 +317,7 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(BrownOrcKinPaint), "Kin Paints", "brown orc kin paint", 60.0, 65.0, typeof(CaveMoss), "cave moss", 1, "You do not have the neccessary cave moss required to cook this.");
             SetNeedHeat(index, true);
-        }
+            */
+        }        
     }
 }

@@ -2244,7 +2244,7 @@ namespace Server.Items
             if (pm_Attacker != null)
             {
                 //Remove Dungeon Weapon Tactics Bonus Impact in PvP
-                if (pm_Attacker.LastPlayerCombatTime + pm_Attacker.PlayerCombatExpirationDelay > DateTime.UtcNow)
+                if (pm_Attacker.RecentlyInPlayerCombat)
                     tacticsBase -= DungeonWeapon.BaseTactics + (TierLevel * DungeonWeapon.TacticsPerTier);
             }
 

@@ -36,7 +36,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public WasabiClumps( Serial serial ) : base( serial )
@@ -92,7 +91,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 5.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -130,7 +128,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 3.0;
-			FillFactor = 2;
 		}
 
 		public SushiRolls( Serial serial ) : base( serial )
@@ -157,9 +154,8 @@ namespace Server.Items
 		[Constructable]
 		public SushiPlatter() : base( 0x2840 )
 		{
-            Stackable = Core.ML;
+            Stackable = false;
 			Weight = 3.0;
-			FillFactor = 2;
 		}
 
 		public SushiPlatter( Serial serial ) : base( serial )
@@ -215,7 +211,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 4.0;
-			FillFactor = 2;
 		}
 
 		public GreenTea( Serial serial ) : base( serial )
@@ -244,7 +239,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 4.0;
-			FillFactor = 2;
 		}
 
 		public MisoSoup( Serial serial ) : base( serial )
@@ -273,7 +267,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 4.0;
-			FillFactor = 2;
 		}
 
 		public WhiteMisoSoup( Serial serial ) : base( serial )
@@ -302,7 +295,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 4.0;
-			FillFactor = 2;
 		}
 
 		public RedMisoSoup( Serial serial ) : base( serial )
@@ -331,7 +323,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 4.0;
-			FillFactor = 2;
 		}
 
 		public AwaseMisoSoup( Serial serial ) : base( serial )

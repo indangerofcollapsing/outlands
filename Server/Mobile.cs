@@ -764,8 +764,7 @@ namespace Server
         private ParalyzedTimer m_ParaTimer;
         private bool m_Frozen;
         private FrozenTimer m_FrozenTimer;
-        private int m_AllowedStealthSteps;
-        private int m_Hunger;
+        private int m_AllowedStealthSteps;        
         private int m_NameHue = -1;
         private Region m_Region;
         private bool m_DisarmReady, m_StunReady;
@@ -780,8 +779,7 @@ namespace Server
         private Queue<MovementRecord> m_MoveRecords;
         private int m_WarmodeChanges = 0;
         private DateTime m_NextWarmodeChange;
-        private WarmodeTimer m_WarmodeTimer;
-        private int m_Thirst, m_BAC;
+        private WarmodeTimer m_WarmodeTimer;       
         private int m_VirtualArmorMod;
         private VirtueInfo m_Virtues;
         private object m_Party;
@@ -1697,13 +1695,12 @@ namespace Server
             }
         }
 
+        private int m_Hunger;
         [CommandProperty(AccessLevel.GameMaster)]
         public int Hunger
         {
-            get
-            {
-                return m_Hunger;
-            }
+            get { return m_Hunger; }
+
             set
             {
                 int oldValue = m_Hunger;
@@ -1715,32 +1712,22 @@ namespace Server
                     EventSink.InvokeHungerChanged(new HungerChangedEventArgs(this, oldValue));
                 }
             }
-        }
+        }        
 
+        private int m_Thirst;
         [CommandProperty(AccessLevel.GameMaster)]
         public int Thirst
         {
-            get
-            {
-                return m_Thirst;
-            }
-            set
-            {
-                m_Thirst = value;
-            }
+            get { return m_Thirst; }
+            set { m_Thirst = value; }
         }
 
+        private int m_BAC;
         [CommandProperty(AccessLevel.GameMaster)]
         public int BAC
         {
-            get
-            {
-                return m_BAC;
-            }
-            set
-            {
-                m_BAC = value;
-            }
+            get { return m_BAC; }
+            set { m_BAC = value; }
         }
 
         private long m_LastMoveTime;
@@ -2116,26 +2103,7 @@ namespace Server
         public virtual bool CanRegenStam { get { return this.Alive; } }
         public virtual bool CanRegenMana { get { return this.Alive; } }
 
-        #region Timers
-
-        public class ManaTimer : Timer
-        {
-            private Mobile m_Owner;
-
-            public ManaTimer(Mobile m): base(Mobile.GetManaRegenRate(m), Mobile.GetManaRegenRate(m))
-            {
-                this.Priority = TimerPriority.FiftyMS;
-                m_Owner = m;
-            }
-
-            protected override void OnTick()
-            {
-                if (m_Owner.CanRegenMana)// m_Owner.Alive )
-                    m_Owner.Mana++;
-
-                Delay = Interval = Mobile.GetManaRegenRate(m_Owner);
-            }
-        }
+        #region Timers        
 
         public class HitsTimer : Timer
         {
@@ -2149,8 +2117,11 @@ namespace Server
 
             protected override void OnTick()
             {
-                if (m_Owner.CanRegenHits)// m_Owner.Alive && !m_Owner.Poisoned )
+                if (m_Owner.CanRegenHits)
+                {
                     m_Owner.Hits++;
+                    m_Owner.OnHitsRegen();
+                }
 
                 Delay = Interval = Mobile.GetHitsRegenRate(m_Owner);
             }
@@ -2168,11 +2139,48 @@ namespace Server
 
             protected override void OnTick()
             {
-                if (m_Owner.CanRegenStam)// m_Owner.Alive )
+                if (m_Owner.CanRegenStam)
+                {
                     m_Owner.Stam++;
+                    m_Owner.OnStamRegen();
+                }
 
                 Delay = Interval = Mobile.GetStamRegenRate(m_Owner);
             }
+        }
+
+        public class ManaTimer : Timer
+        {
+            private Mobile m_Owner;
+
+            public ManaTimer(Mobile m): base(Mobile.GetManaRegenRate(m), Mobile.GetManaRegenRate(m))
+            {
+                this.Priority = TimerPriority.FiftyMS;
+                m_Owner = m;
+            }
+
+            protected override void OnTick()
+            {
+                if (m_Owner.CanRegenMana)
+                {
+                    m_Owner.Mana++;
+                    m_Owner.OnManaRegen();
+                }
+
+                Delay = Interval = Mobile.GetManaRegenRate(m_Owner);
+            }
+        }
+
+        public virtual void OnHitsRegen()
+        {
+        }
+
+        public virtual void OnStamRegen()
+        {
+        }
+
+        public virtual void OnManaRegen()
+        {
         }
 
         public ILogoutRetain FindLogoutRetainer()
@@ -4671,12 +4679,34 @@ namespace Server
             }
         }
 
+        public bool RecentlyInCombat
+        {
+            get
+            {
+                if (m_LastCombatTime + CombatExpirationDelay >= DateTime.UtcNow)
+                    return true;
+
+                return false;
+            }
+        }
+
+        public bool RecentlyInPlayerCombat
+        {
+            get
+            {
+                if (m_LastPlayerCombatTime + PlayerCombatExpirationDelay >= DateTime.UtcNow)
+                    return true;
+
+                return false;
+            }
+        }
+
         public virtual void LastPlayerCombatTimeChanged()
         {           
         }
 
-        public TimeSpan CombatExpirationDelay = TimeSpan.FromSeconds(10); //Last Time Being in Any Form of Combat
-        public TimeSpan PlayerCombatExpirationDelay = TimeSpan.FromMinutes(5); //Last Time Being in PvP
+        public TimeSpan CombatExpirationDelay = TimeSpan.FromSeconds(30); //Last Time Being in Any Form of Combat
+        public TimeSpan PlayerCombatExpirationDelay = TimeSpan.FromSeconds(120); //Last Time Being in PvP
 
         public DateTime NextFirepitRegenAllowed = DateTime.UtcNow;
 
@@ -6550,6 +6580,7 @@ namespace Server
             writer.Write(m_CantWalk);
 
             VirtueInfo.Serialize(writer, m_Virtues);
+
 
             writer.Write(m_Thirst);
             writer.Write(m_BAC);

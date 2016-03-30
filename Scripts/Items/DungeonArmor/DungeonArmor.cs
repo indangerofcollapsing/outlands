@@ -202,7 +202,7 @@ namespace Server.Items
                     return;
                 }
 
-                if (Player.LastPlayerCombatTime + Player.PlayerCombatExpirationDelay > DateTime.UtcNow)
+                if (Player.RecentlyInPlayerCombat)
                     InPlayerCombat = true;
 
                 DungeonEnum currentDungeon = DungeonEnum.None;

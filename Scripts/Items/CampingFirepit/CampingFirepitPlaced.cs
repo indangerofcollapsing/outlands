@@ -370,8 +370,8 @@ namespace Server.Custom
                     if (mobile == null) continue;
                     if (m_MobilesInCombat.Contains(mobile)) continue;
                     if (mobile.AccessLevel > AccessLevel.Player) continue;
-                    if (mobile.LastCombatTime + mobile.CombatExpirationDelay > DateTime.UtcNow) continue;
-                    if (mobile.LastPlayerCombatTime + mobile.PlayerCombatExpirationDelay > DateTime.UtcNow) continue;
+                    if (mobile.RecentlyInCombat) continue;
+                    if (mobile.RecentlyInPlayerCombat) continue;
                     if (mobile.NextFirepitRegenAllowed > DateTime.UtcNow) continue;
 
                     bool regenOccured = false;

@@ -63,7 +63,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -101,7 +100,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -139,7 +137,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -177,7 +174,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -215,7 +211,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -253,7 +248,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -291,7 +285,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -329,7 +322,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -367,7 +359,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 1.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -461,7 +452,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 2.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )
@@ -499,7 +489,6 @@ namespace Server.Items
 		{
 			Stackable = false;
 			Weight = 2.0;
-			FillFactor = 2;
 		}
 
 		public override bool Eat( Mobile from )

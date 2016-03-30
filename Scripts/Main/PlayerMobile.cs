@@ -1010,6 +1010,44 @@ namespace Server.Mobiles
             }
         }
 
+        private Food.SatisfactionLevel m_FoodSatisfaction = Food.SatisfactionLevel.None;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Food.SatisfactionLevel FoodSatisfaction
+        {
+            get { return m_FoodSatisfaction; }
+            set
+            { 
+                Food.SatisfactionLevel oldValue = m_FoodSatisfaction;
+
+                if (oldValue != value)
+                {
+                    m_FoodSatisfaction = value;
+
+                    FoodSatisfactionChanged();
+                }
+            }
+        }
+
+        public void FoodSatisfactionChanged()
+        {
+            ResetRegenTimers();
+        }
+
+        public override void OnHitsRegen()
+        {
+            Food.CheckFoodHitsRegen(this);
+        }
+
+        public override void OnStamRegen()
+        {
+            Food.CheckFoodStamRegen(this);
+        }
+
+        public override void OnManaRegen()
+        {
+            Food.CheckFoodManaRegen(this);
+        }
+
         public int SystemOverloadActions = 0;
         public static int SystemOverloadActionThreshold = 180; //Player flagged if attacking a single target this many times over the SystemOverloadInterval
         public static TimeSpan SystemOverloadInterval = TimeSpan.FromSeconds(60);
@@ -3894,7 +3932,7 @@ namespace Server.Mobiles
                 if (m_Player.Deleted)
                     Stop();
 
-                if (m_Player.LastPlayerCombatTime + m_Player.PlayerCombatExpirationDelay < DateTime.UtcNow)
+                if (!m_Player.RecentlyInPlayerCombat)
                 {
                     DungeonArmor.CheckForAndUpdateDungeonArmorProperties(m_Player);
                     Stop();
@@ -5298,6 +5336,7 @@ namespace Server.Mobiles
 
             writer.WriteEncodedInt(m_GuildRank.Rank);
 
+            writer.Write((int)m_FoodSatisfaction);
             writer.Write(m_EventCalendarAccount);
             writer.Write(m_BonusSkillCap);
             writer.Write(m_MHSPlayerEntry);
@@ -5398,6 +5437,7 @@ namespace Server.Mobiles
 
                 m_GuildRank = Guilds.RankDefinition.Ranks[rank];
 
+                m_FoodSatisfaction = (Food.SatisfactionLevel)reader.ReadInt();
                 m_EventCalendarAccount = (EventCalendarAccount)reader.ReadItem() as EventCalendarAccount;
                 m_BonusSkillCap = reader.ReadInt();
                 m_MHSPlayerEntry = (MHSPlayerEntry)reader.ReadItem() as MHSPlayerEntry;
@@ -5516,7 +5556,7 @@ namespace Server.Mobiles
 
             if (LastPlayerCombatTime > DateTime.MinValue)
             {
-                if (LastPlayerCombatTime + PlayerCombatExpirationDelay > DateTime.UtcNow)
+                if (RecentlyInPlayerCombat)
                 {
                     m_PlayerCombatTimer = new PlayerCombatTimer(this);
                     m_PlayerCombatTimer.Start();

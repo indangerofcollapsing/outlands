@@ -13,21 +13,23 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-	public class PolymorphPotion : BasePotion
-	{
+    public class PolymorphPotion : BasePotion
+    {
         [Constructable]
-		public PolymorphPotion() : base( 0xF0D, PotionEffect.Custom )
-		{
+        public PolymorphPotion()
+            : base(0xF0D, PotionEffect.Custom)
+        {
             Name = "a monsterous polymorph potion";
             Hue = 2600;
 
             Weight = 1.0;
             Movable = true;
-		}
+        }
 
-		public PolymorphPotion( Serial serial ) : base( serial )
-		{
-		}
+        public PolymorphPotion(Serial serial)
+            : base(serial)
+        {
+        }
 
         public override void Drink(Mobile from)
         {
@@ -47,7 +49,7 @@ namespace Server.Items
                     return;
                 }
 
-                if (player.LastPlayerCombatTime + player.PlayerCombatExpirationDelay > DateTime.UtcNow)
+                if (player.RecentlyInPlayerCombat)
                 {
                     from.SendMessage("You have been in combat with another player too recently to drink this.");
                     return;
@@ -151,5 +153,5 @@ namespace Server.Items
             base.Deserialize(reader);
             int version = reader.ReadInt();
         }
-	}
+    }
 }
