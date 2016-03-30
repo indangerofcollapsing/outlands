@@ -14,7 +14,7 @@ namespace Server.Items
 {
     public class Bandage : Item, IDyable
     {
-        public static int Range = (Core.AOS ? 2 : 1);
+        public static int Range = 1;
 
         public override double DefaultWeight
         {
@@ -272,15 +272,16 @@ namespace Server.Items
             BaseCreature petPatient = m_Patient as BaseCreature;
 
             bool healDamage = true;
-            bool healThroughPoison = false;
-            double BandageHealThroughPoisonScalar = 0;
+            bool healThroughPoison = true;
+            double BandageHealThroughPoisonScalar = SpellHelper.HealThroughPoisonScalar;
+
             int effectHue = 0;
 
             DungeonArmor.PlayerDungeonArmorProfile bandagerDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(m_Healer, null);
 
             if (bandagerDungeonArmor.MatchingSet && !bandagerDungeonArmor.InPlayerCombat)
             {
-                BandageHealThroughPoisonScalar = bandagerDungeonArmor.DungeonArmorDetail.BandageHealThroughPoisonScalar;
+                BandageHealThroughPoisonScalar += bandagerDungeonArmor.DungeonArmorDetail.BandageHealThroughPoisonScalar;
                 effectHue = bandagerDungeonArmor.DungeonArmorDetail.EffectHue;                
             }
 
@@ -416,16 +417,7 @@ namespace Server.Items
                     {
                         healerNumber = (m_Healer == m_Patient) ? -1 : 1010058; // You have cured the target of all poisons.
                         patientNumber = 1010059; // You have been cured of all poisons.
-
-                        if (bandagerDungeonArmor.MatchingSet && !bandagerDungeonArmor.InPlayerCombat)
-                        {
-                            if (bandagerDungeonArmor.DungeonArmorDetail.BandageHealThroughPoisonScalar > 0)
-                            {
-                                healDamage = true;
-                                healThroughPoison = true;
-                            }
-                        }
-
+                        
                         if (m_Healer.Player)
                         {
                             // IPY ACHIEVEMENT (cure newbie)
@@ -491,11 +483,8 @@ namespace Server.Items
 
                     if (m_Patient.Body.IsMonster || m_Patient.Body.IsAnimal)
                         toHeal += m_Patient.HitsMax / 100;
-
-                    if (Core.AOS)
-                        toHeal -= toHeal * m_Slips * 0.35; // TODO: Verify algorithm
-                    else
-                        toHeal -= m_Slips * 2.5;
+                                       
+                     toHeal -= m_Slips * 2.5;
 
                     if (healThroughPoison)
                         toHeal *= BandageHealThroughPoisonScalar;
@@ -621,7 +610,10 @@ namespace Server.Items
                 int dex = healer.Dex;
 
                 double seconds;
-                double resDelay = (patient.Alive ? 0.0 : 5.0);
+                double resDelay = 0;
+                
+                if (!patient.Alive)
+                    resDelay += 5;
 
                 if (onSelf)
                 {

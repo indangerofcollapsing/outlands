@@ -10,46 +10,31 @@ namespace Server.Items
     {
         public override ArmorMaterialType MaterialType { get { return ArmorMaterialType.Plate; } }
 
-        public BaseShield(int itemID)
-            : base(itemID)
+        public BaseShield(int itemID): base(itemID)
         {
         }
 
-        public BaseShield(Serial serial)
-            : base(serial)
+        public BaseShield(Serial serial): base(serial)
         {
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write((int)1);//version
+            writer.Write((int)0);//version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (version < 1)
-            {
-                if (this is Aegis)
-                    return;
-
-                // The 15 bonus points to resistances are not applied to shields on OSI.
-                PhysicalBonus = 0;
-                FireBonus = 0;
-                ColdBonus = 0;
-                PoisonBonus = 0;
-                EnergyBonus = 0;
-            }
         }
 
         public override double ArmorRating
         {
             get
             {
-                Mobile m = this.Parent as Mobile;
+                Mobile mobile = Parent as Mobile;
 
                 double baseAR = base.ArmorRating;
 
@@ -71,13 +56,12 @@ namespace Server.Items
 
                 baseAR += -6 + (6 * (int)Quality);
 
-                double parryingSkill = m.Skills[SkillName.Parry].Value;
-                double finalAR = (baseAR / 2) + ((baseAR / 2) * (m.Skills[SkillName.Parry].Value / 100));
+                double finalAR = (baseAR * .5) + ((baseAR * .5) * (mobile.Skills[SkillName.Parry].Value / 100));
 
                 if (finalAR < 1)
                     finalAR = 1;
 
-                if (m != null)
+                if (mobile != null)
                     return finalAR;
                 else
                     return baseAR;
@@ -99,79 +83,36 @@ namespace Server.Items
             if (DecorativeEquipment)
                 return damage;
 
-            double parrySkill = owner.Skills[SkillName.Parry].Value;
-            double baseChance = (parrySkill / 100.0) / 2;
-            double chanceBonus = .167 * (owner.Skills[SkillName.ArmsLore].Value / 100);
+            double successChance = (owner.Skills[SkillName.Parry].Value / 100.0) * .5;
 
-            if (attacker is PlayerMobile)
-                chanceBonus = 0;
-
-            double chance = baseChance + chanceBonus;
-
-            if (chance < 0.01)
-                chance = 0.01;            
-
-            //Successful Parry Check
-            if (owner.CheckSkill(SkillName.Parry, chance, 1.0))
+            if (owner.CheckSkill(SkillName.Parry, successChance, 1.0))
             {
-                double reduction = 0.40; // 50% base reduction
+                double damageScalar = 0.25;
+                double durabilityLossChance = .10;
 
-                // reduce 5% further for each mod
-                if (Quality == Quality.Exceptional)
-                    reduction -= 0.06;
+                damage = (int)(Math.Round((double)damage * damageScalar));
 
-                else
-                    reduction -= (int)ProtectionLevel * 0.06;
+                if (damage < 1)
+                    damage = 1;
 
-                damage = (int)(damage * reduction);
-
-                if (owner.AccessLevel > AccessLevel.Player)
-                    owner.PrivateOverheadMessage(Network.MessageType.Regular, 0x22, false, String.Format("Parry Damage Modifier: {0:0.00}", 1-reduction), owner.NetState);
-
-                //Parry Visual Effect
                 owner.FixedEffect(0x37B9, 10, 16);
 
-                //(25% Chance)
-                if (25 > Utility.Random(100) && LootType != Server.LootType.Blessed)
+                if (Utility.RandomDouble() <= durabilityLossChance && LootType != LootType.Blessed && MaxHitPoints > 0)
                 {
-                    int wear = Utility.Random(2);
-                    wear = GetGuildReducedDamage(wear);
-
-                    //66% Chance of Possible Durability Damage
-                    if (wear > 0 && MaxHitPoints > 0)
+                    if (HitPoints > 1)
                     {
-                        //Durability Damage
-                        if (HitPoints >= wear)
+                        HitPoints--;
+
+                        if (HitPoints == 5)
                         {
-                            HitPoints -= wear;
-                            wear = 0;
-                        }
-
-                        else
-                        {
-                            wear -= HitPoints;
-                            HitPoints = 0;
-                        }
-
-                        if (wear > 0)
-                        {
-                            //Shield Almost Broken
-                            if (MaxHitPoints > wear)
-                            {
-                                MaxHitPoints -= wear;
-
-                                if (Parent is Mobile)
-                                    ((Mobile)Parent).LocalOverheadMessage(MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
-                            }
-
-                            //Shield Breaks
-                            else
-                            {
-                                Delete();
-                            }
+                            if (Parent is Mobile)
+                                ((Mobile)Parent).LocalOverheadMessage(MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
                         }
                     }
-                }
+
+                    else
+                        Delete();
+                }  
             }
 
             return damage;

@@ -63,28 +63,17 @@ namespace Server.Spells
     public class SpellHelper
     {
         public static bool SPELLS_USE_IPY3_STYLE_DISRUPTS_AND_HEALS = true;
+
         private static TimeSpan AosDamageDelay = TimeSpan.FromSeconds(1.0);
         private static TimeSpan OldDamageDelay = TimeSpan.FromSeconds(0.5);
 
-        private static bool SpellToleranceEnabled = false;
         private static bool DistanceDelayEnabled = false;
 
-        [Usage("ToggleSpellTolerance")]
-        [Description("Enables or disables the spell tolerance system")]
-        public static void ToggleSpellTolerance_OnCommand(CommandEventArgs e)
-        {
-            if (SpellToleranceEnabled)
-            {
-                SpellToleranceEnabled = false;
-                e.Mobile.SendMessage("Spell tolerance has been disabled.");
-            }
-            else
-            {
-                SpellToleranceEnabled = true;
-                e.Mobile.SendMessage("Spell tolerance has been enabled.");
-            }
-        }
+        public static TimeSpan SpellHealWindowDuration = TimeSpan.FromSeconds(10);
+        public static double SpellHealScalarAdjustmentPerCount = .25;
 
+        public static double HealThroughPoisonScalar = 0.5;
+        
         [Usage("ToggleDistanceDelay")]
         [Description("Enables or disables the distance delay system")]
         public static void ToggleDistanceDelay_OnCommand(CommandEventArgs e)
@@ -103,7 +92,6 @@ namespace Server.Spells
 
         public static void Initialize()
         {
-            CommandSystem.Register("ToggleSpellTolerance", AccessLevel.Developer, new CommandEventHandler(ToggleSpellTolerance_OnCommand));
             CommandSystem.Register("ToggleDistanceDelay",  AccessLevel.Developer, new CommandEventHandler(ToggleDistanceDelay_OnCommand));
         }
 

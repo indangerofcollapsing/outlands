@@ -1380,70 +1380,36 @@ namespace Server.Items
             if (owner == null)
                 return damage;
 
-            double parrySkill = owner.Skills[SkillName.Parry].Value;
-            double baseChance = (parrySkill / 100.0) / 2.0;
-            double chanceBonus = .167 * (owner.Skills[SkillName.ArmsLore].Value / 100);
-
-            double chance = baseChance + chanceBonus;
-
-            if (chance < 0.01)
-                chance = 0.01;
-
-            //Successful Parry Check
-            if (owner.CheckSkill(SkillName.Parry, chance, 1.0))
+            double successChance = (owner.Skills[SkillName.Parry].Value / 100) * .5;
+            
+            if (owner.CheckSkill(SkillName.Parry, successChance, 1.0))
             {
-                double reduction = 0.65; // 35% base reduction
-                // reduce damage 5% further for each mod
+                double damageScalar = 0.25;
+                double durabilityLossChance = .05;
 
-                if (Quality == Quality.Exceptional)
-                    reduction -= 0.12;
+                damage = (int)(Math.Round((double)damage * damageScalar));
 
-                else
-                    reduction -= (((int)m_DamageLevel + (int)m_AccuracyLevel) / 2) * 0.06;
+                if (damage < 1)
+                    damage = 1;
 
-                damage = (int)(damage * reduction);
-
-                //Parry Visual Effect
                 owner.FixedEffect(0x37B9, 10, 16);
 
-                //(5% Chance of Durability Damage)
-                if (5 > Utility.Random(100) && LootType != LootType.Blessed)
+                if (Utility.RandomDouble() <= durabilityLossChance && LootType != LootType.Blessed && MaxHitPoints > 0)
                 {
-                    int wear = Utility.Random(2);
-
-                    //66% Chance of Possible Durability Damage
-                    if (wear > 0 && MaxHitPoints > 0)
+                    if (HitPoints > 1)  
                     {
-                        //Durability Damage
-                        if (HitPoints >= wear)
-                        {
-                            HitPoints -= wear;
-                            wear = 0;
-                        }
+                        HitPoints--;
 
-                        else
+                        if (HitPoints == 5)
                         {
-                            wear -= HitPoints;
-                            HitPoints = 0;
-                        }
-
-                        if (wear > 0)
-                        {
-                            //Weapon Almost Broken
-                            if (MaxHitPoints > wear)
-                            {
-                                MaxHitPoints -= wear;
-
                                 if (Parent is Mobile)
-                                    ((Mobile)Parent).LocalOverheadMessage(MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
-                            }
-
-                            //Weapon
-                            else
-                                Delete();
+                                ((Mobile)Parent).LocalOverheadMessage(MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
                         }
                     }
-                }
+
+                    else                        
+                            Delete();
+                }                
             }
 
             return damage;

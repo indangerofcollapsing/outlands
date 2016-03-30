@@ -48,69 +48,76 @@ namespace Server.Spells.First
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
 		}
 
-		public void Target( Mobile m )
+		public void Target( Mobile target )
 		{
-            if (!Caster.CanSee(m) || m.Hidden)
-            {
+            if (!Caster.CanSee(target) || target.Hidden)            
                 Caster.SendLocalizedMessage(500237); // Target can not be seen.
-            }
-			else if ( m.IsDeadBondedPet )
-			{
+            
+			else if ( target.IsDeadBondedPet )			
 				Caster.SendLocalizedMessage( 1060177 ); // You cannot heal a creature that is already dead!
-			}
-			else if ( m is BaseCreature && ((BaseCreature)m).IsAnimatedDead )
-			{
+			
+			else if ( target is BaseCreature && ((BaseCreature)target).IsAnimatedDead )			
 				Caster.SendLocalizedMessage( 1061654 ); // You cannot heal that which is not alive.
-			}
-			else if ( m is Golem )
-			{
+			
+			else if ( target is Golem )			
 				Caster.LocalOverheadMessage( MessageType.Regular, 0x3B2, 500951 ); // You cannot heal that.
-			}
-			else if ( CheckBSequence( m ) )
+			
+			else if ( CheckBSequence( target ) )
             {
-                SpellHelper.Turn(Caster, m);
+                SpellHelper.Turn(Caster, target);
+                
+				int healAmount = Utility.RandomMinMax(8, 12);
 
-                // Algorithm: (10% of magery) + (1-5)
+                double mageryScalar = .5 + (.5 * (Caster.Skills[SkillName.Magery].Value / 100));
+                double diminishedEffectScalar = 1.0;
+                double poisonScalar = 1.0;
 
-				int toHeal = 0;
-				if (SpellHelper.SPELLS_USE_IPY3_STYLE_DISRUPTS_AND_HEALS)
-				{
-					// ipy3
-					toHeal = (int)(Caster.Skills[SkillName.Magery].Value * 0.06); // was 0.08 for a 9 - 11 range
-					toHeal += Utility.Random(1, 3); // 7 - 9
-				}
-				else
-				{
-					// ipy2 heavily nerfed
-					toHeal = (int)(Caster.Skills[SkillName.Magery].Value * 0.06);
-					toHeal += Utility.Random(1, 3); // 7 - 9
-				}
+                if (Caster.SpellHealWindowEnd > DateTime.UtcNow)
+                {
+                    diminishedEffectScalar -= (SpellHelper.SpellHealScalarAdjustmentPerCount * (double)Caster.LastSpellCount);
 
-                int spellHue = 0; // PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Heal);                
+                    if (diminishedEffectScalar < 0)
+                        diminishedEffectScalar = 0;
 
-                m.Heal(toHeal);
+                    Caster.LastSpellCount++;
+                    Caster.SpellHealWindowEnd = DateTime.UtcNow + SpellHelper.SpellHealWindowDuration;
+                }
 
-                m.FixedParticles(0x376A, 9, 32, 5005, spellHue, 0, EffectLayer.Waist);
-                m.FixedParticles(0x376A, 9, 32, 5005, spellHue, 0, EffectLayer.Waist);
+                else
+                {
+                    Caster.LastSpellCount = 1;
+                    Caster.SpellHealWindowEnd = DateTime.UtcNow + SpellHelper.SpellHealWindowDuration;
+                }
 
-                m.PlaySound(0x1F2);
+                if (target.Poisoned)
+                    poisonScalar = SpellHelper.HealThroughPoisonScalar;
 
-                m.NextSpellTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(250);
+                healAmount = (int)(Math.Round((double)healAmount * mageryScalar * diminishedEffectScalar * poisonScalar));
+
+                if (healAmount < 1)
+                    healAmount = 1;
+
+                int spellHue = 0;            
+
+                target.Heal(healAmount);
+
+                target.FixedParticles(0x376A, 9, 32, 5005, spellHue, 0, EffectLayer.Waist);
+                target.FixedParticles(0x376A, 9, 32, 5005, spellHue, 0, EffectLayer.Waist);
+
+                target.PlaySound(0x1F2);
+
+                target.NextSpellTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(250);
 
                 // IPY ACHIEVEMENT (heal newbie)
-                if (Caster != m && 3000 > m.SkillsTotal && m.Player && Caster.Player)
+                if (Caster != target && 3000 > target.SkillsTotal && target.Player && Caster.Player)
                     AchievementSystem.Instance.TickProgress(Caster, AchievementTriggers.Trigger_HealPlayerUnder300Skill);
                 // IPY ACHIEVEMENT
             }
@@ -129,10 +136,8 @@ namespace Server.Spells.First
 
 			protected override void OnTarget( Mobile from, object o )
 			{
-				if ( o is Mobile )
-				{
-					m_Owner.Target( (Mobile)o );
-				}
+				if ( o is Mobile )				
+					m_Owner.Target( (Mobile)o );				
 			}
 
 			protected override void OnTargetFinish( Mobile from )

@@ -30,7 +30,7 @@ namespace Server
         public static double DiscordanceFailureCooldown = 5;
         public static double EvalIntCooldown = 2.0;
         public static double HealingSelfCooldown = 10.0;
-        public static double HealingOtherCooldown = 7.5;
+        public static double HealingOtherCooldown = 8;
         public static double FishingCooldown = 10.0;
         public static double ForensicsCooldown = 2.0;
         public static double HerdingSuccessCooldown = 10;

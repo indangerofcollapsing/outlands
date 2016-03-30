@@ -4648,6 +4648,9 @@ namespace Server
             set { m_AggroBonusExpiration = value; }
         }
 
+        public DateTime SpellHealWindowEnd = DateTime.UtcNow - TimeSpan.FromHours(1);
+        public int LastSpellCount = 0;
+
         private DateTime m_LastCombatTime = DateTime.MinValue;
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime LastCombatTime

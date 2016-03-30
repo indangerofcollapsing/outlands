@@ -1,6 +1,7 @@
 using System;
 using Server;
 using Server.Network;
+using Server.Spells;
 
 namespace Server.Items
 {
@@ -21,14 +22,12 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
 		}
 
@@ -37,7 +36,15 @@ namespace Server.Items
 			int min = Scale( from, MinHeal );
 			int max = Scale( from, MaxHeal );
 
-			from.Heal( Utility.RandomMinMax( min, max ) );
+            int healAmount = Utility.RandomMinMax(min, max);
+
+            if (from.Poisoned)
+                healAmount = (int)(Math.Ceiling((double)healAmount * SpellHelper.HealThroughPoisonScalar));
+
+            if (healAmount < 1)
+                healAmount = 1;
+
+            from.Heal(healAmount);
 		}
 
 		public override void Drink( Mobile from )
@@ -56,15 +63,12 @@ namespace Server.Items
 					Timer.DelayCall( TimeSpan.FromSeconds( Delay ), new TimerStateCallback( ReleaseHealLock ), from );
 				}
 
-				else
-				{
-					from.LocalOverheadMessage( MessageType.Regular, 0x22, 500235 ); // You must wait 10 seconds before using another healing potion.
-				}
+				else				
+					from.LocalOverheadMessage( MessageType.Regular, 0x22, 500235 ); // You must wait 10 seconds before using another healing potion.				
             }
-			else
-			{
-				from.SendLocalizedMessage( 1049547 ); // You decide against drinking this potion, as you are already at full health.
-			}
+
+			else			
+				from.SendLocalizedMessage( 1049547 ); // You decide against drinking this potion, as you are already at full health.			
 		}
 
 		private static void ReleaseHealLock( object state )
