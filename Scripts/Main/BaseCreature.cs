@@ -925,7 +925,7 @@ namespace Server.Mobiles
         {
             m_Loyalty = MaxLoyalty;
 
-            Hunger = Utility.RandomMinMax(5, 10);
+            Hunger = Utility.RandomMinMax(10, 20);
 
             m_iRangePerception = iRangePerception;
             m_iRangeFight = iRangeFight;
@@ -7763,7 +7763,7 @@ namespace Server.Mobiles
                         }
                     }
 
-                    bc_Killer.Hunger = 20;
+                    bc_Killer.Hunger = Food.MaxHunger;
                 }
             }
 

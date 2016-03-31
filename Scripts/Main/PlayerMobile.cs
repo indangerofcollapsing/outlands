@@ -1009,28 +1009,21 @@ namespace Server.Mobiles
                 SkillCap = SkillCap + m_BonusSkillCap;
             }
         }
-
-        private Food.SatisfactionLevel m_FoodSatisfaction = Food.SatisfactionLevel.None;
+        
+        private Food.SatisfactionLevelType m_SatisfactionLevel = Food.SatisfactionLevelType.None;
         [CommandProperty(AccessLevel.GameMaster)]
-        public Food.SatisfactionLevel FoodSatisfaction
+        public Food.SatisfactionLevelType SatisfactionLevel
         {
-            get { return m_FoodSatisfaction; }
-            set
-            { 
-                Food.SatisfactionLevel oldValue = m_FoodSatisfaction;
-
-                if (oldValue != value)
-                {
-                    m_FoodSatisfaction = value;
-
-                    FoodSatisfactionChanged();
-                }
-            }
+            get { return m_SatisfactionLevel; }
+            set { m_SatisfactionLevel = value; }
         }
 
-        public void FoodSatisfactionChanged()
+        private DateTime m_SatisfactionExpiration = DateTime.UtcNow;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime SatisfactionExpiration
         {
-            ResetRegenTimers();
+            get { return m_SatisfactionExpiration; }
+            set { m_SatisfactionExpiration = value; }
         }
 
         public override void OnHitsRegen()
@@ -5336,7 +5329,8 @@ namespace Server.Mobiles
 
             writer.WriteEncodedInt(m_GuildRank.Rank);
 
-            writer.Write((int)m_FoodSatisfaction);
+            writer.Write((int)m_SatisfactionLevel);
+            writer.Write(m_SatisfactionExpiration);
             writer.Write(m_EventCalendarAccount);
             writer.Write(m_BonusSkillCap);
             writer.Write(m_MHSPlayerEntry);
@@ -5437,7 +5431,8 @@ namespace Server.Mobiles
 
                 m_GuildRank = Guilds.RankDefinition.Ranks[rank];
 
-                m_FoodSatisfaction = (Food.SatisfactionLevel)reader.ReadInt();
+                m_SatisfactionLevel = (Food.SatisfactionLevelType)reader.ReadInt();
+                m_SatisfactionExpiration = reader.ReadDateTime();
                 m_EventCalendarAccount = (EventCalendarAccount)reader.ReadItem() as EventCalendarAccount;
                 m_BonusSkillCap = reader.ReadInt();
                 m_MHSPlayerEntry = (MHSPlayerEntry)reader.ReadItem() as MHSPlayerEntry;

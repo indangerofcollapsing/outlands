@@ -9,9 +9,63 @@ using Server.Mobiles;
 
 namespace Server.Items
 {
+    public class FoodDecayTimer : Timer
+    {
+        public static void Initialize()
+        {
+            new FoodDecayTimer().Start();
+        }
+
+        public FoodDecayTimer(): base(TimeSpan.FromMinutes(60), TimeSpan.FromMinutes(60))
+        {
+            Priority = TimerPriority.OneMinute;
+        }
+
+        protected override void OnTick()
+        {
+            CheckFoodDecay();
+        }
+
+        public static void CheckFoodDecay()
+        {
+            Queue m_Queue = new Queue();
+
+            foreach (Item item in World.Items.Values)
+            {
+                if (!(item is Food))
+                    continue;
+
+                Food food = item as Food;
+
+                if (!food.Decays) continue;
+                if (food.Map == null || food.Map == Map.Internal) continue;
+
+                Mobile parent = food.RootParentEntity as Mobile;
+
+                if (parent != null)
+                {
+                    //Refresh Expiration
+                    if ((parent is BaseCreature && !(parent is PlayerVendor)) || parent.AccessLevel > AccessLevel.Player)
+                    {                        
+                        food.DecayExpiration = DateTime.UtcNow + food.DecayDuration;
+                        continue;
+                    }
+                }
+
+                m_Queue.Enqueue(food);
+            }
+
+            while (m_Queue.Count > 0)
+            {
+                Item item = (Item)m_Queue.Dequeue();
+                item.Delete();
+            }
+        }
+    }
+
 	public abstract class Food : Item
 	{
-        public enum SatisfactionLevel
+        public enum SatisfactionLevelType
         {
             None,
             Paltry,
@@ -20,9 +74,22 @@ namespace Server.Items
             Appetizing,
             Delectable
         }
-                
-        public virtual SatisfactionLevel Satisfaction { get { return SatisfactionLevel.Paltry; } }
-        public virtual int FillFactor { get { return 5; } }
+
+        public static int CharacterCreationHunger = 30;
+        public static int MaxHunger = 60;        
+
+        public static double HungerThirstTickDuration = 5; //In Minutes
+        public static int HungerThirstLostPerTick = 5;
+
+        public virtual int FillFactor { get { return 6; } }
+        public virtual SatisfactionLevelType Satisfaction { get { return SatisfactionLevelType.Paltry; } }
+        public virtual TimeSpan SatisfactionDuration { get { return TimeSpan.FromMinutes(30); } }        
+        public virtual int MaxCharges { get { return 1; } }
+        public virtual bool Decays { get { return false; } }
+        public virtual TimeSpan DecayDuration { get { return TimeSpan.FromDays(7); } }
+
+        public virtual int MinStaminaRegained { get { return 10; } }
+        public virtual int MaxStaminaRegained { get { return 20; } }        
 
         public static bool AllowInPlayerVsPlayerCombat = true;
 
@@ -32,6 +99,14 @@ namespace Server.Items
         {
             get { return m_Charges; }
             set { m_Charges = value; }
+        }
+
+        private DateTime m_DecayExpiration = DateTime.UtcNow + TimeSpan.FromDays(1000);
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime DecayExpiration
+        {
+            get { return m_DecayExpiration; }
+            set { m_DecayExpiration = value; }
         }
 
         private Poison m_Poison;
@@ -58,6 +133,9 @@ namespace Server.Items
 		{
 			Stackable = true;
 			Amount = amount;
+
+            Charges = MaxCharges;
+            DecayExpiration = DateTime.UtcNow + DecayDuration;
 		}
 
 		public Food( Serial serial ) : base( serial )
@@ -71,8 +149,10 @@ namespace Server.Items
             if (m_Charges > 1)
                 LabelTo(from, "(" + m_Charges.ToString() + " bites remaining)");
 
-            if (Satisfaction != SatisfactionLevel.None)
-                LabelTo(from, "[" + Satisfaction.ToString().ToLower() + "]");
+            string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, m_DecayExpiration, true, true, true, true, false);
+
+            if (m_DecayExpiration < DateTime.UtcNow + TimeSpan.FromDays(90))
+                LabelTo(from, "[expires in " + timeRemaining + "]");
         } 
 
 		public override void GetContextMenuEntries( Mobile from, List<ContextMenuEntry> list )
@@ -92,9 +172,70 @@ namespace Server.Items
 				Eat( from );			
 		}
 
-		public virtual bool Eat( Mobile from )
+        public bool AttemptEat(Mobile from)
+        {
+            if (from.Hunger + FillFactor > Food.MaxHunger)
+            {
+                from.SendMessage("You are too full to eat that.");
+                return false;
+            }
+
+            from.Hunger += FillFactor;
+
+            PlayerMobile player = from as PlayerMobile;
+
+            if (player != null)
+            {
+                if (Satisfaction >= player.SatisfactionLevel)
+                {
+                    player.SatisfactionExpiration = DateTime.UtcNow + SatisfactionDuration;
+                    player.SatisfactionLevel = Satisfaction;
+                }
+            }
+
+            if (from.Stam < from.StamMax)
+                from.Stam += Utility.RandomMinMax(MinStaminaRegained, MaxStaminaRegained);
+
+            int iHunger = from.Hunger + FillFactor;
+
+            string satisfiedMessage = "";
+            string hungerMessage = "";
+
+            switch (Satisfaction)
+            {
+                case SatisfactionLevelType.Paltry: satisfiedMessage = "The food is paltry and barely satisfies."; break;
+                case SatisfactionLevelType.Meagre: satisfiedMessage = " The food is meagre and mildly satisfies."; break;
+                case SatisfactionLevelType.Adequate: satisfiedMessage = "The food is adequate and decently satisfies."; break;
+                case SatisfactionLevelType.Appetizing: satisfiedMessage = "The food is appetizing and greatly satisfies."; break;
+                case SatisfactionLevelType.Delectable: satisfiedMessage = "The food is delectable and completely satisfies."; break;
+            }
+
+            double hungerPercent = (double)iHunger / (double)MaxHunger;
+
+            if (hungerPercent < .25)
+                hungerMessage = "You are still very hungry.";
+
+            else if (hungerPercent < .5)
+                hungerMessage = "You are still slightly hungry.";
+
+            else if (hungerPercent < .75)
+                hungerMessage = "You are somewhat full.";
+
+            else if (hungerPercent < 1.0)
+                hungerMessage = "You are very full.";
+
+            else
+                hungerMessage = "You are completely full.";
+
+            from.SendMessage(satisfiedMessage);
+            from.SendMessage(hungerMessage);
+
+            return true;
+        }
+
+		public virtual bool Eat(Mobile from)
 		{			
-			if ( CanEat( from ) )
+			if (AttemptEat(from))
 			{
                 //Player Enhancement Customization: Mouthy
                 bool mouthy = PlayerEnhancementPersistance.IsCustomizationEntryActive(from, CustomizationType.Mouthy);
@@ -192,16 +333,17 @@ namespace Server.Items
         {
             if (player.Region is UOACZRegion) return;
             if (!AllowInPlayerVsPlayerCombat && player.RecentlyInPlayerCombat) return;
+            if (player.SatisfactionExpiration <= DateTime.UtcNow) return;
 
             double chance = 0;
 
-            switch (player.FoodSatisfaction)
+            switch (player.SatisfactionLevel)
             {
-                case SatisfactionLevel.Paltry: chance = .1; break;
-                case SatisfactionLevel.Meagre: chance = .2; break;
-                case SatisfactionLevel.Adequate: chance = .3; break;
-                case SatisfactionLevel.Appetizing: chance = .4; break;
-                case SatisfactionLevel.Delectable: chance = .5; break;
+                case SatisfactionLevelType.Paltry: chance = .1; break;
+                case SatisfactionLevelType.Meagre: chance = .2; break;
+                case SatisfactionLevelType.Adequate: chance = .3; break;
+                case SatisfactionLevelType.Appetizing: chance = .4; break;
+                case SatisfactionLevelType.Delectable: chance = .5; break;
             }
 
             if (Utility.RandomDouble() <= chance)
@@ -212,16 +354,17 @@ namespace Server.Items
         {
             if (player.Region is UOACZRegion) return;
             if (!AllowInPlayerVsPlayerCombat && player.RecentlyInPlayerCombat) return;
+            if (player.SatisfactionExpiration <= DateTime.UtcNow) return;
 
             double chance = 0;
 
-            switch (player.FoodSatisfaction)
+            switch (player.SatisfactionLevel)
             {
-                case SatisfactionLevel.Paltry: chance = .1; break;
-                case SatisfactionLevel.Meagre: chance = .2; break;
-                case SatisfactionLevel.Adequate: chance = .3; break;
-                case SatisfactionLevel.Appetizing: chance = .4; break;
-                case SatisfactionLevel.Delectable: chance = .5; break;
+                case SatisfactionLevelType.Paltry: chance = .1; break;
+                case SatisfactionLevelType.Meagre: chance = .2; break;
+                case SatisfactionLevelType.Adequate: chance = .3; break;
+                case SatisfactionLevelType.Appetizing: chance = .4; break;
+                case SatisfactionLevelType.Delectable: chance = .5; break;
             }
 
             if (Utility.RandomDouble() <= chance)
@@ -232,16 +375,17 @@ namespace Server.Items
         {
             if (player.Region is UOACZRegion) return;
             if (!AllowInPlayerVsPlayerCombat && player.RecentlyInPlayerCombat) return;
+            if (player.SatisfactionExpiration <= DateTime.UtcNow) return;
 
             double chance = 0;
 
-            switch (player.FoodSatisfaction)
+            switch (player.SatisfactionLevel)
             {
-                case SatisfactionLevel.Paltry: chance = .05; break;
-                case SatisfactionLevel.Meagre: chance = .1; break;
-                case SatisfactionLevel.Adequate: chance = .15; break;
-                case SatisfactionLevel.Appetizing: chance = .2; break;
-                case SatisfactionLevel.Delectable: chance = .25; break;
+                case SatisfactionLevelType.Paltry: chance = .05; break;
+                case SatisfactionLevelType.Meagre: chance = .1; break;
+                case SatisfactionLevelType.Adequate: chance = .15; break;
+                case SatisfactionLevelType.Appetizing: chance = .2; break;
+                case SatisfactionLevelType.Delectable: chance = .25; break;
             }
 
             if (player.Meditating)
@@ -251,63 +395,6 @@ namespace Server.Items
                 player.Mana++;
         }
 
-		public virtual bool CanEat( Mobile from )
-		{
-			return AttemptEat( from, FillFactor, Satisfaction);
-		}
-
-		public static bool AttemptEat( Mobile from, int fillFactor, SatisfactionLevel satisfactionLevel )
-		{
-            if (from.Hunger + fillFactor >= 20)
-            {
-                from.SendMessage("You are too full to eat that.");
-                return false;
-            }
-
-            from.Hunger += fillFactor;
-
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
-            
-            if (from.Stam < from.StamMax)
-                from.Stam += Utility.RandomMinMax(10, 20);
-
-            int iHunger = from.Hunger + fillFactor;
-                        
-            string satisfiedMessage = "";
-            string hungerMessage = "";
-
-            switch (satisfactionLevel)
-            {
-                case SatisfactionLevel.Paltry: satisfiedMessage = "The food is paltry and barely satisfies.";  break;
-                case SatisfactionLevel.Meagre: satisfiedMessage = " The food is meagre and mildly satisfies."; break;
-                case SatisfactionLevel.Adequate: satisfiedMessage = "The food is adequate and decently satisfies."; break;
-                case SatisfactionLevel.Appetizing: satisfiedMessage = "The food is appetizing and greatly satisfies."; break;
-                case SatisfactionLevel.Delectable: satisfiedMessage = "The food is delectable and completely satisfies."; break;
-            }
-
-            if (iHunger < 5)
-                hungerMessage = "You are still very hungry.";
-                
-            else if (iHunger < 10)
-                hungerMessage = "You are still slightly hungry.";
-
-            else if (iHunger < 15)
-                hungerMessage = "You are somewhat full.";
-
-            else if (iHunger < 20)
-                hungerMessage = "You are very full.";
-
-            else
-                hungerMessage = "You are completely full.";
-
-            from.SendMessage(satisfiedMessage);
-            from.SendMessage(hungerMessage);
-
-			return true;
-		}
-
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
@@ -315,9 +402,13 @@ namespace Server.Items
 			writer.Write( (int) 0 ); // version
 
             //Version 0
-            writer.Write(m_Charges);
-            writer.Write(m_Poison.Level);
+            writer.Write(m_Charges);            
 			writer.Write(m_Poisoner);
+
+            if (m_Poison != null)
+                writer.Write(m_Poison.Level);
+            else
+                writer.Write(-1);
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -329,10 +420,18 @@ namespace Server.Items
             //Version 0
             if (version >= 0)
             {
-                m_Charges = reader.ReadInt();
-                m_Poison = Poison.GetPoison(reader.ReadInt());
+                m_Charges = reader.ReadInt();                
                 m_Poisoner = reader.ReadMobile();
+
+                int poisonLevel = reader.ReadInt();
+                if (poisonLevel > -1)
+                    m_Poison = Poison.GetPoison(poisonLevel);
             }
+
+            //-----
+            
+            if (m_DecayExpiration > DateTime.UtcNow + TimeSpan.FromDays(365))
+                m_DecayExpiration = DateTime.UtcNow + TimeSpan.FromDays(1000);
 		}
 	}
 
@@ -639,6 +738,16 @@ namespace Server.Items
 
 	public class RoastPig : Food
 	{
+        public override int FillFactor { get { return 30; } }
+        public override SatisfactionLevelType Satisfaction { get { return SatisfactionLevelType.Delectable; } }
+        public override TimeSpan SatisfactionDuration { get { return TimeSpan.FromMinutes(60); } }
+        public override int MaxCharges { get { return 5; } }
+        public override bool Decays { get { return true; } }
+        public override TimeSpan DecayDuration { get { return TimeSpan.FromDays(3); } }
+
+        public override int MinStaminaRegained { get { return 50; } }
+        public override int MaxStaminaRegained { get { return 100; } }
+
 		[Constructable]
 		public RoastPig() : this( 1 )
 		{
@@ -647,7 +756,9 @@ namespace Server.Items
 		[Constructable]
 		public RoastPig( int amount ) : base( amount, 0x9BB )
 		{
-			Weight = 20.0;
+            Stackable = false;
+
+			Weight = 10.0;
 		}
 
 		public RoastPig( Serial serial ) : base( serial )

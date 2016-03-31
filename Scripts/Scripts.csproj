@@ -3680,7 +3680,7 @@
     <Compile Include="Misc\Email.cs" />
     <Compile Include="Misc\Emitter.cs" />
     <Compile Include="Misc\Fastwalk.cs" />
-    <Compile Include="Misc\FoodDecay.cs" />
+    <Compile Include="Items\Food\HungerThirstDecay.cs" />
     <Compile Include="Misc\Geometry.cs" />
     <Compile Include="Items\Gifts\GiftGiving.cs" />
     <Compile Include="Items\Gifts\Winter2004\DecorativeTopiary.cs" />

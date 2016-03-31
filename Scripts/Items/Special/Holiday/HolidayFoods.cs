@@ -106,17 +106,8 @@ namespace Server.Items
 			Stackable = false;
 			LootType = LootType.Blessed;
 		}
-
-        public override bool CanEat(Mobile from)
-		{
-			EnsureTimer( from ).Eaten += 32;
-
-			from.SendLocalizedMessage( 1077387 ); // You feel as if you could eat as much as you wanted!
-			return true;
-		}
-
-		public CandyCane( Serial serial )
-			: base( serial )
+        
+		public CandyCane( Serial serial ): base( serial )
 		{
 		}
 
