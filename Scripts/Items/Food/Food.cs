@@ -149,10 +149,16 @@ namespace Server.Items
             if (m_Charges > 1)
                 LabelTo(from, "(" + m_Charges.ToString() + " bites remaining)");
 
-            string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, m_DecayExpiration, true, true, true, true, false);
+            if (Decays)
+            {
+                string timeRemaining = Utility.CreateTimeRemainingString(DateTime.UtcNow, m_DecayExpiration, true, true, true, true, false);
 
-            if (m_DecayExpiration < DateTime.UtcNow + TimeSpan.FromDays(90))
-                LabelTo(from, "[expires in " + timeRemaining + "]");
+                if (m_DecayExpiration <= DateTime.UtcNow)
+                    LabelTo(from, "[will expire shortly]");
+
+                else                 
+                    LabelTo(from, "[expires in " + timeRemaining + "]");
+            }
         } 
 
 		public override void GetContextMenuEntries( Mobile from, List<ContextMenuEntry> list )
