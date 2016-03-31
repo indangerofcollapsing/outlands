@@ -205,66 +205,66 @@ namespace Server.Engines.Craft
             int index = -1;
 
             //One Handed Weapons
-            AddCraft(typeof(UOACZDagger), "One Handed Weapons", "Dagger", 5, 30, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(typeof(Kryss), "One Handed Weapons", "Kryss", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(WarFork), "One Handed Weapons", "Warfork", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(Cutlass), "One Handed Weapons", "Cutlass", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(Katana), "One Handed Weapons", "Katana", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(Longsword), "One Handed Weapons", "Longsword", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(Scimitar), "One Handed Weapons", "Scimitar", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(VikingSword), "One Handed Weapons", "Viking Sword", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(HammerPick), "One Handed Weapons", "Hammerpick", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(Mace), "One Handed Weapons", "Mace", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(Maul), "One Handed Weapons", "Maul", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(WarMace), "One Handed Weapons", "War Mace", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(WarAxe), "One Handed Weapons", "War Axe", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(UOACZDagger), "One Handed Weapons", "Dagger", 5, 30, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(Kryss), "One Handed Weapons", "Kryss", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(WarFork), "One Handed Weapons", "Warfork", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Cutlass), "One Handed Weapons", "Cutlass", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Katana), "One Handed Weapons", "Katana", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Longsword), "One Handed Weapons", "Longsword", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Scimitar), "One Handed Weapons", "Scimitar", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(VikingSword), "One Handed Weapons", "Viking Sword", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(HammerPick), "One Handed Weapons", "Hammerpick", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Mace), "One Handed Weapons", "Mace", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Maul), "One Handed Weapons", "Maul", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(WarMace), "One Handed Weapons", "War Mace", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(WarAxe), "One Handed Weapons", "War Axe", 10, 35, typeof(IronIngot), 1044036, 10, 1044037);
             
             //Two Handed Weapons
-            AddCraft(typeof(ShortSpear), "Two Handed Weapons", "Short Spear", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(Spear), "Two Handed Weapons", "Spear", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(Pitchfork), "Two Handed Weapons", "Pitchfork", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(Axe), "Two Handed Weapons", "Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(BattleAxe), "Two Handed Weapons", "Battle Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(DoubleAxe), "Two Handed Weapons", "Double Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(ExecutionersAxe), "Two Handed Weapons", "Executioner's Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(LargeBattleAxe), "Two Handed Weapons", "Large Battle Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(TwoHandedAxe), "Two Handed Weapons", "Two Handed Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(Bardiche), "Two Handed Weapons", "Bardiche", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(Halberd), "Two Handed Weapons", "Halberd", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(WarHammer), "Two Handed Weapons", "Warhammer", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(ShortSpear), "Two Handed Weapons", "Short Spear", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(Spear), "Two Handed Weapons", "Spear", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(Pitchfork), "Two Handed Weapons", "Pitchfork", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(Axe), "Two Handed Weapons", "Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(BattleAxe), "Two Handed Weapons", "Battle Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(DoubleAxe), "Two Handed Weapons", "Double Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(ExecutionersAxe), "Two Handed Weapons", "Executioner's Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(LargeBattleAxe), "Two Handed Weapons", "Large Battle Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(TwoHandedAxe), "Two Handed Weapons", "Two Handed Axe", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(Bardiche), "Two Handed Weapons", "Bardiche", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(Halberd), "Two Handed Weapons", "Halberd", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(WarHammer), "Two Handed Weapons", "Warhammer", 10, 35, typeof(IronIngot), 1044036, 15, 1044037);
 
             //Shields
-            AddCraft(typeof(Buckler), "Shields", "Buckler", 15, 40, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(MetalShield), "Shields", "Metal Shield", 20, 45, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(BronzeShield), "Shields", "Bronze Shield", 25, 50, typeof(IronIngot), 1044036, 15, 1044037);            
-            AddCraft(typeof(MetalKiteShield), "Shields", "Metal Kite Shield", 30, 55, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(HeaterShield), "Shields", "Heater Shield", 35, 60, typeof(IronIngot), 1044036, 20, 1044037);           
+            AddCraft(1, typeof(Buckler), "Shields", "Buckler", 15, 40, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(MetalShield), "Shields", "Metal Shield", 20, 45, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(BronzeShield), "Shields", "Bronze Shield", 25, 50, typeof(IronIngot), 1044036, 15, 1044037);            
+            AddCraft(1, typeof(MetalKiteShield), "Shields", "Metal Kite Shield", 30, 55, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(HeaterShield), "Shields", "Heater Shield", 35, 60, typeof(IronIngot), 1044036, 20, 1044037);           
 
             //Ringmail
-            AddCraft(typeof(RingmailGloves), "Ringmail Armor", "Ringmail Gloves", 15, 40, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(typeof(RingmailArms), "Ringmail Armor", "Ringmail Arms", 15, 40, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(RingmailLegs), "Ringmail Armor", "Ringmail Legs", 15, 40, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(RingmailChest), "Ringmail Armor", "Ringmail Chest", 15, 40, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(RingmailGloves), "Ringmail Armor", "Ringmail Gloves", 15, 40, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(RingmailArms), "Ringmail Armor", "Ringmail Arms", 15, 40, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(RingmailLegs), "Ringmail Armor", "Ringmail Legs", 15, 40, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(RingmailChest), "Ringmail Armor", "Ringmail Chest", 15, 40, typeof(IronIngot), 1044036, 15, 1044037);
 
             //Chainmail
-            AddCraft(typeof(ChainCoif), "Chainmail Armor", "Chainmail Coif", 25, 50, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(typeof(ChainLegs), "Chainmail Armor", "Chainmail Legs", 25, 50, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(ChainChest), "Chainmail Armor", "Chainmail Chest", 25, 50, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(ChainCoif), "Chainmail Armor", "Chainmail Coif", 25, 50, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(ChainLegs), "Chainmail Armor", "Chainmail Legs", 25, 50, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(ChainChest), "Chainmail Armor", "Chainmail Chest", 25, 50, typeof(IronIngot), 1044036, 15, 1044037);
 
             //Platemail
-            AddCraft(typeof(PlateGorget), "Platemail Armor", "Platemail Gorget", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(typeof(PlateGloves), "Platemail Armor", "Platemail Gloves", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(typeof(PlateHelm), "Platemail Armor", "Platemail Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(typeof(PlateArms), "Platemail Armor", "Platemail Arms", 35, 60, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(PlateLegs), "Platemail Armor", "Platemail Legs", 35, 60, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(PlateChest), "Platemail Armor", "Platemail Chest", 35, 60, typeof(IronIngot), 1044036, 20, 1044037);
-            AddCraft(typeof(FemalePlateChest), "Platemail Armor", "Female Platemail Chest", 35, 60, typeof(IronIngot), 1044036, 20, 1044037);
+            AddCraft(1, typeof(PlateGorget), "Platemail Armor", "Platemail Gorget", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(PlateGloves), "Platemail Armor", "Platemail Gloves", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(PlateHelm), "Platemail Armor", "Platemail Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(PlateArms), "Platemail Armor", "Platemail Arms", 35, 60, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(PlateLegs), "Platemail Armor", "Platemail Legs", 35, 60, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(PlateChest), "Platemail Armor", "Platemail Chest", 35, 60, typeof(IronIngot), 1044036, 20, 1044037);
+            AddCraft(1, typeof(FemalePlateChest), "Platemail Armor", "Female Platemail Chest", 35, 60, typeof(IronIngot), 1044036, 20, 1044037);
 
             //Other Helmets
-            AddCraft(typeof(Bascinet), "Other Helmets", "Bascinet", 5, 30, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(typeof(CloseHelm), "Other Helmets", "Close Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(typeof(Helmet), "Other Helmets", "Helmet", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(typeof(NorseHelm), "Other Helmets", "Norse Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);                                   
+            AddCraft(1, typeof(Bascinet), "Other Helmets", "Bascinet", 5, 30, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(CloseHelm), "Other Helmets", "Close Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(Helmet), "Other Helmets", "Helmet", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(NorseHelm), "Other Helmets", "Norse Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);                                   
 
             // Set the overridable material
             SetSubRes(typeof(IronIngot), 1044022);

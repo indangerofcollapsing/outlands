@@ -81,11 +81,14 @@ namespace Server.Engines.Craft
 				AddHtmlLocalized( 305, 390, 150, 18, 1044151, LabelColor, false, false ); // MAKE NOW
 			}
 
-			if ( craftItem.NameNumber > 0 )
-				AddHtmlLocalized( 330, 40, 180, 18, craftItem.NameNumber, LabelColor, false, false );
+            string nameText = "";            
 
-			else
-				AddLabel( 330, 40, LabelHue, craftItem.NameString );
+            nameText += craftItem.NameString;
+
+            if (craftItem.Count > 1)
+                nameText += " (" + craftItem.Count.ToString() + ") ";
+           
+            AddLabel(Utility.CenteredTextOffset(350, nameText), 40, LabelHue, nameText);				
 
 			if ( craftItem.UseAllRes )
 				AddHtmlLocalized( 20, 335 + (m_OtherCount++ * 20), 310, 18, 1048176, LabelColor, false, false ); // Makes as many as possible at once
@@ -125,7 +128,31 @@ namespace Server.Engines.Craft
 		{
 			Type type = m_CraftItem.ItemType;
 
-			AddItem( 20, 50, CraftItem.ItemIDOf( type ), m_CraftItem.ItemHue );
+            int itemID = CraftItem.ItemIDOf(type);
+            int itemHue = CraftItem.BaseHueOf(type);
+
+            if (CraftItem.RetainsColor(type))
+            {                
+                CraftContext context = m_CraftSystem.GetContext(m_From);
+
+                if (context != null)
+                {
+                    CraftSubResCol craftSubRes = (m_CraftItem.UseSubRes2 ? m_CraftSystem.CraftSubRes2 : m_CraftSystem.CraftSubRes);
+
+                    int resIndex = -1;
+
+                    resIndex = (m_CraftItem.UseSubRes2 ? context.LastResourceIndex2 : context.LastResourceIndex);
+
+                    if (resIndex == -1)
+                        resIndex = 0;
+
+                    CraftSubRes resource = craftSubRes.GetAt(resIndex);
+
+                    itemHue = CraftItem.BaseHueOf(resource.ItemType);
+                }
+            }
+
+            AddItem(20, 50, itemID, itemHue);
 
 			if ( m_CraftItem.IsMarkable( type ) )
 			{
@@ -183,6 +210,7 @@ namespace Server.Engines.Craft
 			{
 				if( excepChance < 0.0 )
 					excepChance = 0.0;
+
 				else if( excepChance > 1.0 )
 					excepChance = 1.0;               
 

@@ -29,7 +29,7 @@ namespace Server.Engines.Craft
 		{
 			get { return m_Type; }
 		}
-
+        
 		public string NameString
 		{
 			get { return m_NameString; }

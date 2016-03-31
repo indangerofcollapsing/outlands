@@ -37,27 +37,27 @@ namespace Server.Commands
 			e.Mobile.SendMessage( "What do you wish to dupe?" );
 		}
 
-		private class DupeTarget : Target
-		{
-			private bool m_InBag;
-			private int m_Amount;
+        private class DupeTarget : Target
+        {
+            private bool m_InBag;
+            private int m_Amount;
 
-			public DupeTarget( bool inbag, int amount )
-				: base( 15, false, TargetFlags.None )
-			{
-				m_InBag = inbag;
-				m_Amount = amount;
-			}
+            public DupeTarget(bool inbag, int amount)
+                : base(15, false, TargetFlags.None)
+            {
+                m_InBag = inbag;
+                m_Amount = amount;
+            }
 
-			protected override void OnTarget( Mobile from, object targ )
-			{
-				bool done = false;
-				
-                if (!( targ is Item ) )
-				{
-					from.SendMessage( "You can only dupe items." );
-					return;
-				}
+            protected override void OnTarget(Mobile from, object targ)
+            {
+                bool done = false;
+
+                if (!(targ is Item))
+                {
+                    from.SendMessage("You can only dupe items.");
+                    return;
+                }
 
                 Item copy = (Item)targ;
                 Container pack;
@@ -73,68 +73,111 @@ namespace Server.Commands
                     }
                 }
 
-				CommandLogging.WriteLine( from, "{0} {1} duping {2} (inBag={3}; amount={4})", from.AccessLevel, CommandLogging.Format( from ), CommandLogging.Format( targ ), m_InBag, m_Amount );
-                				
-				if ( m_InBag )
-				{
-					if ( copy.Parent is Container )
-						pack = (Container)copy.Parent;
-					else if ( copy.Parent is Mobile )
-						pack = ( (Mobile)copy.Parent ).Backpack;
-					else
-						pack = null;
-				}
-				else
-					pack = from.Backpack;
+                CommandLogging.WriteLine(from, "{0} {1} duping {2} (inBag={3}; amount={4})", from.AccessLevel, CommandLogging.Format(from), CommandLogging.Format(targ), m_InBag, m_Amount);
 
-				Type t = copy.GetType();
+                if (m_InBag)
+                {
+                    if (copy.Parent is Container)
+                        pack = (Container)copy.Parent;
+                    else if (copy.Parent is Mobile)
+                        pack = ((Mobile)copy.Parent).Backpack;
+                    else
+                        pack = null;
+                }
+                else
+                    pack = from.Backpack;
 
-				//ConstructorInfo[] info = t.GetConstructors();
+                Type t = copy.GetType();
 
-				ConstructorInfo c = t.GetConstructor( Type.EmptyTypes );
+                //ConstructorInfo[] info = t.GetConstructors();
 
-				if ( c != null )
-				{
-					try
-					{
-						from.SendMessage( "Duping {0}...", m_Amount );
-						for ( int i = 0; i < m_Amount; i++ )
-						{
-							object o = c.Invoke( null );
+                ConstructorInfo c = t.GetConstructor(Type.EmptyTypes);
 
-							if ( o != null && o is Item )
-							{
-								Item newItem = (Item)o;
-								CopyProperties( newItem, copy );//copy.Dupe( item, copy.Amount );
-								copy.OnAfterDuped( newItem );
-								newItem.Parent = null;
+                if (c != null)
+                {
+                    try
+                    {
+                        from.SendMessage("Duping {0}...", m_Amount);
+                        for (int i = 0; i < m_Amount; i++)
+                        {
+                            object o = c.Invoke(null);
 
-								if ( pack != null )
-									pack.DropItem( newItem );
-								else
-									newItem.MoveToWorld( from.Location, from.Map );
+                            if (o != null && o is Item)
+                            {
+                                Item newItem = (Item)o;
+                                CopyProperties(newItem, copy);//copy.Dupe( item, copy.Amount );
+                                copy.OnAfterDuped(newItem);
+                                newItem.Parent = null;
 
-								newItem.InvalidateProperties();
+                                if (pack != null)
+                                    pack.DropItem(newItem);
+                                else
+                                    newItem.MoveToWorld(from.Location, from.Map);
 
-								CommandLogging.WriteLine( from, "{0} {1} duped {2} creating {3}", from.AccessLevel, CommandLogging.Format( from ), CommandLogging.Format( targ ), CommandLogging.Format( newItem ) );
-							}
-						}
-						from.SendMessage( "Done" );
-						done = true;
-					}
-					catch
-					{
-						from.SendMessage( "Error!" );
-						return;
-					}
-				}
+                                newItem.InvalidateProperties();
 
-				if ( !done )
-				{
-					from.SendMessage( "Unable to dupe.  Item must have a 0 parameter constructor." );
-				}
-			}
-		}
+                                CommandLogging.WriteLine(from, "{0} {1} duped {2} creating {3}", from.AccessLevel, CommandLogging.Format(from), CommandLogging.Format(targ), CommandLogging.Format(newItem));
+                            }
+                        }
+                        from.SendMessage("Done");
+                        done = true;
+                    }
+                    catch
+                    {
+                        from.SendMessage("Error!");
+                        return;
+                    }
+                }
+
+                if (!done)
+                {
+                    from.SendMessage("Unable to dupe.  Item must have a 0 parameter constructor.");
+                }
+            }
+        }
+
+        public static Item DupeItem(Item item)
+        {
+            if (item == null)
+                return null;
+
+            Item copy = item;
+
+            if (copy is XmlSpawner)
+                return null;
+
+            Type t = copy.GetType();
+
+            ConstructorInfo c = t.GetConstructor(Type.EmptyTypes);
+
+            if (c != null)
+            {
+                try
+                {                    
+                    object o = c.Invoke(null);
+
+                    if (o != null && o is Item)
+                    {
+                        Item newItem = (Item)o;
+
+                        CopyProperties(newItem, copy);
+                        copy.OnAfterDuped(newItem);
+                        newItem.Parent = null;
+
+                        newItem.InvalidateProperties();
+
+                        return newItem;
+                    }
+                }
+
+                catch
+                {
+                    return null;
+                }
+            }
+
+            return null;
+        }
 
 		public static void CopyProperties( Item dest, Item src )
 		{

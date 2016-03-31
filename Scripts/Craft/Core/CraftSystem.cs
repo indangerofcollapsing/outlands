@@ -153,25 +153,25 @@ namespace Server.Engines.Craft
 			return m_RareRecipes[Utility.Random( m_RareRecipes.Count )];
 		}
 
-
-		public int AddCraft( Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, Type typeRes, TextDefinition nameRes, int amount )
+		public int AddCraft(int count, Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, Type typeRes, TextDefinition nameRes, int amount )
 		{
-			return AddCraft( typeItem, group, name, MainSkill, minSkill, maxSkill, typeRes, nameRes, amount, "" );
+			return AddCraft(count, typeItem, group, name, MainSkill, minSkill, maxSkill, typeRes, nameRes, amount, "" );
 		}
 
-		public int AddCraft( Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, Type typeRes, TextDefinition nameRes, int amount, TextDefinition message )
+		public int AddCraft(int count, Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, Type typeRes, TextDefinition nameRes, int amount, TextDefinition message )
 		{
-			return AddCraft( typeItem, group, name, MainSkill, minSkill, maxSkill, typeRes, nameRes, amount, message );
+			return AddCraft(count, typeItem, group, name, MainSkill, minSkill, maxSkill, typeRes, nameRes, amount, message );
 		}
 
-		public int AddCraft( Type typeItem, TextDefinition group, TextDefinition name, SkillName skillToMake, double minSkill, double maxSkill, Type typeRes, TextDefinition nameRes, int amount )
+		public int AddCraft(int count, Type typeItem, TextDefinition group, TextDefinition name, SkillName skillToMake, double minSkill, double maxSkill, Type typeRes, TextDefinition nameRes, int amount )
 		{
-			return AddCraft( typeItem, group, name, skillToMake, minSkill, maxSkill, typeRes, nameRes, amount, "" );
+			return AddCraft(count, typeItem, group, name, skillToMake, minSkill, maxSkill, typeRes, nameRes, amount, "" );
 		}
 
-		public int AddCraft( Type typeItem, TextDefinition group, TextDefinition name, SkillName skillToMake, double minSkill, double maxSkill, Type typeRes, TextDefinition nameRes, int amount, TextDefinition message )
+		public int AddCraft(int count, Type typeItem, TextDefinition group, TextDefinition name, SkillName skillToMake, double minSkill, double maxSkill, Type typeRes, TextDefinition nameRes, int amount, TextDefinition message )
 		{
 			CraftItem craftItem = new CraftItem( typeItem, group, name );
+            craftItem.Count = count;
 			craftItem.AddRes( typeRes, nameRes, amount, message );
 			craftItem.AddSkill( skillToMake, minSkill, maxSkill );
 
@@ -179,10 +179,10 @@ namespace Server.Engines.Craft
 			return m_CraftItems.Add( craftItem );
 		}
 
-        // DungeonMiningSystem extension to support crafting recipes via xmlInit
-        public int AddCraft(Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, TextDefinition nameRes, int amount, int xmlInitValue)
+        public int AddCraft(int count, Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, TextDefinition nameRes, int amount, int xmlInitValue)
         {
             CraftItem craftItem = new CraftItem(typeItem, group, name);
+            craftItem.Count = count;
             craftItem.AddSkill(MainSkill, minSkill, maxSkill);
             craftItem.m_xmlInit = xmlInitValue;
 

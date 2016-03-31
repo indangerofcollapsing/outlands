@@ -188,105 +188,105 @@ namespace Server.Engines.Craft
             int index = -1;
 
             //Ringmail
-            AddCraft(typeof(RingmailGloves), "Ringmail Armor", "Ringmail Gloves", 12.0, 62.0, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(RingmailArms), "Ringmail Armor", "Ringmail Arms", 16.9, 66.9, typeof(IronIngot), 1044036, 14, 1044037);
-            AddCraft(typeof(RingmailLegs), "Ringmail Armor", "Ringmail Legs", 19.4, 69.4, typeof(IronIngot), 1044036, 16, 1044037);
-            AddCraft(typeof(RingmailChest), "Ringmail Armor", "Ringmail Chest", 21.9, 71.9, typeof(IronIngot), 1044036, 18, 1044037);
+            AddCraft(1, typeof(RingmailGloves), "Ringmail Armor", "Ringmail Gloves", 12.0, 62.0, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(RingmailArms), "Ringmail Armor", "Ringmail Arms", 16.9, 66.9, typeof(IronIngot), 1044036, 14, 1044037);
+            AddCraft(1, typeof(RingmailLegs), "Ringmail Armor", "Ringmail Legs", 19.4, 69.4, typeof(IronIngot), 1044036, 16, 1044037);
+            AddCraft(1, typeof(RingmailChest), "Ringmail Armor", "Ringmail Chest", 21.9, 71.9, typeof(IronIngot), 1044036, 18, 1044037);
 
             //Chainmail
-            AddCraft(typeof(ChainCoif), "Chainmail Armor", "Chain Coif", 14.5, 64.5, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(ChainLegs), "Chainmail Armor", "Chain Legs", 36.7, 86.7, typeof(IronIngot), 1044036, 18, 1044037);
-            AddCraft(typeof(ChainChest), "Chainmail Armor", "Chain Chest", 39.1, 89.1, typeof(IronIngot), 1044036, 20, 1044037);
+            AddCraft(1, typeof(ChainCoif), "Chainmail Armor", "Chain Coif", 14.5, 64.5, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(ChainLegs), "Chainmail Armor", "Chain Legs", 36.7, 86.7, typeof(IronIngot), 1044036, 18, 1044037);
+            AddCraft(1, typeof(ChainChest), "Chainmail Armor", "Chain Chest", 39.1, 89.1, typeof(IronIngot), 1044036, 20, 1044037);
 
             //Platemail
-            AddCraft(typeof(PlateGorget), "Platemail Armor", "Plate Gorget", 56.4, 106.4, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(PlateGloves), "Platemail Armor", "Plate Gloves", 58.9, 108.9, typeof(IronIngot), 1044036, 12, 1044037);
-            AddCraft(typeof(PlateHelm), "Platemail Armor", "Plate Helm", 62.6, 112.6, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(PlateArms), "Platemail Armor", "Plate Arms", 66.3, 116.3, typeof(IronIngot), 1044036, 18, 1044037);
-            AddCraft(typeof(PlateLegs), "Platemail Armor", "Plate Legs", 68.8, 118.8, typeof(IronIngot), 1044036, 20, 1044037);
-            AddCraft(typeof(PlateChest), "Platemail Armor", "Plate Chest", 75.0, 125.0, typeof(IronIngot), 1044036, 25, 1044037);
-            AddCraft(typeof(FemalePlateChest), "Platemail Armor", "Female Plate Chest", 44.1, 94.1, typeof(IronIngot), 1044036, 20, 1044037);
+            AddCraft(1, typeof(PlateGorget), "Platemail Armor", "Plate Gorget", 56.4, 106.4, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(PlateGloves), "Platemail Armor", "Plate Gloves", 58.9, 108.9, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(PlateHelm), "Platemail Armor", "Plate Helm", 62.6, 112.6, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(PlateArms), "Platemail Armor", "Plate Arms", 66.3, 116.3, typeof(IronIngot), 1044036, 18, 1044037);
+            AddCraft(1, typeof(PlateLegs), "Platemail Armor", "Plate Legs", 68.8, 118.8, typeof(IronIngot), 1044036, 20, 1044037);
+            AddCraft(1, typeof(PlateChest), "Platemail Armor", "Plate Chest", 75.0, 125.0, typeof(IronIngot), 1044036, 25, 1044037);
+            AddCraft(1, typeof(FemalePlateChest), "Platemail Armor", "Female Plate Chest", 44.1, 94.1, typeof(IronIngot), 1044036, 20, 1044037);
 
             //Helmets
-            AddCraft(typeof(Helmet), "Helmets", "Helmet", 37.9, 87.9, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(Bascinet), "Helmets", "Bascinet", 8.3, 58.3, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(CloseHelm), "Helmets", "Close Helm", 37.9, 87.9, typeof(IronIngot), 1044036, 15, 1044037);
-            AddCraft(typeof(NorseHelm), "Helmets", "Norse Helm", 37.9, 87.9, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(Helmet), "Helmets", "Helmet", 37.9, 87.9, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(Bascinet), "Helmets", "Bascinet", 8.3, 58.3, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(CloseHelm), "Helmets", "Close Helm", 37.9, 87.9, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(NorseHelm), "Helmets", "Norse Helm", 37.9, 87.9, typeof(IronIngot), 1044036, 15, 1044037);
 
             //Shields
-            AddCraft(typeof(Buckler), "Shields", "Buckler", -25.0, 25.0, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(MetalShield), "Shields", "Metal Shield", -10.2, 39.8, typeof(IronIngot), 1044036, 14, 1044037);
-            AddCraft(typeof(BronzeShield), "Shields", "Bronze Shield", -15.2, 34.8, typeof(IronIngot), 1044036, 12, 1044037);
-            AddCraft(typeof(MetalKiteShield), "Shields", "Metal Kite Shield", 4.6, 54.6, typeof(IronIngot), 1044036, 16, 1044037);
-            AddCraft(typeof(HeaterShield), "Shields", "Heater Shield", 24.3, 74.3, typeof(IronIngot), 1044036, 18, 1044037);
+            AddCraft(1, typeof(Buckler), "Shields", "Buckler", -25.0, 25.0, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(MetalShield), "Shields", "Metal Shield", -10.2, 39.8, typeof(IronIngot), 1044036, 14, 1044037);
+            AddCraft(1, typeof(BronzeShield), "Shields", "Bronze Shield", -15.2, 34.8, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(MetalKiteShield), "Shields", "Metal Kite Shield", 4.6, 54.6, typeof(IronIngot), 1044036, 16, 1044037);
+            AddCraft(1, typeof(HeaterShield), "Shields", "Heater Shield", 24.3, 74.3, typeof(IronIngot), 1044036, 18, 1044037);
 
             //Fencing
-            AddCraft(typeof(Dagger), "Fencing Weapons", "Dagger", -0.4, 49.6, typeof(IronIngot), 1044036, 3, 1044037);
-            AddCraft(typeof(Kryss), "Fencing Weapons", "Kryss", 36.7, 86.7, typeof(IronIngot), 1044036, 8, 1044037);
-            AddCraft(typeof(WarFork), "Fencing Weapons", "War Fork", 42.9, 92.9, typeof(IronIngot), 1044036, 12, 1044037);
-            AddCraft(typeof(ShortSpear), "Fencing Weapons", "Short Spear", 45.3, 95.3, typeof(IronIngot), 1044036, 6, 1044037);
-            AddCraft(typeof(Pitchfork), "Fencing Weapons", "Pitchfork", 45.3, 95.3, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(Spear), "Fencing Weapons", "Spear", 49.0, 99.0, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(Dagger), "Fencing Weapons", "Dagger", -0.4, 49.6, typeof(IronIngot), 1044036, 3, 1044037);
+            AddCraft(1, typeof(Kryss), "Fencing Weapons", "Kryss", 36.7, 86.7, typeof(IronIngot), 1044036, 8, 1044037);
+            AddCraft(1, typeof(WarFork), "Fencing Weapons", "War Fork", 42.9, 92.9, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(ShortSpear), "Fencing Weapons", "Short Spear", 45.3, 95.3, typeof(IronIngot), 1044036, 6, 1044037);
+            AddCraft(1, typeof(Pitchfork), "Fencing Weapons", "Pitchfork", 45.3, 95.3, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Spear), "Fencing Weapons", "Spear", 49.0, 99.0, typeof(IronIngot), 1044036, 12, 1044037);
 
             //Macing
-            AddCraft(typeof(HammerPick), "Macing Weapons", "Hammer Pick", 34.2, 84.2, typeof(IronIngot), 1044036, 16, 1044037);
-            AddCraft(typeof(WarAxe), "Macing Weapons", "War Axe", 39.1, 89.1, typeof(IronIngot), 1044036, 16, 1044037);
-            AddCraft(typeof(Mace), "Macing Weapons", "Mace", 14.5, 64.5, typeof(IronIngot), 1044036, 6, 1044037);
-            AddCraft(typeof(Maul), "Macing Weapons", "Maul", 19.4, 69.4, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(WarMace), "Macing Weapons", "War Mace", 28.0, 78.0, typeof(IronIngot), 1044036, 14, 1044037);
-            AddCraft(typeof(WarHammer), "Macing Weapons", "Warhammer", 34.2, 84.2, typeof(IronIngot), 1044036, 16, 1044037);
+            AddCraft(1, typeof(HammerPick), "Macing Weapons", "Hammer Pick", 34.2, 84.2, typeof(IronIngot), 1044036, 16, 1044037);
+            AddCraft(1, typeof(WarAxe), "Macing Weapons", "War Axe", 39.1, 89.1, typeof(IronIngot), 1044036, 16, 1044037);
+            AddCraft(1, typeof(Mace), "Macing Weapons", "Mace", 14.5, 64.5, typeof(IronIngot), 1044036, 6, 1044037);
+            AddCraft(1, typeof(Maul), "Macing Weapons", "Maul", 19.4, 69.4, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(WarMace), "Macing Weapons", "War Mace", 28.0, 78.0, typeof(IronIngot), 1044036, 14, 1044037);
+            AddCraft(1, typeof(WarHammer), "Macing Weapons", "Warhammer", 34.2, 84.2, typeof(IronIngot), 1044036, 16, 1044037);
 
             //Swordsmanship			
-            AddCraft(typeof(Cutlass), "Swordmanship Weapons", "Cutlass", 24.3, 74.3, typeof(IronIngot), 1044036, 8, 1044037);
-            AddCraft(typeof(Katana), "Swordmanship Weapons", "Katana", 44.1, 94.1, typeof(IronIngot), 1044036, 8, 1044037);
-            AddCraft(typeof(Scimitar), "Swordmanship Weapons", "Scimitar", 31.7, 81.7, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(Broadsword), "Swordmanship Weapons", "Broadsword", 35.4, 85.4, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(typeof(Longsword), "Swordmanship Weapons", "Longsword", 28.0, 78.0, typeof(IronIngot), 1044036, 12, 1044037);
-            AddCraft(typeof(VikingSword), "Swordmanship Weapons", "Viking Sword", 24.3, 74.3, typeof(IronIngot), 1044036, 14, 1044037);
-            AddCraft(typeof(Axe), "Swordmanship Weapons", "Axe", 34.2, 84.2, typeof(IronIngot), 1044036, 14, 1044037);
-            AddCraft(typeof(BattleAxe), "Swordmanship Weapons", "Battle Axe", 30.5, 80.5, typeof(IronIngot), 1044036, 14, 1044037);
-            AddCraft(typeof(DoubleAxe), "Swordmanship Weapons", "Double Axe", 29.3, 79.3, typeof(IronIngot), 1044036, 12, 1044037);
-            AddCraft(typeof(ExecutionersAxe), "Swordmanship Weapons", "Executioner's Axe", 34.2, 84.2, typeof(IronIngot), 1044036, 14, 1044037);
-            AddCraft(typeof(LargeBattleAxe), "Swordmanship Weapons", "Large Battle Axe", 28.0, 78.0, typeof(IronIngot), 1044036, 12, 1044037);
-            AddCraft(typeof(TwoHandedAxe), "Swordmanship Weapons", "Two Handed Axe", 33.0, 83.0, typeof(IronIngot), 1044036, 16, 1044037);
-            AddCraft(typeof(Bardiche), "Swordmanship Weapons", "Bardiche", 31.7, 81.7, typeof(IronIngot), 1044036, 18, 1044037);
-            AddCraft(typeof(Halberd), "Swordmanship Weapons", "Halberd", 39.1, 89.1, typeof(IronIngot), 1044036, 20, 1044037);
+            AddCraft(1, typeof(Cutlass), "Swordmanship Weapons", "Cutlass", 24.3, 74.3, typeof(IronIngot), 1044036, 8, 1044037);
+            AddCraft(1, typeof(Katana), "Swordmanship Weapons", "Katana", 44.1, 94.1, typeof(IronIngot), 1044036, 8, 1044037);
+            AddCraft(1, typeof(Scimitar), "Swordmanship Weapons", "Scimitar", 31.7, 81.7, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Broadsword), "Swordmanship Weapons", "Broadsword", 35.4, 85.4, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Longsword), "Swordmanship Weapons", "Longsword", 28.0, 78.0, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(VikingSword), "Swordmanship Weapons", "Viking Sword", 24.3, 74.3, typeof(IronIngot), 1044036, 14, 1044037);
+            AddCraft(1, typeof(Axe), "Swordmanship Weapons", "Axe", 34.2, 84.2, typeof(IronIngot), 1044036, 14, 1044037);
+            AddCraft(1, typeof(BattleAxe), "Swordmanship Weapons", "Battle Axe", 30.5, 80.5, typeof(IronIngot), 1044036, 14, 1044037);
+            AddCraft(1, typeof(DoubleAxe), "Swordmanship Weapons", "Double Axe", 29.3, 79.3, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(ExecutionersAxe), "Swordmanship Weapons", "Executioner's Axe", 34.2, 84.2, typeof(IronIngot), 1044036, 14, 1044037);
+            AddCraft(1, typeof(LargeBattleAxe), "Swordmanship Weapons", "Large Battle Axe", 28.0, 78.0, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(TwoHandedAxe), "Swordmanship Weapons", "Two Handed Axe", 33.0, 83.0, typeof(IronIngot), 1044036, 16, 1044037);
+            AddCraft(1, typeof(Bardiche), "Swordmanship Weapons", "Bardiche", 31.7, 81.7, typeof(IronIngot), 1044036, 18, 1044037);
+            AddCraft(1, typeof(Halberd), "Swordmanship Weapons", "Halberd", 39.1, 89.1, typeof(IronIngot), 1044036, 20, 1044037);
 
             //Other Items
-            index = AddCraft(typeof(BlacksmithyDungeonMould), "Misc", "Blacksmithing Dungeon Mould", 90, 105, typeof(IronIngot), "Iron Ingot", 200, 1044037);
+            index = AddCraft(1, typeof(BlacksmithyDungeonMould), "Misc", "Blacksmithing Dungeon Mould", 90, 105, typeof(IronIngot), "Iron Ingot", 200, 1044037);
             AddRes(index, typeof(FireEssence), "Fire Essence", 3, "You do not have the crafting components required to make this.");
             AddRes(index, typeof(Quartzstone), "Quartzstone", 3, "You do not have the crafting components required to make this.");
             AddRes(index, typeof(ObsidianShard), "Obsidian Shard", 3, "You do not have the crafting components required to make this.");
             //AddRes(index, typeof(LuniteHeart), "Lunite Heart", 3, "You do not have the crafting components required to make this.");
 
             /*
-            AddCraft(typeof(IronOreHuePlating), "Other", "iron ore hue plating", 70, 120, typeof(IronIngot), "iron ingot", 25, "You do not have the neccesary ingots to construct that.");
+            AddCraft(1, typeof(IronOreHuePlating), "Other", "iron ore hue plating", 70, 120, typeof(IronIngot), "iron ingot", 25, "You do not have the neccesary ingots to construct that.");
 
-            index = AddCraft(typeof(DullCopperOreHuePlating), "Other", "dull copper ore hue plating", 70, 120, typeof(DullCopperIngot), "dull copper ingot", 25, "You do not have the neccesary ingots to construct that.");
+            index = AddCraft(1, typeof(DullCopperOreHuePlating), "Other", "dull copper ore hue plating", 70, 120, typeof(DullCopperIngot), "dull copper ingot", 25, "You do not have the neccesary ingots to construct that.");
             AddRes(index, typeof(Ghostweed), "ghostweed", 5, "You do not have the neccessary crafting components to construct that.");
 
-            index = AddCraft(typeof(ShadowIronOreHuePlating), "Other", "shadow iron ore hue plating", 70, 120, typeof(ShadowIronIngot), "shadow iron ingot", 25, "You do not have the neccesary ingots to construct that.");
+            index = AddCraft(1, typeof(ShadowIronOreHuePlating), "Other", "shadow iron ore hue plating", 70, 120, typeof(ShadowIronIngot), "shadow iron ingot", 25, "You do not have the neccesary ingots to construct that.");
             AddRes(index, typeof(ObsidianShard), "obsidian shard", 5, "You do not have the neccessary crafting components to construct that.");
 
-            index = AddCraft(typeof(CopperOreHuePlating), "Other", "copper ore hue plating", 70, 120, typeof(CopperIngot), "copper ingot", 25, "You do not have the neccesary ingots to construct that.");
+            index = AddCraft(1, typeof(CopperOreHuePlating), "Other", "copper ore hue plating", 70, 120, typeof(CopperIngot), "copper ingot", 25, "You do not have the neccesary ingots to construct that.");
             AddRes(index, typeof(Snakeskin), "snakeskin", 5, "You do not have the neccessary crafting components to construct that.");
 
-            index = AddCraft(typeof(BronzeOreHuePlating), "Other", "bronze ore hue plating", 70, 120, typeof(BronzeIngot), "bronze ingot", 25, "You do not have the neccesary ingots to construct that.");
+            index = AddCraft(1, typeof(BronzeOreHuePlating), "Other", "bronze ore hue plating", 70, 120, typeof(BronzeIngot), "bronze ingot", 25, "You do not have the neccesary ingots to construct that.");
             AddRes(index, typeof(Quartzstone), "quartzstone", 5, "You do not have the neccessary crafting components to construct that.");
 
-            index = AddCraft(typeof(GoldOreHuePlating), "Other", "gold ore hue plating", 70, 120, typeof(GoldIngot), "gold ingot", 25, "You do not have the neccesary ingots to construct that.");
+            index = AddCraft(1, typeof(GoldOreHuePlating), "Other", "gold ore hue plating", 70, 120, typeof(GoldIngot), "gold ingot", 25, "You do not have the neccesary ingots to construct that.");
             AddRes(index, typeof(TrollFat), "troll fat", 5, "You do not have the neccessary crafting components to construct that.");
 
-            index = AddCraft(typeof(AgapiteOreHuePlating), "Other", "agapite ore hue plating", 70, 120, typeof(AgapiteIngot), "agapite ingot", 25, "You do not have the neccesary ingots to construct that.");
+            index = AddCraft(1, typeof(AgapiteOreHuePlating), "Other", "agapite ore hue plating", 70, 120, typeof(AgapiteIngot), "agapite ingot", 25, "You do not have the neccesary ingots to construct that.");
             AddRes(index, typeof(GhoulHide), "ghoul hide", 5, "You do not have the neccessary crafting components to construct that.");
 
-            index = AddCraft(typeof(VeriteOreHuePlating), "Other", "verite ore hue plating", 70, 120, typeof(VeriteIngot), "verite ingot", 25, "You do not have the neccesary ingots to construct that.");
+            index = AddCraft(1, typeof(VeriteOreHuePlating), "Other", "verite ore hue plating", 70, 120, typeof(VeriteIngot), "verite ingot", 25, "You do not have the neccesary ingots to construct that.");
             AddRes(index, typeof(ShatteredCrystal), "shattered crystal", 5, "You do not have the neccessary crafting components to construct that.");
 
-            index = AddCraft(typeof(ValoriteOreHuePlating), "Other", "valorite ore hue plating", 70, 120, typeof(ValoriteIngot), "valorite ingot", 25, "You do not have the neccesary ingots to construct that.");
+            index = AddCraft(1, typeof(ValoriteOreHuePlating), "Other", "valorite ore hue plating", 70, 120, typeof(ValoriteIngot), "valorite ingot", 25, "You do not have the neccesary ingots to construct that.");
             AddRes(index, typeof(BluecapMushroom), "bluecap mushroom", 5, "You do not have the neccessary crafting components to construct that.");
 
-            index = AddCraft(typeof(LuniteOreHuePlating), "Other", "lunite ore hue plating", 70, 120, typeof(LuniteIngot), "lunite ingot", 25, "You do not have the neccesary ingots to construct that.");
+            index = AddCraft(1, typeof(LuniteOreHuePlating), "Other", "lunite ore hue plating", 70, 120, typeof(LuniteIngot), "lunite ingot", 25, "You do not have the neccesary ingots to construct that.");
             AddRes(index, typeof(LuniteHeart), "lunite heart", 5, "You do not have the neccessary crafting components to construct that.");
             */
 

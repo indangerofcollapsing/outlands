@@ -219,7 +219,7 @@ namespace Server.Engines.Craft
             if (m_Circle >= 6)
                 groupName = "Circle 7-8 Spells";
 
-            int index = AddCraft(type, groupName, 1044381 + m_Index++, minSkill, maxSkill, m_RegTypes[(int)regs[0]], 1044353 + (int)regs[0], 1, 1044361 + (int)regs[0]);
+            int index = AddCraft(1,type, groupName, 1044381 + m_Index++, minSkill, maxSkill, m_RegTypes[(int)regs[0]], 1044353 + (int)regs[0], 1, 1044361 + (int)regs[0]);
 
             double ChanceOffset = 20.0, ChanceLength = 100.0 / 7.5;
 
@@ -239,7 +239,7 @@ namespace Server.Engines.Craft
         {
             int id = CraftItem.ItemIDOf(regs[0]);
 
-            int index = AddCraft(type, 1061677, 1060509 + spell, minSkill, minSkill + 1.0, regs[0], id < 0x4000 ? 1020000 + id : 1078872 + id, 1, 501627);
+            int index = AddCraft(1,type, 1061677, 1060509 + spell, minSkill, minSkill + 1.0, regs[0], id < 0x4000 ? 1020000 + id : 1078872 + id, 1, 501627);
 
             for (int i = 1; i < regs.Length; ++i)
             {
@@ -260,15 +260,15 @@ namespace Server.Engines.Craft
             m_Mana = 2;
 
             //Utility
-            index = AddCraft(typeof(Spellbook), "Utility", "Spellbook", 25.0, 50.0, typeof(BlankScroll), 1044377, 2, 1044378);
+            index = AddCraft(1, typeof(Spellbook), "Utility", "Spellbook", 25.0, 50.0, typeof(BlankScroll), 1044377, 2, 1044378);
             ForceNonExceptional(index);
 
-            index = AddCraft(typeof(Runebook), "Utility", "Runebook", 45.0, 95.0, typeof(BlankScroll), 1044377, 8, 1044378);
+            index = AddCraft(1, typeof(Runebook), "Utility", "Runebook", 45.0, 95.0, typeof(BlankScroll), 1044377, 8, 1044378);
             AddRes(index, typeof(RecallScroll), 1044445, 1, 1044253);
             AddRes(index, typeof(ResurrectionScroll), 1044439, 1, 1044253);
-            AddCraft(typeof(Engines.BulkOrders.BulkOrderBook), 1044294, 1028793, 65.0, 115.0, typeof(BlankScroll), 1044377, 10, 1044378);
+            AddCraft(1, typeof(Engines.BulkOrders.BulkOrderBook), 1044294, 1028793, 65.0, 115.0, typeof(BlankScroll), 1044377, 10, 1044378);
 
-            index = AddCraft(typeof(AncientMystery.AncientMysteryScroll), "Utility", "Ancient Mystery Scroll", 80.0, 120.0, typeof(BlankScroll), 1044377, 25, 1044378);
+            index = AddCraft(1, typeof(AncientMystery.AncientMysteryScroll), "Utility", "Ancient Mystery Scroll", 80.0, 120.0, typeof(BlankScroll), 1044377, 25, 1044378);
             AddRes(index, typeof(GhoulHide), "Ghoul Hide", 2, "You do not have the neccesary crafting component needed to make this");
 
             //Circle 1-6 Spells

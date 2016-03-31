@@ -137,21 +137,21 @@ namespace Server.Engines.Craft
             int index = -1;
 
             //Utility
-            AddCraft(typeof(Kindling), "Utility", "Kindling", 0, 0, typeof(Log), "Log", 1, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(UOACZBowl), "Utility", "Bowl", 5, 30, typeof(Log), "Log", 5, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(UOACZTorch), "Utility", "Torch", 5, 30, typeof(Log), "Log", 5, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(UOACZTub), "Utility", "Empty Water Tub", 10, 35, typeof(Log), "Log", 20, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(UOACZFishingPole), "Utility", "Fishing Pole", 10, 35, typeof(Log), "Log", 15, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(CampingFirepit), "Utility", "Camping Firepit", 25, 50, typeof(Log), "Log", 75, "You do not have the logs neccessary required in order to craft that.");
+            AddCraft(1, typeof(Kindling), "Utility", "Kindling", 0, 0, typeof(Log), "Log", 1, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(UOACZBowl), "Utility", "Bowl", 5, 30, typeof(Log), "Log", 5, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(UOACZTorch), "Utility", "Torch", 5, 30, typeof(Log), "Log", 5, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(UOACZTub), "Utility", "Empty Water Tub", 10, 35, typeof(Log), "Log", 20, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(UOACZFishingPole), "Utility", "Fishing Pole", 10, 35, typeof(Log), "Log", 15, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(CampingFirepit), "Utility", "Camping Firepit", 25, 50, typeof(Log), "Log", 75, "You do not have the logs neccessary required in order to craft that.");
 
             //Weapons
-            AddCraft(typeof(Club), "Weapons and Armor", "Club", 10, 35, typeof(Log), "Log", 5, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(WoodenShield), "Weapons and Armor", "Wooden Shield", 10, 35, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(UOACZWoodenSword), "Weapons and Armor", "Wooden Sword", 15, 40, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(WoodenKiteShield), "Weapons and Armor", "Wooden Kite Shield", 15, 40, typeof(Log), "Log", 15, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(QuarterStaff), "Weapons and Armor", "Quarterstaff", 20, 45, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(GnarledStaff), "Weapons and Armor", "Gnarled Staff", 20, 45, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
-            AddCraft(typeof(BlackStaff), "Weapons and Armor", "Black Staff", 20, 45, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(Club), "Weapons and Armor", "Club", 10, 35, typeof(Log), "Log", 5, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(WoodenShield), "Weapons and Armor", "Wooden Shield", 10, 35, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(UOACZWoodenSword), "Weapons and Armor", "Wooden Sword", 15, 40, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(WoodenKiteShield), "Weapons and Armor", "Wooden Kite Shield", 15, 40, typeof(Log), "Log", 15, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(QuarterStaff), "Weapons and Armor", "Quarterstaff", 20, 45, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(GnarledStaff), "Weapons and Armor", "Gnarled Staff", 20, 45, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
+            AddCraft(1, typeof(BlackStaff), "Weapons and Armor", "Black Staff", 20, 45, typeof(Log), "Log", 10, "You do not have the logs neccessary in order to craft that.");
                   
             MarkOption = true;
             Repair = true;

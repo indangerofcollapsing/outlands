@@ -54,8 +54,14 @@ namespace Server.Engines.Craft
 
         private bool m_UseSubRes2;
 
-        private bool m_ForceNonExceptional;
+        private int m_Count;
+        public int Count
+        {
+            get { return m_Count; }
+            set { m_Count = value; }
+        }
 
+        private bool m_ForceNonExceptional;
         public bool ForceNonExceptional
         {
             get { return m_ForceNonExceptional; }
@@ -125,6 +131,24 @@ namespace Server.Engines.Craft
             }
 
             return itemId;
+        }
+
+        public static int BaseHueOf(Type type)
+        {
+            int hue = 0;
+
+            Item item = null;
+
+            try { item = Activator.CreateInstance(type) as Item; }
+            catch { }
+
+            if (item != null)
+            {
+                hue = item.Hue;
+                item.Delete();
+            }
+
+            return hue;
         }
 
         public CraftItem(Type type, TextDefinition groupName, TextDefinition name)
@@ -681,6 +705,7 @@ namespace Server.Engines.Craft
                         return false;
                     }
                 }
+
                 // ******************
 
                 for (int j = 0; types[i] == null && j < m_TypesTable.Length; ++j)
@@ -710,8 +735,11 @@ namespace Server.Engines.Craft
 
                             if (res.MessageNumber > 0)
                                 message = res.MessageNumber;
+
                             else if (!String.IsNullOrEmpty(res.MessageString))
+
                                 message = res.MessageString;
+
                             else
                                 message = 502925; // You don't have the resources required to make that item.
 
@@ -1241,6 +1269,7 @@ namespace Server.Engines.Craft
                 if (craftSystem is DefBlacksmithy)
                 {
                     AncientSmithyHammer hammer = from.FindItemOnLayer(Layer.OneHanded) as AncientSmithyHammer;
+
                     if (hammer != null && hammer != tool)
                     {
                         hammer.UsesRemaining--;
@@ -1290,7 +1319,7 @@ namespace Server.Engines.Craft
 
                     else if (item.Hue == 0)
                         item.Hue = resHue;
-
+                    
                     if (maxAmount > 0)
                     {
                         if (!item.Stackable && item is IUsesRemaining)
@@ -1312,7 +1341,28 @@ namespace Server.Engines.Craft
                     item.CraftedBy = from;
                     item.CrafterName = from.RawName;
 
-                    from.AddToBackpack(item);
+                    if (m_Count > 1)
+                    {
+                        if (item.Stackable)
+                        {
+                            item.Amount = m_Count;
+                            from.AddToBackpack(item);
+                        }
+
+                        else
+                        {
+                            for (int a = 0; a < m_Count; a++)
+                            {
+                                Item duplicate = Dupe.DupeItem(item);
+
+                                if (duplicate != null)
+                                    from.AddToBackpack(duplicate);
+                            }
+                        }
+                    }
+
+                    else
+                        from.AddToBackpack(item);
 
                     PlayerMobile player = from as PlayerMobile;
                     

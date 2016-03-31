@@ -142,27 +142,27 @@ namespace Server.Engines.Craft
             int index = -1;
 
             //Fortifications
-            AddCraft(typeof(UOACZBoilingOilCauldronDeed), "Fortifications", "Boiling Oil Cauldron Deed", 25, 50, typeof(IronIngot), 1044036, 100, 1044037);
+            AddCraft(1, typeof(UOACZBoilingOilCauldronDeed), "Fortifications", "Boiling Oil Cauldron Deed", 25, 50, typeof(IronIngot), 1044036, 100, 1044037);
 
             //Crafting Tools
-            AddCraft(typeof(UOACZMortarPestle), "Crafting Tools", "Mortar and Pestle", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(UOACZSaw), "Crafting Tools", "Saw", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(UOACZTongs), "Crafting Tools", "Tongs", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(UOACZSewingKit), "Crafting Tools", "Sewing Kit", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(UOACZSkillet), "Crafting Tools", "Skillet", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(UOACZTinkersTools), "Crafting Tools", "Tinker Tools", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(UOACZMortarPestle), "Crafting Tools", "Mortar and Pestle", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(UOACZSaw), "Crafting Tools", "Saw", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(UOACZTongs), "Crafting Tools", "Tongs", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(UOACZSewingKit), "Crafting Tools", "Sewing Kit", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(UOACZSkillet), "Crafting Tools", "Skillet", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(UOACZTinkersTools), "Crafting Tools", "Tinker Tools", 5, 30, typeof(IronIngot), 1044036, 2, 1044037);
 
             //Utility Tools
-            AddCraft(typeof(Scissors), "Utility Tools", "Scissors", 5, 30, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(typeof(UOACZHatchet), "Utility Tools", "Hatchet", 5, 30, typeof(IronIngot), 1044036, 3, 1044037);
-            AddCraft(typeof(UOACZPickaxe), "Utility Tools", "Pickaxe", 5, 30, typeof(IronIngot), 1044036, 3, 1044037);
-            AddCraft(typeof(UOACZLockpickKit), "Utility Tools", "Lockpick Kit", 5, 30, typeof(IronIngot), 1044036, 3, 1044037);
-            AddCraft(typeof(UOACZRepairHammer), "Utility Tools", "Repair Hammer", 5, 30, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(Scissors), "Utility Tools", "Scissors", 5, 30, typeof(IronIngot), 1044036, 1, 1044037);
+            AddCraft(1, typeof(UOACZHatchet), "Utility Tools", "Hatchet", 5, 30, typeof(IronIngot), 1044036, 3, 1044037);
+            AddCraft(1, typeof(UOACZPickaxe), "Utility Tools", "Pickaxe", 5, 30, typeof(IronIngot), 1044036, 3, 1044037);
+            AddCraft(1, typeof(UOACZLockpickKit), "Utility Tools", "Lockpick Kit", 5, 30, typeof(IronIngot), 1044036, 3, 1044037);
+            AddCraft(1, typeof(UOACZRepairHammer), "Utility Tools", "Repair Hammer", 5, 30, typeof(IronIngot), 1044036, 5, 1044037);
 
             //Materials
-            AddCraft(typeof(UOACZIronWire), "Materials", "Iron Wire", 10, 35, typeof(IronIngot), 1044036, 25, 1044037);          
-            AddCraft(typeof(Springs), "Materials", "Springs", 5, 30, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(typeof(Gears), "Materials", "Gears", 5, 30, typeof(IronIngot), 1044036, 1, 1044037);           
+            AddCraft(1, typeof(UOACZIronWire), "Materials", "Iron Wire", 10, 35, typeof(IronIngot), 1044036, 25, 1044037);          
+            AddCraft(1, typeof(Springs), "Materials", "Springs", 5, 30, typeof(IronIngot), 1044036, 1, 1044037);
+            AddCraft(1, typeof(Gears), "Materials", "Gears", 5, 30, typeof(IronIngot), 1044036, 1, 1044037);           
                       
             // Set the overridable material
             SetSubRes(typeof(IronIngot), 1044022);

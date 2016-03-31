@@ -18,6 +18,7 @@ namespace Server.Engines.Craft
 		private int LabelHue = 0x480;
 		private int LabelColor = 0x7FFF;
 		private int FontColor = 0xFFFFFF;
+        private int skillGainPossibleHue = 2599;
 
 		private enum CraftPage
 		{
@@ -251,7 +252,7 @@ namespace Server.Engines.Craft
 				{
 					int index = i % 10;
 
-					CraftItem craftItem = items[i];
+					CraftItem craftItem = items[i];                    
 
 					if ( index == 0 )
 					{
@@ -272,12 +273,33 @@ namespace Server.Engines.Craft
 
 					AddButton( 220, 60 + (index * 20), 4005, 4007, GetButtonID( 3, i ), GumpButtonType.Reply, 0 );
 
-					if ( craftItem.NameNumber > 0 )
-						AddHtmlLocalized( 255, 63 + (index * 20), 220, 18, craftItem.NameNumber, LabelColor, false, false );
 
-					else
-						AddLabel( 255, 60 + (index * 20), LabelHue, craftItem.NameString );
+                    bool skillGainPossible = false;
+                    bool allRequiredSkills = true;
 
+                    if (context != null)
+                    {
+                        Type resourceType = m_CraftSystem.CraftSubRes.ResType;
+
+                        skillGainPossible = craftItem.SkillGainPossible(m_From, resourceType, m_CraftSystem, false, ref allRequiredSkills);
+
+                        if (!context.HighlightSkillGainItems)
+                            skillGainPossible = false;
+                    }
+
+                    int textHue = LabelHue;
+
+                    if (skillGainPossible)
+                        textHue = skillGainPossibleHue;
+
+                    string nameText = "";
+
+                    nameText += craftItem.NameString;
+
+                    if (craftItem.Count > 1)
+                        nameText += " (" + craftItem.Count.ToString() + ") ";                    
+
+                    AddLabel(255, 60 + (index * 20), textHue, nameText);
 					AddButton( 480, 60 + (index * 20), 4011, 4012, GetButtonID( 4, i ), GumpButtonType.Reply, 0 );
 				}
 			}
@@ -302,8 +324,6 @@ namespace Server.Engines.Craft
                 bool skillGainPossible = false;
                 bool allRequiredSkills = true;
 
-                int skillGainPossibleHue = 2599;
-
                 if (context != null)
                 {
                      CraftItemCol craftItemCol = craftGroup.CraftItems;
@@ -321,13 +341,13 @@ namespace Server.Engines.Craft
                         skillGainPossible = false;
                 }
 
-				AddButton( 15, 80 + (a * 20), 4005, 4007, GetButtonID( 0, a ), GumpButtonType.Reply, 0 );
-                
-                if (skillGainPossible)
-                    AddLabel(50, 80 + (a * 20), skillGainPossibleHue, craftGroup.NameString);
+                int textHue = LabelHue;
 
-                else
-                    AddLabel(50, 80 + (a * 20), LabelHue, craftGroup.NameString);
+                if (skillGainPossible)
+                    textHue = skillGainPossibleHue;
+
+				AddButton( 15, 80 + (a * 20), 4005, 4007, GetButtonID( 0, a ), GumpButtonType.Reply, 0 );
+                AddLabel(50, 80 + (a * 20), textHue, craftGroup.NameString);
 			}
 
 			return craftGroupCol.Count;
@@ -375,8 +395,6 @@ namespace Server.Engines.Craft
                 bool skillGainPossible = false;
                 bool allRequiredSkills = true;
 
-                int skillGainPossibleHue = 2599;
-
                 if (context != null)
                 {
                     Type resourceType = m_CraftSystem.CraftSubRes.ResType;
@@ -387,11 +405,18 @@ namespace Server.Engines.Craft
                         skillGainPossible = false;
                 }
 
+                string nameText = "";
+
+                nameText += craftItem.NameString;
+
+                if (craftItem.Count > 1)
+                    nameText += " (" + craftItem.Count.ToString() + ")";                
+
                 if (skillGainPossible)
-                    AddLabel(255, 60 + (index * 20), skillGainPossibleHue, craftItem.NameString);
+                    AddLabel(255, 60 + (index * 20), skillGainPossibleHue, nameText);
 
                 else
-                    AddLabel(255, 60 + (index * 20), LabelHue, craftItem.NameString);
+                    AddLabel(255, 60 + (index * 20), LabelHue, nameText);
 
                 AddButton(480, 60 + (index * 20), 4011, 4012, GetButtonID(2, i), GumpButtonType.Reply, 0);
             }

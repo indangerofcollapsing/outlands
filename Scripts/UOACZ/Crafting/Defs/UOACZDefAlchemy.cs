@@ -129,83 +129,83 @@ namespace Server.Engines.Craft
             int index = -1;
 
             //Purification
-            index = AddCraft(typeof(UOACZRawDrumstick), "Purification", "Raw Drumstick", 5, 30, typeof(UOACZCorruptedRawDrumstick), "Corrupted Raw Drumstick", 1, "You do not have the neccessary corrupted raw drumstick required to cook this.");
+            index = AddCraft(1, typeof(UOACZRawDrumstick), "Purification", "Raw Drumstick", 5, 30, typeof(UOACZCorruptedRawDrumstick), "Corrupted Raw Drumstick", 1, "You do not have the neccessary corrupted raw drumstick required to cook this.");
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(UOACZRawHam), "Purification", "Raw Ham", 5, 30, typeof(UOACZCorruptedRawHam), "Corrupted Raw Ham", 1, "You do not have the neccessary corrupted raw ham required to cook this.");
+            index = AddCraft(1, typeof(UOACZRawHam), "Purification", "Raw Ham", 5, 30, typeof(UOACZCorruptedRawHam), "Corrupted Raw Ham", 1, "You do not have the neccessary corrupted raw ham required to cook this.");
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(UOACZRawMeatScraps), "Purification", "Raw Meat Scraps", 5, 30, typeof(UOACZCorruptedRawMeatScraps), "Corrupted Raw Meat Scraps", 1, "You do not have the neccessary corrupted raw meat scraps required to cook this.");
+            index = AddCraft(1, typeof(UOACZRawMeatScraps), "Purification", "Raw Meat Scraps", 5, 30, typeof(UOACZCorruptedRawMeatScraps), "Corrupted Raw Meat Scraps", 1, "You do not have the neccessary corrupted raw meat scraps required to cook this.");
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(UOACZRawMeatShank), "Purification", "Raw Meat Shank", 5, 30, typeof(UOACZCorruptedRawMeatShank), "Corrupted Raw Meat Shank", 1, "You do not have the neccessary corrupted raw meat shank required to cook this.");
+            index = AddCraft(1, typeof(UOACZRawMeatShank), "Purification", "Raw Meat Shank", 5, 30, typeof(UOACZCorruptedRawMeatShank), "Corrupted Raw Meat Shank", 1, "You do not have the neccessary corrupted raw meat shank required to cook this.");
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(UOACZRawSteak), "Purification", "Cooked Steak", 5, 30, typeof(UOACZCookedCorruptedSteak), "Cooked Corrupted Steak", 1, "You do not have the neccessary cooked corrupted steak required to cook this.");
+            index = AddCraft(1, typeof(UOACZRawSteak), "Purification", "Cooked Steak", 5, 30, typeof(UOACZCookedCorruptedSteak), "Cooked Corrupted Steak", 1, "You do not have the neccessary cooked corrupted steak required to cook this.");
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(UOACZCookedDrumstick), "Purification", "Cooked Drumstick", 5, 30, typeof(UOACZCookedCorruptedDrumstick), "Cooked Corrupted Drumstick", 1, "You do not have the neccessary cooked corrupted drumstick required to cook this.");
+            index = AddCraft(1, typeof(UOACZCookedDrumstick), "Purification", "Cooked Drumstick", 5, 30, typeof(UOACZCookedCorruptedDrumstick), "Cooked Corrupted Drumstick", 1, "You do not have the neccessary cooked corrupted drumstick required to cook this.");
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(UOACZCookedHam), "Purification", "Cooked Ham", 5, 30, typeof(UOACZCookedCorruptedHam), "Cooked Corrupted Ham", 1, "You do not have the neccessary cooked corrupted ham required to cook this.");
+            index = AddCraft(1, typeof(UOACZCookedHam), "Purification", "Cooked Ham", 5, 30, typeof(UOACZCookedCorruptedHam), "Cooked Corrupted Ham", 1, "You do not have the neccessary cooked corrupted ham required to cook this.");
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(UOACZCookedMeatScraps), "Purification", "Cooked Meat Scraps", 5, 30, typeof(UOACZCookedCorruptedMeatScraps), "Cooked Corrupted Meat Scraps", 1, "You do not have the neccessary cooked corrupted meat scraps required to cook this.");
+            index = AddCraft(1, typeof(UOACZCookedMeatScraps), "Purification", "Cooked Meat Scraps", 5, 30, typeof(UOACZCookedCorruptedMeatScraps), "Cooked Corrupted Meat Scraps", 1, "You do not have the neccessary cooked corrupted meat scraps required to cook this.");
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(UOACZCookedMeatShank), "Purification", "Cooked Meat Shank", 5, 30, typeof(UOACZCookedCorruptedMeatShank), "Cooked Corrupted Meat Shank", 1, "You do not have the neccessary cooked corrupted meat shank required to cook this.");
+            index = AddCraft(1, typeof(UOACZCookedMeatShank), "Purification", "Cooked Meat Shank", 5, 30, typeof(UOACZCookedCorruptedMeatShank), "Cooked Corrupted Meat Shank", 1, "You do not have the neccessary cooked corrupted meat shank required to cook this.");
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(UOACZCookedSteak), "Purification", "Cooked Steak", 5, 30, typeof(UOACZCookedCorruptedSteak), "Cooked Corrupted Steak", 1, "You do not have the neccessary cooked corrupted steak required to cook this.");
+            index = AddCraft(1, typeof(UOACZCookedSteak), "Purification", "Cooked Steak", 5, 30, typeof(UOACZCookedCorruptedSteak), "Cooked Corrupted Steak", 1, "You do not have the neccessary cooked corrupted steak required to cook this.");
             SetNeedHeat(index, true);
 
             //Restoration
-            index = AddCraft(typeof(HealPotion), "Restoration", "Heal Potion", 5, 30, typeof(Ginseng), 1044356, 1, 1044364);
+            index = AddCraft(1, typeof(HealPotion), "Restoration", "Heal Potion", 5, 30, typeof(Ginseng), 1044356, 1, 1044364);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(GreaterHealPotion), "Restoration", "Greater Heal Potion", 15, 40, typeof(Ginseng), 1044356, 2, 1044364);
+            index = AddCraft(1, typeof(GreaterHealPotion), "Restoration", "Greater Heal Potion", 15, 40, typeof(Ginseng), 1044356, 2, 1044364);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(CurePotion), "Restoration", "Cure Potion", 5, 30, typeof(Garlic), 1044355, 1, 1044363);
+            index = AddCraft(1, typeof(CurePotion), "Restoration", "Cure Potion", 5, 30, typeof(Garlic), 1044355, 1, 1044363);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(GreaterCurePotion), "Restoration", "Greater Cure Potion", 15, 40, typeof(Garlic), 1044355, 2, 1044363);
+            index = AddCraft(1, typeof(GreaterCurePotion), "Restoration", "Greater Cure Potion", 15, 40, typeof(Garlic), 1044355, 2, 1044363);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(RefreshPotion), "Restoration", "Refresh Potion", 5, 30, typeof(BlackPearl), 1044353, 1, 1044361);
+            index = AddCraft(1, typeof(RefreshPotion), "Restoration", "Refresh Potion", 5, 30, typeof(BlackPearl), 1044353, 1, 1044361);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(TotalRefreshPotion), "Restoration", "Total Refresh Potion", 15, 40, typeof(BlackPearl), 1044353, 2, 1044361);
+            index = AddCraft(1, typeof(TotalRefreshPotion), "Restoration", "Total Refresh Potion", 15, 40, typeof(BlackPearl), 1044353, 2, 1044361);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Enhancement
-            index = AddCraft(typeof(StrengthPotion), "Enhancement", "Strength Potion", 15, 40, typeof(MandrakeRoot), 1044357, 1, 1044365);
+            index = AddCraft(1, typeof(StrengthPotion), "Enhancement", "Strength Potion", 15, 40, typeof(MandrakeRoot), 1044357, 1, 1044365);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(GreaterStrengthPotion), "Enhancement", "Greater Strength Potion", 25, 50, typeof(MandrakeRoot), 1044357, 2, 1044365);
+            index = AddCraft(1, typeof(GreaterStrengthPotion), "Enhancement", "Greater Strength Potion", 25, 50, typeof(MandrakeRoot), 1044357, 2, 1044365);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(AgilityPotion), "Enhancement", "Agility Potion", 15, 40, typeof(Bloodmoss), 1044354, 1, 1044362);
+            index = AddCraft(1, typeof(AgilityPotion), "Enhancement", "Agility Potion", 15, 40, typeof(Bloodmoss), 1044354, 1, 1044362);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(GreaterAgilityPotion), "Enhancement", "Greater Agility Potion", 25, 50, typeof(Bloodmoss), 1044354, 2, 1044362);
+            index = AddCraft(1, typeof(GreaterAgilityPotion), "Enhancement", "Greater Agility Potion", 25, 50, typeof(Bloodmoss), 1044354, 2, 1044362);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //NightShade
-            index = AddCraft(typeof(UOACZLesserTruestrikePotion), "Enhancement", "Lesser Truestrike Potion", 15, 40, typeof(Nightshade), "Nightshade", 1, "You do not have the neccessary nightshade to craft that.");
+            index = AddCraft(1, typeof(UOACZLesserTruestrikePotion), "Enhancement", "Lesser Truestrike Potion", 15, 40, typeof(Nightshade), "Nightshade", 1, "You do not have the neccessary nightshade to craft that.");
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(UOACZGreaterTruestrikePotion), "Enhancement", "Greater Truestrike Potion", 25, 50, typeof(Nightshade), "Nightshade", 2, "You do not have the neccessary nightshade to craft that.");
+            index = AddCraft(1, typeof(UOACZGreaterTruestrikePotion), "Enhancement", "Greater Truestrike Potion", 25, 50, typeof(Nightshade), "Nightshade", 2, "You do not have the neccessary nightshade to craft that.");
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Utility
-            index = AddCraft(typeof(UOACZLesserConfusionPotion), "Utility", "Lesser Confusion Potion", 15, 40, typeof(SpidersSilk), "Spider's Silk", 1, "You do not have the neccessary spider's silk to craft that.");
+            index = AddCraft(1, typeof(UOACZLesserConfusionPotion), "Utility", "Lesser Confusion Potion", 15, 40, typeof(SpidersSilk), "Spider's Silk", 1, "You do not have the neccessary spider's silk to craft that.");
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(UOACZGreaterConfusionPotion), "Utility", "Greater Confusion Potion", 25, 50, typeof(SpidersSilk), "Spider's Silk", 2, "You do not have the neccessary spider's silk to craft that.");
+            index = AddCraft(1, typeof(UOACZGreaterConfusionPotion), "Utility", "Greater Confusion Potion", 25, 50, typeof(SpidersSilk), "Spider's Silk", 2, "You do not have the neccessary spider's silk to craft that.");
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(typeof(UOACZOilFlask), "Utility", "Oil Flask", 5, 30, typeof(SulfurousAsh), 1044359, 2, 1044367);
+            index = AddCraft(1, typeof(UOACZOilFlask), "Utility", "Oil Flask", 5, 30, typeof(SulfurousAsh), 1044359, 2, 1044367);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
         }
     }
