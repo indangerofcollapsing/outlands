@@ -403,6 +403,38 @@ namespace Server.Items
 
 	public class CraftResources
 	{
+        public static Type GetCraftResourceType(CraftResource craftResource)
+        {
+            switch (craftResource)
+            {
+                case CraftResource.Iron: return typeof(IronIngot); break;
+                case CraftResource.DullCopper: return typeof(DullCopperIngot); break;
+                case CraftResource.ShadowIron: return typeof(ShadowIronIngot); break;
+                case CraftResource.Copper: return typeof(CopperIngot); break;
+                case CraftResource.Bronze: return typeof(BronzeIngot); break;
+                case CraftResource.Gold: return typeof(GoldIngot); break;
+                case CraftResource.Agapite: return typeof(AgapiteIngot); break;
+                case CraftResource.Verite: return typeof(VeriteIngot); break;
+                case CraftResource.Valorite: return typeof(ValoriteIngot); break;
+                case CraftResource.Lunite: return typeof(LuniteIngot); break;
+
+                case CraftResource.RegularLeather: return typeof(Leather); break;
+                case CraftResource.SpinedLeather: return typeof(SpinedLeather); break;
+                case CraftResource.HornedLeather: return typeof(HornedLeather); break;
+                case CraftResource.BarbedLeather: return typeof(BarbedLeather); break;
+
+                case CraftResource.RegularWood: return typeof(Board); break;
+                case CraftResource.OakWood: return typeof(OakBoard); break;
+                case CraftResource.AshWood: return typeof(AshBoard); break;
+                case CraftResource.YewWood: return typeof(YewBoard); break;
+                case CraftResource.Heartwood: return typeof(HeartwoodBoard); break;
+                case CraftResource.Bloodwood: return typeof(BloodwoodBoard); break;
+                case CraftResource.Frostwood: return typeof(FrostwoodBoard); break;
+            }
+
+            return null;
+        }
+
 		private static CraftResourceInfo[] m_MetalInfo = new CraftResourceInfo[]
 			{
 				new CraftResourceInfo( 0x000, 1053109, "Iron",			CraftAttributeInfo.Blank,		CraftResource.Iron,				typeof( IronIngot ),		typeof( IronOre ),			typeof( Granite ) ),

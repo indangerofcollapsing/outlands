@@ -66,10 +66,7 @@ namespace Server.Mobiles
         public override int TamedBaseVirtualArmor { get { return 150; } }
 
         public override bool IsHighSeasBodyType { get { return true; } }
-
-        public override int Meat { get { return 1; } }
-        public override int Hides { get { return 15; } }
-
+        
         public override void SetUniqueAI()
         {
             UniqueCreatureDifficultyScalar = 1.1;

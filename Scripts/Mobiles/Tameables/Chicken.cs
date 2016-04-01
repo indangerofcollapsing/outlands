@@ -59,9 +59,10 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 0; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 50; } }        
+        public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public override int Feathers { get { return 50; } }
+        public override bool HasFeathers { get { return true; } }
+
         public override bool CanFly { get { return true; } }
 
         public override bool OnBeforeDeath()

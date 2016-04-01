@@ -53,9 +53,9 @@ namespace Server
             base.TurnCorrupted(from);            
         }
 
-        public override void UOACZCarve(Mobile from, Corpse corpse, Item with)
+        public override void UOACZCarve(Mobile from, Corpse corpse)
         {
-            base.UOACZCarve(from, corpse, with);
+            base.UOACZCarve(from, corpse);
 
             if (Corrupted)
                 corpse.DropItem(new UOACZCorruptedRawHam());

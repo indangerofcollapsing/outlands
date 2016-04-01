@@ -71,12 +71,7 @@ namespace Server.Mobiles
         public override int GetAngerSound(){return 0x584;}
         public override int GetIdleSound(){return 0x599;}
         public override int GetDeathSound(){return 0x633;}
-
-		public override bool CanRummageCorpses{ get{ return true; } }
-		public override int Meat{ get{ return 1; } }
-		public override int Hides{ get{ return 12; } }
-        public override HideType HideType { get { return HideType.Spined; } }
-
+        
         public HookHorror(Serial serial): base(serial)
 		{
 		}

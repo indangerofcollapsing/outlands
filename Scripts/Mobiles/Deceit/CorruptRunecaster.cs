@@ -57,9 +57,7 @@ namespace Server.Mobiles
         {
             return base.OnBeforeDeath();
         }
-
-        public override int Meat { get { return 1; } }
-
+        
         public CorruptRunecaster(Serial serial): base(serial)
         {
         }

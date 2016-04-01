@@ -1088,7 +1088,7 @@ namespace Server.Items
             }
 
             else if (dead is BaseCreature)            
-                ((BaseCreature)dead).OnCarve(from, this, item);
+                ((BaseCreature)dead).OnCarve(from, this);
             
             else            
                 from.SendLocalizedMessage(500485); // You see nothing useful to carve from the corpse.            

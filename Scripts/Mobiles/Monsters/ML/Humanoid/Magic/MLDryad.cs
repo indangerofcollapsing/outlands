@@ -42,8 +42,6 @@ namespace Server.Mobiles
 				PackItem( Seed.RandomPeculiarSeed( 1 ) );
 		}
         
-		public override int Meat { get { return 1; } }
-
 		public override void OnThink()
 		{
 			base.OnThink();

@@ -54,8 +54,10 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public override int Feathers { get { return 50; } }
+        public override bool HasFeathers { get { return true; } }
 
+        public override bool CanFly { get { return true; } }
+        
         public Parrot(Serial serial): base(serial)
         {
         }

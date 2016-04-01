@@ -74,11 +74,7 @@ namespace Server.Mobiles
         public override int GetAttackSound() { return 0x607; }
         public override int GetHurtSound() { return 0x608; }
         public override int GetDeathSound() { return 0x4F0; }
-
-        public override int Meat { get { return 1; } }
-
-        public override HideType HideType { get { return HideType.Spined; } }
-
+        
         public override bool RevealImmune { get { return !Controlled; } }
 
         public override void SetUniqueAI()

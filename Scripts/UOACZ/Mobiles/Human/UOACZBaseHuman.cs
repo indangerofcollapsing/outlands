@@ -158,7 +158,7 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual void UOACZCarve(Mobile from, Corpse corpse, Item with)
+        public virtual void UOACZCarve(Mobile from, Corpse corpse)
         {
             from.Animate(32, 3, 1, true, false, 0);
             Effects.PlaySound(from.Location, from.Map, 0x3E3);
@@ -172,9 +172,9 @@ namespace Server.Mobiles
             from.SendMessage("You carve the corpse.");
         }
 
-        public override void OnCarve(Mobile from, Corpse corpse, Item with)
+        public override void OnCarve(Mobile from, Corpse corpse)
         {
-            UOACZCarve(from, corpse, with);
+            UOACZCarve(from, corpse);
         }
 
         public override void OnDeath(Container c)

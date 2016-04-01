@@ -40,9 +40,6 @@ namespace Server.Mobiles
             Karma = -15000;         
         }
         
-        public override int Scales { get { return 7; } }
-        public override ScaleType ScaleType { get { return (Body == 12 ? ScaleType.Yellow : ScaleType.Red); } }
-
         public override bool CanFly { get { return true; } }
 
         public override void SetUniqueAI()

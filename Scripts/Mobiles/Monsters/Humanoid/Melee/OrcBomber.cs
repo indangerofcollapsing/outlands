@@ -40,9 +40,7 @@ namespace Server.Mobiles
             Fame = 2500;
             Karma = -2500;
         }
-
-        public override int Meat { get { return 1; } }
-
+        
         public override void SetUniqueAI()
         {
             UniqueCreatureDifficultyScalar = 2;

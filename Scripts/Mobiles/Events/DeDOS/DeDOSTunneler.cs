@@ -59,9 +59,7 @@ namespace Server.Mobiles
             DictCombatFlee[CombatFlee.Flee10] = 0;
             DictCombatFlee[CombatFlee.Flee5] = 0;
         }
-
-        public override int Meat { get { return 1; } }
-
+        
         public override bool IsHighSeasBodyType { get { return true; } }
 
         public override void OnThink()

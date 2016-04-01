@@ -8,7 +8,7 @@ namespace Server.Mobiles
 	public class Gypsy : BaseCreature
 	{
 
-        public override bool DropsGold { get { return false; } }
+        public override bool HasNormalLoot { get { return false; } }
         public override bool AllowParagon { get { return false; } }
 		[Constructable]
 		public Gypsy()

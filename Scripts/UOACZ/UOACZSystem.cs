@@ -125,8 +125,6 @@ namespace Server
 
         public static double SwarmControllerDeathDamageScalar = .5;
 
-        public static int BossSpecialEffectDifficultyDivisor = 3;
-
         public static int HumanChampionSpawnMinutes = 90;
         public static int HumanBossSpawnMinutes = 180;
         public static int UndeadChampionSpawnMinutes = 90;

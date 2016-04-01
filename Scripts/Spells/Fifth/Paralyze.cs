@@ -73,15 +73,7 @@ namespace Server.Spells.Fifth
 					( (PlagueBeastLord) m ).OnParalyzed( Caster );
 					duration = 120;
 				}
-
-                BaseCreature bc_Creature = m as BaseCreature;
-
-                if (bc_Creature != null)
-                {
-                    if (!(bc_Creature.ControlMaster is PlayerMobile) && (bc_Creature.InitialDifficulty >= BaseCreature.HighDifficultyThreshold || bc_Creature.IsBoss() || bc_Creature.IsMiniBoss() || bc_Creature.IsEventBoss() || bc_Creature.IsLoHBoss()))
-                        duration /= bc_Creature.PlayerProximityDifficultyDivisor;
-                }
-
+                
                 bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, m, EnhancedSpellbookType.Warlock, true, true);
 
                 int spellHue = 0; //PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Paralyze);

@@ -31,10 +31,7 @@ namespace Server.Mobiles
 			Fame = 2000;
 			Karma = -2000;
 		}
-
-        public override int Meat { get { return 10; } }
-        public override int Hides { get { return 15; } }
-
+        
 		public override int GetAngerSound()
 		{
 			return 0x4F8;

@@ -142,11 +142,7 @@ namespace Server.Mobiles
 		{
 			return 0x2C8;
 		}
-
-		public override int Meat{ get{ return 19; } }
-		public override int Hides{ get{ return 20; } }
-		public override int Scales{ get{ return 5; } }		
-
+        
 		public SwampDragon( Serial serial ) : base( serial )
 		{
 		}

@@ -59,6 +59,12 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 75; } }
 
+        public override bool HasNormalLoot { get { return false; } }
+
+        public override MeatType MeatType { get { return MeatType.Meat; } }
+        public override int MeatAmount { get { return 5; } }
+        public override int ResourceAmount { get { return 10; } }
+
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
@@ -71,6 +77,7 @@ namespace Server.Mobiles
                 {
                     if (defender is PlayerMobile)
                         effectChance = .01;
+
                     else
                         effectChance = .25;
                 }

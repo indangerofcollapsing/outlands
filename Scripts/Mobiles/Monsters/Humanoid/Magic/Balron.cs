@@ -42,9 +42,7 @@ namespace Server.Mobiles
 			Fame = 30000;
 			Karma = -30000;
 		}
-
-        public override int Meat { get { return 5; } }
-        
+                
         public override bool CanRummageCorpses { get { return true; } }
 
 		public override void OnDeath( Container c )

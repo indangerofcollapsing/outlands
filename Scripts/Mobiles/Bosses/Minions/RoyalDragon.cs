@@ -42,9 +42,6 @@ namespace Server.Mobiles
             Karma = -15000;
         }
 
-        public override int Meat { get { return 5; } }
-        public override int Hides { get { return 20; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
         public override bool CanFly { get { return true; } }       
 
         public override void SetUniqueAI()

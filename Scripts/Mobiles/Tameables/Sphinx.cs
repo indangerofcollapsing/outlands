@@ -42,9 +42,7 @@ namespace Server.Mobiles
             Fame = 1000;
             Karma = -1000;
         }
-
-        public override int Feathers { get { return 250; } }
-
+        
         public override int TamedItemId { get { return 8471; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 10; } }
@@ -66,6 +64,8 @@ namespace Server.Mobiles
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 150; } }
+
+        public override bool HasFeathers { get { return true; } }
 
         public override bool IsHighSeasBodyType { get { return true; } }
 

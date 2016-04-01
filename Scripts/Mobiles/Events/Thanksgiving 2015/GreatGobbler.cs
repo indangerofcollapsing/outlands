@@ -86,8 +86,6 @@ namespace Server.Mobiles
         public override bool AlwaysBoss { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
 
-        public override int Feathers { get { return 1000; } }
-
         public override void SetUniqueAI()
         {
             AttackSpeed = 40;

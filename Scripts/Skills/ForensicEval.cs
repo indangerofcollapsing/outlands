@@ -16,12 +16,12 @@ namespace Server.SkillHandlers
 			SkillInfo.Table[(int)SkillName.Forensics].Callback = new SkillUseCallback( OnUse );
 		}
 
-		public static TimeSpan OnUse( Mobile m )
+		public static TimeSpan OnUse( Mobile from )
 		{
-			m.Target = new ForensicTarget();
-			m.RevealingAction();
+			from.Target = new ForensicTarget();
+			from.RevealingAction();
 
-            m.SendMessage("Show me the crime you wish to investigate or research materials / master scroll you wish to research.");			
+            from.SendMessage("What do you wish to carve, investigate, or research?");
 
 			return TimeSpan.FromSeconds( 2.0 );
 		}
@@ -34,83 +34,75 @@ namespace Server.SkillHandlers
 
 			protected override void OnTarget( Mobile from, object target )
 			{
-				if ( target is Mobile )
+                if (from == null)
+                    return;
+
+				if (target is Mobile)
 				{
                     from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ForensicsCooldown * 1000);
 
-					if ( from.CheckTargetSkill( SkillName.Forensics, target, 40.0, 100.0, 1.0 ) )
+					if ( from.CheckTargetSkill( SkillName.Forensics, target, 50.0, 120.0, 1.0 ) )
 					{
-						if ( target is PlayerMobile && ((PlayerMobile)target).NpcGuild == NpcGuild.ThievesGuild )
-							from.SendLocalizedMessage( 501004 );//That individual is a thief!
+						if (target is PlayerMobile && ((PlayerMobile)target).NpcGuild == NpcGuild.ThievesGuild )
+							from.SendLocalizedMessage( 501004 ); //That individual is a thief!
 
 						else
-							from.SendLocalizedMessage( 501003 );//You notice nothing unusual.
+							from.SendLocalizedMessage( 501003 ); //You notice nothing unusual.
 					}
 
 					else					
-						from.SendLocalizedMessage( 501001 );//You cannot determain anything useful.	
+						from.SendLocalizedMessage( 501001 ); //You cannot determain anything useful.	
 				}
 
                 else if (target is Head)
                 {
-                    Head head = target as Head;
-
-                    string sVictim = head.PlayerName;
-                    bool bVictimPaladin = false;
-                    bool bVictimMurderer = false;
-
-                    if (head.PlayerType == PlayerType.Paladin)
-                        bVictimPaladin = true;
-
-                    if (head.PlayerType == PlayerType.Murderer)
-                        bVictimMurderer = true;
-
-                    string sKiller = head.KillerName;
-                    bool bKillerPaladin = false;
-                    bool bKillerMurderer = false;
-
-                    if (head.KillerType == PlayerType.Paladin)
-                        bKillerPaladin = true;
-
-                    if (head.KillerType == PlayerType.Murderer)
-                        bKillerMurderer = true;
-
-                    if (sKiller != "" && sKiller != null && sVictim != "" && sVictim != null)
-                    {
-                        string text = "It is the head of " + sVictim;
-
-                        if (bVictimPaladin)
-                            text += " the paladin.";
-
-                        else if (bVictimMurderer)
-                            text += " the murderer.";
-
-                        else
-                            text += ".";
-
-                        text += " They would appear to have been slain by " + sKiller;
-
-                        if (bKillerPaladin)
-                            text += " the paladin.";
-
-                        else if (bKillerMurderer)
-                            text += " the murderer.";
-
-                        else
-                            text += ".";
-
-                        from.SendMessage(text);
-                    }
-
-                    else
-                        from.SendMessage("It appears to be a head, but you cannot discern the details of it's owner's demise.");
                 }
 
                 else if (target is Corpse)
                 {
-                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ForensicsCooldown * 1000);
+                    Corpse corpse = target as Corpse;                    
 
-                    if (from.CheckTargetSkill(SkillName.Forensics, target, 0.0, 100.0, 1.0))
+                    if (corpse.Owner is BaseCreature && !corpse.Carved && from.Backpack != null)
+                    {
+                        BaseCreature bc_Creature = corpse.Owner as BaseCreature;
+
+                        bool foundBladed = false;
+
+                        Item oneHanded = from.FindItemOnLayer(Layer.OneHanded);
+                        Item twoHanded = from.FindItemOnLayer(Layer.TwoHanded);
+
+                        if (oneHanded is BaseSword || oneHanded is BaseKnife)
+                            foundBladed = true;
+
+                        if (twoHanded is BaseSword || twoHanded is BaseKnife)
+                            foundBladed = true;
+
+                        if (!foundBladed)
+                        {
+                            Item[] items = from.Backpack.FindItemsByType(typeof(BaseMeleeWeapon));
+
+                            for (int a = 0; a < items.Length; a++)
+                            {
+                                if (items[a] is BaseSword || items[a] is BaseKnife)
+                                {
+                                    foundBladed = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!foundBladed)
+                        {
+                            from.SendMessage("You must have a cutting weapon equipped or in your pack in order to carve this.");
+                            return;
+                        }                        
+
+                        bc_Creature.OnCarve(from, corpse);
+
+                        return;
+                    }
+                    
+                    if (from.CheckTargetSkill(SkillName.Forensics, target, 0.0, 120.0, 1.0))
                     {
                         Corpse c = (Corpse)target;
 
@@ -142,6 +134,7 @@ namespace Server.SkillHandlers
 
                     if (p.Picker != null)
                         from.SendLocalizedMessage(1042749, p.Picker.Name);//This lock was opened by ~1_PICKER_NAME~
+
                     else
                         from.SendLocalizedMessage(501003);//You notice nothing unusual.
                 }

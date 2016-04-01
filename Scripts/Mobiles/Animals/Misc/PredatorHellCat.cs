@@ -33,9 +33,6 @@ namespace Server.Mobiles
 			Karma = -2500;          			
 		}
 
-        public override int Hides { get { return 10; } }
-        public override HideType HideType { get { return HideType.Spined; } }
-
         public override void SetUniqueAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;

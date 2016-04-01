@@ -42,11 +42,7 @@ namespace Server.Mobiles
             Karma = -500;
             PackItem( new Engines.Plants.Seed());
         }
-
-        public override int Meat { get { return 1; } }
-        public override int Hides { get { return 4; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
-
+        
         public override bool IsHighSeasBodyType { get { return true; } }
         public override bool HasAlternateHighSeasHurtAnimation { get { return true; } }
 

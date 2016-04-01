@@ -36,8 +36,6 @@ namespace Server.Mobiles
             MinTameSkill = 35;
         }
 
-        public override HideType HideType { get { return HideType.Spined; } }
-        
         public override int TamedItemId { get { return 8495; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }

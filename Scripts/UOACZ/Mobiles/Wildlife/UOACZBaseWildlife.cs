@@ -346,7 +346,7 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual void UOACZCarve(Mobile from, Corpse corpse, Item with)
+        public virtual void UOACZCarve(Mobile from, Corpse corpse)
         {
             PlayerMobile player = from as PlayerMobile;
 
@@ -365,9 +365,9 @@ namespace Server.Mobiles
             player.m_UOACZAccountEntry.WildlifeSkinned++;    
         }
 
-        public override void OnCarve(Mobile from, Corpse corpse, Item with)
+        public override void OnCarve(Mobile from, Corpse corpse)
         {
-            UOACZCarve(from, corpse, with);            
+            UOACZCarve(from, corpse);            
         }
 
         public override void OnThink()

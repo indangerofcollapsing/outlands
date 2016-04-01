@@ -52,9 +52,7 @@ namespace Server.Mobiles
             DictWanderAction[WanderAction.None] = 1;
             DictWanderAction[WanderAction.Stealth] = 3;
         }
-
-        public override int Meat { get { return 1; } }
-
+        
         public override bool IsHighSeasBodyType { get { return true; } }
 
         public override void OnThink()

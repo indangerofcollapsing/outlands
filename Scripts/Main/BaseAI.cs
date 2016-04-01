@@ -1478,12 +1478,9 @@ namespace Server.Mobiles
             }
 
             if (DateTime.UtcNow > bc_Creature.NextWanderActionAllowed)
-            {
-                if (SpecialAbilities.Global_AllowAbilities)
-                {
-                    if (!bc_Creature.BardPacified && !bc_Creature.BardPacified)
-                        GetWanderAction();
-                }
+            {               
+                if (!bc_Creature.BardPacified && !bc_Creature.BardPacified)
+                    GetWanderAction();                
             }
 
             if (!CheckMove() || bc_Creature.DisallowAllMoves)
@@ -5809,18 +5806,7 @@ namespace Server.Mobiles
                 return false; // Creature is not being herded
 
             double distance = bc_Creature.GetDistanceToSqrt(target);
-
-            if (distance < 1 || distance > 15)
-            {
-                if (distance < 1 && target.X == 1076 && target.Y == 450 && (bc_Creature is HordeMinionFamiliar))
-                {
-                    PlayerMobile pm = bc_Creature.ControlMaster as PlayerMobile;
-                }
-
-                bc_Creature.TargetLocation = null;
-                return false; // At the target or too far away
-            }
-
+            
             DoMove(bc_Creature.GetDirectionTo(target));
 
             return true;

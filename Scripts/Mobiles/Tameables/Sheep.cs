@@ -28,8 +28,7 @@ namespace Server.Mobiles
 
             if (DateTime.UtcNow < m_NextWoolTime)
             {
-                // This sheep is not yet ready to be shorn.
-                PrivateOverheadMessage(MessageType.Regular, 0x3B2, 500449, from.NetState);
+                PrivateOverheadMessage(MessageType.Regular, 0x3B2, 500449, from.NetState); // This sheep is not yet ready to be shorn.
                 return;
             }
 
@@ -38,7 +37,7 @@ namespace Server.Mobiles
             // IPY ACHIEVEMENT
 
             from.SendLocalizedMessage(500452); // You place the gathered wool into your backpack.
-            from.AddToBackpack(new Wool(Map == Map.Felucca ? 2 : 1));
+            from.AddToBackpack(new Wool(WoolAmount));
 
             NextWoolTime = DateTime.UtcNow + TimeSpan.FromHours(3.0); // TODO: Proper time delay
         }
@@ -73,8 +72,7 @@ namespace Server.Mobiles
 
             Fame = 300;
             Karma = 0;
-
-
+            
             Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 25;
@@ -101,8 +99,9 @@ namespace Server.Mobiles
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
-        
-        public override int Wool { get { return (Body == 0xCF ? 1 : 0); } }
+
+        public override bool HasWool { get { return true; } }
+        public override int WoolAmount { get { return (Body == 0xCF ? 1 : 0); } }
 
         public Sheep(Serial serial): base(serial)
         {

@@ -44,14 +44,12 @@ namespace Server.Mobiles
             Karma = -1000;
         }
 
-        public override MeatType MeatType { get { return MeatType.Bird; } }
+        public override bool HasFeathers { get { return true; } }
 
         public override void SetUniqueAI()
         {
             UniqueCreatureDifficultyScalar = 1.15;
         }
-
-        public override int Feathers { get { return 150; } }
 
         public override int TamedItemId { get { return 8465; } }
         public override int TamedItemHue { get { return 0; } }

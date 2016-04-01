@@ -32,9 +32,6 @@ namespace Server.Mobiles
     {
         public static bool CanDoCombatEpicAction(BaseCreature creature)
         {
-            if (!SpecialAbilities.Global_AllowAbilities)
-                return false;
-
             if (creature.DictCombatAction[CombatAction.CombatEpicAction] > 0)
             {
                 if (DateTime.UtcNow > creature.NextCombatEpicActionAllowed)

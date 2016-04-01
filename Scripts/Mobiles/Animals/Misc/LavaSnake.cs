@@ -44,9 +44,7 @@ namespace Server.Mobiles
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
-
-		public override int Meat{ get{ return 1; } }
-
+        
 		public LavaSnake(Serial serial) : base(serial)
 		{
 		}

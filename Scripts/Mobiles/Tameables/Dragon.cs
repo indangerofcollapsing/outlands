@@ -54,8 +54,6 @@ namespace Server.Mobiles
             MinTameSkill = 95;
         }
 
-        public override HideType HideType { get { return HideType.Barbed; } }
-
         public override bool CanFly { get { return true; } }
 
         public override int TamedItemId { get { return 9780; } }

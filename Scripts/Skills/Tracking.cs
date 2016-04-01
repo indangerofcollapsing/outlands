@@ -219,9 +219,6 @@ namespace Server.SkillHandlers
             if (!m.Player)
                 return true;
 
-            if (!DetectHidden.ValidTarget(from, m))
-                return false;
-
             int tracking = from.Skills[SkillName.Tracking].Fixed;
             int detectHidden = from.Skills[SkillName.DetectHidden].Fixed;
 

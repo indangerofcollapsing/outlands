@@ -40,8 +40,6 @@ namespace Server.Mobiles
 			Karma = -10000;			
 		}
 
-        public override int Meat { get { return 2; } }
-
         public override void SetUniqueAI()
         {
             CastOnlyEnergySpells = true;

@@ -56,7 +56,6 @@ namespace Server.Mobiles
             base.OnDeath(c);
         }
 
-		public override int Meat{ get{ return 1; } }
         public override bool CanFly { get { return true; } }
 
         public Gauth(Serial serial): base(serial)

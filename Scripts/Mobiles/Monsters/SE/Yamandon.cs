@@ -50,12 +50,8 @@ namespace Server.Mobiles
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
         public override Poison HitPoison { get { return Poison.Lethal; } } 
-
-		public override bool ReacquireOnMovement{ get{ return true; } }		
-		//public override int TreasureMapLevel{ get{ return 5; } }
-		public override int Hides{ get{ return 20; } }
-
-		public override void OnDamagedBySpell( Mobile attacker )
+        
+        public override void OnDamagedBySpell( Mobile attacker )
 		{
 			base.OnDamagedBySpell( attacker );
 

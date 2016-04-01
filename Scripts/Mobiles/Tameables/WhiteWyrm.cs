@@ -46,11 +46,7 @@ namespace Server.Mobiles
             ControlSlots = 3;
             MinTameSkill = 95;
 		}
-
-        public override int Meat { get { return 10; } }
-        public override int Hides { get { return 20; } }
-        public override HideType HideType { get { return HideType.Barbed; } }
-
+        
         //Animal Lore Display Info
         public override int TamedItemId { get { return 9780; } }
         public override int TamedItemHue { get { return 1150; } }

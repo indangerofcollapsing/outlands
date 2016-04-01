@@ -34,35 +34,15 @@ namespace Server.Mobiles
             Karma = -4500; 
         }
 
-        public override int GetAttackSound()
-        {
-            return 916;
-        }
-
-        public override int GetAngerSound()
-        {
-            return 916;
-        }
-
-        public override int GetDeathSound()
-        {
-            return 917;
-        }
-
-        public override int GetHurtSound()
-        {
-            return 919;
-        }
-
-        public override int GetIdleSound()
-        {
-            return 918;
-        }
-
-        public override MeatType MeatType { get { return MeatType.Bird; } }
-        public override int Feathers { get { return 200; } }
+        public override bool HasFeathers { get { return true; } }
 
         public override bool CanFly { get { return true; } }
+
+        public override int GetAttackSound() { return 916; }
+        public override int GetAngerSound() { return 916; }
+        public override int GetDeathSound() { return 917; }
+        public override int GetHurtSound() { return 919; }
+        public override int GetIdleSound() { return 918; }  
 
         public StoneHarpy(Serial serial): base(serial)
         {

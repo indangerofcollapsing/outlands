@@ -22,6 +22,7 @@ using Server.Achievements;
 using Server.Guilds;
 using Server.Commands;
 using System.Linq;
+using Server.Engines.Craft;
 
 namespace Server.Mobiles
 {
@@ -101,31 +102,27 @@ namespace Server.Mobiles
         Bull = 0x0080
     }
 
-    public enum ScaleType
-    {
-        Red,
-        Yellow,
-        Black,
-        Green,
-        White,
-        Blue,
-        All
-    }
-
     public enum MeatType
     {
+        //Basic
         Ribs,
-        Bird,
-        LambLeg,
-        ChickenLeg
-    }
+        Drumstick,
+        FishSteak,
 
-    public enum HideType
-    {
-        Regular,
-        Spined,
-        Horned,
-        Barbed
+        //Scaled
+        Meat,
+        Poultry,
+        Fish,
+
+        //Special
+        Bacon,
+        Ham, 
+        Cuts,
+        MeatScraps,
+        MeatShank,
+        Sausage,        
+        Bird,
+        Fillet        
     }
 
     public class DamageStore : IComparable
@@ -189,20 +186,13 @@ namespace Server.Mobiles
         public delegate void OnBeforeDeathCB();
         public OnBeforeDeathCB m_OnBeforeDeathCallback;
 
-        public virtual bool DropsGold { get { return true; } }
+        public virtual bool HasNormalLoot { get { return true; } }
 
         private bool m_FreelyLootable = false;
         public bool FreelyLootable
         {
-            get
-            {
-                return m_FreelyLootable;
-            }
-
-            set
-            {
-                m_FreelyLootable = value;
-            }
+            get { return m_FreelyLootable; }
+            set { m_FreelyLootable = value; }
         }
 
         public virtual bool AlwaysFreelyLootable { get { return false; } }
@@ -261,12 +251,6 @@ namespace Server.Mobiles
                 return false;
             }
 
-            else
-            {
-                if (!(ControlMaster is PlayerMobile) && (InitialDifficulty >= BaseCreature.HighDifficultyThreshold || IsMiniBoss() || IsBoss() || IsLoHBoss() || IsEventBoss()))
-                    duration /= PlayerProximityDifficultyDivisor;
-            }
-
             return base.Paralyze(from, duration);
         }
 
@@ -275,7 +259,7 @@ namespace Server.Mobiles
         {
             get
             {
-                if (!DropsGold)
+                if (!HasNormalLoot)
                     return 0;
 
                 int max = 10000;
@@ -526,11 +510,11 @@ namespace Server.Mobiles
 
         public static double TamedCreatureBackstabScalar = 1.0;
 
-        public static double BasePvPMeleeDamageScalar = .40;
-        public static double BasePvPSpellDamageScalar = .40;
-        public static double BasePvPAbilityDamageScalar = .40;
+        public static double BasePvPMeleeDamageScalar = .66;
+        public static double BasePvPSpellDamageScalar = .66;
+        public static double BasePvPAbilityDamageScalar = .66;
 
-        public static double BasePvPHenchmenDamageScalar = .90; //Additional PvP Damage Modifier Henchmen Receive (on top of Base Scalars)
+        public static double BasePvPHenchmenDamageScalar = 1.0;
 
         public double PvPMeleeDamageScalar = BasePvPMeleeDamageScalar;
         public double PvPSpellDamageScalar = BasePvPSpellDamageScalar;
@@ -1949,297 +1933,11 @@ namespace Server.Mobiles
 
         public List<DungeonWeaponDamageEntry> DungeonWeaponDamageEntries = new List<DungeonWeaponDamageEntry>();
 
-        public bool SpecialAbilityEffectLookupInProgress = false;
-
-        public List<SpecialAbilityEffectEntry> m_SpecialAbilityEffectEntries = new List<SpecialAbilityEffectEntry>();
-        public List<SpecialAbilityEffectEntry> m_SpecialAbilityEffectEntriesToAdd = new List<SpecialAbilityEffectEntry>();
-        public List<SpecialAbilityEffectEntry> m_SpecialAbilityEffectEntriesToRemove = new List<SpecialAbilityEffectEntry>();
-
-        public SpecialAbilityEffectTimer m_SpecialAbilityEffectTimer;
-        public class SpecialAbilityEffectTimer : Timer
+        public override void SpecialAbilityTimerTick()
         {
-            private Mobile m_Mobile;
-
-            public SpecialAbilityEffectTimer(Mobile mobile)
-                : base(TimeSpan.Zero, TimeSpan.FromMilliseconds(100))
-            {
-                m_Mobile = mobile;
-                Priority = TimerPriority.TwentyFiveMS;
-            }
-
-            protected override void OnTick()
-            {
-                BaseCreature bc_Creature = m_Mobile as BaseCreature;
-
-                if (bc_Creature == null)
-                    return;
-
-                List<SpecialAbilityEffectEntry> entriesToRemove = new List<SpecialAbilityEffectEntry>();
-
-                int entries = bc_Creature.m_SpecialAbilityEffectEntries.Count;
-
-                for (int a = 0; a < entries; a++)
-                {
-                    if (bc_Creature.SpecialAbilityEffectLookupInProgress)
-                        break;
-
-                    SpecialAbilityEffectEntry entry = bc_Creature.m_SpecialAbilityEffectEntries[a];
-
-                    if (entry == null)
-                        continue;
-
-                    if (entry.m_SpecialAbilityEffect == SpecialAbilityEffect.Hinder)
-                    {
-                        if (DateTime.UtcNow >= entry.m_Expiration)
-                            bc_Creature.Frozen = false;
-                    }
-
-                    if (entry.m_SpecialAbilityEffect == SpecialAbilityEffect.Petrify)
-                    {
-                        if (DateTime.UtcNow >= entry.m_Expiration)
-                        {
-                            bc_Creature.Frozen = false;
-
-                            if (bc_Creature.HueMod == 911)
-                                bc_Creature.HueMod = -1;
-                        }
-                    }
-
-                    if (entry.m_SpecialAbilityEffect == SpecialAbilityEffect.Bleed)
-                    {
-                        if (DateTime.UtcNow >= entry.m_Expiration && !bc_Creature.Blessed)
-                        {
-                            int damage = (int)entry.m_Value;
-
-                            int minBlood = 1;
-                            int maxBlood = 2;
-
-                            //Player Enhancement Customization: Vicious
-                            bool vicious = PlayerEnhancementPersistance.IsCustomizationEntryActive(entry.m_Owner, Custom.CustomizationType.Vicious);
-
-                            if (vicious)
-                            {
-                                minBlood++;
-                                maxBlood++;
-                            }
-
-                            SpecialAbilities.AddBloodEffect(bc_Creature, minBlood, maxBlood);
-
-                            int finalAdjustedDamage = AOS.Damage(bc_Creature, entry.m_Owner, damage, 0, 100, 0, 0, 0);
-
-                            Mobile m_Owner = entry.m_Owner as Mobile;
-                            BaseCreature bc_Owner = entry.m_Owner as BaseCreature;
-                            PlayerMobile pm_Owner = entry.m_Owner as PlayerMobile;
-
-                            if (bc_Owner != null)
-                                bc_Owner.DisplayFollowerDamage(bc_Creature, finalAdjustedDamage);
-
-                            if (pm_Owner != null)
-                            {
-                                if (pm_Owner.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
-                                    pm_Owner.SendMessage(pm_Owner.PlayerMeleeDamageTextHue, bc_Creature.Name + " bleeds for " + finalAdjustedDamage.ToString() + " damage.");
-
-                                if (pm_Owner.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
-                                    bc_Creature.PrivateOverheadMessage(MessageType.Regular, pm_Owner.PlayerMeleeDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), pm_Owner.NetState);
-                            }
-                        }
-                    }
-
-                    if (entry.m_SpecialAbilityEffect == SpecialAbilityEffect.Disease)
-                    {
-                        if (DateTime.UtcNow >= entry.m_Expiration && !bc_Creature.Blessed)
-                        {
-                            int damage = (int)entry.m_Value;
-
-                            if (!bc_Creature.Hidden)
-                            {
-                                Effects.PlaySound(bc_Creature.Location, bc_Creature.Map, 0x5CB);
-
-                                Effects.SendLocationParticles(EffectItem.Create(bc_Creature.Location, bc_Creature.Map, TimeSpan.FromSeconds(0.25)), 0x376A, 10, 20, 2199, 0, 5029, 0);
-
-                                bc_Creature.PublicOverheadMessage(MessageType.Regular, 1103, false, "*looks violently ill*");
-
-                                bc_Creature.TakenDamageFromPoison = true;
-
-                                Blood blood = new Blood();
-                                blood.Hue = 2200;
-                                blood.MoveToWorld(bc_Creature.Location, bc_Creature.Map);
-
-                                int extraBlood = Utility.RandomMinMax(1, 2);
-
-                                for (int i = 0; i < extraBlood; i++)
-                                {
-                                    Blood moreBlood = new Blood();
-                                    moreBlood.Hue = 2200;
-                                    moreBlood.MoveToWorld(new Point3D(bc_Creature.Location.X + Utility.RandomMinMax(-1, 1), bc_Creature.Location.Y + Utility.RandomMinMax(-1, 1), bc_Creature.Location.Z), bc_Creature.Map);
-                                }
-                            }
-
-                            int finalAdjustedDamage = AOS.Damage(bc_Creature, entry.m_Owner, damage, 0, 100, 0, 0, 0);
-
-                            Mobile m_Owner = entry.m_Owner as Mobile;
-                            BaseCreature bc_Owner = entry.m_Owner as BaseCreature;
-                            PlayerMobile pm_Owner = entry.m_Owner as PlayerMobile;
-
-                            if (bc_Owner != null)
-                                bc_Owner.DisplayFollowerDamage(bc_Creature, finalAdjustedDamage);
-                        }
-                    }
-
-                    if (DateTime.UtcNow >= entry.m_Expiration)
-                        bc_Creature.RemoveSpecialAbilityEffectEntry(entry);
-                }
-
-                if (bc_Creature.m_SpecialAbilityEffectEntries.Count == 0)
-                    this.Stop();
-            }
+            SpecialAbilities.TimerTick(this);
         }
-
-        public AddSpecialAbilityEffectTimer m_AddSpecialAbilityEffectTimer;
-        public class AddSpecialAbilityEffectTimer : Timer
-        {
-            private Mobile m_Mobile;
-
-            public AddSpecialAbilityEffectTimer(Mobile mobile)
-                : base(TimeSpan.Zero, TimeSpan.FromMilliseconds(50))
-            {
-                m_Mobile = mobile;
-                Priority = TimerPriority.TwentyFiveMS;
-            }
-
-            protected override void OnTick()
-            {
-                BaseCreature bc_Creature = m_Mobile as BaseCreature;
-
-                if (bc_Creature == null)
-                    return;
-
-                int entriesToAdd = bc_Creature.m_SpecialAbilityEffectEntriesToAdd.Count;
-
-                for (int a = 0; a < entriesToAdd; a++)
-                {
-                    if (bc_Creature.SpecialAbilityEffectLookupInProgress)
-                        break;
-
-                    bc_Creature.m_SpecialAbilityEffectEntries.Add(bc_Creature.m_SpecialAbilityEffectEntriesToAdd[0]);
-                    bc_Creature.m_SpecialAbilityEffectEntriesToAdd.RemoveAt(0);
-
-                    if (bc_Creature.m_SpecialAbilityEffectTimer == null)
-                    {
-                        bc_Creature.m_SpecialAbilityEffectTimer = new SpecialAbilityEffectTimer(bc_Creature);
-                        bc_Creature.m_SpecialAbilityEffectTimer.Start();
-                    }
-
-                    else
-                    {
-                        if (!bc_Creature.m_SpecialAbilityEffectTimer.Running)
-                            bc_Creature.m_SpecialAbilityEffectTimer.Start();
-                    }
-                }
-
-                if (bc_Creature.m_SpecialAbilityEffectEntriesToAdd.Count == 0)
-                    this.Stop();
-            }
-        }
-
-        public RemoveSpecialAbilityEffectTimer m_RemoveSpecialAbilityEffectTimer;
-        public class RemoveSpecialAbilityEffectTimer : Timer
-        {
-            private Mobile m_Mobile;
-
-            public RemoveSpecialAbilityEffectTimer(Mobile mobile)
-                : base(TimeSpan.Zero, TimeSpan.FromMilliseconds(50))
-            {
-                m_Mobile = mobile;
-                Priority = TimerPriority.TwentyFiveMS;
-            }
-
-            protected override void OnTick()
-            {
-                BaseCreature bc_Creature = m_Mobile as BaseCreature;
-
-                if (bc_Creature == null)
-                    return;
-
-                int entriesToRemove = bc_Creature.m_SpecialAbilityEffectEntriesToRemove.Count;
-                for (int a = 0; a < entriesToRemove; a++)
-                {
-                    if (bc_Creature.SpecialAbilityEffectLookupInProgress)
-                        break;
-
-                    bc_Creature.m_SpecialAbilityEffectEntries.Remove(bc_Creature.m_SpecialAbilityEffectEntriesToRemove[0]);
-                    bc_Creature.m_SpecialAbilityEffectEntriesToRemove.RemoveAt(0);
-
-                    if (bc_Creature.m_SpecialAbilityEffectEntries.Count == 0)
-                    {
-                        if (bc_Creature.m_SpecialAbilityEffectTimer != null)
-                        {
-                            if (!bc_Creature.m_SpecialAbilityEffectTimer.Running)
-                                bc_Creature.m_SpecialAbilityEffectTimer.Stop();
-                        }
-                    }
-                }
-
-                if (bc_Creature.m_SpecialAbilityEffectEntriesToRemove.Count == 0)
-                    this.Stop();
-            }
-        }
-
-        public void AddSpecialAbilityEffectEntry(SpecialAbilityEffectEntry entryToAdd)
-        {
-            m_SpecialAbilityEffectEntriesToAdd.Add(entryToAdd);
-
-            if (m_AddSpecialAbilityEffectTimer == null)
-            {
-                m_AddSpecialAbilityEffectTimer = new AddSpecialAbilityEffectTimer(this);
-                m_AddSpecialAbilityEffectTimer.Start();
-            }
-
-            else
-            {
-                if (!m_AddSpecialAbilityEffectTimer.Running)
-                    m_AddSpecialAbilityEffectTimer.Start();
-            }
-        }
-
-        public void RemoveSpecialAbilityEffectEntry(SpecialAbilityEffectEntry entryToRemove)
-        {
-            m_SpecialAbilityEffectEntriesToRemove.Add(entryToRemove);
-
-            if (m_RemoveSpecialAbilityEffectTimer == null)
-            {
-                m_RemoveSpecialAbilityEffectTimer = new RemoveSpecialAbilityEffectTimer(this);
-                m_RemoveSpecialAbilityEffectTimer.Start();
-            }
-
-            else
-            {
-                if (!m_RemoveSpecialAbilityEffectTimer.Running)
-                    m_RemoveSpecialAbilityEffectTimer.Start();
-            }
-        }
-
-        public void GetSpecialAbilityEntryValue(SpecialAbilityEffect effectType, out double value)
-        {
-            int count = 0;
-            double totalValue = 0;
-
-            if (m_SpecialAbilityEffectEntries != null)
-            {
-                SpecialAbilityEffectLookupInProgress = true;
-
-                foreach (SpecialAbilityEffectEntry entry in m_SpecialAbilityEffectEntries)
-                {
-                    if (entry.m_SpecialAbilityEffect == effectType && DateTime.UtcNow < entry.m_Expiration)
-                        totalValue += entry.m_Value;
-                }
-
-                SpecialAbilityEffectLookupInProgress = false;
-            }
-
-            value = totalValue;
-        }
-
+        
         private bool m_IsStealthing;
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsStealthing // IsStealthing should be moved to Server.Mobiles
@@ -2925,10 +2623,7 @@ namespace Server.Mobiles
         public static int StamFreeMoveRange = 100;
         public static int StamFreeAuraDistance = 50;
         public static TimeSpan StamFreeAuraInterval = TimeSpan.FromSeconds(3);
-
-        public double PlayerProximityDifficultyDivisor = 5; //Used to Reduce Impact of Special Ability Effects When Large Numbers of Players Are Nearby
-        public static double BasePlayerProximityDifficultyDivisor = 5;
-
+        
         public virtual bool CanSwitchWeapons { get { return false; } }
         public virtual bool IsRangedPrimary { get { return false; } }
         public virtual int WeaponSwitchRange { get { return 2; } }
@@ -2986,15 +2681,7 @@ namespace Server.Mobiles
                 base.OnTick();
 
                 if (bc_Creature == null)
-                    return;
-
-                bc_Creature.PlayerProximityDifficultyDivisor = BaseCreature.BasePlayerProximityDifficultyDivisor;
-
-                if (bc_Creature.Region is UOACZRegion)
-                {
-                    bc_Creature.PlayerProximityDifficultyDivisor = UOACZSystem.BossSpecialEffectDifficultyDivisor;
-                    return;
-                }
+                    return;                
 
                 IPooledEnumerable eable = bc_Creature.GetMobilesInRange(BaseCreature.StamFreeAuraDistance);
 
@@ -3002,19 +2689,7 @@ namespace Server.Mobiles
                 {
                     if (mobile == null)
                         return;
-
-                    BaseCreature bc_Mobile = mobile as BaseCreature;
-                    PlayerMobile pm_Mobile = mobile as PlayerMobile;
-
-                    if (bc_Mobile != null)
-                    {
-                        if (bc_Mobile.Controlled && bc_Mobile.ControlMaster is PlayerMobile)
-                            bc_Creature.PlayerProximityDifficultyDivisor += (double)bc_Mobile.ControlSlots / 5;
-                    }
-
-                    if (pm_Mobile != null)
-                        bc_Creature.PlayerProximityDifficultyDivisor++;
-
+                    
                     mobile.StamFreeMoveExpiration = DateTime.UtcNow + BaseCreature.StamFreeMoveDuration;
                     mobile.StamFreeMoveSource = bc_Creature.Location;
                 }
@@ -3934,6 +3609,37 @@ namespace Server.Mobiles
             }
         }
 
+        public virtual double SpecialEffectReduction
+        {
+            get
+            {
+                double scalar = 1 - (InitialDifficulty * .01);
+
+                if (scalar < .2)
+                    scalar = .2;
+
+                if (IsParagon)
+                    return scalar;
+
+                if (Rare)
+                    return scalar;
+
+                if (IsMiniBoss())
+                    return scalar;
+
+                if (IsBoss())
+                    return scalar;
+
+                if (IsLoHBoss())
+                    return scalar;
+
+                if (IsEventBoss())
+                    return scalar;
+
+                return scalar;
+            }
+        }
+
         public override TimeSpan DamageEntryExpiration
         {
             get
@@ -4372,149 +4078,233 @@ namespace Server.Mobiles
         {
         }
 
-        public virtual void OnCarve(Mobile from, Corpse corpse, Item with)
+        public virtual bool HasFeathers { get { return false; } }
+        public virtual int FeatherAmount { get { return -1; } }
+
+        public virtual bool HasMeat { get { return true; } }
+        public virtual int MeatAmount { get { return -1; } }
+        public virtual MeatType MeatType { get { return MeatType.Ribs; } }
+
+        public virtual bool HasCraftResource { get { return true; } }
+        public virtual int ResourceAmount { get { return -1; } }
+        public virtual CraftResource ResourceType { get { return CraftResource.RegularLeather; } }
+
+        public virtual bool HasWool { get { return false; } }
+        public virtual int WoolAmount { get { return -1; } }
+
+        public virtual void OnCarve(Mobile from, Corpse corpse)
         {
-            if (NoKillAwards)
+            if (from == null || corpse == null) return;
+            if (corpse.Deleted) return;
+            if (NoKillAwards) return;
+
+            if (corpse.Carved)
+            {
+                from.SendMessage("This corpse has already been carved.");
+                return;
+            }
+
+            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ForensicsCooldown * 1000);
+            from.CheckTargetSkill(SkillName.Forensics, corpse, 0, 120.0, 1.0);
+
+            from.Animate(32, 3, 1, true, false, 0);
+            Effects.PlaySound(from.Location, from.Map, 0x3E3);
+
+            new Blood(0x122D).MoveToWorld(corpse.Location, corpse.Map);
+            
+            int extraBlood = Utility.RandomMinMax(2, 3);
+
+            for (int a = 0; a < extraBlood; a++)
+            {
+                Point3D newLocation = SpecialAbilities.GetRandomAdjustedLocation(corpse.Location, corpse.Map, true, 1, false);
+                new Blood().MoveToWorld(newLocation, corpse.Map);
+            }
+
+            corpse.Carved = true;
+
+            bool hasItems = false;
+
+            //Feathers
+            if (HasFeathers)
+            {
+                hasItems = true;
+
+                int featherAmount = 0;
+
+                if (FeatherAmount != -1)
+                    
+                    featherAmount = FeatherAmount;
+
+                else                
+                    featherAmount = (int)(25 + ((Double)InitialDifficulty * 50));
+
+                DropCarvedItem(corpse, typeof(Feather), FeatherAmount);
+            }
+
+            //Meat
+            if (HasMeat)
+            {
+                hasItems = true;
+
+                double basicMeatScalar = .4 + (Utility.RandomDouble() * .2);
+                double specialMeatScalar = .16 + (Utility.RandomDouble() * .08);
+
+                int meatAmount = 0;
+
+                if (MeatAmount != -1)
+                {
+                    //TEST: FIX UOACZ ITEMS
+                    switch (MeatType)
+                    {
+                        case MeatType.Ribs: DropCarvedItem(corpse, typeof(RawRibs), MeatAmount); break;
+                        case MeatType.Drumstick: DropCarvedItem(corpse, typeof(UOACZRawDrumstick), MeatAmount); break;
+                        case MeatType.FishSteak: DropCarvedItem(corpse, typeof(RawFishSteak), MeatAmount); break;
+
+                        case MeatType.Meat: DropCarvedItem(corpse, typeof(RawRibs), MeatAmount); break;
+                        case MeatType.Poultry: DropCarvedItem(corpse, typeof(UOACZRawDrumstick), MeatAmount); break;
+                        case MeatType.Fish: DropCarvedItem(corpse, typeof(RawFishSteak), MeatAmount); break;
+
+                        case MeatType.Bacon: DropCarvedItem(corpse, typeof(UOACZRawBacon), MeatAmount); break;
+                        case MeatType.Ham: DropCarvedItem(corpse, typeof(UOACZRawHam), MeatAmount); break;
+                        case MeatType.Cuts: DropCarvedItem(corpse, typeof(UOACZRawCutsOfMeat), MeatAmount); break;
+                        case MeatType.MeatScraps: DropCarvedItem(corpse, typeof(UOACZRawMeatScraps), MeatAmount); break;
+                        case MeatType.MeatShank: DropCarvedItem(corpse, typeof(UOACZRawMeatShank), MeatAmount); break;
+                        case MeatType.Sausage: DropCarvedItem(corpse, typeof(UOACZRawSausage), MeatAmount); break;
+                        case MeatType.Bird: DropCarvedItem(corpse, typeof(UOACZRawBird), MeatAmount); break;
+                        case MeatType.Fillet: DropCarvedItem(corpse, typeof(UOACZCuredLargeFish), MeatAmount); break;
+                    }                    
+                }                   
+
+                else
+                {
+                    switch (MeatType)
+                    {
+                        //Basic
+                        case MeatType.Ribs: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar)); DropCarvedItem(corpse, typeof(RawRibs), meatAmount); break;
+                        case MeatType.Drumstick: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawDrumstick), meatAmount); break;
+                        case MeatType.FishSteak: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar)); DropCarvedItem(corpse, typeof(RawFishSteak), meatAmount); break;
+
+                        //Scaled
+                        case MeatType.Meat:
+                            meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar));
+                            DropCarvedItem(corpse, typeof(RawRibs), meatAmount);
+
+                            if (Utility.RandomDouble() <= specialMeatScalar)
+                            {
+                                switch (Utility.RandomMinMax(1, 6))
+                                {
+                                    case 1: DropCarvedItem(corpse, typeof(UOACZRawBacon), MeatAmount); break;
+                                    case 2: DropCarvedItem(corpse, typeof(UOACZRawHam), MeatAmount); break;
+                                    case 3: DropCarvedItem(corpse, typeof(UOACZRawCutsOfMeat), MeatAmount); break;
+                                    case 4: DropCarvedItem(corpse, typeof(UOACZRawMeatScraps), MeatAmount); break;
+                                    case 5: DropCarvedItem(corpse, typeof(UOACZRawMeatShank), MeatAmount); break;
+                                    case 6: DropCarvedItem(corpse, typeof(UOACZRawSausage), MeatAmount); break;
+                                }
+                            }
+                        break;
+
+                        case MeatType.Poultry:
+                            meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar));
+                            DropCarvedItem(corpse, typeof(UOACZRawDrumstick), meatAmount);
+
+                            if (Utility.RandomDouble() <= specialMeatScalar)                            
+                                DropCarvedItem(corpse, typeof(UOACZRawBird), 1);                            
+                        break;
+
+                        case MeatType.Fish:
+                            meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar));
+                            DropCarvedItem(corpse, typeof(RawFishSteak), meatAmount);
+
+                            if (Utility.RandomDouble() <= specialMeatScalar)
+                                DropCarvedItem(corpse, typeof(UOACZCuredLargeFish), 1); 
+                        break;
+
+                        //Special
+                        case MeatType.Bacon: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawBacon), meatAmount); break;
+                        case MeatType.Ham: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawHam), meatAmount); break;
+                        case MeatType.Cuts: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawCutsOfMeat), meatAmount); break;
+                        case MeatType.MeatScraps: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawMeatScraps), meatAmount); break;
+                        case MeatType.MeatShank: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawMeatShank), meatAmount); break;
+                        case MeatType.Sausage: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawSausage), meatAmount); break;
+                        case MeatType.Bird: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawBird), meatAmount); break;
+                        case MeatType.Fillet: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZCuredLargeFish), meatAmount); break;
+                    }
+                }
+            }
+
+            //Craft Resource
+            if (HasCraftResource)
+            {
+                hasItems = true;
+
+                int resourceAmount = 0;
+                double resourceDifficultyScalar = 1.0;
+
+                if (ResourceAmount != -1)
+                    DropCarvedItem(corpse, CraftResources.GetCraftResourceType(ResourceType), ResourceAmount);
+
+                else
+                {
+                    switch (ResourceType)
+                    {
+                        case CraftResource.RegularLeather:
+                            resourceDifficultyScalar = .4 + (Utility.RandomDouble() * .2);
+                            resourceAmount = 1 + (int)(Math.Round(InitialDifficulty * resourceDifficultyScalar)); 
+                            DropCarvedItem(corpse, CraftResources.GetCraftResourceType(ResourceType), resourceAmount);
+                        break;
+                    }
+                }
+            }
+
+            //Wool
+            if (HasWool)
+            {
+                hasItems = true;
+
+                int woolAmount = 0;
+
+                if (WoolAmount != -1)
+                    DropCarvedItem(corpse, typeof(Wool), WoolAmount);
+
+                else
+                {
+                    woolAmount = 1 + (int)(Math.Round(InitialDifficulty * 1));
+                    DropCarvedItem(corpse, typeof(Wool), woolAmount);
+                }                
+            }
+
+            if (hasItems)
+                from.SendMessage("You carve materials from the corpse.");
+
+            else
+                from.SendMessage("You carve the corpse but found no usable materials.");
+        }
+
+        public static void DropCarvedItem(Corpse corpse, Type type, int amount)
+        {
+            if (corpse == null)
                 return;
 
-            int feathers = Feathers;
-            int wool = Wool;
-            int meat = Meat;
-            int hides = Hides;
-            int scales = Scales;
+            Item item = (Item)Activator.CreateInstance(type);
 
-            if ((feathers == 0 && wool == 0 && meat == 0 && hides == 0 && scales == 0) || Summoned || IsBonded)
+            if (item == null)
+                return;
+
+            if (item.Stackable)
             {
-                from.SendLocalizedMessage(500485); // You see nothing useful to carve from the corpse.
+                item.Amount = amount;
+                corpse.DropItem(item);
             }
+
             else
             {
-                if (Core.ML && from.Race == Race.Human)
-                    hides = (int)Math.Ceiling(hides * 1.1); // 10% bonus only applies to hides, ore & logs
+                item.Delete();
 
-                if (corpse.Map == Map.Felucca)
+                for (int a = 0; a < amount; a++)
                 {
-                    // IPY : No felucca boost
-                    //feathers *= 2;
-                    //wool *= 2;
-                    //hides *= 2;
-
-                    if (Core.ML)
-                    {
-                        meat *= 2;
-                        scales *= 2;
-                    }
+                    item = (Item)Activator.CreateInstance(type);
+                    corpse.DropItem(item);
                 }
-
-                new Blood(0x122D).MoveToWorld(corpse.Location, corpse.Map);
-
-                if (feathers != 0)
-                {
-                    corpse.AddCarvedItem(new Feather(feathers), from);
-                    from.SendLocalizedMessage(500479); // You pluck the bird. The feathers are now on the corpse.
-                }
-
-                if (wool != 0)
-                {
-                    corpse.AddCarvedItem(new TaintedWool(wool), from);
-                    from.SendLocalizedMessage(500483); // You shear it, and the wool is now on the corpse.
-                }
-
-                if (meat != 0)
-                {
-                    if (MeatType == MeatType.Ribs)
-                        corpse.AddCarvedItem(new RawRibs(meat), from);
-                    else if (MeatType == MeatType.Bird)
-                        corpse.AddCarvedItem(new RawBird(meat), from);
-                    else if (MeatType == MeatType.LambLeg)
-                        corpse.AddCarvedItem(new RawLambLeg(meat), from);
-                    else if (MeatType == MeatType.ChickenLeg)
-                        corpse.AddCarvedItem(new RawChickenLeg(meat), from);
-
-                    from.SendLocalizedMessage(500467); // You carve some meat, which remains on the corpse.
-                }
-
-                if (hides != 0)
-                {
-                    Item holding = from.Weapon as Item;
-
-                    if (Core.AOS && (holding is SkinningKnife /* TODO: || holding is ButcherWarCleaver || with is ButcherWarCleaver */ ))
-                    {
-                        Item leather = null;
-
-                        switch (HideType)
-                        {
-                            case HideType.Regular: leather = new Leather(hides); break;
-                            case HideType.Spined: leather = new SpinedLeather(hides); break;
-                            case HideType.Horned: leather = new HornedLeather(hides); break;
-                            case HideType.Barbed: leather = new BarbedLeather(hides); break;
-                        }
-
-                        if (leather != null)
-                        {
-                            if (!from.PlaceInBackpack(leather))
-                            {
-                                corpse.DropItem(leather);
-                                from.SendLocalizedMessage(500471); // You skin it, and the hides are now in the corpse.
-                            }
-                            else
-                            {
-                                from.SendLocalizedMessage(1073555); // You skin it and place the cut-up hides in your backpack.
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (HideType == HideType.Regular)
-                            corpse.DropItem(new Hides(hides));
-                        else if (HideType == HideType.Spined)
-                            corpse.DropItem(new SpinedHides(hides));
-                        else if (HideType == HideType.Horned)
-                            corpse.DropItem(new HornedHides(hides));
-                        else if (HideType == HideType.Barbed)
-                            corpse.DropItem(new BarbedHides(hides));
-
-                        from.SendLocalizedMessage(500471); // You skin it, and the hides are now in the corpse.
-
-                        // IPY ACHIEVEMENT
-                        AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_SkinAnimal);
-                        // IPY ACHIEVEMENT
-                    }
-
-                    // IPY : No scales
-                    /*
-                    if ( scales != 0 )
-                    {
-                        ScaleType sc = this.ScaleType;
-
-                        switch ( sc )
-                        {
-                            case ScaleType.Red:     corpse.AddCarvedItem( new RedScales( scales ), from ); break;
-                            case ScaleType.Yellow:  corpse.AddCarvedItem( new YellowScales( scales ), from ); break;
-                            case ScaleType.Black:   corpse.AddCarvedItem( new BlackScales( scales ), from ); break;
-                            case ScaleType.Green:   corpse.AddCarvedItem( new GreenScales( scales ), from ); break;
-                            case ScaleType.White:   corpse.AddCarvedItem( new WhiteScales( scales ), from ); break;
-                            case ScaleType.Blue:    corpse.AddCarvedItem( new BlueScales( scales ), from ); break;
-                            case ScaleType.All:
-                            {
-                                corpse.AddCarvedItem( new RedScales( scales ), from );
-                                corpse.AddCarvedItem( new YellowScales( scales ), from );
-                                corpse.AddCarvedItem( new BlackScales( scales ), from );
-                                corpse.AddCarvedItem( new GreenScales( scales ), from );
-                                corpse.AddCarvedItem( new WhiteScales( scales ), from );
-                                corpse.AddCarvedItem( new BlueScales( scales ), from );
-                                break;
-                            }
-                        }
-
-                        from.SendMessage( "You cut away some scales, but they remain on the corpse." );
-                    }
-                    */
-                }
-                corpse.Carved = true;
-
-                //if ( corpse.IsCriminalAction( from ) )
-                //from.CriminalAction( true );
             }
         }
 
@@ -5690,21 +5480,7 @@ namespace Server.Mobiles
 
         public virtual bool NoHouseRestrictions { get { return false; } }
         public virtual bool IsHouseSummonable { get { return false; } }
-
-        #region Corpse Resources
-        public virtual int Feathers { get { return 0; } }
-        public virtual int Wool { get { return 0; } }
-
-        public virtual MeatType MeatType { get { return MeatType.Ribs; } }
-        public virtual int Meat { get { return 0; } }
-
-        public virtual int Hides { get { return 0; } }
-        public virtual HideType HideType { get { return HideType.Regular; } }
-
-        public virtual int Scales { get { return 0; } }
-        public virtual ScaleType ScaleType { get { return ScaleType.Red; } }
-        #endregion
-
+        
         public virtual bool IsScaryToPets { get { return false; } }
         public virtual bool IsScaredOfScaryThings { get { return true; } }
 

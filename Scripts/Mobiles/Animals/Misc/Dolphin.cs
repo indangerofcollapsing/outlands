@@ -33,9 +33,7 @@ namespace Server.Mobiles
 			CanSwim = true;
 			CantWalk = true;
 		}
-
-		public override int Meat { get { return 1; } }
-
+        
 		public Dolphin( Serial serial ): base( serial )
 		{
 		}

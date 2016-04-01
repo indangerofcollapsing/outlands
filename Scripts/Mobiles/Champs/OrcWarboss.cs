@@ -120,9 +120,7 @@ namespace Server.Mobiles
 
         public override bool AlwaysMiniBoss { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-
-        public override int Meat { get { return 4; } }
-
+        
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);

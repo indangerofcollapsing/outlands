@@ -37,9 +37,7 @@ namespace Server.Mobiles
 		}
 
         public override Poison HitPoison { get { return Poison.Regular; } }
-        public override Poison PoisonImmune { get { return Poison.Regular; } }       
-
-		public override int Meat{ get{ return 1; } }
+        public override Poison PoisonImmune { get { return Poison.Regular; } }
 
 		public IceSnake(Serial serial) : base(serial)
 		{

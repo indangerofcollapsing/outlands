@@ -51,9 +51,9 @@ namespace Server
             base.SetUniqueAI();            
         }
 
-        public override void UOACZCarve(Mobile from, Corpse corpse, Item with)
+        public override void UOACZCarve(Mobile from, Corpse corpse)
         {
-            base.UOACZCarve(from, corpse, with);
+            base.UOACZCarve(from, corpse);
 
             if (Corrupted)
             {

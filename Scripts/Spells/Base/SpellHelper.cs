@@ -31,8 +31,7 @@ namespace Server
         {
             private Mobile m_Mobile;
 
-            public InternalTimer(Mobile m)
-                : base(TimeSpan.FromMinutes(1.0))
+            public InternalTimer(Mobile m): base(TimeSpan.FromMinutes(1.0))
             {
                 m_Mobile = m;
 

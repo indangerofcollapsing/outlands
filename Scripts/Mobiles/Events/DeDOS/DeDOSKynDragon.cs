@@ -90,9 +90,7 @@ namespace Server.Mobiles
 
         public override bool IsHighSeasBodyType { get { return true; } }
         public override bool HasAlternateHighSeasAttackAnimation { get { return true; } }
-
-        public override int Meat { get { return 25; } }
-
+        
         public override void SetUniqueAI()
         {
             ResolveAcquireTargetDelay = 0.5;

@@ -179,9 +179,8 @@ namespace Server.Mobiles
 
 			m_NextProvoke = DateTime.UtcNow + TimeSpan.FromSeconds( 10 );
 		}
-		#endregion
 
-		public override int Meat { get { return 1; } }
+		#endregion
 
 		public Satyr( Serial serial ) : base( serial )
 		{

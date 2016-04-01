@@ -42,9 +42,7 @@ namespace Server.Mobiles
 
             SpecialAbilities.BleedSpecialAbility(.2, this, defender, DamageMax, 8.0, -1, true, "", "The beast gores you with it's horns, causing you to bleed!");
         }
-
-		public override int Meat { get { return 4; } }
-        
+                
 		public override int GetDeathSound()	{ return 0x596; }
 		public override int GetAttackSound() { return 0x597; }
 		public override int GetIdleSound() { return 0x598; }

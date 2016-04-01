@@ -47,8 +47,6 @@ namespace Server.Mobiles
         public override Poison HitPoison { get { return Poison.Greater; } }
         public override Poison PoisonImmune { get { return Poison.Greater; } }
 
-        public override int Meat { get { return 2; } }
-
         public override void SetUniqueAI()
         {
             ResolveAcquireTargetDelay = 1.0;

@@ -48,14 +48,7 @@ namespace Server.Mobiles
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
-		
-		//public override int TreasureMapLevel{ get{ return 2; } }
-		public override int Meat{ get{ return 10; } }
-		public override int Hides{ get{ return 20; } }
-		public override HideType HideType{ get{ return HideType.Horned; } }
-		public override int Scales{ get{ return 2; } }
-		public override ScaleType ScaleType{ get{ return ( Body == 60 ? ScaleType.Yellow : ScaleType.Red ); } }
-
+				
 		public TalkingDrake( Serial serial ) : base( serial )
 		{
 		}

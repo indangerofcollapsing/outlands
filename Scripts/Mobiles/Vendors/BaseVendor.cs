@@ -62,7 +62,7 @@ namespace Server.Mobiles
 		private const int MaxSell = 50;
 
 		protected abstract List<SBInfo> SBInfos { get; }
-        public override bool DropsGold { get { return false; } }
+        public override bool HasNormalLoot { get { return false; } }
         public override bool AllowParagon { get { return false; } }
 
 		// IPY budgets for vendors.

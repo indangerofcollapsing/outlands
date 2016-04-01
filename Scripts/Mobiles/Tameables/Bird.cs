@@ -55,10 +55,7 @@ namespace Server.Mobiles
             ControlSlots = 1;
             MinTameSkill = 25;
         }
-
-        public override MeatType MeatType { get { return MeatType.Bird; } }
-        public override int Feathers { get { return 50; } }
-
+        
         public override int TamedItemId { get { return 8430; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 0; } }
@@ -79,7 +76,11 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 0; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 50; } }   
+        public override int TamedBaseVirtualArmor { get { return 50; } }
+
+        public override bool HasFeathers { get { return true; } }
+
+        public override bool CanFly { get { return true; } }
 
         public Bird(Serial serial): base(serial)
         {
@@ -141,10 +142,7 @@ namespace Server.Mobiles
             ControlSlots = 1;
             MinTameSkill = 25;
         }
-
-        public override MeatType MeatType { get { return MeatType.Bird; } }
-        public override int Feathers { get { return 50; } }
-
+        
         public override int TamedItemId { get { return 8430; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 0; } }
@@ -165,10 +163,13 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 0; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 50; } } 
+        public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public TropicalBird(Serial serial)
-            : base(serial)
+        public override bool HasFeathers { get { return true; } }
+
+        public override bool CanFly { get { return true; } }
+
+        public TropicalBird(Serial serial): base(serial)
         {
         }
 

@@ -1,32 +1,15 @@
-/***************************************************************************
- *                                Mobile.cs
- *                            -------------------
- *   begin                : May 1, 2002
- *   copyright            : (C) The RunUO Software Team
- *   email                : info@runuo.com
- *
- *   $Id$
- *
- ***************************************************************************/
+#if Framework_4_0
 
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
+using System.Linq;
+using System.Threading.Tasks;
+
+#endif
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-#if Framework_4_0
-using System.Linq;
-using System.Threading.Tasks;
-#endif
 using Server;
 using Server.Accounting;
 using Server.Commands;
@@ -350,6 +333,58 @@ namespace Server
     }
 
     #endregion    
+
+    public enum SpecialAbilityEffect
+    {
+        Hinder,
+        Petrify,
+        Cripple,
+        Pierce,
+        Bleed,
+        Stun,
+        Entangle,
+        Silence,
+        Frenzy,
+        Enrage,
+        Disease,
+        Courage,
+        Fortitude,
+        Backlash,
+
+        Expertise,
+        Evasion,
+        Inspiration,
+        EmergencyRepairs,
+        IronFists,
+        Provider,
+        Scientist,
+        Technician,
+        Searcher,
+        Phalanx,
+        Hardy,
+        RapidTreatment,
+        SuperiorHealing,
+
+        Ignite,
+        Bile,
+        ShieldOfBones
+    }
+
+    public class SpecialAbilityEffectEntry
+    {
+        public SpecialAbilityEffect m_SpecialAbilityEffect;
+        public Mobile m_Owner;
+        public double m_Value;
+        public DateTime m_Expiration;
+
+        public SpecialAbilityEffectEntry(SpecialAbilityEffect specialAbilityEffect, Mobile owner, double value, DateTime expiration)
+        {
+            m_SpecialAbilityEffect = specialAbilityEffect;
+            m_Owner = owner;
+            m_Value = value;
+            m_Expiration = expiration;
+        }
+    }
 
     public class DamageEntry
     {
@@ -12189,5 +12224,169 @@ namespace Server
         public virtual void OnSectorDeactivate()
         {
         }
+
+        public virtual void SpecialAbilityTimerTick()
+        {
+        }
+
+        #region Special Ability Effects
+
+        public bool SpecialAbilityEffectLookupInProgress = false;
+
+        public List<SpecialAbilityEffectEntry> m_SpecialAbilityEffectEntries = new List<SpecialAbilityEffectEntry>();
+        public List<SpecialAbilityEffectEntry> m_SpecialAbilityEffectEntriesToAdd = new List<SpecialAbilityEffectEntry>();
+        public List<SpecialAbilityEffectEntry> m_SpecialAbilityEffectEntriesToRemove = new List<SpecialAbilityEffectEntry>();
+
+        public SpecialAbilityEffectTimer m_SpecialAbilityEffectTimer;
+        public class SpecialAbilityEffectTimer : Timer
+        {
+            private Mobile m_Mobile;
+
+            public SpecialAbilityEffectTimer(Mobile mobile): base(TimeSpan.Zero, TimeSpan.FromMilliseconds(100))
+            {
+                m_Mobile = mobile;
+                Priority = TimerPriority.TwentyFiveMS;
+            }
+
+            protected override void OnTick()
+            {
+                m_Mobile.SpecialAbilityTimerTick();                
+            }
+        }
+
+        public AddSpecialAbilityEffectTimer m_AddSpecialAbilityEffectTimer;
+        public class AddSpecialAbilityEffectTimer : Timer
+        {
+            private Mobile m_Mobile;
+
+            public AddSpecialAbilityEffectTimer(Mobile mobile): base(TimeSpan.Zero, TimeSpan.FromMilliseconds(50))
+            {
+                m_Mobile = mobile;
+                Priority = TimerPriority.TwentyFiveMS;
+            }
+
+            protected override void OnTick()
+            {
+                int entriesToAdd = m_Mobile.m_SpecialAbilityEffectEntriesToAdd.Count;
+
+                for (int a = 0; a < entriesToAdd; a++)
+                {
+                    if (m_Mobile.SpecialAbilityEffectLookupInProgress)
+                        break;
+
+                    m_Mobile.m_SpecialAbilityEffectEntries.Add(m_Mobile.m_SpecialAbilityEffectEntriesToAdd[0]);
+                    m_Mobile.m_SpecialAbilityEffectEntriesToAdd.RemoveAt(0);
+
+                    if (m_Mobile.m_SpecialAbilityEffectTimer == null)
+                    {
+                        m_Mobile.m_SpecialAbilityEffectTimer = new SpecialAbilityEffectTimer(m_Mobile);
+                        m_Mobile.m_SpecialAbilityEffectTimer.Start();
+                    }
+
+                    else
+                    {
+                        if (!m_Mobile.m_SpecialAbilityEffectTimer.Running)
+                            m_Mobile.m_SpecialAbilityEffectTimer.Start();
+                    }
+                }
+
+                if (m_Mobile.m_SpecialAbilityEffectEntriesToAdd.Count == 0)
+                    Stop();
+            }
+        }
+
+        public RemoveSpecialAbilityEffectTimer m_RemoveSpecialAbilityEffectTimer;
+        public class RemoveSpecialAbilityEffectTimer : Timer
+        {
+            private Mobile m_Mobile;
+
+            public RemoveSpecialAbilityEffectTimer(Mobile mobile): base(TimeSpan.Zero, TimeSpan.FromMilliseconds(50))
+            {
+                m_Mobile = mobile;
+                Priority = TimerPriority.TwentyFiveMS;
+            }
+
+            protected override void OnTick()
+            {
+                int entriesToRemove = m_Mobile.m_SpecialAbilityEffectEntriesToRemove.Count;
+
+                for (int a = 0; a < entriesToRemove; a++)
+                {
+                    if (m_Mobile.SpecialAbilityEffectLookupInProgress)
+                        break;
+
+                    m_Mobile.m_SpecialAbilityEffectEntries.Remove(m_Mobile.m_SpecialAbilityEffectEntriesToRemove[0]);
+                    m_Mobile.m_SpecialAbilityEffectEntriesToRemove.RemoveAt(0);
+
+                    if (m_Mobile.m_SpecialAbilityEffectEntries.Count == 0)
+                    {
+                        if (m_Mobile.m_SpecialAbilityEffectTimer != null)
+                        {
+                            if (!m_Mobile.m_SpecialAbilityEffectTimer.Running)
+                                m_Mobile.m_SpecialAbilityEffectTimer.Stop();
+                        }
+                    }
+                }
+
+                if (m_Mobile.m_SpecialAbilityEffectEntriesToRemove.Count == 0)
+                    Stop();
+            }
+        }
+
+        public void AddSpecialAbilityEffectEntry(SpecialAbilityEffectEntry entryToAdd)
+        {
+            m_SpecialAbilityEffectEntriesToAdd.Add(entryToAdd);
+
+            if (m_AddSpecialAbilityEffectTimer == null)
+            {
+                m_AddSpecialAbilityEffectTimer = new AddSpecialAbilityEffectTimer(this);
+                m_AddSpecialAbilityEffectTimer.Start();
+            }
+
+            else
+            {
+                if (!m_AddSpecialAbilityEffectTimer.Running)
+                    m_AddSpecialAbilityEffectTimer.Start();
+            }
+        }
+
+        public void RemoveSpecialAbilityEffectEntry(SpecialAbilityEffectEntry entryToRemove)
+        {
+            m_SpecialAbilityEffectEntriesToRemove.Add(entryToRemove);
+
+            if (m_RemoveSpecialAbilityEffectTimer == null)
+            {
+                m_RemoveSpecialAbilityEffectTimer = new RemoveSpecialAbilityEffectTimer(this);
+                m_RemoveSpecialAbilityEffectTimer.Start();
+            }
+
+            else
+            {
+                if (!m_RemoveSpecialAbilityEffectTimer.Running)
+                    m_RemoveSpecialAbilityEffectTimer.Start();
+            }
+        }
+
+        public void GetSpecialAbilityEntryValue(SpecialAbilityEffect effectType, out double value)
+        {
+            double totalValue = 0;
+
+            if (m_SpecialAbilityEffectEntries != null)
+            {
+                SpecialAbilityEffectLookupInProgress = true;
+
+                foreach (SpecialAbilityEffectEntry entry in m_SpecialAbilityEffectEntries)
+                {
+                    if (entry.m_SpecialAbilityEffect == effectType && DateTime.UtcNow < entry.m_Expiration)
+                        totalValue += entry.m_Value;
+                }
+
+                SpecialAbilityEffectLookupInProgress = false;
+            }
+
+            value = totalValue;
+        }
+
+        #endregion
     }
 }

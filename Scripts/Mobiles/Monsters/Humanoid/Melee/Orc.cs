@@ -41,8 +41,6 @@ namespace Server.Mobiles
 			Karma = -1500;
 		}
 
-		public override int Meat { get { return 1; } }
-
 		public override void OnDeath( Container c )
 		{			
     		base.OnDeath( c );

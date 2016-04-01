@@ -498,6 +498,7 @@
     <Compile Include="Items\Weapons\Other\Wooden\ArcanistsWildStaff.cs" />
     <Compile Include="Items\Weapons\Other\Wooden\HardenedWildStaff.cs" />
     <Compile Include="Items\Weapons\Other\Wooden\ThornedWildStaff.cs" />
+    <Compile Include="Mobiles\Bosses\Minions\RockGuar.cs" />
     <Compile Include="Mobiles\Events\DeDOS\DeDOSGiantDataCrystal.cs" />
     <Compile Include="Mobiles\Events\DeDOS\DeDOSDataCrystal.cs" />
     <Compile Include="Mobiles\Events\DeDOS\DeDOSKynDragonStatue.cs" />
@@ -692,7 +693,6 @@
     <Compile Include="Mobiles\Bosses\Misc\SanguinPike.cs" />
     <Compile Include="Mobiles\Bosses\Misc\SanguineousTrap.cs" />
     <Compile Include="Mobiles\Bosses\Sanguineous.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\RockGuar.cs" />
     <Compile Include="Mobiles\Bosses\Lodestone.cs" />
     <Compile Include="Mobiles\Bosses\Minions\LavaElemental.cs" />
     <Compile Include="Mobiles\Bosses\Misc\HarmonicRefractor.cs" />
@@ -984,18 +984,6 @@
     <Compile Include="Misc\MonsterCoin.cs" />
     <Compile Include="Mobiles\Bosses\AncientNecromancer.cs" />
     <Compile Include="Mobiles\Bosses\EmperorDragon.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\GiantDemon.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\Turkey.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\AncientHellhound.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\GreaterPhoenix.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\PrimalLich.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\RisingColossus.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\Rotworm.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\StoneGolem.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\Bloodworm.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\ArmoredCharger.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\Hydra.cs" />
-    <Compile Include="Mobiles\Bosses\GenericBodies\HugeDragon.cs" />
     <Compile Include="Mobiles\Bosses\Maggot.cs" />
     <Compile Include="Mobiles\Bosses\Minions\DiseasedViscera.cs" />
     <Compile Include="Mobiles\Bosses\Minions\Entrail.cs" />
@@ -3813,12 +3801,6 @@
     <Compile Include="Mobiles\Tameables\Cat.cs" />
     <Compile Include="Mobiles\Tameables\Dog.cs" />
     <Compile Include="Mobiles\Tameables\Rat.cs" />
-    <Compile Include="Mobiles\Familiars\BaseFamiliar.cs" />
-    <Compile Include="Mobiles\Familiars\DarkWolf.cs" />
-    <Compile Include="Mobiles\Familiars\DeathAdder.cs" />
-    <Compile Include="Mobiles\Familiars\HordeMinion.cs" />
-    <Compile Include="Mobiles\Familiars\ShadowWisp.cs" />
-    <Compile Include="Mobiles\Familiars\VampireBat.cs" />
     <Compile Include="Mobiles\Guards\ArcherGuard.cs" />
     <Compile Include="Mobiles\Guards\BaseGuard.cs" />
     <Compile Include="Mobiles\Guards\WarriorGuard.cs" />
@@ -3980,7 +3962,7 @@
     <Compile Include="Mobiles\Monsters\LBR\Meers\MeerMage.cs" />
     <Compile Include="Mobiles\Monsters\LBR\Meers\MeerWarrior.cs" />
     <Compile Include="Mobiles\Tameables\HellHound.cs" />
-    <Compile Include="Mobiles\Monsters\Mammal\Melee\VorpalBunny.cs" />
+    <Compile Include="Mobiles\Animals\Misc\VorpalBunny.cs" />
     <Compile Include="Mobiles\Tameables\DarkWisp.cs" />
     <Compile Include="Mobiles\Monsters\Misc\Magic\EtherealWarrior.cs" />
     <Compile Include="Mobiles\Monsters\Misc\Magic\Pixie.cs" />

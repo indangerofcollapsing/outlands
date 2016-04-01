@@ -48,7 +48,6 @@ namespace Server.Mobiles
         }
 
         public override bool CanFly { get { return true; } }
-        public override int Feathers { get { return 100; } }
         public override int GetDeathSound() { return 0x072; }
 
         public override bool OnBeforeDeath()

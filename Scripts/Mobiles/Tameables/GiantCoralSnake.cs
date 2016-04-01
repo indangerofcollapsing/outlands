@@ -42,9 +42,7 @@ namespace Server.Mobiles
 
             PackItem(new Bone(6));
         }
-
-        public override HideType HideType { get { return HideType.Spined; } }
-
+        
         public override Poison PoisonImmune { get { return Poison.Deadly; } }
         public override Poison HitPoison { get { return Poison.Deadly; } }
 

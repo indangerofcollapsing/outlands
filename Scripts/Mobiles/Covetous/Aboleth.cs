@@ -59,9 +59,7 @@ namespace Server.Mobiles
         public override int GetHurtSound(){return 0x386;}
         public override int GetDeathSound(){return 0x58D;}
         public override int GetIdleSound(){return 0x34E;}
-
-        public override int Meat { get { return 1; } }
-
+        
         public Aboleth(Serial serial): base(serial)
         {
         }

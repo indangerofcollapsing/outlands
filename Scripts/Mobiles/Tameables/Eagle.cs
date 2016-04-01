@@ -36,12 +36,7 @@ namespace Server.Mobiles
             ControlSlots = 1;
             MinTameSkill = 30;
         }
-
-        public override MeatType MeatType { get { return MeatType.Bird; } }
-        public override int Feathers { get { return 75; } }
-
-        public override bool CanFly { get { return true; } }
-
+        
         public override int TamedItemId { get { return 8434; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return -15; } }
@@ -62,7 +57,11 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 0; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 50; } }        
+        public override int TamedBaseVirtualArmor { get { return 50; } }
+
+        public override bool HasFeathers { get { return true; } }
+
+        public override bool CanFly { get { return true; } }
 
         public Eagle(Serial serial): base(serial)
         {

@@ -32,39 +32,7 @@ namespace Server.Engines.Craft
             if (type == typeof(Cloth)) return true;
 
             return recycleable;
-        }
-
-        public static Type GetCraftResourceType(CraftResource craftResource)
-        {            
-            switch (craftResource)
-            {
-                case CraftResource.Iron: return typeof(IronIngot); break;
-                case CraftResource.DullCopper: return typeof(DullCopperIngot); break;
-                case CraftResource.ShadowIron: return typeof(ShadowIronIngot); break;
-                case CraftResource.Copper: return typeof(CopperIngot); break;
-                case CraftResource.Bronze: return typeof(BronzeIngot); break;
-                case CraftResource.Gold: return typeof(GoldIngot); break;
-                case CraftResource.Agapite: return typeof(AgapiteIngot); break;
-                case CraftResource.Verite: return typeof(VeriteIngot); break;
-                case CraftResource.Valorite: return typeof(ValoriteIngot); break;
-                case CraftResource.Lunite: return typeof(LuniteIngot); break;
-
-                case CraftResource.RegularLeather: return typeof(Leather); break;
-                case CraftResource.SpinedLeather: return typeof(SpinedLeather); break;
-                case CraftResource.HornedLeather: return typeof(HornedLeather); break;
-                case CraftResource.BarbedLeather: return typeof(BarbedLeather); break;
-
-                case CraftResource.RegularWood: return typeof(Board); break;
-                case CraftResource.OakWood: return typeof(OakBoard); break;
-                case CraftResource.AshWood: return typeof(AshBoard); break;
-                case CraftResource.YewWood: return typeof(YewBoard); break;
-                case CraftResource.Heartwood: return typeof(HeartwoodBoard); break;
-                case CraftResource.Bloodwood: return typeof(BloodwoodBoard); break;
-                case CraftResource.Frostwood: return typeof(FrostwoodBoard); break;
-            }
-
-            return null;
-        }
+        }        
         
 		public static void Do( Mobile from, CraftSystem craftSystem, BaseTool tool )
 		{
@@ -230,7 +198,7 @@ namespace Server.Engines.Craft
 
                             if (recycleItem.Resource != CraftResource.Iron)
                             {
-                                resourceType = GetCraftResourceType(recycleItem.Resource);
+                                resourceType = CraftResources.GetCraftResourceType(recycleItem.Resource);
 
                                 if (resourceType == null)
                                     resourceType = typeof(IronIngot);
@@ -245,7 +213,7 @@ namespace Server.Engines.Craft
 
                             if (recycleItem.Resource != CraftResource.RegularLeather)
                             {
-                                resourceType = GetCraftResourceType(recycleItem.Resource);
+                                resourceType = CraftResources.GetCraftResourceType(recycleItem.Resource);
 
                                 if (resourceType == null)
                                     resourceType = typeof(Leather);
@@ -260,7 +228,7 @@ namespace Server.Engines.Craft
 
                             if (recycleItem.Resource != CraftResource.RegularWood)
                             {
-                                resourceType = GetCraftResourceType(recycleItem.Resource);
+                                resourceType = CraftResources.GetCraftResourceType(recycleItem.Resource);
 
                                 if (resourceType == null)
                                     resourceType = typeof(Board);

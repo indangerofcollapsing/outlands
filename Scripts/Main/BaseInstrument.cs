@@ -347,19 +347,16 @@ namespace Server.Items
             double duration = 60;
 
             double effectScalar = 1.0;
-            double minimumDifficultyThreshold = 20;
             double minimumEffectScalar = .20;
             double tamedEffectScalar = .5;
+            double difficultyScalar = .01;
 
             if (bc_Target != null)
             {
-                if (targetDifficulty > minimumDifficultyThreshold)
-                {
-                    effectScalar = 1 - ((targetDifficulty - 20) * .02);
+                effectScalar = 1 - (targetDifficulty * difficultyScalar);
 
-                    if (effectScalar < minimumEffectScalar)
-                        effectScalar = minimumEffectScalar;
-                }
+                if (effectScalar < minimumEffectScalar)
+                    effectScalar = minimumEffectScalar;                
 
                 if (bc_Target.Controlled && bc_Target.ControlMaster is PlayerMobile)
                     effectScalar *= tamedEffectScalar;

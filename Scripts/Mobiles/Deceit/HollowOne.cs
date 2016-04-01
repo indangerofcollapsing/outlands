@@ -47,10 +47,7 @@ namespace Server.Mobiles
         }
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
-        public override int Meat { get { return 4; } }
-        public override int Hides { get { return 25; } }
-        
+                
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);

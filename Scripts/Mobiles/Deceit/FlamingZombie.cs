@@ -39,10 +39,7 @@ namespace Server.Mobiles
         }
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
-        public override bool CanRummageCorpses { get { return true; } }
-        public override int Meat { get { return 2; } }
-
+        
         public override void SetUniqueAI()
         {           
             UniqueCreatureDifficultyScalar = 1.2;

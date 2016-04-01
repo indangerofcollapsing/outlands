@@ -49,8 +49,6 @@ namespace Server.Mobiles
         public override Poison PoisonImmune { get { return Poison.Deadly; } }
         public override Poison HitPoison { get { return Poison.Deadly; } }
 
-        public override HideType HideType { get { return HideType.Spined; } }
-
         public override int TamedItemId { get { return 9663; } }
         public override int TamedItemHue { get { return Hue; } }
         public override int TamedItemXOffset { get { return 0; } }

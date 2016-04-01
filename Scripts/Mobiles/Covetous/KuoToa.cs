@@ -44,9 +44,7 @@ namespace Server.Mobiles
             CombatHealActionMinDelay = 10;
             CombatHealActionMaxDelay = 20;
         }
-
-        public override int Meat { get { return 1; } }
-
+        
         public override bool OnBeforeDeath()
         {
             return base.OnBeforeDeath();

@@ -81,9 +81,7 @@ namespace Server.Mobiles
                 SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, -1, true, "", "The beast gores you with their horns, causing you to bleed!");
             }
         }
-
-		public override int Meat { get { return 4; } }
-
+        
         public override void OnThink()
         {
             base.OnThink();

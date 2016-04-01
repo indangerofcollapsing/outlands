@@ -109,11 +109,7 @@ namespace Server.Mobiles
 
         public override bool AlwaysMiniBoss { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
-
-        public override HideType HideType { get { return HideType.Barbed; } }
-        public override int Hides { get { return 20; } }
-        public override int Meat { get { return 19; } }
-
+        
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);

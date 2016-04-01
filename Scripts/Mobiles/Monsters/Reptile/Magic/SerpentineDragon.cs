@@ -38,9 +38,6 @@ namespace Server.Mobiles
 			Karma = 15000;			
 		}
                 
-        public override int Scales { get { return 6; } }
-        public override ScaleType ScaleType { get { return (Utility.RandomBool() ? ScaleType.Black : ScaleType.White); } }
-
         public override void SetUniqueAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;

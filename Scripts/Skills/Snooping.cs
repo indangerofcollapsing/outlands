@@ -10,7 +10,6 @@ namespace Server.SkillHandlers
 {
 	public class Snooping
 	{
-
 		public static void Configure()
 		{
 			Container.SnoopHandler = new ContainerSnoopHandler( Container_Snoop );
@@ -26,20 +25,20 @@ namespace Server.SkillHandlers
 		    Map map = from.Map;
 
 			if ( to.Player )
-				return from.CanBeHarmful( to, false, true ); // normal restrictions
+				return from.CanBeHarmful( to, false, true );
 
 			if ( map != null && (map.Rules & MapRules.HarmfulRestrictions) == 0 )
-				return true; // felucca you can snoop anybody
+				return true;
 
 			GuardedRegion reg = (GuardedRegion) to.Region.GetRegion( typeof( GuardedRegion ) );
 
 			if ( reg == null || reg.IsDisabled() )
-				return true; // not in town? we can snoop any npc
+				return true;
 
 			BaseCreature cret = to as BaseCreature;
 
 			if ( to.Body.IsHuman && (cret == null || (!cret.AlwaysAttackable && !cret.IsMurderer())) )
-				return false; // in town we cannot snoop blue human npcs
+				return false;
 
 			return true;
 		}
@@ -70,7 +69,15 @@ namespace Server.SkillHandlers
 					return;
 				}
 
-				if ( root != null && from.AccessLevel == AccessLevel.Player && from.Skills[SkillName.Snooping].Value < Utility.Random( 100 ) )
+                double noticeChance = 1.0 - (from.Skills[SkillName.Snooping].Value / 100);
+
+                if (noticeChance > .5)
+                    noticeChance = .5;
+
+                if (noticeChance < .05)
+                    noticeChance = .05;
+
+				if (Utility.RandomDouble() <= noticeChance && root != null && from.AccessLevel == AccessLevel.Player)
 				{
 					Map map = from.Map;
 
@@ -93,9 +100,27 @@ namespace Server.SkillHandlers
 				if ( from.AccessLevel == AccessLevel.Player )
 					FameKarmaTitles.AwardKarma( from, -4, true );
 
+                from.CheckTargetSkill(SkillName.Snooping, cont, 0.0, 100.0, 1.0);
 
+                double stealingSkill = from.Skills[SkillName.Snooping].Value / 100;
+                double successChance = stealingSkill * .75;
 
-				if ( from.AccessLevel > AccessLevel.Player || from.CheckTargetSkill( SkillName.Snooping, cont, 0.0, 100.0, 1.0 ) )
+                if (from.Hidden)
+                {
+                    double hidingBonus = .25;
+
+                    if (hidingBonus > stealingSkill)
+                        hidingBonus = stealingSkill;
+
+                    successChance += hidingBonus;
+                }
+
+                if (from.LastCombatTime + TimeSpan.FromSeconds(30) > DateTime.UtcNow)
+                    successChance -= .25;
+
+                bool successful = (Utility.RandomDouble() <= successChance);
+
+                if (from.AccessLevel > AccessLevel.Player || successful)
 				{
 					if ( cont is TrapableContainer && ((TrapableContainer)cont).ExecuteTrap( from ) )
 						return;

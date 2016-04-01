@@ -40,9 +40,6 @@ namespace Server.Mobiles
         public override Poison HitPoison { get { return Poison.Deadly; } }
         public override Poison PoisonImmune { get { return Poison.Deadly; } }
 
-        public override int Meat { get { return 4; } }
-        public override int Hides { get { return 15; } }
-
         public override void SetUniqueAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;

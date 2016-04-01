@@ -96,9 +96,7 @@ namespace Server.Mobiles
                 m_NextSpeechAllowed = DateTime.UtcNow + NextSpeechDelay;
             }
         }
-
-		public override int Meat { get { return 3; } }
-		
+        		
 		public override int GetAngerSound(){return 0x597;}
 		public override int GetIdleSound(){return 0x596;}
 		public override int GetAttackSound(){return 0x599;}
