@@ -748,7 +748,7 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				new FillableEntry( typeof( NightSightPotion ) ),
+				new FillableEntry( typeof( MagicResistPotion ) ),
 				new FillableEntry( typeof( LesserCurePotion ) ),
 				new FillableEntry( typeof( AgilityPotion ) ),
 				new FillableEntry( typeof( StrengthPotion ) ),

@@ -37,6 +37,8 @@ namespace Server.Items
 		Invisibility,
 		Parasitic,
 		Darkglow,
+        MagicResist,
+        GreaterMagicResist
 	}
 
 	public abstract class BasePotion : Item, ICraftable, ICommodity

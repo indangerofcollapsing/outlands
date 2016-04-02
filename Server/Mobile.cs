@@ -350,9 +350,11 @@ namespace Server
         Courage,
         Fortitude,
         Backlash,
-
         Expertise,
         Evasion,
+        MagicResist,        
+        
+        //UOACZ
         Inspiration,
         EmergencyRepairs,
         IronFists,
@@ -364,7 +366,6 @@ namespace Server
         Hardy,
         RapidTreatment,
         SuperiorHealing,
-
         Ignite,
         Bile,
         ShieldOfBones

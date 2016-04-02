@@ -30,13 +30,9 @@ namespace Server.Spells.Second
 
 		public override bool CheckCast()
 		{
-			if ( Core.AOS )
-				return true;
-
 			if ( m_Registry.ContainsKey( Caster ) )
 			{
-				Caster.SendLocalizedMessage( 1005559 ); // This spell is already in effect.
-				
+				Caster.SendLocalizedMessage( 1005559 ); // This spell is already in effect.				
                 return false;
 			}
 
@@ -88,30 +84,16 @@ namespace Server.Spells.Second
 
 		public override void OnCast()
 		{
-            if (Core.AOS)
-            {
-                if (CheckSequence())
-                    Toggle(Caster, Caster);
+            BaseCreature casterCreature = Caster as BaseCreature;
 
-                FinishSequence();
+            if (casterCreature != null)
+            {
+                if (casterCreature.SpellTarget != null)                    
+                    Target(casterCreature.SpellTarget);                    
             }
 
-            //Changed by IPY
-            else
-            {
-                BaseCreature casterCreature = Caster as BaseCreature;
-
-                if (casterCreature != null)
-                {
-                    if (casterCreature.SpellTarget != null)                    
-                        Target(casterCreature.SpellTarget);                    
-                }
-
-                else
-                {
-                    Caster.Target = new InternalTarget(this);
-                }
-            }
+            else                
+                Caster.Target = new InternalTarget(this);   
 		}
 
 		public void Target( Mobile m )
@@ -153,7 +135,6 @@ namespace Server.Spells.Second
 			FinishSequence();
 		}
 
-        //Changed by IPY
 		private class InternalTimer : Timer
 		{
 			private Mobile m_Owner;
@@ -178,7 +159,6 @@ namespace Server.Spells.Second
 				m_Val = val;
 			}
            
-            //Changed by IPY
 			protected override void OnTick()
 			{
 				m_Owner.EndAction( typeof( ProtectionSpell ) );
@@ -189,7 +169,6 @@ namespace Server.Spells.Second
 			}
 		}
  
-        //Changed by IPY
 		private class InternalTarget : Target
 		{
 			private ProtectionSpell m_Owner;
@@ -201,10 +180,8 @@ namespace Server.Spells.Second
 
 			protected override void OnTarget( Mobile from, object o )
 			{
-				if ( o is Mobile )
-				{
-					m_Owner.Target( (Mobile)o );
-				}
+				if ( o is Mobile )				
+					m_Owner.Target( (Mobile)o );				
 			}
 
 			protected override void OnTargetFinish( Mobile from )

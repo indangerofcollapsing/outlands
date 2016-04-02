@@ -35,7 +35,7 @@ namespace Server.Mobiles
 
 				Add( new GenericBuyInfo( typeof( MortarPestle ), 8, 10, 0xE9B, 0 ) );
 
-				Add( new GenericBuyInfo( typeof( NightSightPotion ), 15, 10, 0xF06, 0 ) ); 
+                Add(new GenericBuyInfo(typeof(MagicResistPotion), 15, 10, 0xF06, 0)); 
 				Add( new GenericBuyInfo( typeof( AgilityPotion ), 15, 10, 0xF08, 0 ) );
 				Add( new GenericBuyInfo( typeof( StrengthPotion ), 15, 10, 0xF09, 0 ) );
 				Add( new GenericBuyInfo( typeof( RefreshPotion ), 15, 10, 0xF0B, 0 ) );
@@ -62,7 +62,7 @@ namespace Server.Mobiles
 				Add( typeof( MortarPestle ), 4 );
 				Add( typeof( HairDye ), 19 );
 
-				Add( typeof( NightSightPotion ), 3 );
+                Add( typeof(MagicResistPotion), 3);
 				Add( typeof( AgilityPotion ), 3 );
 				Add( typeof( StrengthPotion ), 3 );
 				Add( typeof( RefreshPotion ), 3 );

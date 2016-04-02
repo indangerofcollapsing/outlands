@@ -421,7 +421,7 @@ namespace Server.Items
             switch (m_Type)
             {
                 default:
-                case PotionEffect.Nightsight: return new NightSightPotion();
+                case PotionEffect.Nightsight: return new MagicResistPotion();
 
                 case PotionEffect.CureLesser: return new LesserCurePotion();
                 case PotionEffect.Cure: return new CurePotion();

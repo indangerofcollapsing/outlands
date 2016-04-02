@@ -35,8 +35,7 @@ namespace Server.Engines.Craft
             return 0.0; // 0%
         }
 
-        private DefAlchemy()
-            : base(1, 1, 1.25)// base( 1, 1, 3.1 )
+        private DefAlchemy(): base(1, 1, 1.25)
         {
         }
 
@@ -169,8 +168,11 @@ namespace Server.Engines.Craft
             index = AddCraft(1, typeof(GreaterAgilityPotion), "Agility Potions", "Greater Agility Potion", 35.0, 85.0, typeof(Bloodmoss), 1044354, 3, 1044362);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            //Nightsight Potion
-            index = AddCraft(1, typeof(NightSightPotion), "Nightsight Potions", "Nightsight Potion", -25.0, 25.0, typeof(SpidersSilk), 1044360, 1, 1044368);
+            //Magic Resist Potion
+            index = AddCraft(1, typeof(MagicResistPotion), "Magic Resist Potions", "Magic Resist Potion", 55.0, 105.0, typeof(SpidersSilk), 1044360, 4, 1044368);
+            AddRes(index, typeof(Bottle), 1044529, 1, 500315);
+
+            index = AddCraft(1, typeof(GreaterMagicResistPotion), "Magic Resist Potions", "Greater Magic Resist Potion", 75.0, 125.0, typeof(SpidersSilk), 1044360, 8, 1044368);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Poison Potion

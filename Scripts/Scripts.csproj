@@ -271,6 +271,9 @@
     <Compile Include="Items\Minor Artifacts\StaffOfPower.cs" />
     <Compile Include="Items\Minor Artifacts\VioletCourage.cs" />
     <Compile Include="Items\Minor Artifacts\WrathOfTheDryad.cs" />
+    <Compile Include="Items\SkillItems\Magical\Potions\MagicResist Potions\GreaterMagicResistPotion.cs" />
+    <Compile Include="Items\SkillItems\Magical\Potions\MagicResist Potions\MagicResistPotion.cs" />
+    <Compile Include="Items\SkillItems\Magical\Potions\MagicResist Potions\BaseMagicResistPotion.cs" />
     <Compile Include="Items\SkillItems\Tools\BaseRunicTool.cs" />
     <Compile Include="Items\SkillItems\Tools\RunicDovetailSaw.cs" />
     <Compile Include="Items\SkillItems\Tools\RunicHammer.cs" />
@@ -3392,7 +3395,6 @@
     <Compile Include="Items\SkillItems\Magical\Potions\Heal Potions\GreaterHealPotion.cs" />
     <Compile Include="Items\SkillItems\Magical\Potions\Heal Potions\HealPotion.cs" />
     <Compile Include="Items\SkillItems\Magical\Potions\Heal Potions\LesserHealPotion.cs" />
-    <Compile Include="Items\SkillItems\Magical\Potions\NightSight.cs" />
     <Compile Include="Items\SkillItems\Magical\Potions\Poison Potions\BasePoisonPotion.cs" />
     <Compile Include="Items\SkillItems\Magical\Potions\Poison Potions\DeadlyPoisonPotion.cs" />
     <Compile Include="Items\SkillItems\Magical\Potions\Poison Potions\GreaterPoisonPotion.cs" />
