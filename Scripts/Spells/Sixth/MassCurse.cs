@@ -35,28 +35,22 @@ namespace Server.Spells.Sixth
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
 		}
 
 		public void Target( IPoint3D p )
 		{
-			if ( !Caster.CanSee( p ) )
-			{
+			if ( !Caster.CanSee( p ) )			
 				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
-			}
+			
 			else if ( SpellHelper.CheckTown( p, Caster ) && CheckSequence() )
 			{
 				SpellHelper.Turn( Caster, p );
-
 				SpellHelper.GetSurfaceTop( ref p );
 
 				List<Mobile> targets = new List<Mobile>();
@@ -69,9 +63,6 @@ namespace Server.Spells.Sixth
 
 					foreach ( Mobile m in eable )
 					{
-						if ( Core.AOS && m == Caster )
-							continue;
-
 						if ( SpellHelper.ValidIndirectTarget( Caster, m ) && Caster.CanSee( m ) && Caster.CanBeHarmful( m, false ) )
 							targets.Add( m );
 					}
@@ -83,17 +74,18 @@ namespace Server.Spells.Sixth
 
 				for ( int i = 0; i < targets.Count; ++i )
 				{
-					Mobile m = targets[i];
+					Mobile mobile = targets[i];
 
-					Caster.DoHarmful( m );
+                    CheckMagicResist(mobile);
 
-                    //Changed by IPY
-					SpellHelper.AddStatCurse( Caster, m, StatType.Str );
-					SpellHelper.AddStatCurse( Caster, m, StatType.Dex );
-					SpellHelper.AddStatCurse( Caster, m, StatType.Int );
+					Caster.DoHarmful( mobile );
+                   
+					SpellHelper.AddStatCurse( Caster, mobile, StatType.Str );
+					SpellHelper.AddStatCurse( Caster, mobile, StatType.Dex );
+					SpellHelper.AddStatCurse( Caster, mobile, StatType.Int );
 
-                    m.FixedParticles(0x374A, 10, 15, 5028, spellHue, 0, EffectLayer.Waist);
-					m.PlaySound( 0x1FB );
+                    mobile.FixedParticles(0x374A, 10, 15, 5028, spellHue, 0, EffectLayer.Waist);
+					mobile.PlaySound( 0x1FB );
 				}
 			}
 

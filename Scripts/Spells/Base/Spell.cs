@@ -204,17 +204,20 @@ namespace Server.Spells
             return m.Skills[SkillName.MagicResist].Value;
         }
 
-        public virtual double GetDamageScalar(Mobile target)
+        public virtual double GetDamageScalar(Mobile target, double damageBonus)
         {   
             PlayerMobile pm_Caster = m_Caster as PlayerMobile;
             BaseCreature bc_Caster = m_Caster as BaseCreature;
+
             PlayerMobile pm_Target = target as PlayerMobile;            
             BaseCreature bc_Target = target as BaseCreature;
 
             bool PlayerCaster = false;
-            bool CreatureCaster = false;
             bool PlayerTarget = false;
+
+            bool CreatureCaster = false;           
             bool CreatureTarget = false;
+
             bool TamedCaster = false;
             bool TamedTarget = false;
 
@@ -248,49 +251,65 @@ namespace Server.Spells
                 }
             }
 
-            double scalar = 1.0;
-
-            double casterEI = m_Caster.Skills[DamageSkill].Value;
-            double targetRS = target.Skills[SkillName.MagicResist].Value;
-                        
-            double spiritSpeakBonus = (0.2 * (m_Caster.Skills[SkillName.SpiritSpeak].Value / 100));           
-
-            m_Caster.CheckSkill(DamageSkill, 0.0, 100.0, 1.0);          
-            
-            //Eval Int
-            if (PlayerCaster && CreatureTarget)
-                scalar *= 1 + ((.4 * (casterEI / 100)) - (.2 * (targetRS / 100)));
-
-            else            
-                scalar *= 1 + ((casterEI - targetRS) / 100 * .2);
-
             DungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(m_Caster, null);
             DungeonArmor.PlayerDungeonArmorProfile targetDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(target, null);
 
-            double SpellDamageInflictedScalar = 1.0;
-            double SpellDamageReceivedScalar = 1.0;
+            double damageScalar = .75;
 
-            if (casterDungeonArmor.MatchingSet && !casterDungeonArmor.InPlayerCombat)   
-                SpellDamageInflictedScalar = casterDungeonArmor.DungeonArmorDetail.SpellDamageInflictedScalar;
+            double evalIntBonus = (m_Caster.Skills[SkillName.EvalInt].Value / 100) * .5;
+            double spiritSpeakBonus = (m_Caster.Skills[SkillName.SpiritSpeak].Value / 100) * .2;
+            double inscriptionBonus = (m_Caster.Skills[SkillName.Inscribe].Value / 100) * .1;
+            double slayerBonus = GetSlayerDamageBonus(target); 
+            double spellDamageInflictedBonus = 0;
+            double spellDamageReceivedBonus = 0;                       
+                       
+            if (casterDungeonArmor.MatchingSet && !casterDungeonArmor.InPlayerCombat)
+                spellDamageInflictedBonus = casterDungeonArmor.DungeonArmorDetail.SpellDamageInflictedBonus;
 
             if (targetDungeonArmor.MatchingSet && !targetDungeonArmor.InPlayerCombat)
-                SpellDamageReceivedScalar = targetDungeonArmor.DungeonArmorDetail.SpellDamageReceivedScalar;            
+                spellDamageReceivedBonus = targetDungeonArmor.DungeonArmorDetail.SpellDamageReceivedBonus; 
+
+            m_Caster.CheckSkill(SkillName.SpiritSpeak, 0.0, 120.0, 1.0);
+
+            double targetMagicResist = target.Skills[SkillName.MagicResist].Value;      
+            double magicResistBonus = 0;
+
+            target.GetSpecialAbilityEntryValue(SpecialAbilityEffect.MagicResist, out magicResistBonus);
+            
+            //Player vs Player
+            if (m_Caster is PlayerMobile && target is PlayerMobile)
+            {
+                evalIntBonus *= .5;
+                spiritSpeakBonus *= .5;
+                inscriptionBonus *= .5;
+
+                slayerBonus = 0;     
+                spellDamageInflictedBonus = 0;
+                damageBonus = 0;
+
+                spellDamageReceivedBonus = 0;
+
+                magicResistBonus = 0;
+            }
+
+            damageScalar += evalIntBonus + spiritSpeakBonus + inscriptionBonus + slayerBonus + spellDamageInflictedBonus + damageBonus - spellDamageReceivedBonus;
+
+            targetMagicResist += magicResistBonus;
 
             //Player Caster
             if (PlayerCaster)
             {   
                 //Player Target
                 if (PlayerTarget)
-                    scalar *= 1;
+                    damageScalar *= 1.0;
 
                 //Tamed Target
                 else if (TamedTarget)                
-                    scalar *= 1.75 * (1 + (spiritSpeakBonus * .5)) * SpellDamageInflictedScalar;
-                
+                    damageScalar *= 2.0;                
 
                 //Creature Target
                 else
-                    scalar *= 2.0 * (1 + spiritSpeakBonus) * SpellDamageInflictedScalar;
+                    damageScalar *= 2.0;
             }
 
             //Tamed Creature Casting
@@ -298,58 +317,71 @@ namespace Server.Spells
             {
                 //Player Target
                 if (PlayerTarget)
-                    scalar *= 1.0 * bc_Caster.PvPSpellDamageScalar * SpellDamageReceivedScalar;
+                    damageScalar *= 1.0;
 
                 //Tamed Target
-                else if (TamedTarget)                
-                    scalar *= 1.75 * (1 + (spiritSpeakBonus * .5));                
+                else if (TamedTarget)
+                    damageScalar *= 2.0;
 
                 //Creature Target
-                else                
-                    scalar *= 2.0 * (1 + spiritSpeakBonus);                
+                else
+                    damageScalar *= 2.0;             
             }
 
             else //Normal Creature Casting
             {
                 //Player Target
                 if (PlayerTarget)
-                    scalar *= 1 * SpellDamageReceivedScalar;
+                    damageScalar *= 1;
 
                 //Tamed Target
-                else if (TamedTarget)                
-                    scalar *= 1.75 * (1 + (spiritSpeakBonus * .5));                
+                else if (TamedTarget)
+                    damageScalar *= 2.0;
 
                 //Creature Target
-                else                
-                    scalar *= 2.0 * (1 + spiritSpeakBonus);                
-            }                      
+                else
+                    damageScalar *= 2.0;            
+            }     
 
             if (CreatureTarget)
-                bc_Target.AlterDamageScalarFrom(m_Caster, ref scalar);
+                bc_Target.AlterDamageScalarFrom(m_Caster, ref damageScalar);
                       
             if (CreatureCaster)
-                bc_Caster.AlterDamageScalarTo(target, ref scalar);
+                bc_Caster.AlterDamageScalarTo(target, ref damageScalar);           
 
-            //Enhanced Spellbook: Slayer Type
-            if (PlayerCaster && CreatureTarget)
-                scalar *= GetSlayerDamageScalar(target);
+            target.Region.SpellDamageScalar(m_Caster, target, ref damageScalar);
 
-            target.Region.SpellDamageScalar(m_Caster, target, ref scalar);
+            //Magic Resist
+            double minDamageReduction = (targetMagicResist * .125) / 100;
+            double maxDamageReduction = (targetMagicResist * .25) / 100;
 
-            if (scalar < 0)
-                scalar = 0;
+            double magicResistScalar = 1 - (minDamageReduction + ((maxDamageReduction - minDamageReduction) * Utility.RandomDouble()));
 
-            return scalar;
+            //TEST
+            m_Caster.Say("Casting Damage Scalar: " + damageScalar.ToString());
+
+            //TEST
+            m_Caster.Say("Magic Resist Scalar: " + magicResistScalar.ToString());
+
+            damageScalar *= magicResistScalar;
+
+            //TEST
+            m_Caster.Say("Final Damage Scalar: " + damageScalar.ToString());
+
+            if (damageScalar < 0)
+                damageScalar = 0;
+
+            return damageScalar;
         }
         
-        public virtual double GetSlayerDamageScalar(Mobile defender)
+        public virtual double GetSlayerDamageBonus(Mobile defender)
         {
-            double scalarBonus = 1.0;
+            double slayerBonus = 0;
 
             PlayerMobile pm = m_Caster as PlayerMobile;
 
             if (pm == null)
-                return scalarBonus;            
+                return slayerBonus;            
 
             Spellbook atkBook;
             BaseCreature bc_Defender = defender as BaseCreature;
@@ -369,23 +401,23 @@ namespace Server.Spells
                         Boolean isTamedTarget = SpellHelper.IsTamedTarget(m_Caster, defender);
 
                         if (isTamedTarget)
-                            scalarBonus = SpellHelper.slayerTamedMultiplier;
+                            slayerBonus = SpellHelper.SlayerTamedBonus;
 
                         else
-                            scalarBonus = SpellHelper.slayerMultiplier;
+                            slayerBonus = SpellHelper.SlayerBonus;
 
                         enhancedSpellbook.OnSpellCast(m_Caster);
                     }
                 }
 
                 else                                   
-                    return scalarBonus;                
+                    return slayerBonus;                
             }
 
             else
-                return scalarBonus;            
+                return slayerBonus;            
 
-            return scalarBonus;
+            return slayerBonus;
         }
 
         public virtual void DoFizzle()

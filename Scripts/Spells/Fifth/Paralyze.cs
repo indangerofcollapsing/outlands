@@ -56,7 +56,7 @@ namespace Server.Spells.Fifth
 				{						
 					duration = 5 + (Caster.Skills[SkillName.Magery].Value * 0.05);
 
-					if (CheckResisted(m))
+					if (CheckMagicResist(m))
 						duration *= 0.5;
 				}
 
@@ -64,19 +64,13 @@ namespace Server.Spells.Fifth
 				{						
 					duration = 10.0 + (Caster.Skills[SkillName.Magery].Value * 0.2);
 
-					if (CheckResisted(m))
+					if (CheckMagicResist(m))
 						duration *= 0.75;
 				}				
-
-				if ( m is PlagueBeastLord )
-				{
-					( (PlagueBeastLord) m ).OnParalyzed( Caster );
-					duration = 120;
-				}
-                
+                                
                 bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, m, EnhancedSpellbookType.Warlock, true, true);
 
-                int spellHue = 0; //PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Paralyze);
+                int spellHue = 0;
 
                 if (enhancedSpellcast)
                 {

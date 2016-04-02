@@ -3005,58 +3005,9 @@ namespace Server.Mobiles
             }
         }
 
-        public override int AbsorbDamage(Mobile attacker, int damage, bool physical, bool melee)
+        public override int AbsorbDamage(Mobile attacker, Mobile defender, int damage, bool physical, bool melee)
         {
-            if (!physical)
-                return damage;
-
-            int virtualArmor = VirtualArmor + VirtualArmorMod;
-
-            if (virtualArmor > 0)
-            {
-                double adjustedVirtualArmor = (double)virtualArmor;
-                double totalValue;
-                double pierceScalar = 1;
-                double virtualArmorMultiplier = .0025;
-
-                GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude, out totalValue);
-                adjustedVirtualArmor += totalValue;
-
-                GetSpecialAbilityEntryValue(SpecialAbilityEffect.Pierce, out totalValue);
-                pierceScalar -= totalValue;
-
-                if (pierceScalar > 1)
-                    pierceScalar = 1;
-
-                if (pierceScalar < 0)
-                    pierceScalar = 0;
-
-                int damageReduction = (int)((double)damage * adjustedVirtualArmor * virtualArmorMultiplier * pierceScalar);
-
-                if (damageReduction > damage)
-                    damageReduction = damage;
-
-                damage -= damageReduction;
-
-                totalValue = 0;
-
-                GetSpecialAbilityEntryValue(SpecialAbilityEffect.ShieldOfBones, out totalValue);
-
-                if (totalValue > 0)
-                {
-                    double damageScalar = 1 - totalValue;
-
-                    if (damageScalar < 0)
-                        damageScalar = 0;
-
-                    damage = (int)(Math.Round((double)damage * damageScalar));
-
-                    if (damage < 0)
-                        damage = 0;
-                }
-            }
-
-            return damage;
+            return BaseArmor.AbsorbDamage(attacker, defender, damage, physical, melee);
         }
 
         public override void Damage(int amount, Mobile from)

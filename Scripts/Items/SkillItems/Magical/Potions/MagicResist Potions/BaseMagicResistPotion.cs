@@ -40,6 +40,7 @@ namespace Server.Items
                 from.PlaySound(0x20F);  //0x3BD              
 
                 from.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.MagicResist, from, MagicResist, DateTime.UtcNow + Duration));
+                from.SendMessage("Your magic resist against creatures has increased by " + MagicResist.ToString() + ".");
 
 				return true;
 			}

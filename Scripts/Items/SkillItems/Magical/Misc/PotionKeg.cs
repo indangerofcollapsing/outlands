@@ -340,7 +340,7 @@ namespace Server.Items
                             //Change the color hue based on the type of the potion
                             switch (item.GetType().BaseType.Name)
                             {
-                                case "NightSightPotion": Hue = 1109; break;
+                                case "BaseMagicResistPotion": Hue = 1109; break;
                                 case "BaseCurePotion": Hue = 44; break;
                                 case "BaseAgilityPotion": Hue = 93; break;
                                 case "BaseStrengthPotion": Hue = 956; break;
@@ -348,6 +348,7 @@ namespace Server.Items
                                 case "BaseRefreshPotion": Hue = 37; break;
                                 case "BaseHealPotion": Hue = 253; break;
                                 case "BaseExplosionPotion": Hue = 419; break;
+
                                 default: break;
                             }
 
@@ -421,7 +422,9 @@ namespace Server.Items
             switch (m_Type)
             {
                 default:
-                case PotionEffect.Nightsight: return new MagicResistPotion();
+                case PotionEffect.LesserMagicResist: return new LesserMagicResistPotion();
+                case PotionEffect.MagicResist: return new MagicResistPotion();
+                case PotionEffect.GreaterMagicResist: return new GreaterMagicResistPotion();
 
                 case PotionEffect.CureLesser: return new LesserCurePotion();
                 case PotionEffect.Cure: return new CurePotion();

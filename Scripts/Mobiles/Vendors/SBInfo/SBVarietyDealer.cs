@@ -24,7 +24,7 @@ namespace Server.Mobiles
 
 				Add( new GenericBuyInfo( typeof( BlankScroll ), 6, 999, 0x0E34, 0 ) );
 
-				Add( new GenericBuyInfo( typeof( MagicResistPotion ), 15, 10, 0xF06, 0 ) );
+				Add( new GenericBuyInfo( typeof( LesserMagicResistPotion ), 15, 10, 0xF06, 0 ) );
 				Add( new GenericBuyInfo( typeof( AgilityPotion ), 15, 10, 0xF08, 0 ) );
 				Add( new GenericBuyInfo( typeof( StrengthPotion ), 15, 10, 0xF09, 0 ) );
 				Add( new GenericBuyInfo( typeof( RefreshPotion ), 15, 10, 0xF0B, 0 ) );
@@ -90,7 +90,7 @@ namespace Server.Mobiles
 
 				Add( typeof( BlankScroll ), 3 );
 
-                Add( typeof(MagicResistPotion), 7);
+                Add( typeof(LesserMagicResistPotion), 7);
 				Add( typeof( AgilityPotion ), 7 );
 				Add( typeof( StrengthPotion ), 7 );
 				Add( typeof( RefreshPotion ), 7 );

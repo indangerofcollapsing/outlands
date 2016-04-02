@@ -65,10 +65,13 @@ namespace Server.Spells.Sixth
 
                 if (rx >= 0 && ry >= 0)
                     eastToWest = false;
+
                 else if (rx >= 0)
                     eastToWest = true;
+
                 else if (ry >= 0)
                     eastToWest = true;
+
                 else
                     eastToWest = false;
 
@@ -156,10 +159,10 @@ namespace Server.Spells.Sixth
             {
                 base.Serialize(writer);
 
-                writer.Write((int)1); //version
+                writer.Write((int)0); //version
 
-                writer.Write((Boolean)m_Enhanced);
-
+                //Version 0
+                writer.Write(m_Enhanced);
                 writer.Write(m_Caster);
                 writer.WriteDeltaTime(m_End);
             }
@@ -169,26 +172,18 @@ namespace Server.Spells.Sixth
                 base.Deserialize(reader);
                 int version = reader.ReadInt();
 
-                switch (version)
+                //Version 0
+                if (version >= 0)
                 {
-                    case 1:
-                    {
-                        m_Enhanced = reader.ReadBool();
-
-                        goto case 0;
-                    }
-
-                    case 0:
-                    {
-                        m_Caster = reader.ReadMobile();
-                        m_End = reader.ReadDeltaTime();
-
-                        m_Timer = new InternalTimer(this, m_End - DateTime.UtcNow);
-                        m_Timer.Start();
-
-                        break;
-                    }
+                    m_Enhanced = reader.ReadBool();
+                    m_Caster = reader.ReadMobile();
+                    m_End = reader.ReadDeltaTime();
                 }
+
+                //-----
+
+                m_Timer = new InternalTimer(this, m_End - DateTime.UtcNow);
+                m_Timer.Start();
             }
 
             public override bool OnMoveOver(Mobile m)

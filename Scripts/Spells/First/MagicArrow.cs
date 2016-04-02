@@ -30,87 +30,69 @@ namespace Server.Spells.First
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
 		}
 
 		public override bool DelayedDamage{ get{ return true; } }
 
-		public void Target( Mobile m )
+		public void Target( Mobile mobile )
 		{
-            if (!Caster.CanSee(m) || m.Hidden)		
+            if (!Caster.CanSee(mobile) || mobile.Hidden)		
 				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
 			
-			else if ( CheckHSequence( m ) )
+			else if ( CheckHSequence( mobile ) )
 			{
 				Mobile source = Caster;
 
-				SpellHelper.Turn( source, m );
+				SpellHelper.Turn( source, mobile );
+				SpellHelper.CheckReflect( (int)this.Circle, ref source, ref mobile );				       
 
-				SpellHelper.CheckReflect( (int)this.Circle, ref source, ref m );
+				double damage = (double)Utility.RandomMinMax(3, 5);
+                double damageBonus = 0;
 
-				double damage;               
+                CheckMagicResist(mobile);	
 
-				damage = Utility.Random( 1, 3 );                
+                bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, mobile, EnhancedSpellbookType.Fire, true, true);
+                Boolean chargedSpellcast = SpellHelper.IsChargedSpell(Caster, mobile, true, Scroll != null);
+                Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, mobile);
 
-                if (Caster is PlayerMobile && !(m is PlayerMobile))
-                    damage += 3;
-
-                if (m.Region is UOACZRegion)
-                    damage = Utility.RandomMinMax(2, 4);
-
-                if (CheckResisted(m))
-                {
-                    damage *= 0.50;
-
-                    m.SendLocalizedMessage(501783); // You feel yourself resisting magical energy.
-                }
-
-				damage *= GetDamageScalar( m );				
-
-                bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, m, EnhancedSpellbookType.Fire, true, true);
-                Boolean chargedSpellcast = SpellHelper.IsChargedSpell(Caster, m, true, Scroll != null);
-                Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, m);
-
-                int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.MagicArrow);
+                int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.MagicArrow);                
 
                 if (enhancedSpellcast)
                 {
                     if (isTamedTarget)
-                        damage *= SpellHelper.enhancedTamedCreatureMultiplier;
+                        damageBonus += SpellHelper.EnhancedSpellTamedCreatureBonus;
 
                     else
-                        damage *= SpellHelper.enhancedMultiplier;
+                        damageBonus += SpellHelper.EnhancedSpellBonus;
                 }
 
                 if (chargedSpellcast)
                 {
                     if (isTamedTarget)
-                        damage *= SpellHelper.chargedTamedCreatureMultiplier;
+                        damageBonus += SpellHelper.ChargedSpellTamedCreatureBonus;
 
                     else
-                        damage *= SpellHelper.chargedMultiplier;
+                        damageBonus += SpellHelper.ChargedSpellBonus;
 
-                    source.MovingParticles(m, 0x36E4, 3, 0, false, true, spellHue, 0, 3006, 4006, 0, 0);
-                    source.MovingParticles(m, 0x36E4, 7, 0, false, true, spellHue, 0, 3006, 4006, 0, 0);
+                    source.MovingParticles(mobile, 0x36E4, 3, 0, false, true, spellHue, 0, 3006, 4006, 0, 0);
+                    source.MovingParticles(mobile, 0x36E4, 7, 0, false, true, spellHue, 0, 3006, 4006, 0, 0);
 
                     source.PlaySound(0x1E5);
                 }
 
                 else
                 {
-                    source.MovingParticles(m, 0x36E4, 5, 0, false, true, spellHue, 0, 3006, 4006, 0, 0);
-
+                    source.MovingParticles(mobile, 0x36E4, 5, 0, false, true, spellHue, 0, 3006, 4006, 0, 0);
                     source.PlaySound(0x1E5);
-                }           
+                }
+
+                damage *= GetDamageScalar(mobile, damageBonus);		
 
 				double chance = 0.25;
 
@@ -121,7 +103,7 @@ namespace Server.Spells.First
 					Timer.DelayCall(TimeSpan.FromSeconds(5), delegate { Caster.EndAction(typeof(MagicArrowSpell)); });
 				}
 
-                SpellHelper.DamageChanceDisturb(this, m, damage, chance);
+                SpellHelper.DamageChanceDisturb(this, mobile, damage, chance);
 			}
 
 			FinishSequence();
@@ -138,10 +120,8 @@ namespace Server.Spells.First
 
 			protected override void OnTarget( Mobile from, object o )
 			{
-				if ( o is Mobile )
-				{
-					m_Owner.Target( (Mobile)o );
-				}
+				if ( o is Mobile )				
+					m_Owner.Target( (Mobile)o );				
 			}
 
 			protected override void OnTargetFinish( Mobile from )

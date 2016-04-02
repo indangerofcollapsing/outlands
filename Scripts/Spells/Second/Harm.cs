@@ -30,90 +30,65 @@ namespace Server.Spells.Second
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
 		}
 
 		public override bool DelayedDamage{ get{ return false; } }
-
-
-		public override double GetSlayerDamageScalar( Mobile target )
+        
+		public void Target( Mobile mobile )
 		{
-			return 1.0; //This spell isn't affected by slayer spellbooks
-		}
+            if (!Caster.CanSee(mobile) || mobile.Hidden)			
+				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.			
 
-		public void Target( Mobile m )
-		{
-            if (!Caster.CanSee(m) || m.Hidden)
+			else if ( CheckHSequence( mobile ) )
 			{
-				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
-			}
+				SpellHelper.Turn( Caster, mobile );
+				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref mobile );
+                
+                double damage = (double)Utility.RandomMinMax(4, 8);
+                double damageBonus = 0;
+                
+                CheckMagicResist(mobile);								
 
-			else if ( CheckHSequence( m ) )
-			{
-				SpellHelper.Turn( Caster, m );
-
-				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
-
-				double damage;
-
-				damage = Utility.Random( 3, 5 );
-
-                if (Caster is PlayerMobile && !(m is PlayerMobile))
-                    damage += 4;
-
-                if (m.Region is UOACZRegion)
-                    damage = Utility.RandomMinMax(3, 6);
-                    
-				if ( CheckResisted( m ) )
-				{
-					damage /= 2;
-
-					m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
-				}
-
-				damage *= GetDamageScalar( m );				
-
-                bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, m, EnhancedSpellbookType.Energy, true, true);
-                Boolean chargedSpellcast = SpellHelper.IsChargedSpell(Caster, m, true, Scroll != null);
-                Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, m);
+                bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, mobile, EnhancedSpellbookType.Energy, true, true);
+                Boolean chargedSpellcast = SpellHelper.IsChargedSpell(Caster, mobile, true, Scroll != null);
+                Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, mobile);
 
                 int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Harm);
 
                 if (enhancedSpellcast)
                 {
                     if (isTamedTarget)
-                        damage *= SpellHelper.enhancedTamedCreatureMultiplier;
+                        damageBonus += SpellHelper.EnhancedSpellTamedCreatureBonus;
 
                     else
-                        damage *= SpellHelper.enhancedMultiplier;
+                        damageBonus += SpellHelper.EnhancedSpellBonus;
                 }
 
                 if (chargedSpellcast)
                 {
                     if (isTamedTarget)
-                        damage *= SpellHelper.chargedTamedCreatureMultiplier;
+                        damageBonus += SpellHelper.ChargedSpellTamedCreatureBonus;
 
                     else
-                        damage *= SpellHelper.chargedMultiplier;
+                        damageBonus += SpellHelper.ChargedSpellBonus;
 
-                    m.FixedParticles(0x374A, 10, 30, 5013, spellHue, 0, EffectLayer.Waist);
-                    m.PlaySound(0x1F1);
+                    mobile.FixedParticles(0x374A, 10, 30, 5013, spellHue, 0, EffectLayer.Waist);
+                    mobile.PlaySound(0x1F1);
                 }
 
                 else
                 {
-                    m.FixedParticles(0x374A, 10, 15, 5013, spellHue, 0, EffectLayer.Waist);
-                    m.PlaySound(0x1F1);
+                    mobile.FixedParticles(0x374A, 10, 15, 5013, spellHue, 0, EffectLayer.Waist);
+                    mobile.PlaySound(0x1F1);
                 }
+
+                damage *= GetDamageScalar(mobile, damageBonus);	
 
                 double chance = 0.25;
 
@@ -124,10 +99,7 @@ namespace Server.Spells.Second
                     Timer.DelayCall(TimeSpan.FromSeconds(5), delegate { Caster.EndAction(typeof(HarmSpell)); });
                 }
 
-                if (m is BaseCreature)
-                    ((BaseCreature)m).OnDamagedBySpell(this.Caster);
-
-                SpellHelper.DamageChanceDisturb(this, m, damage, chance);
+                SpellHelper.DamageChanceDisturb(this, mobile, damage, chance);
 			}
 
 			FinishSequence();
@@ -144,10 +116,8 @@ namespace Server.Spells.Second
 
 			protected override void OnTarget( Mobile from, object o )
 			{
-				if ( o is Mobile )
-				{
-					m_Owner.Target( (Mobile)o );
-				}
+				if ( o is Mobile )				
+					m_Owner.Target( (Mobile)o );				
 			}
 
 			protected override void OnTargetFinish( Mobile from )

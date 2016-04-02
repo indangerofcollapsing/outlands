@@ -287,8 +287,8 @@ namespace Server.Items
             public double MeleeDamageInflictedScalar = 1.0;
             public double MeleeDamageReceivedScalar = 1.0;
 
-            public double SpellDamageInflictedScalar = 1.0;
-            public double SpellDamageReceivedScalar = 1.0;
+            public double SpellDamageInflictedBonus = 0;
+            public double SpellDamageReceivedBonus = 0;
 
             public double BreathDamageReceivedScalar = 1.0;
             public double BleedDamageReceivedScalar = 1.0;
@@ -369,7 +369,7 @@ namespace Server.Items
                         MeditationAllowance = ArmorMeditationAllowance.None;                        
 
                         MeleeDamageReceivedScalar = 1 - (.13 + (.03 * tierLevel));
-                        SpellDamageReceivedScalar = 1 - (.13 + (.03 * tierLevel));
+                        SpellDamageReceivedBonus = .13 + (.03 * tierLevel);
 
                         BandageSelfTimeReduction = 2 + (.5 * tierLevel);
 
@@ -382,7 +382,7 @@ namespace Server.Items
                                                 "Meditation Allowed: 0%",
                                                 "",
                                                 "Melee Damage Reduction: " + Utility.CreatePercentageString(1 - MeleeDamageReceivedScalar),
-                                                "Spell Damage Reduction: " + Utility.CreatePercentageString(1 - SpellDamageReceivedScalar),
+                                                "Spell Damage Reduction: " + Utility.CreatePercentageString(SpellDamageReceivedBonus),
                                                 "Bandage Self Timer Reduction: " + BandageSelfTimeReduction.ToString() + " seconds",
                                                 };
                     break;
@@ -423,7 +423,7 @@ namespace Server.Items
                         DexPenalty = 0;
                         MeditationAllowance = ArmorMeditationAllowance.All;
 
-                        SpellDamageInflictedScalar = 1 + (.15 + (.05 * tierLevel));
+                        SpellDamageInflictedBonus = .15 + (.05 * tierLevel);
                         ReducedSpellManaCostChance = .15 + (.05 * tierLevel);
 
                         gumpText = new string[] { 
@@ -434,7 +434,7 @@ namespace Server.Items
                                                 "Dex Penalty: " + DexPenalty.ToString(),
                                                 "Meditation Allowed: 100%",                                                
                                                  "",
-                                                "Spell Damage Bonus: " + Utility.CreatePercentageString(SpellDamageInflictedScalar - 1),
+                                                "Spell Damage Bonus: " + Utility.CreatePercentageString(SpellDamageInflictedBonus),
                                                 "Chance to Cast Spell At Reduced Mana Cost: " + Utility.CreatePercentageString(ReducedSpellManaCostChance),
                                                 };
                     break;

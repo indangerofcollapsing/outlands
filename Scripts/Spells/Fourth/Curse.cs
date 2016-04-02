@@ -31,16 +31,12 @@ namespace Server.Spells.Fourth
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
 		}
 
 		private static Hashtable m_UnderEffect = new Hashtable();
@@ -50,7 +46,6 @@ namespace Server.Spells.Fourth
 			Mobile m = (Mobile)state;
 
 			m_UnderEffect.Remove( m );
-
 			m.UpdateResistances();
 		}
 
@@ -67,7 +62,7 @@ namespace Server.Spells.Fourth
 
             Timer t = (Timer)m_UnderEffect[m];
 
-            if (Caster.Player && m.Player /*&& Caster != m */ && t == null)	//On OSI you CAN curse yourself and get this effect.
+            if (Caster.Player && m.Player && t == null)	//On OSI you CAN curse yourself and get this effect.
             {
                 TimeSpan duration = SpellHelper.GetDuration(Caster, m);
                 m_UnderEffect[m] = t = Timer.DelayCall(duration, new TimerStateCallback(RemoveEffect), m);
@@ -85,19 +80,19 @@ namespace Server.Spells.Fourth
             m.PlaySound(0x1E1);
         }
 
-		public void Target( Mobile m )
+		public void Target( Mobile mobile )
 		{
-            if (!Caster.CanSee(m) || m.Hidden)
-			{
+            if (!Caster.CanSee(mobile) || mobile.Hidden)			
 				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
-			}
-			else if ( CheckHSequence( m ) )
+			
+			else if ( CheckHSequence( mobile ) )
 			{
-				SpellHelper.Turn( Caster, m );
+				SpellHelper.Turn( Caster, mobile );
+				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref mobile );
 
-				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
+                CheckMagicResist(mobile);
 
-                ApplyEffect(Caster, m);
+                ApplyEffect(Caster, mobile);
 			}
 
 			FinishSequence();

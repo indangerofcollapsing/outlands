@@ -36,28 +36,21 @@ namespace Server.Spells.Sixth
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
 		}
 
 		public override bool DelayedDamage{ get{ return false; } }
 
 		public void Target( Mobile m )
 		{
-            if (!Caster.CanSee(m) || m.Hidden)
-			{
-				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
-			}
+            if (!Caster.CanSee(m) || m.Hidden)			
+				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.			
 
-            //Changed to IPY way
 			if ( Caster.HarmfulCheck( m ) )
 			{
 				if ( Caster.CanBeHarmful( m ) && CheckSequence() )
@@ -80,79 +73,68 @@ namespace Server.Spells.Sixth
 		private class InternalTimer : Timer
 		{
 			private MagerySpell m_Spell;
-			private Mobile m_Target;
+			private Mobile mobile;
 			private Mobile m_Attacker, m_Defender;
 
-			public InternalTimer( MagerySpell spell, Mobile attacker, Mobile defender, Mobile target )
-				: base( TimeSpan.FromSeconds( Core.AOS ? 3.0 : 2.5 ) )
+			public InternalTimer( MagerySpell spell, Mobile attacker, Mobile defender, Mobile target ): base( TimeSpan.FromSeconds( 2.5 ) )
 			{
 				m_Spell = spell;
 				m_Attacker = attacker;
 				m_Defender = defender;
-				m_Target = target;
+				mobile = target;
 
 				Priority = TimerPriority.FiftyMS;
 			}
 
 			protected override void OnTick()
 			{
-				double damage;
-
-                List<Mobile> targets = new List<Mobile>();
                 Map map = m_Attacker.Map;
 
-				damage = Utility.Random( 18, 17 );
+                double damage = (double)Utility.RandomMinMax(20, 35);
+                double damageBonus = 0;
 
-                if (m_Attacker.Region is UOACZRegion)
-                    damage = Utility.RandomMinMax(12, 24);
+                m_Spell.CheckMagicResist(mobile);	
 
-				if ( m_Spell.CheckResisted( m_Target ) )
-				{
-					damage *= 0.70;
-
-					m_Target.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
-				}
-
-				damage *= m_Spell.GetDamageScalar( m_Target );
-
-                bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(m_Spell.Caster, m_Target, EnhancedSpellbookType.Fire, true, true);
-                Boolean chargedSpellcast = SpellHelper.IsChargedSpell(m_Spell.Caster, m_Target, true, m_Spell.Scroll != null);
-                Boolean isTamedTarget = SpellHelper.IsTamedTarget(m_Spell.Caster, m_Target);
+                bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(m_Spell.Caster, mobile, EnhancedSpellbookType.Fire, true, true);
+                Boolean chargedSpellcast = SpellHelper.IsChargedSpell(m_Spell.Caster, mobile, true, m_Spell.Scroll != null);
+                Boolean isTamedTarget = SpellHelper.IsTamedTarget(m_Spell.Caster, mobile);
 
                 int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(m_Spell.Caster, HueableSpell.Explosion);
 
                 if (enhancedSpellcast)
                 {
                     if (isTamedTarget)
-                        damage *= SpellHelper.enhancedTamedCreatureMultiplier;
+                        damageBonus  += SpellHelper.EnhancedSpellTamedCreatureBonus;
 
                     else
-                        damage *= SpellHelper.enhancedMultiplier;
+                        damageBonus += SpellHelper.EnhancedSpellBonus;
                 }
                 
                 if (chargedSpellcast)
                 {
                     if (isTamedTarget)
-                        damage *= SpellHelper.chargedTamedCreatureMultiplier;
+                        damageBonus += SpellHelper.ChargedSpellTamedCreatureBonus;
 
-                    else                    
-                        damage *= SpellHelper.chargedMultiplier;
+                    else
+                        damageBonus += SpellHelper.ChargedSpellBonus;
 
                     Registry.Remove(m_Attacker);
 
-                    m_Target.FixedParticles(0x36BD, 20, 20, 5044, spellHue, 0, EffectLayer.Head);
-                    m_Target.PlaySound(0x307);
+                    mobile.FixedParticles(0x36BD, 20, 20, 5044, spellHue, 0, EffectLayer.Head);
+                    mobile.PlaySound(0x307);
                 }
 
                 else
                 {
                     Registry.Remove(m_Attacker);
 
-                    m_Target.FixedParticles(0x36BD, 20, 10, 5044, spellHue, 0, EffectLayer.Head);
-                    m_Target.PlaySound(0x307);
-                }                 
+                    mobile.FixedParticles(0x36BD, 20, 10, 5044, spellHue, 0, EffectLayer.Head);
+                    mobile.PlaySound(0x307);
+                }
 
-				SpellHelper.Damage( m_Spell, m_Target, damage, 0, 100, 0, 0, 0 );
+                damage *= m_Spell.GetDamageScalar(mobile, damageBonus);
+
+				SpellHelper.Damage(m_Spell, mobile, damage, 0, 100, 0, 0, 0 );
 			}
 		}
 
@@ -167,15 +149,11 @@ namespace Server.Spells.Sixth
 
 			protected override void OnTarget( Mobile from, object o )
 			{
-				if ( m_ExpRegistry.ContainsKey( from ) )
-				{
-					return;
-				}
+				if ( m_ExpRegistry.ContainsKey( from ) )				
+					return;				
 
-				if ( o != null && o is Mobile )
-				{
-					m_Owner.Target( (Mobile)o );
-				}
+				if ( o != null && o is Mobile )				
+					m_Owner.Target( (Mobile)o );				
 			}
 
 			protected override void OnTargetFinish( Mobile from )

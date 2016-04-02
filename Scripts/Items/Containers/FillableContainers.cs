@@ -746,9 +746,10 @@ namespace Server.Items
 			{
 				typeof( Mobiles.Alchemist )
 			},
+
 			new FillableEntry[]
 			{
-				new FillableEntry( typeof( MagicResistPotion ) ),
+				new FillableEntry( typeof( LesserMagicResistPotion ) ),
 				new FillableEntry( typeof( LesserCurePotion ) ),
 				new FillableEntry( typeof( AgilityPotion ) ),
 				new FillableEntry( typeof( StrengthPotion ) ),

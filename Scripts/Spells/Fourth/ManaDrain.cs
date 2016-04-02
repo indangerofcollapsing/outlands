@@ -30,16 +30,12 @@ namespace Server.Spells.Fourth
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
 		}
 
 		private static Dictionary<Mobile, Timer> m_Table = new Dictionary<Mobile, Timer>();
@@ -62,78 +58,48 @@ namespace Server.Spells.Fourth
 			m_Table.Remove( m );
 		}
 
-		public void Target( Mobile m )
+		public void Target( Mobile mobile )
 		{
-            if (!Caster.CanSee(m) || m.Hidden)
-			{
+            if (!Caster.CanSee(mobile) || mobile.Hidden)			
 				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
-			}
-			else if ( CheckHSequence( m ) )
+			
+			else if ( CheckHSequence( mobile ) )
 			{
-				SpellHelper.Turn( Caster, m );
+				SpellHelper.Turn( Caster, mobile );
+				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref mobile );
 
-				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
+				if ( mobile.Spell != null )
+					mobile.Spell.OnCasterHurt();
 
-				if ( m.Spell != null )
-					m.Spell.OnCasterHurt();
-
-				m.Paralyzed = false;
-
-                #region AOS - NOT USED
-                if ( Core.AOS )
-				{
-					int toDrain = 40 + (int)(GetDamageSkill( Caster ) - GetResistSkill( m ));
-
-					if ( toDrain < 0 )
-						toDrain = 0;
-					else if ( toDrain > m.Mana )
-						toDrain = m.Mana;
-
-					if ( m_Table.ContainsKey( m ) )
-						toDrain = 0;
-
-					m.FixedParticles( 0x3789, 10, 25, 5032, EffectLayer.Head );
-					m.PlaySound( 0x1F8 );
-
-					if ( toDrain > 0 )
-					{
-						m.Mana -= toDrain;
-
-						m_Table[m] = Timer.DelayCall( TimeSpan.FromSeconds( 5.0 ), new TimerStateCallback( AosDelay_Callback ), new object[]{ m, toDrain } );
-					}
-                }
-                #endregion
-                else
-				{
-                    int manaLoss = 20;      
+				mobile.Paralyzed = false;
+               
+                int manaLoss = 20;      
                     
-                    if (CheckResisted(m))
-                    {
-                        m.SendLocalizedMessage(501783); // You feel yourself resisting magical energy.                      
+                if (CheckMagicResist(mobile))
+                {
+                    mobile.SendLocalizedMessage(501783); // You feel yourself resisting magical energy. 
+                    manaLoss = 0;
+                }
 
-                        manaLoss = 0;
-                    }
+                bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, mobile, EnhancedSpellbookType.Warlock, true, true);
 
-                    bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, m, EnhancedSpellbookType.Warlock, true, true);
-
-                    if (enhancedSpellcast)
-                    {
-                        manaLoss *= 2;
+                if (enhancedSpellcast)
+                {
+                    manaLoss *= 2;
                         
-                        m.FixedParticles(0x374A, 10, 30, 5032, EffectLayer.Head);
-                        m.PlaySound(0x1F8);
-                    }
+                    mobile.FixedParticles(0x374A, 10, 30, 5032, EffectLayer.Head);
+                    mobile.PlaySound(0x1F8);
+                }
 
-                    else
-                    {
-                        m.FixedParticles(0x374A, 10, 15, 5032, EffectLayer.Head);
-                        m.PlaySound(0x1F8);
-                    }
+                else
+                {
+                    mobile.FixedParticles(0x374A, 10, 15, 5032, EffectLayer.Head);
+                    mobile.PlaySound(0x1F8);
+                }
 
-                    m.Mana -= manaLoss;			
-				}
+                mobile.Mana -= manaLoss;	
 
-				HarmfulSpell( m );
+				HarmfulSpell( mobile );
 			}
 
 			FinishSequence();

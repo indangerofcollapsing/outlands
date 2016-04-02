@@ -30,30 +30,24 @@ namespace Server.Spells.Seventh
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
 		}
 
 		public override bool DelayedDamage{ get{ return true; } }
 
 		public void Target( Mobile m )
 		{
-			if ( !Caster.CanSee( m ) || m.Hidden)
-			{
-				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
-			}
+			if ( !Caster.CanSee( m ) || m.Hidden)			
+				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.	
+		
 			else if ( CheckHSequence( m ) )
 			{
 				SpellHelper.Turn( Caster, m );
-
 				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
 
 				if ( m.Spell != null )
@@ -63,10 +57,9 @@ namespace Server.Spells.Seventh
 
                 int manaLoss = 80;
 
-				if ( CheckResisted( m ) )
+				if ( CheckMagicResist( m ) )
                 {
                     manaLoss = 0;
-
 					m.SendLocalizedMessage( 501783 ); // You feel yourself resisting magical energy.
                 }
 
@@ -96,15 +89,11 @@ namespace Server.Spells.Seventh
 
 		public override double GetResistPercent( Mobile target )
 		{
-            if (target != null && target is PlayerMobile)
-            {
-                return 98.0;
-            }
+            if (target != null && target is PlayerMobile)            
+                return 98.0;            
 
-            else
-            {
-                return base.GetResistPercent(target);
-            }
+            else            
+                return base.GetResistPercent(target);            
 		}
 
 		private class InternalTarget : Target
@@ -118,10 +107,8 @@ namespace Server.Spells.Seventh
 
 			protected override void OnTarget( Mobile from, object o )
 			{
-				if ( o is Mobile )
-				{
-					m_Owner.Target( (Mobile)o );
-				}
+				if ( o is Mobile )				
+					m_Owner.Target( (Mobile)o );				
 			}
 
 			protected override void OnTargetFinish( Mobile from )

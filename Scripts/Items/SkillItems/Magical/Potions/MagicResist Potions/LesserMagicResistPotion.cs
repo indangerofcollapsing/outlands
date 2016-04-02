@@ -3,18 +3,18 @@ using Server;
 
 namespace Server.Items
 {
-	public class GreaterMagicResistPotion : BaseMagicResistPotion
+	public class LesserMagicResistPotion : BaseMagicResistPotion
 	{
-        public override double MagicResist { get { return 100.0; } }
+        public override double MagicResist { get { return 25.0; } }
 		public override TimeSpan Duration{ get{ return TimeSpan.FromMinutes( 2.0 ); } }
 
 		[Constructable]
-		public GreaterMagicResistPotion() : base( PotionEffect.MagicResist )
+		public LesserMagicResistPotion() : base( PotionEffect.MagicResist )
 		{
-            Name = "Greater Magic Resist potion";
+            Name = "Lesser Magic Resist potion";
 		}
 
-		public GreaterMagicResistPotion( Serial serial ) : base( serial )
+		public LesserMagicResistPotion( Serial serial ) : base( serial )
 		{
 		}
 

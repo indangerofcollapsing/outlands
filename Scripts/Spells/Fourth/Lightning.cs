@@ -31,16 +31,12 @@ namespace Server.Spells.Fourth
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
 		}
 
 		public override bool DelayedDamage
@@ -52,67 +48,53 @@ namespace Server.Spells.Fourth
 			} 
 		}
 
-		public void Target( Mobile m )
+		public void Target(Mobile mobile)
 		{
-            if (!Caster.CanSee(m) || m.Hidden)
-			{
-				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
-			}
+            if (!Caster.CanSee(mobile) || mobile.Hidden)			
+				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.			
 
-            else if (CheckHSequence(m))
+            else if (CheckHSequence(mobile))
             {
-                SpellHelper.Turn(Caster, m);
-                SpellHelper.CheckReflect((int)this.Circle, Caster, ref m);
+                SpellHelper.Turn(Caster, mobile);
+                SpellHelper.CheckReflect((int)this.Circle, Caster, ref mobile);
 
-                double damage;
-                                
-                damage = Utility.Random(7, 9);
+                double damage = (double)Utility.RandomMinMax(8, 16);
+                double damageBonus = 0;
 
-                if (Caster is PlayerMobile && !(m is PlayerMobile))
-                    damage += 6;
+                CheckMagicResist(mobile);               
 
-                if (m.Region is UOACZRegion)
-                    damage = Utility.RandomMinMax(7, 14);
-
-                if (CheckResisted(m))
-                {
-                    damage *= 0.75;
-
-                    m.SendLocalizedMessage(501783); // You feel yourself resisting magical energy.
-                }
-
-                damage *= GetDamageScalar(m);                
-
-                bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, m, EnhancedSpellbookType.Energy, true, true);
-                Boolean chargedSpellcast = SpellHelper.IsChargedSpell(Caster, m, true, Scroll != null);
-                Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, m);
+                bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, mobile, EnhancedSpellbookType.Energy, true, true);
+                Boolean chargedSpellcast = SpellHelper.IsChargedSpell(Caster, mobile, true, Scroll != null);
+                Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, mobile);
                 
                 if (enhancedSpellcast)
                 {
                     if (isTamedTarget)
-                        damage *= SpellHelper.enhancedTamedCreatureMultiplier;
+                        damageBonus += SpellHelper.EnhancedSpellTamedCreatureBonus;
 
                     else
-                        damage *= SpellHelper.enhancedMultiplier;
+                        damageBonus += SpellHelper.EnhancedSpellBonus;
                 }
 
                 if (chargedSpellcast)
                 {
                     if (isTamedTarget)
-                        damage *= SpellHelper.chargedTamedCreatureMultiplier;
+                        damageBonus += SpellHelper.ChargedSpellTamedCreatureBonus;
 
                     else
-                        damage *= SpellHelper.chargedMultiplier;
+                        damageBonus += SpellHelper.ChargedSpellBonus;
 
-                    m.BoltEffect(0);     
+                    mobile.BoltEffect(0);     
                 }
 
                 else
-                    m.BoltEffect(0);   
+                    mobile.BoltEffect(0);   
 
                 Caster.PlaySound(0x29);
 
-                SpellHelper.Damage(this, m, damage, 0, 0, 0, 0, 100);
+                damage *= GetDamageScalar(mobile, damageBonus);
+
+                SpellHelper.Damage(this, mobile, damage, 0, 0, 0, 0, 100);
             }
 
 			FinishSequence();

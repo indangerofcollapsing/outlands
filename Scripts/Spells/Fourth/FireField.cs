@@ -106,6 +106,7 @@ namespace Server.Spells.Fourth
             private Mobile m_Caster;
             private int m_Damage;
             private bool m_ResistCheck = true;
+            private double MaxResist = 50.0;
 
             public Boolean m_Enhanced = false;
 
@@ -152,12 +153,10 @@ namespace Server.Spells.Fourth
             {
                 base.Serialize(writer);
 
-                writer.Write((int)2); // version
+                writer.Write((int)0); // version
                
                 writer.Write(m_Caster);
                 writer.WriteDeltaTime(m_End);
-
-                //Version 2
                 writer.Write((Boolean)m_Enhanced);
             }
 
@@ -166,33 +165,19 @@ namespace Server.Spells.Fourth
                 base.Deserialize(reader);
 
                 int version = reader.ReadInt();
-                
-                switch (version)
+
+                //Version 0
+                if (version >= 0)
                 {
-                    case 2:
-                    {
-                        m_Enhanced = reader.ReadBool();
-
-                        goto case 1;
-                    }
-
-                    case 1:
-                    {
-                        m_Caster = reader.ReadMobile();
-
-                        goto case 0;
-                    }
-
-                    case 0:
-                    {
-                        m_End = reader.ReadDeltaTime();
-
-                        m_Timer = new InternalTimer(this, TimeSpan.Zero, true, true);
-                        m_Timer.Start();
-
-                        break;
-                    }
+                    m_Caster = reader.ReadMobile();
+                    m_End = reader.ReadDeltaTime();
+                    m_Enhanced = reader.ReadBool();
                 }
+
+                //-----
+
+                m_Timer = new InternalTimer(this, TimeSpan.Zero, true, true);
+                m_Timer.Start();                
             }
 
             public override bool OnMoveOver(Mobile m)
@@ -201,19 +186,23 @@ namespace Server.Spells.Fourth
                 {
                     m_Caster.DoHarmful(m);
 
-                    int damage = m_Damage;
+                    double damage = (double)m_Damage;
 
-                    if (!Core.AOS && m_ResistCheck && m.CheckSkill(SkillName.MagicResist, 0.0, 30.0, 1.0))
+                    if (m_ResistCheck && m.CheckSkill(SkillName.MagicResist, 0.0, MaxResist, 1.0))
                     {
-                        damage /= 2;
-
+                        damage *= .5;
                         m.SendLocalizedMessage(501783); // You feel yourself resisting magical energy.
                     }
 
                     if (m_Enhanced && m is BaseCreature)
-                        damage = (int)(damage * 1.5);   
+                        damage *= 1.5;
 
-                    AOS.Damage(m, m_Caster, damage, 0, 100, 0, 0, 0);
+                    int finalDamage = (int)Math.Round(damage);
+
+                    if (finalDamage < 1)
+                        finalDamage = 1;
+
+                    AOS.Damage(m, m_Caster, finalDamage, 0, 100, 0, 0, 0);
                     m.PlaySound(0x208);
 
                     if (m is BaseCreature)
@@ -288,19 +277,20 @@ namespace Server.Spells.Fourth
 
                                 caster.DoHarmful(m);
 
-                                int damage = m_Item.m_Damage;
+                                double damage = (double)m_Item.m_Damage;
 
-                                if (!Core.AOS && m_ResistCheck && m.CheckSkill(SkillName.MagicResist, 0.0, 30.0, 1.0))
-                                {
-                                    damage /= 2;
+                                if (m_ResistCheck && m.CheckSkill(SkillName.MagicResist, 0.0, m_Item.MaxResist, 1.0))                                
+                                    damage *= .5;                                
 
-                                    m.SendLocalizedMessage(501783); // You feel yourself resisting magical energy.
-                                }
+                                if (m_Item.m_Enhanced && m is BaseCreature)
+                                    damage *= .5;
+                              
+                                int finalDamage = (int)Math.Round(damage);
 
-                                if (m_Item.m_Enhanced && m is BaseCreature)                              
-                                    damage = (int)(damage * 1.5);                                
+                                if (finalDamage < 1)
+                                    finalDamage = 1;
 
-                                AOS.Damage(m, caster, damage, 0, 100, 0, 0, 0);
+                                AOS.Damage(m, caster, finalDamage, 0, 100, 0, 0, 0);
                                 m.PlaySound(0x208);
 
                                 if (m is BaseCreature)
@@ -316,8 +306,7 @@ namespace Server.Spells.Fourth
         {
             private FireFieldSpell m_Owner;
 
-            public InternalTarget(FireFieldSpell owner)
-                : base(Core.ML ? 10 : 12, true, TargetFlags.None)
+            public InternalTarget(FireFieldSpell owner): base(Core.ML ? 10 : 12, true, TargetFlags.None)
             {
                 m_Owner = owner;
             }

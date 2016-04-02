@@ -128,12 +128,12 @@ namespace Server.Spells.Eighth
 
                     if (enhancedSpellcast)
                     {
-                        duration *= SpellHelper.enhancedSummonDurationMultiplier;
+                        duration *= SpellHelper.EnhancedSummonDurationMultiplier;
 
-                        summon.DamageMin = (int)((double)summon.DamageMin * SpellHelper.enhancedSummonDamageMultiplier);
-                        summon.DamageMax = (int)((double)summon.DamageMax * SpellHelper.enhancedSummonDamageMultiplier);
+                        summon.DamageMin = (int)((double)summon.DamageMin * SpellHelper.EnhancedSummonDamageMultiplier);
+                        summon.DamageMax = (int)((double)summon.DamageMax * SpellHelper.EnhancedSummonDamageMultiplier);
 
-                        summon.SetHitsMax((int)((double)summon.HitsMax * SpellHelper.enhancedSummonHitPointsMultiplier));
+                        summon.SetHitsMax((int)((double)summon.HitsMax * SpellHelper.EnhancedSummonHitPointsMultiplier));
                         summon.Hits = summon.HitsMax;
                     }
 

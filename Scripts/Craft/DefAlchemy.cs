@@ -169,10 +169,13 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Magic Resist Potion
-            index = AddCraft(1, typeof(MagicResistPotion), "Magic Resist Potions", "Magic Resist Potion", 55.0, 105.0, typeof(SpidersSilk), 1044360, 4, 1044368);
+            index = AddCraft(1, typeof(LesserMagicResistPotion), "Magic Resist Potions", "Lesser Magic Resist Potion", 25.0, 75.0, typeof(SpidersSilk), 1044360, 3, 1044368);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(GreaterMagicResistPotion), "Magic Resist Potions", "Greater Magic Resist Potion", 75.0, 125.0, typeof(SpidersSilk), 1044360, 8, 1044368);
+            index = AddCraft(1, typeof(MagicResistPotion), "Magic Resist Potions", "Magic Resist Potion", 50.0, 100.0, typeof(SpidersSilk), 1044360, 6, 1044368);
+            AddRes(index, typeof(Bottle), 1044529, 1, 500315);
+
+            index = AddCraft(1, typeof(GreaterMagicResistPotion), "Magic Resist Potions", "Greater Magic Resist Potion", 75.0, 125.0, typeof(SpidersSilk), 1044360, 9, 1044368);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Poison Potion

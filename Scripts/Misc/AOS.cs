@@ -68,7 +68,7 @@ namespace Server
 			if( !Core.AOS )
 			{
                 if (phys > 0)
-                    damage = m.AbsorbDamage(from, damage, true, false);
+                    damage = m.AbsorbDamage(from, m, damage, true, false);
 
                 if (damage < 1)
                     damage = 1;

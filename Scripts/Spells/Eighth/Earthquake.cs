@@ -29,13 +29,11 @@ namespace Server.Spells.Eighth
             return TimeSpan.FromSeconds(4.0);
         }
 
-
-        public EarthquakeSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+        public EarthquakeSpell(Mobile caster, Item scroll): base(caster, scroll, m_Info)
         {
         }
 
-        public override bool DelayedDamage { get { return !Core.AOS; } }
+        public override bool DelayedDamage { get { return true; } }
 
         public override void OnCast()
         {
@@ -76,47 +74,47 @@ namespace Server.Spells.Eighth
 
                 for (int i = 0; i < targets.Count; ++i)
                 {
-                    Mobile m = targets[i];
+                    Mobile mobile = targets[i];
 
-                    int damage = baseDamage;
+                    double damage = (double)Utility.RandomMinMax(5, 10);
+                    double damageBonus = 0;
 
-                    if (m is PlayerMobile)                    
-                        damage = (int)((double)m.Hits * .6);                    
+                    CheckMagicResist(mobile);
+
+                    if (mobile is PlayerMobile)                    
+                        damage = (double)mobile.Hits * .6;                    
 
                     else
                     {
-                        damage = (int)((double)damage * GetDamageScalar(m));
-
-                        Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, m);
+                        Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, mobile);
 
                         if (enhancedSpellcast)
                         {
                             if (isTamedTarget)
-                                damage = (int)((double)damage * SpellHelper.enhancedTamedCreatureMultiplier);
+                                damageBonus += SpellHelper.EnhancedSpellTamedCreatureBonus;
+
                             else
-                                damage = (int)((double)damage * SpellHelper.enhancedMultiplier);
+                                damageBonus += SpellHelper.EnhancedSpellBonus;
                         }
 
                         if (chargedSpellcast)
                         {
                             if (isTamedTarget)
-                                damage = (int)((double)damage * SpellHelper.chargedTamedCreatureMultiplier);
+                                damageBonus += SpellHelper.ChargedSpellTamedCreatureBonus;
 
                             else
-                                damage = (int)((double)damage * SpellHelper.chargedMultiplier);
+                                damageBonus += SpellHelper.ChargedSpellBonus;
                         }
 
-                        m.FixedEffect(0x3779, 10, 20);
-                    }
+                        mobile.FixedEffect(0x3779, 10, 20);
 
-                    if (damage < 10 && !(m is PlayerMobile))
-                        damage = 10;
+                        damage *= GetDamageScalar(mobile, damageBonus);
+                    }                    
 
-                    Caster.DoHarmful(m);
-                    SpellHelper.Damage(TimeSpan.Zero, m, Caster, damage, 100, 0, 0, 0, 0);
-                }
+                    Caster.DoHarmful(mobile);
 
-                
+                    SpellHelper.Damage(TimeSpan.Zero, mobile, Caster, damage, 100, 0, 0, 0, 0);
+                }                
 
                 if (tremor)
                     CustomizationAbilities.Tremor(Caster, range);

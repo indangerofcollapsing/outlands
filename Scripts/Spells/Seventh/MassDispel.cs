@@ -24,8 +24,7 @@ namespace Server.Spells.Seventh
 
         public override SpellCircle Circle { get { return SpellCircle.Seventh; } }
 
-        public MassDispelSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+        public MassDispelSpell(Mobile caster, Item scroll): base(caster, scroll, m_Info)
         {
         }
 
@@ -35,28 +34,22 @@ namespace Server.Spells.Seventh
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget, casterCreature);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget, casterCreature);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
         }
 
         public void Target(IPoint3D p, Mobile from)
         {
-            if (!Caster.CanSee(p))
-            {
+            if (!Caster.CanSee(p))            
                 Caster.SendLocalizedMessage(500237); // Target can not be seen.
-            }
+            
             else if (CheckSequence())
             {
                 SpellHelper.Turn(Caster, p);
-
                 SpellHelper.GetSurfaceTop(ref p);
 
                 List<Mobile> targets = new List<Mobile>();
@@ -88,17 +81,7 @@ namespace Server.Spells.Seventh
                                        
                     Caster.DoHarmful(m);
 
-                    if (Caster is PlayerMobile)
-                    {
-                        if (Utility.RandomDouble() < 0.2)
-                            m.FixedEffect(0x3779, 10, 20, spellHue, 0);
-
-                        else                            
-                            bc_Creature.ResolveDispel(Caster, true, spellHue);                            
-                    }
-
-                    else
-                        bc_Creature.ResolveDispel(Caster, false, spellHue);                    
+                    bc_Creature.ResolveDispel(Caster, false, spellHue);                    
                 }
             }
 

@@ -26,6 +26,8 @@ namespace Server.Misc
         public static double SkillRangeIncrement = 5.0;
         public static double StatRangeIncrement = 5.0;
 
+        public static bool AdminShowSkillGainChance = false;
+
         public enum Stat 
         {   
             Str,
@@ -429,7 +431,7 @@ namespace Server.Misc
             if (increaseAmount > 5)
                 increaseAmount = 5;
 
-            if (from.AccessLevel > AccessLevel.Player && from.NetState != null)            
+            if (AdminShowSkillGainChance && from.AccessLevel > AccessLevel.Player && from.NetState != null)            
                 from.PrivateOverheadMessage(MessageType.Regular, 2550, false, skillName.ToString() + " " + skillGainChance.ToString(), from.NetState);
 
             if (from.Alive && Utility.RandomDouble() <= skillGainChance)

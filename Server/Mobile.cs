@@ -5823,7 +5823,7 @@ namespace Server
             return true;
         }
 
-        public virtual int AbsorbDamage(Mobile attacker, int damage, bool physical, bool melee)
+        public virtual int AbsorbDamage(Mobile attacker, Mobile defender, int damage, bool physical, bool melee)
         {
             return damage;
         }

@@ -1214,6 +1214,88 @@ namespace Server.Items
             base.OnRemoved(parent);
         }
 
+        public static int AbsorbDamage(Mobile attacker, Mobile defender, int damage, bool physical, bool melee)
+        {
+            if (!physical)
+                return damage;
+
+            double adjustedArmorRating = defender.ArmorRating;
+            double fortitudeBonus = 0;
+            double pierceEffect = 0;
+
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+            BaseCreature bc_Defender = defender as BaseCreature;
+
+            if (pm_Defender != null)
+            {
+                if (pm_Defender.IsUOACZUndead)
+                    adjustedArmorRating = (double)pm_Defender.m_UOACZAccountEntry.UndeadProfile.VirtualArmor;
+            }
+
+            if (bc_Defender != null)
+                adjustedArmorRating = defender.VirtualArmor + defender.VirtualArmorMod;            
+
+            defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude, out fortitudeBonus);
+            adjustedArmorRating += fortitudeBonus;
+
+            defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Pierce, out pierceEffect);
+            adjustedArmorRating *= (1 - pierceEffect);
+
+            if (adjustedArmorRating < 0)
+                adjustedArmorRating = 0;
+
+            double minDamageReduction = (adjustedArmorRating * .25) / 100;
+            double maxDamageReduction = (adjustedArmorRating * .50) / 100;
+
+            double damageScalar = 1 - (minDamageReduction + ((maxDamageReduction - minDamageReduction) * Utility.RandomDouble()));
+
+            damage = (int)(Math.Round((double)damage * damageScalar));
+
+            if (damage < 1)
+                damage = 1;
+
+            #region Armor Durability
+
+            if (pm_Defender != null)
+            {
+                double locationResult = Utility.RandomDouble();
+
+                Item armorItem;
+
+                if (locationResult < 0.07)
+                    armorItem = pm_Defender.NeckArmor;
+
+                else if (locationResult < 0.14)
+                    armorItem = pm_Defender.HandArmor;
+
+                else if (locationResult < 0.28)
+                    armorItem = pm_Defender.ArmsArmor;
+
+                else if (locationResult < 0.43)
+                    armorItem = pm_Defender.HeadArmor;
+
+                else if (locationResult < 0.65)
+                    armorItem = pm_Defender.LegsArmor;
+
+                else
+                    armorItem = pm_Defender.ChestArmor;
+
+                //Check Durability Loss on Armor Piece Hit
+                BaseArmor armorHit = armorItem as BaseArmor;
+
+                if (armorHit != null)
+                {
+                    BaseWeapon attackerWeapon = attacker.Weapon as BaseWeapon;
+
+                    armorHit.OnHit(attackerWeapon, damage);
+                }
+            }
+
+            #endregion
+
+            return damage;
+        }
+
         public virtual int OnHit(BaseWeapon weapon, int damageTaken)
         {
             if (LootType == LootType.Blessed)

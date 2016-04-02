@@ -68,7 +68,7 @@ namespace Server.Spells
             return m.Skills[SkillName.MagicResist].Value;
         }
 
-        public virtual bool CheckResisted(Mobile target)
+        public virtual bool CheckMagicResist(Mobile target)
         {
             double n = GetResistPercent(target);
 

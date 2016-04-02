@@ -5042,83 +5042,9 @@ namespace Server.Mobiles
             }
         }
 
-        public override int AbsorbDamage(Mobile attacker, int damage, bool physical, bool melee)
+        public override int AbsorbDamage(Mobile attacker, Mobile defender, int damage, bool physical, bool melee)
         {
-            if (!physical)
-                return damage;
-
-            BaseCreature bc_Attacker = attacker as BaseCreature;
-
-            double totalValue = 0;
-
-            double adjustedTotalArmor = ArmorRating;
-
-            if (IsUOACZUndead)
-                adjustedTotalArmor = (double)m_UOACZAccountEntry.UndeadProfile.VirtualArmor;
-
-            double pierceScalar = 1;
-
-            GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude, out totalValue);
-            adjustedTotalArmor += totalValue;
-
-            totalValue = 0;
-            GetSpecialAbilityEntryValue(SpecialAbilityEffect.Pierce, out totalValue);
-            pierceScalar -= totalValue;
-
-            if (pierceScalar > 1)
-                pierceScalar = 1;
-
-            if (pierceScalar < 0)
-                pierceScalar = 0;
-
-            adjustedTotalArmor *= (1 - pierceScalar);
-
-            if (adjustedTotalArmor < 0)
-                adjustedTotalArmor = 0;
-
-            double minDamageReduction = (adjustedTotalArmor * .25) / 100;
-            double maxDamageReduction = (adjustedTotalArmor * .50) / 100;
-
-            double damageReduction = 1 - (minDamageReduction + ((maxDamageReduction - minDamageReduction) * Utility.RandomDouble()));
-
-            damage = (int)(Math.Round((double)damage * damageReduction));
-
-            if (damage < 1)
-                damage = 1;
-
-            double chance = Utility.RandomDouble();
-
-            Item armorItem;
-
-            if (chance < 0.07)
-                armorItem = NeckArmor;
-
-            else if (chance < 0.14)
-                armorItem = HandArmor;
-
-            else if (chance < 0.28)
-                armorItem = ArmsArmor;
-
-            else if (chance < 0.43)
-                armorItem = HeadArmor;
-
-            else if (chance < 0.65)
-                armorItem = LegsArmor;
-
-            else
-                armorItem = ChestArmor;
-
-            //Check Durability Loss on Armor Piece Hit
-            BaseArmor armorHit = armorItem as BaseArmor;
-
-            if (armorHit != null)
-            {
-                BaseWeapon attackerWeapon = attacker.Weapon as BaseWeapon;
-
-                armorHit.OnHit(attackerWeapon, damage);
-            }
-
-            return damage;
+            return BaseArmor.AbsorbDamage(attacker, defender, damage, physical, melee);
         }
 
         public override void Damage(int amount, Mobile from)

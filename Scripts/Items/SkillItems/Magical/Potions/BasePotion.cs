@@ -7,7 +7,6 @@ namespace Server.Items
 {
 	public enum PotionEffect
 	{
-		Nightsight,
 		CureLesser,
 		Cure,
 		CureGreater,
@@ -37,6 +36,7 @@ namespace Server.Items
 		Invisibility,
 		Parasitic,
 		Darkglow,
+        LesserMagicResist,
         MagicResist,
         GreaterMagicResist
 	}

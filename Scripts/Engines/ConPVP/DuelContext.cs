@@ -266,7 +266,7 @@ namespace Server.Engines.ConPVP
                     option = "Cure";
                 else if (item is BaseHealPotion)
                     option = "Heal";
-                else if (item is MagicResistPotion)
+                else if (item is LesserMagicResistPotion)
                     option = "Magic Resist";
                 else if (item is BasePoisonPotion)
                     option = "Poison";

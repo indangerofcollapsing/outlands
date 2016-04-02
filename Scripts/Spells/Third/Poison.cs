@@ -28,16 +28,12 @@ namespace Server.Spells.Third
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
         }
 
         public static void ApplyEffect(Mobile Caster, Mobile m)
@@ -116,22 +112,19 @@ namespace Server.Spells.Third
 
         public void Target(Mobile mobile)
         {
-            if (!Caster.CanSee(mobile) || mobile.Hidden)
-            {
-                Caster.SendLocalizedMessage(500237); // Target can not be seen.
-            }
+            if (!Caster.CanSee(mobile) || mobile.Hidden)            
+                Caster.SendLocalizedMessage(500237); // Target can not be seen.            
 
             else if (CheckHSequence(mobile))
             {
-                SpellHelper.Turn(Caster, mobile);
-                
+                SpellHelper.Turn(Caster, mobile);                
                 SpellHelper.CheckReflect((int)this.Circle, Caster, ref mobile);
 
                 mobile.Paralyzed = false;
 
                 bool success = false;
 
-                if (CheckResisted(mobile) && mobile is PlayerMobile)
+                if (CheckMagicResist(mobile) && mobile is PlayerMobile)
                     mobile.SendLocalizedMessage(501783); // You feel yourself resisting magical energy.                
 
                 else
@@ -191,10 +184,8 @@ namespace Server.Spells.Third
 
             protected override void OnTarget(Mobile from, object o)
             {
-                if (o is Mobile)
-                {
-                    m_Owner.Target((Mobile)o);
-                }
+                if (o is Mobile)                
+                    m_Owner.Target((Mobile)o);                
             }
 
             protected override void OnTargetFinish(Mobile from)

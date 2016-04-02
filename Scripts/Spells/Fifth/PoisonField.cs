@@ -24,8 +24,7 @@ namespace Server.Spells.Fifth
 
         public override SpellCircle Circle { get { return SpellCircle.Fifth; } }
 
-        public PoisonFieldSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+        public PoisonFieldSpell(Mobile caster, Item scroll): base(caster, scroll, m_Info)
         {
         }
 
@@ -35,24 +34,18 @@ namespace Server.Spells.Fifth
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)
-                {
-                    this.Target(casterCreature.SpellTarget);
-                }
+                if (casterCreature.SpellTarget != null)                
+                    this.Target(casterCreature.SpellTarget);                
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
         }
 
         public void Target(IPoint3D p)
         {
-            if (!Caster.CanSee(p))
-            {
-                Caster.SendLocalizedMessage(500237); // Target can not be seen.
-            }
+            if (!Caster.CanSee(p))            
+                Caster.SendLocalizedMessage(500237); // Target can not be seen.            
 
             else if (BaseBoat.FindBoatAt(p, Caster.Map) != null)
                 Caster.SendMessage("That location is blocked.");
@@ -173,12 +166,11 @@ namespace Server.Spells.Fifth
             {
                 base.Serialize(writer);
 
-                writer.Write((int)2); // version
+                writer.Write((int)0); //version
 
+                //Version 0
                 writer.Write(m_Caster);
                 writer.WriteDeltaTime(m_End);
-
-                //Version 2
                 writer.Write(m_Enhanced);
             }
 
@@ -188,32 +180,18 @@ namespace Server.Spells.Fifth
 
                 int version = reader.ReadInt();
 
-                switch (version)
+                //Version 0
+                if (version >= 0)
                 {
-                    case 2:
-                    {
-                        m_Enhanced = reader.ReadBool();
-
-                        goto case 1;
-                    }
-
-                    case 1:
-                    {
-                        m_Caster = reader.ReadMobile();
-
-                        goto case 0;
-                    }
-
-                    case 0:
-                    {
-                        m_End = reader.ReadDeltaTime();
-
-                        m_Timer = new InternalTimer(this, TimeSpan.Zero, true, true);
-                        m_Timer.Start();
-
-                        break;
-                    }
+                    m_Caster = reader.ReadMobile();
+                    m_End = reader.ReadDeltaTime();
+                    m_Enhanced = reader.ReadBool();
                 }
+
+                //-----
+
+                m_Timer = new InternalTimer(this, TimeSpan.Zero, true, true);
+                m_Timer.Start();
             }
 
             public void ApplyPoisonTo(Mobile mobile)
@@ -319,6 +297,7 @@ namespace Server.Spells.Fifth
                     {
                         if (m_InLOS && m_CanFit)
                             m_Item.Visible = true;
+
                         else
                             m_Item.Delete();
 

@@ -94,18 +94,18 @@ namespace Server.Spells
             CommandSystem.Register("ToggleDistanceDelay",  AccessLevel.Developer, new CommandEventHandler(ToggleDistanceDelay_OnCommand));
         }
 
-        public const double enhancedSummonDamageMultiplier = 1.25;
-        public const double enhancedSummonHitPointsMultiplier = 1.25;
-        public const double enhancedSummonDurationMultiplier = 1.25;
+        public const double EnhancedSummonDamageMultiplier = 1.25;
+        public const double EnhancedSummonHitPointsMultiplier = 1.25;
+        public const double EnhancedSummonDurationMultiplier = 1.25;
 
-        public const double enhancedMultiplier = 1.25;
-        public const double enhancedTamedCreatureMultiplier = 1.125;
+        public const double EnhancedSpellBonus = .25;
+        public const double EnhancedSpellTamedCreatureBonus = .25;
 
-        public const double chargedMultiplier = 1.5;
-        public const double chargedTamedCreatureMultiplier = 1.25;
+        public const double ChargedSpellBonus = .5;
+        public const double ChargedSpellTamedCreatureBonus = .5;
 
-        public const double slayerMultiplier = 1.5;
-        public const double slayerTamedMultiplier = 1.25;
+        public const double SlayerBonus = .5;
+        public const double SlayerTamedBonus = .5;
 
         public static bool IsChargedSpell(Mobile caster, Mobile target, bool needValidTarget, bool fromScroll)
         {

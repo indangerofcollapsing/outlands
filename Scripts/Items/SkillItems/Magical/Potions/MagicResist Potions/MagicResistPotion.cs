@@ -5,7 +5,7 @@ namespace Server.Items
 {
 	public class MagicResistPotion : BaseMagicResistPotion
 	{
-        public override double MagicResist { get { return 25.0; } }
+        public override double MagicResist { get { return 50.0; } }
 		public override TimeSpan Duration{ get{ return TimeSpan.FromMinutes( 2.0 ); } }
 
 		[Constructable]

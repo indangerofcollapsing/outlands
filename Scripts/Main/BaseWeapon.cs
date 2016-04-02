@@ -1045,11 +1045,7 @@ namespace Server.Items
             }
 
             //Armor Absorption
-            if (PlayerAttacker && PlayerDefender)
-                damage = defender.AbsorbDamage(attacker, damage, true, true);
-
-            else
-                damage = defender.AbsorbDamage(attacker, damage, true, false);
+            defender.AbsorbDamage(attacker, defender, damage, true, false);
 
             //Weapon and Shield Parrying
             BaseShield defenderShield = defender.FindItemOnLayer(Layer.TwoHanded) as BaseShield;

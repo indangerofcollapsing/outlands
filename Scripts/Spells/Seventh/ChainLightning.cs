@@ -24,8 +24,7 @@ namespace Server.Spells.Seventh
 
         public override SpellCircle Circle { get { return SpellCircle.Seventh; } }
 
-        public ChainLightningSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+        public ChainLightningSpell(Mobile caster, Item scroll): base(caster, scroll, m_Info)
         {
         }
 
@@ -39,17 +38,13 @@ namespace Server.Spells.Seventh
                 {
                     IPoint3D targetLocation = casterCreature.SpellTarget.Location as IPoint3D;
 
-                    if (targetLocation != null)
-                    {
-                        this.Target(targetLocation);
-                    }
+                    if (targetLocation != null)                    
+                        this.Target(targetLocation);                    
                 }
             }
 
-            else
-            {
-                Caster.Target = new InternalTarget(this);
-            }
+            else            
+                Caster.Target = new InternalTarget(this);            
         }
 
         public override bool DelayedDamage { get { return true; } }
@@ -61,202 +56,98 @@ namespace Server.Spells.Seventh
 
             else if (SpellHelper.CheckTown(p, Caster) && CheckSequence())
             {
-                int damageMin = 20;
-                int damageMax = 25;
+                bool enhancedSpellcast = false;
+                Boolean chargedSpellcast = false;
 
-                double damage = 0;
+                int radius = 2;
 
-                BaseCreature creatureCaster = Caster as BaseCreature;
+                if (Caster is BaseCreature)
+                    radius += (int)(Math.Floor((Caster.Skills[SkillName.Magery].Value - 75) / 25));
+                
+                SpellHelper.Turn(Caster, p);
 
-                //Creature
-                if (creatureCaster != null)
+                if (p is Item)
+                    p = ((Item)p).GetWorldLocation();
+
+                Map map = Caster.Map;
+
+                IPooledEnumerable nearbyMobiles = map.GetMobilesInRange(new Point3D(p), radius);
+
+                Queue m_Queue = new Queue();
+
+                int targetCount = 0;
+
+                bool playerVsCreatureOccurred = false;
+
+                if (targetCount > 0)
+                    Effects.PlaySound(p, Caster.Map, 0x29);
+
+                foreach (Mobile mobile in nearbyMobiles)
                 {
-                    SpellHelper.Turn(creatureCaster, p);
+                    if (mobile == Caster)
+                        continue;
 
-                    if (p is Item)
-                        p = ((Item)p).GetWorldLocation();
-
-                    Map map = creatureCaster.Map;
-
-                    //Increased Range for High Level Creature Casters
-                    double magerySkill = creatureCaster.Skills[SkillName.Magery].Value;
-
-                    int radius = 2 + (int)(Math.Floor((magerySkill - 75) / 25));
-
-                    if (radius < 2)
-                        radius = 2;
-
-                    IPooledEnumerable nearbyMobiles = map.GetMobilesInRange(new Point3D(p), radius);
-
-                    Queue m_Queue = new Queue();
-
-                    foreach (Mobile mobile in nearbyMobiles)
+                    if (Caster is BaseCreature)
                     {
-                        if (creatureCaster == mobile)
+                        if (!SpecialAbilities.MonsterCanDamage(Caster, mobile))
                             continue;
-
-                        if (!creatureCaster.CanBeHarmful(mobile, false))
-                            continue;
-
-                        if (mobile.AccessLevel > AccessLevel.Player)
-                            continue;
-
-                        if (creatureCaster.ControlMaster is PlayerMobile && !creatureCaster.IsBarded())
-                        {
-                            if (creatureCaster.ControlMaster == mobile)
-                                continue;
-
-                            if (mobile is BaseCreature)
-                            {
-                                BaseCreature bc_Target = mobile as BaseCreature;
-
-                                if (bc_Target.ControlMaster == creatureCaster.ControlMaster && !creatureCaster.IsBarded())
-                                    continue;
-                            }
-                        }
-
-                        bool validTarget = false;
-
-                        if (mobile == creatureCaster.Combatant)
-                            validTarget = true;
-
-                        if (creatureCaster.ControlMaster == null)
-                        {
-                            if (creatureCaster.DictCombatTargeting[CombatTargeting.PlayerAny] > 0)
-                            {
-                                if (mobile is PlayerMobile)
-                                    validTarget = true;
-                            }
-                        }
-
-                        foreach (AggressorInfo aggressor in creatureCaster.Aggressors)
-                        {
-                            if (aggressor.Attacker == mobile || aggressor.Defender == mobile)
-                                validTarget = true;
-                        }
-
-                        foreach (AggressorInfo aggressed in creatureCaster.Aggressed)
-                        {
-                            if (aggressed.Attacker == mobile || aggressed.Defender == mobile)
-                                validTarget = true;
-                        }
-
-                        if (creatureCaster.GetFactionAllegiance(mobile) == BaseCreature.Allegiance.Enemy || creatureCaster.GetEthicAllegiance(mobile) == BaseCreature.Allegiance.Enemy)
-                            validTarget = true;
-
-                        if (!validTarget)
-                            continue;
-
-                        m_Queue.Enqueue(mobile);
                     }
 
-                    nearbyMobiles.Free();
+                    if (!Caster.CanBeHarmful(mobile, false))
+                        continue;
 
-                    while (m_Queue.Count > 0)
+                    if (Caster is PlayerMobile && mobile is BaseCreature)
+                        playerVsCreatureOccurred = true;
+
+                    targetCount++;
+                    m_Queue.Enqueue(mobile);
+                }
+
+                nearbyMobiles.Free();
+
+                if (playerVsCreatureOccurred)
+                {
+                    enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, null, EnhancedSpellbookType.Energy, false, true);
+                    chargedSpellcast = SpellHelper.IsChargedSpell(Caster, null, false, Scroll != null);
+                }
+
+                while (m_Queue.Count > 0)
+                {
+                    Mobile mobile = (Mobile)m_Queue.Dequeue();
+
+                    double damage = (double)Utility.RandomMinMax(20, 25);
+                    double damageBonus = 0;
+                    
+                    CheckMagicResist(mobile);	
+
+                    Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, mobile);
+
+                    if (enhancedSpellcast && mobile is BaseCreature)
                     {
-                        damage = (double)Utility.RandomMinMax(damageMin, damageMax);
+                        if (isTamedTarget)
+                            damageBonus += SpellHelper.EnhancedSpellTamedCreatureBonus;
 
-                        Mobile mobile = (Mobile)m_Queue.Dequeue();
+                        else
+                            damageBonus += SpellHelper.EnhancedSpellBonus;
+                    }
 
-                        if (CheckResisted(mobile))
-                        {
-                            damage *= 0.75;
-                            mobile.SendLocalizedMessage(501783); //You feel yourself resisting magical energy.
-                        }
+                    if (chargedSpellcast && mobile is BaseCreature)
+                    {
+                        if (isTamedTarget)
+                            damageBonus += SpellHelper.ChargedSpellTamedCreatureBonus;
 
-                        Effects.PlaySound(p, creatureCaster.Map, 0x29);
-
-                        damage *= GetDamageScalar(mobile);
-
-                        SpellHelper.Damage(this, mobile, damage, 0, 0, 0, 0, 100);
+                        else
+                            damageBonus += SpellHelper.ChargedSpellBonus;
 
                         mobile.BoltEffect(0);
                     }
-                }
 
-                //Player
-                else
-                {
-                    int radius = 2;
+                    else                    
+                        mobile.BoltEffect(0);
 
-                    SpellHelper.Turn(Caster, p);
+                    damage *= GetDamageScalar(mobile, damageBonus);
 
-                    if (p is Item)
-                        p = ((Item)p).GetWorldLocation();
-
-                    List<Mobile> targets = new List<Mobile>();
-
-                    Map map = Caster.Map;
-
-                    if (map != null)
-                    {
-                        IPooledEnumerable eable = map.GetMobilesInRange(new Point3D(p), radius);
-
-                        foreach (Mobile m in eable)
-                        {
-                            if (Caster.CanBeHarmful(m, false))
-                            {
-                                targets.Add(m);
-                            }
-                        }
-
-                        eable.Free();
-                    }
-
-                    if (targets.Count > 0)
-                    {
-                        Effects.PlaySound(p, Caster.Map, 0x29);
-
-                        bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, null, EnhancedSpellbookType.Energy, false, true);
-                        Boolean chargedSpellcast = SpellHelper.IsChargedSpell(Caster, null, false, Scroll != null);
-                        
-                        for (int i = 0; i < targets.Count; ++i)
-                        {
-                            damage = (double)Utility.RandomMinMax(damageMin, damageMax);
-
-                            Mobile m = targets[i];
-
-                            if (CheckResisted(m))
-                            {
-                                damage *= 0.75;
-                                m.SendLocalizedMessage(501783); //You feel yourself resisting magical energy.
-                            }
-
-                            Boolean isTamedTarget = SpellHelper.IsTamedTarget(Caster, m);
-
-                            if (enhancedSpellcast && m is BaseCreature)
-                            {
-                                if (isTamedTarget)
-                                    damage *= SpellHelper.enhancedTamedCreatureMultiplier;
-
-                                else
-                                    damage *= SpellHelper.enhancedMultiplier;
-                            }
-
-                            if (chargedSpellcast && m is BaseCreature)
-                            {
-                                if (isTamedTarget)
-                                    damage *= SpellHelper.chargedTamedCreatureMultiplier;
-
-                                else
-                                    damage *= SpellHelper.chargedMultiplier;
-
-                                m.BoltEffect(0);
-                            }
-
-                            else
-                            {
-                                m.BoltEffect(0);
-                            }
-
-                            if (m is PlayerMobile)
-                                damage *= .5;
-
-                            damage *= GetDamageScalar(m);
-
-                            SpellHelper.Damage(this, m, damage, 0, 0, 0, 0, 100);
-                        }
-                    }
+                    SpellHelper.Damage(this, mobile, damage, 0, 0, 0, 0, 100);
                 }
             }
 
@@ -267,8 +158,7 @@ namespace Server.Spells.Seventh
         {
             private ChainLightningSpell m_Owner;
 
-            public InternalTarget(ChainLightningSpell owner)
-                : base(Core.ML ? 10 : 12, true, TargetFlags.None)
+            public InternalTarget(ChainLightningSpell owner): base(Core.ML ? 10 : 12, true, TargetFlags.None)
             {
                 m_Owner = owner;
             }
