@@ -124,7 +124,6 @@ namespace Server.Items
 				from.PlaySound( Utility.RandomMinMax( 0x15A, 0x15D ) );
 
 			from.LocalOverheadMessage( MessageType.Regular, 0, 501777 ); // Hmm... you suspect that if you used this again, it might hurt.
-			SpellHelper.Damage( TimeSpan.Zero, from, Utility.Dice( 2, 10, 5 ) );
 
 			Timer.DelayCall( TimeSpan.FromSeconds( 0.5 ), TimeSpan.FromSeconds( 0.5 ), 2, new TimerStateCallback( Deactivate ), c );
 		}

@@ -37,27 +37,7 @@ namespace Server.Spells.Fourth
             else            
                 Caster.Target = new InternalTarget(this);            
 		}
-
-		private static Dictionary<Mobile, Timer> m_Table = new Dictionary<Mobile, Timer>();
-
-		private void AosDelay_Callback( object state )
-		{
-			object[] states = (object[])state;
-
-			Mobile m = (Mobile)states[0];
-			int mana = (int)states[1];
-
-			if ( m.Alive && !m.IsDeadBondedPet )
-			{
-				m.Mana += mana;
-
-				m.FixedEffect( 0x3779, 10, 25 );
-				m.PlaySound( 0x28E );
-			}
-
-			m_Table.Remove( m );
-		}
-
+                
 		public void Target( Mobile mobile )
 		{
             if (!Caster.CanSee(mobile) || mobile.Hidden)			
@@ -67,12 +47,7 @@ namespace Server.Spells.Fourth
 			{
 				SpellHelper.Turn( Caster, mobile );
 				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref mobile );
-
-				if ( mobile.Spell != null )
-					mobile.Spell.OnCasterHurt();
-
-				mobile.Paralyzed = false;
-               
+                
                 int manaLoss = 20;      
                     
                 if (CheckMagicResist(mobile))
@@ -97,9 +72,13 @@ namespace Server.Spells.Fourth
                     mobile.PlaySound(0x1F8);
                 }
 
-                mobile.Mana -= manaLoss;	
+                if (mobile.Spell != null)
+                    mobile.Spell.OnCasterHurt();
 
-				HarmfulSpell( mobile );
+                mobile.Paralyzed = false;
+
+                mobile.Mana -= manaLoss;
+				HarmfulSpell(mobile);
 			}
 
 			FinishSequence();
@@ -107,22 +86,18 @@ namespace Server.Spells.Fourth
 
 		public override double GetResistPercent( Mobile target )
 		{
-            if (target != null && target is PlayerMobile)
-            {
-                return 99.0;
-            }
+            if (target != null && target is PlayerMobile)            
+                return 99.0;            
 
-            else
-            {
-                return base.GetResistPercent(target);
-            }
+            else            
+                return base.GetResistPercent(target);            
 		}
 
 		private class InternalTarget : Target
 		{
 			private ManaDrainSpell m_Owner;
 
-			public InternalTarget( ManaDrainSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( ManaDrainSpell owner ) : base(12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

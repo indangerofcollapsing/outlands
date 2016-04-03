@@ -33,11 +33,7 @@ namespace Server.Spells
 
         public virtual bool RevealOnCast { get { return true; } }
         public virtual bool ClearHandsOnCast { get { return true; } }
-        public virtual bool ShowHandMovement { get { return true; } }
-
-        public virtual bool DelayedDamage { get { return true; } }
-
-        public virtual bool DelayedDamageStacking { get { return true; } }       
+        public virtual bool ShowHandMovement { get { return true; } }         
 
         private static Dictionary<Type, DelayedDamageContextWrapper> m_ContextTable = new Dictionary<Type, DelayedDamageContextWrapper>();
 
@@ -66,9 +62,6 @@ namespace Server.Spells
 
         public void StartDelayedDamageContext(Mobile m, Timer t)
         {
-            if (DelayedDamageStacking)
-                return;
-
             DelayedDamageContextWrapper contexts;
 
             if (!m_ContextTable.TryGetValue(GetType(), out contexts))
@@ -356,17 +349,8 @@ namespace Server.Spells
             double maxDamageReduction = (targetMagicResist * .25) / 100;
 
             double magicResistScalar = 1 - (minDamageReduction + ((maxDamageReduction - minDamageReduction) * Utility.RandomDouble()));
-
-            //TEST
-            m_Caster.Say("Casting Damage Scalar: " + damageScalar.ToString());
-
-            //TEST
-            m_Caster.Say("Magic Resist Scalar: " + magicResistScalar.ToString());
-
+            
             damageScalar *= magicResistScalar;
-
-            //TEST
-            m_Caster.Say("Final Damage Scalar: " + damageScalar.ToString());
 
             if (damageScalar < 0)
                 damageScalar = 0;

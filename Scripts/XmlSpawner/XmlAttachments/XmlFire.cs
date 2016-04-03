@@ -72,9 +72,7 @@ namespace Server.Engines.XmlSpawner2
 			{
 				attacker.MovingParticles( defender, 0x36D4, 7, 0, false, true, 9502, 4019, 0x160 );
 				attacker.PlaySound( 0x15E );
-
-				SpellHelper.Damage( TimeSpan.Zero, defender, attacker, damage, 0, 100, 0, 0, 0 );
-			    
+                			    
 				m_EndTime = DateTime.Now + Refractory;
 			}
 		}
@@ -166,7 +164,6 @@ namespace Server.Engines.XmlSpawner2
 			{
 				m.MovingParticles( m, 0x36D4, 7, 0, false, true, 9502, 4019, 0x160 );
 				m.PlaySound( 0x15E );
-				SpellHelper.Damage( TimeSpan.Zero, m, damage, 0, 100, 0, 0, 0 );
 			}
 
 			m_EndTime = DateTime.Now + Refractory;

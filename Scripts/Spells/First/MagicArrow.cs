@@ -21,9 +21,7 @@ namespace Server.Spells.First
 		public MagicArrowSpell( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
 		{
 		}
-
-        public override bool DelayedDamageStacking { get { return !Core.AOS; } }
-
+        
 		public override void OnCast()
 		{
             BaseCreature casterCreature = Caster as BaseCreature;
@@ -37,8 +35,6 @@ namespace Server.Spells.First
             else            
                 Caster.Target = new InternalTarget(this);            
 		}
-
-		public override bool DelayedDamage{ get{ return true; } }
 
 		public void Target( Mobile mobile )
 		{
@@ -92,18 +88,9 @@ namespace Server.Spells.First
                     source.PlaySound(0x1E5);
                 }
 
-                damage *= GetDamageScalar(mobile, damageBonus);		
+                damage *= GetDamageScalar(mobile, damageBonus);
 
-				double chance = 0.25;
-
-				if (Caster.CanBeginAction(typeof(MagicArrowSpell)))
-				{
-					chance = 1.0;
-					Caster.BeginAction(typeof(MagicArrowSpell));
-					Timer.DelayCall(TimeSpan.FromSeconds(5), delegate { Caster.EndAction(typeof(MagicArrowSpell)); });
-				}
-
-                SpellHelper.DamageChanceDisturb(this, mobile, damage, chance);
+                SpellHelper.Damage(this, Caster, mobile, damage);
 			}
 
 			FinishSequence();
@@ -113,7 +100,7 @@ namespace Server.Spells.First
 		{
 			private MagicArrowSpell m_Owner;
 
-			public InternalTarget( MagicArrowSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( MagicArrowSpell owner ) : base( 12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

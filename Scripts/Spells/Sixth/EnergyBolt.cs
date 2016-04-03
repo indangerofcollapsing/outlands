@@ -36,9 +36,7 @@ namespace Server.Spells.Sixth
             else            
                 Caster.Target = new InternalTarget(this);            
 		}
-
-		public override bool DelayedDamage{ get{ return true; } }
-
+        
 		public void Target( Mobile mobile )
 		{
             if (!Caster.CanSee(mobile) || mobile.Hidden)			
@@ -106,7 +104,7 @@ namespace Server.Spells.Sixth
 
                 damage *= GetDamageScalar(mobile, damageBonus);
 
-                SpellHelper.Damage(this, mobile, damage, 0, 0, 0, 0, 100);
+                SpellHelper.Damage(this, Caster, mobile, damage);
             }
 
 			FinishSequence();
@@ -116,7 +114,7 @@ namespace Server.Spells.Sixth
 		{
 			private EnergyBoltSpell m_Owner;
 
-			public InternalTarget( EnergyBoltSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( EnergyBoltSpell owner ) : base(12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

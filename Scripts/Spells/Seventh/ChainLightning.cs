@@ -46,9 +46,7 @@ namespace Server.Spells.Seventh
             else            
                 Caster.Target = new InternalTarget(this);            
         }
-
-        public override bool DelayedDamage { get { return true; } }
-
+        
         public void Target(IPoint3D p)
         {
             if (!Caster.CanSee(p))            
@@ -147,7 +145,7 @@ namespace Server.Spells.Seventh
 
                     damage *= GetDamageScalar(mobile, damageBonus);
 
-                    SpellHelper.Damage(this, mobile, damage, 0, 0, 0, 0, 100);
+                    SpellHelper.Damage(this, Caster, mobile, damage);
                 }
             }
 
@@ -158,7 +156,7 @@ namespace Server.Spells.Seventh
         {
             private ChainLightningSpell m_Owner;
 
-            public InternalTarget(ChainLightningSpell owner): base(Core.ML ? 10 : 12, true, TargetFlags.None)
+            public InternalTarget(ChainLightningSpell owner): base(12, true, TargetFlags.None)
             {
                 m_Owner = owner;
             }

@@ -54,30 +54,30 @@ namespace Server.Spells.Fourth
 			return m_UnderEffect.Contains( m );
 		}
 
-        public static void ApplyEffect(Mobile Caster, Mobile m)
+        public static void ApplyEffect(Mobile Caster, Mobile mobile)
         {
-            SpellHelper.AddStatCurse(Caster, m, StatType.Str); SpellHelper.DisableSkillCheck = true;
-            SpellHelper.AddStatCurse(Caster, m, StatType.Dex);
-            SpellHelper.AddStatCurse(Caster, m, StatType.Int); SpellHelper.DisableSkillCheck = false;
+            SpellHelper.AddStatCurse(Caster, mobile, StatType.Str); SpellHelper.DisableSkillCheck = true;
+            SpellHelper.AddStatCurse(Caster, mobile, StatType.Dex);
+            SpellHelper.AddStatCurse(Caster, mobile, StatType.Int); SpellHelper.DisableSkillCheck = false;
 
-            Timer t = (Timer)m_UnderEffect[m];
+            Timer t = (Timer)m_UnderEffect[mobile];
 
-            if (Caster.Player && m.Player && t == null)	//On OSI you CAN curse yourself and get this effect.
+            if (Caster.Player && mobile.Player && t == null)
             {
-                TimeSpan duration = SpellHelper.GetDuration(Caster, m);
-                m_UnderEffect[m] = t = Timer.DelayCall(duration, new TimerStateCallback(RemoveEffect), m);
-                m.UpdateResistances();
+                TimeSpan duration = SpellHelper.GetDuration(Caster, mobile);
+                m_UnderEffect[mobile] = t = Timer.DelayCall(duration, new TimerStateCallback(RemoveEffect), mobile);
+                mobile.UpdateResistances();
             }
 
-            if (m.Spell != null)
-                m.Spell.OnCasterHurt();
+            if (mobile.Spell != null)
+                mobile.Spell.OnCasterHurt();
 
-            int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Curse);
+            mobile.Paralyzed = false;
 
-            m.Paralyzed = false;
+            int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Curse);            
 
-            m.FixedParticles(0x374A, 10, 15, 5028, spellHue, 0, EffectLayer.Waist);
-            m.PlaySound(0x1E1);
+            mobile.FixedParticles(0x374A, 10, 15, 5028, spellHue, 0, EffectLayer.Waist);
+            mobile.PlaySound(0x1E1);
         }
 
 		public void Target( Mobile mobile )
@@ -102,7 +102,7 @@ namespace Server.Spells.Fourth
 		{
 			private CurseSpell m_Owner;
 
-			public InternalTarget( CurseSpell owner ) : base( Core.ML? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( CurseSpell owner ) : base(12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

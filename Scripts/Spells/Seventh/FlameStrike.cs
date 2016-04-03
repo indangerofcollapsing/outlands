@@ -36,9 +36,7 @@ namespace Server.Spells.Seventh
             else            
                 Caster.Target = new InternalTarget(this);            
 		}
-
-		public override bool DelayedDamage{ get{ return true; } }
-
+        
 		public void Target( Mobile mobile )
 		{
             if (!Caster.CanSee(mobile) || mobile.Hidden)			
@@ -92,7 +90,7 @@ namespace Server.Spells.Seventh
 
                 damage *= GetDamageScalar(mobile, damageBonus);
 
-				SpellHelper.Damage( this, mobile, damage, 0, 100, 0, 0, 0 );
+                SpellHelper.Damage(this, Caster, mobile, damage);
 			}
 
 			FinishSequence();
@@ -102,7 +100,7 @@ namespace Server.Spells.Seventh
 		{
 			private FlameStrikeSpell m_Owner;
 
-			public InternalTarget( FlameStrikeSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( FlameStrikeSpell owner ) : base( 12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

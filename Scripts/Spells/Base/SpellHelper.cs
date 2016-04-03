@@ -1350,10 +1350,6 @@ namespace Server.Spells
                     DefensiveSpell.Nullify(target);
                 }
 
-                else
-                {
-                }
-
                 if (target is BaseCreature)
                 {
                     ((BaseCreature)target).CheckReflect(caster, ref reflect);
@@ -1397,32 +1393,7 @@ namespace Server.Spells
                 }
             }
         }        
-
-        //Rabbi Dan - 10/03/2010 - Distance Based Damage Delay
-        public static TimeSpan GetDamageDelayForSpell(Spell sp, Mobile target)
-        {
-            if (!sp.DelayedDamage)
-                return TimeSpan.Zero;
-
-            if (SpellHelper.SPELLS_USE_IPY3_STYLE_DISRUPTS_AND_HEALS && sp is Server.Spells.Fourth.LightningSpell)
-            {
-                return new TimeSpan(0, 0, 0, 0, 150); // 0.15sec delay on lightning for IPY3
-            }
-
-            else
-            {
-                if (DistanceDelayEnabled)
-                {
-                    int distance = GetDistanceToTarget(sp.Caster, target);
-                    return (new TimeSpan(0, 0, 0, 0, distance * 100));
-                }
-                else
-                {
-                    return OldDamageDelay;
-                }
-            }
-        }
-
+        
         public static int GetDistanceToTarget(Mobile caster, Mobile target)
         {
             int x = Math.Abs(caster.X - target.X);
@@ -1431,402 +1402,118 @@ namespace Server.Spells
             return Math.Max(x, y);
         }
 
-        public static void Damage(MagerySpell spell, Mobile target, double damage)
+        public static void Damage(Spell spell, Mobile caster, Mobile target, double amount)
         {
-            TimeSpan ts = GetDamageDelayForSpell(spell, target);
+            if (caster == null || target == null) return;
+            if (!target.CanBeDamaged() || target.Deleted) return;
 
-            Damage(spell, ts, target, spell.Caster, damage);
-        }
+            int damage = (int)amount;
 
-        public static void Damage(Spell spell, Mobile target, double damage)
-        {
-            TimeSpan ts = GetDamageDelayForSpell(spell, target);
-
-            Damage(ts, target, spell.Caster, damage);
-        }
-
-        public static void Damage(TimeSpan delay, Mobile target, double damage)
-        {
-            Damage(delay, target, null, damage);
-        }
-
-        public static void Damage(TimeSpan delay, Mobile target, Mobile from, double damage)
-        {
-            if (delay == TimeSpan.Zero)
-            {
-                var intDamage = (int)damage;
-                //Add damage modifier for instant attack spell
-                if (target is BaseCreature && from != null)
-                    ((BaseCreature)target).AlterSpellDamageFrom(from, ref intDamage);
-
-                target.Damage(intDamage, from);
-            }
-            else
-                new SpellDamageTimer(null, target, from, (int)damage, delay).Start();
-
-            if (target is BaseCreature && from != null && delay == TimeSpan.Zero)
-                ((BaseCreature)target).OnDamagedBySpell(from);
-        }
-
-        public static void Damage(Spell spell, TimeSpan delay, Mobile target, Mobile from, double damage)
-        {
-            int iDamage = (int)damage;
-
-            if (target is BaseCreature && from != null && delay == TimeSpan.Zero)
-                ((BaseCreature)target).OnDamagedBySpell(from);
-
-            if (delay == TimeSpan.Zero)
-            {
-                /*Commented by IPY 
-                if( from is BaseCreature )
-                    ((BaseCreature)from).AlterSpellDamageTo( target, ref iDamage );
-
-                if( target is BaseCreature )
-                    ((BaseCreature)target).AlterSpellDamageFrom( from, ref iDamage );
-                */
-                target.Damage(iDamage, from);
-            }
-            else
-            {
-                new SpellDamageTimer(spell, target, from, iDamage, delay).Start();
-            }
-
-            //if (target is BaseCreature && from != null && delay == TimeSpan.Zero)
-            //   ((BaseCreature)target).OnDamagedBySpell(from);
-
-        }
-
-        public static void Damage(MagerySpell spell, Mobile target, double damage, int phys, int fire, int cold, int pois, int nrgy)
-        {
-            TimeSpan ts = GetDamageDelayForSpell(spell, target);
-
-            Damage(spell, ts, target, spell.Caster, damage, phys, fire, cold, pois, nrgy, DFAlgorithm.Standard);
-        }
-
-        public static void Damage(MagerySpell spell, Mobile target, double damage, int phys, int fire, int cold, int pois, int nrgy, DFAlgorithm dfa)
-        {
-            TimeSpan ts = GetDamageDelayForSpell(spell, target);
-
-            Damage(spell, ts, target, spell.Caster, damage, phys, fire, cold, pois, nrgy, dfa);
-        }
-
-        public static void Damage(Spell spell, Mobile target, double damage, int phys, int fire, int cold, int pois, int nrgy)
-        {
-            TimeSpan ts = GetDamageDelayForSpell(spell, target);
-
-            Damage(spell, ts, target, spell.Caster, damage, phys, fire, cold, pois, nrgy, DFAlgorithm.Standard);
-        }
-
-        public static void Damage(TimeSpan delay, Mobile target, double damage, int phys, int fire, int cold, int pois, int nrgy)
-        {
-            Damage(delay, target, null, damage, phys, fire, cold, pois, nrgy);
-        }
-
-        public static void Damage(TimeSpan delay, Mobile target, Mobile from, double damage, int phys, int fire, int cold, int pois, int nrgy)
-        {
-            Damage(delay, target, from, damage, phys, fire, cold, pois, nrgy, DFAlgorithm.Standard);
-        }
-
-        public static void Damage(TimeSpan delay, Mobile target, Mobile from, double damage, int phys, int fire, int cold, int pois, int nrgy, DFAlgorithm dfa)
-        {
-            Damage(null, delay, target, from, damage, phys, fire, cold, pois, nrgy, dfa);
-        }
-
-        public static void Damage(Spell spell, TimeSpan delay, Mobile target, Mobile from, double damage, int phys, int fire, int cold, int pois, int nrgy, DFAlgorithm dfa)
-        {
-            if (damage == null)
+            if (!target.Region.OnDamage(target, ref damage))
                 return;
 
-            PlayerMobile pm_Caster = from as PlayerMobile;
-            BaseCreature bc_Caster = from as BaseCreature;
+            PlayerMobile pm_Caster = caster as PlayerMobile;
+            BaseCreature bc_Caster = caster as BaseCreature;
 
             BaseCreature bc_Target = target as BaseCreature;
             PlayerMobile pm_Target = target as PlayerMobile;
 
-            int iDamage = (int)damage;
-            
-            if (delay == TimeSpan.Zero || delay == null)
+            /*            
+            if (bc_Target != null)
             {
-                if (from is BaseCreature)
-                    ((BaseCreature)from).AlterSpellDamageTo(target, ref iDamage);
+                //Discordance
+                adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect));
 
-                if (target is BaseCreature)
-                    ((BaseCreature)target).AlterSpellDamageFrom(from, ref iDamage);
-                
-                WeightOverloading.DFA = dfa;
+                //Ship Combat
+                if (BaseBoat.UseShipBasedDamageModifer(from, bc_Target))
+                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToCreatureScalar);
+            }
 
-                int finalAdjustedDamage = AOS.Damage(target, from, iDamage, phys, fire, cold, pois, nrgy);
+            if (pm_Target != null)
+            {
+                //Ship Combat
+                if (BaseBoat.UseShipBasedDamageModifer(from, pm_Target))
+                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar);
+                            }
+            if (from != null)
+                target.RegisterDamage(amount, from);
 
-                WeightOverloading.DFA = DFAlgorithm.Standard;
+            target.Paralyzed = false;
 
-                //Display Player Spell Damage
-                if (pm_Caster != null)
-                {
-                    if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateMessage)
-                        pm_Caster.SendMessage(pm_Caster.PlayerSpellDamageTextHue, "Your spell hits " + target.Name + " for " + finalAdjustedDamage.ToString() + " damage.");
+            target.OnDamage(amount, from, newHits < 0);
 
-                    if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateOverhead)
-                        target.PrivateOverheadMessage(MessageType.Regular, pm_Caster.PlayerSpellDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), pm_Caster.NetState);
-                }
+            IMount m = target.Mount;
 
-                //Display Follower Spell Damage
-                if (bc_Caster != null)
-                {
-                    if (bc_Caster.Controlled && bc_Caster.ControlMaster is PlayerMobile)
-                    {
-                        PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
+            if (m != null)
+                m.OnRiderDamaged(amount, from, newHits < 0);
 
-                        if (target.GetDistanceToSqrt(playerOwner) <= 20)
-                        {
-                            if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                                playerOwner.SendMessage(playerOwner.PlayerFollowerDamageTextHue, "Follower: " + bc_Caster.Name + " casts for " + finalAdjustedDamage.ToString() + " spell damage against " + target.Name + ".");
+            if (newHits < 0)
+            {
+                target.LastKiller = from;
+                target.Hits = 0;
 
-                            if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                                target.PrivateOverheadMessage(MessageType.Regular, playerOwner.PlayerFollowerDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), playerOwner.NetState);
-                        }
-                    }
-                }
-
-                //Provoked Creature Spell Damage
-                if (bc_Caster != null)
-                {
-                    if (bc_Caster.BardProvoked && bc_Caster.BardMaster is PlayerMobile)
-                    {
-                        PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
-
-                        if (target.GetDistanceToSqrt(playerBard) <= 20)
-                        {
-                            if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateMessage)
-                                playerBard.SendMessage(playerBard.PlayerProvocationDamageTextHue, "Provocation: " + bc_Caster.Name + " casts for " + finalAdjustedDamage.ToString() + " spell damage against " + target.Name + ".");
-
-                            if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateOverhead)
-                                target.PrivateOverheadMessage(MessageType.Regular, playerBard.PlayerProvocationDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), playerBard.NetState);
-                        }
-                    }
-                }
+                if (oldHits >= 0)
+                    target.Kill();
             }
 
             else
-                new SpellDamageTimerAOS(spell, target, from, iDamage, phys, fire, cold, pois, nrgy, delay, dfa).Start();
+                target.Hits = newHits;
+            */
 
-            if (target is BaseCreature && from != null && delay == TimeSpan.Zero)
+            target.Paralyzed = false;
+
+            int finalAdjustedDamage = AOS.Damage(target, caster, damage, 0, 100, 0, 0, 0);
+
+            //Display Player Spell Damage
+            if (pm_Caster != null)
             {
-                BaseCreature c = (BaseCreature)target;
+                if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateMessage)
+                    pm_Caster.SendMessage(pm_Caster.PlayerSpellDamageTextHue, "Your spell hits " + target.Name + " for " + finalAdjustedDamage.ToString() + " damage.");
 
-                c.OnHarmfulSpell(from);
-                c.OnDamagedBySpell(from);
+                if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateOverhead)
+                    target.PrivateOverheadMessage(MessageType.Regular, pm_Caster.PlayerSpellDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), pm_Caster.NetState);
             }
-        }
 
-        public static void DamageChanceDisturb(Spell spell, Mobile target, double damage, double chance)
-        {
-            if (target == null || target.Deleted || !target.Alive || damage <= 0)
-                return;
-
-            Mobile from = spell.Caster;
-
-            PlayerMobile pm_Caster = from as PlayerMobile;
-            BaseCreature bc_Caster = from as BaseCreature;
-
-            PlayerMobile pm_Target = target as PlayerMobile;
-            BaseCreature bc_Target = target as BaseCreature;
-
-            int discordancePenalty = 0;
-            int adjustedDamageDisplayed = 0;
-
-            if (Utility.RandomDouble() > chance)
+            //Display Follower Spell Damage
+            if (bc_Caster != null)
             {
-                TimeSpan ts = GetDamageDelayForSpell(spell, target);
-
-                int amount = (int)damage;
-
-                if (amount > 0)
+                if (bc_Caster.Controlled && bc_Caster.ControlMaster is PlayerMobile)
                 {
-                    if (ts > TimeSpan.Zero)
-                        new SpellDamageNoDisturbTimer(spell, target, from, amount, ts).Start();
-                    else
+                    PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
+
+                    if (target.GetDistanceToSqrt(playerOwner) <= 20)
                     {
-                        if (from is BaseCreature)
-                            ((BaseCreature)from).AlterSpellDamageTo(target, ref amount);
+                        if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
+                            playerOwner.SendMessage(playerOwner.PlayerFollowerDamageTextHue, "Follower: " + bc_Caster.Name + " casts for " + finalAdjustedDamage.ToString() + " spell damage against " + target.Name + ".");
 
-                        if (target is BaseCreature)
-                            ((BaseCreature)target).AlterSpellDamageFrom(from, ref amount);
-
-                        if (target is BaseCreature && from != null)
-                            ((BaseCreature)target).OnDamagedBySpell(from);
-
-                        if (!target.CanBeDamaged() || target.Deleted)
-                            return;
-
-                        if (!target.Region.OnDamage(target, ref amount))
-                            return;
-
-                        if (amount > 0)
-                        {
-                            int oldHits = target.Hits;
-                            int newHits = oldHits - amount;
-
-                            adjustedDamageDisplayed = amount;
-
-                            if (bc_Target != null)
-                            {
-                                //Discordance
-                                adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect));
-
-                                //Ship Combat
-                                if (BaseBoat.UseShipBasedDamageModifer(from, bc_Target))
-                                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToCreatureScalar);
-                            }
-
-                            if (pm_Target != null)
-                            {
-                                //Ship Combat
-                                if (BaseBoat.UseShipBasedDamageModifer(from, pm_Target))
-                                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar);
-                            }
-
-                            //Display Player Spell Damage
-                            if (pm_Caster != null)
-                            {
-                                if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateMessage)
-                                    pm_Caster.SendMessage(pm_Caster.PlayerSpellDamageTextHue, "Your spell hits " + target.Name + " for " + adjustedDamageDisplayed.ToString() + " damage.");
-
-                                if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateOverhead)
-                                    target.PrivateOverheadMessage(MessageType.Regular, pm_Caster.PlayerSpellDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), pm_Caster.NetState);
-                            }
-
-                            //Display Follower Spell Damage
-                            if (bc_Caster != null)
-                            {
-                                if (bc_Caster.Controlled && bc_Caster.ControlMaster is PlayerMobile)
-                                {
-                                    PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
-
-                                    if (target.GetDistanceToSqrt(playerOwner) <= 20)
-                                    {
-                                        if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                                            playerOwner.SendMessage(playerOwner.PlayerFollowerDamageTextHue, "Follower: " + bc_Caster.Name + " casts for " + adjustedDamageDisplayed.ToString() + " spell damage against " + target.Name + ".");
-
-                                        if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                                            target.PrivateOverheadMessage(MessageType.Regular, playerOwner.PlayerFollowerDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), playerOwner.NetState);
-                                    }
-                                }
-                            }
-
-                            //Provoked Creature Spell Damage
-                            if (bc_Caster != null)
-                            {
-                                if (bc_Caster.BardProvoked && bc_Caster.BardMaster is PlayerMobile)
-                                {
-                                    PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
-
-                                    if (target.GetDistanceToSqrt(playerBard) <= 20)
-                                    {
-                                        if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateMessage)
-                                            playerBard.SendMessage(playerBard.PlayerProvocationDamageTextHue, "Provocation: " + bc_Caster.Name + " casts for " + adjustedDamageDisplayed.ToString() + " spell damage against " + target.Name + ".");
-
-                                        if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateOverhead)
-                                            target.PrivateOverheadMessage(MessageType.Regular, playerBard.PlayerProvocationDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), playerBard.NetState);
-                                    }
-                                }
-                            }
-
-                            if (from != null)
-                                target.RegisterDamage(amount, from);
-
-                            target.Paralyzed = false;
-
-                            target.OnDamage(amount, from, newHits < 0);
-
-                            IMount m = target.Mount;
-
-                            if (m != null)
-                                m.OnRiderDamaged(amount, from, newHits < 0);
-
-                            if (newHits < 0)
-                            {
-                                target.LastKiller = from;
-                                target.Hits = 0;
-
-                                if (oldHits >= 0)
-                                    target.Kill();
-                            }
-
-                            else
-                                target.Hits = newHits;
-                        }
+                        if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
+                            target.PrivateOverheadMessage(MessageType.Regular, playerOwner.PlayerFollowerDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), playerOwner.NetState);
                     }
                 }
             }
 
-            else
+            //Provoked Creature Spell Damage
+            if (bc_Caster != null)
             {
-                adjustedDamageDisplayed = (int)damage;
-
-                if (bc_Target != null)
+                if (bc_Caster.BardProvoked && bc_Caster.BardMaster is PlayerMobile)
                 {
-                    //Discordance
-                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect));
-                    
-                    //Ship Combat
-                    if (BaseBoat.UseShipBasedDamageModifer(from, bc_Target))
-                        adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToCreatureScalar);
-                }
+                    PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
 
-                if (pm_Target != null)
-                {
-                    //Ship Combat
-                    if (BaseBoat.UseShipBasedDamageModifer(from, pm_Target))
-                        adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar);
-                }
-
-                //Display Player Spell Damage
-                if (pm_Caster != null)
-                {
-                    if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateMessage)
-                        pm_Caster.SendMessage(pm_Caster.PlayerSpellDamageTextHue, "Your spell hits " + target.Name + " for " + adjustedDamageDisplayed.ToString() + " damage.");
-
-                    if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateOverhead)
-                        target.PrivateOverheadMessage(MessageType.Regular, pm_Caster.PlayerSpellDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), pm_Caster.NetState);
-                }
-
-                //Display Follower Spell Damage
-                if (bc_Caster != null)
-                {
-                    if (bc_Caster.Controlled && bc_Caster.ControlMaster is PlayerMobile)
+                    if (target.GetDistanceToSqrt(playerBard) <= 20)
                     {
-                        PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
+                        if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateMessage)
+                            playerBard.SendMessage(playerBard.PlayerProvocationDamageTextHue, "Provocation: " + bc_Caster.Name + " casts for " + finalAdjustedDamage.ToString() + " spell damage against " + target.Name + ".");
 
-                        if (target.GetDistanceToSqrt(playerOwner) <= 20)
-                        {
-                            if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                                playerOwner.SendMessage(playerOwner.PlayerFollowerDamageTextHue, "Follower: " + bc_Caster.Name + " casts for " + adjustedDamageDisplayed.ToString() + " spell damage against " + target.Name + ".");
-
-                            if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                                target.PrivateOverheadMessage(MessageType.Regular, playerOwner.PlayerFollowerDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), playerOwner.NetState);
-                        }
+                        if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateOverhead)
+                            target.PrivateOverheadMessage(MessageType.Regular, playerBard.PlayerProvocationDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), playerBard.NetState);
                     }
                 }
+            }  
 
-                //Provoked Creature Spell Damage
-                if (bc_Caster != null)
-                {
-                    if (bc_Caster.BardProvoked && bc_Caster.BardMaster is PlayerMobile)
-                    {
-                        PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
-
-                        if (target.GetDistanceToSqrt(playerBard) <= 20)
-                        {
-                            if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateMessage)
-                                playerBard.SendMessage(playerBard.PlayerProvocationDamageTextHue, "Provocation: " + bc_Caster.Name + " casts for " + adjustedDamageDisplayed.ToString() + " spell damage against " + target.Name + ".");
-
-                            if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateOverhead)
-                                target.PrivateOverheadMessage(MessageType.Regular, playerBard.PlayerProvocationDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), playerBard.NetState);
-                        }
-                    }
-                }
-
-                SpellHelper.Damage(spell, target, damage);
+            if (bc_Target != null)
+            {
+                bc_Target.OnHarmfulSpell(caster);
+                bc_Target.OnDamagedBySpell(caster);
             }
         }
 
@@ -1837,7 +1524,6 @@ namespace Server.Spells
 
         public static void Heal(int amount, Mobile target, Mobile from, bool message)
         {
-            //TODO: All Healing *spells* go through ArcaneEmpowerment
             target.Heal(amount, from, message);
         }        
 
@@ -1847,8 +1533,7 @@ namespace Server.Spells
             private int m_Damage;
             private Spell m_Spell;
 
-            public SpellDamageTimer(Spell s, Mobile target, Mobile from, int damage, TimeSpan delay)
-                : base(delay)
+            public SpellDamageTimer(Spell s, Mobile target, Mobile from, int damage, TimeSpan delay): base(delay)
             {
                 m_Target = target;
                 m_From = from;
@@ -1859,11 +1544,9 @@ namespace Server.Spells
 
             protected override void OnTick()
             {
-                //Add logic to check for damage bonus on the mob
                 if (m_Target is BaseCreature && m_From != null)
                     ((BaseCreature)m_Target).AlterSpellDamageFrom(m_From, ref m_Damage);
-
-                // IPY
+               
                 m_Target.Damage(m_Damage);
             }
         }
@@ -1874,8 +1557,7 @@ namespace Server.Spells
             private int m_Damage;
             private Spell m_Spell;
 
-            public SpellDamageNoDisturbTimer(Spell s, Mobile target, Mobile from, int damage, TimeSpan delay)
-                : base(delay)
+            public SpellDamageNoDisturbTimer(Spell s, Mobile target, Mobile from, int damage, TimeSpan delay): base(delay)
             {
                 m_Target = target;
                 m_From = from;
@@ -2004,106 +1686,7 @@ namespace Server.Spells
                         m_Target.Hits = newHits;
                 }
             }
-        }
-
-        private class SpellDamageTimerAOS : Timer
-        {
-            private Mobile m_Target, m_From;
-            private int m_Damage;
-            private int m_Phys, m_Fire, m_Cold, m_Pois, m_Nrgy;
-            private DFAlgorithm m_DFA;
-            private Spell m_Spell;
-
-            public SpellDamageTimerAOS(Spell s, Mobile target, Mobile from, int damage, int phys, int fire, int cold, int pois, int nrgy, TimeSpan delay, DFAlgorithm dfa)
-                : base(delay)
-            {
-                m_Target = target;
-                m_From = from;
-                m_Damage = damage;
-                m_Phys = phys;
-                m_Fire = fire;
-                m_Cold = cold;
-                m_Pois = pois;
-                m_Nrgy = nrgy;
-                m_DFA = dfa;
-                m_Spell = s;
-
-                Priority = TimerPriority.TwentyFiveMS;
-            }
-
-            protected override void OnTick()
-            {
-                PlayerMobile pm_Caster = m_From as PlayerMobile;
-                BaseCreature bc_Caster = m_From as BaseCreature;
-
-                PlayerMobile pm_Target = m_Target as PlayerMobile;
-                BaseCreature bc_Target = m_Target as BaseCreature;
-                
-                if (m_From is BaseCreature && m_Target != null)
-                    ((BaseCreature)m_From).AlterSpellDamageTo(m_Target, ref m_Damage);
-
-                if (m_Target is BaseCreature && m_From != null)
-                    ((BaseCreature)m_Target).AlterSpellDamageFrom(m_From, ref m_Damage);
-                
-                WeightOverloading.DFA = m_DFA;
-                int finalAdjustedDamage = AOS.Damage(m_Target, m_From, m_Damage, m_Phys, m_Fire, m_Cold, m_Pois, m_Nrgy);
-                WeightOverloading.DFA = DFAlgorithm.Standard;
-
-                //Display Player Spell Damage
-                if (pm_Caster != null)
-                {
-                    if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateMessage)
-                        pm_Caster.SendMessage(pm_Caster.PlayerSpellDamageTextHue, "Your spell hits " + m_Target.Name + " for " + finalAdjustedDamage.ToString() + " damage.");
-
-                    if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateOverhead)
-                        m_Target.PrivateOverheadMessage(MessageType.Regular, pm_Caster.PlayerSpellDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), pm_Caster.NetState);
-                }
-
-                //Display Follower Spell Damage
-                if (bc_Caster != null)
-                {
-                    if (bc_Caster.Controlled && bc_Caster.ControlMaster is PlayerMobile)
-                    {
-                        PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
-
-                        if (m_Target.GetDistanceToSqrt(playerOwner) <= 20)
-                        {
-                            if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                                playerOwner.SendMessage(playerOwner.PlayerFollowerDamageTextHue, "Follower: " + bc_Caster.Name + " casts for " + finalAdjustedDamage.ToString() + " spell damage against " + m_Target.Name + ".");
-
-                            if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                                m_Target.PrivateOverheadMessage(MessageType.Regular, playerOwner.PlayerFollowerDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), playerOwner.NetState);
-                        }
-                    }
-                }
-
-                //Provoked Creature Spell Damage
-                if (bc_Caster != null)
-                {
-                    if (bc_Caster.BardProvoked && bc_Caster.BardMaster is PlayerMobile)
-                    {
-                        PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
-
-                        if (m_Target.GetDistanceToSqrt(playerBard) <= 20)
-                        {
-                            if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateMessage)
-                                playerBard.SendMessage(playerBard.PlayerProvocationDamageTextHue, "Provocation: " + bc_Caster.Name + " casts for " + finalAdjustedDamage.ToString() + " spell damage against " + m_Target.Name + ".");
-
-                            if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateOverhead)
-                                m_Target.PrivateOverheadMessage(MessageType.Regular, playerBard.PlayerProvocationDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), playerBard.NetState);
-                        }
-                    }
-                }
-
-                if (m_Target is BaseCreature && m_From != null)
-                {
-                    BaseCreature c = (BaseCreature)m_Target;
-
-                    c.OnHarmfulSpell(m_From);
-                    c.OnDamagedBySpell(m_From);
-                }
-            }
-        }
+        }        
     }
 
     public class TransformationSpellHelper

@@ -50,9 +50,12 @@ namespace Server.Spells.First
 
                 CheckMagicResist(mobile);
 
-                int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Clumsy);                
+                if (mobile.Spell != null)
+                    mobile.Spell.OnCasterHurt();
 
-				mobile.Paralyzed = false;
+                mobile.Paralyzed = false;
+
+                int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Clumsy);          
 
                 mobile.FixedParticles(0x3779, 10, 15, 5002, spellHue, 0, EffectLayer.Head);
 				mobile.PlaySound( 0x1DF );
@@ -65,7 +68,7 @@ namespace Server.Spells.First
 		{
 			private ClumsySpell m_Owner;
 
-			public InternalTarget( ClumsySpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( ClumsySpell owner ) : base( 12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

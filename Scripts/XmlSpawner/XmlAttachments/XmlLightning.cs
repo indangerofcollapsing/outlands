@@ -72,8 +72,6 @@ namespace Server.Engines.XmlSpawner2
 			{
 				defender.BoltEffect( 0 );
 
-				SpellHelper.Damage( TimeSpan.Zero, defender, attacker, damage, 0, 0, 0, 0, 100 );
-
 				m_EndTime = DateTime.Now + Refractory;
 			}
 		}
@@ -179,8 +177,6 @@ namespace Server.Engines.XmlSpawner2
 			if(damage > 0)
 			{
 				m.BoltEffect( 0 );
-
-				SpellHelper.Damage( TimeSpan.Zero, m, damage, 0, 0, 0, 0, 100 );
 			}
 
 			m_EndTime = DateTime.Now + Refractory;

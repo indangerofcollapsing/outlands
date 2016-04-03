@@ -38,16 +38,7 @@ namespace Server.Spells.Fourth
             else            
                 Caster.Target = new InternalTarget(this);            
 		}
-
-		public override bool DelayedDamage
-		{ 
-			get
-			{
-				//ipy3 style : delay of 0.15 sec.
-				return SpellHelper.SPELLS_USE_IPY3_STYLE_DISRUPTS_AND_HEALS;
-			} 
-		}
-
+        
 		public void Target(Mobile mobile)
 		{
             if (!Caster.CanSee(mobile) || mobile.Hidden)			
@@ -94,7 +85,7 @@ namespace Server.Spells.Fourth
 
                 damage *= GetDamageScalar(mobile, damageBonus);
 
-                SpellHelper.Damage(this, mobile, damage, 0, 0, 0, 0, 100);
+                SpellHelper.Damage(this, Caster, mobile, damage);
             }
 
 			FinishSequence();
@@ -104,7 +95,7 @@ namespace Server.Spells.Fourth
 		{
 			private LightningSpell m_Owner;
 
-			public InternalTarget( LightningSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( LightningSpell owner ) : base(12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

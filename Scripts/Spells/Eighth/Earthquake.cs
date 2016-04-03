@@ -32,9 +32,7 @@ namespace Server.Spells.Eighth
         public EarthquakeSpell(Mobile caster, Item scroll): base(caster, scroll, m_Info)
         {
         }
-
-        public override bool DelayedDamage { get { return true; } }
-
+        
         public override void OnCast()
         {
             if (SpellHelper.CheckTown(Caster, Caster) && CheckSequence())
@@ -113,7 +111,7 @@ namespace Server.Spells.Eighth
 
                     Caster.DoHarmful(mobile);
 
-                    SpellHelper.Damage(TimeSpan.Zero, mobile, Caster, damage, 100, 0, 0, 0, 0);
+                    SpellHelper.Damage(this, Caster, mobile, damage);
                 }                
 
                 if (tremor)

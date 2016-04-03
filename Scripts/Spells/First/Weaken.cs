@@ -49,10 +49,13 @@ namespace Server.Spells.First
 				SpellHelper.AddStatCurse( Caster, mobile, StatType.Str );
 
                 CheckMagicResist(mobile);
-                
-                int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Weaken); 
 
-				mobile.Paralyzed = false;
+                if (mobile.Spell != null)
+                    mobile.Spell.OnCasterHurt();
+
+                mobile.Paralyzed = false;
+
+                int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Weaken); 
 
                 mobile.FixedParticles(0x3779, 10, 15, 5002, spellHue, 0, EffectLayer.Head);
 				mobile.PlaySound( 0x1E6 );
@@ -65,7 +68,7 @@ namespace Server.Spells.First
 		{
 			private WeakenSpell m_Owner;
 
-			public InternalTarget( WeakenSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( WeakenSpell owner ) : base( 12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

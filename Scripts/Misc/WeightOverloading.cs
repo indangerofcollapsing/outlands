@@ -4,12 +4,6 @@ using Server.Mobiles;
 
 namespace Server.Misc
 {
-	public enum DFAlgorithm
-	{
-		Standard,
-		PainSpike
-	}
-
 	public class WeightOverloading
 	{
 		public static void Initialize()
@@ -17,32 +11,9 @@ namespace Server.Misc
 			EventSink.Movement += new MovementEventHandler( EventSink_Movement );
 		}
 
-		private static DFAlgorithm m_DFA;
-
-		public static DFAlgorithm DFA
-		{
-			get{ return m_DFA; }
-			set{ m_DFA = value; }
-		}
-
 		public static void FatigueOnDamage( Mobile m, int damage, double scalar)
 		{
-			double fatigue = 0.0;
-
-			switch ( m_DFA )
-			{
-				case DFAlgorithm.Standard:
-				{
-                    fatigue = ((double)damage / 5) * ((double)m.StamMax / 100) * scalar;
-					break;
-				}
-
-				case DFAlgorithm.PainSpike:
-				{
-					fatigue = (damage * ((100.0 / m.Hits) + ((50.0 + m.Stam) / 100) - 1.0)) - 5.0;
-					break;
-				}
-			}    
+            double fatigue = fatigue = ((double)damage / 5) * ((double)m.StamMax / 100) * scalar;					
 
             if (fatigue > 50)
                 fatigue = 50;
@@ -87,20 +58,7 @@ namespace Server.Misc
 					return;
 				}
 			}
-            /*
-             * REMOVED BY IPY: Sean
-             * 
-			if ( ((from.Stam * 100) / Math.Max( from.StamMax, 1 )) < 10 )
-				--from.Stam;
             
-
-			if ( from.Stam == 0 )
-			{
-				from.SendLocalizedMessage( 500110 ); // You are too fatigued to move.
-				e.Blocked = true;
-				return;
-			}*/
-
             if (from is PlayerMobile)
             {
                 int amt = (from.Mounted ? 48 : 21); // IPY

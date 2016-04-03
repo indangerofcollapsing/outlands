@@ -225,7 +225,7 @@ namespace Server.Spells.Seventh
             private EnergyFieldSpell m_Owner;
 
             public InternalTarget(EnergyFieldSpell owner)
-                : base(Core.ML ? 10 : 12, true, TargetFlags.None)
+                : base(12, true, TargetFlags.None)
             {
                 m_Owner = owner;
             }

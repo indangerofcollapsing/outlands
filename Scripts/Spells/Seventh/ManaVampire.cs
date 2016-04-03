@@ -37,9 +37,7 @@ namespace Server.Spells.Seventh
             else            
                 Caster.Target = new InternalTarget(this);            
 		}
-
-		public override bool DelayedDamage{ get{ return true; } }
-
+        
 		public void Target( Mobile m )
 		{
 			if ( !Caster.CanSee( m ) || m.Hidden)			
@@ -49,11 +47,6 @@ namespace Server.Spells.Seventh
 			{
 				SpellHelper.Turn( Caster, m );
 				SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );
-
-				if ( m.Spell != null )
-					m.Spell.OnCasterHurt();
-
-				m.Paralyzed = false;
 
                 int manaLoss = 80;
 
@@ -79,8 +72,12 @@ namespace Server.Spells.Seventh
                     m.PlaySound(0x1F9);
                 }
 
-                m.Mana -= manaLoss;
+                if (m.Spell != null)
+                    m.Spell.OnCasterHurt();
 
+                m.Paralyzed = false;
+
+                m.Mana -= manaLoss;
 				HarmfulSpell( m );
 			}
 
@@ -100,7 +97,7 @@ namespace Server.Spells.Seventh
 		{
 			private ManaVampireSpell m_Owner;
 
-			public InternalTarget( ManaVampireSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( ManaVampireSpell owner ) : base( 12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

@@ -35,9 +35,7 @@ namespace Server.Spells.Third
             else            
                 Caster.Target = new InternalTarget(this);            
 		}
-
-		public override bool DelayedDamage{ get{ return true; } }
-
+        
 		public void Target( Mobile mobile )
 		{
             if (!Caster.CanSee(mobile) || mobile.Hidden)			
@@ -90,17 +88,8 @@ namespace Server.Spells.Third
                 }
 
                 damage *= GetDamageScalar(mobile, damageBonus);
-
-				double chance = 0.25;
-
-				if (Caster.CanBeginAction(typeof(FireballSpell)))
-				{
-					chance = 1.0;
-					Caster.BeginAction(typeof(FireballSpell));
-					Timer.DelayCall(TimeSpan.FromSeconds(5), delegate { Caster.EndAction(typeof(FireballSpell)); });
-				}               
-
-				SpellHelper.DamageChanceDisturb( this, mobile, damage, chance );
+                
+                SpellHelper.Damage(this, Caster, mobile, damage);
 			}
 
 			FinishSequence();
@@ -110,7 +99,7 @@ namespace Server.Spells.Third
 		{
 			private FireballSpell m_Owner;
 
-			public InternalTarget( FireballSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( FireballSpell owner ) : base( 12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

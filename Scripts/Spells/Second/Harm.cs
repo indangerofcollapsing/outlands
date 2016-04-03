@@ -37,9 +37,7 @@ namespace Server.Spells.Second
             else            
                 Caster.Target = new InternalTarget(this);            
 		}
-
-		public override bool DelayedDamage{ get{ return false; } }
-        
+                
 		public void Target( Mobile mobile )
 		{
             if (!Caster.CanSee(mobile) || mobile.Hidden)			
@@ -88,18 +86,9 @@ namespace Server.Spells.Second
                     mobile.PlaySound(0x1F1);
                 }
 
-                damage *= GetDamageScalar(mobile, damageBonus);	
+                damage *= GetDamageScalar(mobile, damageBonus);
 
-                double chance = 0.25;
-
-                if (Caster.CanBeginAction(typeof(HarmSpell)))
-                {
-                    chance = 1.0;
-                    Caster.BeginAction(typeof(HarmSpell));
-                    Timer.DelayCall(TimeSpan.FromSeconds(5), delegate { Caster.EndAction(typeof(HarmSpell)); });
-                }
-
-                SpellHelper.DamageChanceDisturb(this, mobile, damage, chance);
+                SpellHelper.Damage(this, Caster, mobile, damage);
 			}
 
 			FinishSequence();
@@ -109,7 +98,7 @@ namespace Server.Spells.Second
 		{
 			private HarmSpell m_Owner;
 
-			public InternalTarget( HarmSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( HarmSpell owner ) : base( 12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

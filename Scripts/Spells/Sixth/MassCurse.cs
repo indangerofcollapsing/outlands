@@ -76,13 +76,18 @@ namespace Server.Spells.Sixth
 				{
 					Mobile mobile = targets[i];
 
-                    CheckMagicResist(mobile);
+                    CheckMagicResist(mobile);                   
 
 					Caster.DoHarmful( mobile );
                    
 					SpellHelper.AddStatCurse( Caster, mobile, StatType.Str );
 					SpellHelper.AddStatCurse( Caster, mobile, StatType.Dex );
 					SpellHelper.AddStatCurse( Caster, mobile, StatType.Int );
+
+                    if (mobile.Spell != null)
+                        mobile.Spell.OnCasterHurt();
+
+                    mobile.Paralyzed = false;
 
                     mobile.FixedParticles(0x374A, 10, 15, 5028, spellHue, 0, EffectLayer.Waist);
 					mobile.PlaySound( 0x1FB );
@@ -96,7 +101,7 @@ namespace Server.Spells.Sixth
 		{
 			private MassCurseSpell m_Owner;
 
-			public InternalTarget( MassCurseSpell owner ) : base( Core.ML ? 10 : 12, true, TargetFlags.None )
+			public InternalTarget( MassCurseSpell owner ) : base( 12, true, TargetFlags.None )
 			{
 				m_Owner = owner;
 			}

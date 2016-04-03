@@ -51,9 +51,12 @@ namespace Server.Spells.First
 
                 CheckMagicResist(mobile);
 
-                int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Feeblemind); 
+                if (mobile.Spell != null)
+                    mobile.Spell.OnCasterHurt();
 
-				mobile.Paralyzed = false;
+                mobile.Paralyzed = false;
+
+                int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(Caster, HueableSpell.Feeblemind); 
 
                 mobile.FixedParticles(0x3779, 10, 15, 5002, spellHue, 0, EffectLayer.Head);
 				mobile.PlaySound( 0x1E4 );
@@ -66,7 +69,7 @@ namespace Server.Spells.First
 		{
 			private FeeblemindSpell m_Owner;
 
-			public InternalTarget( FeeblemindSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( FeeblemindSpell owner ) : base( 12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

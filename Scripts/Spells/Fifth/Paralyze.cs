@@ -23,9 +23,7 @@ namespace Server.Spells.Fifth
 		public ParalyzeSpell( Mobile caster, Item scroll ) : base( caster, scroll, m_Info )
 		{
 		}
-
-		public override bool DelayedDamage{ get{ return true; } }
-
+        
 		public override void OnCast()
 		{
             BaseCreature casterCreature = Caster as BaseCreature;
@@ -112,7 +110,7 @@ namespace Server.Spells.Fifth
 		{
 			private ParalyzeSpell m_Owner;
 
-			public InternalTarget( ParalyzeSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( ParalyzeSpell owner ) : base(12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

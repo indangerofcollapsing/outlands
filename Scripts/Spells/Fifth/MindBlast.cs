@@ -38,26 +38,7 @@ namespace Server.Spells.Fifth
             else            
                 Caster.Target = new InternalTarget(this);            
 		}
-
-		private void AosDelay_Callback( object state )
-		{
-			object[] states = (object[])state;
-			Mobile caster = (Mobile)states[0];
-			Mobile target = (Mobile)states[1];
-			Mobile defender = (Mobile)states[2];
-			int damage = (int)states[3];
-
-			if ( caster.HarmfulCheck( defender ) )
-			{
-				SpellHelper.Damage( this, target, Utility.RandomMinMax( damage, damage + 4 ), 0, 0, 100, 0, 0 );
-
-				target.FixedParticles( 0x374A, 10, 15, 5038, 1181, 2, EffectLayer.Head );
-				target.PlaySound( 0x213 );
-			}
-		}
-
-		public override bool DelayedDamage{ get{ return false; } }
-
+        
 		public void Target( Mobile mobile )
 		{
             if (!Caster.CanSee(mobile) || mobile.Hidden)			
@@ -113,7 +94,7 @@ namespace Server.Spells.Fifth
 
                 damage *= GetDamageScalar(mobile, damageBonus);
 
-				SpellHelper.Damage( this, target, damage, 0, 0, 100, 0, 0 );
+                SpellHelper.Damage(this, Caster, mobile, damage);
 			}
 
 			FinishSequence();
@@ -123,7 +104,7 @@ namespace Server.Spells.Fifth
 		{
 			private MindBlastSpell m_Owner;
 
-			public InternalTarget( MindBlastSpell owner ) : base( Core.ML ? 10 : 12, false, TargetFlags.Harmful )
+			public InternalTarget( MindBlastSpell owner ) : base( 12, false, TargetFlags.Harmful )
 			{
 				m_Owner = owner;
 			}

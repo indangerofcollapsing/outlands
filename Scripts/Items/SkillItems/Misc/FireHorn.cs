@@ -162,7 +162,6 @@ namespace Server.Items
 					}
 
 					from.DoHarmful( m );
-					SpellHelper.Damage( TimeSpan.Zero, m, from, toDeal, 0, 100, 0, 0, 0 );
 
 					Effects.SendTargetEffect( m, 0x3709, 10, 30 );
 				}
