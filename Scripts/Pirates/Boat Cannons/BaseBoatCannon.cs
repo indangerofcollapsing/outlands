@@ -860,7 +860,7 @@ namespace Server.Custom.Pirates
 
                     if (bc_Target != null)
                     {
-                        if (bc_Target.IsMiniBoss() || bc_Target.IsBoss() || bc_Target.IsLoHBoss() || bc_Target.IsEventBoss())
+                        if (bc_Target.IsChamp() || bc_Target.IsBoss() || bc_Target.IsLoHBoss() || bc_Target.IsEventBoss())
                             largeCreatureHit = true;
                     }
                 }
@@ -977,7 +977,7 @@ namespace Server.Custom.Pirates
                                 {
                                     duration = Utility.RandomMinMax(10, 20);
 
-                                    if (bc_Creature.IsMiniBoss() || bc_Creature.IsBoss() || bc_Creature.IsLoHBoss() || bc_Creature.IsEventBoss())
+                                    if (bc_Creature.IsChamp() || bc_Creature.IsBoss() || bc_Creature.IsLoHBoss() || bc_Creature.IsEventBoss())
                                         duration = Utility.RandomMinMax(5, 10);
 
                                     bc_Creature.PublicOverheadMessage(MessageType.Regular, 0, false, "*looks disoriented*");

@@ -419,7 +419,7 @@ namespace Server.Mobiles
                         Priority = TimerPriority.FiftyMS;
                 }
 
-                else if (owner.bc_Creature.ResolveAcquireTargetDelay != -1 || owner.bc_Creature.IsBoss() || owner.bc_Creature.IsMiniBoss() || owner.bc_Creature.IsLoHBoss() || owner.bc_Creature.IsEventBoss() || owner.bc_Creature.IsParagon || owner.bc_Creature is BladeSpirits || owner.bc_Creature is EnergyVortex)
+                else if (owner.bc_Creature.ResolveAcquireTargetDelay != -1 || owner.bc_Creature.IsBoss() || owner.bc_Creature.IsChamp() || owner.bc_Creature.IsLoHBoss() || owner.bc_Creature.IsEventBoss() || owner.bc_Creature.IsParagon || owner.bc_Creature is BladeSpirits || owner.bc_Creature is EnergyVortex)
                     Priority = TimerPriority.FiftyMS;
 
                 else
@@ -4007,11 +4007,11 @@ namespace Server.Mobiles
                 return false;
 
             //Creature is Too Powerful to Flee
-            if (bc_Creature.Difficulty >= 15 || bc_Creature.IsParagon || bc_Creature.Rare || bc_Creature.IsBoss() || bc_Creature.IsMiniBoss() || bc_Creature.IsLoHBoss() || bc_Creature.IsEventBoss())
+            if (bc_Creature.Difficulty >= 15 || bc_Creature.IsParagon || bc_Creature.Rare || bc_Creature.IsBoss() || bc_Creature.IsChamp() || bc_Creature.IsLoHBoss() || bc_Creature.IsEventBoss())
                 return false;
 
             //Minions Won't Flee
-            if (bc_Creature.IsBossMinion() || bc_Creature.IsMiniBossMinion() || bc_Creature.IsLoHMinion() || bc_Creature.IsEventMinion())
+            if (bc_Creature.IsBossMinion() || bc_Creature.IsChampMinion() || bc_Creature.IsLoHMinion() || bc_Creature.IsEventMinion())
                 return false;
 
             //Mandatory Flee Duration in Place

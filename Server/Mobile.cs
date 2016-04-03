@@ -339,6 +339,7 @@ namespace Server
         Hinder,
         Petrify,
         Cripple,
+        Debilitate,
         Pierce,
         Bleed,
         Stun,

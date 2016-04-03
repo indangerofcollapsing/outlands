@@ -52,7 +52,7 @@ namespace Server.Mobiles
             RangePerception = 24;
         }
 
-        public override bool AlwaysMiniBoss { get { return true; } }
+        public override bool AlwaysChamp { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
         public override bool RevealImmune { get { return true; } }
 

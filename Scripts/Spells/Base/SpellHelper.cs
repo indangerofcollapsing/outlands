@@ -101,6 +101,11 @@ namespace Server.Spells
         public const double EnhancedSpellBonus = .25;
         public const double EnhancedSpellTamedCreatureBonus = .25;
 
+        public const double BaseChargedSpellChance = .10;
+        public const double SpiritSpeakChargedSpellExtraChance = .10;
+        public const double InscriptionScrollChargedSpellExtraChance = .20;
+        public const double CreatureChargedSpellChanceScalar = .5;
+
         public const double ChargedSpellBonus = .5;
         public const double ChargedSpellTamedCreatureBonus = .5;
 
@@ -127,20 +132,17 @@ namespace Server.Spells
                     return false;
             }
 
-            double spiritSpeakSkill = caster.Skills[SkillName.SpiritSpeak].Value;
-            double baseChance = 0.10;
+            double baseChance = BaseChargedSpellChance;
+            double skillChance = (caster.Skills[SkillName.SpiritSpeak].Value / 100) * SpiritSpeakChargedSpellExtraChance;
+            double inscriptionChance = 0;
+            
+            if (fromScroll)            
+               inscriptionChance = (caster.Skills[SkillName.Inscribe].Value / 100) * InscriptionScrollChargedSpellExtraChance;
+                       
+            double chance = baseChance + skillChance + inscriptionChance;
 
             if (!(caster is PlayerMobile))
-                baseChance = 0.05;
-
-            double bonusChance = 0.15 * (spiritSpeakSkill / 100);
-
-            double inscriptionSkill = caster.Skills[SkillName.Inscribe].Value;
-
-            if (fromScroll)
-                bonusChance += (0.5 * inscriptionSkill / 100);
-
-            double chance = baseChance + bonusChance;
+                chance *= CreatureChargedSpellChanceScalar;
 
             double result = Utility.RandomDouble();
 

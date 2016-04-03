@@ -536,10 +536,13 @@ namespace Server.Items
             if (attacker == null || defender == null)
                 return;
 
+            double damage = (double)ComputeDamage(attacker, defender);
+            double damageScalar = damageBonus;
+
             PlaySwingAnimation(attacker);
 
-            if (!defender.Frozen) ;
-            PlayHurtAnimation(defender);
+            if (!defender.Frozen)
+                PlayHurtAnimation(defender);
 
             PlayerMobile pm_Attacker = attacker as PlayerMobile;
             PlayerMobile pm_Defender = defender as PlayerMobile;
@@ -548,6 +551,43 @@ namespace Server.Items
             BaseCreature bc_Defender = defender as BaseCreature;
 
             BaseWeapon weapon = attacker.Weapon as BaseWeapon;
+
+            bool doWeaponSpecialAttack = false;
+            bool doStealthAttack = false;
+            bool doBleedEffect = false;
+
+            bool allowStealthAttack = true;
+            bool allowDungeonBonuses = true;
+            bool allowDungeonAttack = true;
+
+            bool immuneToSpecials = false;
+
+            bool TamedAttacker = false;
+            bool TamedDefender = false;
+
+            if (pm_Defender != null)
+            {
+                allowDungeonBonuses = false;
+                allowDungeonAttack = false;
+            }
+
+            if (bc_Defender != null)
+            {
+                if (bc_Defender.ImmuneToSpecialAttacks)
+                    immuneToSpecials = true;
+            }
+
+            if (bc_Attacker != null)
+            {
+                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile)
+                    TamedAttacker = true;
+            }
+
+            if (bc_Defender != null)
+            {
+                if (bc_Defender.Controlled && bc_Defender.ControlMaster is PlayerMobile)
+                    TamedDefender = true;
+            }
 
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(pm_Attacker);
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(pm_Defender);
@@ -564,46 +604,7 @@ namespace Server.Items
                 effectHue = attackerDungeonArmor.DungeonArmorDetail.EffectHue;
             }
 
-            bool doWeaponSpecialAttack = false;
-            bool doStealthAttack = false;
-
-            bool allowDungeonBonuses = true;
-            bool allowDungeonAttack = true;
-
-            bool immuneToSpecials = false;
-
-            bool PlayerAttacker = (pm_Attacker != null);
-            bool CreatureAttacker = (bc_Attacker != null);
-            bool PlayerDefender = (pm_Defender != null);
-            bool CreatureDefender = (bc_Defender != null);
-            bool TamedAttacker = false;
-            bool TamedDefender = false;
-
-            if (PlayerDefender)
-            {
-                allowDungeonBonuses = false;
-                allowDungeonAttack = false;
-            }
-
-            if (CreatureDefender)
-            {
-                if (bc_Defender.ImmuneToSpecialAttacks)
-                    immuneToSpecials = true;
-            }
-
-            if (CreatureAttacker)
-            {
-                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile)
-                    TamedAttacker = true;
-            }
-
-            if (CreatureDefender)
-            {
-                if (bc_Defender.Controlled && bc_Defender.ControlMaster is PlayerMobile)
-                    TamedDefender = true;
-            }
-
-            bool allowStealthAttack = true;
+            #region Attack Visuals and Sound
 
             //Stealth Attack
             if (attacker.StealthAttackActive && allowStealthAttack)
@@ -627,25 +628,11 @@ namespace Server.Items
 
                 if (bc_Defender != null)
                 {
-                    double ignoreSoundChance = 0;
-
-                    if (bc_Defender.IsMiniBoss())
-                        ignoreSoundChance = .75;
-
-                    if (bc_Defender.IsBoss())
-                        ignoreSoundChance = .80;
-
-                    if (bc_Defender.IsLoHBoss())
-                        ignoreSoundChance = .85;
-
-                    if (bc_Defender.IsEventBoss())
-                        ignoreSoundChance = .90;
-
-                    if (Utility.RandomDouble() <= ignoreSoundChance)
-                        playDefenderSound = false;
+                    if (Utility.RandomDouble() <= bc_Defender.IgnoreHurtSoundChance)
+                        playDefenderSound = false;                    
                 }
 
-                if ((attacker.Body.IsHuman && attacker.Weapon is Fists) || (PlayerAttacker && attacker.Weapon is Fists))
+                if ((attacker.Body.IsHuman && attacker.Weapon is Fists) || (pm_Attacker != null && attacker.Weapon is Fists))
                 {
                     if (playDefenderSound)
                     {
@@ -678,12 +665,89 @@ namespace Server.Items
                 }
             }
 
-            //Weapon Special Attack Chance
-            if (PlayerAttacker && CreatureDefender && !immuneToSpecials)
+            #endregion                       
+
+            #region Stealth Attack Damage Bonus
+
+            //Decorative / Training Weapons
+            if (DecorativeEquipment || TrainingWeapon)
+                allowStealthAttack = false;
+
+            double stealthBonus = 0;
+
+            //Stealth Attack Damage Bonus
+            if (attacker.StealthAttackActive)
             {
-                double chance = 0.1;
-                double armsLoreSkillBonus = 0.15 * (attacker.Skills[SkillName.ArmsLore].Value / 100);
-                double stealthAttackBonus = .25;
+                //Valid Weapon
+                if (weapon != null && !immuneToSpecials)
+                {
+                    int fastestWeaponSpeedPossible = 60;
+                    int slowestWeaponSpeedPossible = 20;
+
+                    int speedBonus = weapon.BaseSpeed - slowestWeaponSpeedPossible;
+                    double speedScalar = 1 / ((double)fastestWeaponSpeedPossible - (double)slowestWeaponSpeedPossible);
+
+                    double stealthWeaponBonus = 0;
+
+                    stealthBonus = 3.5;
+                    stealthBonus += 4.5 * (double)speedBonus * speedScalar;
+
+                    if (attackerDungeonArmor.MatchingSet && !attackerDungeonArmor.InPlayerCombat)
+                        stealthWeaponBonus *= attackerDungeonArmor.DungeonArmorDetail.BackstabDamageInflictedBonus;
+
+                    //Player Attacking
+                    if (pm_Attacker != null)
+                    {
+                        if (pm_Defender != null)
+                            stealthBonus = 0;                       
+
+                        else                        
+                            stealthBonus *= bc_Defender.BackstabDamageRecievedScalar;                        
+
+                        if (pm_Attacker.IsUOACZHuman || pm_Attacker.IsUOACZUndead)
+                            stealthBonus *= .5;
+                    }
+
+                    //Tamed Creature Attacking
+                    else if (TamedAttacker)
+                    {
+                        if (pm_Defender != null)
+                            stealthBonus = 0;
+                        else
+                            stealthBonus = 4.0;
+
+                        if (attacker.Region is UOACZRegion)
+                            stealthBonus = 1.0;
+                    }
+
+                    //Normal Creature Attacking
+                    else
+                    {
+                        if (pm_Defender != null)
+                            stealthBonus = .5;
+
+                        else
+                            stealthBonus = 1.0;
+                    }
+                }
+
+                attacker.StealthAttackActive = false;
+            }
+
+            stealthBonus *= attacker.BackstabDamageScalar;
+
+            damageScalar += stealthBonus;
+
+            #endregion
+
+            #region Weapon Special Attacks
+
+            //Weapon Special Attack Chance
+            if (pm_Attacker != null && bc_Defender != null && !immuneToSpecials)
+            {
+                double baseChance = 0.1;
+                double armsLoreSkillBonus = (attacker.Skills[SkillName.ArmsLore].Value / 100) * .1;
+                double stealthAttackBonus = 0;
                 double dungeonArmorBonus = 0;
                 double expertiseBonus = 0;
 
@@ -698,7 +762,7 @@ namespace Server.Items
                     dungeonArmorBonus = attackerDungeonArmor.DungeonArmorDetail.SpecialWeaponAttackBonus;
 
                 double result = Utility.RandomDouble();
-                double totalChance = chance + armsLoreSkillBonus + stealthAttackBonus + dungeonArmorBonus + expertiseBonus;
+                double totalChance = baseChance + armsLoreSkillBonus + stealthAttackBonus + dungeonArmorBonus + expertiseBonus;
 
                 //Success
                 if (result <= totalChance)
@@ -719,348 +783,7 @@ namespace Server.Items
 
             //Decorative / Training Weapons
             if (DecorativeEquipment || TrainingWeapon)
-                doWeaponSpecialAttack = false;
-
-            //Base Damage
-            int damage = ComputeDamage(attacker, defender);
-
-            //Starting Bonus Damage Percent
-            int percentageBonus = (int)(damageBonus * 100) - 100;
-
-            //Damage Bonus to Creatures
-            if (PlayerAttacker && CreatureDefender)
-            {
-                //Arms Lore Bonus: Tamed Defender
-                if (bc_Defender.Controlled && bc_Defender.ControlMaster is PlayerMobile)
-                    percentageBonus += (int)(10 * (attacker.Skills[SkillName.ArmsLore].Value / 100));
-
-                //Arms Lore Bonus: Creature Defender
-                else
-                    percentageBonus += (int)(20 * (attacker.Skills[SkillName.ArmsLore].Value / 100));
-            }
-
-            //Slayer Weapon Damage Bonus
-            if (m_SlayerGroup != SlayerGroupType.None && bc_Defender != null)
-            {
-                if (m_SlayerGroup == bc_Defender.SlayerGroup)
-                {
-                    defender.FixedEffect(0x37B9, 10, 5);
-                    percentageBonus += 50;
-                }
-            }
-
-            //UOACZ Undead
-            if (m_SlayerGroup == SlayerGroupType.Undead)
-            {
-                bool slayerValid = false;
-
-                int uoaczSlayerBonus = 50;
-
-                if (defender is UOACZBaseWildlife)
-                {
-                    UOACZBaseWildlife wildlife = defender as UOACZBaseWildlife;
-
-                    if (wildlife.Corrupted)
-                        slayerValid = true;
-                }
-
-                if (defender is UOACZBaseUndead)
-                    slayerValid = true;
-
-                if (pm_Defender != null)
-                {
-                    if (pm_Defender.IsUOACZUndead)
-                    {
-                        slayerValid = true;
-                        uoaczSlayerBonus = 25;
-                    }
-                }
-
-                if (slayerValid)
-                {
-                    defender.FixedEffect(0x37B9, 10, 5);
-                    percentageBonus += uoaczSlayerBonus;
-                }
-            }
-
-            int discordancePenalty = 0;
-
-            #region Stealth AttackBonus
-
-            //Stealth Attack Bonus
-            int stealthBonus = 0;
-
-            if (attacker.StealthAttackActive)
-            {
-                //Valid Weapon
-                if (weapon != null && !immuneToSpecials)
-                {
-                    int fastestWeaponSpeedPossible = 60;
-                    int slowestWeaponSpeedPossible = 20;
-
-                    int speedBonus = weapon.BaseSpeed - slowestWeaponSpeedPossible;
-                    double speedScalar = 1 / ((double)fastestWeaponSpeedPossible - (double)slowestWeaponSpeedPossible);
-
-                    double stealthWeaponBonus = 0;
-
-                    stealthWeaponBonus = 350;
-                    stealthWeaponBonus += 450 * (double)speedBonus * speedScalar;
-
-                    if (attackerDungeonArmor.MatchingSet && !attackerDungeonArmor.InPlayerCombat)
-                        stealthWeaponBonus *= attackerDungeonArmor.DungeonArmorDetail.BackstabDamageInflictedScalar;
-
-                    //Player Attacking
-                    if (PlayerAttacker)
-                    {
-                        if (PlayerDefender)
-                            stealthBonus = 0;
-
-                        else if (TamedDefender)
-                            stealthBonus = (int)(stealthWeaponBonus * .2);
-
-                        else
-                        {
-                            if (bc_Defender.IsBoss() || bc_Defender.IsMiniBoss() || bc_Defender.IsEventBoss() || bc_Defender.IsLoHBoss())
-                                stealthBonus = (int)(stealthWeaponBonus * .4);
-                            else
-                                stealthBonus = (int)stealthWeaponBonus;
-                        }
-
-                        if (pm_Attacker.IsUOACZHuman || pm_Attacker.IsUOACZUndead)
-                            stealthBonus = (int)(stealthWeaponBonus * .5);
-                    }
-
-                    //Tamed Creature Attacking
-                    else if (TamedAttacker)
-                    {
-                        if (PlayerDefender)
-                            stealthBonus = 0;
-
-                        else if (TamedDefender)
-                            stealthBonus = 200;
-
-                        else
-                            stealthBonus = 400;
-
-                        if (attacker.Region is UOACZRegion)
-                            stealthBonus = 100;
-                    }
-
-                    //Normal Creature Attacking
-                    else
-                    {
-                        if (PlayerDefender)
-                            stealthBonus = 50;
-
-                        else if (TamedDefender)
-                            stealthBonus = 50;
-                    }
-                }
-
-                attacker.StealthAttackActive = false;
-            }
-
-            stealthBonus = (int)(Math.Round((double)stealthBonus * attacker.BackstabDamageScalar));
-
-            percentageBonus += stealthBonus;
-
-            #endregion
-
-            //Sneak Attack Bonus: Tamed Creature Capable of Stealth Attacking a "Distracted" Combatant
-            if (TamedAttacker && !PlayerDefender)
-            {
-                if (bc_Attacker.DictWanderAction[WanderAction.Stealth] > 0 && stealthBonus == 0 && !(bc_Attacker.Region is UOACZRegion))
-                {
-                    if (defender.Combatant != bc_Attacker && Utility.RandomDouble() <= .25)
-                    {
-                        bc_Attacker.PlaySound(bc_Attacker.GetAngerSound());
-                        bc_Attacker.PublicOverheadMessage(MessageType.Regular, 0, false, "*sneak attack!*");
-
-                        int sneakBonus = 25;
-
-                        if (PlayerDefender)
-                            stealthBonus = 0;
-
-                        else if (TamedDefender)
-                            sneakBonus = 100;
-
-                        else
-                            sneakBonus = 200;
-
-                        sneakBonus = (int)(Math.Round((double)sneakBonus * attacker.BackstabDamageScalar));
-
-                        percentageBonus += sneakBonus;
-                    }
-                }
-            }
-
-            //Enrage Effect
-            if (bc_Attacker != null)
-            {
-                double totalValue;
-
-                bc_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Enrage, out totalValue);
-
-                int enrageBonus = (int)(totalValue * 100);
-
-                percentageBonus += enrageBonus;
-            }
-
-            if (pm_Attacker != null)
-            {
-                double totalValue;
-
-                pm_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Enrage, out totalValue);
-
-                int enrageBonus = (int)(totalValue * 100);
-
-                percentageBonus += enrageBonus;
-            }
-
-            //Iron Fists
-            if (pm_Attacker != null && weapon is Fists)
-            {
-                double totalValue;
-
-                pm_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.IronFists, out totalValue);
-
-                if (defender is PlayerMobile)
-                    totalValue *= .5;
-
-                int ironFistBonus = (int)(totalValue * 100);
-
-                percentageBonus += ironFistBonus;
-            }
-
-            damage = AOS.Scale(damage, 100 + percentageBonus);
-
-            if (CreatureAttacker)
-                ((BaseCreature)attacker).AlterMeleeDamageTo(defender, ref damage);
-
-            if (CreatureDefender)
-                ((BaseCreature)defender).AlterMeleeDamageFrom(attacker, ref damage);
-
-            double MeleeDamageInflictedScalar = 1.0;
-            double MeleeDamageReceivedScalar = 1.0;
-
-            if (attackerDungeonArmor.MatchingSet && !attackerDungeonArmor.InPlayerCombat)
-                MeleeDamageInflictedScalar = attackerDungeonArmor.DungeonArmorDetail.MeleeDamageInflictedScalar;
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
-                MeleeDamageReceivedScalar = defenderDungeonArmor.DungeonArmorDetail.MeleeDamageReceivedScalar;
-
-            //Player Attacking
-            if (PlayerAttacker)
-            {
-                if (PlayerDefender)
-                {
-                    if (pm_Attacker.IsUOACZHuman)
-                        damage = (int)((double)damage * 1.0 * UOACZSystem.HumanPlayerVsPlayerDamageScalar * UOACZSystem.GetFatigueScalar(pm_Attacker));
-
-                    else if (pm_Attacker.IsUOACZUndead)
-                        damage = (int)((double)damage * 1.0 * UOACZSystem.UndeadPlayerVsPlayerDamageScalar * UOACZSystem.GetFatigueScalar(pm_Attacker));
-
-                    else
-                        damage = (int)((double)damage * 1.0);
-                }
-
-                else if (TamedDefender)
-                {
-                    if (pm_Attacker.IsUOACZHuman || pm_Attacker.IsUOACZUndead)
-                        damage = (int)((double)damage * 1.0 * MeleeDamageInflictedScalar * UOACZSystem.GetFatigueScalar(pm_Attacker));
-
-                    else
-                        damage = (int)((double)damage * 1.0 * MeleeDamageInflictedScalar);
-                }
-
-                else
-                {
-                    if (pm_Attacker.IsUOACZHuman)
-                        damage = (int)((double)damage * 1.0 * UOACZSystem.HumanPlayerVsCreatureDamageScalar);
-
-                    else if (pm_Attacker.IsUOACZUndead)
-                        damage = (int)((double)damage * 1.0 * UOACZSystem.UndeadPlayerVsCreatureDamageScalar);
-
-                    else
-                        damage = (int)((double)damage * 1.0 * MeleeDamageInflictedScalar);
-                }
-            }
-
-            //Tamed Creature Attacking
-            else if (TamedAttacker)
-            {
-                PlayerMobile pm_Controller = bc_Attacker.ControlMaster as PlayerMobile;
-
-                if (PlayerDefender)
-                {
-                    if (pm_Controller.IsUOACZHuman || pm_Controller.IsUOACZUndead)
-                        damage = (int)((double)damage * 1.0 * bc_Attacker.PvPMeleeDamageScalar * MeleeDamageReceivedScalar * UOACZSystem.GetFatigueScalar(pm_Controller));
-
-                    else
-                        damage = (int)((double)damage * 1.0 * bc_Attacker.PvPMeleeDamageScalar * MeleeDamageReceivedScalar);
-                }
-
-                else if (TamedDefender)
-                {
-                    if (pm_Controller.IsUOACZHuman || pm_Controller.IsUOACZUndead)
-                        damage = (int)((double)damage * 1.0 * UOACZSystem.GetFatigueScalar(pm_Controller));
-
-                    else
-                        damage = (int)((double)damage * 1.0);
-                }
-
-                else
-                {
-                    if (UOACZSystem.IsUOACZValidMobile(bc_Attacker))
-                        damage = (int)((double)damage * 1.0 * UOACZSystem.TamedCreatureVsCreatureDamageScalar);
-
-                    else
-                        damage = (int)((double)damage * 1.0);
-                }
-            }
-
-            //Normal Creature Attacking
-            else
-            {
-                double ProvokedCreatureDamageInflictedScalar = 1.0;
-
-                if (bc_Attacker.BardMaster != null)
-                {
-                    DungeonArmor.PlayerDungeonArmorProfile bardMasterDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(bc_Attacker.BardMaster, null);
-
-                    if (bardMasterDungeonArmor.MatchingSet && !bardMasterDungeonArmor.InPlayerCombat)
-                        ProvokedCreatureDamageInflictedScalar = bardMasterDungeonArmor.DungeonArmorDetail.ProvokedCreatureDamageInflictedScalar;
-                }
-
-                if (PlayerDefender)
-                    damage = (int)((double)damage * 1.0 * MeleeDamageReceivedScalar);
-
-                else if (TamedDefender)
-                {
-                    damage = (int)((double)damage * 1.0 * ProvokedCreatureDamageInflictedScalar);
-
-                    if (UOACZSystem.IsUOACZValidMobile(bc_Defender))
-                        damage = (int)((double)damage * 1.0 * UOACZSystem.CreatureVsTamedCreatureDamageScalar);
-                }
-            }
-
-            //Armor Absorption
-            defender.AbsorbDamage(attacker, defender, damage, true, false);
-
-            //Weapon and Shield Parrying
-            BaseShield defenderShield = defender.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
-            BaseWeapon defenderWeapon = defender.FindItemOnLayer(Layer.TwoHanded) as BaseWeapon;
-
-            if (defenderShield != null)
-                damage = defenderShield.OnHit(this, damage, attacker);
-
-            else if (defenderWeapon != null)
-            {
-                if (!(defenderWeapon is BaseRanged) && !(attacker is PlayerMobile) && (defender is PlayerMobile))
-                    damage = defenderWeapon.WeaponParry(defenderWeapon, damage, defender);
-            }
-
-            #region Weapon Special Attack Effects
+                doWeaponSpecialAttack = false;            
 
             //Resolve Weapon Special Ability Effects
             if (doWeaponSpecialAttack)
@@ -1087,11 +810,12 @@ namespace Server.Items
                     //Wrestling
                     if (weapon is Fists)
                     {
-                        value = .2;
+                        value = -.1;
                         expirationSeconds = 12;
 
-                        if (CreatureDefender)
-                            SpecialAbilities.StunSpecialAbility(1, attacker, bc_Defender, value, expirationSeconds, 0x510, true, "Your strike stuns your target!", "Their attack stuns you!");
+                        damageScalar += .5;
+                       
+                        SpecialAbilities.CourageSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x510, true, "Your strike disorients your target, lowering their accuracy!", "Their attack disorients you!", "");
                     }
 
                     //Weapon Attack
@@ -1106,64 +830,51 @@ namespace Server.Items
                                 value = 1;
                                 expirationSeconds = maxDuration - ((maxDuration - minDuration) * (speed - minSpeed) * speedInterval);
 
+                                damageScalar += .5;
+
                                 if (doStealthAttack)
                                     expirationSeconds = maxDuration;
 
-                                if (CreatureDefender)
-                                    SpecialAbilities.HinderSpecialAbility(1, attacker, bc_Defender, value, expirationSeconds, false, 0x51c, true, "Your shot hinders your target!", "Their attack hinders you!");
-                                break;
+                                if (bc_Defender != null)
+                                    SpecialAbilities.HinderSpecialAbility(1, attacker, defender, value, expirationSeconds, false, 0x51c, true, "Your shot hinders your target!", "Their attack hinders you!");
+                            break;
 
                             case SkillName.Fencing:
-                                minDuration = 6;
-                                maxDuration = 12;
+                                minDuration = 8;
+                                maxDuration = 15;
 
-                                value = .33;
+                                value = .05;
                                 expirationSeconds = maxDuration - ((maxDuration - minDuration) * (speed - minSpeed) * speedInterval);
 
-                                damage += (int)Math.Round((double)damage * .5);
+                                damageScalar += .5;
 
                                 if (doStealthAttack)
                                     expirationSeconds = maxDuration;
 
-                                SpecialAbilities.CrippleSpecialAbility(1, attacker, bc_Defender, value, expirationSeconds, 0x520, true, "Your attack slows your target!", "Their attack slows you!");
-                                break;
-
+                                if (bc_Defender != null)
+                                    SpecialAbilities.Debilitate(1.0, attacker, defender, value, expirationSeconds, 0x520, true, "Your attack debiliates your target, lowering their guard!", "Their attack debilitates you, lowering your guard!");
+                            break;
+                                
                             case SkillName.Macing:
-                                double stamPercent = (double)defender.Stam / (double)defender.StamMax;
+                                minDuration = 8;
+                                maxDuration = 15;
 
-                                double baseDamage = (double)damage * .5;
-                                double extraDamage = (double)damage * .75 * (1 - stamPercent);
-                                double crushDamage = (int)Math.Round((baseDamage + extraDamage));
+                                value = -.1;
+                                expirationSeconds = maxDuration - ((maxDuration - minDuration) * (speed - minSpeed) * speedInterval);
+
+                                damageScalar += .5;
 
                                 if (doStealthAttack)
-                                    crushDamage *= .33;
+                                    expirationSeconds = maxDuration;
 
-                                if (crushDamage < 1)
-                                    crushDamage = 1;
-
-                                if (CreatureDefender)
-                                {
-                                    damage += (int)crushDamage;
-
-                                    attacker.SendMessage("You land a crushing blow on your target!");
-                                    defender.SendMessage("They land a crushing blow on you!");
-
-                                    defender.FixedEffect(0x5683, 10, 20);
-                                    Effects.PlaySound(attacker.Location, attacker.Map, 0x525);
-                                }
-                                break;
+                                SpecialAbilities.PierceSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x525, true, "Your attack crushes their armor!", "Their attack crushes your armor!");
+                            break;
 
                             case SkillName.Swords:
-                                expirationSeconds = 8;
-                                value = damage;
+                                doBleedEffect = true;
 
-                                if (doStealthAttack)
-                                    value *= .33;
-
-                                if (CreatureDefender)
-                                    SpecialAbilities.BleedSpecialAbility(1, attacker, bc_Defender, value, expirationSeconds, 0x51e, true, "Your attack causes your target to bleed!", "Their attack causes you to bleed!");
-
-                                break;
+                                damageScalar += .5;
+                            break;
                         }
                     }
                 }
@@ -1171,14 +882,315 @@ namespace Server.Items
 
             #endregion
 
-            AddBlood(attacker, defender, damage);
+            #region Arms Lore Damage Bonus
 
-            //GetDamageTypes(attacker, out phys, out fire, out cold, out pois, out nrgy, out chaos, out direct);
+            double ArmsLoreCreatureBonus = .2;
+            double ArmsLorePlayerBonus = .1;
 
-            int damageGiven = damage;
+            if (bc_Defender != null)
+                damageScalar += (attacker.Skills[SkillName.ArmsLore].Value / 100) * ArmsLoreCreatureBonus;
 
-            int adjustedDamageDisplayed = damage;
+            else
+                damageScalar += (attacker.Skills[SkillName.ArmsLore].Value / 100) * ArmsLorePlayerBonus;
 
+            #endregion
+
+            #region Slayer Damage Bonus
+
+            double SlayerBonus = .5;
+
+            if (m_SlayerGroup != SlayerGroupType.None && bc_Defender != null)
+            {
+                if (m_SlayerGroup == bc_Defender.SlayerGroup)
+                {
+                    defender.FixedEffect(0x37B9, 10, 5);
+                    damageScalar += SlayerBonus;
+                }
+            }
+
+            #endregion            
+
+            #region Stealth Sneak Attack Damage Bonus
+
+            double SneakAttackChance = .1;
+            double SneakAttackBonus = .5;
+
+            //Sneak Attack Bonus: Tamed Creature Capable of Stealth Attacking a "Distracted" Combatant
+            if (TamedAttacker && bc_Defender != null)
+            {
+                if (bc_Attacker.DictWanderAction[WanderAction.Stealth] > 0 && stealthBonus == 0 && !(bc_Attacker.Region is UOACZRegion))
+                {
+                    if (defender.Combatant != bc_Attacker && Utility.RandomDouble() <= SneakAttackChance)
+                    {
+                        bc_Attacker.PlaySound(bc_Attacker.GetAngerSound());
+                        bc_Attacker.PublicOverheadMessage(MessageType.Regular, 0, false, "*sneak attack!*");
+                        
+                        if (bc_Defender != null)
+                            damageScalar += SneakAttackBonus * attacker.BackstabDamageScalar;                        
+                    }
+                }
+            }
+
+            #endregion
+
+            #region Enrage Effect Attack Damage Bonus
+        
+            double enrageValue;
+
+            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Enrage, out enrageValue);
+
+            damageScalar += enrageValue;
+
+            #endregion            
+
+            #region UOACZ Bonuses
+
+            //Iron Fists
+            if (weapon is Fists)
+            {
+                double ironFistsValue;
+
+                attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.IronFists, out ironFistsValue);
+
+                if (pm_Defender != null)
+                    ironFistsValue *= .5;
+
+                damageScalar += ironFistsValue;
+            }
+
+            if (m_SlayerGroup == SlayerGroupType.Undead)
+            {
+                double slayerBonus = 0;
+
+                if (defender is UOACZBaseWildlife)
+                {
+                    UOACZBaseWildlife wildlife = defender as UOACZBaseWildlife;
+
+                    if (wildlife.Corrupted)
+                        slayerBonus = .5;
+                }
+
+                if (defender is UOACZBaseUndead)
+                    slayerBonus = .5;
+
+                if (pm_Defender != null)
+                {
+                    if (pm_Defender.IsUOACZUndead)                    
+                        slayerBonus = .25;                    
+                }
+
+                if (slayerBonus > 0)
+                {
+                    defender.FixedEffect(0x37B9, 10, 5);
+                    damageScalar += slayerBonus;
+                }
+            }
+
+            #endregion        
+
+            #region Dungeon Armor
+
+            double MeleeDamageInflictedBonus = 0;
+            double ProvokedCreatureDamageInflictedBonus = 0;
+
+            double MeleeDamageReceivedBonus = 0;            
+
+            if (attackerDungeonArmor.MatchingSet && !attackerDungeonArmor.InPlayerCombat)
+                MeleeDamageInflictedBonus = attackerDungeonArmor.DungeonArmorDetail.MeleeDamageInflictedBonus;
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
+                MeleeDamageReceivedBonus = defenderDungeonArmor.DungeonArmorDetail.MeleeDamageReceivedBonus;
+
+            if (bc_Attacker != null)
+            {
+                if (bc_Attacker.BardMaster != null)
+                {
+                    DungeonArmor.PlayerDungeonArmorProfile bardMasterDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(bc_Attacker.BardMaster, null);
+
+                    if (bardMasterDungeonArmor.MatchingSet && !bardMasterDungeonArmor.InPlayerCombat)
+                        ProvokedCreatureDamageInflictedBonus = bardMasterDungeonArmor.DungeonArmorDetail.ProvokedCreatureDamageInflictedBonus;
+                }
+            }
+
+            damageScalar += MeleeDamageInflictedBonus;
+            damageScalar += ProvokedCreatureDamageInflictedBonus;
+
+            damageScalar -= MeleeDamageReceivedBonus;
+
+            #endregion   
+         
+            double finalBaseDamage = damage * damageScalar;
+
+            #region Final Base Damage Adjustments
+
+            //Player Attacking
+            if (pm_Attacker != null)
+            {
+                if (pm_Defender != null)
+                {
+                    if (pm_Attacker.IsUOACZHuman)
+                        finalBaseDamage *= 1.0 * UOACZSystem.HumanPlayerVsPlayerDamageScalar * UOACZSystem.GetFatigueScalar(pm_Attacker);
+
+                    else if (pm_Attacker.IsUOACZUndead)
+                        finalBaseDamage *= 1.0 * UOACZSystem.UndeadPlayerVsPlayerDamageScalar * UOACZSystem.GetFatigueScalar(pm_Attacker);
+
+                    else
+                        finalBaseDamage *= 1.0;
+                }
+
+                else if (TamedDefender)
+                {
+                    if (pm_Attacker.IsUOACZHuman || pm_Attacker.IsUOACZUndead)
+                        finalBaseDamage *= 1.0 * UOACZSystem.GetFatigueScalar(pm_Attacker);
+
+                    else
+                        finalBaseDamage *= 1.0;
+                }
+
+                else
+                {
+                    if (pm_Attacker.IsUOACZHuman)
+                        finalBaseDamage *= 1.0 * UOACZSystem.HumanPlayerVsCreatureDamageScalar;
+
+                    else if (pm_Attacker.IsUOACZUndead)
+                        finalBaseDamage *= 1.0 * UOACZSystem.UndeadPlayerVsCreatureDamageScalar;
+
+                    else
+                        finalBaseDamage *= 1.0;
+                }
+            }
+
+            //Tamed Creature Attacking
+            else if (TamedAttacker)
+            {
+                PlayerMobile pm_Controller = bc_Attacker.ControlMaster as PlayerMobile;
+
+                if (pm_Defender != null)
+                {
+                    if (pm_Controller.IsUOACZHuman || pm_Controller.IsUOACZUndead)
+                        finalBaseDamage *= 1.0 * bc_Attacker.PvPMeleeDamageScalar * UOACZSystem.GetFatigueScalar(pm_Controller);
+
+                    else
+                        finalBaseDamage *= 1.0 * bc_Attacker.PvPMeleeDamageScalar;
+                }
+
+                else if (TamedDefender)
+                {
+                    if (pm_Controller.IsUOACZHuman || pm_Controller.IsUOACZUndead)
+                        finalBaseDamage *= 1.0 * UOACZSystem.GetFatigueScalar(pm_Controller);
+
+                    else
+                        finalBaseDamage *= 1.0;
+                }
+
+                else
+                {
+                    if (UOACZSystem.IsUOACZValidMobile(bc_Attacker))
+                        finalBaseDamage *= 1.0 * UOACZSystem.TamedCreatureVsCreatureDamageScalar;
+
+                    else
+                        finalBaseDamage *= 1.0;
+                }
+            }
+
+            //Normal Creature Attacking
+            else
+            {
+                if (pm_Defender != null)
+                    finalBaseDamage *= 1.0;
+
+                else if (TamedDefender)
+                {
+                    if (UOACZSystem.IsUOACZValidMobile(bc_Defender))
+                        finalBaseDamage *= 1.0 * UOACZSystem.CreatureVsTamedCreatureDamageScalar;
+                }
+            }
+
+            #endregion
+
+            int finalDamage = (int)(Math.Round(finalBaseDamage));
+
+            if (finalDamage < 1)
+                finalDamage = 1;
+
+            #region Creature Damage Alterations
+
+            if (bc_Attacker != null)
+                bc_Attacker.AlterMeleeDamageTo(defender, ref finalDamage);
+
+            if (bc_Defender != null)
+                bc_Defender.AlterMeleeDamageFrom(attacker, ref finalDamage);
+
+            #endregion
+            
+            #region Parrying
+
+            //Weapon and Shield Parrying
+            BaseShield defenderShield = defender.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
+            BaseWeapon defenderWeapon = defender.FindItemOnLayer(Layer.TwoHanded) as BaseWeapon;
+
+            if (defenderShield != null)
+                damage = defenderShield.OnHit(this, finalDamage, attacker);
+
+            else if (defenderWeapon != null)
+            {
+                if (!(defenderWeapon is BaseRanged) && !(attacker is PlayerMobile) && (defender is PlayerMobile))
+                    damage = defenderWeapon.WeaponParry(defenderWeapon, finalDamage, defender);
+            }
+
+            #endregion            
+
+            int damageGiven = finalDamage;            
+
+            #region Reactive Armor
+
+            //Enhanced Spellbook: Wizard --- Player Can Get Above 20, But Only Should Be Against Monsters
+            if (attacker is PlayerMobile && defender.MeleeDamageAbsorb > 20 && !(defender.Region is UOACZRegion))
+                defender.MeleeDamageAbsorb = 20;
+
+            int reactiveArmorAbsorption = defender.MeleeDamageAbsorb;
+
+            if (reactiveArmorAbsorption > 0)
+            {
+                if (reactiveArmorAbsorption > finalDamage)
+                {
+                    int react = finalDamage / 5;
+
+                    defender.MeleeDamageAbsorb -= Math.Max(finalDamage, 2);
+                    finalDamage = 0;
+
+                    attacker.Damage(react, defender);
+
+                    int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(defender, HueableSpell.ReactiveArmor);
+
+                    attacker.PlaySound(0x1F1);
+                    attacker.FixedEffect(0x374A, 10, 16, spellHue, 0);
+                }
+
+                else
+                {
+                    finalDamage -= reactiveArmorAbsorption;
+                    defender.MeleeDamageAbsorb = 0;
+                    defender.SendLocalizedMessage(1005556); // Your reactive armor spell has been nullified.
+
+                    DefensiveSpell.Nullify(defender);
+                }
+            }
+
+            #endregion
+
+            if (finalDamage < 1)
+                finalDamage = 1;
+
+            AddBlood(attacker, defender, finalDamage);
+
+            //Assign Final Damage to Target
+            damageGiven = AOS.Damage(defender, attacker, finalDamage, false, 100, 0, 0, 0, 0);
+            
+            #region Display Damage Text
+
+            int adjustedDamageDisplayed = damageGiven;
+                        
             if (bc_Defender != null)
             {
                 //Discordance
@@ -1193,51 +1205,11 @@ namespace Server.Items
             {
                 //Ship Combat
                 if (BaseBoat.UseShipBasedDamageModifer(attacker, pm_Defender))
-                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar);
-            }
-
-            #region Reactive Armor
-
-            //Enhanced Spellbook: Wizard --- Player Can Get Above 20, But Only Should Be Against Monsters
-            if (attacker is PlayerMobile && defender.MeleeDamageAbsorb > 20 && !(defender.Region is UOACZRegion))
-                defender.MeleeDamageAbsorb = 20;
-
-            int reactiveArmorAbsorption = defender.MeleeDamageAbsorb;
-
-            if (reactiveArmorAbsorption > 0)
-            {
-                if (reactiveArmorAbsorption > damage)
-                {
-                    int react = damage / 5;
-
-                    defender.MeleeDamageAbsorb -= Math.Max(damage, 2);
-                    damage = 0;
-
-                    attacker.Damage(react, defender);
-
-                    int spellHue = PlayerEnhancementPersistance.GetSpellHueFor(defender, HueableSpell.ReactiveArmor);
-
-                    attacker.PlaySound(0x1F1);
-                    attacker.FixedEffect(0x374A, 10, 16, spellHue, 0);
-                }
-
-                else
-                {
-                    damage -= reactiveArmorAbsorption;
-                    defender.MeleeDamageAbsorb = 0;
-                    defender.SendLocalizedMessage(1005556); // Your reactive armor spell has been nullified.
-
-                    DefensiveSpell.Nullify(defender);
-                }
-            }
-
-            #endregion
-
-            if (damage < 1)
-                damage = 1;
+                   adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar);
+            }            
 
             //Display Player Melee Damage
-            if (PlayerAttacker)
+            if (pm_Attacker != null)
             {
                 if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
                     pm_Attacker.SendMessage(pm_Attacker.PlayerMeleeDamageTextHue, "You attack " + defender.Name + " for " + adjustedDamageDisplayed.ToString() + " damage.");
@@ -1247,7 +1219,7 @@ namespace Server.Items
             }
 
             //Display Follower Melee Damage
-            if (CreatureAttacker)
+            if (bc_Attacker != null)
             {
                 if ((bc_Attacker is BladeSpirits || bc_Attacker is EnergyVortex) && bc_Attacker.SummonMaster is PlayerMobile)
                 {
@@ -1279,7 +1251,7 @@ namespace Server.Items
             }
 
             //Provoked Creature Melee Damage
-            if (CreatureAttacker)
+            if (bc_Attacker != null)
             {
                 if (bc_Attacker.BardProvoked && bc_Attacker.BardMaster is PlayerMobile)
                 {
@@ -1296,10 +1268,25 @@ namespace Server.Items
                 }
             }
 
-            //Assign Final Damage to Target
-            damageGiven = AOS.Damage(defender, attacker, damage, false, 100, 0, 0, 0, 0);
+            #endregion            
 
-            //Dungeon Weapon
+            #region Bleed Effect
+
+            if (doBleedEffect)
+            {
+                double expirationSeconds = 10;
+                double value = (double)damageGiven * .5;
+
+                if (doStealthAttack)
+                    value *= .33;
+
+                SpecialAbilities.BleedSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x51e, true, "Your attack causes your target to bleed!", "Their attack causes you to bleed!");
+            }            
+
+            #endregion
+
+            #region Dungeon Weapon Resolution
+
             if ((Dungeon != DungeonEnum.None && TierLevel > 0) && allowDungeonBonuses && pm_Attacker != null && bc_Defender != null)
             {
                 //Damage Tracking: Used for Experience Gains
@@ -1331,6 +1318,10 @@ namespace Server.Items
                     DungeonWeapon.CheckResolveSpecialEffect(this, pm_Attacker, bc_Defender);
             }
 
+            #endregion
+
+            #region Weapon Durability
+
             //Weapon Takes Durability Loss on Hit
             if (LootType != Server.LootType.Blessed && ParentEntity is PlayerMobile)
             {
@@ -1349,21 +1340,27 @@ namespace Server.Items
                 }
             }
 
+            #endregion
+
+            #region Post-Hit Effects
+
             //Player Attack Post-Hit Effects
-            if (PlayerAttacker)
+            if (pm_Attacker != null)
                 pm_Attacker.OnGaveMeleeAttack(defender);
 
             //Player Defending Post-Hit Effects
-            if (PlayerDefender)
+            if (pm_Defender != null)
                 pm_Defender.OnGotMeleeAttack(attacker);
 
             //Creature Attack Post-Hit Effects
-            if (CreatureAttacker)
+            if (bc_Attacker != null)
                 bc_Attacker.OnGaveMeleeAttack(defender);
 
             //Creature Defending Post-Hit Effects
-            if (CreatureDefender)
+            if (bc_Defender != null)
                 bc_Defender.OnGotMeleeAttack(attacker);
+
+            #endregion
         }
 
         public int WeaponParry(BaseWeapon weapon, int damage, Mobile defender)
@@ -1724,36 +1721,7 @@ namespace Server.Items
                         defValue = 100;
                 }
             }
-
-            #region Weapon Special Attack: Stun ToHit Bonuses/Penalties
-
-            //Special Ability Effect on Creature: Stun
-            if (bc_Attacker != null)
-            {
-                double totalValue;
-
-                bc_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Stun, out totalValue);
-
-                atkValue -= totalValue;
-
-                if (atkValue < 0)
-                    atkValue = 0;
-            }
-
-            if (bc_Defender != null)
-            {
-                double totalValue;
-
-                bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Stun, out totalValue);
-
-                defValue -= totalValue;
-
-                if (defValue < 0)
-                    defValue = 0;
-            }
-
-            #endregion
-
+            
             double ourValue;
             double theirValue;
 
@@ -1767,40 +1735,36 @@ namespace Server.Items
             theirValue = (defValue + 50.0);
 
             double chance = ourValue / (theirValue * 2.0);
+            
+            chance += GetHitChanceBonus(attacker, defender);
 
-            double weaponBonus = GetHitChanceBonus(attacker, defender);
+            #region Special Effects
 
-            chance += weaponBonus;
-
+            //Special Ability Effect: Courage  
             double courageBonus = 0;
 
-            //Special Ability Effect: Courage
-            if (bc_Attacker != null)
-            {
-                bc_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Courage, out courageBonus);
-                chance += (int)(courageBonus * 100);
-            }
+            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Courage, out courageBonus);
+            chance += courageBonus;
 
-            else if (pm_Attacker != null)
-            {
-                pm_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Courage, out courageBonus);
-                chance += (int)(courageBonus * 100);
-            }
+            //Specil Ability Effect: Stun
+            double stunBonus = 0;
+
+            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Stun, out stunBonus);
+            chance -= stunBonus;
+
+            //Special Ability Effect: Debilitation
+            double debilitationBonus = 0;
+                        
+            defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Debilitate, out debilitationBonus);
+            chance += debilitationBonus;          
 
             //Special Ability Effect: Evasion
             double evasionBonus = 0;
 
-            if (bc_Defender != null)
-            {
-                bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Evasion, out evasionBonus);
-                chance -= (int)(courageBonus * 100);
-            }
+            defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Evasion, out evasionBonus);
+            chance -= evasionBonus;
 
-            else if (pm_Defender != null)
-            {
-                pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Evasion, out evasionBonus);
-                chance -= (int)(evasionBonus * 100);
-            }
+            #endregion
 
             #region StealthAttack ToHit Bonus
 
@@ -1846,15 +1810,16 @@ namespace Server.Items
 
             #endregion
 
-            //Dungeon Weapon
+            #region Dungeon Weapon
+
             if (Dungeon != DungeonEnum.None && TierLevel > 0 && pm_Defender == null)
                 chance += DungeonWeapon.BaseAccuracy * (DungeonWeapon.AccuracyPerTier * (double)TierLevel);
 
-            if (defender is PlayerMobile && ((PlayerMobile)defender).m_DateTimeDied + TimeSpan.FromSeconds(60) > DateTime.UtcNow)
-                return (Utility.RandomDouble() < chance);
+            #endregion
 
-            else
-                return attacker.CheckSkill(atkSkill.SkillName, chance, 1.0);
+            //attacker.Say("Chance to Hit: " + chance.ToString());
+            
+           return attacker.CheckSkill(atkSkill.SkillName, chance, 1.0);
         }
 
         #region Sounds
@@ -2301,7 +2266,7 @@ namespace Server.Items
 
                 double hurtSoundIgnoreChance = 0;
 
-                if (bc_From.IsMiniBoss())
+                if (bc_From.IsChamp())
                     hurtSoundIgnoreChance = .75;
 
                 if (bc_From.IsBoss())

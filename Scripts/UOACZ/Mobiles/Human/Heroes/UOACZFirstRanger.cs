@@ -83,7 +83,7 @@ namespace Server.Mobiles
 		}
 
         public override int MaxDistanceAllowedFromHome { get { return 75; } }
-        public override bool AlwaysMiniBoss { get { return true; } }
+        public override bool AlwaysChamp { get { return true; } }
 
         public override bool IsRangedPrimary { get { return true; } }
         public override int WeaponSwitchRange { get { return 2; } }

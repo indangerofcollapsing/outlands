@@ -77,7 +77,7 @@ namespace Server
 
         public override int MaxDistanceAllowedFromHome { get { return 100; } }
 
-        public override bool AlwaysMiniBoss { get { return true; } }
+        public override bool AlwaysChamp { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
 
         public override int AttackRange { get { return 3; } }

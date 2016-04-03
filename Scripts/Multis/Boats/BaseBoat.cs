@@ -4014,7 +4014,7 @@ namespace Server.Multis
 
                 if (bc_Creature != null)
                 {
-                    if (bc_Creature.IsMiniBoss() || bc_Creature.IsBoss() || bc_Creature.IsLoHBoss() || bc_Creature.IsEventBoss())
+                    if (bc_Creature.IsChamp() || bc_Creature.IsBoss() || bc_Creature.IsLoHBoss() || bc_Creature.IsEventBoss())
                         continue;
 
                     if (bc_Creature.Controlled && bc_Creature.ControlMaster is PlayerMobile)

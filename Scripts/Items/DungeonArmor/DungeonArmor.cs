@@ -284,8 +284,8 @@ namespace Server.Items
             public ArmorMeditationAllowance MeditationAllowance = ArmorMeditationAllowance.None;
             public int DexPenalty = -10;
 
-            public double MeleeDamageInflictedScalar = 1.0;
-            public double MeleeDamageReceivedScalar = 1.0;
+            public double MeleeDamageInflictedBonus = 0;
+            public double MeleeDamageReceivedBonus = 0;
 
             public double SpellDamageInflictedBonus = 0;
             public double SpellDamageReceivedBonus = 0;
@@ -310,10 +310,10 @@ namespace Server.Items
             public double ReducedSpellManaCostScalar = .5;
             
             public int BonusStealthSteps = 0;
-            public double BackstabDamageInflictedScalar = 1.0;
+            public double BackstabDamageInflictedBonus = 0;
             public bool StealthLeavesFootprints = false;
 
-            public double ProvokedCreatureDamageInflictedScalar = 1.0;
+            public double ProvokedCreatureDamageInflictedBonus = 0;
             public double IgnorePeacemakingBreakChance = 0;
             public double DiscordanceEffectBonus = 0;
 
@@ -368,7 +368,7 @@ namespace Server.Items
                         DexPenalty = -10;
                         MeditationAllowance = ArmorMeditationAllowance.None;                        
 
-                        MeleeDamageReceivedScalar = 1 - (.13 + (.03 * tierLevel));
+                        MeleeDamageReceivedBonus =.13 + (.03 * tierLevel);
                         SpellDamageReceivedBonus = .13 + (.03 * tierLevel);
 
                         BandageSelfTimeReduction = 2 + (.5 * tierLevel);
@@ -381,7 +381,7 @@ namespace Server.Items
                                                 "Dex Penalty: " + DexPenalty.ToString(),
                                                 "Meditation Allowed: 0%",
                                                 "",
-                                                "Melee Damage Reduction: " + Utility.CreatePercentageString(1 - MeleeDamageReceivedScalar),
+                                                "Melee Damage Reduction: " + Utility.CreatePercentageString(MeleeDamageReceivedBonus),
                                                 "Spell Damage Reduction: " + Utility.CreatePercentageString(SpellDamageReceivedBonus),
                                                 "Bandage Self Timer Reduction: " + BandageSelfTimeReduction.ToString() + " seconds",
                                                 };
@@ -397,7 +397,7 @@ namespace Server.Items
                         DexPenalty = -3;
                         MeditationAllowance = ArmorMeditationAllowance.Half;
 
-                        MeleeDamageInflictedScalar = 1 + (.10 + (.025 * tierLevel));
+                        MeleeDamageInflictedBonus = .10 + (.025 * tierLevel);
                         SpecialWeaponAttackBonus = .08 + (.02 * tierLevel);
 
                         gumpText = new string[] { 
@@ -408,7 +408,7 @@ namespace Server.Items
                                                 "Dex Penalty: " + DexPenalty.ToString(),
                                                 "Meditation Allowed: 50%",
                                                  "",
-                                                "Melee Damage Bonus: " + Utility.CreatePercentageString(MeleeDamageInflictedScalar - 1),
+                                                "Melee Damage Bonus: " + Utility.CreatePercentageString(MeleeDamageInflictedBonus),
                                                 "Special Weapon Attack Chance Bonus: " + Utility.CreatePercentageString(SpecialWeaponAttackBonus),
                                                 };
                     break;
@@ -478,7 +478,7 @@ namespace Server.Items
                         MeditationAllowance = ArmorMeditationAllowance.Half;
 
                         BonusStealthSteps = 4 + (1 * tierLevel);
-                        BackstabDamageInflictedScalar = 1 + (.40 + (.05 * tierLevel));
+                        BackstabDamageInflictedBonus = .40 + (.05 * tierLevel);
                         StealthLeavesFootprints = true;
 
                         gumpText = new string[] { 
@@ -490,7 +490,7 @@ namespace Server.Items
                                                 "Meditation Allowed: 50%",
                                                  "",
                                                 "Bonus Stealth Steps: " + BonusStealthSteps.ToString(),
-                                                "Backstab Damage Inflicted Bonus: " + Utility.CreatePercentageString(BackstabDamageInflictedScalar - 1),
+                                                "Backstab Damage Inflicted Bonus: " + Utility.CreatePercentageString(BackstabDamageInflictedBonus),
                                                 "Stealth Movement Now Leaves Footprints",
                                                 };
                     break;
@@ -505,7 +505,7 @@ namespace Server.Items
                         DexPenalty = 0;
                         MeditationAllowance = ArmorMeditationAllowance.All;
 
-                        ProvokedCreatureDamageInflictedScalar = 1 + (.2 + (.025 * tierLevel));
+                        ProvokedCreatureDamageInflictedBonus = .2 + (.025 * tierLevel);
                         IgnorePeacemakingBreakChance = .30 + (.05 * tierLevel);
                         DiscordanceEffectBonus = .04 + (.015 * tierLevel);
 
@@ -517,7 +517,7 @@ namespace Server.Items
                                                 "Dex Penalty: " + DexPenalty.ToString(),
                                                 "Meditation Allowed: 100%",                                                
                                                  "",
-                                                "Provoked Creature Damage Inflicted Bonus: " + Utility.CreatePercentageString(ProvokedCreatureDamageInflictedScalar - 1),
+                                                "Provoked Creature Damage Inflicted Bonus: " + Utility.CreatePercentageString(ProvokedCreatureDamageInflictedBonus),
                                                 "Chance to Avoid Peacemaking Breaking: " + Utility.CreatePercentageString(IgnorePeacemakingBreakChance),
                                                 "Discordance Effect Bonus: " + Utility.CreatePercentageString(DiscordanceEffectBonus),
                                                 };

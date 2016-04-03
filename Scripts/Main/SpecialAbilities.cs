@@ -2773,6 +2773,50 @@ namespace Server.Mobiles
 
         #endregion
 
+        #region Debilitate
+
+        public static void Debilitate(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            if (bc_Defender != null)
+                value *= bc_Defender.SpecialEffectReduction;
+
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
+            {
+                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
+                {
+                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
+                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
+
+                    return;
+                }
+            }
+
+            if (showEffect)
+                defender.FixedEffect(0x5683, 10, 20);
+
+            if (soundOverride == -1)
+                Effects.PlaySound(defender.Location, defender.Map, 0x510);
+
+            else if (soundOverride > 0)
+                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            defender.SendMessage(defenderMessage);
+            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Debilitate, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion
+
         #region Frenzy
 
         public static void FrenzySpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)

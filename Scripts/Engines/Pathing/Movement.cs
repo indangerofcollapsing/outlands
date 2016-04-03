@@ -332,7 +332,7 @@ namespace Server.Movement
 
             if (bc_Creature != null)
             {
-                if (bc_Creature.IsBoss() || bc_Creature.IsMiniBoss() || bc_Creature.IsLoHBoss() || bc_Creature.IsEventBoss())
+                if (bc_Creature.IsBoss() || bc_Creature.IsChamp() || bc_Creature.IsLoHBoss() || bc_Creature.IsEventBoss())
                     checkMobs = false;
             }
 

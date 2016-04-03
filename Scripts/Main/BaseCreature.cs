@@ -199,7 +199,7 @@ namespace Server.Mobiles
 
         public bool IsFreelyLootable()
         {
-            if (FreelyLootable || AlwaysFreelyLootable || IsMiniBossMinion() || IsBossMinion() || IsLoHMinion() || IsEventMinion())
+            if (FreelyLootable || AlwaysFreelyLootable || IsChampMinion() || IsBossMinion() || IsLoHMinion() || IsEventMinion())
                 return true;
 
             return false;
@@ -217,7 +217,7 @@ namespace Server.Mobiles
                 if (Region is UOACZRegion)
                     return 0;
 
-                if (IsMiniBoss())
+                if (IsChamp())
                     return .75;
 
                 if (IsBoss())
@@ -2180,7 +2180,7 @@ namespace Server.Mobiles
         public virtual TimeSpan AbandonDelay { get { return TimeSpan.FromHours(72); } }
         public virtual TimeSpan DeleteDelay { get { return TimeSpan.FromHours(6); } }
 
-        public override bool CanRegenHits { get { return !m_IsDeadPet && !IsBoss() && !IsMiniBoss() && base.CanRegenHits; } }
+        public override bool CanRegenHits { get { return !m_IsDeadPet && !IsBoss() && !IsChamp() && base.CanRegenHits; } }
         public override bool CanRegenStam { get { return !m_IsDeadPet && base.CanRegenStam; } }
         public override bool CanRegenMana { get { return !m_IsDeadPet && base.CanRegenMana; } }
 
@@ -2403,10 +2403,10 @@ namespace Server.Mobiles
         public virtual bool Uncalmable { get { return BardImmune || m_IsDeadPet; } }
         public virtual bool AreaPeaceImmune { get { return BardImmune || m_IsDeadPet; } }
 
-        public virtual bool AllowParagon { get { return (LootTier < Loot.LootTier.Eight && !IsMiniBoss() && !IsBoss() && !IsLoHBoss() && !IsEventBoss()) && !Rare; } }
+        public virtual bool AllowParagon { get { return (LootTier < Loot.LootTier.Eight && !IsChamp() && !IsBoss() && !IsLoHBoss() && !IsEventBoss()) && !Rare; } }
 
-        public virtual bool AlwaysMiniBoss { get { return false; } }
-        public virtual bool AlwaysMiniBossMinion { get { return false; } }
+        public virtual bool AlwaysChamp { get { return false; } }
+        public virtual bool AlwaysChampMinion { get { return false; } }
 
         public virtual bool AlwaysBoss { get { return false; } }
         public virtual bool AlwaysBossMinion { get { return false; } }
@@ -2434,18 +2434,18 @@ namespace Server.Mobiles
             return false;
         }
 
-        //MiniBoss
-        public bool IsMiniBoss()
+        //Champ
+        public bool IsChamp()
         {
-            if (AlwaysMiniBoss || MiniBoss)
+            if (AlwaysChamp || Champ)
                 return true;
 
             return false;
         }
 
-        public bool IsMiniBossMinion()
+        public bool IsChampMinion()
         {
-            if (AlwaysMiniBossMinion || MiniBossMinion)
+            if (AlwaysChampMinion || ChampMinion)
                 return true;
 
             return false;
@@ -2520,21 +2520,21 @@ namespace Server.Mobiles
             set { m_BossMinion = value; }
         }
 
-        //Mini-Boss
-        public bool m_MiniBoss = false;
+        //Champ
+        public bool m_Champ = false;
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool MiniBoss
+        public bool Champ
         {
-            get { return m_MiniBoss; }
-            set { m_MiniBoss = value; }
+            get { return m_Champ; }
+            set { m_Champ = value; }
         }
 
-        public bool m_MiniBossMinion = false;
+        public bool m_ChampMinion = false;
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool MiniBossMinion
+        public bool ChampMinion
         {
-            get { return m_MiniBossMinion; }
-            set { m_MiniBossMinion = value; }
+            get { return m_ChampMinion; }
+            set { m_ChampMinion = value; }
         }
 
         //LoH
@@ -2658,7 +2658,7 @@ namespace Server.Mobiles
 
         public void StartStamFreeMoveAuraTimer()
         {
-            if ((IsBoss() || IsMiniBoss() || IsLoHBoss() || IsEventBoss()) && !(Region is UOACZRegion))
+            if ((IsBoss() || IsChamp() || IsLoHBoss() || IsEventBoss()) && !(Region is UOACZRegion))
             {
                 m_StamFreeMoveAuraTimer = new StamFreeMoveAuraTimer(this);
                 m_StamFreeMoveAuraTimer.Start();
@@ -3492,7 +3492,7 @@ namespace Server.Mobiles
 
         public Dictionary<BaseCreature, DateTime> DictAutoDispelInstances = new Dictionary<BaseCreature, DateTime>();
 
-        public virtual bool AutoDispel { get { return (!Summoned && !(Region is UOACZRegion) && (InitialDifficulty >= MediumDifficultyThreshold || IsMiniBoss() || IsBoss() || IsLoHBoss() || IsEventBoss())); } }
+        public virtual bool AutoDispel { get { return (!Summoned && !(Region is UOACZRegion) && (InitialDifficulty >= MediumDifficultyThreshold || IsChamp() || IsBoss() || IsLoHBoss() || IsEventBoss())); } }
 
         public void SetDispelResistance(Mobile caster, bool enhancedSpellcast, double bonusResist)
         {
@@ -3511,7 +3511,7 @@ namespace Server.Mobiles
         {
             get
             {
-                if (IsMiniBoss())
+                if (IsChamp())
                     return TimeSpan.FromSeconds(6);
 
                 if (IsBoss())
@@ -3544,7 +3544,7 @@ namespace Server.Mobiles
                 if (Rare)
                     return TimeSpan.FromSeconds(30);
 
-                if (IsMiniBoss())
+                if (IsChamp())
                     return TimeSpan.FromSeconds(45);
 
                 if (IsBoss())
@@ -3557,6 +3557,37 @@ namespace Server.Mobiles
                     return TimeSpan.FromSeconds(90);
 
                 return TimeSpan.FromSeconds(0);
+            }
+        }
+
+        public virtual double IgnoreHurtSoundChance
+        {
+            get
+            {
+                double scalar = InitialDifficulty * .01;
+
+                if (scalar > .8)
+                    scalar = .8;
+
+                if (IsParagon)
+                    return 0;
+
+                if (Rare)
+                    return 0;
+
+                if (IsChamp())
+                    return scalar;
+
+                if (IsBoss())
+                    return scalar;
+
+                if (IsLoHBoss())
+                    return scalar;
+
+                if (IsEventBoss())
+                    return .9;
+
+                return 0;
             }
         }
 
@@ -3575,7 +3606,7 @@ namespace Server.Mobiles
                 if (Rare)
                     return scalar;
 
-                if (IsMiniBoss())
+                if (IsChamp())
                     return scalar;
 
                 if (IsBoss())
@@ -3591,11 +3622,37 @@ namespace Server.Mobiles
             }
         }
 
+        public virtual double BackstabDamageRecievedScalar
+        {
+            get
+            {
+                if (IsParagon)
+                    return 1;
+
+                if (Rare)
+                    return 1;
+
+                if (IsChamp())
+                    return .5;
+
+                if (IsBoss())
+                    return .5;
+
+                if (IsLoHBoss())
+                    return .5;
+
+                if (IsEventBoss())
+                    return .5;
+
+                return 1;
+            }
+        }
+
         public override TimeSpan DamageEntryExpiration
         {
             get
             {
-                if (IsMiniBoss())
+                if (IsChamp())
                     return TimeSpan.FromMinutes(5);
 
                 if (IsBoss())
@@ -4330,8 +4387,8 @@ namespace Server.Mobiles
             writer.Write(m_WasFishedUp);
             writer.Write(m_Boss);
             writer.Write(m_BossMinion);
-            writer.Write(m_MiniBoss);
-            writer.Write(m_MiniBossMinion);
+            writer.Write(m_Champ);
+            writer.Write(m_ChampMinion);
             writer.Write(m_LoHBoss);
             writer.Write(m_LoHMinion);
             writer.Write(m_EventBoss);
@@ -4457,8 +4514,8 @@ namespace Server.Mobiles
                 m_WasFishedUp = reader.ReadBool();
                 m_Boss = reader.ReadBool();
                 m_BossMinion = reader.ReadBool();
-                m_MiniBoss = reader.ReadBool();
-                m_MiniBossMinion = reader.ReadBool();
+                m_Champ = reader.ReadBool();
+                m_ChampMinion = reader.ReadBool();
                 m_LoHBoss = reader.ReadBool();
                 m_LoHMinion = reader.ReadBool();
                 m_EventBoss = reader.ReadBool();
@@ -5935,7 +5992,7 @@ namespace Server.Mobiles
         public bool CanStamFreeShove()
         {
             //Mini-Bosses and Bosses Can Move Freely Through Mobiles
-            if (IsBoss() || IsMiniBoss() || IsLoHBoss() || IsEventBoss())
+            if (IsBoss() || IsChamp() || IsLoHBoss() || IsEventBoss())
                 return true;
 
             //Tamed Creatures 
@@ -7408,7 +7465,7 @@ namespace Server.Mobiles
                 AwardGuildExperience();
             }
 
-            else if (IsMiniBoss() && !(Region is NewbieDungeonRegion) && !DiedByShipSinking && !(Region is UOACZRegion))
+            else if (IsChamp() && !(Region is NewbieDungeonRegion) && !DiedByShipSinking && !(Region is UOACZRegion))
             {
                 double dungeonArmorChance = 1;
                 double dungeonArmorUpgradeHammerChance = .25;

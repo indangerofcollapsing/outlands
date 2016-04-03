@@ -160,7 +160,7 @@ namespace Server.Items
 
             int xpGain = NormalGain;
 
-            if (creature.IsMiniBoss())
+            if (creature.IsChamp())
             {
                 xpGain = ChampGain;
                 finalChance = 1.0;
