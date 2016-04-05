@@ -2,7 +2,7 @@ using System;
 
 namespace Server.Factions
 {
-	public class Britain : Town
+	public class Britain : FactionTown
 	{
 		public Britain()
 		{

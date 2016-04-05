@@ -8,7 +8,7 @@ namespace Server.Factions
 {
 	public class FactionBoardVendor : BaseFactionVendor
 	{
-		public FactionBoardVendor( Town town, Faction faction ) : base( town, faction, "the LumberMan" ) // NOTE: title inconsistant, as OSI
+		public FactionBoardVendor( FactionTown town, Faction faction ) : base( town, faction, "the LumberMan" ) // NOTE: title inconsistant, as OSI
 		{
 			SetSkill( SkillName.Carpentry, 85.0, 100.0 );
 			SetSkill( SkillName.Lumberjacking, 60.0, 83.0 );

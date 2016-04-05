@@ -1229,8 +1229,10 @@ namespace Server.Mobiles
 				if (value == false && m_ShowBoundsItems != null)
 				{
 					// Remove all of the items from the array
-					foreach (Static s in m_ShowBoundsItems)
-						s.Delete();
+                    foreach (Static s in m_ShowBoundsItems)
+                    {
+                        s.Delete();
+                    }
 
 					m_ShowBoundsItems.Clear();
 				}
@@ -6757,8 +6759,10 @@ public static void _TraceEnd(int index)
 							if (!bad_spawner)
 							{
 								// Delete the old spawner if it exists
-								if (OldSpawner != null)
-									OldSpawner.Delete();
+                                if (OldSpawner != null)
+                                {
+                                    OldSpawner.Delete();
+                                }
 
 								// Create the new spawner
 								XmlSpawner TheSpawn = new XmlSpawner(SpawnId, SpawnX, SpawnY, SpawnWidth, SpawnHeight, SpawnName, SpawnMaxCount,
@@ -7748,8 +7752,10 @@ public static void _TraceEnd(int index)
 				}
 
 				// Delete the items in the array list
-				foreach (Item i in ToDelete)
-					i.Delete();
+                foreach (Item i in ToDelete)
+                {
+                    i.Delete();
+                }
 
 				if (WipeAll == true)
 					e.Mobile.SendMessage("Removed {0} XmlSpawner objects from the world.", Count);
@@ -7981,13 +7987,27 @@ public static void _TraceEnd(int index)
 		}
 
 		[Constructable]
-		public XmlSpawner(string creatureName)
-			: base(BaseItemId)
+		public XmlSpawner(List<string> creatureNames, List<int> creatureAmounts): base(BaseItemId)
 		{
 			m_PlayerCreated = true;
 			m_UniqueId = Guid.NewGuid().ToString();
-			SpawnObject[] so = new SpawnObject[1];
-			so[0] = new SpawnObject(creatureName, 1);
+
+            SpawnObject[] so = new SpawnObject[creatureNames.Count];
+
+            for (int a = 0; a < creatureNames.Count; a++)
+            {
+                string creatureName = "";
+                int creatureAmount = 1;
+                
+                if (a < creatureNames.Count)
+                    creatureName = creatureNames[a];
+
+                if (a < creatureAmounts.Count)
+                    creatureAmount = creatureAmounts[a];
+
+                so[a] = new SpawnObject(creatureName, creatureAmount);
+            }
+
 			SpawnRange = defSpawnRange;
 
 			InitSpawn(0, 0, m_Width, m_Height, string.Empty, 1, defMinDelay, defMaxDelay, defDuration,
@@ -11119,10 +11139,13 @@ public static void _TraceEnd(int index)
 
 			foreach (object o in list)
 			{
-				if (o is Item)
-					((Item)o).Delete();
-				else if (o is Mobile)
-					((Mobile)o).Delete();
+                if (o is Item)
+                {
+                    ((Item)o).Delete();
+                }
+
+                else if (o is Mobile)
+                    ((Mobile)o).Delete();
 			}
 		}
 
@@ -11133,6 +11156,7 @@ public static void _TraceEnd(int index)
 				for(int i=listi.Count - 1; i>=0; --i)
 					listi[i].Delete();
 			}
+
 			if(listm != null)
 			{
 				for(int i=listm.Count - 1; i>=0; --i)

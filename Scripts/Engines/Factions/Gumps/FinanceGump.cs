@@ -13,7 +13,7 @@ namespace Server.Factions
 	{
 		private PlayerMobile m_From;
 		private Faction m_Faction;
-		private Town m_Town;
+		private FactionTown m_Town;
 
 		private static int[] m_PriceOffsets = new int[]
 			{
@@ -23,7 +23,7 @@ namespace Server.Factions
 
 		public override int ButtonTypes{ get{ return 2; } }
 
-		public FinanceGump( PlayerMobile from, Faction faction, Town town ) : base( 50, 50 )
+		public FinanceGump( PlayerMobile from, Faction faction, FactionTown town ) : base( 50, 50 )
 		{
 			m_From = from;
 			m_Faction = faction;
@@ -211,7 +211,7 @@ namespace Server.Factions
 
 							if ( m_From.AccessLevel == AccessLevel.Player && !m_Town.TaxChangeReady )
 							{
-								TimeSpan remaining = DateTime.UtcNow - ( m_Town.LastTaxChange + Town.TaxChangePeriod );
+								TimeSpan remaining = DateTime.UtcNow - ( m_Town.LastTaxChange + FactionTown.TaxChangePeriod );
 
 								if ( remaining.TotalMinutes < 4 )
 									m_From.SendLocalizedMessage( 1042165 ); // You must wait a short while before changing prices again.
@@ -246,9 +246,9 @@ namespace Server.Factions
 					{
 						VendorList vendorList = vendorLists[index];
 
-						Town town = Town.FromRegion( m_From.Region );
+						FactionTown town = FactionTown.FromRegion( m_From.Region );
 
-						if ( Town.FromRegion( m_From.Region ) != m_Town )
+						if ( FactionTown.FromRegion( m_From.Region ) != m_Town )
 						{
 							m_From.SendLocalizedMessage( 1010305 ); // You must be in your controlled city to buy Items
 						}

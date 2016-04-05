@@ -1,6 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ServerRegions>
-	<Facet name="Felucca">		
+	<Facet name="Felucca">
+		<region type="TownRegion" priority="50" name="Cambria">
+			<rect x="1416" y="1498" width="324" height="279" zmin="-10" />
+			<rect x="1500" y="1408" width="46" height="90" />
+			<rect x="1385" y="1538" width="31" height="239" zmin="-10" />
+			<rect x="1416" y="1777" width="324" height="60" />
+			<rect x="1330" y="1991" width="13" height="13" /> 
+			<rect x="1295" y="1559" width="113" height="137" />
+			<go x="1495" y="1629" z="10" />
+			<music name="Britain1" />
+			<zrange min="0" />
+			<region>
+				<rect x="1492" y="1602" width="8" height="19" />
+				<rect x="1500" y="1610" width="8" height="16" />
+				<rect x="1576" y="1584" width="24" height="16" />
+				<rect x="1456" y="1512" width="16" height="16" />
+				<rect x="1472" y="1512" width="8" height="8" />
+				<rect x="1486" y="1684" width="8" height="8" />
+				<rect x="1494" y="1676" width="8" height="24" />
+				<rect x="1424" y="1712" width="8" height="24" />
+				<rect x="1432" y="1712" width="8" height="12" />
+				<rect x="1608" y="1584" width="24" height="8" />
+				<rect x="1616" y="1576" width="8" height="8" />
+				<rect x="1544" y="1760" width="16" height="16" />
+				<rect x="1560" y="1760" width="8" height="8" />
+				<zrange min="0" />
+				<logoutDelay active="false" />
+			</region>
+		</region>
+		<region type="TownRegion" priority="50" name="Prevalia">
+			<rect x="1856" y="2636" width="75" height="28" />
+			<rect x="1816" y="2664" width="283" height="231" />
+			<rect x="2099" y="2782" width="18" height="25" />
+			<rect x="1970" y="2895" width="47" height="32" />
+			<rect x="1823" y="2943" width="11" height="11" />
+			<rect x="1796" y="2696" width="20" height="67" zmin="0" />
+			<rect x="1800" y="2796" width="16" height="52" zmin="0" />
+			<go x="1867" y="2780" z="0" />
+			<music name="Trinsic" />
+			<region>
+				<rect x="1834" y="2728" width="22" height="16" />
+				<rect x="2024" y="2784" width="16" height="20" />
+				<rect x="2026" y="2804" width="14" height="2" />
+				<rect x="2024" y="2806" width="16" height="7" />
+				<rect x="1923" y="2786" width="12" height="22" />
+				<rect x="1935" y="2786" width="7" height="14" />
+				<logoutDelay active="false" />
+			</region>
+		</region>	
+		<region type="DungeonRegion" priority="50" name="Wrong">
+			<rect x="5633" y="511" width="253" height="510" />
+			<go x="5825" y="599" z="0" />
+			<music name="Dungeon9" />
+			<entrance x="2042" y="226" />
+		</region>
+		<region type="NoHousingRegion" priority="50" name="Britain Graveyard">
+			<rect x="1333" y="1441" width="84" height="82" />
+			<go x="1384" y="1492" z="10" />
+		</region>		
 	</Facet>
 	
 	<Facet name="Trammel">		

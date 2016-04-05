@@ -585,7 +585,7 @@ namespace Server.Factions
 			for ( int i = 0; i < monoliths.Count; ++i )
 				monoliths[i].Sigil = null;
 
-			List<Town> towns = Town.Towns;
+			List<FactionTown> towns = FactionTown.Towns;
 
 			for ( int i = 0; i < towns.Count; ++i )
 			{
@@ -637,7 +637,7 @@ namespace Server.Factions
 			for ( int i = 0; i < monoliths.Count; ++i )
 				monoliths[i].Sigil = null;
 
-			List<Town> towns = Town.Towns;
+			List<FactionTown> towns = FactionTown.Towns;
 
 			for ( int i = 0; i < towns.Count; ++i )
 			{

@@ -205,12 +205,6 @@ namespace Server.Items
 					for ( int j = -8; j <= 8; ++j )
 					{
 						z = from.Z + j;
-                        BaseGuildDock b = Server.Custom.Pirates.TownDockControl.CheckDockMulti(new Point3D(x, y, z), map);
-                        if (b != null)
-                        {
-                            from.Location = new Point3D(x, y, b.Z+6);
-                            return false;
-                        }
 
 						if ( map.CanFit( x, y, z, 16, false, false ) && !Server.Spells.SpellHelper.CheckMulti( new Point3D( x, y, z ), map ) && !Region.Find( new Point3D( x, y, z ), map ).IsPartOf( typeof( Factions.StrongholdRegion ) ) )
 						{

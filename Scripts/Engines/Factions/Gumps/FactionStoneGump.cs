@@ -85,11 +85,11 @@ namespace Server.Factions
 
 			AddHtmlLocalized( 20, 30, 250, 20, 1011430, false, false ); // CITY STATUS
 
-			List<Town> towns = Town.Towns;
+			List<FactionTown> towns = FactionTown.Towns;
 
 			for ( int i = 0; i < towns.Count; ++i )
 			{
-				Town town = towns[i];
+				FactionTown town = towns[i];
 
 				AddHtmlText( 40, 55 + (i * 30), 150, 20, town.Definition.TownName, false, false );
 
@@ -205,7 +205,7 @@ namespace Server.Factions
 
 					for ( int i = 0; i < towns.Count; ++i )
 					{
-						Town town = towns[i];
+						FactionTown town = towns[i];
 
 						AddHtmlText( 55, 75 + (i * 30), 200, 20, town.Definition.TownName, false, false );
 
@@ -307,11 +307,11 @@ namespace Server.Factions
 					if ( !m_Faction.IsCommander( m_From ) )
 						return;
 
-					List<Town> towns = Town.Towns;
+					List<FactionTown> towns = FactionTown.Towns;
 
 					if ( index >= 0 && index < towns.Count )
 					{
-						Town town = towns[index];
+						FactionTown town = towns[index];
 
 						if ( town.Owner == m_Faction )
 						{

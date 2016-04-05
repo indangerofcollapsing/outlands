@@ -7,10 +7,10 @@ namespace Server.Factions
 {
 	public class TownStone : BaseSystemController
 	{
-		private Town m_Town;
+		private FactionTown m_Town;
 
 		[CommandProperty( AccessLevel.Counselor, AccessLevel.Administrator )]
-		public Town Town
+		public FactionTown Town
 		{
 			get{ return m_Town; }
 			set
@@ -29,7 +29,7 @@ namespace Server.Factions
 		}
 
 		[Constructable]
-		public TownStone( Town town ) : base( 0xEDE )
+		public TownStone( FactionTown town ) : base( 0xEDE )
 		{
 			Movable = false;
 			Town = town;
@@ -65,7 +65,7 @@ namespace Server.Factions
 
 			writer.Write( (int) 0 ); // version
 
-			Town.WriteReference( writer, m_Town );
+			FactionTown.WriteReference( writer, m_Town );
 		}
 
 		public override void Deserialize( GenericReader reader )
@@ -78,7 +78,7 @@ namespace Server.Factions
 			{
 				case 0:
 				{
-					Town = Town.ReadReference( reader );
+					Town = FactionTown.ReadReference( reader );
 					break;
 				}
 			}

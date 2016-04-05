@@ -13,7 +13,7 @@ namespace Server.Factions
 	{
 		private PlayerMobile m_From;
 		private Faction m_Faction;
-		private Town m_Town;
+		private FactionTown m_Town;
 
 		private void CenterItem( int itemID, int x, int y, int w, int h )
 		{
@@ -21,7 +21,7 @@ namespace Server.Factions
 			AddItem( x + ((w - rc.Width) / 2) - rc.X, y + ((h - rc.Height) / 2) - rc.Y, itemID );
 		}
 
-		public SheriffGump( PlayerMobile from, Faction faction, Town town ) : base( 50, 50 )
+		public SheriffGump( PlayerMobile from, Faction faction, FactionTown town ) : base( 50, 50 )
 		{
 			m_From = from;
 			m_Faction = faction;
@@ -148,9 +148,9 @@ namespace Server.Factions
 			if ( index >= 0 && index < m_Town.GuardLists.Count )
 			{
 				GuardList guardList = m_Town.GuardLists[index];
-				Town town = Town.FromRegion( m_From.Region );
+				FactionTown town = FactionTown.FromRegion( m_From.Region );
 
-				if ( Town.FromRegion( m_From.Region ) != m_Town )
+				if ( FactionTown.FromRegion( m_From.Region ) != m_Town )
 				{
 					m_From.SendLocalizedMessage( 1010305 ); // You must be in your controlled city to buy Items
 				}

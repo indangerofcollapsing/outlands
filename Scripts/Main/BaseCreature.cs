@@ -8215,7 +8215,7 @@ namespace Server.Mobiles
 
         public override bool CanBeHarmful(Mobile target, bool message, bool ignoreOurBlessedness)
         {
-            if (target is BaseFactionGuard || target is BaseCannonGuard)
+            if (target is BaseFactionGuard )
                 return false;
 
             if ((target is BaseCreature && ((BaseCreature)target).IsInvulnerable) || target is PlayerVendor)

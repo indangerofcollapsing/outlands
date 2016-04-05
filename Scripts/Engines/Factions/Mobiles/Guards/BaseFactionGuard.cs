@@ -12,7 +12,7 @@ namespace Server.Factions
 	public abstract class BaseFactionGuard : BaseCreature
 	{
 		private Faction m_Faction;
-		private Town m_Town;
+		private FactionTown m_Town;
 		private Orders m_Orders;
 
 		public override bool BardImmune{ get{ return true; } }
@@ -30,7 +30,7 @@ namespace Server.Factions
 		}
 
 		[CommandProperty( AccessLevel.GameMaster, AccessLevel.Administrator )]
-		public Town Town
+		public FactionTown Town
 		{
 			get{ return m_Town; }
 			set{ Unregister(); m_Town = value; Register(); }
@@ -175,7 +175,7 @@ namespace Server.Factions
 					{
 						this.Say( 1042189 ); // I don't work for you!
 					}
-					else if ( Town.FromRegion( this.Region ) == m_Town )
+					else if ( FactionTown.FromRegion( this.Region ) == m_Town )
 					{
 						this.Say( 1042180 ); // Your orders, sire?
 						m_OrdersEnd = DateTime.UtcNow + TimeSpan.FromSeconds( 10.0 );
@@ -183,7 +183,7 @@ namespace Server.Factions
 				}
 				else if ( DateTime.UtcNow < m_OrdersEnd )
 				{
-					if ( m_Town != null && m_Town.IsSheriff( from ) && Town.FromRegion( this.Region ) == m_Town )
+					if ( m_Town != null && m_Town.IsSheriff( from ) && FactionTown.FromRegion( this.Region ) == m_Town )
 					{
 						m_OrdersEnd = DateTime.UtcNow + TimeSpan.FromSeconds( 10.0 );
 
@@ -420,7 +420,7 @@ namespace Server.Factions
 			writer.Write( (int) 0 ); // version
 
 			Faction.WriteReference( writer, m_Faction );
-			Town.WriteReference( writer, m_Town );
+			FactionTown.WriteReference( writer, m_Town );
 
 			m_Orders.Serialize( writer );
 		}
@@ -432,7 +432,7 @@ namespace Server.Factions
 			int version = reader.ReadInt();
 
 			m_Faction = Faction.ReadReference( reader );
-			m_Town = Town.ReadReference( reader );
+			m_Town = FactionTown.ReadReference( reader );
 			m_Orders = new Orders( this, reader );
 
 			Timer.DelayCall( TimeSpan.Zero, new TimerCallback( Register ) );

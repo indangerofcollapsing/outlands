@@ -33,7 +33,7 @@ namespace Server.Factions
 				{
 					case 0x00E4: // *i wish to access the city treasury*
 					{
-						Town town = Town.FromRegion( from.Region );
+						FactionTown town = FactionTown.FromRegion( from.Region );
 
 						if ( town == null || !town.IsFinance( from ) || !from.Alive )
 							break;
@@ -47,7 +47,7 @@ namespace Server.Factions
 					}
 					case 0x0ED: // *i am sheriff*
 					{
-						Town town = Town.FromRegion( from.Region );
+						FactionTown town = FactionTown.FromRegion( from.Region );
 
 						if ( town == null || !town.IsSheriff( from ) || !from.Alive )
 							break;
@@ -61,7 +61,7 @@ namespace Server.Factions
 					}
 					case 0x00EF: // *you are fired*
 					{
-						Town town = Town.FromRegion( from.Region );
+						FactionTown town = FactionTown.FromRegion( from.Region );
 
 						if ( town == null )
 							break;

@@ -17,8 +17,8 @@ namespace Server.Factions
 		private List<SilverGivenEntry> m_SilverGiven;
 		private bool m_IsActive;
 
-		private Town m_Sheriff;
-		private Town m_Finance;
+		private FactionTown m_Sheriff;
+		private FactionTown m_Finance;
 
 		private DateTime m_LastHonorTime;
 
@@ -26,8 +26,8 @@ namespace Server.Factions
 		public Faction Faction{ get{ return m_Faction; } }
 		public List<PlayerState> Owner { get { return m_Owner; } }
 		public MerchantTitle MerchantTitle{ get{ return m_MerchantTitle; } set{ m_MerchantTitle = value; Invalidate(); } }
-		public Town Sheriff{ get{ return m_Sheriff; } set{ m_Sheriff = value; Invalidate(); } }
-		public Town Finance{ get{ return m_Finance; } set{ m_Finance = value; Invalidate(); } }
+		public FactionTown Sheriff{ get{ return m_Sheriff; } set{ m_Sheriff = value; Invalidate(); } }
+		public FactionTown Finance{ get{ return m_Finance; } set{ m_Finance = value; Invalidate(); } }
 		public List<SilverGivenEntry> SilverGiven { get { return m_SilverGiven; } }
 
 		public int KillPoints { 

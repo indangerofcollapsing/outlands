@@ -1,23 +1,3 @@
-/***************************************************************************
- *                                 Region.cs
- *                            -------------------
- *   begin                : May 1, 2002
- *   copyright            : (C) The RunUO Software Team
- *   email                : info@runuo.com
- *
- *   $Id$
- *
- ***************************************************************************/
-
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,7 +7,47 @@ using Server.Targeting;
 
 namespace Server
 {
-	public enum MusicName
+    public enum IndexedRegionName
+    {
+        NotIndexed = 0,
+
+        Cambria,
+        Prevalia,
+
+        //-----
+
+        HedgeMaze,
+        Britain,
+        Wind,
+        BuccaneeersDen,
+        Cove,
+        Jhelom,
+        Magincia,
+        Minoc,
+        Moonglow,
+        Nujelm,
+        Occlo,
+        SerpentsHold,
+        SkaraBrae,
+        Trinsic,
+        Vesper,
+        Yew,
+        Despise,
+        Deceit,
+        Destard,
+        Wrong,
+        Covetous,
+        Shame,
+        Hythloth,
+        FireDungeon,
+        IceDungeon,
+        TerathanKeep,
+        YewOrcFort_IPY,
+    }
+
+    #region Music
+
+    public enum MusicName
 	{
 		Invalid = -1,
 		OldUlt01 = 0,
@@ -99,47 +119,56 @@ namespace Server
 		ValoriaShips
 	}
 
-	// IPY
-	public enum IndexedRegionName
-	{
-		NotIndexed = 0,
-		HedgeMaze,
-		Britain,
-		Wind,
-		BuccaneeersDen,
-		Cove,
-		Jhelom,
-		Magincia,
-		Minoc,
-		Moonglow,
-		Nujelm,
-		Occlo,
-		SerpentsHold,
-		SkaraBrae,
-		Trinsic,
-		Vesper,
-		Yew,
-		Despise,
-		Deceit,
-		Destard,
-		Wrong,
-		Covetous,
-		Shame,
-		Hythloth,
-		FireDungeon,
-		IceDungeon,
-		TerathanKeep,
-		YewOrcFort_IPY, // for the RP orcs
-	}
-	// IPY
+    #endregion
 
-	public class Region : IComparable
+    public class Region : IComparable
 	{
 		private static Dictionary<string, IndexedRegionName> m_NameToIndexLookup;
 
-		private static List<Region> m_Regions = new List<Region>();
+        static Region()
+        {
+            m_NameToIndexLookup = new Dictionary<string, IndexedRegionName>();
 
-		public static List<Region> Regions{ get{ return m_Regions; } }
+            m_NameToIndexLookup["Cambria"] = IndexedRegionName.Cambria;
+            m_NameToIndexLookup["Prevalia"] = IndexedRegionName.Prevalia;
+
+            //-----
+
+            m_NameToIndexLookup["Britain"] = IndexedRegionName.Britain;
+            m_NameToIndexLookup["Jhelom"] = IndexedRegionName.Jhelom;
+            m_NameToIndexLookup["Minoc"] = IndexedRegionName.Minoc;
+            m_NameToIndexLookup["Trinsic"] = IndexedRegionName.Trinsic;
+            m_NameToIndexLookup["Vesper"] = IndexedRegionName.Vesper;
+            m_NameToIndexLookup["Yew"] = IndexedRegionName.Yew;
+            m_NameToIndexLookup["Wind"] = IndexedRegionName.Wind;
+            m_NameToIndexLookup["Serpent's Hold"] = IndexedRegionName.SerpentsHold;
+            m_NameToIndexLookup["Skara Brae"] = IndexedRegionName.SkaraBrae;
+            m_NameToIndexLookup["Nujel'm"] = IndexedRegionName.Nujelm;
+            m_NameToIndexLookup["Moonglow"] = IndexedRegionName.Moonglow;
+            m_NameToIndexLookup["Magincia"] = IndexedRegionName.Magincia;
+            m_NameToIndexLookup["Buccaneer's Den"] = IndexedRegionName.BuccaneeersDen;
+            m_NameToIndexLookup["Ocllo"] = IndexedRegionName.Occlo;
+            m_NameToIndexLookup["Cove"] = IndexedRegionName.Cove;
+
+            m_NameToIndexLookup["Covetous"] = IndexedRegionName.Covetous;
+            m_NameToIndexLookup["Deceit"] = IndexedRegionName.Deceit;
+            m_NameToIndexLookup["Despise"] = IndexedRegionName.Despise;
+            m_NameToIndexLookup["Destard"] = IndexedRegionName.Destard;
+            m_NameToIndexLookup["Hythloth"] = IndexedRegionName.Hythloth;
+            m_NameToIndexLookup["Shame"] = IndexedRegionName.Shame;
+            m_NameToIndexLookup["Wrong"] = IndexedRegionName.Wrong;
+            m_NameToIndexLookup["Terathan Keep"] = IndexedRegionName.TerathanKeep;
+            m_NameToIndexLookup["Fire"] = IndexedRegionName.FireDungeon;
+            m_NameToIndexLookup["Ice"] = IndexedRegionName.IceDungeon;
+            m_NameToIndexLookup["Hedge Maze"] = IndexedRegionName.HedgeMaze;
+            m_NameToIndexLookup["Yew Orc Town"] = IndexedRegionName.YewOrcFort_IPY;
+        } 
+
+		private static List<Region> m_Regions = new List<Region>();
+		public static List<Region> Regions
+        { 
+            get { return m_Regions; } 
+        }
 
 		public static Region Find( Point3D p, Map map )
 		{
@@ -159,6 +188,20 @@ namespace Server
 
 			return map.DefaultRegion;
 		}
+
+        public static Region GetRegionByIndexedRegionName(IndexedRegionName indexedRegionName)
+        {
+            foreach (Region region in m_Regions)
+            {
+                if (region == null)
+                    continue;
+
+                if (region.IndexedName == indexedRegionName)
+                    return region;
+            }
+
+            return null;
+        }
 
         public virtual bool IsBlessedRegion { get { return false; } }
 
@@ -193,10 +236,7 @@ namespace Server
 			return ret;
 		}
 
-
-		// IPY
 		private IndexedRegionName m_IndexedName;
-		// IPY
 
 		private string m_Name;
 		private Map m_Map;
@@ -232,61 +272,6 @@ namespace Server
 		public bool IsDefault{ get{ return m_Map.DefaultRegion == this; } }
 		public virtual MusicName DefaultMusic{ get{ return m_Parent != null ? m_Parent.Music : MusicName.Invalid; } }
 
-		static Region()
-		{
-			// fast indexing lookup table
-			m_NameToIndexLookup = new Dictionary<string, IndexedRegionName>();
-			m_NameToIndexLookup["Britain"] = IndexedRegionName.Britain;
-			m_NameToIndexLookup["Jhelom"] = IndexedRegionName.Jhelom;
-			m_NameToIndexLookup["Minoc"] = IndexedRegionName.Minoc;
-			m_NameToIndexLookup["Trinsic"] = IndexedRegionName.Trinsic;
-			m_NameToIndexLookup["Vesper"] = IndexedRegionName.Vesper;
-			m_NameToIndexLookup["Yew"] = IndexedRegionName.Yew;
-			m_NameToIndexLookup["Wind"] = IndexedRegionName.Wind;
-			m_NameToIndexLookup["Serpent's Hold"] = IndexedRegionName.SerpentsHold;
-			m_NameToIndexLookup["Skara Brae"] = IndexedRegionName.SkaraBrae;
-			m_NameToIndexLookup["Nujel'm"] = IndexedRegionName.Nujelm;
-			m_NameToIndexLookup["Moonglow"] = IndexedRegionName.Moonglow;
-			m_NameToIndexLookup["Magincia"] = IndexedRegionName.Magincia;
-			m_NameToIndexLookup["Buccaneer's Den"] = IndexedRegionName.BuccaneeersDen;
-			m_NameToIndexLookup["Ocllo"] = IndexedRegionName.Occlo;
-			m_NameToIndexLookup["Cove"] = IndexedRegionName.Cove;
-
-			m_NameToIndexLookup["Covetous"] = IndexedRegionName.Covetous;
-			m_NameToIndexLookup["Deceit"] = IndexedRegionName.Deceit;
-			m_NameToIndexLookup["Despise"] = IndexedRegionName.Despise;
-			m_NameToIndexLookup["Destard"] = IndexedRegionName.Destard;
-			m_NameToIndexLookup["Hythloth"] = IndexedRegionName.Hythloth;
-			m_NameToIndexLookup["Shame"] = IndexedRegionName.Shame;
-			m_NameToIndexLookup["Wrong"] = IndexedRegionName.Wrong;
-			m_NameToIndexLookup["Terathan Keep"] = IndexedRegionName.TerathanKeep;
-			m_NameToIndexLookup["Fire"] = IndexedRegionName.FireDungeon;
-			m_NameToIndexLookup["Ice"] = IndexedRegionName.IceDungeon;
-			m_NameToIndexLookup["Hedge Maze"] = IndexedRegionName.HedgeMaze;
-			m_NameToIndexLookup["Yew Orc Town"] = IndexedRegionName.YewOrcFort_IPY;
-		}
-
-        public static bool IsTempStatlossRegion(Region region)
-        {
-            switch (region.IndexedName)
-            {
-                case IndexedRegionName.Despise: return true;
-                case IndexedRegionName.Deceit: return true;
-                case IndexedRegionName.Destard: return true;
-                case IndexedRegionName.Wrong: return true;
-                case IndexedRegionName.Covetous: return true;
-                case IndexedRegionName.Shame: return true;
-                case IndexedRegionName.Hythloth: return true;
-                case IndexedRegionName.FireDungeon: return true;
-                case IndexedRegionName.IceDungeon: return true;
-                case IndexedRegionName.TerathanKeep: return true;
-                case IndexedRegionName.HedgeMaze: return true;
-                case IndexedRegionName.Wind: return true;
-            }
-
-            return false;
-        }        
-
 		public Region( string name, Map map, int priority, params Rectangle2D[] area ) : this( name, map, priority, ConvertTo3D( area ) )
 		{
 		}
@@ -314,6 +299,7 @@ namespace Server
 				m_ChildLevel = 0;
 				m_Priority = DefaultPriority;
 			}
+
 			else
 			{
 				m_ChildLevel = m_Parent.ChildLevel + 1;
@@ -340,16 +326,15 @@ namespace Server
 
 			m_Map.RegisterRegion( this );
 
-			// IPY
-			// set up the fast indexing for this region
 			m_IndexedName = IndexedRegionName.NotIndexed;
+
 			if (m_Name != null)
 			{
 				IndexedRegionName temp;
+
 				if (m_NameToIndexLookup.TryGetValue(m_Name, out temp))
 					m_IndexedName = temp;
 			}
-			// IPY
 
 			List<Sector> sectors = new List<Sector>();
 
@@ -475,11 +460,12 @@ namespace Server
 
 				r = r.m_Parent;
 			}
+
 			while ( r != null );
 
 			return null;
 		}
-
+        
 		public bool IsPartOf( Region region )
 		{
 			if ( this == region )
@@ -487,25 +473,6 @@ namespace Server
 
 			return IsChildOf( region );
 		}
-
-		// IPY
-		public bool IsPartOf_FAST(IndexedRegionName indexed_name)
-		{
-			// no string comparison, strict int
-			if (indexed_name == IndexedRegionName.NotIndexed)
-				return false;
-
-			Region r = this;
-			do
-			{
-				if (r.m_IndexedName == indexed_name)
-					return true;
-				r = r.m_Parent;
-			}
-			while (r != null);
-			return false;
-		}
-		// IPY
 
 		public bool IsPartOf( Type regionType )
 		{
@@ -647,16 +614,14 @@ namespace Server
 			if ( reg == null )
 				throw new ArgumentException( "obj is not a Region", "obj" );
 
-			// Dynamic regions go first
-			if ( this.Dynamic )
+			if ( Dynamic )
 			{
 				if ( !reg.Dynamic )
 					return -1;
 			}
-			else if ( reg.Dynamic )
-			{
-				return 1;
-			}
+
+			else if ( reg.Dynamic )			
+				return 1;			
 
 			int thisPriority = this.Priority;
 			int regPriority = reg.Priority;
@@ -664,13 +629,14 @@ namespace Server
 			if ( thisPriority != regPriority )
 				return ( regPriority - thisPriority );
 
-			return ( reg.ChildLevel - this.ChildLevel );
+			return ( reg.ChildLevel - ChildLevel );
 		}
 
 		public override string ToString()
 		{
 			if ( m_Name != null )
 				return m_Name;
+
 			else
 				return GetType().Name;
 		}
@@ -814,6 +780,7 @@ namespace Server
 		{
 			if ( m_Parent != null )
 				m_Parent.OnCriminalAction( m, message );
+
 			else if ( message )
 				m.SendLocalizedMessage( 1005040 ); // You've committed a criminal act!!
 		}
@@ -947,12 +914,13 @@ namespace Server
 		{
 			if ( m_Parent != null )
 				return m_Parent.GetLogoutDelay( m );
+
 			else if ( m.AccessLevel > AccessLevel.Player )
 				return m_StaffLogoutDelay;
+
 			else
 				return m_DefaultLogoutDelay;
 		}
-
 
 		internal static bool CanMove( Mobile m, Direction d, Point3D newLocation, Point3D oldLocation, Map map )
 		{
@@ -979,10 +947,8 @@ namespace Server
 			{
 				m.CheckLightLevels( false );
 
-				if ( oldRegion == null || oldRegion.Music != newRegion.Music )
-				{
-					m.Send( PlayMusic.GetInstance( newRegion.Music ) );
-				}
+				if ( oldRegion == null || oldRegion.Music != newRegion.Music )				
+					m.Send( PlayMusic.GetInstance( newRegion.Music ) );				
 			}
 
 			Region oldR = oldRegion;
@@ -1023,15 +989,15 @@ namespace Server
 
 			XmlElement root = doc["ServerRegions"];
 
-			if ( root == null )
-			{
+			if ( root == null )			
 				Console.WriteLine( "Could not find root element 'ServerRegions' in Regions.xml" );
-			}
+			
 			else
 			{
 				foreach ( XmlElement facet in root.SelectNodes( "Facet" ) )
 				{
 					Map map = null;
+
 					if ( ReadMap( facet, "name", ref map ) )
 					{
 						if ( map == Map.Internal )
@@ -1060,10 +1026,12 @@ namespace Server
 				}
 
 				Region region = null;
+
 				try
 				{
 					region = (Region) Activator.CreateInstance( type, new object[] { xmlReg, map, parent } );
 				}
+
 				catch ( Exception ex )
 				{
 					Console.WriteLine( "Error during the creation of region type '{0}': {1}", type.FullName, ex );
@@ -1087,6 +1055,7 @@ namespace Server
 				m_ChildLevel = 0;
 				m_Priority = DefaultPriority;
 			}
+
 			else
 			{
 				m_ChildLevel = m_Parent.ChildLevel + 1;
@@ -1098,7 +1067,6 @@ namespace Server
 			if ( parent == null )
 				ReadInt32( xml, "priority", ref m_Priority, false );
 
-
 			int minZ = MinZ;
 			int maxZ = MaxZ;
 
@@ -1106,8 +1074,8 @@ namespace Server
 			ReadInt32( zrange, "min", ref minZ, false );
 			ReadInt32( zrange, "max", ref maxZ, false );
 
-
 			List<Rectangle3D> area = new List<Rectangle3D>();
+
 			foreach ( XmlElement xmlRect in xml.SelectNodes( "rect" ) )
 			{
 				Rectangle3D rect = new Rectangle3D();
@@ -1120,7 +1088,6 @@ namespace Server
 			if ( m_Area.Length == 0 )
 				Console.WriteLine( "Empty area for region '{0}'", this );
 
-
 			if ( !ReadPoint3D( xml["go"], map, ref m_GoLocation, false ) && m_Area.Length > 0 )
 			{
 				Point3D start = m_Area[0].Start;
@@ -1131,7 +1098,6 @@ namespace Server
 
 				m_GoLocation = new Point3D( x, y, m_Map.GetAverageZ( x, y ) );
 			}
-
 
 			MusicName music = this.DefaultMusic;
 
@@ -1149,10 +1115,10 @@ namespace Server
 
 				return null;
 			}
-			else if ( xml.HasAttribute( attribute ) )
-			{
-				return xml.GetAttribute( attribute );
-			}
+
+			else if ( xml.HasAttribute( attribute ) )			
+				return xml.GetAttribute( attribute );			
+
 			else
 			{
 				if ( mandatory )
@@ -1175,6 +1141,7 @@ namespace Server
 				return false;
 
 			value = s;
+
 			return true;
 		}
 
@@ -1194,6 +1161,7 @@ namespace Server
 			{
 				value = XmlConvert.ToInt32( s );
 			}
+
 			catch
 			{
 				Console.WriteLine( "Could not parse integer attribute '{0}' in element '{1}'", attribute, xml.Name );
@@ -1216,9 +1184,10 @@ namespace Server
 				return false;
 
 			try
-			{
-				value = XmlConvert.ToBoolean( s );
+			{			
+                value = XmlConvert.ToBoolean( s );
 			}
+
 			catch
 			{
 				Console.WriteLine( "Could not parse boolean attribute '{0}' in element '{1}'", attribute, xml.Name );
@@ -1244,6 +1213,7 @@ namespace Server
 			{
 				value = XmlConvert.ToDateTime( s, XmlDateTimeSerializationMode.Local );
 			}
+
 			catch
 			{
 				Console.WriteLine( "Could not parse DateTime attribute '{0}' in element '{1}'", attribute, xml.Name );
@@ -1269,6 +1239,7 @@ namespace Server
 			{
 				value = XmlConvert.ToTimeSpan( s );
 			}
+
 			catch
 			{
 				Console.WriteLine( "Could not parse TimeSpan attribute '{0}' in element '{1}'", attribute, xml.Name );
@@ -1291,6 +1262,7 @@ namespace Server
 				return false;
 
 			Type type = typeof(T);
+            
 #if Framework_4_0
 			T tempVal;
 
@@ -1299,6 +1271,7 @@ namespace Server
 				value = tempVal;
 				return true;
 			}
+
 			else
 			{
 				Console.WriteLine( "Could not parse {0} enum attribute '{1}' in element '{2}'", type, attribute, xml.Name );
@@ -1335,6 +1308,7 @@ namespace Server
 			{
 				value = Map.Parse( s );
 			}
+
 			catch
 			{
 				Console.WriteLine( "Could not parse Map attribute '{0}' in element '{1}'", attribute, xml.Name );
@@ -1357,10 +1331,12 @@ namespace Server
 				return false;
 
 			Type type;
+
 			try
 			{
 				type = ScriptCompiler.FindTypeByName( s, false );
 			}
+
 			catch
 			{
 				Console.WriteLine( "Could not parse Type attribute '{0}' in element '{1}'", attribute, xml.Name );
@@ -1425,6 +1401,7 @@ namespace Server
 					return false;
 				}
 			}
+
 			else
 			{
 				if ( !ReadInt32( xml, "x1", ref x1, mandatory )

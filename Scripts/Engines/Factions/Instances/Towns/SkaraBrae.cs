@@ -2,7 +2,7 @@ using System;
 
 namespace Server.Factions
 {
-	public class SkaraBrae : Town
+	public class SkaraBrae : FactionTown
 	{
 		public SkaraBrae()
 		{

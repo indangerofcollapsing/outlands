@@ -2899,19 +2899,9 @@ namespace Server.Mobiles
 
         public override void OnRegionChange(Region Old, Region New)
         {
-            // IPY ACHIEVEMENT (Exploration)
             if (New.IndexedName == IndexedRegionName.NotIndexed)
                 return;
-
-            // IPY Special notification hack hack (Enter orc fort)
-            if (New.IndexedName == IndexedRegionName.YewOrcFort_IPY)
-                SendMessage("Beware! You are entering Orc Territory!");
-
-            //Check For Potential Temporary Statloss 
-            if (Region.IsTempStatlossRegion(New))
-                EnterContestedRegion(false);
-
-            // Fast region check (no hierarchical string-comp crap)
+            
             switch (New.IndexedName)
             {
                 case IndexedRegionName.HedgeMaze: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreHedgeMaze); break;
@@ -2932,23 +2922,20 @@ namespace Server.Mobiles
                 case IndexedRegionName.Yew: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreYew); break;
                 case IndexedRegionName.Despise:
                     AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreDespise);
-                    DailyAchievement.TickProgress(Category.Newb, this, NewbCategory.VisitDespise);
-
-                    break;
+                    DailyAchievement.TickProgress(Category.Newb, this, NewbCategory.VisitDespise);break;
                 case IndexedRegionName.Deceit: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreDeceit); break;
                 case IndexedRegionName.Destard: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreDestard); break;
                 case IndexedRegionName.Wrong: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreWrong); break;
                 case IndexedRegionName.Covetous: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreCovetous); break;
                 case IndexedRegionName.Shame:
                     AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreShame);
-                    DailyAchievement.TickProgress(Category.Newb, this, NewbCategory.VisitShame);
-                    break;
+                    DailyAchievement.TickProgress(Category.Newb, this, NewbCategory.VisitShame);break;
                 case IndexedRegionName.Hythloth: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreHythloth); break;
                 case IndexedRegionName.FireDungeon: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreFireDungeon); break;
                 case IndexedRegionName.IceDungeon: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreIceDungeon); break;
                 case IndexedRegionName.TerathanKeep: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreTerathanKeep); break;
-                default:
-                    break;
+                 
+                default: break;
             }
         }
 
@@ -2958,9 +2945,7 @@ namespace Server.Mobiles
 
             if (from == this)
             {
-                // IPY Gump
-                list.Add(new CallbackEntry(10008, new ContextCallback(ShowIPYGump)));
-                // IPY Gump
+                list.Add(new CallbackEntry(10008, new ContextCallback(ShowIPYGump)));       
 
                 if (Alive && InsuranceEnabled)
                 {
@@ -3451,13 +3436,11 @@ namespace Server.Mobiles
         {
             private ContextCallback m_Callback;
 
-            public CallbackEntry(int number, ContextCallback callback)
-                : this(number, -1, callback)
+            public CallbackEntry(int number, ContextCallback callback): this(number, -1, callback)
             {
             }
 
-            public CallbackEntry(int number, int range, ContextCallback callback)
-                : base(number, range)
+            public CallbackEntry(int number, int range, ContextCallback callback): base(number, range)
             {
                 m_Callback = callback;
             }
@@ -3471,10 +3454,8 @@ namespace Server.Mobiles
 
         public override void DisruptiveAction()
         {
-            if (Meditating)
-            {
-                RemoveBuff(BuffIcon.ActiveMeditation);
-            }
+            if (Meditating)            
+                RemoveBuff(BuffIcon.ActiveMeditation);            
 
             base.DisruptiveAction();
         }
@@ -3968,17 +3949,9 @@ namespace Server.Mobiles
             }
 
             //Reapply Kin Paint
-            if (KinPaintHue != -1 && KinPaintExpiration > DateTime.UtcNow)
-            {
+            if (KinPaintHue != -1 && KinPaintExpiration > DateTime.UtcNow)            
                 HueMod = KinPaintHue;
-            }
-
-            //After Ressurection Check if Player is Ressing in Contested Region While in Penance (Potential for Temp Stat Loss)
-            Region region = Region.Find(Location, Map);
-
-            if (Region.IsTempStatlossRegion(region))
-                EnterContestedRegion(true);
-
+            
             //Player Enhancement Customization: Lifegiver
             bool reborn = PlayerEnhancementPersistance.IsCustomizationEntryActive(this, CustomizationType.Reborn);
 

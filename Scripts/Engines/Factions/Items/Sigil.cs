@@ -25,7 +25,7 @@ namespace Server.Factions
 
 		private BaseMonolith m_LastMonolith;
 
-		private Town m_Town;
+		private FactionTown m_Town;
 		private Faction m_Corrupted;
 		private Faction m_Corrupting;
 
@@ -63,7 +63,7 @@ namespace Server.Factions
 		}
 
 		[CommandProperty( AccessLevel.Counselor, AccessLevel.Administrator )]
-		public Town Town
+		public FactionTown Town
 		{
 			get{ return m_Town; }
 			set{ m_Town = value; Update(); }
@@ -206,7 +206,7 @@ namespace Server.Factions
 				mob.SolidHueOverride = -1;
 		}
 
-		public Sigil( Town town ) : base( 0x1869 )
+		public Sigil( FactionTown town ) : base( 0x1869 )
 		{
 			Movable = false;
 			Town = town;
@@ -384,7 +384,7 @@ namespace Server.Factions
 
 			writer.Write( (int) 0 ); // version
 
-			Town.WriteReference( writer, m_Town );
+			FactionTown.WriteReference( writer, m_Town );
 			Faction.WriteReference( writer, m_Corrupted );
 			Faction.WriteReference( writer, m_Corrupting );
 
@@ -406,7 +406,7 @@ namespace Server.Factions
 			{
 				case 0:
 				{
-					m_Town = Town.ReadReference( reader );
+					m_Town = FactionTown.ReadReference( reader );
 					m_Corrupted = Faction.ReadReference( reader );
 					m_Corrupting = Faction.ReadReference( reader );
 

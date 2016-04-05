@@ -7,11 +7,11 @@ namespace Server.Factions
 {
 	public abstract class BaseFactionVendor : BaseVendor
 	{
-		private Town m_Town;
+		private FactionTown m_Town;
 		private Faction m_Faction;
 
 		[CommandProperty( AccessLevel.Counselor, AccessLevel.Administrator )]
-		public Town Town
+		public FactionTown Town
 		{
 			get{ return m_Town; }
 			set{ Unregister(); m_Town = value; Register(); }
@@ -63,7 +63,7 @@ namespace Server.Factions
 			return true;
 		}
 
-		public BaseFactionVendor( Town town, Faction faction, string title ) : base( title )
+		public BaseFactionVendor( FactionTown town, Faction faction, string title ) : base( title )
 		{
 			Frozen = true;
 			CantWalk = true;
@@ -88,7 +88,7 @@ namespace Server.Factions
 
 			writer.Write( (int) 0 ); // version
 
-			Town.WriteReference( writer, m_Town );
+			FactionTown.WriteReference( writer, m_Town );
 			Faction.WriteReference( writer, m_Faction );
 		}
 
@@ -102,7 +102,7 @@ namespace Server.Factions
 			{
 				case 0:
 				{
-					m_Town = Town.ReadReference( reader );
+					m_Town = FactionTown.ReadReference( reader );
 					m_Faction = Faction.ReadReference( reader );
 					Register();
 					break;

@@ -8,7 +8,7 @@ namespace Server.Factions
 {
 	public class FactionBottleVendor : BaseFactionVendor
 	{
-		public FactionBottleVendor( Town town, Faction faction ) : base( town, faction, "the Bottle Seller" )
+		public FactionBottleVendor( FactionTown town, Faction faction ) : base( town, faction, "the Bottle Seller" )
 		{
 			SetSkill( SkillName.Alchemy, 85.0, 100.0 );
 			SetSkill( SkillName.TasteID, 65.0, 88.0 );

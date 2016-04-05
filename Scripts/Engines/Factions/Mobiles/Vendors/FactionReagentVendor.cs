@@ -8,7 +8,7 @@ namespace Server.Factions
 {
 	public class FactionReagentVendor : BaseFactionVendor
 	{
-		public FactionReagentVendor( Town town, Faction faction ) : base( town, faction, "the Reagent Man" )
+		public FactionReagentVendor( FactionTown town, Faction faction ) : base( town, faction, "the Reagent Man" )
 		{
 			SetSkill( SkillName.EvalInt, 65.0, 88.0 );
 			SetSkill( SkillName.Inscribe, 60.0, 83.0 );

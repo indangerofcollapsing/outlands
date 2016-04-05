@@ -2,7 +2,7 @@ using System;
 
 namespace Server.Factions
 {
-	public class Minoc : Town
+	public class Minoc : FactionTown
 	{
 		public Minoc()
 		{

@@ -12,7 +12,7 @@ namespace Server.Factions
 		public VendorDefinition Definition{ get{ return m_Definition; } }
 		public List<BaseFactionVendor> Vendors { get { return m_Vendors; } }
 
-		public BaseFactionVendor Construct( Town town, Faction faction )
+		public BaseFactionVendor Construct( FactionTown town, Faction faction )
 		{
 			try{ return Activator.CreateInstance( m_Definition.Type, new object[]{ town, faction } ) as BaseFactionVendor; }
 			catch{ return null; }

@@ -50,7 +50,7 @@ namespace Server.Factions
 				factions[i].State.Serialize( writer );
 			}
 
-			List<Town> towns = Town.Towns;
+			List<FactionTown> towns = FactionTown.Towns;
 
 			for ( int i = 0; i < towns.Count; ++i )
 			{
@@ -78,7 +78,7 @@ namespace Server.Factions
 						switch ( type )
 						{
 							case PersistedType.Faction: new FactionState( reader ); break;
-							case PersistedType.Town: new TownState( reader ); break;
+							case PersistedType.Town: new FactionTownState( reader ); break;
 						}
 					}
 

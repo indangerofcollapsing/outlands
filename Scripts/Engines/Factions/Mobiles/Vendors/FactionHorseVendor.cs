@@ -10,7 +10,7 @@ namespace Server.Factions
 {
 	public class FactionHorseVendor : BaseFactionVendor
 	{
-		public FactionHorseVendor( Town town, Faction faction ) : base( town, faction, "the Horse Breeder" )
+		public FactionHorseVendor( FactionTown town, Faction faction ) : base( town, faction, "the Horse Breeder" )
 		{
 			SetSkill( SkillName.AnimalLore, 64.0, 100.0 );
 			SetSkill( SkillName.AnimalTaming, 90.0, 100.0 );

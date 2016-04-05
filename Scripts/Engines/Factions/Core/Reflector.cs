@@ -8,9 +8,9 @@ namespace Server.Factions
 {
 	public class Reflector
 	{
-		private static List<Town> m_Towns;
+		private static List<FactionTown> m_Towns;
 
-		public static List<Town> Towns
+		public static List<FactionTown> Towns
 		{
 			get
 			{
@@ -43,7 +43,7 @@ namespace Server.Factions
 		private static void ProcessTypes()
 		{
 			m_Factions = new List<Faction>();
-			m_Towns = new List<Town>();
+			m_Towns = new List<FactionTown>();
 
 			Assembly[] asms = ScriptCompiler.Assemblies;
 
@@ -64,12 +64,12 @@ namespace Server.Factions
 						if ( faction != null )
 							Faction.Factions.Add( faction );
 					}
-					else if ( type.IsSubclassOf( typeof( Town ) ) )
+					else if ( type.IsSubclassOf( typeof( FactionTown ) ) )
 					{
-						Town town = Construct( type ) as Town;
+						FactionTown town = Construct( type ) as FactionTown;
 
 						if ( town != null )
-							Town.Towns.Add( town );
+							FactionTown.Towns.Add( town );
 					}
 				}
 			}

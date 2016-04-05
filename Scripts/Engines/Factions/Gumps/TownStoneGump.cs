@@ -11,9 +11,9 @@ namespace Server.Factions
 	{
 		private PlayerMobile m_From;
 		private Faction m_Faction;
-		private Town m_Town;
+		private FactionTown m_Town;
 
-		public TownStoneGump( PlayerMobile from, Faction faction, Town town ) : base( 50, 50 )
+		public TownStoneGump( PlayerMobile from, Faction faction, FactionTown town ) : base( 50, 50 )
 		{
 			m_From = from;
 			m_Faction = faction;

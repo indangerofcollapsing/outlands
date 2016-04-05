@@ -21,16 +21,16 @@ namespace Server.Regions
 			XmlElement entrEl = xml["entrance"];
 
 			Map entrMap = map;
+
 			ReadMap( entrEl, "map", ref entrMap, false );
 
 			if ( ReadPoint3D( entrEl, entrMap, ref m_EntranceLocation, false ) )
 				m_EntranceMap = entrMap;
 		}
 
-		//	IPY
-        public DungeonRegion(string name, Map map, int priority, Rectangle2D[] area)
-            : base(name, map, priority, area) {
-                m_EntranceMap = map;
+        public DungeonRegion(string name, Map map, int priority, Rectangle2D[] area): base(name, map, priority, area) 
+        {
+            m_EntranceMap = map;
         }
 		
 		public override bool AllowHousing( Mobile from, Point3D p )
@@ -45,7 +45,7 @@ namespace Server.Regions
 
 		public override bool CanUseStuckMenu( Mobile m )
 		{
-			if ( this.Map == Map.Felucca )
+			if ( Map == Map.Felucca )
 				return false;
 
 			return base.CanUseStuckMenu( m );

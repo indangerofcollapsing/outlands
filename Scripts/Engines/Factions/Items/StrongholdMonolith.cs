@@ -15,7 +15,7 @@ namespace Server.Factions
 		{
 		}
 
-		public StrongholdMonolith( Town town, Faction faction ) : base( town, faction )
+		public StrongholdMonolith( FactionTown town, Faction faction ) : base( town, faction )
 		{
 		}
 

@@ -8,7 +8,7 @@ namespace Server.Factions
 {
 	public class FactionOreVendor : BaseFactionVendor
 	{
-		public FactionOreVendor( Town town, Faction faction ) : base( town, faction, "the Ore Man" )
+		public FactionOreVendor( FactionTown town, Faction faction ) : base( town, faction, "the Ore Man" )
 		{
 			// NOTE: Skills verified
 			SetSkill( SkillName.Carpentry, 85.0, 100.0 );

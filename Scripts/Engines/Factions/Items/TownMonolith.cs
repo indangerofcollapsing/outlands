@@ -15,7 +15,7 @@ namespace Server.Factions
 		{
 		}
 
-		public TownMonolith( Town town ) : base( town, null )
+		public TownMonolith( FactionTown town ) : base( town, null )
 		{
 		}
 

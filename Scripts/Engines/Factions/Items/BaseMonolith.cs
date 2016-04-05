@@ -5,7 +5,7 @@ namespace Server.Factions
 {
 	public abstract class BaseMonolith : BaseSystemController
 	{
-		private Town m_Town;
+		private FactionTown m_Town;
 		private Faction m_Faction;
 		private Sigil m_Sigil;
 
@@ -31,7 +31,7 @@ namespace Server.Factions
 		}
 
 		[CommandProperty( AccessLevel.Counselor, AccessLevel.Administrator )]
-		public Town Town
+		public FactionTown Town
 		{
 			get{ return m_Town; }
 			set
@@ -76,7 +76,7 @@ namespace Server.Factions
 		{
 		}
 
-		public BaseMonolith( Town town, Faction faction ) : base( 0x1183 )
+		public BaseMonolith( FactionTown town, Faction faction ) : base( 0x1183 )
 		{
 			Movable = false;
 			Town = town;
@@ -101,7 +101,7 @@ namespace Server.Factions
 
 			writer.Write( (int) 0 ); // version
 
-			Town.WriteReference( writer, m_Town );
+			FactionTown.WriteReference( writer, m_Town );
 			Faction.WriteReference( writer, m_Faction );
 
 			writer.Write( (Item) m_Sigil );
@@ -117,7 +117,7 @@ namespace Server.Factions
 			{
 				case 0:
 				{
-					Town = Town.ReadReference( reader );
+					Town = FactionTown.ReadReference( reader );
 					Faction = Faction.ReadReference( reader );
 					m_Sigil = reader.ReadItem() as Sigil;
 					break;

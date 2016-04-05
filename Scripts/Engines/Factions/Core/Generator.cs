@@ -20,13 +20,13 @@ namespace Server.Factions
 			foreach ( Faction faction in factions )
 				Generate( faction );
 
-			List<Town> towns = Town.Towns;
+			List<FactionTown> towns = FactionTown.Towns;
 
-			foreach ( Town town in towns )
+			foreach ( FactionTown town in towns )
 				Generate( town );
 		}
 
-		public static void Generate( Town town )
+		public static void Generate( FactionTown town )
 		{
 			Map facet = Faction.Facet;
 
@@ -47,7 +47,7 @@ namespace Server.Factions
 		{
 			Map facet = Faction.Facet;
 
-			List<Town> towns = Town.Towns;
+			List<FactionTown> towns = FactionTown.Towns;
 
 			StrongholdDefinition stronghold = faction.Definition.Stronghold;
 

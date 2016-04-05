@@ -1193,7 +1193,12 @@
     <Compile Include="Poker\PokerPlayer.cs" />
     <Compile Include="Items\PotionKegCombiningDeed.cs" />
     <Compile Include="PvELeaderboards\GoldCoinTracker.cs" />
+    <Compile Include="Regions\TownRegion.cs" />
     <Compile Include="Skills\SkillCooldown.cs" />
+    <Compile Include="Towns\Cambria.cs" />
+    <Compile Include="Towns\Prevalia.cs" />
+    <Compile Include="Towns\Town.cs" />
+    <Compile Include="Towns\Towns.cs" />
     <Compile Include="UOACZ\Abilities\UOACZHumanAbilities.cs" />
     <Compile Include="UOACZ\Abilities\UOACZUndeadAbilities.cs" />
     <Compile Include="UOACZ\Customization\UOACZLotteryTicket.cs" />
@@ -1924,13 +1929,7 @@
     <Compile Include="Pirates\Boat Cannons\LightCannon.cs" />
     <Compile Include="Pirates\BuccaneersTavernControl.cs" />
     <Compile Include="Pirates\BuccaneersTavernPlatform.cs" />
-    <Compile Include="Pirates\Dock Cannons\BaseCannonDeed.cs" />
-    <Compile Include="Pirates\Dock Cannons\BaseCannonGuard.cs" />
-    <Compile Include="Pirates\Dock Cannons\DoubloonDockGuard.cs" />
-    <Compile Include="Pirates\Dock Cannons\FireableCannon.cs" />
-    <Compile Include="Pirates\Dock Cannons\TurnableCannonGuard.cs" />
     <Compile Include="Pirates\Doubloon.cs" />
-    <Compile Include="Pirates\DoubloonDocks.cs" />
     <Compile Include="Pirates\Guild Docks\BaseGuildDock.cs" />
     <Compile Include="Pirates\Guild Docks\DockDeeds.cs" />
     <Compile Include="Pirates\Guild Docks\Dockmaster.cs" />
@@ -1944,7 +1943,6 @@
     <Compile Include="Pirates\PirateFishing.cs" />
     <Compile Include="Pirates\PirateHelper.cs" />
     <Compile Include="Pirates\SunkenShipContainer.cs" />
-    <Compile Include="Pirates\TownDockControl.cs" />
     <Compile Include="RaresCrafting\CraftableRares.cs" />
     <Compile Include="RaresCrafting\RaresCraftingSystem.cs" />
     <Compile Include="Misc\SellingPersistance.cs" />
@@ -2480,8 +2478,8 @@
     <Compile Include="Engines\Factions\Core\Reflector.cs" />
     <Compile Include="Engines\Factions\Core\SilverGivenEntry.cs" />
     <Compile Include="Engines\Factions\Core\StrongholdRegion.cs" />
-    <Compile Include="Engines\Factions\Core\Town.cs" />
-    <Compile Include="Engines\Factions\Core\TownState.cs" />
+    <Compile Include="Engines\Factions\Core\FactionTown.cs" />
+    <Compile Include="Engines\Factions\Core\FactionTownState.cs" />
     <Compile Include="Engines\Factions\Core\VendorList.cs" />
     <Compile Include="Engines\Factions\Definitions\FactionDefinition.cs" />
     <Compile Include="Engines\Factions\Definitions\FactionItemDefinition.cs" />
@@ -4295,7 +4293,6 @@
     <Compile Include="Multis\Tent\TentVerifier.cs" />
     <Compile Include="Regions\BaseRegion.cs" />
     <Compile Include="Regions\DungeonRegion.cs" />
-    <Compile Include="Regions\EncounterRegion.cs" />
     <Compile Include="Regions\GreenAcres.cs" />
     <Compile Include="Regions\GuardedRegion.cs" />
     <Compile Include="Regions\HouseRegion.cs" />
