@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Server.Mobiles;
 using Server.Items;
-using Server.Achievements;
+
 
 namespace Server.Custom
 {
@@ -314,8 +314,6 @@ namespace Server.Custom
 
             if (scavengeResult)
             {
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZScavenging, 1);
-
                 UOACZPersistance.CheckAndCreateUOACZAccountEntry(player);
                 player.m_UOACZAccountEntry.ScavengeableContainerItems++;
             }

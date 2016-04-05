@@ -11,7 +11,7 @@ using Server.Misc;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
-using Server.Achievements;
+
 using Server.Commands;
 
 namespace Server.Accounting
@@ -19,13 +19,10 @@ namespace Server.Accounting
     public class Account : IAccount, IComparable, IComparable<Account>
     {
         private string m_EmailAddress;
-        private string m_GeneratedCode;
-        private PlayerAccomplishments m_Achievements;       
+        private string m_GeneratedCode;    
 
         public static readonly TimeSpan YoungDuration = TimeSpan.FromDays(7);
-
         public static readonly TimeSpan InactiveDuration = TimeSpan.FromDays(180.0);
-
         public static readonly TimeSpan EmptyInactiveDuration = TimeSpan.FromDays(30.0);
 
         private string m_Username, m_PlainPassword, m_CryptPassword, m_NewCryptPassword;
@@ -166,13 +163,7 @@ namespace Server.Accounting
             get { return m_GeneratedCode; }
             set { m_GeneratedCode = value; }
         }
-
-        public PlayerAccomplishments AccountAchievements
-        {
-            get { return m_Achievements; }
-        }
-        // End IPY specific
-
+        
         /// <summary>
         /// Initial AccessLevel for new characters created on this account.
         /// </summary>
@@ -671,19 +662,14 @@ namespace Server.Accounting
 
             SetPassword(password);
 
-            // START IPY
             m_EmailAddress = "none";
             m_GeneratedCode = "none";
-            m_Achievements = new PlayerAccomplishments();
-            // END IPY
 
             m_AccessLevel = AccessLevel.Player;
 
             m_Created = m_LastLogin = DateTime.UtcNow;
             m_TotalGameTime = TimeSpan.Zero;
 
-            //m_Comments = new ArrayList();
-            //m_Tags = new ArrayList();
             m_Mobiles = new Mobile[6];
 
             m_IPRestrictions = new string[0];
@@ -745,12 +731,8 @@ namespace Server.Accounting
                     }
             }
 
-            // START IPY
             m_EmailAddress = Utility.GetText(node["email"], "none");
             m_GeneratedCode = Utility.GetText(node["code"], "none");
-            m_Achievements = new PlayerAccomplishments();
-            m_Achievements.ReadFrom(Utility.GetText(node["achievements"], ""));
-            // END IPY
 
 #if Framework_4_0
             Enum.TryParse(Utility.GetText(node["accessLevel"], "Player"), true, out m_AccessLevel);
@@ -1120,14 +1102,6 @@ namespace Server.Accounting
                 xml.WriteString(m_GeneratedCode);
 
             xml.WriteEndElement();
-
-            xml.WriteStartElement("achievements");
-            string achievements_data = m_Achievements.SaveTo();
-            xml.WriteString(achievements_data);
-            xml.WriteEndElement();
-            // End IPY specific
-
-
 
             if (m_AccessLevel != AccessLevel.Player)
             {

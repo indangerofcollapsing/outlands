@@ -5,7 +5,7 @@ using Server.Network;
 using Server.Mobiles;
 using System.Collections;
 using System.Collections.Generic;
-using Server.Achievements;
+
 
 namespace Server.Items
 {
@@ -205,9 +205,7 @@ namespace Server.Items
                     break;
                 }
             });
-
-            AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZConsumeBrains, 1);
-
+            
             Delete();
         }
 

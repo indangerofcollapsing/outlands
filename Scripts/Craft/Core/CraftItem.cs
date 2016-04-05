@@ -8,7 +8,7 @@ using Server.Commands;
 using Server.Custom.Pirates;
 
 using Server.Multis;
-using Server.Achievements;
+
 using Server.Factions;
 using System.Reflection;
 
@@ -1078,11 +1078,7 @@ namespace Server.Engines.Craft
 
                                         if (context != null)
                                             context.OnMade(this);
-
-                                        // IPY ACHIEVEMENTS
-                                        TrackCraftingAchievements(from);
-                                        // IPY ACHIEVEMENTS
-
+                                        
                                         int iMin = craftSystem.MinCraftEffect;
                                         int iMax = (craftSystem.MaxCraftEffect - iMin) + 1;
                                         int iRandom = Utility.Random(iMax);
@@ -1134,31 +1130,6 @@ namespace Server.Engines.Craft
 
             else            
                 from.SendLocalizedMessage(500119); // You must wait to perform another action            
-        }
-
-        private void TrackCraftingAchievements(Mobile crafter)
-        {
-            if (this.ItemType.IsSubclassOf(typeof(BaseWeapon)))
-                AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_CraftWeapon);
-
-            else if (this.ItemType.IsSubclassOf(typeof(BaseArmor)))
-                AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_CraftArmor);
-        }
-
-        private void TrackBrokenToolsAchievements(Mobile crafter, BaseTool tool)
-        {
-            if (tool is Hammer)
-                AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_HammerBroke);
-            else if (tool is Tongs)
-                AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_TongsBroke);
-            else if (tool is SewingKit)
-                AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_SewingKitBroke);
-            else if (tool is MortarPestle)
-                AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_MortarPestleBroke);
-            else if (tool is ScribesPen)
-                AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_ScribesPenBroke);
-            else if (tool is TinkerTools)
-                AchievementSystem.Instance.TickProgress(crafter, AchievementTriggers.Trigger_TinkerToolsBroke);
         }
 
         private object RequiredExpansionMessage(Expansion expansion)	//Eventually convert to TextDefinition, but that requires that we convert all the gumps to ues it too.  Not that it wouldn't be a bad idea.
@@ -1283,13 +1254,7 @@ namespace Server.Engines.Craft
                     toolBroken = true;
 
                 if (toolBroken)
-                {
-                    //IPY ACHIEVEMENTS
-                    TrackBrokenToolsAchievements(from, tool);
-                    //IPY ACHIEVEMENTS
-
-                    tool.Delete();
-                }
+                    tool.Delete();                
 
                 int num = 0;
 
@@ -1404,20 +1369,7 @@ namespace Server.Engines.Craft
                     }
 
                     if (from.AccessLevel > AccessLevel.Player)
-                        CommandLogging.WriteLine(from, "Crafting {0} with craft system {1}", CommandLogging.Format(item), craftSystem.GetType().Name);
-
-                    // IPY ACHIEVEMENTS 
-                    if (makersMark)
-                        AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MarkCraftItem);
-
-                    if (item is BaseWeapon)
-                        DailyAchievement.TickProgress(Category.Crafter, (PlayerMobile)from, CrafterCategory.CraftWeapon);
-
-                    if (item is BaseArmor)
-                        DailyAchievement.TickProgress(Category.Crafter, (PlayerMobile)from, CrafterCategory.CraftArmor);
-
-                    if (item is BaseClothing)
-                        DailyAchievement.TickProgress(Category.Crafter, (PlayerMobile)from, CrafterCategory.CraftClothing);
+                        CommandLogging.WriteLine(from, "Crafting {0} with craft system {1}", CommandLogging.Format(item), craftSystem.GetType().Name);                    
                 }                
 
                 if (num == 0)
@@ -1470,14 +1422,8 @@ namespace Server.Engines.Craft
                 if (tool.UsesRemaining < 1)
                     toolBroken = true;
 
-                if (toolBroken)
-                {
-                    tool.Delete();
-
-                    //IPY ACHIEVEMENTS
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_HammerBroke);
-                    //IPY ACHIEVEMENTS
-                }
+                if (toolBroken)                
+                    tool.Delete();                
 
                 // SkillCheck failed.
                 int num = craftSystem.PlayEndingEffect(from, true, true, toolBroken, endquality, false, this);

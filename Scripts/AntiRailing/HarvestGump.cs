@@ -7,7 +7,7 @@ using Server.Gumps;
 using Server.Items;
 using Server.Commands;
 using Server.Mobiles;
-using Server.Achievements;
+
 
 namespace Server.Custom.AntiRailing
 {
@@ -246,29 +246,8 @@ namespace Server.Custom.AntiRailing
 
                 if (m_Harvester.TempStashedHarvestDef != null)
 				    Effects.PlaySound(m_Harvester.Location, m_Harvester.Map, Utility.RandomList(m_Harvester.TempStashedHarvestDef.EffectSounds));
-
-				if (i is IronOre) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_MineIron, i.Amount);
-				if (i is DullCopperOre) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_MineDullCopper, i.Amount);
-				if (i is CopperOre) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_MineCopper, i.Amount);
-				if (i is BronzeOre) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_MineBronze, i.Amount);
-				if (i is ShadowIronOre) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_MineShadow, i.Amount);
-				if (i is GoldOre) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_MineGold, i.Amount);
-				if (i is AgapiteOre) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_MineAgapite, i.Amount);
-				if (i is VeriteOre) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_MineVerite, i.Amount);
-				if (i is ValoriteOre) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_MineValorite, i.Amount);
-                if (i is BaseOre) DailyAchievement.TickProgress(Category.Crafter, m_Harvester, CrafterCategory.MineOre, i.Amount);
-                if (i is BaseLog) DailyAchievement.TickProgress(Category.Crafter, m_Harvester, CrafterCategory.ChopTree, i.Amount);
-                // UOAC ACHIEVEMENT TRACKING
-                if (i is Log) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_HarvestRegularWood, i.Amount);
-                if (i is OakLog) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_HarvestOakWood, i.Amount);
-                if (i is AshLog) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_HarvestAshWood, i.Amount);
-                if (i is YewLog) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_HarvestYewWood, i.Amount);
-                if (i is BloodwoodLog) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_HarvestBloodWood, i.Amount);
-                if (i is HeartwoodLog) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_HarvestHeartWood, i.Amount);
-                if (i is FrostwoodLog) AchievementSystem.Instance.TickProgressMulti(m_Harvester, AchievementTriggers.Trigger_HarvestFrostwood, i.Amount);
-                // UOAC ACHIEVEMENT TRACKING
-
             }
+
             base.OnTick();
 		}
 	}

@@ -12,7 +12,7 @@ using Server.Items;
 using Server.Accounting;
 using Server.Spells;
 using Server.Custom;
-using Server.Achievements;
+
 
 namespace Server
 {
@@ -80,8 +80,6 @@ namespace Server
             }
 
             AbilitySuccessful(player, UOACZHumanAbilityType.Escape);
-
-            AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZNightwalker, 1);
 
             player.Hidden = true;
             player.StealthAttackReady = true;
@@ -1545,9 +1543,7 @@ namespace Server
                         weapon.OnMiss(player, mobileTarget);
 
                     AbilitySuccessful(player, UOACZHumanAbilityType.Shadowstrike);
-
-                    AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZNightwalker, 1);
-
+                    
                     player.DoHarmful(mobileTarget);
                     player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
 
@@ -2101,8 +2097,6 @@ namespace Server
                 }
 
                 AbilitySuccessful(player, UOACZHumanAbilityType.Flee);
-
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZNightwalker, 1);
 
                 player.Location = targetLocation.Location;
 

@@ -3,7 +3,7 @@ using Server;
 using Server.Guilds;
 using Server.Targeting;
 using Server.Factions;
-using Server.Achievements;
+
 
 namespace Server.Gumps
 {
@@ -76,10 +76,6 @@ namespace Server.Gumps
 				else if ( m_Mobile.AccessLevel >= AccessLevel.GameMaster || m_Guild.Leader == m_Mobile )
 				{
 					m_Guild.Accepted.Add( m );
-                    
-                    // IPY ACHIEVEMENT 
-                    AchievementSystem.Instance.TickProgress(m, AchievementTriggers.Trigger_JoinAGuild);
-                    // IPY ACHIEVEMENT
 				}
 				else
 				{

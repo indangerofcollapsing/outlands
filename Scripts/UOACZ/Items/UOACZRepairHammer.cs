@@ -7,7 +7,7 @@ using Server.Custom;
 using Server.Spells;
 using System.Collections;
 using System.Collections.Generic;
-using Server.Achievements;
+
 
 namespace Server.Items
 {
@@ -283,9 +283,7 @@ namespace Server.Items
                             UOACZEvents.RepairOutpostComponent();
                         }
                     }
-
-                    AchievementSystemImpl.Instance.TickProgressMulti(m_Player, AchievementTriggers.Trigger_UOACZRepairObjects, 1);
-
+                    
                     UOACZPersistance.CheckAndCreateUOACZAccountEntry(m_Player);
                     m_Player.m_UOACZAccountEntry.TimesRepaired++; 
                     

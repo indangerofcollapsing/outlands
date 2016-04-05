@@ -24,7 +24,7 @@ using Server.Gumps;
 using System.Collections.Generic;
 #endif
 using System.Collections;
-using Server.Achievements;
+
 
 namespace Server.Items
 {
@@ -1032,7 +1032,7 @@ namespace Server.Items
 			if (m_ContinuousShuffle || carddeck.Remaining < 16)
 				carddeck.QuickShuffle();
 			m_LastPlayed = DateTime.Now;
-            AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_Gamble, cost);
+           
 			m_TotalPlays++;
 			m_Won = m_SplitCount = m_SplitAceCount;
 			m_BJInfo.status = GameStatus.PlayerTurn;

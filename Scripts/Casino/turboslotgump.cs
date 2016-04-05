@@ -4,7 +4,7 @@ using Server.Gumps;
 using Server.Items;
 using Server.Network;
 using Server.Factions;
-using Server.Achievements;
+
 
 namespace Server.Gumps
 {
@@ -398,26 +398,28 @@ namespace Server.Gumps
                         m_Slot.DoSpin(from);
                         m_Slot.LastPay = 0;
                     }
+
                     else if (from.Backpack.ConsumeTotal(typeof(Gold), m_Slot.Cost))
                     {
-                        AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_Gamble, m_Slot.Cost);
                         m_Slot.DoSpin(from);
                         m_Slot.LastPay = 0;
                         m_Slot.SlotTotalCollected += m_Slot.Cost;
                     }
+
                     else if (m_Slot.Won >= m_Slot.Cost)
                     {
-                        AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_Gamble, m_Slot.Cost);
                         m_Slot.SlotWon -= m_Slot.Cost;
                         m_Slot.DoSpin(from);
                         m_Slot.LastPay = 0;
                         m_Slot.SlotTotalCollected += m_Slot.Cost;
                     }
+
                     else if (m_Slot.CashCheck(from, out amount))
                     {
                         from.SendMessage("Cashing bank check for {0} gold from your backpack, you may now spin again.", amount);
                         from.SendGump(new TurboSlotGump(m_Slot, m_Symbols));
                     }
+
                     else
                     {
                         from.SendMessage("You must have at least {0} gold, or credits on the machine to play.", m_Slot.Cost);

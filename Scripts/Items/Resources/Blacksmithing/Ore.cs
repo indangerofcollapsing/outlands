@@ -4,7 +4,7 @@ using Server.Network;
 using Server.Targeting;
 using Server.Engines.Craft;
 using Server.Mobiles;
-using Server.Achievements;
+
 
 namespace Server.Items
 {
@@ -226,20 +226,7 @@ namespace Server.Items
 
 							m_Ore.Consume( toConsume );
 							from.AddToBackpack( ingot );
-							//from.PlaySound( 0x57 );
-
-							// IPY ACHIEVEMENT
-							if (m_Ore is DullCopperOre) AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_CreateIngotDullCopper, ingot.Amount);
-							if (m_Ore is CopperOre) AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_CreateIngotCopper, ingot.Amount);
-							if (m_Ore is BronzeOre) AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_CreateIngotBronze, ingot.Amount);
-							if (m_Ore is ShadowIronOre) AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_CreateIngotShadow, ingot.Amount);
-							if (m_Ore is GoldOre) AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_CreateIngotGold, ingot.Amount);
-							if (m_Ore is AgapiteOre) AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_CreateIngotAgapite, ingot.Amount);
-							if (m_Ore is VeriteOre) AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_CreateIngotVerite, ingot.Amount);
-							if (m_Ore is ValoriteOre) AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_CreateIngotValorite, ingot.Amount);		
-							// IPY ACHIEVEMENT
-
-
+							
 							from.SendLocalizedMessage( 501988 ); // You smelt the ore removing the impurities and put the metal in your backpack.
 						}
 					}

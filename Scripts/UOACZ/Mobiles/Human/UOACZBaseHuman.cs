@@ -7,7 +7,7 @@ using Server.Network;
 using Server.Custom;
 using System.Collections;
 using System.Collections.Generic;
-using Server.Achievements;
+
 
 namespace Server.Mobiles
 {
@@ -372,24 +372,10 @@ namespace Server.Mobiles
 
                     if (damage >= 100 || damagePercentOfTotal > .10)
                     {
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZScoreFromKillingHumans, scoreValue);
-                        AchievementHandling(player, GetType());
-
                         UOACZSystem.ChangeStat(player, UOACZSystem.UOACZStatType.UndeadScore, scoreValue, true);
 
-                        if (!player.m_UOACZAccountEntry.UndeadProfile.m_FormsKilledWith.Contains(player.m_UOACZAccountEntry.UndeadProfile.ActiveForm))
-                        {
-                            player.m_UOACZAccountEntry.UndeadProfile.m_FormsKilledWith.Add(player.m_UOACZAccountEntry.UndeadProfile.ActiveForm);
-
-                            if (player.m_UOACZAccountEntry.UndeadProfile.m_FormsKilledWith.Count == 8)
-                                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZKillWithDifferentForms1, 1);
-
-                            if (player.m_UOACZAccountEntry.UndeadProfile.m_FormsKilledWith.Count == 12)
-                                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZKillWithDifferentForms2, 1);
-
-                            if (player.m_UOACZAccountEntry.UndeadProfile.m_FormsKilledWith.Count == 16)
-                                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZKillWithDifferentForms3, 1);
-                        }
+                        if (!player.m_UOACZAccountEntry.UndeadProfile.m_FormsKilledWith.Contains(player.m_UOACZAccountEntry.UndeadProfile.ActiveForm))                        
+                            player.m_UOACZAccountEntry.UndeadProfile.m_FormsKilledWith.Add(player.m_UOACZAccountEntry.UndeadProfile.ActiveForm); 
 
                         if (this is UOACZBaseCivilian)
                             player.m_UOACZAccountEntry.CiviliansKilledAsUndead++;
@@ -468,16 +454,7 @@ namespace Server.Mobiles
                 }
             }
         }
-
-        public void AchievementHandling(PlayerMobile player, Type type)
-        {
-            if (type == typeof(UOACZFirstRanger))
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZKillHumanChampion, 1);
-
-            if (type == typeof(UOACZFortCommander))
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZKillHumanBoss, 1);
-        }
-
+        
         public override void OnAfterDelete()
         {
             base.OnAfterDelete();

@@ -8,7 +8,7 @@ using Server.Guilds;
 using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
-using Server.Achievements;
+
 using Server.Engines.XmlSpawner2;
 
 namespace Server.Items
@@ -1034,15 +1034,7 @@ namespace Server.Items
             }
 
             else if (((Body)Amount).IsHuman && ItemID == 0x2006)
-            {                
-                // IPY ACHIEVEMENT TRIGGER: As a blue or gray player, cut the corpse of a red player
-                if (from.Player && m_Owner.Player)
-                {                    
-                    if (from.ShortTermMurders < 5 && NotorietyHandlers.CorpseNotoriety(from, this) == Notoriety.Murderer)                    
-                        AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_PlayerCorpseCut);                    
-                }
-                // END IPY ACHIEVEMENT TRIGGER
-
+            {
                 new Blood(0x122D).MoveToWorld(Location, Map);
 
                 new Torso().MoveToWorld(Location, Map);

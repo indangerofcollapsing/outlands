@@ -9,7 +9,7 @@ using Server.Network;
 using Server.Spells.Fourth;
 using Server.Spells;
 using Server.SkillHandlers;
-using Server.Achievements;
+
 using Server.Gumps;
 
 namespace Server.Items
@@ -138,19 +138,6 @@ namespace Server.Items
                     UpdateProperties(from);
 
                     from.PublicOverheadMessage(MessageType.Emote, hue, false, "*a magical aura surrounds " + from.Name + "*");
-
-                    switch (dungeonArmorName)
-                    {
-                        case "Hythloth": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_HythlothArmor); break;
-                        case "Shame": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_ShameArmor); break;
-                        case "Destard": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_DestardArmor); break;
-                        case "Deceit": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_DeceitArmor); break;
-                        case "Covetous": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_CovetousArmor); break;
-                        case "Wrong": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_WrongArmor); break;
-                        case "Despise": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_DespiseArmor); break;
-                        case "Ice": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_IceArmor); break;
-                        case "Fire": AchievementSystemImpl.Instance.TickProgress(from, AchievementTriggers.Trigger_FireArmor); break;
-                    }
                 }
             });
         }

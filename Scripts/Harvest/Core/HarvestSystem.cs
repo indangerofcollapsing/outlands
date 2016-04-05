@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Server;
 using Server.Items;
 using Server.Targeting;
-using Server.Achievements;
+
 using Server.Multis;
 
 using Server.Engines.BulkOrders;
@@ -172,8 +172,6 @@ namespace Server.Engines.Harvest
 
                         if (item is PrizedFish)
                         {
-                            AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CatchPrizedFish);
-
                             if (ownerBoat != null)
                             {
                                 if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
@@ -183,8 +181,6 @@ namespace Server.Engines.Harvest
 
                         else if (item is WondrousFish)
                         {
-                            AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CatchWondrousFish);
-
                             if (ownerBoat != null)
                             {
                                 if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
@@ -194,8 +190,6 @@ namespace Server.Engines.Harvest
 
                         else if (item is TrulyRareFish)
                         {
-                            AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CatchTrulyRareFish);
-
                             if (ownerBoat != null)
                             {
                                 if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
@@ -205,8 +199,6 @@ namespace Server.Engines.Harvest
 
                         else if (item is PeculiarFish)
                         {
-                            AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CatchHighlyPeculiarFish);
-
                             if (ownerBoat != null)
                             {
                                 if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
@@ -215,14 +207,11 @@ namespace Server.Engines.Harvest
                         }
 
                         else if (item is MessageInABottle)
-                        {
-                            AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CatchMIB);                            
+                        {                         
                         }
 
                         else if (item is Fish)
                         {
-                            AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CatchFish);
-
                             if (ownerBoat != null)
                             {
                                 if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
@@ -287,7 +276,6 @@ namespace Server.Engines.Harvest
                     if ((def.Skill != SkillName.Mining && def.Skill != SkillName.Lumberjacking) || !Mining.UseMiningCaptcha)
                     {
                         def.SendMessageTo(from, def.FailMessage);
-                        AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_FailMiningAttempt);
 
                         FailHarvest(from, def);
                     }
@@ -297,7 +285,6 @@ namespace Server.Engines.Harvest
             else
             {
                 def.SendMessageTo(from, def.FailMessage);
-                AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_FailMiningAttempt);
 
                 FailHarvest(from, def);
             }
@@ -322,11 +309,6 @@ namespace Server.Engines.Harvest
 
                 if (toolWithUses.UsesRemaining < 1)
                 {
-                    // IPY ACHIEVEMENT
-                    if (tool is Pickaxe)
-                        AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_PickaxeBroke);
-                    // IPY ACHIEVEMENT
-
                     tool.Delete();
                     def.SendMessageTo(from, def.ToolBrokeMessage);
                 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Server;
-using Server.Achievements;
+
 using Server.Items;
 using Server.Movement;
 using Server.Network;
@@ -3384,51 +3384,12 @@ namespace Server.Multis
 
                         if (MobileControlType == Multis.MobileControlType.Player)
                         {
-                            attackingBoat.playerShipsSunk++;
-                            AchievementSystem.Instance.TickProgressMulti(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkPlayerBoats, 1);
-                            //check boat size
-                            if (this is SmallBoat || this is SmallDragonBoat)
-                                AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkSmallShips);
-                            else if (this is MediumBoat || this is MediumDragonBoat)
-                                AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkMediumShips);
-                            else if (this is LargeBoat || this is LargeDragonBoat)
-                                AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkLargeShips);
-                            else if (this is CarrackBoat)
-                                AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkCarracks);
-                            else if (this is GalleonBoat)
-                                AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkGalleon);
+                            attackingBoat.playerShipsSunk++;                           
                         }
+
                         else
                         {
-                            attackingBoat.NPCShipsSunk++;
-                            AchievementSystem.Instance.TickProgressMulti(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkNpcBoats, 1);
-                            //track boat type achievement
-                            switch (this.MobileFactionType)
-                            {
-                                case MobileFactionType.Britain:
-                                    AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkBritainNavyShips);
-                                    break;
-                                case MobileFactionType.Fishing:
-                                    AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkFishingShips);
-                                    break;
-                                case MobileFactionType.Orc:
-                                    AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkOrcShips);
-                                    break;
-                                case MobileFactionType.Orghereim:
-                                    AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkOrghereimShips);
-                                    break;
-                                case MobileFactionType.Pirate:
-                                    AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkPirateShips);
-                                    break;
-                                case MobileFactionType.Undead:
-                                    AchievementSystem.Instance.TickProgress(attackingBoatPlayerOwner, AchievementTriggers.Trigger_SinkUndeadShips);
-                                    break;
-                                default:
-                                case MobileFactionType.None:
-                                case MobileFactionType.Null:
-                                    break;
-
-                            }
+                            attackingBoat.NPCShipsSunk++;                            
                         }
 
                         attackingBoat.doubloonsEarned += finalDoubloonAmount;

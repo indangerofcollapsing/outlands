@@ -12,7 +12,7 @@ using Server.Items;
 using Server.Accounting;
 using Server.Spells;
 using Server.Custom;
-using Server.Achievements;
+
 
 namespace Server
 {
@@ -301,8 +301,6 @@ namespace Server
 
                     UOACZSystem.ChangeStat(player, UOACZSystem.UOACZStatType.UndeadScore, UOACZSystem.GiftOfCorruptionAbilityScore, true);
 
-                    AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZCorruptionAbilities, 1);
-
                     player.SendMessage(UOACZSystem.greenTextHue, "You draw power from the corruption and are rewarded for your efforts.");
 
                     if (player.Backpack != null)
@@ -483,9 +481,7 @@ namespace Server
                         });
 
                         UOACZSystem.ChangeStat(player, UOACZSystem.UOACZStatType.UndeadScore, UOACZSystem.CreepAbilityScore, true);
-
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZCorruptionAbilities, 1);
-
+                        
                         player.SendMessage(UOACZSystem.greenTextHue, "You spread corruption and are rewarded for your efforts.");
 
                         UOACZEvents.SpreadCorruption();
@@ -2318,12 +2314,8 @@ namespace Server
                         if (m_Queue.Count == 0)
                             breakableStatic.ReceiveDamage(player, damage, BreakableStatic.InteractionType.Weapon);
 
-                        else
-                        {
-                            AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZDamageObjects, 1);   
-
-                            breakableStatic.ReceiveDamage(null, damage, BreakableStatic.InteractionType.Weapon);
-                        }
+                        else                        
+                            breakableStatic.ReceiveDamage(null, damage, BreakableStatic.InteractionType.Weapon);                        
                     }
 
                     m_Queue = new Queue();
@@ -3582,8 +3574,6 @@ namespace Server
             });
 
             creature.PlaySound(creature.GetIdleSound());            
-
-            AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZNightwalker, 1);
 
             player.SendMessage("You become one with the shadows.");
         }

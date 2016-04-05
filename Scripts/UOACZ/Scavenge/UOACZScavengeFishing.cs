@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Server.Mobiles;
 using Server.Items;
 using Server.Spells;
-using Server.Achievements;
+
 
 namespace Server.Custom
 {
@@ -141,8 +141,6 @@ namespace Server.Custom
             if (scavengeResult)
             {
                 Effects.PlaySound(player.Location, player.Map, 0x025);
-
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZHarvesting, 1);
 
                 UOACZPersistance.CheckAndCreateUOACZAccountEntry(player);
                 player.m_UOACZAccountEntry.ScavengeableFishingItems++;

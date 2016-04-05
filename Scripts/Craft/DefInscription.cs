@@ -2,7 +2,7 @@ using System;
 using Server.Items;
 using Server.Mobiles;
 using Server.Spells;
-using Server.Achievements;
+
 using Server.Custom;
 
 namespace Server.Engines.Craft
@@ -171,11 +171,8 @@ namespace Server.Engines.Craft
 
                 if (failed)
                     return 501630; // You fail to inscribe the scroll, and the scroll is ruined.
-                else
-                {
-                    DailyAchievement.TickProgress(Category.Crafter, (PlayerMobile)from, CrafterCategory.WriteScrolls);
-                    return 501629; // You inscribe the spell and put the scroll in your backpack.
-                }
+                else                                   
+                    return 501629; // You inscribe the spell and put the scroll in your backpack.                
             }
         }
 

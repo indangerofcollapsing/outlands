@@ -6,7 +6,7 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
-using Server.Achievements;
+
 using Server.Multis;
 using Server.Spells;
 
@@ -417,18 +417,6 @@ namespace Server.Items
                     {
                         healerNumber = (m_Healer == m_Patient) ? -1 : 1010058; // You have cured the target of all poisons.
                         patientNumber = 1010059; // You have been cured of all poisons.
-                        
-                        if (m_Healer.Player)
-                        {
-                            // IPY ACHIEVEMENT (cure newbie)
-                            if (healerNumber != -1 && 3000 > m_Patient.SkillsTotal && m_Patient.Player && m_Patient != m_Healer)
-                                AchievementSystem.Instance.TickProgress(m_Healer, AchievementTriggers.Trigger_CurePlayerUnder300Skill);
-
-                            // IPY ACHIEVEMENT (cure pet)
-                            if (petPatient != null && !petPatient.IsDeadPet)
-                                AchievementSystem.Instance.TickProgress(m_Healer, AchievementTriggers.Trigger_CureAnimalWithBandages);
-                        }
-
                     }
 
                     else
@@ -516,15 +504,6 @@ namespace Server.Items
                     int finalHeal = (int)toHeal;
 
                     m_Patient.Heal(finalHeal, m_Healer, false);
-
-                    // IPY ACHIEVEMENT (heal pet)
-                    if (petPatient != null && !petPatient.IsDeadPet)
-                        AchievementSystem.Instance.TickProgress(m_Healer, AchievementTriggers.Trigger_HealAnimalUsingBandages);
-
-                    // IPY ACHIEVEMENT (heal newbie)
-                    if (m_Patient != m_Healer && 3000 > m_Patient.SkillsTotal && m_Patient.Player && m_Healer.Player)
-                        AchievementSystem.Instance.TickProgress(m_Healer, AchievementTriggers.Trigger_HealPlayerUnder300Skill);
-                    // IPY ACHIEVEMENT
                 }
 
                 else

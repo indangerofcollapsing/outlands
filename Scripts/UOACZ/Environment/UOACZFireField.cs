@@ -2,7 +2,7 @@ using System;
 using Server;
 using Server.Mobiles;
 using System.Collections;
-using Server.Achievements;
+
 using Server.Network;
 
 namespace Server.Items
@@ -127,9 +127,6 @@ namespace Server.Items
                     if (m_Owner is PlayerMobile && UOACZSystem.IsUOACZValidMobile(m_Owner))
                     {
                         PlayerMobile pm_Owner = m_Owner as PlayerMobile;
-
-                        if (pm_Owner.IsUOACZHuman)
-                            AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZKillCreaturesWithFirefields, 1);
                     }
                 }
 
@@ -360,21 +357,7 @@ namespace Server.Items
                     if (damage > 0)
                     {
                         int finalDamage = (int)(Math.Round(damage));
-
-                        if (finalDamage >= mobile.Hits && mobile is UOACZBaseUndead)
-                        {
-                            if (UOACZSystem.IsUOACZValidMobile(m_Owner))
-                            {
-                                PlayerMobile pm_Owner = m_Owner as PlayerMobile;
-
-                                if (pm_Owner != null)
-                                {
-                                    if (pm_Owner.IsUOACZHuman)
-                                        AchievementSystemImpl.Instance.TickProgressMulti(pm_Owner, AchievementTriggers.Trigger_UOACZKillCreaturesWithFirefields, 1);
-                                }
-                            }
-                        }
-
+                        
                         AOS.Damage(mobile, finalDamage, 0, 100, 0, 0, 0);
                         Effects.PlaySound(mobile.Location, mobile.Map, m_UOACZFirefield.m_HitSound);
                     }

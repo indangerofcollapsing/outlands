@@ -3,7 +3,7 @@ using Server;
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
-using Server.Achievements;
+
 namespace Server.Mobiles
 {
     [CorpseName("a sheep corpse")]
@@ -31,11 +31,7 @@ namespace Server.Mobiles
                 PrivateOverheadMessage(MessageType.Regular, 0x3B2, 500449, from.NetState); // This sheep is not yet ready to be shorn.
                 return;
             }
-
-            // IPY ACHIEVEMENT
-            AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_ShearSheep_TIMED);
-            // IPY ACHIEVEMENT
-
+            
             from.SendLocalizedMessage(500452); // You place the gathered wool into your backpack.
             from.AddToBackpack(new Wool(WoolAmount));
 

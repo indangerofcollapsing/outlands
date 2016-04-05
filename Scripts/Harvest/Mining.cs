@@ -4,7 +4,7 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Targeting;
 
-using Server.Achievements;
+
 
 namespace Server.Engines.Harvest
 {
@@ -224,22 +224,8 @@ namespace Server.Engines.Harvest
             if (item is BaseGranite)
                 from.SendLocalizedMessage(1044606); // You carefully extract some workable stone from the ore vein!
 
-            else
-            {
-                base.SendSuccessTo(from, item, resource);
-
-                // IPY ACHIEVEMENT TRACKING
-                if (item is IronOre) AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MineIron);
-                if (item is DullCopperOre) AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MineDullCopper);
-                if (item is CopperOre) AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MineCopper);
-                if (item is BronzeOre) AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MineBronze);
-                if (item is ShadowIronOre) AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MineShadow);
-                if (item is GoldOre) AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MineGold);
-                if (item is AgapiteOre) AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MineAgapite);
-                if (item is VeriteOre) AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MineVerite);
-                if (item is ValoriteOre) AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MineValorite);
-                // IPY ACHIEVEMENT TRACKING
-            }
+            else            
+                base.SendSuccessTo(from, item, resource);            
         }
 
         public override bool CheckHarvest(Mobile from, Item tool, HarvestDefinition def, object toHarvest)

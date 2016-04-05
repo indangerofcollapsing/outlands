@@ -7,7 +7,7 @@ using Server.Misc;
 using Server.Regions;
 using Server.Mobiles;
 
-using Server.Achievements;
+
 using Server.Multis;
 using Server.Custom;
 
@@ -266,10 +266,6 @@ namespace Server.Spells.Seventh
 			public override void OnGateUsed(Mobile m)
 			{
 				base.OnGateUsed(m);
-
-				// IPY ACHIEVEMENT
-				AchievementSystem.Instance.TickProgress(m, AchievementTriggers.Trigger_UsePortal);
-				// IPY ACHIEVEMENT
 			}
 
 			private class InternalTimer : Timer

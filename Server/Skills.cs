@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Server.Network;
-using Server.Achievements;
 using Server.Mobiles;
 
 namespace Server
@@ -1033,11 +1032,7 @@ namespace Server
 				m_Highest = skill;
 
 			m_Owner.OnSkillInvalidated( skill );
-
-            // IPY ACHIEVEMENT
-            if (skill.BaseFixedPoint == 1000 && m_Owner.Player)
-                OnGMReached(skill, m_Owner);
-
+            
 			NetState ns = m_Owner.NetState;
 
             if (ns != null)
@@ -1052,66 +1047,6 @@ namespace Server
 		public IEnumerator GetEnumerator()
 		{
 			return m_Skills.GetEnumerator();
-		}
-        
-        // IPY ACHIEVEMENTS
-        private static List<AchievementTriggers> m_SkillToAchievementIDLookup = new List<AchievementTriggers> 
-        { 
-            AchievementTriggers.Trigger_Reach100InAlchemy       ,
-            AchievementTriggers.Trigger_Reach100InAnatomy       ,
-            AchievementTriggers.Trigger_Reach100InAnimalLore    ,
-            AchievementTriggers.Trigger_Reach100InItemID        ,
-            AchievementTriggers.Trigger_Reach100InArmsLore      ,
-            AchievementTriggers.Trigger_Reach100InParry         ,
-            AchievementTriggers.Trigger_Reach100InBegging       ,
-            AchievementTriggers.Trigger_Reach100InBlacksmith    ,
-            AchievementTriggers.Trigger_Reach100InFletching     ,
-            AchievementTriggers.Trigger_Reach100InPeacemaking   ,
-            AchievementTriggers.Trigger_Reach100InCamping       ,
-            AchievementTriggers.Trigger_Reach100InCarpentry     ,
-            AchievementTriggers.Trigger_Reach100InCartography   ,
-            AchievementTriggers.Trigger_Reach100InCooking       ,
-            AchievementTriggers.Trigger_Reach100InDetectHidden  ,
-            AchievementTriggers.Trigger_Reach100InDiscordance   ,
-            AchievementTriggers.Trigger_Reach100InEvalInt       ,
-            AchievementTriggers.Trigger_Reach100InHealing       ,
-            AchievementTriggers.Trigger_Reach100InFishing       ,
-            AchievementTriggers.Trigger_Reach100InForensics     ,
-            AchievementTriggers.Trigger_Reach100InHerding       ,
-            AchievementTriggers.Trigger_Reach100InHiding        ,
-            AchievementTriggers.Trigger_Reach100InProvocation   ,
-            AchievementTriggers.Trigger_Reach100InInscribe      ,
-            AchievementTriggers.Trigger_Reach100InLockpicking   ,
-            AchievementTriggers.Trigger_Reach100InMagery        ,
-            AchievementTriggers.Trigger_Reach100InMagicResist   ,
-            AchievementTriggers.Trigger_Reach100InTactics       ,
-            AchievementTriggers.Trigger_Reach100InSnooping      ,
-            AchievementTriggers.Trigger_Reach100InMusicianship  ,
-            AchievementTriggers.Trigger_Reach100InPoisoning     ,
-            AchievementTriggers.Trigger_Reach100InArchery       ,
-            AchievementTriggers.Trigger_Reach100InSpiritSpeak   ,
-            AchievementTriggers.Trigger_Reach100InStealing      ,
-            AchievementTriggers.Trigger_Reach100InTailoring     ,
-            AchievementTriggers.Trigger_Reach100InAnimalTaming  ,
-            AchievementTriggers.Trigger_Reach100InTasteID       ,
-            AchievementTriggers.Trigger_Reach100InTinkering     ,
-            AchievementTriggers.Trigger_Reach100InTracking      ,
-            AchievementTriggers.Trigger_Reach100InVeterinary    ,
-            AchievementTriggers.Trigger_Reach100InSwords        ,
-            AchievementTriggers.Trigger_Reach100InMacing        ,
-            AchievementTriggers.Trigger_Reach100InFencing       ,
-            AchievementTriggers.Trigger_Reach100InWrestling     ,
-            AchievementTriggers.Trigger_Reach100InLumberjacking ,
-            AchievementTriggers.Trigger_Reach100InMining        ,
-            AchievementTriggers.Trigger_Reach100InMeditation    ,
-            AchievementTriggers.Trigger_Reach100InStealth       ,
-            AchievementTriggers.Trigger_Reach100InRemoveTrap    ,
-        };
-
-        private void OnGMReached(Skill skill, Mobile owner)
-        {
-            if (m_SkillToAchievementIDLookup.Count > skill.SkillID)
-                AchievementSystem.Instance.TickProgress(owner, m_SkillToAchievementIDLookup[skill.SkillID]);
-        }
+		}        
 	}
 }

@@ -7,7 +7,7 @@ using Server.Network;
 using Server.ContextMenus;
 using EDI = Server.Mobiles.EscortDestinationInfo;
 using Server.Engines.XmlSpawner2;
-using Server.Achievements;
+
 
 namespace Server.Mobiles
 {
@@ -92,14 +92,6 @@ namespace Server.Mobiles
 
         public override void OnDeath(Container c)
         {
-            // IPY ACHIEVEMENT
-            Mobile escorter = GetEscorter();
-            if (escorter != null && LastKiller == escorter)
-            {
-                AchievementSystem.Instance.TickProgress(escorter, AchievementTriggers.Trigger_KillEscortedNPC);
-            }
-            // IPY ACHIEVEMENT
-
             base.OnDeath(c);
         }
 
@@ -369,10 +361,7 @@ namespace Server.Mobiles
             if (dest.Contains(Location))
             {
                 Say(1042809, escorter.Name); // We have arrived! I thank thee, ~1_PLAYER_NAME~! I have no further need of thy services. Here is thy pay.
-
-                AchievementSystem.Instance.TickProgress(escorter, AchievementTriggers.Trigger_EscortNPC);
-
-
+                
                 // not going anywhere
                 m_Destination = null;
                 m_DestinationString = null;

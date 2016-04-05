@@ -9,7 +9,7 @@ using Server.Items;
 using Server.Targeting;
 using Server.Spells;
 using Server.SkillHandlers;
-using Server.Achievements;
+
 
 namespace Server.Custom
 {
@@ -195,9 +195,7 @@ namespace Server.Custom
                     if (Utility.GetDistance(playerLocation, mobileLocation) >= 25) return;
                         
                     SpecialAbilities.HinderSpecialAbility(1.0, player, mobileTarget, 1, duration, true, -1, true, "You ensnare them in a net", "You have been ensnared in a net!");
-
-                    AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZSnaresTrapsNets, 1);
-
+                    
                     for (int a = 0; a < 9; a++)
                     {
                         TimedStatic net = new TimedStatic(3538, duration - destinationDelay);

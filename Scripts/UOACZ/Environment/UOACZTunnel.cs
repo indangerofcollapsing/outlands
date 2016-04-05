@@ -10,7 +10,7 @@ using Server.Gumps;
 using Server.Spells.Fifth;
 using Server.Spells.Seventh;
 using Server.Spells;
-using Server.Achievements;
+
 
 namespace Server
 {
@@ -112,8 +112,6 @@ namespace Server
             dirt.Name = "dirt";
             dirt.MoveToWorld(Location, Map);
             dirt.PublicOverheadMessage(MessageType.Regular, 0, false, "*goes into tunnel*");
-
-            AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZUseTunnels, 1);
 
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(player);
             player.m_UOACZAccountEntry.TunnelsUsed++;                   

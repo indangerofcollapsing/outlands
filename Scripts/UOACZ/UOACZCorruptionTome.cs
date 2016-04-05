@@ -6,7 +6,7 @@ using Server.Mobiles;
 using System.Collections;
 using System.Collections.Generic;
 using Server.Gumps;
-using Server.Achievements;
+
 
 namespace Server.Items
 {
@@ -978,10 +978,7 @@ namespace Server.Items
                                 player.m_UOACZAccountEntry.UndeadProfile.UpgradesSpent += upgradeCost;
 
                                 player.SendSound(0x5C8);
-
-                                if (player.m_UOACZAccountEntry.UndeadProfile.MonsterTier == 5)
-                                    AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZMonsterTierLevel5, 1);
-
+                                
                                 player.m_UOACZAccountEntry.UndeadProfile.AbilitiesHotbarPageNumber = 1;
 
                                 UOACZUndeadUpgradeType newUpgradeType = UOACZUndeadUpgrades.GetRandomizedUpgrade(player.m_UOACZAccountEntry);

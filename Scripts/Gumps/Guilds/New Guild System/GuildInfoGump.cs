@@ -6,7 +6,6 @@ using Server.Network;
 using Server.Factions;
 using Server.Prompts;
 using Server.Items;
-using Server.Custom.Guilds;
 
 namespace Server.Guilds
 {
@@ -200,11 +199,6 @@ namespace Server.Guilds
                     else
                         pm.SendMessage(0xEE, resp);
                     pm.SendGump(new GuildInfoGump(pm, guild,false));
-                    break;
-                }
-                case 9:
-                {
-                    pm.SendGump(new GuildLevelGump(pm, guild));
                     break;
                 }
 			}

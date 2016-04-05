@@ -1,5 +1,5 @@
 using System;
-using Server.Achievements;
+
 using Server.Mobiles;
 
 namespace Server.Items
@@ -20,10 +20,6 @@ namespace Server.Items
 		public override void PlayInstrumentWell(Mobile from)
 		{
 			base.PlayInstrumentWell(from);
-			// IPY ACHIEVEMENT 
-			if (from is PlayerMobile)
-				AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_PlayDrumWell);
-			// IPY ACHIEVEMENT 
 		}
 
 		public override void Serialize( GenericWriter writer )

@@ -9,7 +9,7 @@ using Server.Network;
 using Server.Mobiles;
 using Server.Items;
 using Server.Targeting;
-using Server.Achievements;
+
 using Server.Accounting;
 using System.Linq;
 using Server.Custom;
@@ -1959,17 +1959,11 @@ namespace Server
                 if (playerEntry.MostRecentPlayer == null)
                     continue;
 
-                if (playerEntry.CurrentSessionHumanScore >= UOACZSystem.MinScoreToQualifyAsParticipant && humanVictory)
-                {
-                    AchievementSystemImpl.Instance.TickProgressMulti(playerEntry.MostRecentPlayer, AchievementTriggers.Trigger_UOACZHumanVictory, 1);
-                    playerEntry.HumanVictoryCount++;
-                }
+                if (playerEntry.CurrentSessionHumanScore >= UOACZSystem.MinScoreToQualifyAsParticipant && humanVictory)                
+                    playerEntry.HumanVictoryCount++;                
 
-                if (playerEntry.CurrentSessionUndeadScore >= UOACZSystem.MinScoreToQualifyAsParticipant && undeadVictory)
-                {
-                    AchievementSystemImpl.Instance.TickProgressMulti(playerEntry.MostRecentPlayer, AchievementTriggers.Trigger_UOACZUndeadVictory, 1);
-                    playerEntry.UndeadVictoryCount++;
-                }
+                if (playerEntry.CurrentSessionUndeadScore >= UOACZSystem.MinScoreToQualifyAsParticipant && undeadVictory)                
+                    playerEntry.UndeadVictoryCount++;                
             }
 
             Timer.DelayCall(TimeSpan.FromSeconds(5), delegate
@@ -5121,9 +5115,7 @@ namespace Server
                 int totalPointsEarned = ParticipationRewardPoints + UOACZSystem.HighestTotalScoreRewardPoints;
 
                 PlayerMobile winner = m_HighestTotalScoreAccount.MostRecentPlayer;
-
-                AchievementSystemImpl.Instance.TickProgressMulti(winner, AchievementTriggers.Trigger_UOACZHighestSessionTotalScore, 1);
-
+                
                 if (winner != null)
                 {
                     privateWinnerMessage = "You have earned the top score with a total of " + highestTotalScoreValue.ToString() + ". You have earned " + totalPointsEarned.ToString() + " UOACZ Reward Points.";
@@ -5706,17 +5698,12 @@ namespace Server
 
         public static void AddCreatureToPlayerSwarm(PlayerMobile player, BaseCreature creature)
         {
-            AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZUndeadAddToSwarm, 1);
-
             UOACZPersistance.CheckAndCreateUOACZAccountEntry(player);
             player.m_UOACZAccountEntry.TotalFollowers++;
 
             if (player.Followers > player.m_UOACZAccountEntry.LargestSwarm)
                 player.m_UOACZAccountEntry.LargestSwarm = player.Followers;
-
-            if (player.Followers >= 15)
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZUndeadSwarmSize15, 1);
-
+            
             Timer.DelayCall(TimeSpan.FromSeconds(1), delegate
             {
                 if (!IsUOACZValidMobile(player)) return;
@@ -5834,16 +5821,7 @@ namespace Server
                         player.m_UOACZAccountEntry.LongestTimeAsHuman = player.m_UOACZAccountEntry.HumanProfile.TotalMinutesAlive;
 
                     if (player.m_UOACZAccountEntry.HumanProfile.TotalMinutesAlive > player.m_UOACZAccountEntry.LongestTimeAsHumanWithoutADeath && player.m_UOACZAccountEntry.HumanProfile.Deaths == 0)
-                        player.m_UOACZAccountEntry.LongestTimeAsHumanWithoutADeath = player.m_UOACZAccountEntry.HumanProfile.TotalMinutesAlive;
-                    
-                    if (player.m_UOACZAccountEntry.HumanProfile.Deaths == 0 && player.m_UOACZAccountEntry.HumanProfile.TotalMinutesAlive > 180)
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZHumanSurvival1, 1);
-
-                    if (player.m_UOACZAccountEntry.HumanProfile.Deaths == 0 && player.m_UOACZAccountEntry.HumanProfile.TotalMinutesAlive > 360)
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZHumanSurvival2, 1);
-
-                    if (player.m_UOACZAccountEntry.HumanProfile.Deaths == 0 && player.m_UOACZAccountEntry.HumanProfile.TotalMinutesAlive > 540)
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZHumanSurvival3, 1);                                       
+                        player.m_UOACZAccountEntry.LongestTimeAsHumanWithoutADeath = player.m_UOACZAccountEntry.HumanProfile.TotalMinutesAlive;                                               
                 break;
 
                 case UOACZAccountEntry.ActiveProfileType.Undead:

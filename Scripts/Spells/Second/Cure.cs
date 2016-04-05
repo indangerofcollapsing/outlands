@@ -1,7 +1,7 @@
 using System;
 using Server.Targeting;
 using Server.Network;
-using Server.Achievements;
+
 using Server.Mobiles;
 using Server.Items;
 using Server.Custom;
@@ -73,16 +73,9 @@ namespace Server.Spells.Second
                     {
                         if (m.CurePoison(Caster))
                         {
-                            if (Caster != m)
-                            {
+                            if (Caster != m)                            
                                 Caster.SendLocalizedMessage(1010058); // You have cured the target of all poisons!
-
-                                // IPY ACHIEVEMENT (cure newbie)
-                                if (3000 > m.SkillsTotal && m is PlayerMobile && Caster is PlayerMobile)
-                                {
-                                    AchievementSystem.Instance.TickProgress(Caster, AchievementTriggers.Trigger_CurePlayerUnder300Skill);
-                                }
-                            }
+                            
                             m.SendLocalizedMessage(1010059); // You have been cured of all poisons.
                         }
                     }

@@ -18,7 +18,7 @@ using Server.ContextMenus;
 using Server.Engines.PartySystem;
 using Server.Factions;
 using Server.SkillHandlers;
-using Server.Achievements;
+
 using Server.Guilds;
 using Server.Commands;
 using System.Linq;
@@ -4663,16 +4663,7 @@ namespace Server.Mobiles
                         trainingCreditDeed.Value -= amountGiven;
 
                         if (trainingCreditDeed.Value <= 0)
-                            trainingCreditDeed.Delete();
-
-                        // IPY ACHIEVEMENT 
-                        if (the_skill == SkillName.Alchemy || the_skill == SkillName.Blacksmith || the_skill == SkillName.Carpentry || the_skill == SkillName.Cooking ||
-                            the_skill == SkillName.Inscribe || the_skill == SkillName.Mining || the_skill == SkillName.Poisoning ||
-                            the_skill == SkillName.Tailoring || the_skill == SkillName.Tinkering)
-                        {
-                            AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_TrainCraftingSkillFromNPC);
-                        }
-                        // IPY ACHIEVEMENT                       
+                            trainingCreditDeed.Delete();                   
                     }
                 }
 
@@ -4691,15 +4682,6 @@ namespace Server.Mobiles
                 if (Teach(m_Teaching, from, dropped.Amount, true))
                 {
                     dropped.Delete();
-
-                    // IPY ACHIEVEMENT 
-                    if (the_skill == SkillName.Alchemy || the_skill == SkillName.Blacksmith || the_skill == SkillName.Carpentry || the_skill == SkillName.Cooking ||
-                        the_skill == SkillName.Inscribe || the_skill == SkillName.Mining || the_skill == SkillName.Poisoning ||
-                        the_skill == SkillName.Tailoring || the_skill == SkillName.Tinkering)
-                    {
-                        AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_TrainCraftingSkillFromNPC);
-                    }
-                    // IPY ACHIEVEMENT
 
                     return true;
                 }
@@ -4725,16 +4707,6 @@ namespace Server.Mobiles
                 this.SpeechHue = oldSpeechHue;
 
                 dropped.Delete();
-
-
-                // IPY ACHIEVEMENT
-                if (dropped.Amount >= 80 && dropped.Amount < 250)
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_Donate80to250GoldToNPC);
-                else if (dropped.Amount >= 250 && dropped.Amount <= 500)
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_Donate250to500GoldToNPC);
-                else if (dropped.Amount > 500)
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_DonateOver500GoldToNPC);
-                // IPY ACHIEVEMENT
 
                 return true;
             }
@@ -7805,17 +7777,7 @@ namespace Server.Mobiles
             }
 
             MeerMage.StopEffect(this, false);
-
-            // IPY ACHIEVEMENT
-            if (Controlled &&
-                !Summoned &&
-                LastKiller != null &&
-                LastKiller is PlayerMobile &&
-                GetMaster() != LastKiller)
-            {
-                AchievementSystem.Instance.TickProgress(LastKiller, AchievementTriggers.Trigger_KillAnyTamedAnimal);
-            }
-
+            
             BandageContext bandageContext = BandageContext.GetContext(this);
 
             if (bandageContext != null)

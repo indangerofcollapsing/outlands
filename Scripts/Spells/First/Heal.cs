@@ -3,7 +3,7 @@ using Server;
 using Server.Targeting;
 using Server.Network;
 using Server.Mobiles;
-using Server.Achievements;
+
 using Server.Items;
 using Server.Custom;
 
@@ -115,11 +115,6 @@ namespace Server.Spells.First
                 target.PlaySound(0x1F2);
 
                 target.NextSpellTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(250);
-
-                // IPY ACHIEVEMENT (heal newbie)
-                if (Caster != target && 3000 > target.SkillsTotal && target.Player && Caster.Player)
-                    AchievementSystem.Instance.TickProgress(Caster, AchievementTriggers.Trigger_HealPlayerUnder300Skill);
-                // IPY ACHIEVEMENT
             }
 
 			FinishSequence();

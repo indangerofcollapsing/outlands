@@ -22,7 +22,7 @@ using Server.Engines.CannedEvil;
 using Server.Engines.Craft;
 using Server.Engines.PartySystem;
 using Server.Commands;
-using Server.Achievements;
+
 using Server.Custom;
 using Server.SkillHandlers;
 using Server.Guilds;
@@ -775,8 +775,7 @@ namespace Server.Mobiles
             {
                 if ((pm_From.Young || pm_From.Companion) && !YoungChatListeners.Contains(pm_From))
                     YoungChatListeners.Add(pm_From);
-
-                Timer.DelayCall(TimeSpan.FromSeconds(5), new TimerStateCallback(CheckAccountAgeAchievements), from as object);
+                
                 pm_From.ClaimAutoStabledPets();
 
                 if (pm_From.AccessLevel > AccessLevel.Player)
@@ -1379,37 +1378,6 @@ namespace Server.Mobiles
         {
             get { return GetFlag(PlayerFlag.BoatMovement); }
             set { SetFlag(PlayerFlag.BoatMovement, value); }
-        }
-
-        private static void CheckAccountAgeAchievements(object mobile)
-        {
-            if (mobile is PlayerMobile)
-            {
-                PlayerMobile pm = mobile as PlayerMobile;
-
-                if (pm.Deleted)
-                    return;
-
-                TimeSpan diff = DateTime.UtcNow - ((Account)pm.Account).Created;
-
-                if (diff.TotalDays >= 365.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_365dayOldAccount);
-
-                if (diff.TotalDays >= 180.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_180dayOldAccount);
-
-                if (diff.TotalDays >= 90.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_90dayOldAccount);
-
-                if (diff.TotalDays >= 30.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_30dayOldAccount);
-
-                if (diff.TotalDays >= 7.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_7dayOldAccount);
-
-                if (diff.TotalDays >= 1.0)
-                    AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_1dayOldAccount);
-            }
         }
 
         public bool CheckPlayerAccountsForCommonGuild(PlayerMobile player2)
@@ -2900,43 +2868,7 @@ namespace Server.Mobiles
         public override void OnRegionChange(Region Old, Region New)
         {
             if (New.IndexedName == IndexedRegionName.NotIndexed)
-                return;
-            
-            switch (New.IndexedName)
-            {
-                case IndexedRegionName.HedgeMaze: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreHedgeMaze); break;
-                case IndexedRegionName.Britain: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreBritain); break;
-                case IndexedRegionName.Wind: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreWind); break;
-                case IndexedRegionName.BuccaneeersDen: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreBuccsDen); break;
-                case IndexedRegionName.Cove: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreCove); break;
-                case IndexedRegionName.Jhelom: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreJhelom); break;
-                case IndexedRegionName.Magincia: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreMagincia); break;
-                case IndexedRegionName.Minoc: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreMinoc); break;
-                case IndexedRegionName.Moonglow: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreMoonglow); break;
-                case IndexedRegionName.Nujelm: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreNujelm); break;
-                case IndexedRegionName.Occlo: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreOcclo); break;
-                case IndexedRegionName.SerpentsHold: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreSerpentsHold); break;
-                case IndexedRegionName.SkaraBrae: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreSkaraBrae); break;
-                case IndexedRegionName.Trinsic: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreTrinsic); break;
-                case IndexedRegionName.Vesper: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreVesper); break;
-                case IndexedRegionName.Yew: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreYew); break;
-                case IndexedRegionName.Despise:
-                    AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreDespise);
-                    DailyAchievement.TickProgress(Category.Newb, this, NewbCategory.VisitDespise);break;
-                case IndexedRegionName.Deceit: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreDeceit); break;
-                case IndexedRegionName.Destard: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreDestard); break;
-                case IndexedRegionName.Wrong: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreWrong); break;
-                case IndexedRegionName.Covetous: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreCovetous); break;
-                case IndexedRegionName.Shame:
-                    AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreShame);
-                    DailyAchievement.TickProgress(Category.Newb, this, NewbCategory.VisitShame);break;
-                case IndexedRegionName.Hythloth: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreHythloth); break;
-                case IndexedRegionName.FireDungeon: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreFireDungeon); break;
-                case IndexedRegionName.IceDungeon: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreIceDungeon); break;
-                case IndexedRegionName.TerathanKeep: AchievementSystem.Instance.TickProgress(this, AchievementTriggers.Trigger_ExploreTerathanKeep); break;
-                 
-                default: break;
-            }
+                return;            
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
@@ -4330,8 +4262,6 @@ namespace Server.Mobiles
                             if (UOACZRegion.ContainsMobile(player))
                                 player.SendMessage(UOACZSystem.redTextHue, playerKiller.Name + " [Human] has killed " + Name + " [Human].");
                         }
-
-                        AchievementSystemImpl.Instance.TickProgressMulti(playerKiller, AchievementTriggers.Trigger_UOACZMurderAnotherHuman, 1);
                     }
                 }
             }
@@ -4489,18 +4419,7 @@ namespace Server.Mobiles
 
                                 if (UOACZRegion.ContainsMobile(player))
                                     player.SendMessage(UOACZSystem.redTextHue, playerDamager.Name + " [Undead] has killed " + Name + " [Human].");
-                            }
-
-                            AchievementSystemImpl.Instance.TickProgressMulti(playerDamager, AchievementTriggers.Trigger_UOACZKillHumanPlayer, 1);
-
-                            Timer.DelayCall(TimeSpan.FromSeconds(3), delegate
-                            {
-                                if (!UOACZSystem.IsUOACZValidMobile(this)) return;
-                                if (!UOACZSystem.IsUOACZValidMobile(playerDamager)) return;
-
-                                if (IsUOACZUndead)
-                                    AchievementSystemImpl.Instance.TickProgressMulti(playerDamager, AchievementTriggers.Trigger_UOACZCauseUndeadTransformation, 1);
-                            });
+                            }                            
                         }
                     }
 
@@ -4527,8 +4446,6 @@ namespace Server.Mobiles
                                 if (UOACZRegion.ContainsMobile(player))
                                     player.SendMessage(UOACZSystem.redTextHue, playerDamager.Name + " [Human] has killed " + Name + " [Undead].");
                             }
-
-                            AchievementSystemImpl.Instance.TickProgressMulti(playerDamager, AchievementTriggers.Trigger_UOACZKillUndeadPlayer, 1);
                         }
                     }
 

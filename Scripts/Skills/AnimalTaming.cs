@@ -7,7 +7,7 @@ using Server.Mobiles;
 using Server.Factions;
 using Server.Spells;
 using Server.Spells;
-using Server.Achievements;
+
 
 namespace Server.SkillHandlers
 {
@@ -289,10 +289,6 @@ namespace Server.SkillHandlers
                             {
                                 m_Creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502799, m_Tamer.NetState); // It seems to accept you as master.
                                 m_Creature.Owners.Add(m_Tamer);
-
-                                // IPY ACHIEVEMENTS
-                                TrackTamingAchievements();
-                                // IPY ACHIEVEMENTS
                             }
 
                             m_Creature.TimesTamed++;
@@ -319,29 +315,6 @@ namespace Server.SkillHandlers
                     MovementPath path = new MovementPath(m_Creature, new Point3D(p));
 
                     return path.Success;
-                }
-
-                private void TrackTamingAchievements()
-                {
-                    if (!(m_Tamer is PlayerMobile))
-                        return;
-
-                    if (m_Creature is Chicken) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameChicken);
-                    else if (m_Creature is BlackBear || m_Creature is BrownBear || m_Creature is GrizzlyBear) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameBear);
-                    else if (m_Creature is Dog) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameDog);
-                    else if (m_Creature is TimberWolf) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameTimberWolf);
-                    else if (m_Creature is Hind) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameHind);
-                    else if (m_Creature is Cat) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameCat);
-                    else if (m_Creature is GiantToad) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameGiantToad);
-                    else if (m_Creature is JackRabbit) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameJackRabbit);
-                    else if (m_Creature is Rabbit) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameRabbit);
-                    else if (m_Creature is Rat) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameRat);
-                    else if (m_Creature is Gorilla) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameGorilla);
-                    else if (m_Creature is Walrus) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameWalrus);
-                    else if (m_Creature is PolarBear) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TamePolarBear);
-                    else if (m_Creature is HellHound) AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameHellHound);
-
-                    AchievementSystem.Instance.TickProgress(m_Tamer, AchievementTriggers.Trigger_TameAnyAnimal);
                 }
             }
         }

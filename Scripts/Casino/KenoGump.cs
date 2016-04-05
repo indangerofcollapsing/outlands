@@ -7,7 +7,7 @@ using Server.Network;
 using Server.Factions;
 #if XMLSPAWNER
 using System.Xml;
-using Server.Achievements;
+
 #endif
 
 namespace Server.Gumps
@@ -474,20 +474,22 @@ namespace Server.Gumps
                         m_Keno.RemovePlayer(from, m_Player);
                         return;
                     }
+
                     if (from.Backpack.ConsumeTotal(typeof(CasinoToken), 1))
                     {
                         played = PlayKeno(from, 0);
                     }
+
                     else if (from.Backpack.ConsumeTotal(typeof(Gold), m_Player.Cost))
-                    {
-                        AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_Gamble, m_Player.Cost);
+                    {                       
                         played = PlayKeno(from, 0);
                     }
+
                     else if (m_Keno.OnCredit(from, m_Player, 0) >= m_Player.Cost)
-                    {
-                        AchievementSystem.Instance.TickProgressMulti(from, AchievementTriggers.Trigger_Gamble, m_Player.Cost);
+                    {                       
                         played = PlayKeno(from, m_Player.Cost);
                     }
+
                     else if (m_Keno.CashCheck(from, m_Player, out amount))
                     {
                         from.SendMessage("Cashing bank check for {0} gold from your backpack, you may now spin again.", amount);

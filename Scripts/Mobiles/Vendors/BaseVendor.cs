@@ -10,7 +10,7 @@ using Server.Engines.BulkOrders;
 using Server.Regions;
 using Server.Factions;
 
-using Server.Achievements;
+
 using Server.Engines.Craft;
 using Server;
 
@@ -949,8 +949,6 @@ namespace Server.Mobiles
 
 				dropped.Delete();
 
-                DailyAchievement.TickProgress(Category.Crafter, pm, CrafterCategory.TurnInBod, dropped is LargeBOD ? 3 : 1);
-
 				return true;
 			}
 
@@ -1491,12 +1489,7 @@ namespace Server.Mobiles
                                     pMobile.ResetItemsNotCraftedByDateTime = DateTime.UtcNow + TimeSpan.FromDays(1);
                                 pMobile.ItemsNotCraftedBySold++;
                             }
-
-                        // IPY ACHIEVEMENT (sell items stuff)
-                        if (GiveGold < 10) AchievementSystem.Instance.TickProgress(seller, AchievementTriggers.Trigger_SellItem1to9gold);
-                        else if (GiveGold < 100) AchievementSystem.Instance.TickProgress(seller, AchievementTriggers.Trigger_SellItem10to99gold);
-                        else if (GiveGold < 200) AchievementSystem.Instance.TickProgress(seller, AchievementTriggers.Trigger_SellItem100to199gold);
-                        else AchievementSystem.Instance.TickProgress(seller, AchievementTriggers.Trigger_SellItemOver199gold);
+                        
 						break;
 					}
 				}

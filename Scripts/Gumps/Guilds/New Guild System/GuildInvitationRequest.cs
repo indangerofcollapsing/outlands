@@ -3,7 +3,7 @@ using Server;
 using Server.Gumps;
 using Server.Network;
 using Server.Mobiles;
-using Server.Achievements;
+
 
 namespace Server.Guilds
 {
@@ -46,11 +46,7 @@ namespace Server.Guilds
 				case 1:
 				{
 					guild.AddMember( player );
-
-					// IPY ACHIEVEMENT 
-					AchievementSystem.Instance.TickProgress(player, AchievementTriggers.Trigger_JoinAGuild);
-					// IPY ACHIEVEMENT
-
+                    
 					player.SendLocalizedMessage( 1063056, guild.Name ); // You have joined ~1_val~.
 					m_Inviter.SendLocalizedMessage( 1063249, String.Format( "{0}\t{1}", player.Name, guild.Name ) ); // ~1_val~ has accepted your invitation to join ~2_val~.
 

@@ -5,7 +5,7 @@ using Server.Multis;
 using Server.Targeting;
 using Server.Items;
 using Server.Regions;
-using Server.Achievements;
+
 using Server.Mobiles;
 
 namespace Server.Multis.Deeds
@@ -218,20 +218,7 @@ namespace Server.Multis.Deeds
                     case HousePlacementResult.Valid:
                         {
                             BaseHouse house = GetHouse(from);
-
-                            // IPY ACHIEVEMENT
-                            if (house is SmallOldHouse)
-                                AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_PlaceSmallHouse);
-                            else if (house is GuildHouse || house is TwoStoryHouse || house is LargeMarbleHouse || house is TwoStoryVilla || house is LargePatioHouse)
-                                AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_PlaceMediumHouse);
-                            else if (house is Tower)
-                                AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_PlaceTower);
-                            else if (house is Keep)
-                                AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_PlaceKeep);
-                            else if (house is Castle)
-                                AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_PlaceCastle);
-                            // IPY ACHIEVEMENT
-
+                            
                             //For Custom house, drop z-level by -8 <--- May need to revise after we add more custom houses
                             if (house is SmallStoneTempleHouse || house is MagistrateHouse || house is SandstoneSpaHouse || house is ArbiterEstate)
                                 center.Z -= 8;

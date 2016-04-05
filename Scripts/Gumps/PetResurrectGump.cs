@@ -3,7 +3,7 @@ using Server;
 using Server.Mobiles;
 using Server.Network;
 using Server.Gumps;
-using Server.Achievements;
+
 using Server.Custom.Items;
 
 namespace Server.Gumps
@@ -95,11 +95,6 @@ namespace Server.Gumps
 
                 else
                     from.SendMessage("There are not enough charges remaining to resurrect this creature.");
-
-                // IPY Achievement
-                if (m_Healer is PlayerMobile)
-                    AchievementSystem.Instance.TickProgress(m_Healer, AchievementTriggers.Trigger_ResurrectAnimal);
-                // IPY Achievement
             }
         }
     }

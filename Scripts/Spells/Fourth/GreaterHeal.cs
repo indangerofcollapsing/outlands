@@ -6,7 +6,7 @@ using Server.Mobiles;
 
 using Server.Items;
 using Server.Custom;
-using Server.Achievements;
+
 
 namespace Server.Spells.Fourth
 {
@@ -84,12 +84,7 @@ namespace Server.Spells.Fourth
                     healAmount = 1;
 
                 SpellHelper.Heal(healAmount, target, Caster);
-
-                // IPY ACHIEVEMENT (heal newbie)
-                if (Caster != target && 3000 > target.SkillsTotal && target.Player && Caster.Player)
-                    AchievementSystem.Instance.TickProgress(Caster, AchievementTriggers.Trigger_HealPlayerUnder300Skill);
-                // IPY ACHIEVEMENT
-
+                
                 int spellHue = 0;
 
                 target.FixedParticles(0x376A, 9, 32, 5030, spellHue, 0, EffectLayer.Waist);

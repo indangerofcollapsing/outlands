@@ -3,7 +3,7 @@ using Server;
 using Server.Guilds;
 using Server.Network;
 using Server.Factions;
-using Server.Achievements;
+
 
 namespace Server.Gumps
 {
@@ -80,12 +80,7 @@ namespace Server.Gumps
 
 								m_Guild.Candidates.Remove( m );
 								m_Guild.Accepted.Add( m );
-
-                                // IPY ACHIEVEMENT 
-                                AchievementSystem.Instance.TickProgress(m, AchievementTriggers.Trigger_JoinAGuild);
-                                // IPY ACHIEVEMENT
-
-
+                                
 								GuildGump.EnsureClosed( m_Mobile );
 
 								if ( m_Guild.Candidates.Count > 0 )

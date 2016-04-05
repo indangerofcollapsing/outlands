@@ -6,7 +6,7 @@ using Server.Mobiles;
 using System.Collections;
 using System.Collections.Generic;
 using Server.Gumps;
-using Server.Achievements;
+
 
 namespace Server.Items
 {
@@ -1128,10 +1128,7 @@ namespace Server.Items
 
                     UOACZHumanUpgrades.PurchaseUpgrade(player, m_HumanUpgradeType);
                     player.SendMessage(UOACZSystem.greenTextHue, "You purchase the upgrade: " + upgradeDetail.m_Name + ".");
-
-                    if (player.m_UOACZAccountEntry.HumanProfile.ShufflesSpent == 0 && player.m_UOACZAccountEntry.HumanProfile.UpgradesSpent >= 25)
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZPurchaseUpgradesWithoutShuffles, 1);
-
+                    
                     List<UOACZHumanUpgradeType> m_UpgradeTypes = new List<UOACZHumanUpgradeType>();
 
                     foreach (UOACZHumanUpgradeEntry upgradeEntry in player.m_UOACZAccountEntry.HumanProfile.m_Upgrades)
@@ -1141,10 +1138,7 @@ namespace Server.Items
                         if (!m_UpgradeTypes.Contains(upgradeType))
                             m_UpgradeTypes.Add(upgradeType);
                     }
-
-                    if (m_UpgradeTypes.Count >= 25)
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZPurchaseDifferentHumanUpgrades, 1);
-
+                    
                     UOACZSystem.RefreshAllGumps(player);
                     player.SendGump(new HumanProfileUpgradeGump(player));
 

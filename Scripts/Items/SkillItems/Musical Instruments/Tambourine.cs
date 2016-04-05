@@ -1,6 +1,6 @@
 using System;
 using Server.Mobiles;
-using Server.Achievements;
+
 
 namespace Server.Items
 {
@@ -26,10 +26,6 @@ namespace Server.Items
 		public override void PlayInstrumentWell(Mobile from)
 		{
 			base.PlayInstrumentWell(from);
-			// IPY ACHIEVEMENT 
-			if (from is PlayerMobile)
-				AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_PlayTambourineWell);
-			// IPY ACHIEVEMENT 
 		}
 
 		public override void Deserialize( GenericReader reader )

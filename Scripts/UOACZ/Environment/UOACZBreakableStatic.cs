@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Server.Mobiles;
 using Server.Items;
-using Server.Achievements;
+
 
 namespace Server.Custom
 {
@@ -160,8 +160,6 @@ namespace Server.Custom
 
                     if (player.IsUOACZUndead)
                     {
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZDamageObjects, 1);
-
                         if (Utility.RandomDouble() <= UOACZSystem.UndeadDamageStockpileScoreChance)
                             UOACZSystem.ChangeStat(player, UOACZSystem.UOACZStatType.UndeadScore, 1, true);
 
@@ -231,9 +229,7 @@ namespace Server.Custom
 
                         if (Utility.RandomDouble() <= scoreChance)
                             UOACZSystem.ChangeStat(player, UOACZSystem.UOACZStatType.UndeadScore, 1, true);
-
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZDamageObjects, 1);
-
+                        
                         if (player.Backpack != null)
                         {
                             if (Utility.RandomDouble() <= corruptionChance)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Server.Misc;
 using Server.Network;
-using Server.Achievements;
+
 using Server.Commands;
 using Server.Items;
 using Server.Mobiles;
@@ -37,7 +37,6 @@ namespace Server.Gumps
 			ArenaLeaders,
 			ArenaTournaments,
 			Codex,
-			AchievementsYours,
 			Quests,
 			Titles,
 			DungeonQueue,
@@ -83,9 +82,7 @@ namespace Server.Gumps
 			// Labels and buttons
 			this.AddLabel(cat_l_x, 109, label_hue, @"Character");
 				this.AddLabel(lab_l_x, 130, sublabel_hue, @"Titles");
-				this.AddButton(but_l_x, 135, 2103, 2104, (int)Buttons.Titles, GumpButtonType.Reply, 0);
-				this.AddLabel(lab_l_x, 150, sublabel_hue, @"Achievements");
-				this.AddButton(but_l_x, 155, 2103, 2104, (int)Buttons.AchievementsYours, GumpButtonType.Reply, 0);
+				this.AddButton(but_l_x, 135, 2103, 2104, (int)Buttons.Titles, GumpButtonType.Reply, 0);				
 				this.AddLabel(lab_l_x, 170, sublabel_hue, @"Quests");
 				this.AddButton(but_l_x, 175, 2103, 2104, (int)Buttons.Quests, GumpButtonType.Reply, 0);
 
@@ -173,10 +170,7 @@ namespace Server.Gumps
 				case (int)Buttons.Codex:
 					string url = "http://www.uoancorp.com";
 					sender.Mobile.LaunchBrowser(url);
-					break;
-				case (int)Buttons.AchievementsYours:
-					CommandSystem.Handle(sender.Mobile, "[ach");
-					break;
+					break;				
 				case (int)Buttons.Quests:
 					XmlQuest.NormalQuestButton(sender.Mobile as PlayerMobile);
 					break;

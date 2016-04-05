@@ -4,7 +4,7 @@ using Server.Mobiles;
 using Server.Items;
 using Server.Multis;
 using Server.Spells;
-using Server.Achievements;
+
 using Server.Regions;
 using Server.Network;
 using Server.SkillHandlers;
@@ -555,10 +555,7 @@ namespace Server.Misc
                     else
                         from.NextSkillGainAllowed.Add(skill, DateTime.UtcNow + TimeSpan.FromMinutes(skillGainCooldown));
                 }
-            }
-
-            if (from.Player)
-                DailyAchievement.TickProgress(Category.Newb, (PlayerMobile)from, NewbCategory.GainSkill, increase);
+            }            
         }
 
         public static void GainStat(Mobile from, Stat stat)

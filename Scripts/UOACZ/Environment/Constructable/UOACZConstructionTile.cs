@@ -3,7 +3,7 @@ using Server;
 using Server.Mobiles;
 using System.Collections;
 using Server.Custom;
-using Server.Achievements;
+
 
 namespace Server.Items
 {
@@ -159,9 +159,7 @@ namespace Server.Items
             player.SendMessage("You place the object in the construction slot. Use a repair hammer and restore it to full durability to activate it.");
 
             if (player.Backpack != null && constructionDeed.CraftedBy == player)
-            {
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZBuildAndPlaceFortifications, 1);
-                
+            {                               
                 UOACZSystem.ChangeStat(player, UOACZSystem.UOACZStatType.HumanScore, UOACZSystem.HumanConstructableScorePoints, true);
 
                 if (Utility.RandomDouble() <= UOACZSystem.HumanConstructableSurvivalStoneChance)

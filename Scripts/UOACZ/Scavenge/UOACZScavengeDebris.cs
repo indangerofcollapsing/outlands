@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Server.Mobiles;
 using Server.Items;
-using Server.Achievements;
+
 
 namespace Server.Custom
 {
@@ -239,9 +239,7 @@ namespace Server.Custom
             if (scavengeResult)
             {
                 Effects.PlaySound(player.Location, player.Map, 0x2E2);
-
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZScavenging, 1);
-
+                
                 UOACZPersistance.CheckAndCreateUOACZAccountEntry(player);
                 player.m_UOACZAccountEntry.ScavengeableDebrisItems++;
             }

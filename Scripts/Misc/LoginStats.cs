@@ -14,17 +14,7 @@ namespace Server.Misc
 			// Register our event handler
 			EventSink.Login += new LoginEventHandler( EventSink_Login );
         }
-
-		private static void NotfiyUnclaimedAchievements(object state)
-		{
-			object[] states = (object[])state;
-			int num_unclaimed = (int)states[0];
-			Mobile owner = (Mobile)states[1];
-			object[] args = { num_unclaimed };
-
-			owner.SendMessage(0x44, String.Format("You have {0} unclaimed achievement rewards!", args));
-		}
-
+        
 		private static void EventSink_Login( LoginEventArgs args )
 		{
 			int userCount = Server.RemoteAdmin.ServerInfo.NetStateCount();
@@ -45,15 +35,6 @@ namespace Server.Misc
 			m.SendMessage("Welcome {0}!", args.Mobile.Name);
 
 			m.SendGump( new Server.Gumps.WelcomeGump(0) );
-
-			// IPY ACHIEVEMENTS (notify unclaimed)
-			if (m is PlayerMobile)
-			{
-				PlayerMobile pm = m as PlayerMobile;
-				if( ((Account)pm.Account).AccountAchievements.m_NumUnclaimedAchievements > 0 )
-					Timer.DelayCall(TimeSpan.FromSeconds(10), new TimerStateCallback(NotfiyUnclaimedAchievements), new object[] { ((Account)pm.Account).AccountAchievements.m_NumUnclaimedAchievements, m });
-			}
-			// IPY ACHIEVEMENTS (notify unclaimed)
 		}
 	}
 }

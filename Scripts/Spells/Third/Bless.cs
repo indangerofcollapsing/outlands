@@ -1,7 +1,7 @@
 using System;
 using Server.Targeting;
 using Server.Network;
-using Server.Achievements;
+
 using Server.Mobiles;
 using Server.Items;
 using Server.Custom;
@@ -82,12 +82,7 @@ namespace Server.Spells.Third
                 {
                     m.FixedParticles(0x373A, 10, 15, 5018, spellHue, 0, EffectLayer.Waist);
                     m.PlaySound(0x1EA);
-                }					
-
-                // IPY ACHIEVEMENT (bless newbie)
-                if (Caster != m && 3000 > m.SkillsTotal && m.Player && Caster.Player)
-                    AchievementSystem.Instance.TickProgress(Caster, AchievementTriggers.Trigger_BlessPlayerUnder300Skill);
-                // IPY ACHIEVEMENT
+                }				
 			}
 
 			FinishSequence();

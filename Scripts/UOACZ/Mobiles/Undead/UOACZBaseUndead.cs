@@ -8,7 +8,7 @@ using Server.Custom;
 using System.Collections;
 using System.Collections.Generic;
 using Server.Spells;
-using Server.Achievements;
+
 
 namespace Server.Mobiles
 {
@@ -908,9 +908,6 @@ namespace Server.Mobiles
 
                     if (damage >= 100 || damagePercentOfTotal > .10)
                     {
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZScoreFromKillingUndead, scoreValue);
-                        AchievementHandling(player, GetType());
-
                         UOACZPersistance.CheckAndCreateUOACZAccountEntry(player);
                         player.m_UOACZAccountEntry.UndeadKilledAsHuman++;                        
 
@@ -1024,28 +1021,6 @@ namespace Server.Mobiles
                 if (dropUpgradeToken)
                     c.AddItem(new UOACZHumanUpgradeToken(player));                
             }
-        }
-
-        public void AchievementHandling(PlayerMobile player, Type type)
-        {
-            List<Type> m_ZombieTypes = new List<Type>()
-            {
-                typeof(UOACZZombie),
-                typeof(UOACZZombieMagi),
-                typeof(UOACZFlamingZombie),
-                typeof(UOACZDecayedZombie),
-                typeof(UOACZBloodyZombie),
-                typeof(UOACZRottingCorpse),
-            };
-
-            if (m_ZombieTypes.Contains(type))
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZKillZombies, 1);
-
-            if (type == typeof(UOACZTreeOfDeath))
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZKillUndeadChampion, 1);
-
-            if (type == typeof(UOACZTheGatekeeper))
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZKillUndeadBoss, 1);
         }
 
         public override void OnAfterDelete()

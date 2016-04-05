@@ -1,6 +1,6 @@
 using System;
 using Server.Items;
-using Server.Achievements;
+
 using Server.Mobiles;
 
 namespace Server.Engines.Craft
@@ -85,28 +85,6 @@ namespace Server.Engines.Craft
             else
             {
                 from.PlaySound(0x240); // Sound of a filling bottle
-
-                // IPY ACHIEVEMENT 
-                if (item.ItemType.IsSubclassOf(typeof(BaseRefreshPotion)))
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CreateRefreshPotion);
-                else if (item.ItemType.IsSubclassOf(typeof(BaseCurePotion)))
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CreateCurePotion);
-                else if (item.ItemType.IsSubclassOf(typeof(BaseHealPotion)))
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CreateHealPotion);
-                else if (item.ItemType.IsSubclassOf(typeof(BaseStrengthPotion)))
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CreateStrengthPotion);
-                else if (item.ItemType.IsSubclassOf(typeof(BaseAgilityPotion)))
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CreateAgilityPotion);
-                else if (item.ItemType.IsSubclassOf(typeof(BasePoisonPotion)))
-                {
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CreatePoisonPotion);
-                    if (item.ItemType.IsAssignableFrom(typeof(DeadlyPoisonPotion)))
-                        AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CreateDeadlyPoisonPotion);
-                }
-                AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_MakeAnyPotion);
-                DailyAchievement.TickProgress(Category.Crafter, (PlayerMobile)from, CrafterCategory.FillPotions);
-                // IPY ACHIEVEMENT
-
 
                 if (IsPotion(item.ItemType))
                 {

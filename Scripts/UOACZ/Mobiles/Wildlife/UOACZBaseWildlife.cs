@@ -8,7 +8,7 @@ using Server.Custom;
 using System.Collections;
 using System.Collections.Generic;
 using Server.Spells;
-using Server.Achievements;
+
 
 namespace Server.Mobiles
 {
@@ -267,7 +267,6 @@ namespace Server.Mobiles
             if (from is PlayerMobile)
             {
                 PlayerMobile player = from as PlayerMobile;
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZCorruptWildlife, 1);
 
                 UOACZPersistance.CheckAndCreateUOACZAccountEntry(player);
                 player.m_UOACZAccountEntry.WildlifeCorrupted++;

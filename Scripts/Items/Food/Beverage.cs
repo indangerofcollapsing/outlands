@@ -4,7 +4,7 @@ using Server.Engines.Plants;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
-using Server.Achievements;
+
 using Server.Custom;
 using Server.Spells;
 
@@ -955,10 +955,6 @@ namespace Server.Items
 					t.Start();
 
 					m_Table[from] = t;
-
-                    // IPY ACHIEVEMENT (get wasted)
-                    AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_GetDrunk);
-
                 }
 			}
 			else

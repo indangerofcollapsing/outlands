@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Server.Items;
 using Server.Accounting;
-using Server.Achievements;
+
 
 namespace Server
 {
@@ -860,11 +860,8 @@ namespace Server
 
                 if (m_Skills.Contains(skillname) && player.m_UOACZAccountEntry.HumanProfile.m_Skills[(SkillName)a] >= 100)
                 {
-                    if (player.m_UOACZAccountEntry.HumanProfile.m_GMCraftingSkills.Contains(skillname))
-                    {
-                        player.m_UOACZAccountEntry.HumanProfile.m_GMCraftingSkills.Add(skillname);
-                        AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZCraftingSkill, 1);
-                    }
+                    if (player.m_UOACZAccountEntry.HumanProfile.m_GMCraftingSkills.Contains(skillname))                    
+                        player.m_UOACZAccountEntry.HumanProfile.m_GMCraftingSkills.Add(skillname);                    
                 }
             }
 

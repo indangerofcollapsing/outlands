@@ -587,11 +587,6 @@ namespace Server.Items
 			base.Deserialize( reader );
 
 			int version = reader.ReadInt();
-
-			// IPY : Removed this for the achievement that gives a blood red orcmask
-			//if ( Hue != 0x8A4 )
-			//	Hue = 0x8A4;
-			// IPY : Removed this for the achievement that gives a blood red orcmask
 		}
 	}
 

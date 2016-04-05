@@ -2,7 +2,7 @@ using System;
 using Server.Targeting;
 using Server.Items;
 using Server.Network;
-using Server.Achievements;
+
 using Server.Mobiles;
 
 namespace Server.SkillHandlers
@@ -124,10 +124,7 @@ namespace Server.SkillHandlers
 								((BaseWeapon)m_Target).PoisonCharges = 18 - (m_Poison.Level * 2);
                             }                            
 
-                            m_From.SendLocalizedMessage( 1010517 ); // You apply the poison
-
-                            if (m_From.Player)
-                                DailyAchievement.TickProgress(Category.Crafter, (PlayerMobile)m_From, CrafterCategory.PoisonWeapons);
+                            m_From.SendLocalizedMessage( 1010517 ); // You apply the poison                           
 
 							Misc.FameKarmaTitles.AwardKarma( m_From, -20, true );
 						}

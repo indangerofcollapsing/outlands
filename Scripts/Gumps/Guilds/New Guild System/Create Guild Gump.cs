@@ -3,7 +3,7 @@ using Server;
 using Server.Gumps;
 using Server.Network;
 using Server.Mobiles;
-using Server.Achievements;
+
 
 namespace Server.Guilds
 {
@@ -81,11 +81,6 @@ namespace Server.Guilds
 						pm.SendLocalizedMessage( 1060398, Guild.RegistrationFee.ToString() ); // ~1_AMOUNT~ gold has been withdrawn from your bank box.
 						pm.SendLocalizedMessage( 1063238 ); // Your new guild has been founded.
 						pm.Guild = new Guild( pm, guildName, guildAbbrev );
-
-                        // IPY ACHIEVEMENT
-                        AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_CreateAGuild);
-                        AchievementSystem.Instance.TickProgress(pm, AchievementTriggers.Trigger_JoinAGuild);
-                        // IPY ACHIEVEMENT
 					}
 
 					break;

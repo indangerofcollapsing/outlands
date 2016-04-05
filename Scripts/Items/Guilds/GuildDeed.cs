@@ -4,7 +4,7 @@ using Server.Prompts;
 using Server.Guilds;
 using Server.Multis;
 using Server.Regions;
-using Server.Achievements;
+
 
 namespace Server.Items
 {
@@ -127,12 +127,7 @@ namespace Server.Items
 						from.GuildTitle = "Guildmaster";
 
 						Guildstone stone = new Guildstone( guild );
-
-                        // IPY ACHIEVEMENT
-                        AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_CreateAGuild);
-                        AchievementSystem.Instance.TickProgress(from, AchievementTriggers.Trigger_JoinAGuild);
-                        // IPY ACHIEVEMENT
-
+                        
 						stone.MoveToWorld( from.Location, from.Map );
 
 						guild.Guildstone = stone;

@@ -130,11 +130,6 @@
     <Compile Include="Commands\Wipe.cs" />
     <Compile Include="ContextMenus\AddToParty.cs" />
     <Compile Include="ContextMenus\AddToSpellbookEntry.cs" />
-    <Compile Include="Achievements\Daily\Categories.cs" />
-    <Compile Include="Achievements\Daily\DailyAchievement.cs" />
-    <Compile Include="Achievements\Daily\DailyAchievementReward.cs" />
-    <Compile Include="Achievements\Daily\DailyAchievementTrackerGump.cs" />
-    <Compile Include="Achievements\Daily\Progress.cs" />
     <Compile Include="AncientMysteries\ResearchedMasterScroll.cs" />
     <Compile Include="BreakableObjects\Items\LuniteOreFormationSpawner.cs" />
     <Compile Include="Commands\Recompile.cs" />
@@ -836,8 +831,6 @@
     <Compile Include="Mobiles\Events\Summer Festival 2015\Rewards\VinesRegularEast.cs" />
     <Compile Include="Mobiles\Events\Summer Festival 2015\Rewards\VinesRegularSouth.cs" />
     <Compile Include="Mobiles\Events\Summer Festival 2015\Rewards\WoodlandSpriteSandals.cs" />
-    <Compile Include="Guilds\Abilities.cs" />
-    <Compile Include="Guilds\GuildLevelGump.cs" />
     <Compile Include="Items\AstralLeash.cs" />
     <Compile Include="Items\BeverageKeg.cs" />
     <Compile Include="Items\DungeonArmor\DungeonArmor.cs" />
@@ -1302,7 +1295,6 @@
     <Compile Include="UOACZ\Mobiles\Undead\Heroes\UOACZTreeOfDeath.cs" />
     <Compile Include="UOACZ\Objectives\UOACZBoneBox.cs" />
     <Compile Include="UOACZ\Objectives\UOACZCorruptionSourcestone.cs" />
-    <Compile Include="UOACZ\UOACZAchievements.cs" />
     <Compile Include="UOACZ\UOACZTomeGenerator.cs" />
     <Compile Include="UOACZ\Environment\Constructable\UOACZBoilingOilCauldronDeed.cs" />
     <Compile Include="UOACZ\Environment\Constructable\UOACZBaseConstructionDeed.cs" />
@@ -1735,11 +1727,6 @@
     <Compile Include="ContextMenus\EjectPlayer.cs" />
     <Compile Include="ContextMenus\OpenBankEntry.cs" />
     <Compile Include="ContextMenus\TeachEntry.cs" />
-    <Compile Include="Achievements\AchievementLoader.cs" />
-    <Compile Include="Achievements\AchievementsReport.cs" />
-    <Compile Include="Achievements\AchievementStatusTrackerGump.cs" />
-    <Compile Include="Achievements\AchievementSystem.cs" />
-    <Compile Include="Achievements\AchivementSpecialRewards.cs" />
     <Compile Include="AntiRailing\AntiRailGump.cs" />
     <Compile Include="AntiRailing\HarvestGump.cs" />
     <Compile Include="Casino\CardDeck.cs" />

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Server.Mobiles;
 using Server.Items;
-using Server.Achievements;
+
 
 namespace Server.Custom
 {
@@ -129,8 +129,6 @@ namespace Server.Custom
             if (playerMiningValue >= miningTarget)
             {
                 scavengeResult = true;
-
-                AchievementSystemImpl.Instance.TickProgressMulti(player, AchievementTriggers.Trigger_UOACZHarvesting, 1);
                 
                 UOACZPersistance.CheckAndCreateUOACZAccountEntry(player);
                 player.m_UOACZAccountEntry.ScavengeableOreFormationItems++;

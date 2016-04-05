@@ -1,26 +1,5 @@
-/***************************************************************************
- *                               Containers.cs
- *                            -------------------
- *   begin                : May 1, 2002
- *   copyright            : (C) The RunUO Software Team
- *   email                : info@runuo.com
- *
- *   $Id$
- *
- ***************************************************************************/
-
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-
 using System;
 using Server.Network;
-using Server.Achievements;
 
 namespace Server.Items
 {
@@ -111,20 +90,6 @@ namespace Server.Items
 		public override void UpdateTotal(Item sender, TotalType type, int delta)
 		{
 			base.UpdateTotal(sender, type, delta);
-
-			if (delta > 0 && type == TotalType.Gold)
-			{
-				if (TotalGold > 50000)
-					AchievementSystem.Instance.TickProgress(m_Owner, AchievementTriggers.Trigger_50kInBank);
-				if (TotalGold > 100000)
-					AchievementSystem.Instance.TickProgress(m_Owner, AchievementTriggers.Trigger_100kInBank);
-				if (TotalGold > 250000)
-					AchievementSystem.Instance.TickProgress(m_Owner, AchievementTriggers.Trigger_250kInBank);
-				if (TotalGold > 500000)
-					AchievementSystem.Instance.TickProgress(m_Owner, AchievementTriggers.Trigger_500kInBank);
-				if (TotalGold > 1000000)
-					AchievementSystem.Instance.TickProgress(m_Owner, AchievementTriggers.Trigger_1MillionInBank);
-			}
 		}
 
 		private static bool m_SendRemovePacket;
