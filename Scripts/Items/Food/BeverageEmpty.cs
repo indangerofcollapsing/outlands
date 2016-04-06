@@ -8,7 +8,7 @@ namespace Server.Items
 		[Constructable]
 		public Glass() : base( 0x1f81 )
 		{
-			this.Weight = 0.1;
+			Weight = 0.1;
 		}
 
 		public Glass( Serial serial ) : base( serial )
@@ -18,14 +18,12 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
 		}
 	}
@@ -35,7 +33,7 @@ namespace Server.Items
 		[Constructable]
 		public GlassBottle() : base( 0xe2b )
 		{
-			this.Weight = 0.3;
+			Weight = 0.2;
 		}
 
 		public GlassBottle( Serial serial ) : base( serial )
@@ -45,14 +43,12 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
 		}
 	}

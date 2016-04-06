@@ -236,11 +236,6 @@ namespace Server.Custom
                 i = new YellowCandy();
                 text = "You win a yellow candy! Happy Halloween!";
             }
-            else if (no < (val += 0.07))
-            {
-                i = new PumpkinPie();
-                text = "You win a pumpkin pie! Delicious!! Happy Halloween!";
-            }
             else if (no < (val += 0.08))
             {
                 i = new PumpkinBomb();

@@ -132,6 +132,8 @@ namespace Server.SkillHandlers
 
                                 m_From.AddToBackpack(gold);
 
+                                //TEST: REDO
+                                /*
                                 if (m_From.Skills.Begging.Value == 100)
                                 {
                                     var randomNumber = Utility.RandomMinMax(1, 100);
@@ -163,21 +165,18 @@ namespace Server.SkillHandlers
 
                                     else // 1% chance
                                     {
-                                        switch (Utility.Random(8))
+                                        switch (Utility.RandomMinMax(1, 6))
                                         {
-                                            case 0: m_From.AddToBackpack(new Bedroll()); break;
-                                            case 1: m_From.AddToBackpack(new Pitcher(BeverageType.Wine)); break;
-                                            case 2: m_From.AddToBackpack(new BeverageBottle(BeverageType.Wine)); break;
-                                            case 3: m_From.AddToBackpack(new FlowerGarland()); break;
-                                            case 4: m_From.AddToBackpack(new Cookies()); break;
+                                            case 1: m_From.AddToBackpack(new Bedroll()); break;
+                                            case 2: m_From.AddToBackpack(new Pitcher(BeverageType.Wine)); break;
+                                            case 3: m_From.AddToBackpack(new BeverageBottle(BeverageType.Wine)); break;
+                                            case 4: m_From.AddToBackpack(new FlowerGarland()); break;
                                             case 5: m_From.AddToBackpack(new FishingPole()); break;
-                                            case 6: m_From.AddToBackpack(new FishSteak()); break;
-                                            case 7: m_From.AddToBackpack(new SakeArtifact()); break;
-
-                                            default: m_From.AddToBackpack(new Turnip()); break;
+                                            case 6: m_From.AddToBackpack(new Turnip()); break;
                                         }
                                     }
                                 }
+                                */
 
                                 m_From.PlaySound(gold.GetDropSound());
 

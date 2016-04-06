@@ -180,10 +180,10 @@ namespace Server.Items
                             rewardText = "You find a lot of gold inside the pouch! Or did you?";
                         break;
 
-                        case "FruitBasket":
-                            item = new FruitBasket();
-                            rewardText = "You find a delicious looking fruitbasket stuffed inside the pouch!";
-                        break;
+                        //case "FruitBasket":
+                            //item = new FruitBasket();
+                            //rewardText = "You find a delicious looking fruitbasket stuffed inside the pouch!";
+                        //break;
 
                         case "GypsyTears":
                             item = new GypsyTears();

@@ -117,7 +117,7 @@ namespace Server.Mobiles
         //Special
         Bacon,
         Ham, 
-        Cuts,
+        Steaks,
         MeatScraps,
         MeatShank,
         Sausage,        
@@ -4161,25 +4161,24 @@ namespace Server.Mobiles
 
                 if (MeatAmount != -1)
                 {
-                    //TEST: FIX UOACZ ITEMS
                     switch (MeatType)
                     {
                         case MeatType.Ribs: DropCarvedItem(corpse, typeof(RawRibs), MeatAmount); break;
-                        case MeatType.Drumstick: DropCarvedItem(corpse, typeof(UOACZRawDrumstick), MeatAmount); break;
+                        case MeatType.Drumstick: DropCarvedItem(corpse, typeof(RawDrumstick), MeatAmount); break;
                         case MeatType.FishSteak: DropCarvedItem(corpse, typeof(RawFishSteak), MeatAmount); break;
 
                         case MeatType.Meat: DropCarvedItem(corpse, typeof(RawRibs), MeatAmount); break;
-                        case MeatType.Poultry: DropCarvedItem(corpse, typeof(UOACZRawDrumstick), MeatAmount); break;
+                        case MeatType.Poultry: DropCarvedItem(corpse, typeof(RawDrumstick), MeatAmount); break;
                         case MeatType.Fish: DropCarvedItem(corpse, typeof(RawFishSteak), MeatAmount); break;
 
-                        case MeatType.Bacon: DropCarvedItem(corpse, typeof(UOACZRawBacon), MeatAmount); break;
-                        case MeatType.Ham: DropCarvedItem(corpse, typeof(UOACZRawHam), MeatAmount); break;
-                        case MeatType.Cuts: DropCarvedItem(corpse, typeof(UOACZRawCutsOfMeat), MeatAmount); break;
-                        case MeatType.MeatScraps: DropCarvedItem(corpse, typeof(UOACZRawMeatScraps), MeatAmount); break;
-                        case MeatType.MeatShank: DropCarvedItem(corpse, typeof(UOACZRawMeatShank), MeatAmount); break;
-                        case MeatType.Sausage: DropCarvedItem(corpse, typeof(UOACZRawSausage), MeatAmount); break;
-                        case MeatType.Bird: DropCarvedItem(corpse, typeof(UOACZRawBird), MeatAmount); break;
-                        case MeatType.Fillet: DropCarvedItem(corpse, typeof(UOACZCuredLargeFish), MeatAmount); break;
+                        case MeatType.Bacon: DropCarvedItem(corpse, typeof(RawBacon), MeatAmount); break;
+                        case MeatType.Ham: DropCarvedItem(corpse, typeof(RawHam), MeatAmount); break;
+                        case MeatType.Steaks: DropCarvedItem(corpse, typeof(RawSteaks), MeatAmount); break;
+                        case MeatType.MeatScraps: DropCarvedItem(corpse, typeof(RawMeatScraps), MeatAmount); break;
+                        case MeatType.MeatShank: DropCarvedItem(corpse, typeof(RawMeatShank), MeatAmount); break;
+                        case MeatType.Sausage: DropCarvedItem(corpse, typeof(RawSausage), MeatAmount); break;
+                        case MeatType.Bird: DropCarvedItem(corpse, typeof(RawBird), MeatAmount); break;
+                        case MeatType.Fillet: DropCarvedItem(corpse, typeof(RawFishFillet), MeatAmount); break;
                     }                    
                 }                   
 
@@ -4189,7 +4188,7 @@ namespace Server.Mobiles
                     {
                         //Basic
                         case MeatType.Ribs: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar)); DropCarvedItem(corpse, typeof(RawRibs), meatAmount); break;
-                        case MeatType.Drumstick: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawDrumstick), meatAmount); break;
+                        case MeatType.Drumstick: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar)); DropCarvedItem(corpse, typeof(RawDrumstick), meatAmount); break;
                         case MeatType.FishSteak: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar)); DropCarvedItem(corpse, typeof(RawFishSteak), meatAmount); break;
 
                         //Scaled
@@ -4201,22 +4200,22 @@ namespace Server.Mobiles
                             {
                                 switch (Utility.RandomMinMax(1, 6))
                                 {
-                                    case 1: DropCarvedItem(corpse, typeof(UOACZRawBacon), MeatAmount); break;
-                                    case 2: DropCarvedItem(corpse, typeof(UOACZRawHam), MeatAmount); break;
-                                    case 3: DropCarvedItem(corpse, typeof(UOACZRawCutsOfMeat), MeatAmount); break;
-                                    case 4: DropCarvedItem(corpse, typeof(UOACZRawMeatScraps), MeatAmount); break;
-                                    case 5: DropCarvedItem(corpse, typeof(UOACZRawMeatShank), MeatAmount); break;
-                                    case 6: DropCarvedItem(corpse, typeof(UOACZRawSausage), MeatAmount); break;
+                                    case 1: DropCarvedItem(corpse, typeof(RawBacon), MeatAmount); break;
+                                    case 2: DropCarvedItem(corpse, typeof(RawHam), MeatAmount); break;
+                                    case 3: DropCarvedItem(corpse, typeof(RawSteaks), MeatAmount); break;
+                                    case 4: DropCarvedItem(corpse, typeof(RawMeatScraps), MeatAmount); break;
+                                    case 5: DropCarvedItem(corpse, typeof(RawMeatShank), MeatAmount); break;
+                                    case 6: DropCarvedItem(corpse, typeof(RawSausage), MeatAmount); break;
                                 }
                             }
                         break;
 
                         case MeatType.Poultry:
                             meatAmount = 1 + (int)(Math.Round(InitialDifficulty * basicMeatScalar));
-                            DropCarvedItem(corpse, typeof(UOACZRawDrumstick), meatAmount);
+                            DropCarvedItem(corpse, typeof(RawDrumstick), meatAmount);
 
                             if (Utility.RandomDouble() <= specialMeatScalar)                            
-                                DropCarvedItem(corpse, typeof(UOACZRawBird), 1);                            
+                                DropCarvedItem(corpse, typeof(RawBird), 1);                            
                         break;
 
                         case MeatType.Fish:
@@ -4224,18 +4223,18 @@ namespace Server.Mobiles
                             DropCarvedItem(corpse, typeof(RawFishSteak), meatAmount);
 
                             if (Utility.RandomDouble() <= specialMeatScalar)
-                                DropCarvedItem(corpse, typeof(UOACZCuredLargeFish), 1); 
+                                DropCarvedItem(corpse, typeof(RawFishFillet), 1); 
                         break;
 
                         //Special
-                        case MeatType.Bacon: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawBacon), meatAmount); break;
-                        case MeatType.Ham: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawHam), meatAmount); break;
-                        case MeatType.Cuts: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawCutsOfMeat), meatAmount); break;
-                        case MeatType.MeatScraps: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawMeatScraps), meatAmount); break;
-                        case MeatType.MeatShank: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawMeatShank), meatAmount); break;
-                        case MeatType.Sausage: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawSausage), meatAmount); break;
-                        case MeatType.Bird: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZRawBird), meatAmount); break;
-                        case MeatType.Fillet: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(UOACZCuredLargeFish), meatAmount); break;
+                        case MeatType.Bacon: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawBacon), meatAmount); break;
+                        case MeatType.Ham: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawHam), meatAmount); break;
+                        case MeatType.Steaks: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawSteaks), meatAmount); break;
+                        case MeatType.MeatScraps: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawMeatScraps), meatAmount); break;
+                        case MeatType.MeatShank: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawMeatShank), meatAmount); break;
+                        case MeatType.Sausage: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawSausage), meatAmount); break;
+                        case MeatType.Bird: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawBird), meatAmount); break;
+                        case MeatType.Fillet: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawFishFillet), meatAmount); break;
                     }
                 }
             }
@@ -4715,56 +4714,6 @@ namespace Server.Mobiles
         }
 
         public override bool ShouldCheckStatTimers { get { return false; } }
-
-        #region Food
-        private static Type[] m_Eggs = new Type[]
-            {
-                typeof( FriedEggs ), typeof( Eggs )
-            };
-
-        private static Type[] m_Fish = new Type[]
-            {
-                typeof( FishSteak ), typeof( RawFishSteak )
-            };
-
-        private static Type[] m_GrainsAndHay = new Type[]
-            {
-                typeof( BreadLoaf ), typeof( FrenchBread ), typeof( SheafOfHay )
-            };
-
-        private static Type[] m_Meat = new Type[]
-            {
-                /* Cooked */
-                typeof( Bacon ), typeof( CookedBird ), typeof( Sausage ),
-                typeof( Ham ), typeof( Ribs ), typeof( LambLeg ),
-                typeof( ChickenLeg ),
-
-                /* Uncooked */
-                typeof( RawBird ), typeof( RawRibs ), typeof( RawLambLeg ),
-                typeof( RawChickenLeg ),
-
-                /* Body Parts */
-                typeof( Head ), typeof( LeftArm ), typeof( LeftLeg ),
-                typeof( Torso ), typeof( RightArm ), typeof( RightLeg )
-            };
-
-        private static Type[] m_FruitsAndVegies = new Type[]
-            {
-                typeof( HoneydewMelon ), typeof( YellowGourd ), typeof( GreenGourd ),
-                typeof( Banana ), typeof( Bananas ), typeof( Lemon ), typeof( Lime ),
-                typeof( Dates ), typeof( Grapes ), typeof( Peach ), typeof( Pear ),
-                typeof( Apple ), typeof( Watermelon ), typeof( Squash ),
-                typeof( Cantaloupe ), typeof( Carrot ), typeof( Cabbage ),
-                typeof( Onion ), typeof( Lettuce ), typeof( Pumpkin )
-            };
-
-        private static Type[] m_Gold = new Type[]
-        {
-            // white wyrms eat gold..
-            typeof( Gold )
-        };
-
-        #endregion
 
         public virtual bool OverrideBondingReqs()
         {

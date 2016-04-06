@@ -19,14 +19,8 @@ namespace Server.Mobiles
 		public class InternalBuyInfo : List<GenericBuyInfo> 
 		{ 
 			public InternalBuyInfo() 
-			{ 
-				Add( new GenericBuyInfo( typeof( RawRibs ), 6, 20, 0x9F1, 0 ) ); 
-				Add( new GenericBuyInfo( typeof( RawLambLeg ), 6, 20, 0x1609, 0 ) ); 
-				Add( new GenericBuyInfo( typeof( RawChickenLeg ), 6, 20, 0x1607, 0 ) ); 
-				Add( new GenericBuyInfo( typeof( RawBird ), 6, 20, 0x9B9, 0 ) ); 
-				Add( new GenericBuyInfo( typeof( Bacon ), 3, 20, 0x979, 0 ) ); 
-				Add( new GenericBuyInfo( typeof( Sausage ), 17, 20, 0x9C0, 0 ) ); 
-				Add( new GenericBuyInfo( typeof( Ham ), 22, 20, 0x9C9, 0 ) ); 
+			{
+                Add( new GenericBuyInfo("Skillet", typeof(Skillet), 10, 50, 0x97F, 0));
 				Add( new GenericBuyInfo( typeof( ButcherKnife ), 21, 20, 0x13F6, 0 ) );             
 				Add( new GenericBuyInfo( typeof( Cleaver ), 24, 20, 0xEC3, 0 ) ); 
 				Add( new GenericBuyInfo( typeof( SkinningKnife ), 26, 20, 0xEC4, 0 ) ); 
@@ -36,16 +30,8 @@ namespace Server.Mobiles
 		public class InternalSellInfo : GenericSellInfo 
 		{ 
 			public InternalSellInfo() 
-			{ 
-				Add( typeof( RawRibs ), 3 ); 
-				Add( typeof( RawLambLeg ), 3 ); 
-				Add( typeof( RawChickenLeg ), 3 ); 
-				Add( typeof( RawBird ), 3 );
-				Add( typeof( CookedBird ), 6 ); 
-				Add( typeof( Ribs ), 5 ); 
-				Add( typeof( Bacon ), 1 ); 
-				Add( typeof( Sausage ), 8 ); 
-				Add( typeof( Ham ), 10 ); 
+			{
+                Add( typeof( Skillet ), 2);
 				Add( typeof( ButcherKnife ), 13 ); 
 				Add( typeof( Cleaver ), 12 ); 
 				Add( typeof( SkinningKnife ), 10 ); 

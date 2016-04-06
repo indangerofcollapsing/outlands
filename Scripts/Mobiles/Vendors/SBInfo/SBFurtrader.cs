@@ -20,7 +20,6 @@ namespace Server.Mobiles
 		{ 
 			public InternalBuyInfo() 
 			{ 
-				//Add( new GenericBuyInfo( typeof( Hides ), 4, 40, 0x1079, 0 ) ); 
 			} 
 		} 
 
@@ -28,7 +27,6 @@ namespace Server.Mobiles
 		{ 
 			public InternalSellInfo() 
 			{ 
-				Add( typeof( Hides ), 2 ); 
 			} 
 		} 
 	} 

@@ -8,7 +8,7 @@ namespace Server.Items
 		public abstract double MagicResist { get; }
 		public abstract TimeSpan Duration { get; }
 
-		public BaseMagicResistPotion( PotionEffect effect ) : base( 0x0F09, effect )
+        public BaseMagicResistPotion(PotionEffect effect): base(0x0F06 , effect)
 		{
 		}
 

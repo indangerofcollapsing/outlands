@@ -16,10 +16,9 @@ namespace Server.Items
     public class PolymorphPotion : BasePotion
     {
         [Constructable]
-        public PolymorphPotion()
-            : base(0xF0D, PotionEffect.Custom)
+        public PolymorphPotion(): base(0xF0D, PotionEffect.Custom)
         {
-            Name = "a monsterous polymorph potion";
+            Name = "Monsterous Polymorph potion";
             Hue = 2600;
 
             Weight = 1.0;

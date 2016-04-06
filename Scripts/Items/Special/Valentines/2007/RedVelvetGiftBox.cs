@@ -32,7 +32,7 @@ namespace Server.Items
 					AddToBox(new ValentinesCardSouth(), new Point3D(60 + (i * 10), 47, 0));
 					AddToBox(new ValentinesCardEast(), new Point3D(20 + (i * 10), 72, 0));
 				}
-				AddToBox(new Bacon(), new Point3D(90, 85, 0));
+				
 				AddToBox(new RoseInAVase(), new Point3D(130, 55, 0));
 			}
 		}

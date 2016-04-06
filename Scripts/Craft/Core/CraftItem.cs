@@ -374,9 +374,6 @@ namespace Server.Engines.Craft
 				new Type[]{ typeof( BarbedLeather ), typeof( BarbedHides ) },
 				new Type[]{ typeof( BlankMap ), typeof( BlankScroll ) },
 				new Type[]{ typeof( Cloth ), typeof( UncutCloth ) },
-				new Type[]{ typeof( CheeseWheel ), typeof( CheeseWedge ) },
-				new Type[]{ typeof( Pumpkin ), typeof( SmallPumpkin ) },
-				new Type[]{ typeof( WoodenBowlOfPeas ), typeof( PewterBowlOfPeas ) }
 			};
 
         private static Type[] m_ColoredItemTable = new Type[]

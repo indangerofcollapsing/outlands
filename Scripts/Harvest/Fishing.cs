@@ -72,7 +72,7 @@ namespace Server.Engines.Harvest
 
             res = new HarvestResource[]
 			{
-				new HarvestResource( 00.0, 00.0, 120.0, 1043297, typeof( Fish ) ),               
+				new HarvestResource( 00.0, 00.0, 120.0, 1043297, typeof( RawFish ) ),               
 			};
 
             veins = new HarvestVein[]
@@ -108,17 +108,16 @@ namespace Server.Engines.Harvest
             }
         }
 
+        //TEST: FIX THIS
         private static MutateEntry[] m_MutateTable = new MutateEntry[]
-		{			
-			new MutateEntry(  80.0,  80.0,  3480.0,  true, typeof( SpecialFishingNet ) ),	// 0.59%
-			new MutateEntry(  80.0,  80.0,  3480.0,  true, typeof( BigFish ) ),				// 0.59%
-			new MutateEntry(  90.0,  80.0,  3480.0,  true, typeof( TreasureMap ) ),			// 0.59%
-			new MutateEntry( 100.0,  80.0,  5200.0,  true, typeof( MessageInABottle ) ),	// 0.39%
-            new MutateEntry(  90.0,  80.0,  2080.0,  true, typeof( SunkenShipContainer ) ),//2080.0 = 1%
-			new MutateEntry(   0.0, 125.0, -2375.0, false, typeof( PrizedFish ), typeof( WondrousFish ), typeof( TrulyRareFish ), typeof( PeculiarFish ) ),
-			new MutateEntry(   0.0, 105.0,  -420.0, false, typeof( Boots ), typeof( Shoes ), typeof( Sandals ), typeof( ThighBoots ) ),
-			new MutateEntry(   0.0, 200.0,  -200.0, false, new Type[1]{ null } )
-		};
+		{	
+            new MutateEntry(  50.0,  80.0,  1000.0,  false, typeof( RawLargeFish ) ),		// 0.59%
+            new MutateEntry(  80.0,  80.0,  3480.0,  true,  typeof( SpecialFishingNet ) ),	// 0.59%
+            new MutateEntry(  90.0,  80.0,  3480.0,  true,  typeof( TreasureMap ) ),			// 0.59%
+            new MutateEntry( 100.0,  80.0,  5200.0,  true,  typeof( MessageInABottle ) ),	// 0.39%
+            new MutateEntry(   0.0, 105.0,  -420.0, false,  typeof( Boots ), typeof( Shoes ), typeof( Sandals ), typeof( ThighBoots ) ),
+            new MutateEntry(   0.0, 200.0,  -200.0, false,  new Type[1]{ null } )
+       };
 
         public override bool SpecialHarvest(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc)
         {
@@ -236,6 +235,7 @@ namespace Server.Engines.Harvest
         {
             if (type == typeof(SunkenShipContainer))
             {
+                /*
                 SunkenShipContainer c = Custom.Pirates.PirateFishing.OnFish(from.Location); //if there has been a sunken ship in this grid location...
 
                 if (c != null)
@@ -251,6 +251,7 @@ namespace Server.Engines.Harvest
                         case 4: { return new PeculiarFish(); }
                     }
                 }
+                */
             }
 
             else if (type == typeof(TreasureMap))
@@ -602,7 +603,7 @@ namespace Server.Engines.Harvest
                 return true;
             }
 
-            if (item is BigFish || item is WoodenChest || item is MetalGoldenChest || item is SunkenShipContainer)
+            if (item is WoodenChest || item is MetalGoldenChest || item is SunkenShipContainer)
                 placeAtFeet = true;
 
             from.PlaySound(0x025);
@@ -615,11 +616,8 @@ namespace Server.Engines.Harvest
             if (item is SunkenShipContainer)            
                 from.SendMessage("You pull up the contents of a sunken ship's hold!");
 
-            else if (item is BigFish)
-            {
-                from.SendLocalizedMessage(1042635); // Your fishing pole bends as you pull a big fish from the depths!
-                ((BigFish)item).Fisher = from;
-            }
+            else if (item is RawLargeFish)            
+                from.SendLocalizedMessage(1042635); // Your fishing pole bends as you pull a big fish from the depths!            
 
             else if (item is WoodenChest || item is MetalGoldenChest)            
                 from.SendLocalizedMessage(503175); // You pull up a heavy chest from the depths of the ocean!            
@@ -629,13 +627,7 @@ namespace Server.Engines.Harvest
                 int number;
                 string name;
 
-                if (item is BaseMagicFish)
-                {
-                    number = 1008124;
-                    name = "a mess of small fish";
-                }
-
-                else if (item is Fish)
+                if (item is RawFish)
                 {
                     number = 1008124;
                     name = "a fish";

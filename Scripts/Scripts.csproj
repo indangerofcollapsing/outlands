@@ -48,7 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Items\Food\Crafted\" />
     <Folder Include="Items\Quivers\.svn\prop-base\" />
     <Folder Include="Items\Quivers\.svn\props\" />
     <Folder Include="Items\Quivers\.svn\text-base\" />
@@ -188,11 +187,16 @@
     <Compile Include="Items\Champion Artifacts\Unique\Subdue.cs" />
     <Compile Include="Items\Deeds\HolidayTreeDeed.cs" />
     <Compile Include="Items\Food\Chocolatiering.cs" />
+    <Compile Include="Items\Food\Containers\WoodenBowl.cs" />
+    <Compile Include="Items\Food\Crafted\CookedLobster.cs" />
+    <Compile Include="Items\Food\Crafted\CookedCrab.cs" />
+    <Compile Include="Items\Food\Crafted\RoastPig.cs" />
     <Compile Include="Items\Food\Fruit\Banana.cs" />
     <Compile Include="Items\Food\Fruit\Bananas.cs" />
     <Compile Include="Items\Food\Fruit\Coconut.cs" />
     <Compile Include="Items\Food\Fruit\Apple.cs" />
     <Compile Include="Items\Food\Fruit\Cantalope.cs" />
+    <Compile Include="Items\Food\Fruit\Honeydew.cs" />
     <Compile Include="Items\Food\Fruit\Squash.cs" />
     <Compile Include="Items\Food\Fruit\SmallWatermelon.cs" />
     <Compile Include="Items\Food\Fruit\Watermelon.cs" />
@@ -206,8 +210,32 @@
     <Compile Include="Items\Food\Fruit\Lemons.cs" />
     <Compile Include="Items\Food\Fruit\Lemon.cs" />
     <Compile Include="Items\Food\Fruit\SplitCoconut.cs" />
+    <Compile Include="Items\Resources\Fishing\RawLargeFish.cs" />
+    <Compile Include="Items\Resources\Fishing\RawFish.cs" />
+    <Compile Include="Items\Food\Harvestable\RawFishFillet.cs" />
+    <Compile Include="Items\Food\Harvestable\RawBird.cs" />
+    <Compile Include="Items\Food\Harvestable\RawSausage.cs" />
+    <Compile Include="Items\Food\Harvestable\RawMeatShank.cs" />
+    <Compile Include="Items\Food\Harvestable\RawMeatScraps.cs" />
+    <Compile Include="Items\Food\Harvestable\RawSteaks.cs" />
+    <Compile Include="Items\Food\Harvestable\RawHam.cs" />
+    <Compile Include="Items\Food\Harvestable\RawBacon.cs" />
+    <Compile Include="Items\Food\Harvestable\RawDrumstick.cs" />
+    <Compile Include="Items\Food\Harvestable\RawFishSteak.cs" />
+    <Compile Include="Items\Food\Harvestable\RawRibs.cs" />
+    <Compile Include="Items\Food\Harvestable\SheafOfWheat.cs" />
+    <Compile Include="Items\Food\Harvestable\RawCrab.cs" />
+    <Compile Include="Items\Food\Harvestable\RawLobster.cs" />
+    <Compile Include="Items\Food\Harvestable\SheafOfHay.cs" />
+    <Compile Include="Items\Food\Misc\SackOfFlour.cs" />
+    <Compile Include="Items\Food\Misc\JarOfHoney.cs" />
+    <Compile Include="Items\Food\Misc\Dough.cs" />
     <Compile Include="Items\Food\Vegetable\Carrot.cs" />
     <Compile Include="Items\Food\Vegetable\Cabbage.cs" />
+    <Compile Include="Items\Food\Vegetable\YellowGourd.cs" />
+    <Compile Include="Items\Food\Vegetable\GreenGourd.cs" />
+    <Compile Include="Items\Food\Vegetable\EarOfCorn.cs" />
+    <Compile Include="Items\Food\Vegetable\Turnip.cs" />
     <Compile Include="Items\Food\Vegetable\SmallPumpkin.cs" />
     <Compile Include="Items\Food\Vegetable\Pumpkin.cs" />
     <Compile Include="Items\Food\Vegetable\Lettuce.cs" />
@@ -1861,12 +1889,10 @@
     <Compile Include="Items\ArchitectsPen.cs" />
     <Compile Include="Items\EnhancedSpellbook\EnhancedSpellbookTome.cs" />
     <Compile Include="Items\EnhancedSpellbook\EnhancedSpellbook.cs" />
-    <Compile Include="Items\FishingArtifacts\ChickenOfTheSea.cs" />
     <Compile Include="Items\FishingArtifacts\EyeOfTrout.cs" />
     <Compile Include="Items\FishingArtifacts\FishHeads.cs" />
     <Compile Include="Items\FishingArtifacts\HangingFilets.cs" />
     <Compile Include="Items\FishingArtifacts\PirateGlassEye.cs" />
-    <Compile Include="Items\FishingArtifacts\RawFish.cs" />
     <Compile Include="Items\FishingArtifacts\Sardines.cs" />
     <Compile Include="Items\houseplans.cs" />
     <Compile Include="Items\LockDownExpansionDeed.cs" />
@@ -1925,7 +1951,6 @@
     <Compile Include="Pirates\Guild Docks\DockPlacement.cs" />
     <Compile Include="Pirates\LobsterFishing\Items\Buoy.cs" />
     <Compile Include="Pirates\LobsterFishing\Items\LobsterTrap.cs" />
-    <Compile Include="Pirates\LobsterFishing\Items\Resources.cs" />
     <Compile Include="Pirates\LobsterFishing\LobsterFishing.cs" />
     <Compile Include="Pirates\Mobiles\Pirate.cs" />
     <Compile Include="Pirates\Mobiles\PirateCaptain.cs" />
@@ -3091,8 +3116,6 @@
     <Compile Include="Items\Food\Beverage.cs" />
     <Compile Include="Items\Food\BeverageEmpty.cs" />
     <Compile Include="Items\Food\Bowls.cs" />
-    <Compile Include="Items\Food\CookableFood.cs" />
-    <Compile Include="Items\Food\Cooking.cs" />
     <Compile Include="Items\Food\Food.cs" />
     <Compile Include="Items\Games\Backgammon.cs" />
     <Compile Include="Items\Games\BaseBoard.cs" />
@@ -3290,9 +3313,6 @@
     <Compile Include="Items\Resources\Arrows\Shaft.cs" />
     <Compile Include="Items\Resources\Blacksmithing\Ingots.cs" />
     <Compile Include="Items\Resources\Blacksmithing\Ore.cs" />
-    <Compile Include="Items\Resources\Fishing\BigFish.cs" />
-    <Compile Include="Items\Resources\Fishing\Fish.cs" />
-    <Compile Include="Items\Resources\Fishing\MagicFish.cs" />
     <Compile Include="Items\Resources\Masonry\Granite.cs" />
     <Compile Include="Items\Resources\MiscMLResources.cs" />
     <Compile Include="Items\Resources\Reagents\BagOfAllReagents.cs" />
@@ -3344,7 +3364,7 @@
     <Compile Include="Items\SkillItems\Camping\Kindling.cs" />
     <Compile Include="Items\SkillItems\Carpenter Items\Board.cs" />
     <Compile Include="Items\SkillItems\Carpenter Items\TaxidermyKit.cs" />
-    <Compile Include="Items\SkillItems\Explosion Potions\BaseExplosionPotion.cs" />
+    <Compile Include="Items\SkillItems\Magical\Potions\Explosion Potions\BaseExplosionPotion.cs" />
     <Compile Include="Items\SkillItems\Fishing\FishingPole.cs" />
     <Compile Include="Items\SkillItems\Fishing\Misc\MessageInABottle.cs" />
     <Compile Include="Items\SkillItems\Fishing\Misc\Sextant.cs" />
@@ -3540,7 +3560,6 @@
     <Compile Include="Items\SkillItems\Tools\Blowpipe.cs" />
     <Compile Include="Items\SkillItems\Tools\DovetailSaw.cs" />
     <Compile Include="Items\SkillItems\Tools\DrawKnife.cs" />
-    <Compile Include="Items\SkillItems\Tools\FlourSifter.cs" />
     <Compile Include="Items\SkillItems\Tools\Froe.cs" />
     <Compile Include="Items\SkillItems\Tools\Hammer.cs" />
     <Compile Include="Items\SkillItems\Tools\Inshave.cs" />

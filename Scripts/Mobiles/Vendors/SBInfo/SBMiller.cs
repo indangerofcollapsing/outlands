@@ -19,18 +19,22 @@ namespace Server.Mobiles
 		public class InternalBuyInfo : List<GenericBuyInfo> 
 		{ 
 			public InternalBuyInfo() 
-			{ 
-				Add( new GenericBuyInfo( typeof( SackFlour ), 3, 20, 0x1039, 0 ) );
-				Add( new GenericBuyInfo( typeof( SheafOfHay ), 2, 20, 0xF36, 0 ) );
+			{
+                Add(new GenericBuyInfo("Skillet", typeof(Skillet), 10, 20, 0x97F, 0));
+                Add(new GenericBuyInfo(typeof(RollingPin), 2, 20, 0x1043, 0));
+				Add(new GenericBuyInfo(typeof(SackOfFlour), 3, 20, 0x1039, 0 ) );
+				Add(new GenericBuyInfo(typeof(SheafOfHay), 2, 20, 0xF36, 0 ) );
 			} 
 		} 
 
 		public class InternalSellInfo : GenericSellInfo 
 		{ 
 			public InternalSellInfo() 
-			{ 
-				Add( typeof( SackFlour ), 1 );
-				Add( typeof( SheafOfHay ), 1 );
+			{
+                Add(typeof( Skillet), 2);
+                Add(typeof( RollingPin), 1);
+                Add(typeof( SackOfFlour ), 1);
+				Add(typeof( SheafOfHay ), 1 );
 			} 
 		} 
 	} 

@@ -78,7 +78,7 @@ namespace Server.Custom
                     return;
                 }               
 
-                if (target is RawFishSteak || target is RawFish || target is BaseMagicFish)
+                if (target is RawFishSteak)
                 {
                     Item item = target as Item;
 

@@ -129,7 +129,7 @@ namespace Server.Engines.Harvest
 
 		private static MutateEntry[] m_MutateTable = new MutateEntry[]
 			{
-				new MutateEntry(  80.0,  80.0,  3480.0,  true, typeof( BigFish ) ),
+				new MutateEntry(  80.0,  80.0,  3480.0,  true, typeof( RawLargeFish ) ),
 			};
 
 		public override Type MutateType( Type type, Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestResource resource )

@@ -56,7 +56,7 @@ namespace Server.Items
 			{
             new TrophyInfo( typeof( BrownBear ),	0x1E60,		1041093, 1041107 ),
 			new TrophyInfo( typeof( GreatHart ),	0x1E61,		1041095, 1041109 ),
-			new TrophyInfo( typeof( BigFish ),		0x1E62,		1041096, 1041110 ),
+			//new TrophyInfo( typeof( BigFish ),		0x1E62,		1041096, 1041110 ),
 			new TrophyInfo( typeof( Gorilla ),		0x1E63,		1041091, 1041105 ),
 			new TrophyInfo( typeof( Orc ),			0x1E64,		1041090, 1041104 ),
 			new TrophyInfo( typeof( PolarBear ),	0x1E65,		1041094, 1041108 ),
@@ -98,12 +98,8 @@ namespace Server.Items
 			{
 				if ( m_Kit.Deleted )
 					return;
-
-				if ( !(targeted is Corpse) && !(targeted is BigFish) )
-				{
-					from.SendLocalizedMessage( 1042600 ); // That is not a corpse!
-				}
-				else if ( targeted is Corpse && ((Corpse)targeted).VisitedByTaxidermist )
+                
+                if ( targeted is Corpse && ((Corpse)targeted).VisitedByTaxidermist )
 				{
 					from.SendLocalizedMessage( 1042596 ); // That corpse seems to have been visited by a taxidermist already.
 				}
@@ -138,18 +134,7 @@ namespace Server.Items
 								Mobile hunter = null;
 								int weight = 0;
 
-								if ( targeted is BigFish )
-								{
-                                        BigFish fish = targeted as BigFish;
-
-                                        hunter = fish.Fisher;
-                                        weight = (int)fish.Weight;
-
-                                        fish.Consume();
-								}
-
-
-                                    from.AddToBackpack( new TrophyDeed( m_Table[i], hunter, weight ) );
+                                from.AddToBackpack( new TrophyDeed( m_Table[i], hunter, weight ) );
 
 								if ( targeted is Corpse )
 									((Corpse)targeted).VisitedByTaxidermist = true;

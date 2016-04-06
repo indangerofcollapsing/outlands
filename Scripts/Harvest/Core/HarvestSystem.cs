@@ -169,48 +169,12 @@ namespace Server.Engines.Harvest
                     else
                     {
                         BaseBoat ownerBoat = BaseBoat.FindBoatAt(from.Location, from.Map);
-
-                        if (item is PrizedFish)
-                        {
-                            if (ownerBoat != null)
-                            {
-                                if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
-                                    ownerBoat.fishCaught++;
-                            }
-                        }
-
-                        else if (item is WondrousFish)
-                        {
-                            if (ownerBoat != null)
-                            {
-                                if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
-                                    ownerBoat.fishCaught++;
-                            }
-                        }
-
-                        else if (item is TrulyRareFish)
-                        {
-                            if (ownerBoat != null)
-                            {
-                                if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
-                                    ownerBoat.fishCaught++;
-                            }
-                        }
-
-                        else if (item is PeculiarFish)
-                        {
-                            if (ownerBoat != null)
-                            {
-                                if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
-                                    ownerBoat.fishCaught++;
-                            }
-                        }
-
-                        else if (item is MessageInABottle)
+                        
+                        if (item is MessageInABottle)
                         {                         
                         }
 
-                        else if (item is Fish)
+                        else if (item is RawFish || item is RawLargeFish)
                         {
                             if (ownerBoat != null)
                             {

@@ -99,6 +99,22 @@ namespace Server.Items
             ScaleUses();
         }
 
+        public override double GetSellValueScalar()
+        {
+            double scalar = 1.0;
+
+            if (Quality == Quality.Low)
+                scalar -= .1;
+
+            if (Quality == Server.Quality.Exceptional)
+                scalar += .1;
+
+            scalar += (double)((int)DurabilityLevel) * .02;
+            scalar += (double)((int)ArtistryLevel) * .05;
+
+            return scalar;
+        }
+
         public void UnscaleUses()
         {
             UsesRemaining = Utility.RandomMinMax(InitMinUses, InitMaxUses);

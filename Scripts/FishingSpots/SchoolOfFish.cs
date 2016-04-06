@@ -136,12 +136,14 @@ namespace Server.Custom
             {
                 case 1:
                     //Normal Fish
-                    item = new Fish(Utility.RandomMinMax(10, 20));
+                    item = new RawFish(Utility.RandomMinMax(10, 20));
                     itemName = "a pile of fish"; 
                 break;
                     
                 case 2:
                     //Magic Fish
+                    //TEST: FIX THIS
+                    /*
                     switch (Utility.RandomMinMax(1, 3))
                     {
                         case 1:
@@ -158,7 +160,8 @@ namespace Server.Custom
                             item = new TrulyRareFish();
                             itemName = "a truly rare fish";
                         break;
-                    }               
+                    }   
+                    */
                 break;
 
                 case 3:

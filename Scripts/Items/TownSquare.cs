@@ -209,7 +209,7 @@ namespace Server.ArenaSystem
                     Add(new GenericBuyInfo(typeof(BlankMap), 5, 40, 0x14EC, 0));
                     Add(new GenericBuyInfo(typeof(BlankScroll), 6, 40, 0xEF3, 0));
                     Add(new GenericBuyInfo(typeof(Bottle), 5, 200, 0xF0E, 0)); 
-                    Add(new GenericBuyInfo("1044567", typeof(Skillet), 6, 20, 0x97F, 0));
+                    Add(new GenericBuyInfo("1044567", typeof(Skillet), 10, 50, 0x97F, 0));
                     Add(new GenericBuyInfo(typeof(Scissors), 13, 20, 0xF9F, 0));
 
                     Add(new GenericBuyInfo(typeof(TransformationDust), 50000, 1, 0x5745, 0)); // This will be like 16k from hometown mages

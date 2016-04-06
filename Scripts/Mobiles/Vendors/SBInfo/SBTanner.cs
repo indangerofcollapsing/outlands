@@ -22,8 +22,6 @@ namespace Server.Mobiles
 			{
 				Add( new GenericBuyInfo( typeof( Bag ), 6, 20, 0xE76, 0 ) );
 				Add( new GenericBuyInfo( typeof( Pouch ), 6, 20, 0xE79, 0 ) );
-				//Add( new GenericBuyInfo( typeof( Leather ), 6, 100, 0x1081, 0 ) );
-				//Add( new GenericBuyInfo( "1041279", typeof( TaxidermyKit ), 100000, 20, 0x1EBA, 0 ) );
 				Add( new GenericBuyInfo( typeof( SkinningKnife ), 26, 20, 0xEC4, 0 ) );
 				Add( new GenericBuyInfo( typeof( LeatherLegs ), 80, 20, 0x13CB, 0 ) );
 				Add( new GenericBuyInfo( typeof( LeatherShorts ), 86, 20, 0x1C00, 0 ) );
@@ -51,7 +49,6 @@ namespace Server.Mobiles
 		{
 			public InternalSellInfo()
 			{
-				//Add( typeof( Leather ), 3 );
 			}
 		}
 	}

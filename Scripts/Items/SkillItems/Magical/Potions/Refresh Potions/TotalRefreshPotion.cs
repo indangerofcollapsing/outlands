@@ -10,6 +10,7 @@ namespace Server.Items
 		[Constructable]
 		public TotalRefreshPotion() : base( PotionEffect.RefreshTotal )
 		{
+            Name = "Total Refresh potion";
 		}
 
 		public TotalRefreshPotion( Serial serial ) : base( serial )
@@ -19,14 +20,12 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
 		}
 	}

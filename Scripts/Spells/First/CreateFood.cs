@@ -23,13 +23,6 @@ namespace Server.Spells.First
 		private static FoodInfo[] m_Food = new FoodInfo[]
 			{
 				new FoodInfo( typeof( Grapes ), "a grape bunch" ),
-				new FoodInfo( typeof( Ham ), "a ham" ),
-				new FoodInfo( typeof( CheeseWedge ), "a wedge of cheese" ),
-				new FoodInfo( typeof( Muffins ), "muffins" ),
-				new FoodInfo( typeof( FishSteak ), "a fish steak" ),
-				new FoodInfo( typeof( Ribs ), "cut of ribs" ),
-				new FoodInfo( typeof( CookedBird ), "a cooked bird" ),
-				new FoodInfo( typeof( Sausage ), "sausage" ),
 				new FoodInfo( typeof( Apple ), "an apple" ),
 				new FoodInfo( typeof( Peach ), "a peach" )
 			};

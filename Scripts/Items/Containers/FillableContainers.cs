@@ -785,26 +785,10 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				//new FillableEntry( 1, typeof( PaintsAndBrush ) ),
-				//new FillableEntry( 1, typeof( SledgeHammer ) ),
 				new FillableEntry( 2, typeof( SmithHammer ) ),
 				new FillableEntry( 2, typeof( Tongs ) ),
 				new FillableEntry( 4, typeof( Lockpick ) ),
 				new FillableEntry( 4, typeof( TinkerTools ) ),
-				//new FillableEntry( 1, typeof( MalletAndChisel ) ),
-				//new FillableEntry( 1, typeof( StatueEast2 ) ),
-				//new FillableEntry( 1, typeof( StatueSouth ) ),
-				//new FillableEntry( 1, typeof( StatueSouthEast ) ),
-				//new FillableEntry( 1, typeof( StatueWest ) ),
-				//new FillableEntry( 1, typeof( StatueNorth ) ),
-				//new FillableEntry( 1, typeof( StatueEast ) ),
-				//new FillableEntry( 1, typeof( BustEast ) ),
-				//new FillableEntry( 1, typeof( BustSouth ) ),
-				//new FillableEntry( 1, typeof( BearMask ) ),
-				//new FillableEntry( 1, typeof( DeerMask ) ),
-				//new FillableEntry( 4, typeof( OrcHelm ) ),
-				//new FillableEntry( 1, typeof( TribalMask ) ),
-				//new FillableEntry( 1, typeof( HornedTribalMask ) )
 			} );
 
 		public static FillableContent Baker = new FillableContent(
@@ -816,9 +800,6 @@ namespace Server.Items
 			new FillableEntry[]
 			{
 				new FillableEntry( 1, typeof( RollingPin ) ),
-				new FillableEntry( 2, typeof( SackFlour ) ),
-				new FillableEntry( 2, typeof( BreadLoaf ) ),
-				new FillableEntry( 1, typeof( FrenchBread ) )
 			} );
 
 		public static FillableContent Bard = new FillableContent(
@@ -834,7 +815,6 @@ namespace Server.Items
 				new FillableEntry( 2, typeof( Lute ) ),
 				new FillableEntry( 1, typeof( Drums ) ),
 				new FillableEntry( 1, typeof( Tambourine ) ),
-				//new FillableEntry( 1, typeof( TambourineTassel ) )
 			} );
 
 		public static FillableContent Blacksmith = new FillableContent(
@@ -848,15 +828,7 @@ namespace Server.Items
 			{
 				new FillableEntry( 8, typeof( SmithHammer ) ),
 				new FillableEntry( 8, typeof( Tongs ) ),
-				//new FillableEntry( 8, typeof( SledgeHammer ) ),
-				//new FillableEntry( 8, typeof( IronOre ) ), TODO: Smaller ore
 				new FillableEntry( 8, typeof( IronIngot ) ),
-				//new FillableEntry( 1, typeof( IronWire ) ),
-				//new FillableEntry( 1, typeof( SilverWire ) ),
-				//new FillableEntry( 1, typeof( GoldWire ) ),
-				//new FillableEntry( 1, typeof( CopperWire ) ),
-				//new FillableEntry( 1, typeof( HorseShoes ) ),
-				//new FillableEntry( 1, typeof( ForgedMetal ) )
 			} );
 
 		public static FillableContent Bowyer = new FillableContent(
@@ -880,21 +852,6 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				//new FillableEntry( 2, typeof( Cleaver ) ),
-				//new FillableEntry( 2, typeof( SlabOfBacon ) ),
-				//new FillableEntry( 2, typeof( Bacon ) ),
-				new FillableEntry( 1, typeof( RawFishSteak ) ),
-				new FillableEntry( 1, typeof( FishSteak ) ),
-				new FillableEntry( 2, typeof( CookedBird ) ),
-				new FillableEntry( 2, typeof( RawBird ) ),
-				new FillableEntry( 2, typeof( Ham ) ),
-				new FillableEntry( 1, typeof( RawLambLeg ) ),
-				new FillableEntry( 1, typeof( LambLeg ) ),
-				new FillableEntry( 1, typeof( Ribs ) ),
-				new FillableEntry( 1, typeof( RawRibs ) ),
-				new FillableEntry( 2, typeof( Sausage ) ),
-				new FillableEntry( 1, typeof( RawChickenLeg ) ),
-				new FillableEntry( 1, typeof( ChickenLeg ) )
 			} );
 
 		public static FillableContent Carpenter = new FillableContent(
@@ -912,7 +869,6 @@ namespace Server.Items
 				new FillableEntry( 2, typeof( DovetailSaw ) ),
 				new FillableEntry( 2, typeof( Hammer ) ),
 				new FillableEntry( 2, typeof( MouldingPlane ) ),
-				//new FillableEntry( 2, typeof( Nails ) ),
 				new FillableEntry( 2, typeof( JointingPlane ) ),
 				new FillableEntry( 2, typeof( SmoothingPlane ) ),
 				new FillableEntry( 2, typeof( Saw ) ),
@@ -935,15 +891,6 @@ namespace Server.Items
 			{
 				new FillableEntry( 1, typeof( Cotton ) ),
 				new FillableEntry( 1, typeof( Wool ) ),
-				//new FillableEntry( 1, typeof( DarkYarn ) ),
-				//new FillableEntry( 1, typeof( LightYarn ) ),
-				//new FillableEntry( 1, typeof( LightYarnUnraveled ) ),
-				//new FillableEntry( 1, typeof( SpoolOfThread ) ),
-				// Four different types
-				//new FillableEntry( 1, typeof( FoldedCloth ) ),
-				//new FillableEntry( 1, typeof( FoldedCloth ) ),
-				//new FillableEntry( 1, typeof( FoldedCloth ) ),
-				//new FillableEntry( 1, typeof( FoldedCloth ) ),
 				new FillableEntry( 1, typeof( Dyes ) ),
 				new FillableEntry( 2, typeof( Leather ) )
 			} );
@@ -972,10 +919,6 @@ namespace Server.Items
 			new FillableEntry[]
 			{
 				new FillableEntry( 1, typeof( FishingPole ) ),
-				// Two different types
-				//new FillableEntry( 1, typeof( SmallFish ) ),
-				//new FillableEntry( 1, typeof( SmallFish ) ),
-				new FillableEntry( 4, typeof( Fish ) )
 			} );
 
 		public static FillableContent Farm = new FillableContent(
@@ -997,13 +940,6 @@ namespace Server.Items
 				new FillableEntry( 2, typeof( Pitchfork ) ),
 				new FillableEntry( 1, typeof( Bag ) ),
 				new FillableEntry( 1, typeof( Kindling ) ),
-				new FillableEntry( 1, typeof( Lettuce ) ),
-				//new FillableEntry( 1, typeof( Onion ) ),
-				//new FillableEntry( 1, typeof( Turnip ) ),
-				//new FillableEntry( 1, typeof( Ham ) ),
-				//new FillableEntry( 1, typeof( Bacon ) ),
-				new FillableEntry( 1, typeof( RawLambLeg ) ),
-				//new FillableEntry( 1, typeof( SheafOfHay ) ),
 				new FillableBvrge( 1, typeof( Pitcher ), BeverageType.Milk )
 			} );
 
@@ -1059,11 +995,6 @@ namespace Server.Items
 				new FillableEntry( 10, typeof( Garlic ) ),
 				new FillableEntry( 10, typeof( Ginseng ) ),
 				new FillableEntry( 10, typeof( MandrakeRoot ) ),
-				//new FillableEntry(  1, typeof( DeadWood ) ),
-				//new FillableEntry(  1, typeof( WhiteDriedFlowers ) ),
-				//new FillableEntry(  1, typeof( GreenDriedFlowers ) ),
-				//new FillableEntry(  1, typeof( DriedOnions ) ),
-				//new FillableEntry(  1, typeof( DriedHerbs ) )
 			} );
 
 		public static FillableContent Inn = new FillableContent(
@@ -1075,7 +1006,6 @@ namespace Server.Items
 			{
 				new FillableEntry( 1, typeof( Candle ) ),
 				new FillableEntry( 1, typeof( Torch ) ),
-				//new FillableEntry( 1, typeof( Lantern ) )
 			} );
 
 		public static FillableContent Jeweler = new FillableContent(
@@ -1120,14 +1050,6 @@ namespace Server.Items
 			{
 				new FillableEntry( 16, typeof( BlankScroll ) ),
 				new FillableEntry( 14, typeof( Spellbook ) ),
-				//new FillableEntry( 12, Loot.RegularScrollTypes,  0, 8 ),
-				//new FillableEntry( 11, Loot.RegularScrollTypes,  8, 8 ),
-				//new FillableEntry( 10, Loot.RegularScrollTypes, 16, 8 ),
-				//new FillableEntry(  9, Loot.RegularScrollTypes, 24, 8 ),
-				//new FillableEntry(  8, Loot.RegularScrollTypes, 32, 8 ),
-				//new FillableEntry(  7, Loot.RegularScrollTypes, 40, 8 ),
-				//new FillableEntry(  6, Loot.RegularScrollTypes, 48, 8 ),
-				//new FillableEntry(  5, Loot.RegularScrollTypes, 56, 8 )
 			} );
 
 		public static FillableContent Merchant = new FillableContent(
@@ -1138,54 +1060,6 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				//new FillableEntry( 1, typeof( CheeseWheel ) ),
-				new FillableEntry( 1, typeof( CheeseWedge ) ),
-				//new FillableEntry( 1, typeof( CheeseSlice ) ),
-				new FillableEntry( 1, typeof( Eggs ) ),
-				new FillableEntry( 4, typeof( Fish ) ),
-				new FillableEntry( 2, typeof( RawFishSteak ) ),
-				new FillableEntry( 2, typeof( FishSteak ) ),
-				new FillableEntry( 1, typeof( Apple ) ),
-				//new FillableEntry( 2, typeof( Banana ) ),
-				//new FillableEntry( 2, typeof( Bananas ) ),
-				//new FillableEntry( 2, typeof( OpenCoconut ) ),
-				//new FillableEntry( 1, typeof( SplitCoconut ) ),
-				//new FillableEntry( 1, typeof( Coconut ) ),
-				//new FillableEntry( 1, typeof( Dates ) ),
-				//new FillableEntry( 1, typeof( Grapes ) ),
-				//new FillableEntry( 1, typeof( Lemon ) ),
-				//new FillableEntry( 1, typeof( Lemons ) ),
-				//new FillableEntry( 1, typeof( Lime ) ),
-				//new FillableEntry( 1, typeof( Limes ) ),
-				//new FillableEntry( 1, typeof( Peach ) ),
-				//new FillableEntry( 1, typeof( Pear ) ),
-				//new FillableEntry( 2, typeof( SlabOfBacon ) ),
-				//new FillableEntry( 2, typeof( Bacon ) ),
-				//new FillableEntry( 2, typeof( CookedBird ) ),
-				//new FillableEntry( 2, typeof( RawBird ) ),
-				//new FillableEntry( 2, typeof( Ham ) ),
-				new FillableEntry( 1, typeof( RawLambLeg ) ),
-				new FillableEntry( 1, typeof( LambLeg ) ),
-				new FillableEntry( 1, typeof( Ribs ) ),
-				new FillableEntry( 1, typeof( RawRibs ) ),
-				new FillableEntry( 2, typeof( Sausage ) ),
-				new FillableEntry( 1, typeof( RawChickenLeg ) ),
-				new FillableEntry( 1, typeof( ChickenLeg ) ),
-				//new FillableEntry( 1, typeof( Watermelon ) ),
-				//new FillableEntry( 1, typeof( SmallWatermelon ) ),
-				//new FillableEntry( 3, typeof( Turnip ) ),
-				//new FillableEntry( 2, typeof( YellowGourd ) ),
-				//new FillableEntry( 2, typeof( GreenGourd ) ),
-				//new FillableEntry( 2, typeof( Pumpkin ) ),
-				//new FillableEntry( 1, typeof( SmallPumpkin ) ),
-				//new FillableEntry( 2, typeof( Onion ) ),
-				//new FillableEntry( 2, typeof( Lettuce ) ),
-				//new FillableEntry( 2, typeof( Squash ) ),
-				//new FillableEntry( 2, typeof( HoneydewMelon ) ),
-				//new FillableEntry( 1, typeof( Carrot ) ),
-				//new FillableEntry( 2, typeof( Cantaloupe ) ),
-				//new FillableEntry( 2, typeof( Cabbage ) ),
-				//new FillableEntry( 4, typeof( EarOfCorn ) )
 			} );
 
 		public static FillableContent Mill = new FillableContent(
@@ -1195,7 +1069,6 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				new FillableEntry( 1, typeof( SackFlour ) )
 			} );
 
 		public static FillableContent Mine = new FillableContent(
@@ -1209,7 +1082,6 @@ namespace Server.Items
 				new FillableEntry( 2, typeof( Pickaxe ) ),
 				new FillableEntry( 2, typeof( Shovel ) ),
 				new FillableEntry( 2, typeof( IronIngot ) ),
-				//new FillableEntry( 2, typeof( IronOre ) ),	TODO: Smaller Ore
 				new FillableEntry( 1, typeof( ForgedMetal ) )
 			} );
 
@@ -1222,7 +1094,6 @@ namespace Server.Items
 			{
 				new FillableEntry( 2, typeof( Sextant ) ),
 				new FillableEntry( 2, typeof( Clock ) ),
-				//new FillableEntry( 1, typeof( Spyglass ) )
 			} );
 
 		public static FillableContent Painter = new FillableContent(
@@ -1232,7 +1103,6 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				//new FillableEntry( 1, typeof( PaintsAndBrush ) ),
 				new FillableEntry( 2, typeof( PenAndInk ) )
 			} );
 
@@ -1243,62 +1113,7 @@ namespace Server.Items
 				typeof( Provisioner )
 			},
 			new FillableEntry[]
-			{
-				new FillableEntry( 1, typeof( CheeseWheel ) ),
-				new FillableEntry( 1, typeof( CheeseWedge ) ),
-				new FillableEntry( 1, typeof( CheeseSlice ) ),
-				new FillableEntry( 1, typeof( Eggs ) ),
-				new FillableEntry( 4, typeof( Fish ) ),
-				//new FillableEntry( 1, typeof( DirtyFrypan ) ),
-				//new FillableEntry( 1, typeof( DirtyPan ) ),
-				//new FillableEntry( 1, typeof( DirtyKettle ) ),
-				//new FillableEntry( 1, typeof( DirtySmallRoundPot ) ),
-				//new FillableEntry( 1, typeof( DirtyRoundPot ) ),
-				//new FillableEntry( 1, typeof( DirtySmallPot ) ),
-				//new FillableEntry( 1, typeof( DirtyPot ) ),
-				//new FillableEntry( 1, typeof( Apple ) ),
-				//new FillableEntry( 2, typeof( Banana ) ),
-				//new FillableEntry( 2, typeof( Bananas ) ),
-				//new FillableEntry( 2, typeof( OpenCoconut ) ),
-				//new FillableEntry( 1, typeof( SplitCoconut ) ),
-				//new FillableEntry( 1, typeof( Coconut ) ),
-				//new FillableEntry( 1, typeof( Dates ) ),
-				//new FillableEntry( 1, typeof( Grapes ) ),
-				//new FillableEntry( 1, typeof( Lemon ) ),
-				//new FillableEntry( 1, typeof( Lemons ) ),
-				//new FillableEntry( 1, typeof( Lime ) ),
-				//new FillableEntry( 1, typeof( Limes ) ),
-				//new FillableEntry( 1, typeof( Peach ) ),
-				//new FillableEntry( 1, typeof( Pear ) ),
-				//new FillableEntry( 2, typeof( SlabOfBacon ) ),
-				//new FillableEntry( 2, typeof( Bacon ) ),
-				//new FillableEntry( 1, typeof( RawFishSteak ) ),
-				//new FillableEntry( 1, typeof( FishSteak ) ),
-				//new FillableEntry( 2, typeof( CookedBird ) ),
-				//new FillableEntry( 2, typeof( RawBird ) ),
-				//new FillableEntry( 2, typeof( Ham ) ),
-				//new FillableEntry( 1, typeof( RawLambLeg ) ),
-				new FillableEntry( 1, typeof( LambLeg ) ),
-				new FillableEntry( 1, typeof( Ribs ) ),
-				new FillableEntry( 1, typeof( RawRibs ) ),
-				new FillableEntry( 2, typeof( Sausage ) ),
-				new FillableEntry( 1, typeof( RawChickenLeg ) ),
-				new FillableEntry( 1, typeof( ChickenLeg ) ),
-				//new FillableEntry( 1, typeof( Watermelon ) ),
-				//new FillableEntry( 1, typeof( SmallWatermelon ) ),
-				//new FillableEntry( 3, typeof( Turnip ) ),
-				//new FillableEntry( 2, typeof( YellowGourd ) ),
-				//new FillableEntry( 2, typeof( GreenGourd ) ),
-				//new FillableEntry( 2, typeof( Pumpkin ) ),
-				//new FillableEntry( 1, typeof( SmallPumpkin ) ),
-				//new FillableEntry( 2, typeof( Onion ) ),
-				//new FillableEntry( 2, typeof( Lettuce ) ),
-				//new FillableEntry( 2, typeof( Squash ) ),
-				//new FillableEntry( 2, typeof( HoneydewMelon ) ),
-				//new FillableEntry( 1, typeof( Carrot ) ),
-				//new FillableEntry( 2, typeof( Cantaloupe ) ),
-				//new FillableEntry( 2, typeof( Cabbage ) ),
-				//new FillableEntry( 4, typeof( EarOfCorn ) )
+			{				
 			} );
 
 		public static FillableContent Ranger = new FillableContent(
@@ -1322,7 +1137,6 @@ namespace Server.Items
 				new FillableEntry( 2, typeof( LeatherGloves ) ),
 				new FillableEntry( 1, typeof( LeatherGorget ) ),
 
-				//new FillableEntry( 2, typeof( FeatheredHat ) ),
 				new FillableEntry( 1, typeof( CloseHelm ) ),
 				new FillableEntry( 1, typeof( TallStrawHat ) ),
 				new FillableEntry( 1, typeof( Bandana ) ),
@@ -1348,7 +1162,6 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				//new FillableEntry( 1, typeof( Wheat ) ),
 				new FillableEntry( 1, typeof( Carrot ) )
 			} );
 
@@ -1362,7 +1175,6 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				//new FillableEntry( 1, typeof( FeatheredHat ) ),
 				new FillableEntry( 1, typeof( LeatherArms ) ),
 				new FillableEntry( 2, typeof( LeatherLegs ) ),
 				new FillableEntry( 2, typeof( LeatherChest ) ),
@@ -1398,11 +1210,6 @@ namespace Server.Items
 			new FillableEntry[]
 			{
 				new FillableEntry( 1, typeof( Lockpick ) ),
-				//new FillableEntry( 1, typeof( BearMask ) ),
-				//new FillableEntry( 1, typeof( DeerMask ) ),
-				//new FillableEntry( 1, typeof( TribalMask ) ),
-				//new FillableEntry( 1, typeof( HornedTribalMask ) ),
-				//new FillableEntry( 4, typeof( OrcHelm ) )
 			} );
 
 		public static FillableContent Tinker = new FillableContent(
@@ -1415,13 +1222,11 @@ namespace Server.Items
 			new FillableEntry[]
 			{
 				new FillableEntry( 1, typeof( Lockpick ) ),
-				//new FillableEntry( 1, typeof( KeyRing ) ),
 				new FillableEntry( 2, typeof( Clock ) ),
 				new FillableEntry( 2, typeof( ClockParts ) ),
 				new FillableEntry( 2, typeof( AxleGears ) ),
 				new FillableEntry( 2, typeof( Gears ) ),
 				new FillableEntry( 2, typeof( Hinge ) ),
-				//new FillableEntry( 1, typeof( ArrowShafts ) ),
 				new FillableEntry( 2, typeof( Sextant ) ),
 				new FillableEntry( 2, typeof( SextantParts ) ),
 				new FillableEntry( 2, typeof( Axle ) ),
@@ -1440,8 +1245,7 @@ namespace Server.Items
 			{
 				new FillableEntry( 1, typeof( Bandage ) ),
 				new FillableEntry( 1, typeof( MortarPestle ) ),
-				new FillableEntry( 1, typeof( LesserHealPotion ) ),
-				//new FillableEntry( 1, typeof( Wheat ) ),
+				new FillableEntry( 1, typeof( LesserHealPotion ) ),				
 				new FillableEntry( 1, typeof( Carrot ) )
 			} );
 

@@ -78,7 +78,7 @@ namespace Server.Items
 
 			if ( from != null && !from.Deleted && !this.Deleted && IsFull )
 			{
-				SackFlour flour = new SackFlour();
+                SackOfFlour flour = new SackOfFlour();
 
 				flour.ItemID = ( Utility.RandomBool() ? 4153 : 4165 );
 

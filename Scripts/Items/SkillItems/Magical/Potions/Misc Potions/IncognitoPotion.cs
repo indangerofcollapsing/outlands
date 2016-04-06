@@ -16,7 +16,7 @@ namespace Server.Items
         [Constructable]
         public IncognitoPotion(): base(0xF0B, PotionEffect.Custom)
         {
-            Name = "an incognito potion";
+            Name = "Incognito potion";
             Hue = 2515;
 
             Weight = 1.0;

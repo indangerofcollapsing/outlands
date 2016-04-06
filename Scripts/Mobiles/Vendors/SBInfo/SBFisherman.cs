@@ -21,8 +21,6 @@ namespace Server.Mobiles
 		{ 
 			public InternalBuyInfo() 
 			{ 
-				Add( new GenericBuyInfo( typeof( RawFishSteak ), 4, 20, 0x97A, 0 ) );
-				Add( new GenericBuyInfo( typeof( Fish ), 4, 80, 0x9CC, 0 ) );
 				Add( new GenericBuyInfo( typeof( FishingPole ), 15, 20, 0xDC0, 0 ) );
                 Add( new GenericBuyInfo( typeof( LobsterTrap), 6, 40, 0x44D0, 0));
 			} 
@@ -32,7 +30,6 @@ namespace Server.Mobiles
 		{ 
 			public InternalSellInfo() 
 			{ 
-                //Add( typeof( RawFishSteak ), 1 );
                 Add( typeof( FishCommissionCompletedDeed ), 500);
 				Add( typeof( FishingPole ), 7 );
 			} 

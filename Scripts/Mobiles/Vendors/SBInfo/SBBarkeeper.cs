@@ -30,16 +30,10 @@ namespace Server.Mobiles
 				Add( new BeverageBuyInfo( typeof( Pitcher ), BeverageType.Liquor, 11, 20, 0x1F99, 0 ) );
 				Add( new BeverageBuyInfo( typeof( Pitcher ), BeverageType.Wine, 11, 20, 0x1F9B, 0 ) );
 				Add( new BeverageBuyInfo( typeof( Pitcher ), BeverageType.Water, 11, 20, 0x1F9D, 0 ) );
-				Add( new GenericBuyInfo( typeof( BreadLoaf ), 7, 10, 0x103B, 0 ) );
-				Add( new GenericBuyInfo( typeof( CheeseWheel ), 25, 10, 0x97E, 0 ) );
-				Add( new GenericBuyInfo( typeof( CookedBird ), 17, 20, 0x9B7, 0 ) );
-				Add( new GenericBuyInfo( typeof( LambLeg ), 8, 20, 0x160A, 0 ) );
-				// TODO: Bowl of *, tomato soup, baked pie
 				Add( new GenericBuyInfo( "1016450", typeof( Chessboard ), 2, 20, 0xFA6, 0 ) );
 				Add( new GenericBuyInfo( "1016449", typeof( CheckerBoard ), 2, 20, 0xFA6, 0 ) );
 				Add( new GenericBuyInfo( typeof( Backgammon ), 2, 20, 0xE1C, 0 ) );
 				Add( new GenericBuyInfo( typeof( Dices ), 2, 20, 0xFA7, 0 ) );
-                //Add( new GenericBuyInfo( "1041243", typeof( ContractOfEmployment ), 1025, 20, 0x14F0, 0 ) );
                 Add(new GenericBuyInfo("1062332", typeof(VendorRentalContract), 1025, 20, 0x14F0, 0));
 				Add( new GenericBuyInfo( "a barkeep contract", typeof( BarkeepContract ), 6250, 20, 0x14F0, 0 ) );
 			}
@@ -53,8 +47,6 @@ namespace Server.Mobiles
 				Add( typeof( Jug ), 6 );
 				Add( typeof( Pitcher ), 5 );
 				Add( typeof( GlassMug ), 1 );
-				Add( typeof( BreadLoaf ), 3 );
-				Add( typeof( CheeseWheel ), 12 );
 				Add( typeof( Chessboard ), 1 );
 				Add( typeof( CheckerBoard ), 1 );
 				Add( typeof( Backgammon ), 1 );

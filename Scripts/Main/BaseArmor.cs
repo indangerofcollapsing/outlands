@@ -312,6 +312,22 @@ namespace Server.Items
             }
         }
 
+        public override double GetSellValueScalar()
+        {
+            double scalar = 1.0;
+
+            if (Quality == Quality.Low)
+                scalar -= .1;
+
+            if (Quality == Server.Quality.Exceptional)
+                scalar += .1;
+
+            scalar += (double)((int)Durability) * .02;
+            scalar += (double)((int)ProtectionLevel) * .05;
+
+            return scalar;
+        }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public ArmorDurabilityLevel Durability
         {

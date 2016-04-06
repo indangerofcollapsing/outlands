@@ -121,6 +121,26 @@ namespace Server.Items
             ScaleDurability();
         }
 
+        public override double GetSellValueScalar()
+        {
+            double scalar = 1.0;
+
+            if (Quality == Quality.Low)
+                scalar -= .1;
+
+            if (Quality == Server.Quality.Exceptional)
+                scalar += .1;
+
+            scalar += (double)((int)DurabilityLevel) * .02;
+            scalar += (double)((int)AccuracyLevel) * .05;
+            scalar += (double)((int)DamageLevel) * .05;
+
+            if (SlayerGroup != SlayerGroupType.None)
+                scalar += .25;
+
+            return scalar;
+        }
+
         public override void DungeonChange()
         {
             if (Dungeon != DungeonEnum.None)

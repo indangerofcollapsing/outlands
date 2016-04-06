@@ -12,7 +12,7 @@ namespace Server.Items
 		[Constructable]
 		public HealPotion() : base( PotionEffect.Heal )
 		{
-            Name = "heal potion";
+            Name = "Heal potion";
 		}
 
 		public HealPotion( Serial serial ) : base( serial )
@@ -22,14 +22,12 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
 		}
 	}

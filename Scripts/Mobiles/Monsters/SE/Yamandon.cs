@@ -44,8 +44,6 @@ namespace Server.Mobiles
 
 			if ( Utility.RandomDouble() < .50 )
 				PackItem( Engines.Plants.Seed.RandomBonsaiSeed() );
-
-			PackItem( new Eggs( 2 ) );
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }

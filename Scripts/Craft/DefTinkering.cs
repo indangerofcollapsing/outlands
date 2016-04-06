@@ -198,7 +198,6 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(SmithHammer), "Tools", "Smith's Hammer", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(SledgeHammer), "Tools", "Sledge Hammer", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(Inshave), "Tools", "Inshave", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(FlourSifter), "Tools", "Flour Sifter", 50.0, 100.0, typeof(IronIngot), 1044036, 3, 1044037);
 
             //Parts
             AddCraft(1, typeof(JointingPlane), "Parts", "Jointing Plane", 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);

@@ -29,10 +29,7 @@ namespace Server.Mobiles
 				Add( new GenericBuyInfo( typeof( Sapphire ), 120, 20, 0xF19, 0 ) );
 				Add( new GenericBuyInfo( typeof( StarSapphire ), 150, 20, 0xF21, 0 ) );
 				Add( new GenericBuyInfo( typeof( Tourmaline ), 90, 20, 0xF2D, 0 ) );
-
-				//Add( new GenericBuyInfo( typeof( Board ), 3, 20, 0x1BD7, 0 ) );
-				//Add( new GenericBuyInfo( typeof( IronIngot ), 8, 20, 0x1BF2, 0 ) );
-
+                
 				Add( new GenericBuyInfo( typeof( Necklace ), 26, 20, 0x1085, 0 ) );
 				Add( new GenericBuyInfo( typeof( GoldRing ), 27, 20, 0x108A, 0 ) );
 				Add( new GenericBuyInfo( typeof( GoldNecklace ), 27, 20, 0x1088, 0 ) );
@@ -56,9 +53,6 @@ namespace Server.Mobiles
 				Add( typeof( Sapphire ), 60 );
 				Add( typeof( StarSapphire ), 75 );
 				Add( typeof( Tourmaline ), 45 );
-
-				//Add( typeof( Board ), 1 );
-				//Add( typeof( IronIngot ), 3 );
 
 				Add( typeof( Necklace ), 13 );
 				Add( typeof( GoldRing ), 13 );

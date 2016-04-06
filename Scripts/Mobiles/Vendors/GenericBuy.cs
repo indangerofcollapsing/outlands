@@ -8,12 +8,16 @@ namespace Server.Mobiles
 {
 	public class GenericBuyInfo : IBuyItemInfo
 	{
+        public static double PurchaseCompareToSellPriceScalar = 5.0;
+
 		private class DisplayCache : Container
 		{
 			private static DisplayCache m_Cache;
 
-			public static DisplayCache Cache {
-				get {
+			public static DisplayCache Cache 
+            {
+				get
+                {
 					if ( m_Cache == null || m_Cache.Deleted )
 						m_Cache = new DisplayCache();
 
@@ -34,6 +38,7 @@ namespace Server.Mobiles
 			{
 				IEntity e = null;
 				m_Table.TryGetValue( key, out e );
+
 				return e;
 			}
 
@@ -44,6 +49,7 @@ namespace Server.Mobiles
 
 				if ( obj is Item )
 					AddItem( (Item)obj );
+
 				else if ( obj is Mobile )
 					m_Mobiles.Add( (Mobile)obj );
 			}
@@ -74,7 +80,6 @@ namespace Server.Mobiles
 				base.Serialize( writer );
 
 				writer.Write( (int) 0 ); // version
-
 				writer.Write( m_Mobiles );
 			}
 
@@ -97,6 +102,7 @@ namespace Server.Mobiles
 
 				if ( m_Cache == null )
 					m_Cache = this;
+
 				else
 					Delete();
 
@@ -115,12 +121,13 @@ namespace Server.Mobiles
 
 		public virtual int ControlSlots{ get{ return 0; } }
 
-		public virtual bool CanCacheDisplay{ get{ return false; } } //return ( m_Args == null || m_Args.Length == 0 ); } 
+		public virtual bool CanCacheDisplay{ get{ return false; } } 
 
 		private bool IsDeleted( IEntity obj )
 		{
 			if ( obj is Item )
 				return ((Item)obj).Deleted;
+
 			else if ( obj is Mobile )
 				return ((Mobile)obj).Deleted;
 
@@ -201,6 +208,7 @@ namespace Server.Mobiles
 
 				return m_Price;
 			}
+
 			set{ m_Price = value; }
 		}
 
@@ -249,7 +257,7 @@ namespace Server.Mobiles
 		public GenericBuyInfo( string name, Type type, int price, int amount, int itemID, int hue, object[] args )
 		{
 			m_Type = type;
-			m_Price = (int)Math.Ceiling(price*0.33);
+            m_Price = price;
 			m_MaxAmount = m_Amount = amount;
 			m_ItemID = itemID;
 			m_Hue = hue;
@@ -257,87 +265,42 @@ namespace Server.Mobiles
 
 			if ( name == null )
 				m_Name = itemID < 0x4000 ? (1020000 + itemID).ToString() : (1078872 + itemID).ToString();
+
 			else
 				m_Name = name;
 		}
 
-		//get a new instance of an object (we just bought it)
 		public virtual IEntity GetEntity()
 		{
 			if ( m_Args == null || m_Args.Length == 0 )
 				return (IEntity)Activator.CreateInstance( m_Type );
 
-			return (IEntity)Activator.CreateInstance( m_Type, m_Args );
-			//return (Item)Activator.CreateInstance( m_Type );
+			return (IEntity)Activator.CreateInstance( m_Type, m_Args );;
 		}
 
-		//Attempt to restock with item, (return true if restock sucessful)
 		public bool Restock( Item item, int amount )
 		{
-			return false;
-			/*if ( item.GetType() == m_Type )
-			{
-				if ( item is BaseWeapon )
-				{
-					BaseWeapon weapon = (BaseWeapon)item;
-
-					if ( weapon.Quality == WeaponQuality.Low || weapon.Quality == WeaponQuality.Exceptional || (int)weapon.DurabilityLevel > 0 || (int)weapon.DamageLevel > 0 || (int)weapon.AccuracyLevel > 0 )
-						return false;
-				}
-
-				if ( item is BaseArmor )
-				{
-					BaseArmor armor = (BaseArmor)item;
-
-					if ( armor.Quality == ArmorQuality.Low || armor.Quality == ArmorQuality.Exceptional || (int)armor.Durability > 0 || (int)armor.ProtectionLevel > 0 )
-						return false;
-				}
-
-				m_Amount += amount;
-
-				return true;
-			}
-			else
-			{
-				return false;
-			}*/
+			return false;			
 		}
 
 		public void OnRestock()
 		{
 			if ( m_Amount <= 0 )
-			{
-				/*
-					Core.ML using this vendor system is undefined behavior, so being
-					as it lends itself to an abusable exploit to cause ingame havok
-					and the stackable items are not found to be over 20 items, this is
-					changed until there is a better solution.
-				*/
+			{				
 
 				object Obj_Disp = GetDisplayEntity();
-
-				if( Core.ML && Obj_Disp is Item && !( Obj_Disp as Item ).Stackable )
-				{
-					m_MaxAmount = Math.Min( 20, m_MaxAmount );
-				}
-				else
-				{
-					m_MaxAmount = Math.Min( 999, m_MaxAmount * 2 );
-				}
+				
+				m_MaxAmount = Math.Min( 999, m_MaxAmount * 2 );				
 			}
+
 			else
 			{
-				/* NOTE: According to UO.com, the quantity is halved if the item does not reach 0
-				 * Here we implement differently: the quantity is halved only if less than half
-				 * of the maximum quantity was bought. That is, if more than half is sold, then
-				 * there's clearly a demand and we should not cut down on the stock.
-				 */
-
 				int halfQuantity = m_MaxAmount;
 
 				if ( halfQuantity >= 999 )
 					halfQuantity = 640;
-				else if ( halfQuantity > 100 ) // IPY! Changed from 20 to 100.
+
+				else if ( halfQuantity > 100 )
 					halfQuantity /= 2;
 
 				if ( m_Amount >= halfQuantity )

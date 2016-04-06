@@ -13,7 +13,7 @@ namespace Server.Items
 
 		public override Item GetCropObject()
 		{
-			return new WheatSheaf();
+			return new SheafOfWheat();
 		}
 
 		public override int GetPickedID()

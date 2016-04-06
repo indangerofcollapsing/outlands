@@ -280,9 +280,9 @@ namespace Server.Mobiles
 
                                 switch (Utility.RandomMinMax(1, 8))
                                 {
-                                    case 1: item = new CookedBird(); break;
-                                    case 2: item = new ChickenLeg(); break;
-                                    case 3: item = new LambLeg(); item.Name = "chicken drumstick"; break;
+                                    //case 1: item = new CookedBird(); break;
+                                    //case 2: item = new ChickenLeg(); break;
+                                    //case 3: item = new LambLeg(); item.Name = "chicken drumstick"; break;
                                     case 4: item = new Feather(); break;
                                     case 5: item = new Feather(); break;
                                     case 6: item = new Feather(); break;
@@ -608,9 +608,9 @@ namespace Server.Mobiles
 
                             switch (itemId)
                             {
-                                case 5641: item = new LambLeg(); item.Name = "chicken drumstick"; break;
-                                case 2489: item = new CookedBird();  break;
-                                case 5639: item = new ChickenLeg(); break;
+                                //case 5641: item = new LambLeg(); item.Name = "chicken drumstick"; break;
+                                //case 2489: item = new CookedBird();  break;
+                                //case 5639: item = new ChickenLeg(); break;
                             }
 
                             Point3D foodLocation = new Point3D(wingLocation.X, wingLocation.Y, wingLocation.Z);

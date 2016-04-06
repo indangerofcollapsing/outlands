@@ -13,6 +13,7 @@ namespace Server.Items
 		[Constructable]
 		public LesserPoisonPotion() : base( PotionEffect.PoisonLesser )
 		{
+            Name = "Lesser Poison potion";
 		}
 
 		public LesserPoisonPotion( Serial serial ) : base( serial )
@@ -22,14 +23,12 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
 		}
 	}

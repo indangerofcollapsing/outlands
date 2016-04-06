@@ -20,7 +20,7 @@ namespace Server.Items
             Movable = true;
             Hue = 0x1A7;
 
-            Name = "a rabbit bomb";
+            Name = "Rabbit bomb";
         }
 
         public RabbitBomb(Serial serial): base(serial)

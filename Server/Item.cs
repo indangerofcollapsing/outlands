@@ -1027,6 +1027,11 @@ namespace Server
         {
         }
 
+        public virtual double GetSellValueScalar()
+        {
+            return 1.0;
+        }
+
         public static string GetDungeonName(DungeonEnum dungeon)
         {
             switch (dungeon)
