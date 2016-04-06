@@ -74,10 +74,15 @@ namespace Server.Custom
 
     public static class PlayerCustomization
     {
-        public static void OnLoginAudit(PlayerMobile player)
+        public static void OnLogin(PlayerMobile player)
         {
-            if (player == null)
+            if (player == null) 
                 return;
+
+            PlayerEnhancementPersistance.CheckAndCreatePlayerEnhancementAccountEntry(player);
+
+            player.m_PlayerEnhancementAccountEntry.AuditCustomizationEntries();
+            player.m_PlayerEnhancementAccountEntry.AuditSpellHueEntries();
 
             //Hoarder
             bool hoarder = PlayerEnhancementPersistance.IsCustomizationEntryActive(player, CustomizationType.Hoarder);
@@ -103,7 +108,7 @@ namespace Server.Custom
 
                 if (account.CharacterLimit == 5)
                     account.CharacterLimit = 6;
-            }
+            }            
         }
 
         public static void OnUnlockCustomization(PlayerMobile player, CustomizationType customization)

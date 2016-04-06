@@ -112,12 +112,8 @@ namespace Server.Custom
                 pm_From.SendMessage("That must be in your backpack for you to use it.");
                 return;
             }
-
-            if (pm_From.m_PlayerEnhancementAccountEntry == null)
-                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
-
-            if (pm_From.m_PlayerEnhancementAccountEntry == null)
-                return;
+            
+            PlayerEnhancementPersistance.CheckAndCreatePlayerEnhancementAccountEntry(pm_From);
 
             Activate(pm_From);
         }

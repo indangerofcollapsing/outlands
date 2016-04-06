@@ -75,6 +75,8 @@
     <Compile Include="Accounting\AccountTag.cs" />
     <Compile Include="Accounting\Firewall.cs" />
     <Compile Include="Accounting\IPLimiter.cs" />
+    <Compile Include="Achievements\Achievements.cs" />
+    <Compile Include="Achievements\AchievementsPersistance.cs" />
     <Compile Include="Commands\Add.cs" />
     <Compile Include="Commands\Attributes.cs" />
     <Compile Include="Commands\Batch.cs" />

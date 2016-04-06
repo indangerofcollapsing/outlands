@@ -35,12 +35,7 @@ namespace Server.Items
             if (pm_From == null)
                 return;
 
-            //Create Enhancement Account Entry if Doesn't Exist
-            if (pm_From.m_PlayerEnhancementAccountEntry == null)
-                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
-
-            if (pm_From.m_PlayerEnhancementAccountEntry.Deleted)
-                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
+            PlayerEnhancementPersistance.CheckAndCreatePlayerEnhancementAccountEntry(pm_From);
 
             from.CloseAllGumps();
             from.SendGump(new PlayerEnhancementGump(from));

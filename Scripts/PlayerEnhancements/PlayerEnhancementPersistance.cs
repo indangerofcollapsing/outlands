@@ -4,14 +4,10 @@ using System.Collections.Generic;
 using Server;
 using Server.Commands;
 using Server.Misc;
-using Server.Gumps;
 using Server.Network;
 using Server.Mobiles;
 using Server.Items;
-using Server.Targeting;
-
 using Server.Accounting;
-using System.Linq;
 using Server.Custom;
 
 namespace Server.Items
@@ -92,7 +88,7 @@ namespace Server.Items
             pm_Mobile.SendMessage("Player Enhancements Wiped.");
         }
 
-        public static void CreatePlayerEnhancementAccountEntry(PlayerMobile player)
+        public static void CheckAndCreatePlayerEnhancementAccountEntry(PlayerMobile player)
         {
             if (player == null) return;
             if (player.Account == null) return;

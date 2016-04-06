@@ -22,7 +22,6 @@ using Server.Engines.CannedEvil;
 using Server.Engines.Craft;
 using Server.Engines.PartySystem;
 using Server.Commands;
-
 using Server.Custom;
 using Server.SkillHandlers;
 using Server.Guilds;
@@ -782,19 +781,13 @@ namespace Server.Mobiles
                     pm_From.Send(SpeedControl.MountSpeed);
             }
 
-            //Player Enhancements
-            if (pm_From.m_PlayerEnhancementAccountEntry == null)
-                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
+            //Achievements
+            AchievementsPersistance.OnLogin(pm_From);
 
-            if (pm_From.m_PlayerEnhancementAccountEntry.Deleted)
-                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
+            //Player Enhancements            
+            PlayerCustomization.OnLogin(pm_From);           
 
-            PlayerCustomization.OnLoginAudit(pm_From);
-
-            //Audit Enhancements For New Entries Available
-            pm_From.m_PlayerEnhancementAccountEntry.AuditCustomizationEntries();
-            pm_From.m_PlayerEnhancementAccountEntry.AuditSpellHueEntries();
-
+            //Influence System
             InfluencePersistance.OnLogin(pm_From);
 
             //UOACZ
@@ -976,6 +969,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public BaseBoat BoatOccupied { get { return m_BoatOccupied; } set { m_BoatOccupied = value; } }
 
+        public AchievementAccountEntry m_AchievementAccountEntry = null;
         public PlayerEnhancementAccountEntry m_PlayerEnhancementAccountEntry = null;
         public InfluenceAccountEntry m_InfluenceAccountEntry = null;
         public UOACZAccountEntry m_UOACZAccountEntry = null;
@@ -5157,6 +5151,7 @@ namespace Server.Mobiles
             writer.Write((int)m_HenchmenSpeechDisplayMode);
             writer.Write((int)m_StealthStepsDisplayMode);
             writer.Write(m_ShowAdminFilterText);
+            writer.Write(m_AchievementAccountEntry);
             writer.Write(m_PlayerEnhancementAccountEntry);
             writer.Write(m_InfluenceAccountEntry);
             writer.Write((int)m_ShowFollowerDamageTaken);
@@ -5259,6 +5254,7 @@ namespace Server.Mobiles
                 m_HenchmenSpeechDisplayMode = (HenchmenSpeechDisplayMode)reader.ReadInt();
                 m_StealthStepsDisplayMode = (StealthStepsDisplayMode)reader.ReadInt();
                 m_ShowAdminFilterText = reader.ReadBool();
+                m_AchievementAccountEntry = (AchievementAccountEntry)reader.ReadItem() as AchievementAccountEntry;
                 m_PlayerEnhancementAccountEntry = (PlayerEnhancementAccountEntry)reader.ReadItem() as PlayerEnhancementAccountEntry;
                 m_InfluenceAccountEntry = reader.ReadItem() as InfluenceAccountEntry;
                 m_ShowFollowerDamageTaken = (DamageDisplayMode)reader.ReadInt();

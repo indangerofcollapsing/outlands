@@ -71,11 +71,7 @@ namespace Server.Custom
                 return;
             }
 
-            if (pm_From.m_PlayerEnhancementAccountEntry == null)
-                PlayerEnhancementPersistance.CreatePlayerEnhancementAccountEntry(pm_From);
-
-            if (pm_From.m_PlayerEnhancementAccountEntry == null)
-                return;
+            PlayerEnhancementPersistance.CheckAndCreatePlayerEnhancementAccountEntry(pm_From);
 
             Activate(pm_From);
         }
