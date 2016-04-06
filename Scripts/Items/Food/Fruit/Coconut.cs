@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Coconut(int amount): base(amount, 0x1726)
+        public Coconut(int amount): base( 0x1726)
         {
+            Name = "coconut";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Coconut(Serial serial): base(serial)

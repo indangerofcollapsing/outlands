@@ -11,9 +11,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Squash(int amount): base(amount, 0xc72)
+        public Squash(int amount): base( 0xc72)
         {
+            Name = "squash";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Squash(Serial serial): base(serial)

@@ -10,9 +10,13 @@ namespace Server.Items
         }
 
         [Constructable]
-        public SmallPumpkin(int amount): base(amount, 0xC6C)
+        public SmallPumpkin(int amount): base(0xC6C)
         {
-            Weight = 1.0;
+            Name = "small pumkin";
+
+            Stackable = true;
+            Weight = 2.0;
+            Amount = amount;
         }
 
         public SmallPumpkin(Serial serial): base(serial)

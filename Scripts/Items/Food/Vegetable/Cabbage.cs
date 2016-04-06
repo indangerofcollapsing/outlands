@@ -11,9 +11,13 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Cabbage(int amount): base(amount, 0xc7b)
+        public Cabbage(int amount): base(0xc7b)
         {
+            Name = "cabbage";
+
+            Stackable = true;
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Cabbage(Serial serial): base(serial)

@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Apple(int amount): base(amount, 0x9D0)
+        public Apple(int amount): base(0x9D0)
         {
+            Name = "apple";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Apple(Serial serial): base(serial)

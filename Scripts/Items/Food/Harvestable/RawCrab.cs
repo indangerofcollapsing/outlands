@@ -5,11 +5,18 @@ namespace Server.Items
     public class RawCrab : Item
     {
         [Constructable]
-        public RawCrab(): base(0x44D1)
+        public RawCrab(): this(1)
+        {
+        }
+
+        [Constructable]
+        public RawCrab(int amount): base(0x44D1)
         {
             Name = "raw crab";
 
             Stackable = true;
+            Weight = 0.1;
+            Amount = amount;
         }
 
         public RawCrab(Serial serial): base(serial)

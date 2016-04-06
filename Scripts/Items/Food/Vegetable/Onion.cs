@@ -11,9 +11,13 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Onion(int amount) : base(amount, 0xc6d)
+        public Onion(int amount) : base(0xc6d)
         {
+            Name = "onion";
+
+            Stackable = true;
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Onion(Serial serial): base(serial)

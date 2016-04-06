@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Dates(int amount): base(amount, 0x1727)
+        public Dates(int amount): base( 0x1727)
         {
+            Name = "dates";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Dates(Serial serial): base(serial)

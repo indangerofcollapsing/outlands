@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Limes(int amount): base(amount, 0x172B)
+        public Limes(int amount): base( 0x172B)
         {
+            Name = "limes";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Limes(Serial serial): base(serial)

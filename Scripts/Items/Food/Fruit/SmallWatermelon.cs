@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public SmallWatermelon(int amount): base(amount, 0xC5D)
+        public SmallWatermelon(int amount): base( 0xC5D)
         {
+            Name = "small watermelon";
+
             Weight = 2.0;
+            Amount = amount;
         }
 
         public SmallWatermelon(Serial serial): base(serial)

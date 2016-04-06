@@ -7,6 +7,8 @@ namespace Server.Items
         [Constructable]
         public SheafOfWheat(): base(7869)
         {
+            Name = "sheaf of wheat";
+
             Weight = 5;
         }
 

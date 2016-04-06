@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Pear(int amount): base(amount, 0x994)
+        public Pear(int amount): base( 0x994)
         {
+            Name = "pear";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Pear(Serial serial): base(serial)

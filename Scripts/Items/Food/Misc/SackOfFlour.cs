@@ -5,10 +5,18 @@ namespace Server.Items
     public class SackOfFlour : Item
     {
         [Constructable]
-        public SackOfFlour(): base(0x1039)
+        public SackOfFlour(): this(1)
         {
+        }
+
+        [Constructable]
+        public SackOfFlour(int amount): base(0x1039)
+        {
+            Name = "sack of flour";
+
             Stackable = true;
-            Weight = 5;
+            Weight = 3;
+            Amount = amount;
         }
 
         public SackOfFlour(Serial serial): base(serial)

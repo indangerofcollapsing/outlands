@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Grapes(int amount): base(amount, 0x9D1)
+        public Grapes(int amount): base( 0x9D1)
         {
+            Name = "grapes";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Grapes(Serial serial): base(serial)

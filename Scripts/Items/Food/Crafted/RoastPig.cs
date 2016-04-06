@@ -13,17 +13,13 @@ namespace Server.Items
 
         public override int MinStaminaRegained { get { return 50; } }
         public override int MaxStaminaRegained { get { return 100; } }
-
+        
         [Constructable]
-        public RoastPig(): this(1)
+        public RoastPig(): base(0x9BB)
         {
-        }
+            Name = "roast pig";
 
-        [Constructable]
-        public RoastPig(int amount): base(amount, 0x9BB)
-        {
             Stackable = false;
-
             Weight = 10.0;
         }
 

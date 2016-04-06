@@ -11,9 +11,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Cantaloupe(int amount): base(amount, 0xc79)
+        public Cantaloupe(int amount): base( 0xc79)
         {
+            Name = "cantaloupe";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Cantaloupe(Serial serial): base(serial)

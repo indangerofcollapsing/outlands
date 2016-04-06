@@ -5,12 +5,18 @@ namespace Server.Items
     public class RawBird : Item
     {
         [Constructable]
-        public RawBird(): base(2489)
+        public RawBird(): this(1)
+        {
+        }
+
+        [Constructable]
+        public RawBird(int amount): base(2489)
         {
             Name = "raw bird";
 
             Stackable = true;
             Weight = 0.1;
+            Amount = amount;
         }
 
         public RawBird(Serial serial): base(serial)

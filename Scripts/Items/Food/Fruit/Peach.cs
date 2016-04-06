@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Peach(int amount): base(amount, 0x9D2)
+        public Peach(int amount): base( 0x9D2)
         {
+            Name = "peach";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Peach(Serial serial): base(serial)

@@ -11,9 +11,13 @@ namespace Server.Items
         }
 
         [Constructable]
-        public EarOfCorn(int amount): base(amount, 0xC81)
+        public EarOfCorn(int amount): base(0xC81)
         {
+            Name = "ear of corn";
+
+            Stackable = true;
             Weight = 1.0;
+            Amount = amount;
         }
 
         public EarOfCorn(Serial serial): base(serial)

@@ -11,9 +11,13 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Carrot(int amount): base(amount, 0xc78)
+        public Carrot(int amount): base(0xc78)
         {
+            Name = "carrot";
+
+            Stackable = true;
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Carrot(Serial serial): base(serial)

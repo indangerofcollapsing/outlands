@@ -5,12 +5,18 @@ namespace Server.Items
     public class RawDrumstick : Item
     {
         [Constructable]
-        public RawDrumstick(): base(5639)
+        public RawDrumstick() : this(1)
+        {
+        }
+
+        [Constructable]
+        public RawDrumstick(int amount): base(5639)
         {
             Name = "raw drumstick";
 
             Stackable = true;
             Weight = 0.1;
+            Amount = amount;
         }
 
         public RawDrumstick(Serial serial): base(serial)

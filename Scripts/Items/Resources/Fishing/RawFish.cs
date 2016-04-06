@@ -28,7 +28,7 @@ namespace Server.Items
 
         public void Carve(Mobile from, Item item)
         {
-            base.ScissorHelper(from, new RawFishSteak(), 1);
+            base.ScissorHelper(from, new RawFishSteak(), 1, false);
         }
 
         public override void Serialize(GenericWriter writer)

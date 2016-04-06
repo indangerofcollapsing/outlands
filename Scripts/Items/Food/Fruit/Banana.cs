@@ -11,9 +11,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Banana(int amount): base(amount, 0x171f)
+        public Banana(int amount): base(0x171f)
         {
+            Name = "banana";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Banana(Serial serial): base(serial)

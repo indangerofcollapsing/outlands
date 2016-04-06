@@ -7,6 +7,7 @@ namespace Server.Items
         [Constructable]
         public WoodenBowl(): base(0x15f8)
         {
+            Name = "wooden bowl";
             Weight = 1;
         }
 

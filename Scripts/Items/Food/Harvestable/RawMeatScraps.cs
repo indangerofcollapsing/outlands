@@ -4,13 +4,21 @@ namespace Server.Items
 {
     public class RawMeatScraps : Item
     {
+        //TEST: NOT STACKABLE ITEMID
+
         [Constructable]
-        public RawMeatScraps(): base(7820)
+        public RawMeatScraps(): this(1)
+        {
+        }
+
+        [Constructable]
+        public RawMeatScraps(int amount): base(7820)
         {
             Name = "raw meat scraps";
 
             Stackable = true;
             Weight = 0.1;
+            Amount = amount;
         }
 
         public RawMeatScraps(Serial serial): base(serial)

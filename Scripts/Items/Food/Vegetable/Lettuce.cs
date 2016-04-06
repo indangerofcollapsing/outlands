@@ -11,9 +11,13 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Lettuce(int amount) : base(amount, 0xc70)
+        public Lettuce(int amount) : base(0xc70)
         {
+            Name = "lettuce";
+
+            Stackable = true;
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Lettuce(Serial serial): base(serial)

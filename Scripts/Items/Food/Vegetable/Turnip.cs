@@ -10,9 +10,13 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Turnip(int amount): base(amount, 0xD3A)
+        public Turnip(int amount): base(0xD3A)
         {
+            Name = "turnip";
+
+            Stackable = true;
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Turnip(Serial serial): base(serial)

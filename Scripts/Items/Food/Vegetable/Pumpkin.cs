@@ -11,9 +11,13 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Pumpkin(int amount): base(amount, 0xC6A)
+        public Pumpkin(int amount): base(0xC6A)
         {
-            Weight = 3.0;
+            Name = "pumpkin";
+
+            Stackable = true;
+            Weight = 4;
+            Amount = amount;
         }
 
         public Pumpkin(Serial serial): base(serial)

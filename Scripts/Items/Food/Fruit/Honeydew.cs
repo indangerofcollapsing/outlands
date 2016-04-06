@@ -11,9 +11,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Honeydew(int amount): base(amount, 0xC74)
+        public Honeydew(int amount): base(0xC74)
         {
+            Name = "honeydew";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Honeydew(Serial serial): base(serial)

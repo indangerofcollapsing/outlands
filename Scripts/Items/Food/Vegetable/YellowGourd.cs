@@ -11,9 +11,13 @@ namespace Server.Items
         }
 
         [Constructable]
-        public YellowGourd(int amount): base(amount, 0xC64)
+        public YellowGourd(int amount): base( 0xC64)
         {
+            Name = "yellow gourd";
+
+            Stackable = true;
             Weight = 1.0;
+            Amount = amount;
         }
 
         public YellowGourd(Serial serial): base(serial)

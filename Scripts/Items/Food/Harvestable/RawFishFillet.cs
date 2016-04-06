@@ -5,12 +5,18 @@ namespace Server.Items
     public class RawFishFillet : Item
     {
         [Constructable]
-        public RawFishFillet(): base(7701)
+        public RawFishFillet(): this(1)
+        {
+        }
+
+        [Constructable]
+        public RawFishFillet(int amount): base(7708)
         {
             Name = "raw fish fillet";
 
             Stackable = true;
             Weight = 0.1;
+            Amount = amount;
         }
 
         public RawFishFillet(Serial serial): base(serial)

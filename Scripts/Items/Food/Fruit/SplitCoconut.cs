@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public SplitCoconut(int amount): base(amount, 0x1725)
+        public SplitCoconut(int amount): base( 0x1725)
         {
+            Name = "split coconut";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public SplitCoconut(Serial serial): base(serial)

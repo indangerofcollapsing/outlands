@@ -5,10 +5,18 @@ namespace Server.Items
     public class Dough : Item
     {
         [Constructable]
-        public Dough(): base(0x103d)
+        public Dough(): this(1)
         {
+        }
+
+        [Constructable]
+        public Dough(int amount): base(0x103d)
+        {
+            Name = "dough";
+
             Stackable = true;
             Weight = 1;
+            Amount = amount;
         }
 
         public Dough(Serial serial): base(serial)

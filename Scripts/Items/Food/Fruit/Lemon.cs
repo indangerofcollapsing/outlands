@@ -10,9 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Lemon(int amount): base(amount, 0x1728)
+        public Lemon(int amount): base( 0x1728)
         {
+            Name = "lemon";
+
             Weight = 1.0;
+            Amount = amount;
         }
 
         public Lemon(Serial serial): base(serial)

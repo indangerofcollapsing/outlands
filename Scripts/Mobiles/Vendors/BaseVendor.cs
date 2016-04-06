@@ -550,7 +550,7 @@ namespace Server.Mobiles
 					SayTo( from, true, "Your current budget is {0}, which resets at {1}",
 						m_Budgets[from.Serial].CurrentBudget, m_Budgets[from.Serial].ResetBudgetAt );
 				}
-                 * */
+                */
 				
 				if ( DateTime.UtcNow < m_Budgets[from.Serial].ResetBudgetAt )
 				{

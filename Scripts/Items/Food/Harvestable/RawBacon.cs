@@ -5,12 +5,18 @@ namespace Server.Items
     public class RawBacon : Item
     {
         [Constructable]
-        public RawBacon(): base(2422)
+        public RawBacon(): this(1)
+        {
+        }
+
+        [Constructable]
+        public RawBacon(int amount): base( 2422)
         {
             Name = "raw bacon";
 
             Stackable = true;
             Weight = 0.1;
+            Amount = amount;
         }
 
         public RawBacon(Serial serial): base(serial)

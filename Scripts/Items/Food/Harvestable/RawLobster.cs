@@ -5,11 +5,18 @@ namespace Server.Items
     public class RawLobster : Item
     {
         [Constructable]
-        public RawLobster(): base(0x44D3)
+        public RawLobster(): this(1)
         {
-            Name = "lobster";
+        }
+
+        [Constructable]
+        public RawLobster(int amount): base(0x44D3)
+        {
+            Name = "raw lobster";
 
             Stackable = true;
+            Weight = 0.1;
+            Amount = amount;
         }
 
         public RawLobster(Serial serial): base(serial)
