@@ -756,9 +756,10 @@ namespace Server.Misc
 
                 case SkillName.Cooking:
                 {
-                    PackItem(new Kindling(2));
+                    PackItem(new Skillet(1));
+                    PackItem(new RollingPin(1));
                     PackItem(new SackOfFlour(3));
-                    PackItem(new Pitcher(BeverageType.Water));
+                    
                     break;
                 }
 

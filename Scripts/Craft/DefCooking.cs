@@ -103,10 +103,12 @@ namespace Server.Engines.Craft
 
         public override void InitCraftList()
         {
+            string missingIngredients = "You do not have all of the ingredients neccessary to make that.";
+
             int index = -1;
 
-            index = AddCraft(1, typeof(Dough), 1044495, 1024157, 0.0, 100.0, typeof(SackOfFlour), 1044468, 1, 1044253);
-            AddRes(index, typeof(BaseBeverage), 1046458, 1, 1044253);
+            index = AddCraft(5, typeof(Dough), "Ingredients", "Dough", 0.0, 25.0, typeof(SackOfFlour), "Sack of Flour", 1, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
 
             /*
             index = AddCraft(1, typeof(SackFlour), 1044495, 1024153, 0.0, 100.0, typeof(WheatSheaf), 1044489, 2, 1044490);

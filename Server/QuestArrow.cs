@@ -28,6 +28,8 @@ namespace Server
 	{
 		private Mobile m_Mobile;        
 		private Mobile m_Target;
+        public int m_X;
+        public int m_Y;
 
 		private bool m_Running;
 
@@ -56,8 +58,8 @@ namespace Server
 		}
 
 		public void Update()
-		{            
-			Update( m_Target.X, m_Target.Y );
+		{
+            Update(m_X, m_Y);
 		}
 
 		public void Update( int x, int y )
@@ -72,6 +74,7 @@ namespace Server
 
 			if ( ns.HighSeas )
 				ns.Send( new SetArrowHS( x, y, m_Target.Serial ) );
+
 			else
 				ns.Send( new SetArrow( x, y ) );
 		}

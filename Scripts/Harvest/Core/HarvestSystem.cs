@@ -489,60 +489,73 @@ namespace Server.Engines.Harvest
             bool foundValidNode = false;
 
             HarvestBank harvestBank = null;
-            
+
+            List<Point3D> nearbyPoints = new List<Point3D>();
+
             for (int a = 1; a < rows + 1; a++)
             {
                 for (int b = 1; b < columns + 1; b++)
                 {
                     Point3D newPoint = new Point3D(location.X + (-1 * (range + 1)) + a, location.Y + (-1 * (range + 1)) + b, location.Z);
                     
-                    //Land Target on Tile
-                    LandTarget landTarget = new LandTarget(newPoint, map);
+                    nearbyPoints.Add(newPoint);
+                }
+            }
 
-                    if (landTarget != null)
+            int totalPoints = nearbyPoints.Count;
+
+            for (int a = 0; a < totalPoints; a++)
+            {
+                Point3D currentPoint = nearbyPoints[Utility.RandomMinMax(0, nearbyPoints.Count - 1)];
+
+                //Land Target on Tile
+                LandTarget landTarget = new LandTarget(currentPoint, map);
+
+                if (landTarget != null)
+                {
+                    HarvestDefinition landTargetHarvestDefinition = GetDefinition(landTarget.TileID);
+
+                    if (landTargetHarvestDefinition != null)
                     {
-                        HarvestDefinition landTargetHarvestDefinition = GetDefinition(landTarget.TileID);
+                        harvestBank = landTargetHarvestDefinition.GetBank(map, currentPoint.X, currentPoint.Y);
 
-                        if (landTargetHarvestDefinition != null)
+                        if (harvestBank != null)
                         {
-                            harvestBank = landTargetHarvestDefinition.GetBank(map, newPoint.X, newPoint.Y);
-
-                            if (harvestBank != null)
-                            {
-                                if (harvestBank.Current >= landTargetHarvestDefinition.ConsumedPerHarvest)
-                                    return landTarget;
-                            }
+                            if (harvestBank.Current >= landTargetHarvestDefinition.ConsumedPerHarvest)
+                                return landTarget;
                         }
                     }
-                    
-                    StaticTile[] staticTiles = map.Tiles.GetStaticTiles(newPoint.X, newPoint.Y, false);
-                    
-                    if (staticTiles == null)
-                        continue;
-                    
-                    foreach (StaticTile staticTile in staticTiles)
-                    {
-                        StaticTarget staticTarget = new StaticTarget(newPoint, staticTile.ID);
-                        
-                        if (staticTarget == null)
-                            continue;
-
-                        int tileID = (staticTarget.ItemID & 0x3FFF) | 0x4000;
-                        
-                        HarvestDefinition staticTargetHarvestDefinition = GetDefinition(tileID);
-
-                        if (staticTargetHarvestDefinition == null)
-                            continue;
-
-                        harvestBank = staticTargetHarvestDefinition.GetBank(map, newPoint.X, newPoint.Y);
-
-                        if (harvestBank == null)
-                            continue;
-
-                        if (harvestBank.Current >= staticTargetHarvestDefinition.ConsumedPerHarvest)                        
-                            return staticTarget;                        
-                    }                    
                 }
+
+                StaticTile[] staticTiles = map.Tiles.GetStaticTiles(currentPoint.X, currentPoint.Y, false);
+
+                if (staticTiles == null)
+                    continue;
+
+                foreach (StaticTile staticTile in staticTiles)
+                {
+                    StaticTarget staticTarget = new StaticTarget(currentPoint, staticTile.ID);
+
+                    if (staticTarget == null)
+                        continue;
+
+                    int tileID = (staticTarget.ItemID & 0x3FFF) | 0x4000;
+
+                    HarvestDefinition staticTargetHarvestDefinition = GetDefinition(tileID);
+
+                    if (staticTargetHarvestDefinition == null)
+                        continue;
+
+                    harvestBank = staticTargetHarvestDefinition.GetBank(map, currentPoint.X, currentPoint.Y);
+
+                    if (harvestBank == null)
+                        continue;
+
+                    if (harvestBank.Current >= staticTargetHarvestDefinition.ConsumedPerHarvest)
+                        return staticTarget;
+                }  
+
+                nearbyPoints.Remove(currentPoint);
             }
             
             return null;
