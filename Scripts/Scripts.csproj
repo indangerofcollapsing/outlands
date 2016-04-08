@@ -1218,6 +1218,8 @@
     <Compile Include="PvELeaderboards\GoldCoinTracker.cs" />
     <Compile Include="Regions\TownRegion.cs" />
     <Compile Include="Skills\SkillCooldown.cs" />
+    <Compile Include="TestCenter\GumpTester.cs" />
+    <Compile Include="Titles\TitlePersistance.cs" />
     <Compile Include="Towns\Cambria.cs" />
     <Compile Include="Towns\Prevalia.cs" />
     <Compile Include="Towns\Town.cs" />
