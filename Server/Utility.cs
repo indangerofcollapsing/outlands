@@ -999,7 +999,7 @@ namespace Server
 
         public static string CreateDecimalString(double value, int decimalPlaces)
         {
-            double factor = Math.Pow(10, 2 + decimalPlaces);
+            double factor = Math.Pow(10, decimalPlaces);
 
             double roundedValue = ((Math.Round(value * factor)) / factor);
 

@@ -40,7 +40,22 @@ namespace Server.Items
         public double GrowthValue
         {
             get { return m_GrowthValue; }
-            set { m_GrowthValue = value; }
+            set
+            { 
+                m_GrowthValue = value;
+
+                if (m_PlantSeed != null)
+                {
+                    if (m_GrowthValue >= m_PlantSeed.TargetGrowth)
+                    {
+                        m_GrowthValue = m_PlantSeed.TargetGrowth;
+                        ReadyForHarvest = true;
+                    }
+
+                    if (m_GrowthValue < 0)
+                        m_GrowthValue = 0;
+                }
+            }
         }
 
         public double m_WaterValue = 0;
@@ -70,7 +85,7 @@ namespace Server.Items
         [Constructable]
         public PlantBowl(): base(4551)
         {
-            Name = "plant bowl";
+            Name = "Plant Bowl";
             Weight = 1.0;
 
             PlantPersistance.m_Instances.Add(this);
@@ -80,17 +95,40 @@ namespace Server.Items
         {
         }
 
+        public override void OnSingleClick(Mobile from)
+        {
+            base.OnSingleClick(from);
+
+            if (m_PlantSeed != null)
+            {
+                if (m_ReadyForHarvest)
+                {
+                    LabelTo(from, "(" + m_PlantSeed.PlantName + ")");
+                    LabelTo(from, "[Ready for Harvest]");
+                }
+
+                else
+                {
+                    string growthText = Utility.CreateDecimalString(GrowthValue, 1);
+                    growthText = growthText + " / " + PlantSeed.TargetGrowth.ToString();
+
+                    LabelTo(from, "(" + m_PlantSeed.SeedName + ")");
+                    LabelTo(from, "[Growth: " + growthText + "]");
+                }
+            }
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             base.OnDoubleClick(from);
-
-            //Check Access Rights
-
+            
             if (!from.InRange(GetWorldLocation(), 2))
             {
                 from.SendMessage("You are too far away to access that.");
                 return;
             }
+
+            from.SendSound(0x5E3);
 
             from.CloseGump(typeof(PlantGump));
             from.SendGump(new PlantGump(from, this));
@@ -134,6 +172,22 @@ namespace Server.Items
                 return true;
             }
 
+            else
+            {
+                Item item = (Item)target;
+                IWaterSource waterSource;
+
+                waterSource = (item as IWaterSource);
+
+                if (waterSource == null && item is AddonComponent)
+                {
+                    waterSource = (((AddonComponent)item).Addon as IWaterSource);
+
+                    if (waterSource != null)
+                        return true;
+                }
+            }
+
             return false;
         }
 
@@ -172,6 +226,22 @@ namespace Server.Items
                 }
             }
 
+            else
+            {
+                Item item = (Item)target;
+                IWaterSource waterSource;
+
+                waterSource = (item as IWaterSource);
+
+                if (waterSource == null && item is AddonComponent)
+                {
+                    waterSource = (((AddonComponent)item).Addon as IWaterSource);
+
+                    if (waterSource != null)
+                        return true;
+                }
+            }
+
             return false;
         }
 
@@ -179,13 +249,11 @@ namespace Server.Items
         {
             int MaxHeatDistance = 2;
 
-            double BaseLightHeatScalar = 5.0;
-            double CandleHeatScalar = 5.0;
-            double HeatingStandHeatScalar = 10.0;
-            double ForgeHeatScalar = 15.0;
+            double BaseLightHeatScalar = 10.0;
+            double OpenFireHeatScalar = 20.0;
+            double ForgeHeatScalar = 30.0;
 
             double totalHeat = 0;
-            double nearbyHeat = 0;
 
             if (RootParent == null)
             {
@@ -193,6 +261,8 @@ namespace Server.Items
 
                 foreach (Item item in nearbyHeatSources)
                 {
+                    double itemHeat = 0;
+
                     if (item.RootParent != null)
                         continue;
 
@@ -208,29 +278,37 @@ namespace Server.Items
                         BaseLight baseLight = item as BaseLight;
 
                         if (baseLight.Burning)
-                            nearbyHeat = BaseLightHeatScalar * heatScalar;
+                            itemHeat = BaseLightHeatScalar * heatScalar;
                     }
 
-                    if (item is Candle)
+                    if (item is BaseEquipableLight)
                     {
-                        Candle candle = item as Candle;
+                        BaseEquipableLight candle = item as BaseEquipableLight;
 
                         if (candle.Burning)
-                            nearbyHeat = CandleHeatScalar * heatScalar;
+                            itemHeat = BaseLightHeatScalar * heatScalar;
                     }
-
-                    if (item is HeatingStand)
+                    
+                    if (item is Campfire)
                     {
-                        HeatingStand heatingStand = item as HeatingStand;
+                        Campfire campfire = item as Campfire;
 
-                        if (heatingStand.Burning)
-                            nearbyHeat = HeatingStandHeatScalar * heatScalar;
+                        if (campfire.Status == CampfireStatus.Burning || campfire.Status == CampfireStatus.Extinguishing)
+                            itemHeat = OpenFireHeatScalar * heatScalar;
                     }
 
-                    if (item is Forge || item is LargeForgeEast || item is LargeForgeWest)
-                        nearbyHeat = ForgeHeatScalar * heatScalar;
+                    if (item is Brazier || item is BrazierTall)
+                    {
+                        BaseLight brazier = item as BaseLight;
 
-                    totalHeat += nearbyHeat;
+                        if (brazier.Burning)
+                            itemHeat = OpenFireHeatScalar * heatScalar;
+                    }
+
+                    if (item is Forge || item is LargeForgeEast || item is LargeForgeWest || item is ForgeComponent)
+                        itemHeat = ForgeHeatScalar * heatScalar;
+
+                    totalHeat += itemHeat;
                 }
 
                 nearbyHeatSources.Free();
@@ -374,11 +452,11 @@ namespace Server.Items
                     if (target is PlantSeed)
                     {
                         PlantSeed plantSeed = target as PlantSeed;
-
+                        
                         m_PlantBowl.PlantSeed = plantSeed;
                         m_PlantBowl.PlantSeed.Internalize();
 
-                        from.PlaySound(0x4E);
+                        from.PlaySound(0x059);
                         from.SendMessage("You plant the seed into the plant bowl.");
                     }
 
@@ -421,40 +499,30 @@ namespace Server.Items
                     }
 
                     //Soil Item
-                    else if (target is SoilItem)
+                    else if (target is SoilEnhancer)
                     {
-                        SoilItem soilItem = target as SoilItem;
-
-                        if (!from.InRange(soilItem.GetWorldLocation(), 2))
-                        {
-                            from.SendMessage("You are too far away to access that.");
-
-                            from.CloseGump(typeof(PlantGump));
-                            from.SendGump(new PlantGump(from, m_PlantBowl));
-
-                            return;
-                        }
-
+                        SoilEnhancer soilEnhancer = target as SoilEnhancer;
+                        
                         if (m_PlantBowl.SoilQualityValue == PlantPersistance.MaxSoilQuality)
                             from.SendMessage("That plant bowl is at maximum soil richness.");
 
-                        else if (m_PlantBowl.SoilQualityValue >= soilItem.MaxSoilQuality)
-                            from.SendMessage("That plant bowl will require stronger ingredients than that to increase its soil quality.");
+                        else if (m_PlantBowl.SoilQualityValue >= soilEnhancer.MaxSoilQuality)
+                            from.SendMessage("That plant requires a higher quality soil enhancer to increase its soil richness further.");
                         
                         else
                         {
-                            m_PlantBowl.SoilQualityValue += soilItem.SoilQualityIncrease;
+                            m_PlantBowl.SoilQualityValue += soilEnhancer.SoilQualityIncrease;
 
-                            if (m_PlantBowl.SoilQualityValue > soilItem.MaxSoilQuality)
-                                m_PlantBowl.SoilQualityValue = soilItem.MaxSoilQuality;
+                            if (m_PlantBowl.SoilQualityValue > soilEnhancer.MaxSoilQuality)
+                                m_PlantBowl.SoilQualityValue = soilEnhancer.MaxSoilQuality;
 
-                            from.PlaySound(0x4E);
-                            from.SendMessage("You increase the plant bowl's soil quality.");
+                            from.PlaySound(Utility.RandomList(0x134, 0x133,  0x132, 0x131));
+                            from.SendMessage("You increase the plant's soil richness.");
 
-                            soilItem.Charges--;
+                            soilEnhancer.Charges--;
 
-                            if (soilItem.Charges == 0)
-                                soilItem.Delete();
+                            if (soilEnhancer.Charges == 0)
+                                soilEnhancer.Delete();
                         }
 
                         from.CloseGump(typeof(PlantGump));
@@ -497,7 +565,7 @@ namespace Server.Items
                 if (item.Stackable && m_PlantSeed.PlantCount > 1)
                 {
                     item.Amount = m_PlantSeed.PlantCount;
-                    from.Backpack.DropItem(item);
+                    from.Backpack.DropItem(item);                    
                 }
 
                 else
@@ -526,13 +594,35 @@ namespace Server.Items
                 m_SoilQualityValue = 0;
                 m_HeatValue = 0;
 
-                //Playsound
-                //Ground Dirt
+                from.PlaySound(0x5AE);
+                from.SendMessage("You harvest the plant.");
+
+                TimedStatic dirt = new TimedStatic(Utility.RandomList(7681, 7682), 3);
+                dirt.Name = "dirt";
+                dirt.MoveToWorld(from.Location, from.Map);
+
+                int dirtCount = Utility.RandomMinMax(2, 3);
+                for (int a = 0; a < dirtCount; a++)
+                {
+                    Point3D newLocation = SpecialAbilities.GetRandomAdjustedLocation(from.Location, from.Map, true, 1, false);
+
+                    dirt = new TimedStatic(Utility.RandomList(7681, 7682), 3);
+                    dirt.Name = "dirt";
+                    dirt.MoveToWorld(newLocation, from.Map);
+                }
 
                 return true;
             }
 
             return false;
+        }
+
+        public override void OnDelete()
+        {
+            if(PlantPersistance.m_Instances.Contains(this))
+                PlantPersistance.m_Instances.Remove(this);
+
+            base.OnDelete();
         }
 
         public override void Serialize(GenericWriter writer)

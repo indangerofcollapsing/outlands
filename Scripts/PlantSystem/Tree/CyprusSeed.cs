@@ -17,6 +17,7 @@ namespace Server.Items
         public override int SeedGumpOffsetX { get { return 0; } }
         public override int SeedGumpOffsetY { get { return 0; } }
 
+        public override string PlantName { get { return "Cyprus Tree"; } }
         public override Type PlantType { get { return typeof(CyprusTree); } }
         public override PlantGroupType PlantGroup { get { return PlantGroupType.Tree; } }
         public override int PlantCount { get { return 1; } }

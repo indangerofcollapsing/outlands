@@ -21,7 +21,6 @@ namespace Server.Items
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 ); // version
 		}
 
@@ -34,7 +33,7 @@ namespace Server.Items
 
 		public int Quantity
 		{
-			get{ return 500; }
+			get{ return 1000; }
 			set{}
 		}
 	}

@@ -244,6 +244,9 @@ namespace Server.Custom
                 }
             }
 
+            if (m_Instances.Contains(this))
+                m_Instances.Remove(this);
+
  	        base.OnDelete();
         }
 

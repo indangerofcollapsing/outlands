@@ -265,16 +265,16 @@ namespace Server.Items
             if (pm_Mobile == null)
                 return;
 
-            int fishingSpotCount = FishingSpot.AllFishingSpotInstances.Count;
+            int fishingSpotCount = FishingSpot.m_Instances.Count;
             int deleteCount = 0;
             {
                 for (int a = 0; a < fishingSpotCount; a++)
                 {
                     int index = a - deleteCount;
 
-                    FishingSpot fishingSpot = FishingSpot.AllFishingSpotInstances[index];
+                    FishingSpot fishingSpot = FishingSpot.m_Instances[index];
 
-                    FishingSpot.AllFishingSpotInstances.RemoveAt(index);
+                    FishingSpot.m_Instances.RemoveAt(index);
                     fishingSpot.Delete();
                     deleteCount++;                    
                 }

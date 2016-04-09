@@ -43,8 +43,7 @@ namespace Server.Custom
 
         private Timer m_Timer;
 
-        private static List<FishingSpot> m_Instances = new List<FishingSpot>();
-        public static List<FishingSpot> AllFishingSpotInstances { get { return m_Instances; } }
+        public static List<FishingSpot> m_Instances = new List<FishingSpot>();
 
         [Constructable]
         public FishingSpot(): base()
@@ -224,6 +223,14 @@ namespace Server.Custom
 
         public FishingSpot(Serial serial): base(serial)
         {
+        }
+
+        public override void OnDelete()
+        {
+            if (m_Instances.Contains(this))
+                m_Instances.Remove(this);
+
+            base.OnDelete();
         }
 
         public override void Serialize(GenericWriter writer)

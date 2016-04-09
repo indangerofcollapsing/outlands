@@ -6,16 +6,17 @@ using Server.Network;
 
 namespace Server.Items
 {
-    public class BasicFertilizer : SoilItem
+    public class BasicFertilizer : SoilEnhancer
     {
-        public override double MaxSoilQuality { get { return 30.0; } }
+        public override double MaxSoilQuality { get { return 40.0; } }
         public override double SoilQualityIncrease { get { return 10.0; } }
+        public override SoilEnhancerQualityType QualityType { get { return SoilEnhancerQualityType.Average; } }
 
         public override string SoilItemName { get { return "basic fertilizer"; } }
         public override int SoilItemId { get { return 4154; } }
         public override int SoilItemHue { get { return 0; } }
 
-        public override int MaxCharges { get { return 5; } }
+        public override int MaxCharges { get { return 4; } }
         
         [Constructable]
         public BasicFertilizer(): base()

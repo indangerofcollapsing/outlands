@@ -232,6 +232,9 @@ namespace Server.Custom
 
         public override void OnDelete()
         {
+            if (m_Instances.Contains(this))
+                m_Instances.Remove(this);
+
  	        base.OnDelete();
         }
 

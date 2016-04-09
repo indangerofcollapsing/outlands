@@ -15,8 +15,8 @@ namespace Server.Items
 
         public override int PlantItemID { get { return 3320; } }
         public override int PlantItemHue { get { return 0; } }
-        public override int PlantItemOffsetX { get { return 0; } }
-        public override int PlantItemOffsetY { get { return 0; } }
+        public override int PlantItemOffsetX { get { return -38; } }
+        public override int PlantItemOffsetY { get { return -123; } }
 
         [Constructable]
         public CyprusTree(): base()

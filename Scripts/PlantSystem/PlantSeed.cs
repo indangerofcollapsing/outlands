@@ -27,6 +27,7 @@ namespace Server.Items
         public virtual int SeedGumpOffsetX { get { return 0; } }
         public virtual int SeedGumpOffsetY { get { return 0; } }
 
+        public virtual string PlantName { get { return "Cyprus Tree"; } }
         public virtual Type PlantType { get { return typeof(CyprusTree); } }
         public virtual PlantGroupType PlantGroup { get { return PlantGroupType.Tree; } }
         public virtual int PlantCount { get { return 1; } }

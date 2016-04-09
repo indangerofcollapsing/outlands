@@ -109,7 +109,7 @@ namespace Server.Items
                         plantItemHue = plant.PlantItemHue;
                         plantItemOffsetX = plant.PlantItemOffsetX;
                         plantItemOffsetY = plant.PlantItemOffsetY;
-                        
+
                         plantName = plant.PlantName;
 
                         dailyGrowthText = "Ready to Harvest";
@@ -128,7 +128,7 @@ namespace Server.Items
                     double progressPercent = plantBowl.GrowthValue / plantBowl.PlantSeed.TargetGrowth;
                     double dailyGrowthValue = plantBowl.GetDailyGrowthScalar() * PlantPersistance.GrowthPerDay;
 
-                    dailyGrowthText = Utility.CreateDecimalString(dailyGrowthValue, 2);
+                    dailyGrowthText = Utility.CreateDecimalString(dailyGrowthValue, 1);
 
                     if (dailyGrowthText.IndexOf(".") == -1)
                         dailyGrowthText = dailyGrowthText + ".0";
@@ -159,31 +159,31 @@ namespace Server.Items
 
                     switch (plantBowl.PlantSeed.PlantGroup)
                     {
-                        case PlantGroupType.Crop:                            
+                        case PlantGroupType.Crop:
                             plantName = "Unknown Crop";
 
                             if (progressPercent < .33)
                             {
                                 plantItemId = 6818;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = -1;
+                                plantItemOffsetY = 18;
                             }
 
                             else if (progressPercent < .66)
                             {
                                 plantItemId = 731;
                                 plantItemHue = 2208;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 6;
+                                plantItemOffsetY = 2;
                             }
 
                             else
                             {
                                 plantItemId = 3155;
                                 plantItemHue = 2208;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 4;
+                                plantItemOffsetY = -1;
                             }
                         break;
 
@@ -194,24 +194,24 @@ namespace Server.Items
                             {
                                 plantItemId = 3169;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 3;
+                                plantItemOffsetY = 16;
                             }
 
                             else if (progressPercent < .66)
                             {
                                 plantItemId = 3267;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 1;
+                                plantItemOffsetY = -9;
                             }
 
                             else
                             {
                                 plantItemId = 3269;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 6;
+                                plantItemOffsetY = -8;
                             }
                         break;
 
@@ -222,24 +222,24 @@ namespace Server.Items
                             {
                                 plantItemId = 3176;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = -2;
+                                plantItemOffsetY = 4;
                             }
 
                             else if (progressPercent < .66)
                             {
                                 plantItemId = 3177;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = -2;
+                                plantItemOffsetY = 5;
                             }
 
                             else
                             {
                                 plantItemId = 3183;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = -1;
+                                plantItemOffsetY = 3;
                             }
                         break;
 
@@ -250,8 +250,8 @@ namespace Server.Items
                             {
                                 plantItemId = 3253;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 2;
+                                plantItemOffsetY = 7;
                             }
 
                             else if (progressPercent < .66)
@@ -259,19 +259,19 @@ namespace Server.Items
                                 plantItemId = 3254;
                                 plantItemHue = 0;
                                 plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetY = 6;
                             }
 
                             else
                             {
                                 plantItemId = 3219;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 2;
+                                plantItemOffsetY = 6;
                             }
                         break;
 
-                        case PlantGroupType.Tree: 
+                        case PlantGroupType.Tree:
                             plantName = "Unknown Tree";
 
                             if (progressPercent < .33)
@@ -287,26 +287,26 @@ namespace Server.Items
                                 plantItemId = 3306;
                                 plantItemHue = 0;
                                 plantItemOffsetX = 7;
-                                plantItemOffsetY = -32;
+                                plantItemOffsetY = -28;
                             }
 
                             else
                             {
                                 plantItemId = 3305;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 3;
+                                plantItemOffsetY = -39;
                             }
                         break;
 
-                        case PlantGroupType.Vine: 
+                        case PlantGroupType.Vine:
                             plantName = "Unknown Vine";
 
                             if (progressPercent < .33)
                             {
                                 plantItemId = 3251;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
+                                plantItemOffsetX = 18;
                                 plantItemOffsetY = 0;
                             }
 
@@ -314,16 +314,16 @@ namespace Server.Items
                             {
                                 plantItemId = 3166;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 6;
+                                plantItemOffsetY = 3;
                             }
 
                             else
                             {
                                 plantItemId = 3167;
                                 plantItemHue = 0;
-                                plantItemOffsetX = 0;
-                                plantItemOffsetY = 0;
+                                plantItemOffsetX = 5;
+                                plantItemOffsetY = 3;
                             }
                         break;
                     }
@@ -332,7 +332,7 @@ namespace Server.Items
                 }
             }
 
-            else
+            else            
                 plantName = "No Seed Planted";
 
             //Bowl
@@ -387,7 +387,7 @@ namespace Server.Items
             {
                 double dailyGrowthScalar = plantBowl.GetDailyGrowthScalar();
 
-                growthEfficiencyText = "Growth Efficiency: " + Utility.CreateDecimalPercentageString(dailyGrowthScalar, 1);
+                growthEfficiencyText = "Growth Efficiency: " + Utility.CreateDecimalPercentageString(dailyGrowthScalar, 0);
 
                 AddLabel(Utility.CenteredTextOffset(125, growthEfficiencyText), 359, growthEfficiencyHue, growthEfficiencyText);
             }

@@ -6,16 +6,17 @@ using Server.Network;
 
 namespace Server.Items
 {
-    public class RawDirt : SoilItem
+    public class RawDirt : SoilEnhancer
     {
-        public override double MaxSoilQuality { get { return 10.0; } }
+        public override double MaxSoilQuality { get { return 20.0; } }
         public override double SoilQualityIncrease { get { return 5.0; } }
+        public override SoilEnhancerQualityType QualityType { get { return SoilEnhancerQualityType.Low; } }
 
         public override string SoilItemName { get { return "raw dirt"; } }
         public override int SoilItemId { get { return 2323; } }
         public override int SoilItemHue { get { return 0; } }
 
-        public override int MaxCharges { get { return 3; } }
+        public override int MaxCharges { get { return 2; } }
         
         [Constructable]
         public RawDirt(): base()

@@ -928,7 +928,7 @@
     <Compile Include="PlantSystem\PlantGump.cs" />
     <Compile Include="PlantSystem\PlantPersistance.cs" />
     <Compile Include="PlantSystem\PlantSeed.cs" />
-    <Compile Include="PlantSystem\SoilItem.cs" />
+    <Compile Include="PlantSystem\SoilEnhancer.cs" />
     <Compile Include="PlantSystem\SoilItems\BasicFertilizer.cs" />
     <Compile Include="PlantSystem\SoilItems\RawDirt.cs" />
     <Compile Include="PlantSystem\Tree\CyprusSeed.cs" />

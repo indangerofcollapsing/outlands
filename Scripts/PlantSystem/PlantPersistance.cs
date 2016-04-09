@@ -20,6 +20,8 @@ namespace Server.Items
 
         public static double WaterAddedPerUse = 10;
 
+        public static TimeSpan ProgressTickInterval = TimeSpan.FromHours(1);
+
         public static Timer m_Timer;
 
         public static void Initialize()
@@ -33,13 +35,15 @@ namespace Server.Items
 
         public class PlantTimer : Timer
         {
-            public PlantTimer(): base(TimeSpan.Zero, TimeSpan.FromHours(1))
+            public PlantTimer(): base(ProgressTickInterval, ProgressTickInterval)
             {
                 Priority = TimerPriority.OneMinute;
             }
 
             protected override void OnTick()
             {
+                double progressTickScalar = (double)ProgressTickInterval.Minutes / TimeSpan.FromDays(1).TotalMinutes;
+
                 foreach (PlantBowl plantBowl in m_Instances)
                 {
                     if (plantBowl == null) continue;
@@ -54,7 +58,7 @@ namespace Server.Items
 
                     plantBowl.DetermineHeatLevel();
 
-                    double growthAmount = (GrowthPerDay / 24.0) * plantBowl.GetDailyGrowthScalar();
+                    double growthAmount = (GrowthPerDay * progressTickScalar) * plantBowl.GetDailyGrowthScalar();
 
                     plantBowl.GrowthValue += growthAmount;
 
@@ -64,15 +68,15 @@ namespace Server.Items
                         plantBowl.ReadyForHarvest = true;
                     }
 
-                    plantBowl.WaterValue -= (WaterLostPerDay / 24.0);
+                    plantBowl.WaterValue -= (WaterLostPerDay * progressTickScalar);
 
                     if (plantBowl.WaterValue < 0)
                         plantBowl.WaterValue = 0;
 
-                    plantBowl.SoilQualityValue -= (SoilQualityLostPerDay / 24.0);
+                    plantBowl.SoilQualityValue -= (SoilQualityLostPerDay * progressTickScalar);
 
                     if (plantBowl.SoilQualityValue < 0)
-                        plantBowl.SoilQualityValue = 0;
+                        plantBowl.SoilQualityValue = 0;                    
                 }
             }
         }

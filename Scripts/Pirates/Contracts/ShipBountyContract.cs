@@ -332,6 +332,14 @@ namespace Server.Items
                 boat.Delete();
         }
 
+        public override void OnDelete()
+        {
+            if (m_Instances.Contains(this))
+                m_Instances.Remove(this);
+
+            base.OnDelete();
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

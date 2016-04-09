@@ -3,7 +3,7 @@ using Server;
 
 namespace Server.Items
 {
-	public class WaterTubAddon : BaseAddon
+    public class WaterTubAddon : BaseAddon, IWaterSource
 	{
         public override BaseAddonDeed Deed { get { return new WaterTubDeed(); } }
 
@@ -25,17 +25,21 @@ namespace Server.Items
 		{
 		}
 
+        public int Quantity
+        {
+            get { return 5000; }
+            set { }
+        }
+
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int) 0 ); // version
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
 		}
 	}
