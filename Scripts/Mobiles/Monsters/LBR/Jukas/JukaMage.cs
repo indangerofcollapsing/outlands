@@ -63,10 +63,7 @@ namespace Server.Mobiles
 			PackItem( bag );
 
 			PackItem( new ArcaneGem() );
-
-			if ( Core.ML && Utility.RandomDouble() < .33 )
-				PackItem( Engines.Plants.Seed.RandomPeculiarSeed(4) );
-
+            
 			m_NextAbilityTime = DateTime.UtcNow + TimeSpan.FromSeconds( Utility.RandomMinMax( 2, 5 ) );
 		}
 

@@ -14,8 +14,6 @@ using Server.ContextMenus;
 using Server.Gumps;
 using Server.Guilds;
 using Server.Engines.BulkOrders;
-
-using Server.Engines.Plants;
 using Server.Custom.Items;
 
 namespace Server.Multis
@@ -1186,7 +1184,7 @@ namespace Server.Multis
                 return true;
             else if (item is Dyes || item is DyeTub)
                 return true;
-            else if (item is PlantBowl || item is PlantItem)
+            else if (item is PlantBowl)
                 return HasSecureAccess(from, SecureLevel.Friends);
             else if (item is ISecurable)
                 return HasSecureAccess(from, ((ISecurable)item).Level);

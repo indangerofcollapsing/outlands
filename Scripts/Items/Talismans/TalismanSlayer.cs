@@ -68,7 +68,7 @@ namespace Server.Items
 				typeof( FrostTroll ),
 
 				  // TODO WinterReaper, check
-				typeof( IceSnake ), typeof( SnowLeopard ), typeof( PolarBear ),  typeof( IceSerpent ), typeof( GiantIceWorm )
+				typeof( IceSnake ), typeof( SnowLeopard ), typeof( PolarBear ),  typeof( IceSerpent )
 			};
 			
 			m_Table[ TalismanSlayerName.Flame ] = new Type[]

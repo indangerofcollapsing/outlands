@@ -43,11 +43,7 @@ namespace Server.Mobiles
 
 			Fame = 15000;
 			Karma = -15000;
-			
-			
-			if ( Utility.RandomDouble() < .25 )
-				PackItem( Engines.Plants.Seed.RandomBonsaiSeed() );
-				
+							
 			switch ( Utility.Random( 10 ))
 			{
 				case 0: PackItem( new LeftArm() ); break;

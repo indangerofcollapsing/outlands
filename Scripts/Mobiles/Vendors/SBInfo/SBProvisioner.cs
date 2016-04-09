@@ -34,8 +34,7 @@ namespace Server.Mobiles
                 Add(new GenericBuyInfo(typeof(Torch), 7, 20, 0xF6B, 0));
                 Add(new GenericBuyInfo(typeof(Lantern), 2, 20, 0xA25, 0));
                 Add(new GenericBuyInfo(typeof(Candle), 6, 20, 0xA28, 0));
-                Add( new GenericBuyInfo( typeof(ParagonDevolveWand), 500, 50, 0x26BC, 2408));				
-				Add( new GenericBuyInfo( "1060834", typeof( Engines.Plants.PlantBowl ), 2, 20, 0x15FD, 0 ) );
+                Add( new GenericBuyInfo( typeof(ParagonDevolveWand), 500, 50, 0x26BC, 2408));	
 				Add( new BeverageBuyInfo( typeof( BeverageBottle ), BeverageType.Ale, 7, 20, 0x99F, 0 ) );
 				Add( new BeverageBuyInfo( typeof( BeverageBottle ), BeverageType.Wine, 7, 20, 0x9C7, 0 ) );
 				Add( new BeverageBuyInfo( typeof( BeverageBottle ), BeverageType.Liquor, 7, 20, 0x99B, 0 ) );

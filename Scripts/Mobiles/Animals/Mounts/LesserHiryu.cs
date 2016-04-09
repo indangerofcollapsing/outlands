@@ -70,9 +70,6 @@ namespace Server.Mobiles
 
 			Fame = 10000;
 			Karma = -10000;
-
-			if( Utility.RandomDouble() < .33 )
-				PackItem( Engines.Plants.Seed.RandomBonsaiSeed() );
 		}
 
 

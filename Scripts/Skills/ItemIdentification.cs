@@ -1,6 +1,5 @@
 using System;
 using Server;
-using Server.Engines.Plants;
 using Server.Targeting;
 using Server.Mobiles;
 
@@ -42,9 +41,6 @@ namespace Server.Items
 
                         else if (item is BaseArmor)
                             ((BaseArmor)item).Identified = true;
-
-                        else if (item is Seed)
-                            ((Seed)item).ShowType = true;
                     }
 
                     from.SendMessage("You identify the bag of goods.");
@@ -61,9 +57,6 @@ namespace Server.Items
 
                         else if (o is BaseArmor)
                             ((BaseArmor)o).Identified = true;
-
-                        else if (o is Seed && from.Skills.ItemID.Base >= 100.0)
-                            ((Seed)o).ShowType = true;
 
                         if (!Core.AOS)
                             ((Item)o).OnSingleClick(from);

@@ -827,6 +827,16 @@ namespace Server
             return textOffsetX;
         }
 
+        public static int ProgressBarX(double percent)
+        {
+            return (int)(Math.Round(106.0 * percent));
+        }
+
+        public static int ProgressBarWidth(double percent)
+        {
+            return 106 - (int)(Math.Round(106.0 * percent));
+        }
+
         public static Item Dupe(Item item)
         {
             if (item == null)
@@ -985,6 +995,15 @@ namespace Server
                 sTimeRemaining = "1 second";
             
             return sTimeRemaining;
+        }
+
+        public static string CreateDecimalString(double value, int decimalPlaces)
+        {
+            double factor = Math.Pow(10, 2 + decimalPlaces);
+
+            double roundedValue = ((Math.Round(value * factor)) / factor);
+
+            return roundedValue.ToString();
         }
 
         public static string CreateDecimalPercentageString(double value, int decimalPlaces)

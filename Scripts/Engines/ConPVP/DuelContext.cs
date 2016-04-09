@@ -295,11 +295,6 @@ namespace Server.Engines.ConPVP
                 title = "Items";
                 option = "Bolas";
             }
-            else if (item is OrangePetals)
-            {
-                title = "Items";
-                option = "Orange Petals";
-            }
             else if (item is EtherealMount || item.Layer == Layer.Mount)
             {
                 title = "Items";
@@ -1613,9 +1608,7 @@ namespace Server.Engines.ConPVP
             mob.RemoveStatMod("[Magic] Dex Offset");
             mob.RemoveStatMod("[Magic] Int Offset");
             mob.RemoveStatMod("Concussion");
-
-            OrangePetals.RemoveContext(mob);
-
+            
             mob.Paralyzed = false;
             mob.Hidden = false;
 

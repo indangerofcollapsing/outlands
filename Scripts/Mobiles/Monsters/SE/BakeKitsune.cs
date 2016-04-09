@@ -39,9 +39,6 @@ namespace Server.Mobiles
 
 			Fame = 8000;
 			Karma = -8000;
-
-			if ( Utility.RandomDouble() < .25 )
-				PackItem( Engines.Plants.Seed.RandomBonsaiSeed() );
 		}
 
 		public override bool PropertyTitle{ get{ return false; } }

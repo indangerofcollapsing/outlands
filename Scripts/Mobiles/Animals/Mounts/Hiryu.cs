@@ -98,12 +98,6 @@ namespace Server.Mobiles
 
 			Fame = 18000;
 			Karma = -18000;
-
-			if( Utility.RandomDouble() < .33 )
-				PackItem( Engines.Plants.Seed.RandomBonsaiSeed() );
-
-			if ( Core.ML && Utility.RandomDouble() < .33 )
-				PackItem( Engines.Plants.Seed.RandomPeculiarSeed(3) );
 		}
 
 

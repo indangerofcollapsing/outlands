@@ -41,9 +41,6 @@ namespace Server.Mobiles
 
 			Fame = 22000;
 			Karma = -22000;
-
-			if ( Utility.RandomDouble() < .50 )
-				PackItem( Engines.Plants.Seed.RandomBonsaiSeed() );
 		}
 
         public override Poison PoisonImmune { get { return Poison.Lethal; } }

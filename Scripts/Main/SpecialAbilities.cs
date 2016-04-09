@@ -1373,7 +1373,7 @@ namespace Server.Mobiles
 
             foreach (Mobile mobile in m_NearbyMobiles)
             {
-                if (mobile is Myconid || mobile is MyconidTallstalk || mobile is TreeStalker || mobile is ArborealMyconid || mobile is TreeOfLife) continue;
+                if (mobile is Myconid || mobile is MyconidTallstalk) continue;
                 if (mobile.AccessLevel > AccessLevel.Player) continue;
                 if (!mobile.CanBeDamaged()) continue;
 

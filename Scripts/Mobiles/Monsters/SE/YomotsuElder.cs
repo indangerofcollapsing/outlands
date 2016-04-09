@@ -57,15 +57,9 @@ namespace Server.Mobiles
 				case 2: PackItem( new Boots() ); break;
 				case 3: PackItem( new ThighBoots() ); break;
 			}
-
-			if ( Utility.RandomDouble() < .25 )
-				PackItem( Engines.Plants.Seed.RandomBonsaiSeed() );
 		}
         
 		public override bool CanRummageCorpses{ get{ return true; } }
-		//public override int TreasureMapLevel{ get{ return 5; } }
-
-		// TODO: Axe Throw
 
 		public override void OnGaveMeleeAttack( Mobile defender )
 		{

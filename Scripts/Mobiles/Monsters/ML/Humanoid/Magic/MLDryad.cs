@@ -1,5 +1,4 @@
 using System;
-using Server.Engines.Plants;
 
 namespace Server.Mobiles
 {
@@ -37,9 +36,6 @@ namespace Server.Mobiles
 
 			Fame = 5000;
 			Karma = 5000;
-
-			if ( Core.ML && Utility.RandomDouble() < .60 )
-				PackItem( Seed.RandomPeculiarSeed( 1 ) );
 		}
         
 		public override void OnThink()

@@ -40,7 +40,6 @@ namespace Server.Mobiles
 
             Fame = 500;
             Karma = -500;
-            PackItem( new Engines.Plants.Seed());
         }
         
         public override bool IsHighSeasBodyType { get { return true; } }

@@ -49,9 +49,6 @@ namespace Server.Mobiles
 				case 4: PackItem( new LeatherCap() ); break;
 				case 5: PackItem( new LeatherChest() ); break;
 			}
-
-			if ( Utility.RandomDouble() < .5 )
-				PackItem( Engines.Plants.Seed.RandomBonsaiSeed() );
 		}
 
 		public override int GetAngerSound()
