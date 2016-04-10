@@ -38,7 +38,23 @@ namespace Server.Items
         public virtual int IconOffsetX { get { return 0; } } //65 is Baseline X For Gumps
         public virtual int IconOffsetY { get { return 0; } } //80 is Baseline Y For Gumps
 
-        private SkillMod m_SkillMod;
+        public static int PlayerFistSpeed = 50;
+
+        public static double SlayerDamageScalarBonus = .5;
+
+        public static double PlayerVsPlayerDamageScalar = 1.0;
+        public static double PlayerVsTamedCreatureDamageScalar = 1.0;
+        public static double PlayerVsCreatureDamageScalar = 1.0;
+
+        public static double TamedCreatureVsPlayerDamageScalar = 1.0;
+        public static double TamedCreatureVsTamedCreatureDamageScalar = 1.0;
+        public static double TamedCreatureVsCreatureDamageScalar = 1.0;
+
+        public static double CreatureVsPlayerDamageScalar = 1.0;
+        public static double CreatureVsTamedCreatureDamageScalar = 1.0;
+        public static double CreatureVsCreatureDamageScalar = 1.0;
+
+        public SkillMod m_SkillMod;
 
         private SlayerGroupType m_SlayerGroup = SlayerGroupType.None;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -389,8 +405,6 @@ namespace Server.Items
 
         #region GetDelay
 
-        public static int PlayerFistSpeed = 50;
-
         public virtual TimeSpan GetDelay(Mobile mobile, bool useRawValues)
         {
             int speed = this.Speed;
@@ -550,13 +564,26 @@ namespace Server.Items
         {
             OnHit(attacker, defender, 1.0);
         }
+        
+        public double GetArmsLoreDamageBonus(Mobile attacker, bool playerDefender)
+        {
+            double damageScalar = 0;
+
+            if (playerDefender)
+                damageScalar += (attacker.Skills[SkillName.ArmsLore].Value / 100) * .1;
+
+            else
+                damageScalar += (attacker.Skills[SkillName.ArmsLore].Value / 100) * .2;
+
+            return damageScalar;
+        }
 
         public virtual void OnHit(Mobile attacker, Mobile defender, double damageBonus)
         {
             if (attacker == null || defender == null)
                 return;
 
-            double damage = (double)ComputeDamage(attacker, defender);
+            double damage = (double)ComputeDamage(attacker, defender, true);
             double damageScalar = damageBonus;
 
             PlaySwingAnimation(attacker);
@@ -903,28 +930,19 @@ namespace Server.Items
             #endregion
 
             #region Arms Lore Damage Bonus
-
-            double ArmsLoreCreatureBonus = .2;
-            double ArmsLorePlayerBonus = .1;
-
-            if (bc_Defender != null)
-                damageScalar += (attacker.Skills[SkillName.ArmsLore].Value / 100) * ArmsLoreCreatureBonus;
-
-            else
-                damageScalar += (attacker.Skills[SkillName.ArmsLore].Value / 100) * ArmsLorePlayerBonus;
+           
+            damageScalar += GetArmsLoreDamageBonus(attacker, pm_Defender != null);          
 
             #endregion
 
             #region Slayer Damage Bonus
-
-            double SlayerBonus = .5;
-
+            
             if (m_SlayerGroup != SlayerGroupType.None && bc_Defender != null)
             {
                 if (m_SlayerGroup == bc_Defender.SlayerGroup)
                 {
                     defender.FixedEffect(0x37B9, 10, 5);
-                    damageScalar += SlayerBonus;
+                    damageScalar += SlayerDamageScalarBonus;
                 }
             }
 
@@ -1042,41 +1060,41 @@ namespace Server.Items
             double finalBaseDamage = damage * damageScalar;
 
             #region Final Base Damage Adjustments
-
+            
             //Player Attacking
             if (pm_Attacker != null)
             {
                 if (pm_Defender != null)
                 {
                     if (pm_Attacker.IsUOACZHuman)
-                        finalBaseDamage *= 1.0 * UOACZSystem.HumanPlayerVsPlayerDamageScalar * UOACZSystem.GetFatigueScalar(pm_Attacker);
+                        finalBaseDamage *= PlayerVsPlayerDamageScalar * UOACZSystem.HumanPlayerVsPlayerDamageScalar * UOACZSystem.GetFatigueScalar(pm_Attacker);
 
                     else if (pm_Attacker.IsUOACZUndead)
-                        finalBaseDamage *= 1.0 * UOACZSystem.UndeadPlayerVsPlayerDamageScalar * UOACZSystem.GetFatigueScalar(pm_Attacker);
+                        finalBaseDamage *= PlayerVsPlayerDamageScalar * UOACZSystem.UndeadPlayerVsPlayerDamageScalar * UOACZSystem.GetFatigueScalar(pm_Attacker);
 
                     else
-                        finalBaseDamage *= 1.0;
+                        finalBaseDamage *= PlayerVsPlayerDamageScalar;
                 }
 
                 else if (TamedDefender)
                 {
                     if (pm_Attacker.IsUOACZHuman || pm_Attacker.IsUOACZUndead)
-                        finalBaseDamage *= 1.0 * UOACZSystem.GetFatigueScalar(pm_Attacker);
+                        finalBaseDamage *= PlayerVsTamedCreatureDamageScalar * UOACZSystem.GetFatigueScalar(pm_Attacker);
 
                     else
-                        finalBaseDamage *= 1.0;
+                        finalBaseDamage *= PlayerVsTamedCreatureDamageScalar;
                 }
 
                 else
                 {
                     if (pm_Attacker.IsUOACZHuman)
-                        finalBaseDamage *= 1.0 * UOACZSystem.HumanPlayerVsCreatureDamageScalar;
+                        finalBaseDamage *= PlayerVsCreatureDamageScalar * UOACZSystem.HumanPlayerVsCreatureDamageScalar;
 
                     else if (pm_Attacker.IsUOACZUndead)
-                        finalBaseDamage *= 1.0 * UOACZSystem.UndeadPlayerVsCreatureDamageScalar;
+                        finalBaseDamage *= PlayerVsCreatureDamageScalar * UOACZSystem.UndeadPlayerVsCreatureDamageScalar;
 
                     else
-                        finalBaseDamage *= 1.0;
+                        finalBaseDamage *= PlayerVsCreatureDamageScalar;
                 }
             }
 
@@ -1088,28 +1106,28 @@ namespace Server.Items
                 if (pm_Defender != null)
                 {
                     if (pm_Controller.IsUOACZHuman || pm_Controller.IsUOACZUndead)
-                        finalBaseDamage *= 1.0 * bc_Attacker.PvPMeleeDamageScalar * UOACZSystem.GetFatigueScalar(pm_Controller);
+                        finalBaseDamage *= TamedCreatureVsPlayerDamageScalar * bc_Attacker.PvPMeleeDamageScalar * UOACZSystem.GetFatigueScalar(pm_Controller);
 
                     else
-                        finalBaseDamage *= 1.0 * bc_Attacker.PvPMeleeDamageScalar;
+                        finalBaseDamage *= TamedCreatureVsPlayerDamageScalar * bc_Attacker.PvPMeleeDamageScalar;
                 }
 
                 else if (TamedDefender)
                 {
                     if (pm_Controller.IsUOACZHuman || pm_Controller.IsUOACZUndead)
-                        finalBaseDamage *= 1.0 * UOACZSystem.GetFatigueScalar(pm_Controller);
+                        finalBaseDamage *= TamedCreatureVsTamedCreatureDamageScalar * UOACZSystem.GetFatigueScalar(pm_Controller);
 
                     else
-                        finalBaseDamage *= 1.0;
+                        finalBaseDamage *= TamedCreatureVsTamedCreatureDamageScalar;
                 }
 
                 else
                 {
                     if (UOACZSystem.IsUOACZValidMobile(bc_Attacker))
-                        finalBaseDamage *= 1.0 * UOACZSystem.TamedCreatureVsCreatureDamageScalar;
+                        finalBaseDamage *= TamedCreatureVsCreatureDamageScalar * UOACZSystem.TamedCreatureVsCreatureDamageScalar;
 
                     else
-                        finalBaseDamage *= 1.0;
+                        finalBaseDamage *= TamedCreatureVsCreatureDamageScalar;
                 }
             }
 
@@ -1117,13 +1135,16 @@ namespace Server.Items
             else
             {
                 if (pm_Defender != null)
-                    finalBaseDamage *= 1.0;
+                    finalBaseDamage *= CreatureVsPlayerDamageScalar;
 
                 else if (TamedDefender)
                 {
                     if (UOACZSystem.IsUOACZValidMobile(bc_Defender))
-                        finalBaseDamage *= 1.0 * UOACZSystem.CreatureVsTamedCreatureDamageScalar;
+                        finalBaseDamage *= CreatureVsTamedCreatureDamageScalar * UOACZSystem.CreatureVsTamedCreatureDamageScalar;
                 }
+
+                else                
+                    finalBaseDamage *= CreatureVsCreatureDamageScalar;                
             }
 
             #endregion
@@ -1381,7 +1402,7 @@ namespace Server.Items
                 bc_Defender.OnGotMeleeAttack(attacker);
 
             #endregion
-        }
+        }                
 
         public int WeaponParry(BaseWeapon weapon, int damage, Mobile defender)
         {
@@ -1671,6 +1692,34 @@ namespace Server.Items
             return false;
         }
 
+        public double GetSimulatedHitChance(Mobile attacker, double defenderSkill, bool defenderPlayer)
+        {
+            PlayerMobile pm_Attacker = attacker as PlayerMobile;
+
+            BaseWeapon atkWeapon = attacker.Weapon as BaseWeapon;
+
+            double atkValue = atkWeapon.GetAttackSkillValue(attacker, null);
+            double defValue = defenderSkill;
+
+            double ourValue;
+            double theirValue;
+
+            if (atkValue <= -50.0)
+                atkValue = -49.9;
+
+            if (defValue <= -50.0)
+                defValue = -49.9;
+
+            ourValue = (atkValue + 50.0);
+            theirValue = (defValue + 50.0);
+
+            double chance = ourValue / (theirValue * 2.0);
+
+            chance += GetHitChanceBonus(pm_Attacker != null, defenderPlayer);
+
+            return chance;
+        }
+
         public virtual bool CheckHit(Mobile attacker, Mobile defender)
         {
             BaseWeapon atkWeapon = attacker.Weapon as BaseWeapon;
@@ -1756,7 +1805,7 @@ namespace Server.Items
 
             double chance = ourValue / (theirValue * 2.0);
             
-            chance += GetHitChanceBonus(attacker, defender);
+            chance += GetHitChanceBonus(pm_Attacker != null, pm_Defender != null);
 
             #region Special Effects
 
@@ -1829,14 +1878,7 @@ namespace Server.Items
             }
 
             #endregion
-
-            #region Dungeon Weapon
-
-            if (Dungeon != DungeonEnum.None && TierLevel > 0 && pm_Defender == null)
-                chance += DungeonWeapon.BaseAccuracy * (DungeonWeapon.AccuracyPerTier * (double)TierLevel);
-
-            #endregion
-
+            
             //attacker.Say("Chance to Hit: " + chance.ToString());
             
            return attacker.CheckSkill(atkSkill.SkillName, chance, 1.0);
@@ -2098,11 +2140,11 @@ namespace Server.Items
             return bonus / 100;
         }
 
-        public virtual double GetHitChanceBonus(Mobile from, Mobile target)
+        public virtual double GetHitChanceBonus(bool playerAttacker, bool playerDefender)
         {
-            double bonus = 0;
+            double bonus = 0;            
 
-            if (target is PlayerMobile)
+            if (playerDefender)
             {
                 switch (m_AccuracyLevel)
                 {
@@ -2116,13 +2158,24 @@ namespace Server.Items
 
             else
             {
-                switch (m_AccuracyLevel)
+                if (Dungeon != DungeonEnum.None && TierLevel > 0)
                 {
-                    case WeaponAccuracyLevel.Accurate: bonus += 0.03; break;
-                    case WeaponAccuracyLevel.Surpassingly: bonus += 0.06; break;
-                    case WeaponAccuracyLevel.Eminently: bonus += 0.09; break;
-                    case WeaponAccuracyLevel.Exceedingly: bonus += 0.12; break;
-                    case WeaponAccuracyLevel.Supremely: bonus += 0.15; break;
+                    bonus = DungeonWeapon.BaseAccuracy * (DungeonWeapon.AccuracyPerTier * (double)TierLevel);
+
+                    if (playerDefender)
+                        bonus = 0;
+                }
+
+                else
+                {
+                    switch (m_AccuracyLevel)
+                    {
+                        case WeaponAccuracyLevel.Accurate: bonus += 0.03; break;
+                        case WeaponAccuracyLevel.Surpassingly: bonus += 0.06; break;
+                        case WeaponAccuracyLevel.Eminently: bonus += 0.09; break;
+                        case WeaponAccuracyLevel.Exceedingly: bonus += 0.12; break;
+                        case WeaponAccuracyLevel.Supremely: bonus += 0.15; break;
+                    }
                 }
             }
 
@@ -2157,58 +2210,76 @@ namespace Server.Items
 
             GetBaseDamageRange(from, out baseMin, out baseMax);
 
-            min = Math.Max((int)ScaleDamageOld(from, baseMin, false), 1);
-            max = Math.Max((int)ScaleDamageOld(from, baseMax, false), 1);
-        }
-
-        public virtual double ScaleDamageAOS(Mobile attacker, double damage, bool checkSkills)
-        {
-            if (checkSkills)
-            {
-                attacker.CheckSkill(SkillName.Tactics, 0.0, 100.0, 1.0); // Passively check tactics for gain
-                attacker.CheckSkill(SkillName.Anatomy, 0.0, attacker.Skills[SkillName.Anatomy].Cap, 1.0); // Passively check Anatomy for gain
-                attacker.CheckSkill(SkillName.ArmsLore, 0.0, attacker.Skills[SkillName.ArmsLore].Cap, 1.0); // Passively check Arms Lore for gain
-
-                /*
-                if (Type == WeaponType.Axe)
-                    attacker.CheckSkill(SkillName.Lumberjacking, 0.0, 100.0, 1.0); // Passively check Lumberjacking for gain
-                */
-            }
-
-            #region Physical bonuses
-
-            double strengthBonus = GetBonus(attacker.Str, 0.300, 100.0, 5.00);
-            double anatomyBonus = GetBonus(attacker.Skills[SkillName.Anatomy].Value, 0.500, 100.0, 5.00);
-            double tacticsBonus = GetBonus(attacker.Skills[SkillName.Tactics].Value, 0.625, 100.0, 6.25);
-            double lumberBonus = GetBonus(attacker.Skills[SkillName.Lumberjacking].Value, 0.200, 100.0, 10.00);
-
-            if (Type != WeaponType.Axe)
-                lumberBonus = 0.0;
-
-            #endregion
-
-            #region Modifiers
-
-            int damageBonus = AosAttributes.GetValue(attacker, AosAttribute.WeaponDamage);
-            
-            if (damageBonus > 100)
-                damageBonus = 100;
-
-            #endregion
-
-            double totalBonus = strengthBonus + anatomyBonus + tacticsBonus + lumberBonus + ((double)(GetDamageBonus() + damageBonus) / 100.0);
-
-            return damage + (int)(damage * totalBonus);
+            min = Math.Max((int)ScaleDamage(from, baseMin, true, false), 1);
+            max = Math.Max((int)ScaleDamage(from, baseMax, true, false), 1);
         }
 
         public virtual int VirtualDamageBonus { get { return 0; } }
 
-        public virtual int ComputeDamageAOS(Mobile attacker, Mobile defender)
+        public double GetTacticsScalar(Mobile attacker, bool playerVsPlayer)
         {
-            return (int)ScaleDamageAOS(attacker, GetBaseDamage(attacker), true);
+            double tacticsBase = attacker.Skills[SkillName.Tactics].Value;
+            double tacticsBonus = 0;
+
+            if (tacticsBase > 100)
+            {
+                tacticsBonus = tacticsBase - 100;
+                tacticsBase = 100;
+            };
+
+            //Remove Dungeon Weapon Tactics Bonus Impact in PvP
+            if (playerVsPlayer)
+            {
+                if (TierLevel > 0 && Dungeon != DungeonEnum.None)
+                    tacticsBonus -= DungeonWeapon.BaseTactics + (TierLevel * DungeonWeapon.TacticsPerTier);
+            }
+
+            double tacticsScalar = .5 + (.5 * (tacticsBase / 100)) + (.01 * tacticsBonus);
+
+            return tacticsScalar;
         }
 
-        public virtual double ScaleDamageOld(Mobile attacker, double damage, bool checkSkills)
+        public double GetAnatomyScalarBonus(Mobile attacker)
+        {
+            return (.2 * (attacker.Skills[SkillName.Anatomy].Value / 100));
+        }
+
+        public double GetDurabilityScalarPenalty()
+        {
+            int missingDurability = m_MaxHits - m_Hits;
+
+            double penalty = (double)missingDurability * 10;
+
+            if (m_MaxHits == 0)
+                penalty = 0;
+
+            return penalty;
+        }
+
+        public virtual int ComputeDamage(Mobile attacker, Mobile defender, bool scaleDurability)
+        {
+            double baseDamage = GetBaseDamage(attacker);
+            bool checkSkills = !(defender is PlayerMobile) || ((PlayerMobile)defender).m_DateTimeDied + TimeSpan.FromSeconds(60) < DateTime.UtcNow;
+            int scaledDamage = (int)baseDamage;
+
+            return (int)ScaleDamage(attacker, baseDamage, scaleDurability, checkSkills);
+        }
+
+        public double GetDamageScalar(Mobile attacker, bool scaleDurability, bool playerVsPlayer)
+        {
+            double tacticsScalar = GetTacticsScalar(attacker, playerVsPlayer);
+            double anatomyScalar = GetAnatomyScalarBonus(attacker);
+            double durabilityPenalty = GetDurabilityScalarPenalty();
+
+            if (!scaleDurability)
+                durabilityPenalty = 0;
+
+            double damageScalar = tacticsScalar + anatomyScalar - durabilityPenalty;
+
+            return damageScalar;
+        }
+
+        public virtual double ScaleDamage(Mobile attacker, double damage, bool scaleDurability, bool checkSkills)
         {
             if (checkSkills)
             {
@@ -2217,49 +2288,12 @@ namespace Server.Items
                 attacker.CheckSkill(SkillName.ArmsLore, 0.0, attacker.Skills[SkillName.ArmsLore].Cap, 1.0); // Passively check Arms Lore for gain
             }
 
-            double tacticsBase = attacker.Skills[SkillName.Tactics].Value;
-            double tacticsBonus = 0;
+            double damageScalar = GetDamageScalar(attacker, scaleDurability, attacker.RecentlyInPlayerCombat);
 
-            PlayerMobile pm_Attacker = attacker as PlayerMobile;
+            damage *= damageScalar;
 
-            if (pm_Attacker != null)
-            {
-                //Remove Dungeon Weapon Tactics Bonus Impact in PvP
-                if (pm_Attacker.RecentlyInPlayerCombat)
-                    tacticsBase -= DungeonWeapon.BaseTactics + (TierLevel * DungeonWeapon.TacticsPerTier);
-            }
-
-            if (tacticsBase > 100)
-            {
-                tacticsBonus = tacticsBase - 100;
-                tacticsBase = 100;
-            };
-
-            double tacticsScalar = .5 + (.5 * (tacticsBase / 100)) + (.01 * tacticsBonus);
-            double anatomyScalar = 1 + (.2 * (attacker.Skills[SkillName.Anatomy].Value / 100));
-            double virtualDamageScalar = 1 + ((double)VirtualDamageBonus / 100);
-
-            damage *= tacticsScalar;
-            damage *= anatomyScalar;
-            damage *= virtualDamageScalar;
-
-            return ScaleDamageByDurability((int)damage);
-        }
-
-        public virtual int ScaleDamageByDurability(int damage)
-        {
-            int scale = 100;
-
-            if (m_MaxHits > 0 && m_Hits < m_MaxHits)
-                scale = 90 + ((10 * m_Hits) / m_MaxHits);
-
-            return AOS.Scale(damage, scale);
-        }
-
-        public virtual int ComputeDamage(Mobile attacker, Mobile defender)
-        {
-            return (int)ScaleDamageOld(attacker, GetBaseDamage(attacker), !(defender is PlayerMobile) || ((PlayerMobile)defender).m_DateTimeDied + TimeSpan.FromSeconds(60) < DateTime.UtcNow);
-        }
+            return (int)damage;
+        }        
 
         public virtual void PlayHurtAnimation(Mobile from)
         {

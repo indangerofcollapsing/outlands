@@ -820,7 +820,7 @@ namespace Server
         private int m_VirtualArmorMod;
         private VirtueInfo m_Virtues;
         private object m_Party;
-        private List<SkillMod> m_SkillMods;
+        public List<SkillMod> m_SkillMods;
         private Body m_BodyMod;      
         private Race m_Race;
 

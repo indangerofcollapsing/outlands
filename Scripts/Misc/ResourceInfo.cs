@@ -435,6 +435,38 @@ namespace Server.Items
             return null;
         }
 
+        public static string GetCraftResourceName(CraftResource craftResource)
+        {
+            switch (craftResource)
+            {
+                case CraftResource.Iron: return "Iron"; break;
+                case CraftResource.DullCopper: return "Dull Copper"; break;
+                case CraftResource.ShadowIron: return "Shadow Iron"; break;
+                case CraftResource.Copper: return "Copper"; break;
+                case CraftResource.Bronze: return "Bronze"; break;
+                case CraftResource.Gold: return "Gold"; break;
+                case CraftResource.Agapite: return "Agapite"; break;
+                case CraftResource.Verite: return "Verite"; break;
+                case CraftResource.Valorite: return "Valorite"; break;
+                case CraftResource.Lunite: return "Lunite"; break;
+
+                case CraftResource.RegularLeather: return "Leather"; break;
+                case CraftResource.SpinedLeather: return "Spined"; break;
+                case CraftResource.HornedLeather: return "Horned"; break;
+                case CraftResource.BarbedLeather: return "Barbed"; break;
+
+                case CraftResource.RegularWood: return "Wood"; break;
+                case CraftResource.OakWood: return "Oak"; break;
+                case CraftResource.AshWood: return "Ash"; break;
+                case CraftResource.YewWood: return "Yew"; break;
+                case CraftResource.Heartwood: return "Heartwood"; break;
+                case CraftResource.Bloodwood: return "Bloodwood"; break;
+                case CraftResource.Frostwood: return "Frostwood"; break;
+            }
+
+            return null;
+        }
+
 		private static CraftResourceInfo[] m_MetalInfo = new CraftResourceInfo[]
 			{
 				new CraftResourceInfo( 0x000, 1053109, "Iron",			CraftAttributeInfo.Blank,		CraftResource.Iron,				typeof( IronIngot ),		typeof( IronOre ),			typeof( Granite ) ),
