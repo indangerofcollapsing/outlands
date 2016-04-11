@@ -21,12 +21,14 @@ namespace Server.Items
 		public override int ArmorBase{ get{ return 24; } }
         public override int OldDexBonus { get { return -7; } }
 
-		[Constructable]
-		public ChaosShield() : base( 0x1BC3 )
-		{
-			if ( !Core.AOS )
-				LootType = LootType.Newbied;
+        public override int IconItemId { get { return 7107; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return -5; } }
+        public override int IconOffsetY { get { return 12; } }
 
+		[Constructable]
+		public ChaosShield() : base( 7107 )
+		{
 			Weight = 5.0;
 		}
 

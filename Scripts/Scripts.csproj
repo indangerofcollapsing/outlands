@@ -312,7 +312,7 @@
     <Compile Include="Items\Special\8th Anniversary Items\Dawn%27s Music Box\DawnsMusicBox.cs" />
     <Compile Include="Items\Special\8th Anniversary Items\Dawn%27s Music Box\DawnsMusicGear.cs" />
     <Compile Include="Items\Special\8th Anniversary Items\Dawn%27s Music Box\DawnsMusicInfo.cs" />
-    <Compile Include="Items\Special\8th Anniversary Items\DupresShield.cs" />
+    <Compile Include="Items\Shields\DupresShield.cs" />
     <Compile Include="Items\Special\8th Anniversary Items\FountainOfLife.cs" />
     <Compile Include="Items\Special\8th Anniversary Items\OssianGrimoire.cs" />
     <Compile Include="Items\Special\8th Anniversary Items\QuiverOfInfinity.cs" />
@@ -3286,7 +3286,6 @@
     <Compile Include="Items\Resources\Tailor\YarnsAndThreads.cs" />
     <Compile Include="Items\Shields\Artifacts\Aegis.cs" />
     <Compile Include="Items\Shields\Artifacts\ArcaneShield.cs" />
-    <Compile Include="Items\Shields\BalanceShield.cs" />
     <Compile Include="Main\BaseShield.cs" />
     <Compile Include="Items\Shields\BronzeShield.cs" />
     <Compile Include="Items\Shields\Buckler.cs" />

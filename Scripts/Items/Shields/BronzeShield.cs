@@ -19,9 +19,13 @@ namespace Server.Items
         public override int ArmorBase { get { return 18; } }
         public override int OldDexBonus { get { return -4; } }
 
+        public override int IconItemId { get { return 7026; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 1; } }
+        public override int IconOffsetY { get { return 5; } }
+
         [Constructable]
-        public BronzeShield()
-            : base(0x1B72)
+        public BronzeShield() : base(7026)
         {
             Weight = 6.0;
         }

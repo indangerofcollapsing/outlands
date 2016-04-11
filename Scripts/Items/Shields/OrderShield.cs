@@ -21,12 +21,14 @@ namespace Server.Items
 		public override int ArmorBase{ get{ return 24; } }
         public override int OldDexBonus { get { return -7; } }
 
-		[Constructable]
-		public OrderShield() : base( 0x1BC4 )
-		{
-			if ( !Core.AOS )
-				LootType = LootType.Newbied;
+        public override int IconItemId { get { return 7109; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 6; } }
+        public override int IconOffsetY { get { return 6; } }
 
+		[Constructable]
+		public OrderShield() : base( 7109 )
+		{
 			Weight = 7.0;
 		}
 
@@ -37,17 +39,12 @@ namespace Server.Items
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
-
-			if ( Weight == 6.0 )
-				Weight = 7.0;
 		}
 
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
 			writer.Write( (int)0 );//version
 		}
 

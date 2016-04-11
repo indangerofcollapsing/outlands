@@ -19,9 +19,13 @@ namespace Server.Items
         public override int ArmorBase { get { return 12; } }
         public override int OldDexBonus { get { return -1; } }
 
+        public override int IconItemId { get { return 7027; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return -1; } }
+        public override int IconOffsetY { get { return 6; } }
+
         [Constructable]
-        public Buckler()
-            : base(0x1B73)
+        public Buckler(): base(7027)
         {
             Weight = 5.0;
         }

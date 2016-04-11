@@ -19,9 +19,13 @@ namespace Server.Items
         public override int ArmorBase { get { return 20; } }
         public override int OldDexBonus { get { return -5; } }
 
+        public override int IconItemId { get { return 7029; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 4; } }
+        public override int IconOffsetY { get { return 1; } }
+
         [Constructable]
-        public MetalKiteShield()
-            : base(0x1B74)
+        public MetalKiteShield(): base(7029)
         {
             Weight = 7.0;
         }

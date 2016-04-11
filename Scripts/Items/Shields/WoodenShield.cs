@@ -19,15 +19,18 @@ namespace Server.Items
         public override int ArmorBase { get { return 10; } }
         public override int OldDexBonus { get { return 0; } }
 
+        public override int IconItemId { get { return 7034; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return -1; } }
+        public override int IconOffsetY { get { return 8; } }
+
         [Constructable]
-        public WoodenShield()
-            : base(0x1B7A)
+        public WoodenShield(): base(7034)
         {
             Weight = 5.0;
         }
 
-        public WoodenShield(Serial serial)
-            : base(serial)
+        public WoodenShield(Serial serial): base(serial)
         {
         }
 
