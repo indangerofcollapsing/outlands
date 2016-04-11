@@ -165,10 +165,7 @@ namespace Server.Engines.Craft
             //Instruments
             index = AddCraft(1, typeof(Harp), "Instruments", "Harp", 78.9, 103.9, typeof(Board), 1044041, 35, 1044351);
             AddRes(index, typeof(Cloth), 1044286, 15, 1044287);
-
-            index = AddCraft(1, typeof(LapHarp), "Instruments", "Lap Harp", 63.1, 88.1, typeof(Board), 1044041, 20, 1044351);
-            AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
-
+                        
             index = AddCraft(1, typeof(Drums), "Instruments", "Drums", 57.8, 82.8, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
 
@@ -176,10 +173,10 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
 
             index = AddCraft(1, typeof(Tambourine), "Instruments", "Tambourine", 57.8, 82.8, typeof(Board), 1044041, 15, 1044351);
+            AddRes(index, typeof(Cloth), 1044286, 10, 1044287);           
+            
+            index = AddCraft(1, typeof(StandingHarp), "Instruments", "Standing Harp", 63.1, 88.1, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
-
-            index = AddCraft(1, typeof(TambourineTassel), "Instruments", "Tassled Tambourine", 57.8, 82.8, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(Cloth), 1044286, 15, 1044287);
 
             AddCraft(1, typeof(BambooFlute), "Instruments", "Bamboo Flute", 80.0, 105.0, typeof(Board), 1044041, 15, 1044351);
 

@@ -19,6 +19,11 @@ namespace Server.Items
 
 		public override int RevertArmorBase{ get{ return 1; } }
 
+        public override int IconItemId { get { return 5063; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 8; } }
+        public override int IconOffsetY { get { return 8; } }
+
 		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Leather; } }
 		public override CraftResource DefaultResource{ get{ return CraftResource.RegularLeather; } }
 
@@ -28,7 +33,7 @@ namespace Server.Items
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.All; } }
 
 		[Constructable]
-		public LeatherGorget() : base( 0x13C7 )
+		public LeatherGorget() : base( 5063 )
 		{
 			Weight = 1.0;
 		}

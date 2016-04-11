@@ -4,8 +4,13 @@ namespace Server.Items
 {
 	public class BambooFlute : BaseInstrument
 	{
+        public override int IconItemId { get { return 10245; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 6; } }
+        public override int IconOffsetY { get { return -1; } }
+
 		[Constructable]
-		public BambooFlute() : base( 0x2805, 0x504, 0x503 )
+		public BambooFlute() : base( 10245, 0x504, 0x503 )
 		{
             Name = "bamboo flute";
 			Weight = 2.0;

@@ -11,29 +11,29 @@ namespace Server.Items
 		public override int BaseColdResistance{ get{ return 2; } }
 		public override int BasePoisonResistance{ get{ return 3; } }
 		public override int BaseEnergyResistance{ get{ return 2; } }
-
-        //Changed to IPY values
 		public override int InitMinHits{ get{ return 51; } }
 		public override int InitMaxHits{ get{ return 65; } }
 
 		public override int AosStrReq{ get{ return 95; } }
 		public override int OldStrReq{ get{ return 45; } }
-
-        //Changed to IPY values
 		public override int OldDexBonus{ get{ return -4; } }
 
 		public override bool AllowMaleWearer{ get{ return false; } }
 
 		public override int ArmorBase{ get{ return 30; } }
-        //Added by IPY
 		public override int RevertArmorBase{ get{ return 13; } }
+
+        public override int IconItemId { get { return 7173; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 1; } }
+        public override int IconOffsetY { get { return 2; } }
 
 		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Plate; } }
 
 		public override ArmorMeditationAllowance DefMedAllowance{ get{ return ArmorMeditationAllowance.None; } }
 
 		[Constructable]
-		public FemalePlateChest() : base( 0x1C04 )
+		public FemalePlateChest() : base( 7173 )
 		{
 			Weight = 4.0;
 		}

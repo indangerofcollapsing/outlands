@@ -70,7 +70,6 @@ namespace Server.Items
         private int m_StrReq = -1, m_DexReq = -1, m_IntReq = -1;
         private AMA m_Meditate = (AMA)(-1);
 
-
         public virtual bool AllowMaleWearer { get { return true; } }
         public virtual bool AllowFemaleWearer { get { return true; } }
 
@@ -83,7 +82,6 @@ namespace Server.Items
         public virtual AMA AosMedAllowance { get { return DefMedAllowance; } }
         public virtual AMA OldMedAllowance { get { return DefMedAllowance; } }
 
-
         public virtual int AosStrBonus { get { return 0; } }
         public virtual int AosDexBonus { get { return 0; } }
         public virtual int AosIntBonus { get { return 0; } }
@@ -91,13 +89,17 @@ namespace Server.Items
         public virtual int AosDexReq { get { return 0; } }
         public virtual int AosIntReq { get { return 0; } }
 
-
         public virtual int OldStrBonus { get { return 0; } }
         public virtual int OldDexBonus { get { return 0; } }
         public virtual int OldIntBonus { get { return 0; } }
         public virtual int OldStrReq { get { return 0; } }
         public virtual int OldDexReq { get { return 0; } }
         public virtual int OldIntReq { get { return 0; } }
+
+        public virtual int IconItemId { get { return ItemID; } }
+        public virtual int IconHue { get { return Hue; } }
+        public virtual int IconOffsetX { get { return 0; } } //Base is 85
+        public virtual int IconOffsetY { get { return 0; } } //Base is 80
 
         public virtual string BlessedInRegionName { get { return ""; } }
         

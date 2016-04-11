@@ -19,10 +19,15 @@ namespace Server.Items
 
 		public override int ArmorBase{ get{ return 30; } }
 
+        public override int IconItemId { get { return 5129; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 0; } }
+        public override int IconOffsetY { get { return 4; } }
+
 		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Plate; } }
 
 		[Constructable]
-		public CloseHelm() : base( 0x1408 )
+		public CloseHelm() : base( 5129 )
 		{
 			Weight = 5.0;
 		}

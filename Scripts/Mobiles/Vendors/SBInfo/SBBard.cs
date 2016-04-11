@@ -20,7 +20,7 @@ namespace Server.Mobiles
 		{ 
 			public InternalBuyInfo() 
 			{ 
-				Add( new GenericBuyInfo( typeof( LapHarp ), 30, ( 10 ), 0x0EB2, 0 ) ); 
+				Add( new GenericBuyInfo( typeof( StandingHarp ), 30, ( 10 ), 0x0EB2, 0 ) ); 
 				Add( new GenericBuyInfo( typeof( Lute ), 40, ( 10 ), 0x0EB3, 0 ) ); 
 				Add( new GenericBuyInfo( typeof( Drums ), 50, ( 10 ), 0x0E9C, 0 ) ); 
 				Add( new GenericBuyInfo( typeof( Harp ), 90, ( 10 ), 0x0EB1, 0 ) ); 
@@ -32,7 +32,7 @@ namespace Server.Mobiles
 		{ 
 			public InternalSellInfo() 
 			{ 
-				Add( typeof( LapHarp ), 15 ); 
+				Add( typeof( StandingHarp ), 15 ); 
 				Add( typeof( Lute ), 20 ); 
 				Add( typeof( Drums ), 25 ); 
 				Add( typeof( Harp ), 45 ); 

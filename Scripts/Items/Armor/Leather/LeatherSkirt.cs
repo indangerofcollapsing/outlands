@@ -12,7 +12,6 @@ namespace Server.Items
 		public override int BasePoisonResistance{ get{ return 3; } }
 		public override int BaseEnergyResistance{ get{ return 3; } }
 
-        //Changed to IPY values
 		public override int InitMinHits{ get{ return 31; } }
 		public override int InitMaxHits{ get{ return 37; } }
 
@@ -20,8 +19,12 @@ namespace Server.Items
 		public override int OldStrReq{ get{ return 10; } }
 
 		public override int ArmorBase{ get{ return 13; } }
-        //Added by IPY
 		public override int RevertArmorBase{ get{ return 2; } }
+
+        public override int IconItemId { get { return 7177; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return -6; } }
+        public override int IconOffsetY { get { return 8; } }        
 
 		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Leather; } }
 		public override CraftResource DefaultResource{ get{ return CraftResource.RegularLeather; } }
@@ -31,7 +34,7 @@ namespace Server.Items
 		public override bool AllowMaleWearer{ get{ return false; } }
 
 		[Constructable]
-		public LeatherSkirt() : base( 0x1C08 )
+		public LeatherSkirt() : base( 7177 )
 		{
 			Weight = 1.0;
 		}

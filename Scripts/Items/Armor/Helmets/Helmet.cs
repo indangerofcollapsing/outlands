@@ -18,13 +18,17 @@ namespace Server.Items
 		public override int OldStrReq{ get{ return 40; } }
 
 		public override int ArmorBase{ get{ return 30; } }
-		//Added by IPY
         public override int RevertArmorBase{ get{ return 4; } }
+
+        public override int IconItemId { get { return 5131; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 0; } }
+        public override int IconOffsetY { get { return 4; } }
 
 		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Plate; } }
 
 		[Constructable]
-		public Helmet() : base( 0x140A )
+		public Helmet() : base( 5131 )
 		{
 			Weight = 5.0;
 		}

@@ -24,10 +24,15 @@ namespace Server.Items
         public override int ArmorBase { get { return 40; } }
         public override int OldDexBonus { get { return -1; } }
 
+        public override int IconItemId { get { return 5138; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 3; } }
+        public override int IconOffsetY { get { return 6; } }
+
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.None; } }
 
 		[Constructable]
-		public PlateHelm() : base( 0x1412 )
+		public PlateHelm() : base( 5138 )
 		{
             Name = "platemail helm";
 			Weight = 5.0;

@@ -35,8 +35,8 @@ namespace Server.Items
 
         public virtual int IconItemId { get { return ItemID; } }
         public virtual int IconHue { get { return Hue; } }
-        public virtual int IconOffsetX { get { return 0; } } //65 is Baseline X For Gumps
-        public virtual int IconOffsetY { get { return 0; } } //80 is Baseline Y For Gumps
+        public virtual int IconOffsetX { get { return 0; } } //Base is 100
+        public virtual int IconOffsetY { get { return 0; } } //Base is 95
 
         public static int PlayerFistSpeed = 50;
 

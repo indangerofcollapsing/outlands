@@ -17,15 +17,20 @@ namespace Server.Items
 		public override int AosStrReq{ get{ return 40; } }
 		public override int OldStrReq{ get{ return 10; } }
 
-		public override int ArmorBase{ get{ return 18; } }
-		//Added by IPY
+		public override int ArmorBase{ get{ return 18; } }		
         public override int RevertArmorBase{ get{ return 3; } }
+
+        public override int IconItemId { get { return 5132; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 0; } }
+        public override int IconOffsetY { get { return 4; } }
 
 		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Plate; } }
 
 		[Constructable]
-		public Bascinet() : base( 0x140C )
+		public Bascinet() : base( 5132 )
 		{
+            Name = "bascinet";
 			Weight = 5.0;
 		}
 

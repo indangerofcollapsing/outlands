@@ -24,10 +24,15 @@ namespace Server.Items
         public override int ArmorBase { get { return 40; } }
         public override int OldDexBonus { get { return 0; } }
 
+        public override int IconItemId { get { return 5139; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 6; } }
+        public override int IconOffsetY { get { return 9; } }
+
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.None; } }
 
 		[Constructable]
-		public PlateGorget() : base( 0x1413 )
+		public PlateGorget() : base( 5139 )
 		{
             Name = "platemail gorget";
 			Weight = 2.0;

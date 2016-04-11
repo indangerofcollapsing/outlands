@@ -811,7 +811,7 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				new FillableEntry( 1, typeof( LapHarp ) ),
+				new FillableEntry( 1, typeof( StandingHarp ) ),
 				new FillableEntry( 2, typeof( Lute ) ),
 				new FillableEntry( 1, typeof( Drums ) ),
 				new FillableEntry( 1, typeof( Tambourine ) ),

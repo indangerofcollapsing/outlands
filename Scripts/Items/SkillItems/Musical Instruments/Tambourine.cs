@@ -6,8 +6,13 @@ namespace Server.Items
 {
 	public class Tambourine : BaseInstrument
 	{
+        public override int IconItemId { get { return 3742; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 8; } }
+        public override int IconOffsetY { get { return -2; } }
+
 		[Constructable]
-		public Tambourine() : base( 0xE9D, 0x52, 0x53 )
+        public Tambourine(): base(0xE9E, 0x52, 0x53)
 		{
             Name = "tambourine";
 			Weight = 2.0;

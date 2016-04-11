@@ -101,6 +101,7 @@ namespace Server.SkillHandlers
             m_DisplayMode = displayMode;
 
             bool showDetailedInfo = m_Success;
+            bool showDurability = m_Success;
             
             Closable = true;
             Disposable = true;
@@ -224,11 +225,10 @@ namespace Server.SkillHandlers
 
                         //Durability
                         AddLabel(205, 85, textHue, "Durability:");
-                        if (showDetailedInfo)
+                        if (showDetailedInfo && showDurability)
                             AddLabel(280, 85, 2603, weapon.HitPoints + "/" + weapon.MaxHitPoints);
                         else
                             AddLabel(280, 85, 2603, "?");
-
 
                         //Accuracy
                         AddLabel(209, 105, textHue, "Accuracy:");

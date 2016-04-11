@@ -17,20 +17,24 @@ namespace Server.Items
 
 		public override int AosStrReq{ get{ return 35; } }
 		public override int OldStrReq{ get{ return 35; } }
-        //Changed to IPY values
+
 		public override int ArmorBase{ get{ return 15; } }
-		//Added by IPY
         public override int RevertArmorBase{ get{ return 7; } }
+
+        public override int IconItemId { get { return 7170; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return -2; } }
+        public override int IconOffsetY { get { return 2; } }
 
 		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Studded; } }
 		public override CraftResource DefaultResource{ get{ return CraftResource.RegularLeather; } }
-        //Removed by IPY
-		//public override ArmorMeditationAllowance DefMedAllowance{ get{ return ArmorMeditationAllowance.Half; } }
+
+        public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.ThreeQuarter; } }
 
 		public override bool AllowMaleWearer{ get{ return false; } }
 
 		[Constructable]
-		public FemaleStuddedChest() : base( 0x1C02 )
+		public FemaleStuddedChest() : base( 7170 )
 		{
 			Weight = 6.0;
 		}

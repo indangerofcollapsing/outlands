@@ -22,7 +22,7 @@ namespace Server.Mobiles
 			{ 
 				Add( new GenericBuyInfo( typeof( Drums ), 50, 20, 0x0E9C, 0 ) );
 				Add( new GenericBuyInfo( typeof( Tambourine ), 60, 20, 0x0E9E, 0 ) );
-				Add( new GenericBuyInfo( typeof( LapHarp ), 30, 20, 0x0EB2, 0 ) );
+				Add( new GenericBuyInfo( typeof( StandingHarp ), 30, 20, 0x0EB2, 0 ) );
 				Add( new GenericBuyInfo( typeof( Lute ), 40, 20, 0x0EB3, 0 ) );
 
 				Add( new GenericBuyInfo( typeof( Shovel ), 12, 20, 0xF39, 0 ) );
@@ -70,7 +70,7 @@ namespace Server.Mobiles
 			{ 
 				Add( typeof( Drums ), 17 );
 				Add( typeof( Tambourine ), 20 );
-				Add( typeof( LapHarp ), 10 );
+				Add( typeof( StandingHarp ), 10 );
 				Add( typeof( Lute ), 14 );
 
 				Add( typeof( Shovel ), 4 );

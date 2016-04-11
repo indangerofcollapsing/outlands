@@ -19,6 +19,11 @@ namespace Server.Items
         public virtual int InitMinUses { get { return 200; } }
         public virtual int InitMaxUses { get { return 300; } }
 
+        public virtual int IconItemId { get { return ItemID; } }
+        public virtual int IconHue { get { return Hue; } }
+        public virtual int IconOffsetX { get { return 0; } } //Base is 75
+        public virtual int IconOffsetY { get { return 0; } } //Base is 95
+
         public static double DiscordanceModifier = .25;
 
         public static double ExceptionalQualitySkillBonus = 5;

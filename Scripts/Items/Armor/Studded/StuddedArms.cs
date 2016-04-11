@@ -26,10 +26,15 @@ namespace Server.Items
         public override int ArmorBase { get { return 20; } }
         public override int OldDexBonus { get { return 0; } }
 
+        public override int IconItemId { get { return 5076; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 0; } }
+        public override int IconOffsetY { get { return 5; } }
+
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.ThreeQuarter; } }
 
 		[Constructable]
-		public StuddedArms() : base( 0x13DC )
+		public StuddedArms() : base( 5076 )
 		{
 			Weight = 4.0;
 		}

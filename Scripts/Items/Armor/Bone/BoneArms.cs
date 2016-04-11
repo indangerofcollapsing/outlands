@@ -26,12 +26,16 @@ namespace Server.Items
         public override int ArmorBase { get { return 25; } }
         public override int OldDexBonus { get { return 0; } }
 
+        public override int IconItemId { get { return 5203; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 0; } }
+        public override int IconOffsetY { get { return 5; } }
+
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.Quarter; } }
 
 		[Constructable]
-		public BoneArms() : base( 0x144E )
+		public BoneArms() : base( 5203 )
 		{
-            //IPY weight
 			Weight = 1.0;
 		}
 

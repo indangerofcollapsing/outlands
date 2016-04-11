@@ -616,14 +616,13 @@ namespace Server.Misc
 
         private static void PackInstrument()
         {
-            switch (Utility.Random(6))
+            switch (Utility.Random(5))
             {
                 case 0: PackItem(new Drums()); break;
                 case 1: PackItem(new Harp()); break;
-                case 2: PackItem(new LapHarp()); break;
+                case 2: PackItem(new StandingHarp()); break;
                 case 3: PackItem(new Lute()); break;
                 case 4: PackItem(new Tambourine()); break;
-                case 5: PackItem(new TambourineTassel()); break;
             }
         }
 

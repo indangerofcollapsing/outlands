@@ -453,8 +453,8 @@ namespace Server
         public static Type[] InstrumentTypes { get { return m_InstrumentTypes; } }
         private static Type[] m_InstrumentTypes = new Type[]
 		{
-			typeof( Drums ),				typeof( Harp ),					typeof( LapHarp ),
-			typeof( Lute ),					typeof( Tambourine ),			typeof( TambourineTassel )
+			typeof( Drums ),				typeof( Harp ),					typeof( StandingHarp ),
+			typeof( Lute ),					typeof( Tambourine ),			
 		};
 
         public static SpellScroll RandomScroll(int minIndex, int maxIndex, SpellbookType type)

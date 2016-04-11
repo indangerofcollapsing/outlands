@@ -25,10 +25,15 @@ namespace Server.Items
         public override int ArmorBase { get { return 25; } }
         public override int OldDexBonus { get { return 0; } }
 
+        public override int IconItemId { get { return 5106; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 3; } }
+        public override int IconOffsetY { get { return 5; } }
+
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.Half; } }
 
 		[Constructable]
-		public RingmailGloves() : base( 0x13EB )
+		public RingmailGloves() : base( 5106 )
 		{
 			Weight = 2.0;
 		}

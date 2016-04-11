@@ -27,10 +27,15 @@ namespace Server.Items
         public override int ArmorBase { get { return 15; } }
         public override int OldDexBonus { get { return 0; } }
 
+        public override int IconItemId { get { return 5075; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return -1; } }
+        public override int IconOffsetY { get { return -1; } }
+
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.All; } }
 
 		[Constructable]
-		public LeatherChest() : base( 0x13CC )
+		public LeatherChest() : base( 5075 )
 		{
 			Weight = 6.0;
 		}
