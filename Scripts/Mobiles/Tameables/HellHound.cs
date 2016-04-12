@@ -1,21 +1,11 @@
 using System;
-using System.Collections;
 using Server.Items;
-using Server.Targeting;
-using Server.Spells;
-using Server.Spells.Seventh;
-using Server.Spells.Sixth;
-using Server.Spells.Fourth;
-using Server.Spells.Third;
-
 
 namespace Server.Mobiles
 {
 	[CorpseName( "a hell hound corpse" )]
 	public class HellHound : BaseCreature
 	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
 		[Constructable]
 		public HellHound() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -80,10 +70,20 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
 
-		public override void OnDeath( Container c )
-		{
-			base.OnDeath(c);
-		}
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
 
 		public HellHound( Serial serial ) : base( serial )
 		{

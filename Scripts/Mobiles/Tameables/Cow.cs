@@ -1,5 +1,4 @@
 using System;
-using Server.Mobiles;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -60,18 +59,28 @@ namespace Server.Mobiles
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
-                
-        public override void OnDoubleClick(Mobile from)
+
+        public override void SetUniqueAI()
         {
-            base.OnDoubleClick(from);
+        }
 
-            int random = Utility.Random(100);
+        public override void SetTamedAI()
+        {
+        }
 
-           if (random < 20)
-                PlaySound(120);
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Slow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
 
-            else if (random < 40)
-                PlaySound(121);
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public Cow(Serial serial): base(serial)

@@ -1,5 +1,4 @@
 using System;
-using Server.Mobiles;
 using Server.Items;
 using System.Collections.Generic;
 
@@ -8,8 +7,6 @@ namespace Server.Mobiles
 	[CorpseName( "a plague rat rat corpse" )]	
 	public class PlagueRat : BaseCreature
 	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
 		[Constructable]
 		public PlagueRat() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -63,12 +60,20 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
         public override void SetUniqueAI()
-        {           
-            UniqueCreatureDifficultyScalar = 1.33;
+        {
         }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison PoisonImmune { get { return Poison.Lethal; } }
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {
@@ -88,6 +93,16 @@ namespace Server.Mobiles
             }
 
             SpecialAbilities.DiseaseSpecialAbility(effectChance, this, defender, 20, 60, -1, true, "", "Their bite has infected you with a horrific disease!");
+        }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public PlagueRat(Serial serial): base(serial)

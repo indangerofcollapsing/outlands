@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
@@ -59,15 +55,22 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 0; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 50; } }        
+        public override int TamedBaseVirtualArmor { get { return 50; } }
+
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
 
         public override bool IsHighSeasBodyType { get { return true; } }
-
-        public override int GetAngerSound() { return 0x2A9; }
-        public override int GetIdleSound() { return 0x2A8; }
-        public override int GetAttackSound() { return 0x622; }
-        public override int GetHurtSound() { return 0x623; }
-        public override int GetDeathSound() { return 0x5D5; }
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {
@@ -88,6 +91,22 @@ namespace Server.Mobiles
 
             SpecialAbilities.FrenzySpecialAbility(effectChance, this, defender, .25, 10, -1, true, "", "", "*becomes frenzied*");
         }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
+                
+        public override int GetAngerSound() { return 0x2A9; }
+        public override int GetIdleSound() { return 0x2A8; }
+        public override int GetAttackSound() { return 0x622; }
+        public override int GetHurtSound() { return 0x623; }
+        public override int GetDeathSound() { return 0x5D5; }
 
         public Skitter(Serial serial): base(serial)
 		{

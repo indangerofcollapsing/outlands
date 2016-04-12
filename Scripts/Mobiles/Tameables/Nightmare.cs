@@ -1,15 +1,11 @@
 using System;
-using Server;
 using Server.Items;
-using Server.Mobiles;
 
 namespace Server.Mobiles
 {
 	[CorpseName( "a nightmare corpse" )]
 	public class Nightmare : BaseCreature
 	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
 		[Constructable]
 		public Nightmare () : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
 		{
@@ -90,7 +86,22 @@ namespace Server.Mobiles
 
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
-        }        
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
 
         public override int GetAngerSound() {return 0x4BE; }
         public override int GetIdleSound(){ return 0x4BD; }

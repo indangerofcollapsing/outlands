@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections;
-using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
     [CorpseName("a swamp crawler corpse")]
     public class SwampCrawler : BaseCreature
     {
-        public DateTime m_NextStealthCheckAllowed = DateTime.UtcNow;
-        public TimeSpan StealthDelay = TimeSpan.FromSeconds(10);
-
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
         [Constructable]
         public SwampCrawler(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -71,12 +62,8 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 75; } }
 
-        public override bool IsHighSeasBodyType { get { return true; } }
-
         public override void SetUniqueAI()
-        {            
-            UniqueCreatureDifficultyScalar = 1.05;
-
+        {
             DictWanderAction[WanderAction.None] = 5;
             DictWanderAction[WanderAction.Stealth] = 1;
         }
@@ -91,6 +78,16 @@ namespace Server.Mobiles
             SetSkill(SkillName.Hiding, 100);
             SetSkill(SkillName.Stealth, 100);
         }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public DateTime m_NextStealthCheckAllowed = DateTime.UtcNow;
+        public TimeSpan StealthDelay = TimeSpan.FromSeconds(10);
+
+        public override bool IsHighSeasBodyType { get { return true; } }
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {
@@ -110,7 +107,7 @@ namespace Server.Mobiles
         public override void OnThink()
         {
             base.OnThink();
-            
+
             if (Alive && Controlled && ControlMaster is PlayerMobile && ControlOrder != OrderType.Stop)
             {
                 if (Hidden || Combatant != null)
@@ -165,7 +162,12 @@ namespace Server.Mobiles
                         m_NextStealthCheckAllowed = DateTime.UtcNow + StealthDelay;
                     }
                 }
-            }            
+            }
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public SwampCrawler(Serial serial): base(serial)

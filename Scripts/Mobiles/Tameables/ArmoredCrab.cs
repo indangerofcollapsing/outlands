@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
@@ -63,10 +60,37 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 150; } }
 
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Slow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override bool HasNormalLoot { get { return false; } }
+        public override MeatType MeatType { get { return MeatType.Meat; } }
+        public override int MeatAmount { get { return 5; } }
+        public override int ResourceAmount { get { return 10; } }
+
         public override bool IsHighSeasBodyType { get { return true; } }
 
-        public ArmoredCrab(Serial serial)
-            : base(serial)
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
+
+        public ArmoredCrab(Serial serial): base(serial)
         {
         }
 

@@ -1,7 +1,5 @@
 using System;
-using Server.Mobiles;
 using Server.Items;
-
 
 namespace Server.Mobiles
 {
@@ -41,9 +39,6 @@ namespace Server.Mobiles
             MinTameSkill = 30;
         }
 
-        public override Poison PoisonImmune { get { return Poison.Regular; } }
-        public override Poison HitPoison { get { return Poison.Regular; } }
-
         public override int TamedItemId { get { return 8444; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 15; } }
@@ -64,15 +59,36 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 75; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 50; } } 
+        public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public Snake(Serial serial): base(serial)
+        public override void SetUniqueAI()
         {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison HitPoison { get { return Poison.Regular; } }
+        public override Poison PoisonImmune { get { return Poison.Regular; } }        
+
+        public override void OnThink()
+        {
+            base.OnThink();
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
+        }        
+
+        public Snake(Serial serial): base(serial)
+        {
         }
 
         public override void Serialize(GenericWriter writer)

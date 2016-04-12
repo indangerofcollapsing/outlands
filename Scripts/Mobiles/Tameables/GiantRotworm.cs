@@ -7,9 +7,7 @@ namespace Server.Mobiles
 {
 	[CorpseName( "a giant rotworm corpse" )]
 	public class GiantRotworm : BaseCreature
-	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-        
+	{        
 		[Constructable]
 		public GiantRotworm() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -65,6 +63,24 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 75; } }
 
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VerySlow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison HitPoison { get { return Poison.Lethal; } }
+        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+
+        public override bool IsHighSeasBodyType { get { return true; } }
+
         public override int AttackAnimation { get { return Utility.RandomList(1, 5, 6); } }
         public override int AttackFrames { get { return 8; } }
 
@@ -72,22 +88,8 @@ namespace Server.Mobiles
         public override int HurtFrames { get { return 6; } }
 
         public override int IdleAnimation { get { return 17; } }
-        public override int IdleFrames { get { return 8; } }       
-
-        public override Poison HitPoison { get { return Poison.Lethal; } }
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
-        public override bool IsHighSeasBodyType { get { return true; } }
-
-        public override void SetUniqueAI()
-        {           
-            UniqueCreatureDifficultyScalar = 1.2;
-        }
-
-        public override void SetTamedAI()
-        {            
-        }
-
+        public override int IdleFrames { get { return 8; } }     
+        
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
@@ -148,12 +150,7 @@ namespace Server.Mobiles
         {
             base.OnDamage(amount, from, willKill);
         }
-
-        public override void OnThink()
-        {
-            base.OnThink();
-        }
-
+        
         protected override bool OnMove(Direction d)
         {
             if (Utility.RandomDouble() <= .25)
@@ -169,6 +166,16 @@ namespace Server.Mobiles
             }            
 
             return base.OnMove(d);
+        }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public override int GetAngerSound() { return 0x581; }

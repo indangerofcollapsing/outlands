@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
@@ -42,11 +38,6 @@ namespace Server.Mobiles
 
             PackItem(new Bone(6));
         }
-        
-        public override Poison PoisonImmune { get { return Poison.Deadly; } }
-        public override Poison HitPoison { get { return Poison.Deadly; } }
-
-        public override bool IsHighSeasBodyType { get { return true; } }
 
         public override int TamedItemId { get { return 17046; } }
         public override int TamedItemHue { get { return 0; } }
@@ -68,7 +59,35 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 50; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 50; } }        
+        public override int TamedBaseVirtualArmor { get { return 50; } }
+
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
+
+        public override Poison PoisonImmune { get { return Poison.Deadly; } }
+        public override Poison HitPoison { get { return Poison.Deadly; } }
+
+        public override bool IsHighSeasBodyType { get { return true; } }
 
         public GiantCoralSnake(Serial serial): base(serial)
         {

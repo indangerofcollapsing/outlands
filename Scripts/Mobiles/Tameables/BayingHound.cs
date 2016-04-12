@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections;
 using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
     [CorpseName("a baying hound corpse")]
     public class BayingHound : BaseCreature
     {
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
         [Constructable]
         public BayingHound(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -42,11 +37,6 @@ namespace Server.Mobiles
             Fame = 500;
             Karma = -500;
         }
-        
-        public override void SetUniqueAI()
-        {
-            UniqueCreatureDifficultyScalar = 1.05;
-        }
 
         public override int TamedItemId { get { return 8535; } }
         public override int TamedItemHue { get { return 0; } }
@@ -70,6 +60,19 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
         public override bool IsHighSeasBodyType { get { return true; } }
 
         public override void OnGaveMeleeAttack(Mobile defender)
@@ -92,10 +95,17 @@ namespace Server.Mobiles
             SpecialAbilities.StunSpecialAbility(effectChance, this, defender, .10, 10, -1, true, "", "The creature clings to you, making it difficult to use your weapon!");
         }
 
-        public override int GetDeathSound()
+        public override void OnThink()
         {
-            return 0x386;
+            base.OnThink();
         }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
+
+        public override int GetDeathSound() { return 0x386; }
 
         public BayingHound(Serial serial): base(serial)
         {

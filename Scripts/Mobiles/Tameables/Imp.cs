@@ -1,5 +1,4 @@
 using System;
-using Server;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -43,8 +42,6 @@ namespace Server.Mobiles
             MinTameSkill = 75;
         }
 
-        public override bool CanFly { get { return true; } }
-
         public override int TamedItemId { get { return 9631; } }
         public override int TamedItemHue { get { return 2118; } }
         public override int TamedItemXOffset { get { return 10; } }
@@ -67,6 +64,10 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 125; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
+        public override void SetUniqueAI()
+        {
+        }
+
         public override void SetTamedAI()
         {
             AISubGroup = AISubGroupType.Mage2;
@@ -81,6 +82,21 @@ namespace Server.Mobiles
 
             SpellDelayMin *= 1.33;
             SpellDelayMax *= 1.33;
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Mage2; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public Imp(Serial serial): base(serial)

@@ -27,8 +27,6 @@ namespace Server.Custom
         public virtual HenchmanGroupType HenchmanGroup { get { return HenchmanGroupType.Honorable; } }
         public virtual bool HenchmanHumanoid { get { return true; } }
         public virtual bool Recruitable { get { return true; } }
-        
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
 
         public override bool AllowParagon { get { return false; } }
 

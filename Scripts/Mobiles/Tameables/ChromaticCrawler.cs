@@ -1,16 +1,11 @@
 using System;
-using System.Collections;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
 	[CorpseName( "a chromatic crawler corpse" )]
 	public class ChromaticCrawler : BaseCreature
 	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
 		[Constructable]
 		public ChromaticCrawler() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -42,12 +37,7 @@ namespace Server.Mobiles
             Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 100.1;
-
-            PackItem(new LesserPoisonPotion());
         }
-
-        public override Poison HitPoison { get { return Poison.Deadly; } }
-        public override Poison PoisonImmune { get { return Poison.Deadly; } }        
         
         public override int TamedItemId { get { return 8420; } }
         public override int TamedItemHue { get { return 2500; } }
@@ -72,10 +62,21 @@ namespace Server.Mobiles
         public override int TamedBaseVirtualArmor { get { return 125; } }
 
         public override void SetUniqueAI()
-        {          
-            UniqueCreatureDifficultyScalar = 1.2;
+        {
         }
 
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Slow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison HitPoison { get { return Poison.Deadly; } }
+        public override Poison PoisonImmune { get { return Poison.Deadly; } }       
+        
         public override bool OnBeforeHarmfulSpell()
         {            
             double effectChance = .15;
@@ -92,7 +93,12 @@ namespace Server.Mobiles
             return true;
         }
 
-		public override void OnDeath(Container c)
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
         {
             base.OnDeath(c);
         }

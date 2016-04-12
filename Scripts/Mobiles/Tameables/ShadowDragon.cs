@@ -1,16 +1,11 @@
 using System;
-using Server;
 using Server.Items;
-using Server.Mobiles.Vendors.NPC;
-
 
 namespace Server.Mobiles
 {
 	[CorpseName( "a shadow dragon corpse" )]
 	public class ShadowDragon : BaseCreature
 	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
 		[Constructable]
 		public ShadowDragon() : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -69,11 +64,6 @@ namespace Server.Mobiles
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 100; } }
         public override int TamedBaseVirtualArmor { get { return 75; } } 
-        
-        public override Poison PoisonImmune { get { return Poison.Deadly; } }
-        public override Poison HitPoison { get { return Poison.Deadly; } }
-
-        public override bool CanFly { get { return true; } }
 
         public override void SetUniqueAI()
         {
@@ -93,15 +83,30 @@ namespace Server.Mobiles
 
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.PoisonBreathAttack] = 1;
-        }      		
-		
-		public override int GetIdleSound(){return 0x2D5;}
-		public override int GetHurtSound(){return 0x2D1;}
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage2; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison HitPoison { get { return Poison.Deadly; } }
+        public override Poison PoisonImmune { get { return Poison.Deadly; } }        
+
+        public override bool CanFly { get { return true; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-        }
+        }       
+		
+		public override int GetIdleSound(){return 0x2D5;}
+		public override int GetHurtSound(){return 0x2D1;}
 
 		public ShadowDragon( Serial serial ) : base( serial )
 		{

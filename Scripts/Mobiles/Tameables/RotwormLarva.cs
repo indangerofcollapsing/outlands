@@ -1,7 +1,5 @@
 using System;
-using Server.Mobiles;
 using Server.Items;
-using Server.Spells;
 using Server.Network;
 
 namespace Server.Mobiles
@@ -9,8 +7,6 @@ namespace Server.Mobiles
     [CorpseName("a rotworm larva corpse")]
     public class RotwormLarva : BaseCreature
     {
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
         [Constructable]
         public RotwormLarva(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -65,18 +61,22 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
-        public override bool IsHighSeasBodyType { get { return true; } }
-
         public override void SetUniqueAI()
         {
-            UniqueCreatureDifficultyScalar = 1.15;
         }
 
         public override void SetTamedAI()
         {
-        }       
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VerySlow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+
+        public override bool IsHighSeasBodyType { get { return true; } }
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {
@@ -104,7 +104,7 @@ namespace Server.Mobiles
                 defender.SendMessage("The creature burrows inside of you, causing you immense pain and discomfort!");
 
                 double damage = DamageMax * 5;
-                
+
                 SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 30, 0x4F1, true, "", "");
 
                 int projectiles = 6;
@@ -112,20 +112,17 @@ namespace Server.Mobiles
 
                 for (int a = 0; a < projectiles; a++)
                 {
-                    Point3D newLocation = new Point3D(defender.X + Utility.RandomList( -4, -3, -2, -1, 1, 2, 3, 4), defender.Y + Utility.RandomList( -4, -3, -2, -1, 1, 2, 3, 4), defender.Z);
-                    SpellHelper.AdjustField(ref newLocation, defender.Map, 12, false);
+                    Point3D newLocation = SpecialAbilities.GetRandomAdjustedLocation(defender.Location, defender.Map, true, 4, false);
 
                     IEntity effectStartLocation = new Entity(Serial.Zero, new Point3D(defender.X, defender.Y, defender.Z + Utility.RandomMinMax(5, 10)), defender.Map);
                     IEntity effectEndLocation = new Entity(Serial.Zero, new Point3D(newLocation.X, newLocation.Y, newLocation.Z + Utility.RandomMinMax(10, 20)), defender.Map);
 
                     Effects.SendMovingEffect(effectStartLocation, effectEndLocation, Utility.RandomList(4651, 4652, 4653, 4654), particleSpeed, 0, false, false, 0, 0);
-                } 
+                }
 
                 for (int a = 0; a < 4; a++)
                 {
-                    Point3D bloodLocation = new Point3D(X + Utility.RandomList(-1, 1), Y + Utility.RandomList(-1, 1), Z);
-                    SpellHelper.AdjustField(ref bloodLocation, Map, 12, false);
-
+                    Point3D bloodLocation = SpecialAbilities.GetRandomAdjustedLocation(Location, Map, true, 1, false);
                     new Blood().MoveToWorld(bloodLocation, Map);
                 }
 
@@ -135,16 +132,25 @@ namespace Server.Mobiles
             }
         }
 
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }        
+
         protected override bool OnMove(Direction d)
         {
             if (Utility.RandomDouble() <= .25)
             {
-                Blood blood = new Blood();
-                blood.ItemID = Utility.RandomList(4651, 4652, 4653, 4654);
-                blood.Hue = 2623;
-                blood.Name = "slime";
+                TimedStatic slime = new TimedStatic(Utility.RandomList(4651, 4652, 4653, 4654), 5);
+                slime.Hue = 2623;
+                slime.Name = "slime";
 
-                blood.MoveToWorld(Location, Map);
+                slime.MoveToWorld(Location, Map);
 
                 Effects.PlaySound(Location, Map, Utility.RandomList(0x5D9, 0x5DB));
             }            

@@ -1,5 +1,4 @@
 using System;
-using Server;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -35,6 +34,31 @@ namespace Server.Mobiles
             VirtualArmor = 50;
 
             ControlSlots = 2;
+        }
+
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+            AISubGroup = AISubGroupType.MeleeMage2;
+            UpdateAI(false);
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage2; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public SummonedWaterElemental(Serial serial): base(serial)

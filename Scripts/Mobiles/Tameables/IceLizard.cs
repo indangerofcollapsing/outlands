@@ -1,14 +1,11 @@
 using System;
 using Server.Items;
-using Server.Mobiles;
 
 namespace Server.Mobiles
 {
 	[CorpseName( "an ice lizard corpse" )]
 	public class IceLizard : BaseCreature
 	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
 		[Constructable]
 		public IceLizard() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -72,6 +69,22 @@ namespace Server.Mobiles
         public override void SetTamedAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
+            DictCombatSpecialAction[CombatSpecialAction.IceBreathAttack] = 1;
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public IceLizard(Serial serial): base(serial)

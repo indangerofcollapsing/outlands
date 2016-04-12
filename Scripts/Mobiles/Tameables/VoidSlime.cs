@@ -9,13 +9,6 @@ namespace Server.Mobiles
 	[CorpseName( "a void slime corpse" )]
 	public class VoidSlime : BaseCreature
 	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
-        public DateTime m_NextVoidAttackAllowed;
-
-        public TimeSpan NextPvMVoidAttackDelay = TimeSpan.FromSeconds(3);
-        public TimeSpan NextPvPVoidAttackDelay = TimeSpan.FromSeconds(3);
-
 		[Constructable]
 		public VoidSlime() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -68,17 +61,29 @@ namespace Server.Mobiles
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
-        
-        public override void SetUniqueAI()
-        {  
-            UniqueCreatureDifficultyScalar = 1.5;
 
+        public override void SetUniqueAI()
+        {
             DictCombatRange[CombatRange.WeaponAttackRange] = 0;
             DictCombatRange[CombatRange.SpellRange] = 10;
             DictCombatRange[CombatRange.Withdraw] = 0;
         }
 
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VerySlow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
+
+        public DateTime m_NextVoidAttackAllowed;
+
+        public TimeSpan NextPvMVoidAttackDelay = TimeSpan.FromSeconds(3);
+        public TimeSpan NextPvPVoidAttackDelay = TimeSpan.FromSeconds(3);
 
         public override void OnThink()
         {
@@ -95,7 +100,7 @@ namespace Server.Mobiles
 
                 if (combatant == null)
                     m_NextVoidAttackAllowed = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(minSeconds, maxSeconds));
-            }           
+            }
 
             if (DateTime.UtcNow >= m_NextVoidAttackAllowed && AIObject.currentCombatRange != CombatRange.Withdraw && AIObject.Action != ActionType.Flee)
             {
@@ -134,7 +139,7 @@ namespace Server.Mobiles
                             attackCooldown = NextPvPVoidAttackDelay;
                         }
 
-                        m_NextVoidAttackAllowed = DateTime.UtcNow + attackCooldown;                        
+                        m_NextVoidAttackAllowed = DateTime.UtcNow + attackCooldown;
 
                         Animate(4, 4, 1, true, false, 0);
 
@@ -169,7 +174,7 @@ namespace Server.Mobiles
                                 TimedStatic voidResidue = new TimedStatic(Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655), 5);
                                 voidResidue.Hue = 2051;
                                 voidResidue.Name = "void residue";
-                                voidResidue.MoveToWorld(new Point3D(combatant.X, combatant.Y, combatant.Z), Map);                               
+                                voidResidue.MoveToWorld(new Point3D(combatant.X, combatant.Y, combatant.Z), Map);
 
                                 if (Utility.RandomDouble() <= effectChance)
                                 {
@@ -181,8 +186,7 @@ namespace Server.Mobiles
                                         voidResidue.Hue = 2051;
                                         voidResidue.Name = "void residue";
 
-                                        Point3D voidResidueLocation = new Point3D(combatant.X + Utility.RandomMinMax(-1, 1), combatant.Y + Utility.RandomMinMax(-1, 1), combatant.Z);
-                                        SpellHelper.AdjustField(ref voidResidueLocation, combatant.Map, 12, false);
+                                        Point3D voidResidueLocation = SpecialAbilities.GetRandomAdjustedLocation(combatant.Location, combatant.Map, true, 1, false);
 
                                         voidResidue.MoveToWorld(voidResidueLocation, combatant.Map);
                                     }
@@ -203,12 +207,12 @@ namespace Server.Mobiles
             }
         }
 
-        public override int GetAttackSound() { return 0x5DA; }
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
 
-		public override void OnDeath( Container c )
-		{			
-    		base.OnDeath( c );
-		}        
+        public override int GetAttackSound() { return 0x5DA; }       
         
         public VoidSlime( Serial serial ) : base( serial )
 		{

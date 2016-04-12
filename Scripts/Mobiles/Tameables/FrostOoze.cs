@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using Server.Items;
-using Server.Targeting;
 
 namespace Server.Mobiles
 {
@@ -71,6 +69,21 @@ namespace Server.Mobiles
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.IceBreathAttack] = 1;
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VerySlow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 		
 		public FrostOoze( Serial serial ) : base( serial )

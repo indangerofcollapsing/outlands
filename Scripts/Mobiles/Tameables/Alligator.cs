@@ -59,8 +59,20 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 75; } }
 
-        public override bool HasNormalLoot { get { return false; } }
+        public override void SetUniqueAI()
+        {
+        }
 
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override bool HasNormalLoot { get { return false; } }
         public override MeatType MeatType { get { return MeatType.Meat; } }
         public override int MeatAmount { get { return 5; } }
         public override int ResourceAmount { get { return 10; } }
@@ -85,6 +97,16 @@ namespace Server.Mobiles
 
             SpecialAbilities.EntangleSpecialAbility(effectChance, this, defender, 5.0, 1, -1, true, "", "The creature grasps you with its jaws, holding you in place!");
         }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
         
 		public Alligator(Serial serial) : base(serial)
 		{
@@ -99,7 +121,6 @@ namespace Server.Mobiles
 		public override void Deserialize(GenericReader reader)
 		{
 			base.Deserialize(reader);
-
 			int version = reader.ReadInt();
 		}
 	}

@@ -1,16 +1,12 @@
 using System;
 using Server;
 using Server.Items;
-using System.Collections;
 
 namespace Server.Mobiles
 {
     [CorpseName("an energy vortex corpse")]
     public class EnergyVortex : BaseCreature
     {
-        public override bool DeleteCorpseOnDeath { get { return Summoned; } }
-        public override bool AlwaysMurderer { get { return true; } }
-
         [Constructable]
         public EnergyVortex(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -44,10 +40,19 @@ namespace Server.Mobiles
             ReturnsHome = false;
         }
 
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Berserk; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
         public override Poison PoisonImmune { get { return Poison.Lethal; } }
 
-        public override int GetAngerSound() {  return 0x15;}
-        public override int GetAttackSound() {   return 0x28;   }
+        public override bool DeleteCorpseOnDeath { get { return Summoned; } }
+        public override bool AlwaysMurderer { get { return true; } }
+        public override bool IsHouseSummonable { get { return true; } }     
+
+        public override int GetAngerSound() {return 0x15;}
+        public override int GetAttackSound() {return 0x28;}
 
         public EnergyVortex(Serial serial): base(serial)
         {

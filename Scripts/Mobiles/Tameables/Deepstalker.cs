@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
     [CorpseName("a deepstalker corpse")]
     public class Deepstalker : BaseCreature
     {
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
-        public DateTime m_NextStealthCheckAllowed = DateTime.UtcNow;
-        public TimeSpan StealthDelay = TimeSpan.FromSeconds(10);
-
         [Constructable]
         public Deepstalker(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -69,6 +61,41 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 25; } }
 
+        public override void SetUniqueAI()
+        {
+            DictWanderAction[WanderAction.None] = 5;
+            DictWanderAction[WanderAction.Stealth] = 1;
+        }
+
+        public override void SetTamedAI()
+        {
+            DictWanderAction[WanderAction.None] = 1;
+            DictWanderAction[WanderAction.Stealth] = 2;
+
+            BackstabDamageScalar = BaseCreature.TamedCreatureBackstabScalar;
+
+            SetSkill(SkillName.Hiding, 100);
+            SetSkill(SkillName.Stealth, 100);
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }        
+
+        public DateTime m_NextStealthCheckAllowed = DateTime.UtcNow;
+        public TimeSpan StealthDelay = TimeSpan.FromSeconds(10);
+
+        public override bool IsHighSeasBodyType { get { return true; } }
+
+        public override void OnDamage(int amount, Mobile from, bool willKill)
+        {
+            if (!willKill)
+                m_NextStealthCheckAllowed = DateTime.UtcNow + StealthDelay;
+
+            base.OnDamage(amount, from, willKill);
+        }
+
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
@@ -87,35 +114,6 @@ namespace Server.Mobiles
             SpecialAbilities.FrenzySpecialAbility(effectChance, this, defender, .25, 10, -1, true, "", "", "*becomes frenzied*");
 
             m_NextStealthCheckAllowed = DateTime.UtcNow + StealthDelay;
-        }
-
-        public override bool IsHighSeasBodyType { get { return true; } }
-
-        public override void SetUniqueAI()
-        {           
-            UniqueCreatureDifficultyScalar = 1.05;
-
-            DictWanderAction[WanderAction.None] = 5;
-            DictWanderAction[WanderAction.Stealth] = 1;
-        }
-
-        public override void SetTamedAI()
-        {
-            DictWanderAction[WanderAction.None] = 1;
-            DictWanderAction[WanderAction.Stealth] = 2;
-
-            BackstabDamageScalar = BaseCreature.TamedCreatureBackstabScalar;
-
-            SetSkill(SkillName.Hiding, 100);
-            SetSkill(SkillName.Stealth, 100);
-        }
-
-        public override void OnDamage(int amount, Mobile from, bool willKill)
-        {
-            if (!willKill)
-                m_NextStealthCheckAllowed = DateTime.UtcNow + StealthDelay;
-
-            base.OnDamage(amount, from, willKill);
         }
 
         public override void OnThink()

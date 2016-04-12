@@ -50,8 +50,6 @@ namespace Server.Mobiles
 			AddItem( pack );
 		}
 
-        public override int MaxExperience { get { return 50; } }
-
         public override int TamedItemId { get { return 8486; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }
@@ -72,22 +70,27 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 0; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 50; } }
-        public override int TamedBaseVirtualArmor { get { return 20; } }	
-		
-		public PackHorse( Serial serial ) : base( serial )
-		{
-		}
+        public override int TamedBaseVirtualArmor { get { return 20; } }
 
-		#region Pack Animal Methods
-		public override bool OnBeforeDeath()
-		{
-			if ( !base.OnBeforeDeath() )
-				return false;
+        public override void SetUniqueAI()
+        {
+        }
 
-			PackAnimal.CombineBackpacks( this );
+        public override void SetTamedAI()
+        {
+        }
 
-			return true;
-		}
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override int MaxExperience { get { return 50; } }		
 
 		public override DeathMoveResult GetInventoryMoveResultFor( Item item )
 		{
@@ -134,7 +137,20 @@ namespace Server.Mobiles
 
 			PackAnimal.GetContextMenuEntries( this, from, list );
 		}
-		#endregion
+
+        public override bool OnBeforeDeath()
+        {
+            if (!base.OnBeforeDeath())
+                return false;
+
+            PackAnimal.CombineBackpacks(this);
+
+            return true;
+        }
+
+        public PackHorse(Serial serial): base(serial)
+        {
+        }
 
 		public override void Serialize( GenericWriter writer )
 		{
@@ -146,80 +162,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-		}
-	}
-
-	public class PackAnimalBackpackEntry : ContextMenuEntry
-	{
-		private BaseCreature m_Animal;
-		private Mobile m_From;
-
-		public PackAnimalBackpackEntry( BaseCreature animal, Mobile from ) : base( 6145, 3 )
-		{
-			m_Animal = animal;
-			m_From = from;
-
-			if ( animal.IsDeadPet )
-				Enabled = false;
-		}
-
-		public override void OnClick()
-		{
-			PackAnimal.TryPackOpen( m_Animal, m_From );
-		}
-	}
-
-	public class PackAnimal
-	{
-		public static void GetContextMenuEntries( BaseCreature animal, Mobile from, List<ContextMenuEntry> list )
-		{
-			if ( CheckAccess( animal, from ) )
-				list.Add( new PackAnimalBackpackEntry( animal, from ) );
-		}
-
-		public static bool CheckAccess( BaseCreature animal, Mobile from )
-		{
-			if ( from == animal || from.AccessLevel >= AccessLevel.GameMaster )
-				return true;
-
-			if ( from.Alive && animal.Controlled && !animal.IsDeadPet && ( from == animal.ControlMaster || from == animal.SummonMaster ) )
-				return true;
-
-			return false;
-		}
-
-		public static void CombineBackpacks( BaseCreature animal )
-		{
-			if ( Core.AOS )
-				return;
-
-			Container pack = animal.Backpack;
-
-			if ( pack != null )
-			{
-				Container newPack = new Backpack();
-
-				for ( int i = pack.Items.Count - 1; i >= 0; --i )
-				{
-					if ( i >= pack.Items.Count )
-						continue;
-
-					newPack.DropItem( pack.Items[i] );
-				}
-
-				pack.DropItem( newPack );
-			}
-		}
-
-		public static void TryPackOpen( BaseCreature animal, Mobile from )
-		{
-			if ( animal.IsDeadPet )
-				return;
-
-			Container item = animal.Backpack;
-
-			if ( item != null )
-				from.Use( item );
 		}
 	}
 }

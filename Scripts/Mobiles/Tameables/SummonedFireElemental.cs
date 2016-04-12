@@ -1,5 +1,4 @@
 using System;
-using Server;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -40,6 +39,27 @@ namespace Server.Mobiles
         public override void SetUniqueAI()
         {
             CastOnlyFireSpells = true;
+        }
+
+        public override void SetTamedAI()
+        {
+            AISubGroup = AISubGroupType.MeleeMage3;
+            UpdateAI(false);
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage3; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public SummonedFireElemental(Serial serial): base(serial)

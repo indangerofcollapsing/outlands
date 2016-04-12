@@ -52,7 +52,7 @@ namespace Server.Items
 				#region Reptilian
 				typeof( Dragon ), 			typeof( Drake ), 				typeof( Snake ),				typeof( GreaterDragon ),
 				typeof( IceSerpent ), 		typeof( GiantSerpent ), 		typeof( IceSnake ), 			typeof( LavaSerpent ),
-				typeof( Lizardman ), 		typeof( Wyvern ),				typeof( WhiteWyrm ),
+				typeof( Lizardman ), 		typeof( Wyvern ),				typeof( FrostDrake ),
 				typeof( ShadowWyrm ), 		typeof( SilverSerpent ), 		typeof( LavaSnake ),
 				#endregion
 

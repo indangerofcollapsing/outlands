@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
@@ -64,10 +60,33 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public override Poison PoisonImmune { get { return Poison.Regular; } }
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
         public override Poison HitPoison { get { return Poison.Regular; } }
+        public override Poison PoisonImmune { get { return Poison.Regular; } }
 
         public override bool IsHighSeasBodyType { get { return true; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }        
 
         public ForestSpider(Serial serial): base(serial)
         {

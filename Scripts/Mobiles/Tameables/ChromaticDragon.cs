@@ -1,15 +1,11 @@
 using System;
-using Server;
 using Server.Items;
-
 
 namespace Server.Mobiles
 {
     [CorpseName("a chromatic dragon corpse")]
     public class ChromaticDragon : BaseCreature
     {
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
         [Constructable]
         public ChromaticDragon(): base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -46,8 +42,6 @@ namespace Server.Mobiles
             MinTameSkill = 110.1;
         }
 
-        public override bool CanFly { get { return true; } }
-
         public override int TamedItemId { get { return 9780; } }
         public override int TamedItemHue { get { return 2500; } }
         public override int TamedItemXOffset { get { return 0; } }
@@ -72,8 +66,6 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {           
-            UniqueCreatureDifficultyScalar = 1.2;
-
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;            
         }
@@ -92,6 +84,13 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;   
         }
 
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage2; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override bool CanFly { get { return true; } }
+
         public override bool OnBeforeHarmfulSpell()
         {
             double effectChance = .15;
@@ -108,10 +107,15 @@ namespace Server.Mobiles
             return true;
         }
 
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-        }      
+        }
 
         public ChromaticDragon(Serial serial): base(serial)
         {

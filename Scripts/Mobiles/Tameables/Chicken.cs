@@ -1,8 +1,5 @@
 using System;
-using Server.Mobiles;
-using Server.Spells;
 using Server.Items;
-
 
 namespace Server.Mobiles
 {
@@ -61,21 +58,33 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public override bool HasFeathers { get { return true; } }
-
-        public override bool CanFly { get { return true; } }
-
-        public override bool OnBeforeDeath()
+        public override void SetUniqueAI()
         {
-            return base.OnBeforeDeath();
         }
 
-        public override int GetDeathSound() { return 0x072; }
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override bool HasFeathers { get { return true; } }
+        public override bool CanFly { get { return true; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
         }
+
+        public override int GetDeathSound() { return 0x072; }
 
         public Chicken(Serial serial): base(serial)
         {

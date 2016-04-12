@@ -1,5 +1,4 @@
 using System;
-using Server;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -7,8 +6,6 @@ namespace Server.Mobiles
 	[CorpseName( "a skeletal drake corpse" )]
 	public class SkeletalDrake : BaseCreature
 	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
 		[Constructable]
 		public SkeletalDrake(): base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -61,9 +58,6 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 75; } }
 
-        public override bool CanFly { get { return true; } }
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
-
         public override void SetUniqueAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
@@ -73,6 +67,26 @@ namespace Server.Mobiles
         public override void SetTamedAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
+            DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+
+        public override bool CanFly { get { return true; } }        
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public SkeletalDrake(Serial serial): base(serial)

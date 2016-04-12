@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Server;
 using Server.Items;
-using Server.Mobiles;
-using Server.ContextMenus;
 using Server.Network;
 
 namespace Server.Mobiles
@@ -12,11 +8,6 @@ namespace Server.Mobiles
     [CorpseName("a fire beetle corpse")]
     public class FireBeetle : BaseCreature
     {
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
-        public DateTime m_NextVanishAllowed;
-        public TimeSpan NextVanishDelay = TimeSpan.FromSeconds(Utility.RandomMinMax(50, 70));
-
         [Constructable]
         public FireBeetle(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -69,18 +60,23 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 150; } }
 
-        public override int GetAngerSound() { return 0x4F3; }
-        public override int GetIdleSound() { return 0x4F2; }
-        public override int GetAttackSound() { return 0x607; }
-        public override int GetHurtSound() { return 0x608; }
-        public override int GetDeathSound() { return 0x4F0; }
-        
-        public override bool RevealImmune { get { return !Controlled; } }
-
         public override void SetUniqueAI()
-        {            
-            UniqueCreatureDifficultyScalar = 1.25;
+        {
         }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Slow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public DateTime m_NextVanishAllowed;
+        public TimeSpan NextVanishDelay = TimeSpan.FromSeconds(Utility.RandomMinMax(50, 70));       
+        
+        public override bool RevealImmune { get { return !Controlled; } }       
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {
@@ -115,6 +111,7 @@ namespace Server.Mobiles
                 {
                     if (attacker is PlayerMobile)
                         effectChance = .10;
+
                     else
                         effectChance = .50;
                 }
@@ -147,7 +144,7 @@ namespace Server.Mobiles
         public override void OnThink()
         {
             base.OnThink();
-            
+
             if (Controlled && ControlMaster is PlayerMobile)
                 return;
 
@@ -163,26 +160,22 @@ namespace Server.Mobiles
                     {
                         for (int a = 0; a < 3; a++)
                         {
-                            if (Utility.RandomDouble() <= .50)
+                            if (Utility.RandomDouble() <= .5)
                             {
-                                //Rocks
-                                Blood rocks = new Blood();
+                                TimedStatic rocks = new TimedStatic(Utility.RandomList(4967, 4970, 4973), 5);
                                 rocks.Name = "rocks";
-                                rocks.ItemID = Utility.RandomList(4967, 4970, 4973);
 
-                                Point3D rockLocation = new Point3D(originalLocation.X + Utility.RandomMinMax(-2, 2), originalLocation.Y + Utility.RandomMinMax(-2, 2), originalLocation.Z);
+                                Point3D rockLocation = SpecialAbilities.GetRandomAdjustedLocation(originalLocation, Map, true, 1, true);
 
                                 rocks.MoveToWorld(rockLocation, Map);
                             }
 
                             else
                             {
-                                //Dirt
-                                Blood dirt = new Blood();
+                                TimedStatic dirt = new TimedStatic(Utility.RandomList(7681, 7682), 5);
                                 dirt.Name = "dirt";
-                                dirt.ItemID = Utility.RandomList(7681, 7682);
 
-                                Point3D dirtLocation = new Point3D(originalLocation.X + Utility.RandomMinMax(-2, 2), originalLocation.Y + Utility.RandomMinMax(-2, 2), Z);
+                                Point3D dirtLocation = SpecialAbilities.GetRandomAdjustedLocation(originalLocation, Map, true, 1, true);
 
                                 dirt.MoveToWorld(dirtLocation, Map);
                             }
@@ -197,8 +190,19 @@ namespace Server.Mobiles
 
                     m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
                 }
-            }            
-        }        
+            }
+        }
+        
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
+
+        public override int GetAngerSound() { return 0x4F3; }
+        public override int GetIdleSound() { return 0x4F2; }
+        public override int GetAttackSound() { return 0x607; }
+        public override int GetHurtSound() { return 0x608; }
+        public override int GetDeathSound() { return 0x4F0; }
 
         public FireBeetle(Serial serial): base(serial)
         {

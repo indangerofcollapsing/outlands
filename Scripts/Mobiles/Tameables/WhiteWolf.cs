@@ -1,10 +1,9 @@
 using System;
-using Server.Mobiles;
+using Server.Items;
 
 namespace Server.Mobiles
 {
 	[CorpseName( "a white wolf corpse" )]
-	[TypeAlias( "Server.Mobiles.Whitewolf" )]
 	public class WhiteWolf : BaseCreature
 	{
 		[Constructable]
@@ -38,20 +37,17 @@ namespace Server.Mobiles
             MinTameSkill = 65;
         }
         
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8482; } }
         public override int TamedItemHue { get { return 1154; } }
         public override int TamedItemXOffset { get { return 5; } }
         public override int TamedItemYOffset { get { return 15; } }
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
         public override int TamedBaseMaxHits { get { return 150; } }
         public override int TamedBaseMinDamage { get { return 6; } }
         public override int TamedBaseMaxDamage { get { return 8; } }
         public override double TamedBaseWrestling { get { return 70; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public override int TamedBaseStr { get { return 5; } }
         public override int TamedBaseDex { get { return 50; } }
         public override int TamedBaseInt { get { return 5; } }
@@ -73,6 +69,21 @@ namespace Server.Mobiles
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.IceBreathAttack] = 1;
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
         
         public WhiteWolf( Serial serial ) : base( serial )

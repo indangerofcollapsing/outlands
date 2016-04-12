@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
@@ -41,11 +37,6 @@ namespace Server.Mobiles
             Karma = -500;
         }
 
-        public override void SetUniqueAI()
-        {
-            UniqueCreatureDifficultyScalar = 1.1;
-        }
-
         public override int TamedItemId { get { return 9777; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }
@@ -68,6 +59,21 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override bool CanFly { get { return true; } }
+
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
@@ -83,8 +89,18 @@ namespace Server.Mobiles
                 }
             }
 
-            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, -1, true, "", "Their bite causes you to bleed!");            
+            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, -1, true, "", "Their bite causes you to bleed!");
         }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }        
 
         public GiantBat(Serial serial): base(serial)
         {

@@ -47,7 +47,7 @@ namespace Server.Items
 			new Type[]{ typeof(CorruptRunecaster), typeof(WaterElemental), typeof(Savage), typeof(OrcishSurjin), typeof(BurrowBeetle), typeof(Bootlegger), typeof(DragonWhelp), typeof(GraveRobber) },
 			new Type[]{ typeof(Lich), typeof(Drake), typeof(TombRaider), typeof(Minotaur), typeof(DriderWarrior), typeof(Smuggler), typeof(OgreMage), typeof(CyclopsShaman) },
 			new Type[]{ typeof(OgreLord), typeof(ElderGazer), typeof(ElderAirElemental), typeof(DarkWisp), typeof(MinotaurCaptain), typeof(SilverSerpent), typeof(OrcishMaurk), typeof(Dragon) },
-			new Type[]{ typeof(LichLord), typeof(Daemon), typeof(BloodElemental), typeof(GreaterCyclops), typeof(SanguinWizard), typeof(WhiteWyrm), typeof(IceFiend) },
+			new Type[]{ typeof(LichLord), typeof(Daemon), typeof(BloodElemental), typeof(GreaterCyclops), typeof(SanguinWizard), typeof(FrostDragon), typeof(IceFiend) },
 			new Type[]{ typeof(AncientWyrm), typeof(Balron), typeof(ElderBloodElemental), typeof(PoisonElemental), typeof(DriderHarbinger), typeof(SilverDaemon), typeof(ArmoredTitan), typeof(AncientLich) }
 		};
 

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
@@ -40,9 +36,7 @@ namespace Server.Mobiles
             ControlSlots = 1;
             MinTameSkill = 75;
         }
-
-        public override bool CanFly { get { return true; } }
-
+        
         public override int TamedItemId { get { return 8467; } }
         public override int TamedItemHue { get { return 1005; } }
         public override int TamedItemXOffset { get { return 10; } }
@@ -79,14 +73,24 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
 
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
         public override bool IsHighSeasBodyType { get { return true; } }
 
-        public override int GetDeathSound() { return 0x2CD;}
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-        }        
+        }
+
+        public override int GetDeathSound() { return 0x2CD;}
 
 		public DrakeWhelp( Serial serial ) : base(serial)
 		{

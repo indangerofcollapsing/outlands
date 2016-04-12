@@ -1,10 +1,9 @@
 using System;
-using Server.Mobiles;
+using Server.Items;
 
 namespace Server.Mobiles
 {
 	[CorpseName( "a horse corpse" )]
-	[TypeAlias( "Server.Mobiles.BrownHorse", "Server.Mobiles.DirtyHorse", "Server.Mobiles.GrayHorse", "Server.Mobiles.TanHorse" )]
 	public class Horse : BaseMount
 	{
 		private static int[] m_IDs = new int[]
@@ -15,14 +14,14 @@ namespace Server.Mobiles
 				0xCC, 0x3EA2
 			};
 
-		[Constructable]
-		public Horse() : this( "a horse" )
-		{
-		}
+        [Constructable]
+        public Horse(): this("a horse")
+        {
+        }
 
-		[Constructable]
-		public Horse( string name ) : base( name, 0xE2, 0x3EA0, AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4 )
-		{
+        [Constructable]
+        public Horse(string name): base(name, 0xE2, 0x3EA0, AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4)
+        {
 			int random = Utility.Random( 4 );
 
 			Body = m_IDs[random * 2];
@@ -72,7 +71,30 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 0; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 50; } }
-        public override int TamedBaseVirtualArmor { get { return 20; } }		
+        public override int TamedBaseVirtualArmor { get { return 20; } }
+
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
 		
 		public Horse( Serial serial ) : base( serial )
 		{

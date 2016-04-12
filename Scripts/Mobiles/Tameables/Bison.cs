@@ -1,5 +1,5 @@
 using System;
-using Server.Mobiles;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -59,9 +59,18 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-		public Bison(Serial serial) : base(serial)
-		{
-		}
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }		
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {
@@ -83,23 +92,20 @@ namespace Server.Mobiles
             SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, 0x516, true, "", "The beast gores you with it's horns, causing you to bleed!");
         }
 
-        public override void OnDoubleClick( Mobile from ) 
-        { 
-            if( ( InRange( from.Location, 2 ) == true ) && ( Warmode == false ) )
-            {
-				if( 0.1 > Utility.RandomDouble() )
-				{ 
-					this.Animate( 8, 5, 1, true, false, 0 ); 
-					this.PlaySound( 0x7C ); 
-				} 
-                else 
-                { 
-                    int rnd = Utility.Random ( 3 ); 
-                    this.PlaySound( 0x64 + rnd ); 
-                } 
-            }        
-        } 
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
 
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
+
+        public Bison(Serial serial): base(serial)
+        {
+        }
+        
 		public override void Serialize(GenericWriter writer)
 		{
 			base.Serialize(writer);

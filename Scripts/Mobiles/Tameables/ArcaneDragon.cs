@@ -1,16 +1,12 @@
 using System;
 using Server;
 using Server.Items;
-using Server.Mobiles.Vendors.NPC;
-
 
 namespace Server.Mobiles
 {
 	[CorpseName( "an arcane dragon corpse" )]
 	public class ArcaneDragon : BaseCreature
 	{
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
 		[Constructable]
 		public ArcaneDragon () : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
@@ -87,6 +83,18 @@ namespace Server.Mobiles
 
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;     
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage4; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override bool CanFly { get { return true; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
         }
 
         public override void OnDeath(Container c)

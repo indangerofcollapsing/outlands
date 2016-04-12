@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections;
-using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
     [CorpseName("a cockatrice corpse")]
     public class Cockatrice : BaseCreature
     {
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
         [Constructable]
         public Cockatrice(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -44,13 +38,6 @@ namespace Server.Mobiles
             Karma = -1000;
         }
 
-        public override bool HasFeathers { get { return true; } }
-
-        public override void SetUniqueAI()
-        {
-            UniqueCreatureDifficultyScalar = 1.15;
-        }
-
         public override int TamedItemId { get { return 8465; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 0; } }
@@ -73,8 +60,23 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public override Poison PoisonImmune { get { return Poison.Deadly; } }
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
         public override Poison HitPoison { get { return Poison.Deadly; } }
+        public override Poison PoisonImmune { get { return Poison.Deadly; } }        
+
+        public override bool HasFeathers { get { return true; } }
 
         public override bool IsHighSeasBodyType { get { return true; } }
 
@@ -94,6 +96,16 @@ namespace Server.Mobiles
             }
 
             SpecialAbilities.PetrifySpecialAbility(effectChance, this, defender, 1.0, 5.0, -1, true, "", "You are petrified by their gaze!"); 
+        }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public override int GetAngerSound() { return 0x4DA; }

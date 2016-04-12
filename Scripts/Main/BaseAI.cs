@@ -70,7 +70,7 @@ namespace Server.Mobiles
     public enum AISubGroupType
     {
         Unspecified,
-        None,
+        Melee,
         MeleeMage1,
         MeleeMage2,
         MeleeMage3,

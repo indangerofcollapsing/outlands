@@ -1,5 +1,5 @@
 using System;
-using Server.Mobiles;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -54,6 +54,29 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
+
         public override bool HasFeathers { get { return true; } }
 
         public override bool CanFly { get { return true; } }
@@ -66,7 +89,7 @@ namespace Server.Mobiles
         public override int GetIdleSound() { return 0x1C;  }
         public override int GetAttackSound()  {return 0x1D; }
         public override int GetHurtSound() { return 0x1E; }
-        public override int GetDeathSound()  {   return 0x1F;  }
+        public override int GetDeathSound() { return 0x1F; }
 
         public override void Serialize(GenericWriter writer)
         {

@@ -8,10 +8,6 @@ namespace Server.Mobiles
 	[CorpseName( "a blade spirit corpse" )]
 	public class BladeSpirits : BaseCreature
 	{
-        public override bool DeleteCorpseOnDeath { get { return Summoned; } }
-        public override bool AlwaysMurderer { get { return true; } }
-		public override bool IsHouseSummonable { get { return true; } }
-
 		[Constructable]
 		public BladeSpirits(): base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.3, 0.6 )
 		{
@@ -43,8 +39,17 @@ namespace Server.Mobiles
         {
             ReturnsHome = false;
         }
-		
-		public override Poison PoisonImmune { get { return Poison.Lethal; } }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Berserk; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+
+        public override bool DeleteCorpseOnDeath { get { return Summoned; } }
+        public override bool AlwaysMurderer { get { return true; } }
+        public override bool IsHouseSummonable { get { return true; } }   
 
 		public override int GetAngerSound(){return 0x23A;}
 		public override int GetAttackSound(){return 0x3B8;}

@@ -1,5 +1,5 @@
 using System;
-using Server.Mobiles;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -7,12 +7,7 @@ namespace Server.Mobiles
     public class ForestOstard : BaseCreature
     {
         [Constructable]
-        public ForestOstard(): this("a forest ostard")
-        {
-        }
-
-        [Constructable]
-        public ForestOstard(string name): base(AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4)   
+        public ForestOstard(): base(AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4)   
         {
             Name = "a forest ostard";
             
@@ -67,6 +62,19 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
@@ -83,6 +91,16 @@ namespace Server.Mobiles
             }
 
             SpecialAbilities.FrenzySpecialAbility(effectChance, this, defender, .25, 10, -1, true, "", "", "*becomes frenzied*");
+        }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public ForestOstard(Serial serial): base(serial)

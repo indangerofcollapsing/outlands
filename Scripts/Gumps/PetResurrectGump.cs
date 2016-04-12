@@ -69,12 +69,14 @@ namespace Server.Gumps
                     return;
                 }
 
+                /*
                 if (m_Follower.CanBeResurrectedThroughVeterinary && m_Salts == null)
                 {
                     ResurrectPet();
                 }
+                 * */
 
-                else if (m_Salts != null && m_Salts.Charges >= m_Follower.ControlSlots)
+                if (m_Salts != null && m_Salts.Charges >= m_Follower.ControlSlots)
                 {
                     ResurrectPet();
                     m_Salts.Charges -= m_Follower.ControlSlots;

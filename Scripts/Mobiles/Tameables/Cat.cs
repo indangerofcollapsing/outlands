@@ -1,12 +1,9 @@
 using System;
-using Server.Mobiles;
 using Server.Items;
-
 
 namespace Server.Mobiles
 {
     [CorpseName("a cat corpse")]
-    [TypeAlias("Server.Mobiles.Housecat")]
     public class Cat : BaseCreature
     {
         [Constructable]
@@ -60,16 +57,34 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 0; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 50; } }        
-        
-        public Cat(Serial serial): base(serial)
+        public override int TamedBaseVirtualArmor { get { return 50; } }
+
+        public override void SetUniqueAI()
         {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
         }
+
+        public Cat(Serial serial): base(serial)
+        {
+        }        
 
         public override void Serialize(GenericWriter writer)
         {

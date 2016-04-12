@@ -1,28 +1,12 @@
 using System;
 using Server;
 using Server.Items;
-using Server.Spells;
-using Server.Spells.Seventh;
-using Server.Spells.Sixth;
-using Server.Spells.Third;
-
 
 namespace Server.Mobiles
 {
     [CorpseName("an ancient wyrm corpse")]
     public class AncientWyrm : BaseCreature
     {
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
-        public DateTime m_NextMassiveBreathAllowed;
-        public TimeSpan NextMassiveBreathDelay = TimeSpan.FromSeconds(20);
-
-        public DateTime m_NextFireBreathAllowed;
-        public TimeSpan NextFireBreathDelay = TimeSpan.FromSeconds(20);
-
-        public DateTime m_NextAbilityAllowed;
-        public TimeSpan NextAbilityDelay = TimeSpan.FromSeconds(10);
-
         [Constructable]
         public AncientWyrm(): base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -58,6 +42,28 @@ namespace Server.Mobiles
             MinTameSkill = 115.1;
         }
 
+        public override int TamedItemId { get { return 17062; } }
+        public override int TamedItemHue { get { return 0; } }
+        public override int TamedItemXOffset { get { return 10; } }
+        public override int TamedItemYOffset { get { return 0; } }
+
+        public override int TamedBaseMaxHits { get { return 600; } }
+        public override int TamedBaseMinDamage { get { return 38; } }
+        public override int TamedBaseMaxDamage { get { return 40; } }
+        public override double TamedBaseWrestling { get { return 100; } }
+        public override double TamedBaseEvalInt { get { return 50; } }
+
+        public override int TamedBaseStr { get { return 5; } }
+        public override int TamedBaseDex { get { return 50; } }
+        public override int TamedBaseInt { get { return 75; } }
+        public override int TamedBaseMaxMana { get { return 1000; } }
+        public override double TamedBaseMagicResist { get { return 100; } }
+        public override double TamedBaseMagery { get { return 50; } }
+        public override double TamedBasePoisoning { get { return 0; } }
+        public override double TamedBaseTactics { get { return 100; } }
+        public override double TamedBaseMeditation { get { return 125; } }
+        public override int TamedBaseVirtualArmor { get { return 100; } }
+
         public override void SetUniqueAI()
         {
             MassiveBreathRange = 6;
@@ -70,6 +76,20 @@ namespace Server.Mobiles
 
             MassiveBreathRange = 6;
         }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage3; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public DateTime m_NextMassiveBreathAllowed;
+        public TimeSpan NextMassiveBreathDelay = TimeSpan.FromSeconds(20);
+
+        public DateTime m_NextBreathAllowed;
+        public TimeSpan NextBreathDelay = TimeSpan.FromSeconds(20);
+
+        public DateTime m_NextAbilityAllowed;
+        public TimeSpan NextAbilityDelay = TimeSpan.FromSeconds(10);
 
         public override void OnThink()
         {
@@ -98,11 +118,11 @@ namespace Server.Mobiles
                     return;
                 }
                 
-                if (DateTime.UtcNow >= m_NextFireBreathAllowed && AICombatSpecialAction.CanDoFireBreathAttack(this))
+                if (DateTime.UtcNow >= m_NextBreathAllowed && AICombatSpecialAction.CanDoFireBreathAttack(this))
                 {
                     AICombatSpecialAction.DoFireBreathAttack(this, Combatant);
 
-                    m_NextFireBreathAllowed = DateTime.UtcNow + NextFireBreathDelay;
+                    m_NextBreathAllowed = DateTime.UtcNow + NextBreathDelay;
                     m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay;
 
                     NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(4);
@@ -112,36 +132,14 @@ namespace Server.Mobiles
                 }                
             }
         }
-        
-        public override int TamedItemId { get { return 17062; } }
-        public override int TamedItemHue { get { return 0; } }
-        public override int TamedItemXOffset { get { return 10; } }
-        public override int TamedItemYOffset { get { return 0; } }
-
-        public override int TamedBaseMaxHits { get { return 600; } }
-        public override int TamedBaseMinDamage { get { return 38; } }
-        public override int TamedBaseMaxDamage { get { return 40; } }
-        public override double TamedBaseWrestling { get { return 100; } }
-        public override double TamedBaseEvalInt { get { return 50; } }
-
-        public override int TamedBaseStr { get { return 5; } }
-        public override int TamedBaseDex { get { return 50; } }
-        public override int TamedBaseInt { get { return 75; } }
-        public override int TamedBaseMaxMana { get { return 1000; } }
-        public override double TamedBaseMagicResist { get { return 100; } }
-        public override double TamedBaseMagery { get { return 50; } }
-        public override double TamedBasePoisoning { get { return 0; } }
-        public override double TamedBaseTactics { get { return 100; } }
-        public override double TamedBaseMeditation { get { return 125; } }
-        public override int TamedBaseVirtualArmor { get { return 100; } }
                 
+        public override int GetIdleSound(){ return 0x2D3; }
+        public override int GetHurtSound(){ return 0x2D1; }
+
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
         }
-
-        public override int GetIdleSound(){ return 0x2D3; }
-        public override int GetHurtSound(){ return 0x2D1; }
 
         public AncientWyrm(Serial serial): base(serial)
         {

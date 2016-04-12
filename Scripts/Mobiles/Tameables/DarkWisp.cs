@@ -1,18 +1,12 @@
 using System;
-using Server;
 using Server.Misc;
 using Server.Items;
-using Server.Factions;
 
 namespace Server.Mobiles
 {
 	[CorpseName( "a dark wisp corpse" )]
 	public class DarkWisp : BaseCreature
-	{
-		public override InhumanSpeech SpeechType{ get{ return InhumanSpeech.Wisp; } }
-
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-        
+	{   
 		[Constructable]
 		public DarkWisp() : base( AIType.AI_Mage, FightMode.Aggressor, 10, 1, 0.2, 0.4 )
 		{
@@ -91,6 +85,25 @@ namespace Server.Mobiles
 
             SpellDelayMin *= 1.33;
             SpellDelayMax *= 1.33;
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Mage4; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override InhumanSpeech SpeechType { get { return InhumanSpeech.Wisp; } }
+
+        public override bool CanFly { get { return true; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
 		public DarkWisp( Serial serial ) : base( serial )

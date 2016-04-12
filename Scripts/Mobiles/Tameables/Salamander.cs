@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections;
-using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
     [CorpseName("a salamander corpse")]
     public class Salamander : BaseCreature
     {
-        public DateTime m_NextStealthCheckAllowed = DateTime.UtcNow;
-        public TimeSpan StealthDelay = TimeSpan.FromSeconds(10);
-
         [Constructable]
         public Salamander(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -66,12 +59,8 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-        public override bool IsHighSeasBodyType { get { return true; } }
-
         public override void SetUniqueAI()
         {   
-            UniqueCreatureDifficultyScalar = 1.05;
-
             DictWanderAction[WanderAction.None] = 5;
             DictWanderAction[WanderAction.Stealth] = 1;
         }
@@ -86,6 +75,16 @@ namespace Server.Mobiles
             SetSkill(SkillName.Hiding, 100);
             SetSkill(SkillName.Stealth, 100);
         }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public DateTime m_NextStealthCheckAllowed = DateTime.UtcNow;
+        public TimeSpan StealthDelay = TimeSpan.FromSeconds(10);
+
+        public override bool IsHighSeasBodyType { get { return true; } }
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {
@@ -161,6 +160,11 @@ namespace Server.Mobiles
                     }
                 }
             }
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public Salamander(Serial serial): base(serial)

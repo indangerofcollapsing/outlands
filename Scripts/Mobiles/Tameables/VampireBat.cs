@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using Server;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
@@ -65,13 +61,23 @@ namespace Server.Mobiles
 
         public override void SetUniqueAI()
         {
-            UniqueCreatureDifficultyScalar = 1.2;
         }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override bool CanFly { get { return true; } }
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
-            
+
             double effectChance = .25;
 
             if (Controlled && ControlMaster != null)
@@ -94,16 +100,26 @@ namespace Server.Mobiles
                 Blood blood = new Blood();
                 blood.MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z + 1), Map);
 
-                if (defender is PlayerMobile)                                    
+                if (defender is PlayerMobile)
                     SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, 0x44D, true, "", "The creature sinks its fangs into you, causing you to bleed!");
-                
+
                 else
                 {
                     SpecialAbilities.StunSpecialAbility(1.0, this, defender, .15, 10, -1, false, "", "");
                     SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, 0x44D, true, "", "The creature sinks its fangs into you, stunning you and causing you to bleed!");
                 }
-            }            
+            }
         }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }        
 
         public VampireBat(Serial serial): base(serial)
         {

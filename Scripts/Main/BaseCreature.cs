@@ -28,6 +28,7 @@ namespace Server.Mobiles
 {
     public enum SpeedGroupType
     {
+        None,
         SuperSlow,
         VerySlow,
         Slow,
@@ -40,7 +41,7 @@ namespace Server.Mobiles
     public enum SlayerGroupType
     {
         None,
-        Beast,
+        Beastial,
         Daemonic,
         Elemental,
         Humanoid,
@@ -287,8 +288,6 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual bool CanBeResurrectedThroughVeterinary { get { return true; } } // IPY - Dragon, drake etc requires special item to be resurrected
-
         public int m_ResurrectionsRemaining = -1; //-1 is Unlimited
         [CommandProperty(AccessLevel.Counselor)]
         public int ResurrectionsRemaining
@@ -398,9 +397,7 @@ namespace Server.Mobiles
         public int WalkRandomOutsideHomeLimit = 10; //Length of time creature will walk around outside home
         public int WalkTowardsHomeLimit = 20; //Length of time creature will attempt to walk home before teleporting
         public DateTime PostPeacemakingTeleportDelay;
-
-        public bool EnableSpeedTables = true;
-
+        
         public double DecisionTimeDelay = 1.0; //Delay between decisions for AI    
         public int CreatureBandageSelfDuration = 12; //Seconds it takes for creature to bandage heal self
         public int CreatureBandageOtherDuration = 5; //Seconds it takes for creature to bandage heal other
@@ -498,15 +495,7 @@ namespace Server.Mobiles
         private DateTime m_NextDecisionTime = DateTime.UtcNow;
         private bool m_AIActionInProgress = false;
 
-        public const int DefaultRangePerception = 12;
-
-        private double m_UniqueCreatureDifficultyScalar = 1;
-        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
-        public double UniqueCreatureDifficultyScalar
-        {
-            get { return m_UniqueCreatureDifficultyScalar; }
-            set { m_UniqueCreatureDifficultyScalar = value; }
-        }
+        public const int DefaultRangePerception = 12;        
 
         public static double TamedCreatureBackstabScalar = 1.0;
 
@@ -980,7 +969,7 @@ namespace Server.Mobiles
 
         public void SetSpeed()
         {
-            switch (SpeedGroup)
+            switch (BaseSpeedGroup)
             {
                 case SpeedGroupType.SuperSlow: ActiveSpeed = 0.8; PassiveSpeed = 0.9; break;
                 case SpeedGroupType.VerySlow: ActiveSpeed = 0.6; PassiveSpeed = 0.7; break;
@@ -2631,25 +2620,84 @@ namespace Server.Mobiles
         public DateTime m_NextWeaponChangeAllowed = DateTime.UtcNow;
         public TimeSpan NextWeaponChangeDelay = TimeSpan.FromSeconds(Utility.RandomMinMax(4, 6));
 
-        public virtual SpeedGroupType SpeedGroup { get { return SpeedGroupType.Medium; } }
-
+        public virtual SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public virtual AIGroupType AIBaseGroup { get { return AIGroupType.None; } }
-        public virtual AISubGroupType AIBaseSubGroup { get { return AISubGroupType.None; } }
+        public virtual AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public virtual double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        private SpeedGroupType m_SpeedGroup = SpeedGroupType.None;
+        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
+        public SpeedGroupType SpeedGroup
+        {
+            get
+            {
+                if (m_SpeedGroup != SpeedGroupType.None)
+                    return m_SpeedGroup;
+
+                else
+                    return BaseSpeedGroup;
+            }
+
+            set 
+            { 
+                m_SpeedGroup = value;
+                SetSpeed();
+            }
+        }
 
         private AIGroupType m_AIGroup = AIGroupType.Unspecified;
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
         public AIGroupType AIGroup
         {
-            get { return m_AIGroup; }
-            set { m_AIGroup = value; UpdateAI(true); }
+            get
+            {
+                if (m_AIGroup == AIGroupType.Unspecified)
+                    return AIBaseGroup;
+
+                return m_AIGroup; 
+            }
+
+            set
+            { 
+                m_AIGroup = value; 
+                UpdateAI(true);
+            }
         }
 
-        public AISubGroupType m_AISubGroup = AISubGroupType.None;
+        public AISubGroupType m_AISubGroup = AISubGroupType.Melee;
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
         public AISubGroupType AISubGroup
         {
-            get { return m_AISubGroup; }
-            set { m_AISubGroup = value; UpdateAI(true); }
+            get 
+            { 
+                if (m_AISubGroup == AISubGroupType.Unspecified)
+                    return AIBaseSubGroup; 
+
+                else
+                    return m_AISubGroup; 
+            }
+
+            set 
+            { 
+                m_AISubGroup = value; 
+                UpdateAI(true); 
+            }
+        }
+
+        private double m_UniqueCreatureDifficultyScalar = -1;
+        [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
+        public double UniqueCreatureDifficultyScalar
+        {
+            get
+            {
+                if (m_UniqueCreatureDifficultyScalar == -1)
+                    return BaseUniqueDifficultyScalar;
+
+                else
+                    return m_UniqueCreatureDifficultyScalar;
+            }
+
+            set { m_UniqueCreatureDifficultyScalar = value; }
         }
 
         public virtual SlayerGroupType SlayerGroup { get { return SlayerGroupType.Monstrous; } }
@@ -4361,6 +4409,7 @@ namespace Server.Mobiles
             writer.Write(m_RemoveStep);
             writer.Write(m_BardImmune);
             writer.Write(m_CorpseNameOverride);
+            writer.Write((int)m_SpeedGroup);
             writer.Write((int)m_AIGroup);
             writer.Write((int)m_AISubGroup);
             writer.Write(m_ControlObject);
@@ -4488,6 +4537,7 @@ namespace Server.Mobiles
                 m_RemoveStep = reader.ReadInt();
                 m_BardImmune = reader.ReadBool();
                 m_CorpseNameOverride = reader.ReadString();
+                m_SpeedGroup = (SpeedGroupType)reader.ReadInt();
                 m_AIGroup = (AIGroupType)reader.ReadInt();
                 m_AISubGroup = (AISubGroupType)reader.ReadInt();
                 m_ControlObject = (Item)reader.ReadItem();

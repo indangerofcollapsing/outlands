@@ -1,16 +1,9 @@
 using System;
-using Server;
 using Server.Items;
-using Server.Mobiles;
-using Server.Spells;
-using Server.Spells.Seventh;
-using Server.Spells.Sixth;
-using Server.Spells.Third;
 
 namespace Server.Mobiles
 {
 	[CorpseName( "a giant lava serpent corpse" )]
-	[TypeAlias( "Server.Mobiles.Lavaserpant" )]
 	public class LavaSerpent : BaseCreature
 	{
 		[Constructable]
@@ -45,9 +38,6 @@ namespace Server.Mobiles
             MinTameSkill = 95;
 		}
 
-        public override Poison PoisonImmune { get { return Poison.Deadly; } }
-        public override Poison HitPoison { get { return Poison.Deadly; } }
-
         public override int TamedItemId { get { return 9663; } }
         public override int TamedItemHue { get { return Hue; } }
         public override int TamedItemXOffset { get { return 0; } }
@@ -79,6 +69,25 @@ namespace Server.Mobiles
         public override void SetTamedAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
+            DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison HitPoison { get { return Poison.Deadly; } }
+        public override Poison PoisonImmune { get { return Poison.Deadly; } }        
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
 		public LavaSerpent(Serial serial) : base(serial)

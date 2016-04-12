@@ -1,5 +1,4 @@
 using System;
-using Server;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -7,8 +6,6 @@ namespace Server.Mobiles
     [CorpseName("a shadow drake corpse")]
     public class ShadowDrake : BaseCreature
     {
-        public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
         [Constructable]
         public ShadowDrake(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
@@ -47,11 +44,6 @@ namespace Server.Mobiles
             MinTameSkill = 95;
         }
 
-        public override Poison PoisonImmune { get { return Poison.Deadly; } }
-        public override Poison HitPoison { get { return Poison.Deadly; } }
-
-        public override bool CanFly { get { return true; } } 
-
         public override int TamedItemId { get { return 8406; } }
         public override int TamedItemHue { get { return 2500; } }
         public override int TamedItemXOffset { get { return 10; } }
@@ -83,12 +75,28 @@ namespace Server.Mobiles
         public override void SetTamedAI()
         {
             DictCombatAction[CombatAction.CombatSpecialAction] = 3;
+            DictCombatSpecialAction[CombatSpecialAction.PoisonBreathAttack] = 1;
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison HitPoison { get { return Poison.Deadly; } }
+        public override Poison PoisonImmune { get { return Poison.Deadly; } }        
+
+        public override bool CanFly { get { return true; } } 
+
+        public override void OnThink()
+        {
+            base.OnThink();
         }
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-        }
+        }        
 
         public ShadowDrake(Serial serial): base(serial)
         {

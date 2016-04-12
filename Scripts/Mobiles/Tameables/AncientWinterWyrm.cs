@@ -2,23 +2,11 @@ using System;
 using Server;
 using Server.Items;
 
-
 namespace Server.Mobiles
 {
     [CorpseName("an ancient winter corpse")]
 	public class AncientWinterWyrm : BaseCreature
 	{
-		public override bool CanBeResurrectedThroughVeterinary { get { return false; } }
-
-        public DateTime m_NextMassiveBreathAllowed;
-        public TimeSpan NextMassiveBreathDelay = TimeSpan.FromSeconds(20);
-
-        public DateTime m_NextFireBreathAllowed;
-        public TimeSpan NextFireBreathDelay = TimeSpan.FromSeconds(20);
-
-        public DateTime m_NextAbilityAllowed;
-        public TimeSpan NextAbilityDelay = TimeSpan.FromSeconds(10);
-	
 		[Constructable]
 		public AncientWinterWyrm () : base( AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{			
@@ -85,11 +73,25 @@ namespace Server.Mobiles
 
         public override void SetTamedAI()
         {
-            AISubGroup = AISubGroupType.MeleeMage2;
+            AISubGroup = AISubGroupType.MeleeMage3;
             UpdateAI(false);
 
             MassiveBreathRange = 6;
         }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage3; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public DateTime m_NextMassiveBreathAllowed;
+        public TimeSpan NextMassiveBreathDelay = TimeSpan.FromSeconds(20);
+
+        public DateTime m_NextBreathAllowed;
+        public TimeSpan NextBreathDelay = TimeSpan.FromSeconds(20);
+
+        public DateTime m_NextAbilityAllowed;
+        public TimeSpan NextAbilityDelay = TimeSpan.FromSeconds(10);    
 
         public override void OnThink()
         {
@@ -118,12 +120,11 @@ namespace Server.Mobiles
                     return;
                 }
 
-
-                if (DateTime.UtcNow >= m_NextFireBreathAllowed && AICombatSpecialAction.CanDoIceBreathAttack(this))
+                if (DateTime.UtcNow >= m_NextBreathAllowed && AICombatSpecialAction.CanDoIceBreathAttack(this))
                 {
                     AICombatSpecialAction.DoIceBreathAttack(this, Combatant);
 
-                    m_NextFireBreathAllowed = DateTime.UtcNow + NextFireBreathDelay;
+                    m_NextBreathAllowed = DateTime.UtcNow + NextBreathDelay;
                     m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay;
 
                     NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(4);

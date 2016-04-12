@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
@@ -43,7 +40,6 @@ namespace Server.Mobiles
             MinTameSkill = 25;
         }
 
-
         public override int TamedItemId { get { return 8441; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 15; } }
@@ -66,10 +62,28 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
 
-		public override void OnDeath( Container c )
-		{
-			base.OnDeath(c);
-		}		
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }		
 		
 		public Mongbat( Serial serial ) : base( serial )
 		{

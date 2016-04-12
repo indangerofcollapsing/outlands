@@ -1,20 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Server;
 using Server.Items;
-using Server.Mobiles;
 using Server.Network;
-using Server.ContextMenus;
 
 namespace Server.Mobiles
 {
 	[CorpseName( "a burrow beetle corpse" )]
 	public class BurrowBeetle : BaseCreature
-	{
-        public DateTime m_NextVanishAllowed;
-        public TimeSpan NextVanishDelay = TimeSpan.FromSeconds(Utility.RandomMinMax(50, 70));
-        
+	{   
         [Constructable]
         public BurrowBeetle(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
 		{
@@ -44,69 +37,6 @@ namespace Server.Mobiles
 			ControlSlots = 1;
 			MinTameSkill = 70;
 		}
-        
-        public override bool RevealImmune { get { return !Controlled; } }
-
-        public override void SetUniqueAI()
-        {
-            UniqueCreatureDifficultyScalar = 1.1;
-        }
-
-        public override void OnThink()
-        {
-            base.OnThink();
-            
-            if (Controlled && ControlMaster is PlayerMobile)
-                return;
-
-            double hitsPercent = (double)Hits / (double)HitsMax;
-
-            if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed && hitsPercent < .50)
-            {
-                if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
-                {
-                    Point3D originalLocation = Location;
-
-                    if (SpecialAbilities.VanishAbility(this, 5.0, false, 0x21D, 5, 10, true, null))
-                    {
-                        for (int a = 0; a < 3; a++)
-                        {
-                            if (Utility.RandomDouble() <= .50)
-                            {
-                                //Rocks
-                                Blood rocks = new Blood();
-                                rocks.Name = "rocks";
-                                rocks.ItemID = Utility.RandomList(4967, 4970, 4973);
-
-                                Point3D rockLocation = new Point3D(originalLocation.X + Utility.RandomMinMax(-2, 2), originalLocation.Y + Utility.RandomMinMax(-2, 2), originalLocation.Z);
-
-                                rocks.MoveToWorld(rockLocation, Map);
-                            }
-
-                            else
-                            {
-                                //Dirt
-                                Blood dirt = new Blood();
-                                dirt.Name = "dirt";
-                                dirt.ItemID = Utility.RandomList(7681, 7682);
-
-                                Point3D dirtLocation = new Point3D(originalLocation.X + Utility.RandomMinMax(-2, 2), originalLocation.Y + Utility.RandomMinMax(-2, 2), Z);
-
-                                dirt.MoveToWorld(dirtLocation, Map);
-                            }
-                        }
-
-                        PublicOverheadMessage(MessageType.Regular, 0, false, "*burrows*");
-
-                        Combatant = null;
-
-                        Effects.PlaySound(Location, Map, GetIdleSound());
-                    }
-
-                    m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
-                }
-            }            
-        }
 
         public override int TamedItemId { get { return 9743; } }
         public override int TamedItemHue { get { return 0; } }
@@ -129,6 +59,81 @@ namespace Server.Mobiles
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 150; } }
+
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Slow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override bool RevealImmune { get { return !Controlled; } }
+
+        public DateTime m_NextVanishAllowed;
+        public TimeSpan NextVanishDelay = TimeSpan.FromSeconds(Utility.RandomMinMax(50, 70));
+
+        public override void OnThink()
+        {
+            base.OnThink();
+            
+            if (Controlled && ControlMaster is PlayerMobile)
+                return;
+
+            double hitsPercent = (double)Hits / (double)HitsMax;
+
+            if (Utility.RandomDouble() < 0.05 && DateTime.UtcNow > m_NextVanishAllowed && hitsPercent < .50)
+            {
+                if (Combatant != null && !Hidden && !Paralyzed && !BardProvoked && !BardPacified)
+                {
+                    Point3D originalLocation = Location;
+
+                    if (SpecialAbilities.VanishAbility(this, 5.0, false, 0x21D, 5, 10, true, null))
+                    {
+                        for (int a = 0; a < 3; a++)
+                        {
+                            if (Utility.RandomDouble() <= .5)
+                            {
+                                TimedStatic rocks = new TimedStatic(Utility.RandomList(4967, 4970, 4973), 5);
+                                rocks.Name = "rocks";
+
+                                Point3D rockLocation = SpecialAbilities.GetRandomAdjustedLocation(originalLocation, Map, true, 1, true);
+
+                                rocks.MoveToWorld(rockLocation, Map);
+                            }
+
+                            else
+                            {   
+                                TimedStatic dirt = new TimedStatic(Utility.RandomList(7681, 7682), 5);
+                                dirt.Name = "dirt";
+
+                                Point3D dirtLocation = SpecialAbilities.GetRandomAdjustedLocation(originalLocation, Map, true, 1, true);
+
+                                dirt.MoveToWorld(dirtLocation, Map);
+                            }
+                        }
+
+                        PublicOverheadMessage(MessageType.Regular, 0, false, "*burrows*");
+
+                        Combatant = null;
+
+                        Effects.PlaySound(Location, Map, GetIdleSound());
+                    }
+
+                    m_NextVanishAllowed = DateTime.UtcNow + NextVanishDelay;
+                }
+            }            
+        }
+        
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }
 
 		public override int GetAngerSound(){return 0x4F3;}
 		public override int GetIdleSound(){return 0x4F2;}

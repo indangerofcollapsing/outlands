@@ -129,7 +129,7 @@ namespace Server
             //AI SubGroup
             switch (subGroupType)
             {
-                case AISubGroupType.None:
+                case AISubGroupType.Melee:
                     target.DictCombatRange[CombatRange.WeaponAttackRange] = 1;
                     target.DictCombatRange[CombatRange.SpellRange] = 0;
                     target.DictCombatRange[CombatRange.Withdraw] = 0;

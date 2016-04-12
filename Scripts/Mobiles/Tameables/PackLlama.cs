@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Server.Mobiles;
 using Server.Items;
@@ -49,8 +50,6 @@ namespace Server.Mobiles
 			AddItem( pack );
 		}
 
-        public override int MaxExperience { get { return 50; } }
-
         public override int TamedItemId { get { return 8487; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }
@@ -72,21 +71,25 @@ namespace Server.Mobiles
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 50; } }
         public override int TamedBaseVirtualArmor { get { return 20; } }		
-		
-		public PackLlama( Serial serial ) : base( serial )
-		{
-		}
+		public override void SetUniqueAI()
+        {
+        }
 
-		#region Pack Animal Methods
-		public override bool OnBeforeDeath()
-		{
-			if ( !base.OnBeforeDeath() )
-				return false;
+        public override void SetTamedAI()
+        {
+        }
 
-			PackAnimal.CombineBackpacks( this );
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
 
-			return true;
-		}
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override int MaxExperience { get { return 50; } }		
 
 		public override DeathMoveResult GetInventoryMoveResultFor( Item item )
 		{
@@ -133,7 +136,20 @@ namespace Server.Mobiles
 
 			PackAnimal.GetContextMenuEntries( this, from, list );
 		}
-		#endregion
+
+        public override bool OnBeforeDeath()
+        {
+            if (!base.OnBeforeDeath())
+                return false;
+
+            PackAnimal.CombineBackpacks(this);
+
+            return true;
+        }
+
+        public PackLlama(Serial serial): base(serial)
+        {
+        }
 
 		public override void Serialize( GenericWriter writer )
 		{

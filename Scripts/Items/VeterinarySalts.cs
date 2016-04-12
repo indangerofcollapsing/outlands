@@ -125,6 +125,7 @@ namespace Server.Custom.Items
 				return;
 			}
 
+                /*
 			else if (!deadFollower.CanBeResurrectedThroughVeterinary && deadFollower.Controlled && deadFollower.ControlMaster is PlayerMobile)
 			{
                 if (m_Salts.Charges >= deadFollower.ControlSlots)
@@ -145,8 +146,9 @@ namespace Server.Custom.Items
                 else                
                     from.SendMessage("There are insufficent charges remaining to resurrect that.");                
 			}
+                 * */
 
-			else			
+			//else			
 				from.SendMessage("That creature cannot be resurrected with this item.");			
 		}
 	}

@@ -1636,7 +1636,7 @@ namespace Server.Mobiles
 
                 SetSkill(SkillName.MagicResist, 50);
 
-                AISubGroup = AISubGroupType.None;
+                AISubGroup = AISubGroupType.Melee;
                 UpdateAI(false);
 
                 int maxBloodHarvestable = 30;

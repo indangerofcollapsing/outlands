@@ -1,7 +1,5 @@
 using System;
 using Server.Items;
-using Server.Targeting;
-using System.Collections;
 
 namespace Server.Mobiles
 {
@@ -39,9 +37,6 @@ namespace Server.Mobiles
 			Karma = -600;
 		}
 
-        public override Poison PoisonImmune { get { return Poison.Regular; } }
-        public override Poison HitPoison { get { return Poison.Regular; } }
-
         public override int TamedItemId { get { return 8445; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 0; } }
@@ -62,7 +57,33 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 75; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 50; } }        			
+        public override int TamedBaseVirtualArmor { get { return 50; } }
+
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison HitPoison { get { return Poison.Regular; } }
+        public override Poison PoisonImmune { get { return Poison.Regular; } }  
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+        }  
 
 		public GiantSpider( Serial serial ) : base( serial )
 		{

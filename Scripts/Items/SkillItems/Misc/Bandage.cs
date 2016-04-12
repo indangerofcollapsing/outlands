@@ -359,13 +359,15 @@ namespace Server.Items
                         {
                             Mobile master = petPatient.ControlMaster;
 
+                            /*
                             if (!petPatient.CanBeResurrectedThroughVeterinary)
                             {
                                 m_Healer.SendMessage("Another item is required to resurrect this creature");
                                 healerNumber = 500966; // You are unable to resurrect your patient.
                             }
+                             * */
 
-                            else if (master != null && master.InRange(petPatient, 3))
+                            if (master != null && master.InRange(petPatient, 3))
                             {
                                 healerNumber = 503255; // You are able to resurrect the creature.
 

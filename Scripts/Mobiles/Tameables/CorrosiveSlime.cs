@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using Server.Items;
-using Server.Targeting;
 
 namespace Server.Mobiles
 {
@@ -42,14 +40,6 @@ namespace Server.Mobiles
             MinTameSkill = 50;
         }
 
-        public override void SetUniqueAI()
-        {
-            UniqueCreatureDifficultyScalar = 1.05;
-        }
-
-        public override Poison PoisonImmune { get { return Poison.Regular; } }
-        public override Poison HitPoison { get { return Poison.Regular; } }
-
         public override int TamedItemId { get { return 8424; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 0; } }
@@ -72,6 +62,22 @@ namespace Server.Mobiles
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }        
 
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VerySlow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison HitPoison { get { return Poison.Regular; } }
+        public override Poison PoisonImmune { get { return Poison.Regular; } }
+
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
@@ -88,6 +94,16 @@ namespace Server.Mobiles
             }
 
             SpecialAbilities.PierceSpecialAbility(effectChance, this, defender, .25, 10, -1, true, "", "Their acid momentarily weakens your armor!");
+        }
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }
+
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
         }
 
         public CorrosiveSlime(Serial serial): base(serial)

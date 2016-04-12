@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using Server.Items;
-using Server.Targeting;
-
 
 namespace Server.Mobiles
 {
@@ -39,10 +36,7 @@ namespace Server.Mobiles
             Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 55;
-        }
-
-        public override Poison HitPoison { get { return Poison.Greater; } }
-        public override Poison PoisonImmune { get { return Poison.Greater; } }        
+        }      
 
         public override int TamedItemId { get { return 8420; } }
         public override int TamedItemHue { get { return 0; } }
@@ -64,7 +58,28 @@ namespace Server.Mobiles
         public override double TamedBasePoisoning { get { return 75; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 100; } }        
+        public override int TamedBaseVirtualArmor { get { return 100; } }
+
+        public override void SetUniqueAI()
+        {
+        }
+
+        public override void SetTamedAI()
+        {
+        }
+
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Slow; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
+        public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
+
+        public override Poison HitPoison { get { return Poison.Greater; } }
+        public override Poison PoisonImmune { get { return Poison.Greater; } } 
+
+        public override void OnThink()
+        {
+            base.OnThink();
+        }        
 
 		public override void OnDeath(Container c)
         {
