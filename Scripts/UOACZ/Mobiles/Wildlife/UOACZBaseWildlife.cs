@@ -56,15 +56,14 @@ namespace Server.Mobiles
             }
         }
 
-        public override Poison PoisonImmune
+        public override int PoisonResistance
         {
             get
             {
                 if (m_Corrupted)
-                    return Poison.Lethal;
+                    return 5;
 
-                else
-                    return null;
+                return 0;
             } 
         }
         

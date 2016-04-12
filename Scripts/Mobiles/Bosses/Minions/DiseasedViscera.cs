@@ -57,7 +57,7 @@ namespace Server.Mobiles
         public override bool AlwaysBossMinion { get { return true; } }
 
         public override Poison HitPoison { get { return Poison.Deadly; } }
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override bool AllowParagon { get { return false; } }
         public override bool BardImmune { get { return true; } }  

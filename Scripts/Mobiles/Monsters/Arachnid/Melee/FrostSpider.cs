@@ -36,7 +36,7 @@ namespace Server.Mobiles
 		}
 
         public override Poison HitPoison { get { return Poison.Regular; } }
-        public override Poison PoisonImmune { get { return Poison.Regular; } }   
+        public override int PoisonResistance { get { return 2; } }   
 
 		public FrostSpider( Serial serial ) : base( serial )
 		{

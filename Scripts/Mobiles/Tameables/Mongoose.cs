@@ -3,62 +3,61 @@ using Server.Items;
 
 namespace Server.Mobiles
 {
-    [CorpseName("a rock spider corpse")]
-    public class RockSpider : BaseCreature
+    [CorpseName("a mongoose corpse")]
+    public class Mongoose : BaseCreature
     {
         [Constructable]
-        public RockSpider(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
+        public Mongoose(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
-            Name = "a rock spider";
-            Body = 737;
+            Name = "a mongoose";
+            Body = 278;
             Hue = 0;
-            BaseSoundID = 0x388;
+            BaseSoundID = 0x62e;
 
             SetStr(50);
-            SetDex(50);
+            SetDex(75);
             SetInt(25);
 
-            SetHits(100);
+            SetHits(50);
+
             SetDamage(4, 8);
 
-            SetSkill(SkillName.Wrestling, 50);
+            SetSkill(SkillName.Wrestling, 40);
             SetSkill(SkillName.Tactics, 100);
 
-            SetSkill(SkillName.MagicResist, 25);
+            SetSkill(SkillName.MagicResist, 50);
 
-            SetSkill(SkillName.Poisoning, 20);
-
-            VirtualArmor = 75;
+            VirtualArmor = 25;
 
             Tameable = true;
             ControlSlots = 1;
-            MinTameSkill = 35;
+            MinTameSkill = 30.0;
 
-            Fame = 500;
-            Karma = -500;
+            Fame = 400;
+            Karma = 0;
         }
-
-        public override int TamedItemId { get { return 17060; } }
+        
+        public override int TamedItemId { get { return 11671; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }
         public override int TamedItemYOffset { get { return 10; } }
 
-        public override int TamedBaseMaxHits { get { return 100; } }
+        public override int TamedBaseMaxHits { get { return 75; } }
         public override int TamedBaseMinDamage { get { return 4; } }
         public override int TamedBaseMaxDamage { get { return 6; } }
-        public override double TamedBaseWrestling { get { return 55; } }
+        public override double TamedBaseWrestling { get { return 60; } }
         public override double TamedBaseEvalInt { get { return 0; } }
 
         public override int TamedBaseStr { get { return 5; } }
-        public override int TamedBaseDex { get { return 50; } }
+        public override int TamedBaseDex { get { return 75; } }
         public override int TamedBaseInt { get { return 5; } }
         public override int TamedBaseMaxMana { get { return 0; } }
         public override double TamedBaseMagicResist { get { return 50; } }
         public override double TamedBaseMagery { get { return 0; } }
-        public override double TamedBasePoisoning { get { return 75; } }
+        public override double TamedBasePoisoning { get { return 0; } }
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
-        public override int TamedBaseVirtualArmor { get { return 125; } }
+        public override int TamedBaseVirtualArmor { get { return 50; } }
 
         public override void SetUniqueAI()
         {
@@ -68,15 +67,10 @@ namespace Server.Mobiles
         {
         }
 
-        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
-        public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
+        public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
+        public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
         public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
-
-        public override Poison HitPoison { get { return Poison.Regular; } }
-        public override int PoisonResistance { get { return 1; } }        
-
-        public override bool IsHighSeasBodyType { get { return true; } }
 
         public override void OnThink()
         {
@@ -88,7 +82,13 @@ namespace Server.Mobiles
             base.OnDeath(c);
         }
 
-        public RockSpider(Serial serial): base(serial)
+        public override int GetAttackSound() {return 0x631;}
+        public override int GetHurtSound()  { return 0x630;}
+        public override int GetAngerSound() { return 0x2A3;}
+        public override int GetIdleSound() {  return 0x366;}
+        public override int GetDeathSound()  {return 0x450;}
+        
+        public Mongoose(Serial serial): base(serial)
         {
         }
 

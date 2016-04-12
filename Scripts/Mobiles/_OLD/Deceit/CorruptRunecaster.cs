@@ -51,7 +51,7 @@ namespace Server.Mobiles
             AddItem(new Spellbook() { Hue = 1175, Movable = false, Name = "a necromantic tome" });            
         }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override bool OnBeforeDeath()
         {

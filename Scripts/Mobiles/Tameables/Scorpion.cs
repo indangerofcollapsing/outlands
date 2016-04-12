@@ -74,7 +74,7 @@ namespace Server.Mobiles
         public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
 
         public override Poison HitPoison { get { return Poison.Greater; } }
-        public override Poison PoisonImmune { get { return Poison.Greater; } } 
+        public override int PoisonResistance { get { return 2; } } 
 
         public override void OnThink()
         {

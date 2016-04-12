@@ -100,7 +100,7 @@ namespace Server.Mobiles
             intervalCount = (int)(Math.Floor((1 - (double)Hits / (double)HitsMax) * (double)totalIntervals));
         }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override bool AlwaysBoss { get { return true; } }        
         public override bool AlwaysMurderer { get { return true; } }

@@ -43,7 +43,7 @@ namespace Server.Mobiles
             UniqueCreatureDifficultyScalar = 2.1;
         }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override void OnThink()
         {

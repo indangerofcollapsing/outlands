@@ -173,18 +173,6 @@ namespace Server.Mobiles
             Tameable = false;
         }
 
-        public override Poison PoisonImmune 
-        { 
-            get 
-            {
-                if (m_BunnyType == BunnyType.Devious)
-                    return Poison.Lethal;
-
-                else
-                    return null;
-            } 
-        }
-
         public EasterBunny(Serial serial): base(serial)
         {
         }

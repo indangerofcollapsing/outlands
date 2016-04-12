@@ -1818,8 +1818,8 @@ namespace Server.Mobiles
             double magicResistScalar = .98 + (Skills.MagicResist.Base / 1250);
             double poisonImmunityScalar = 1;
 
-            if (PoisonImmune != null)
-                poisonImmunityScalar = 1 + (Math.Pow(((double)PoisonImmune.Level + 1), 2) / 250);
+            if (PoisonResistance > 0)
+                poisonImmunityScalar = 1 + (Math.Pow((PoisonResistance), 2) / 250);
 
             double survivalScalar = hitPointsScalar * defenseSkillScalar * defenseSkillScalar * virtualArmorScalar * magicResistScalar * poisonImmunityScalar;
 
@@ -2379,7 +2379,7 @@ namespace Server.Mobiles
             set { m_HitPoisonChance = value; }
         }
 
-        public virtual Poison PoisonImmune { get { return null; } }
+        public virtual int PoisonResistance { get { return 0; } }
 
         public static double BreathDamageToPlayerScalar = 1.0;
         public static double BreathDamageToCreatureScalar = 1.5;
@@ -3209,13 +3209,17 @@ namespace Server.Mobiles
             if (!Alive || IsDeadPet)
                 return ApplyPoisonResult.Immune;
 
-            BaseCreature bc_From = from as BaseCreature;
+            int poisonLevel = poison.Level;
+          
+            if (PoisonResistance >= 5)
+                return ApplyPoisonResult.Immune;
 
-            if (bc_From != null)
-            {
-                if (bc_From.IsParagon)
-                    poison = PoisonImpl.IncreaseLevel(poison);
-            }
+            poisonLevel -= PoisonResistance;
+
+            if (poisonLevel < 0)
+                poisonLevel = 0;
+
+            poison = Poison.GetPoison(poisonLevel);
 
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
@@ -3227,15 +3231,10 @@ namespace Server.Mobiles
 
         public override bool CheckPoisonImmunity(Mobile from, Poison poison)
         {
-            if (base.CheckPoisonImmunity(from, poison))
+            if (PoisonResistance >= 5)
                 return true;
 
-            Poison p = PoisonImmune;
-
-            if (m_Paragon)
-                p = PoisonImpl.IncreaseLevel(p);
-
-            return (p != null && p.Level >= poison.Level);
+            return false;
         }
 
         [CommandProperty(AccessLevel.GameMaster)]

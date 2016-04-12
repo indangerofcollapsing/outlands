@@ -38,7 +38,7 @@ namespace Server.Mobiles
 			Karma = 0;
 		}
 
-		public override Poison PoisonImmune{ get{ return Poison.Lethal; } }
+		public override int PoisonResistance{ get{ return 5; } }
 
 		public SkeletalMount( Serial serial ) : base( serial )
 		{

@@ -68,7 +68,7 @@ namespace Server.Mobiles
             }            
         }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override void OnDeath(Container c)
         {

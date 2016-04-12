@@ -52,7 +52,7 @@ namespace Server.Mobiles
             SpecialAbilities.StunSpecialAbility(.20, this, defender, .20, 10, -1, true, "", "The creature stuns you with its strike!");
         }
        
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override bool AlwaysMurderer { get { return true; } }
 

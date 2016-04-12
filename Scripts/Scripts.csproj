@@ -1676,7 +1676,7 @@
     <Compile Include="Mobiles\Tameables\Sphinx.cs" />
     <Compile Include="Mobiles\Tameables\Ferret.cs" />
     <Compile Include="Mobiles\Tameables\Guar.cs" />
-    <Compile Include="Mobiles\Tameables\Fox.cs" />
+    <Compile Include="Mobiles\Tameables\Mongoose.cs" />
     <Compile Include="Mobiles\_OLD\Deceit\BloodyZombie.cs" />
     <Compile Include="Mobiles\_OLD\Deceit\CorruptReaver.cs" />
     <Compile Include="Mobiles\_OLD\Deceit\CorruptRunecaster.cs" />

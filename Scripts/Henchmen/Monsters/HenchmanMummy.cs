@@ -94,7 +94,7 @@ namespace Server.Custom
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 75; } }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {

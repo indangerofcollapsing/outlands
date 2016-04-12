@@ -74,6 +74,11 @@ namespace Server.Mobiles
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
         public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
 
+        public override Poison HitPoison { get { return Poison.Deadly; } }
+        public override int PoisonResistance { get { return 3; } }
+
+        public override bool IsHighSeasBodyType { get { return true; } }
+
         public override void OnThink()
         {
             base.OnThink();
@@ -82,12 +87,7 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
-        }
-
-        public override Poison PoisonImmune { get { return Poison.Deadly; } }
-        public override Poison HitPoison { get { return Poison.Deadly; } }
-
-        public override bool IsHighSeasBodyType { get { return true; } }
+        }        
 
         public GiantCoralSnake(Serial serial): base(serial)
         {

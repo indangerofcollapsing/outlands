@@ -40,7 +40,7 @@ namespace Server.Mobiles
 		}
 
         public override Poison HitPoison { get { return Poison.Deadly; } }
-        public override Poison PoisonImmune { get { return Poison.Deadly; } }
+        public override int PoisonResistance { get { return 4; } }
         
 		public OphidianArchmage( Serial serial ) : base( serial )
 		{

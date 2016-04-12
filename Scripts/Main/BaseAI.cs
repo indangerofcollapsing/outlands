@@ -4888,11 +4888,8 @@ namespace Server.Mobiles
                     //Weak Against Poison
                     if (bc_Target != null)
                     {
-                        if (bc_Creature.HitPoison != null && bc_Target.PoisonImmune != null)
-                        {
-                            if (bc_Creature.HitPoison.Level > bc_Target.PoisonImmune.Level)
-                                BonusWeightValue += (int)(Math.Round(PoisonerBonus));
-                        }
+                        if (bc_Creature.HitPoison != null && bc_Target.PoisonResistance < 5)
+                            BonusWeightValue += (int)(Math.Round(PoisonerBonus));                        
                     }
 
                     BonusWeightValue += (int)(Math.Round(PoisonerBonus));

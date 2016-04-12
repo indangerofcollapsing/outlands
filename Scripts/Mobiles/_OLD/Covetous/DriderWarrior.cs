@@ -43,7 +43,7 @@ namespace Server.Mobiles
 		}
 
         public override Poison HitPoison { get { return Poison.Greater; } }
-        public override Poison PoisonImmune { get { return Poison.Greater; } }
+        public override int PoisonResistance { get { return 3; } }
 
         public DriderWarrior(Serial serial) : base(serial)
 		{

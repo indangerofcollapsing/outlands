@@ -53,7 +53,7 @@ namespace Server.Mobiles
             AddItem(new Scythe() { Hue = 1175, Movable = false, Speed = 30 });
         }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override bool OnBeforeDeath()
         {

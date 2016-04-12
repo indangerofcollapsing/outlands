@@ -45,7 +45,7 @@ namespace Server.Mobiles
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Berserk; } }
         public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override bool DeleteCorpseOnDeath { get { return Summoned; } }
         public override bool AlwaysMurderer { get { return true; } }

@@ -50,7 +50,7 @@ namespace Server.Mobiles
 		public override bool AutoDispel{ get{ return true; } }
 		public override bool BardImmune{ get{ return !Core.AOS; } }
 		public override bool CanRummageCorpses{ get{ return true; } }
-		public override Poison PoisonImmune{ get{ return Poison.Lethal; } }
+		public override int PoisonResistance{ get{ return 5; } }
 		//public override int TreasureMapLevel{ get{ return Core.AOS ? 5 : 4; } }
 
 		public override bool InitialInnocent{ get{ return true; } }

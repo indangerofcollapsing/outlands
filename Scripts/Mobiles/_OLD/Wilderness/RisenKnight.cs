@@ -35,7 +35,7 @@ namespace Server.Mobiles
 			Karma = -7000;
 		}
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
         
         public RisenKnight(Serial serial): base(serial)
 		{

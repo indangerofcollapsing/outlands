@@ -69,7 +69,7 @@ namespace Server.Custom
             MinTameSkill = 50;
 		}
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         //Animal Lore Display Info
         public override int TamedItemId { get { return 8423; } }

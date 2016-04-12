@@ -39,7 +39,7 @@ namespace Server.Mobiles
 			Karma = -115500;
 		}
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
         public override bool AlwaysMurderer { get { return true; } }   
         public override bool DisallowAllMoves { get { return true; } }		
 

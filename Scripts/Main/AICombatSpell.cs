@@ -327,7 +327,7 @@ namespace Server.Mobiles
 
                     if (bc_Target != null)
                     {
-                        if (bc_Target.PoisonImmune != null)
+                        if (bc_Target.PoisonResistance >= 5)
                             return false;
                     }
 

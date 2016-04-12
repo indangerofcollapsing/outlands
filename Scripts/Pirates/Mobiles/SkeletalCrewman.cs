@@ -89,7 +89,7 @@ namespace Server.Custom.Pirates
         public override bool CanSwitchWeapons { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public override void SetUniqueAI()
         {

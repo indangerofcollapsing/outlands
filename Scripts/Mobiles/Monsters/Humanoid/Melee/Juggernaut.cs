@@ -51,7 +51,7 @@ namespace Server.Mobiles
             }
         }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
         public override bool AlwaysMurderer { get { return true; } }
        		
 		public override int GetDeathSound(){return 0x423;}

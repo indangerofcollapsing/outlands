@@ -79,7 +79,7 @@ namespace Server.Mobiles
 
         public UOACZUndeadSpawner m_Spawner;
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 5; } }
 
         public virtual int DeathAnimation { get { return Utility.RandomMinMax(2, 3); } }
         public virtual int DeathAnimationFrames { get { return 4; } }

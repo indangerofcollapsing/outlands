@@ -35,7 +35,7 @@ namespace Server.Mobiles
             Karma = -1000;
 		}
 
-        public override Poison PoisonImmune { get { return Poison.Greater; } }
+        public override int PoisonResistance { get { return 3; } }
         public override Poison HitPoison { get { return Poison.Greater; } }
         
 		public PoisonousSlime( Serial serial ) : base( serial )

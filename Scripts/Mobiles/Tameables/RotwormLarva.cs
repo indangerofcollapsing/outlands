@@ -74,7 +74,7 @@ namespace Server.Mobiles
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
         public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
 
-        public override Poison PoisonImmune { get { return Poison.Lethal; } }
+        public override int PoisonResistance { get { return 4; } }
 
         public override bool IsHighSeasBodyType { get { return true; } }
 
