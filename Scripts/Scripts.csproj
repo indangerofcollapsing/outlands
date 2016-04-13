@@ -755,6 +755,8 @@
     <Compile Include="Items\Packs\RuinedHomePack.cs" />
     <Compile Include="Items\Packs\MonsterSlayerPack.cs" />
     <Compile Include="Items\Packs\SpookyPack.cs" />
+    <Compile Include="Multis\Houses\HouseDeeds.cs" />
+    <Compile Include="Multis\HouseDeed.cs" />
     <Compile Include="Pirates\Contracts\GuildDockContractsGump.cs" />
     <Compile Include="Pirates\Contracts\OceanEvent.cs" />
     <Compile Include="Pirates\Contracts\ShipBountyContract.cs" />
@@ -4229,7 +4231,6 @@
     <Compile Include="Multis\Camps\OrcCamp.cs" />
     <Compile Include="Multis\Camps\RatCamp.cs" />
     <Compile Include="Multis\ComponentVerification.cs" />
-    <Compile Include="Multis\Deeds.cs" />
     <Compile Include="Multis\HouseFoundation.cs" />
     <Compile Include="Multis\HousePlacement.cs" />
     <Compile Include="Multis\HousePlacementTool.cs" />

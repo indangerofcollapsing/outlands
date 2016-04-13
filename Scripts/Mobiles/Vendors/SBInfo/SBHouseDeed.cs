@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Server.Multis.Deeds;
+using Server.Multis;
 
 namespace Server.Mobiles
 {

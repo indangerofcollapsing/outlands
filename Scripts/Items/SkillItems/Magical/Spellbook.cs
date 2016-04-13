@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Server;
 using Server.Commands;
@@ -62,6 +63,7 @@ namespace Server.Items
 			EventSink.CastSpellRequest += new CastSpellRequestEventHandler( EventSink_CastSpellRequest );
 
 			CommandSystem.Register( "AllSpells", AccessLevel.GameMaster, new CommandEventHandler( AllSpells_OnCommand ) );
+            CommandSystem.Register("AddSpells", AccessLevel.Player, new CommandEventHandler(AddSpells_OnCommand));
 		}
 
 		[Usage( "AllSpells" )]
@@ -94,6 +96,111 @@ namespace Server.Items
 				from.SendMessage( "That is not a spellbook. Try again." );
 			}
 		}
+
+        [Usage("AddSpells")]
+        [Description("Fills a spellbook with any scrolls are missing from the spellbook found in the player's backpack.")]
+        private static void AddSpells_OnCommand(CommandEventArgs e)
+        {
+            Mobile from = e.Mobile;
+
+            from.SendMessage("Which spellbook do you wish to fill with spells from your backpack?");
+            from.Target = new AddScrollsToSpellbook(from);
+        }
+
+        public class AddScrollsToSpellbook : Target
+        {
+            private Mobile m_From;
+
+            public AddScrollsToSpellbook(Mobile from): base(18, false, TargetFlags.None)
+            {
+                m_From = from;               
+            }
+
+            protected override void OnTarget(Mobile from, object target)
+            {
+                if (!SpecialAbilities.Exists(from)) return;
+                if (from.Backpack == null) return;
+
+                if (!(target is Spellbook))
+                {
+                    from.SendMessage("That is not a spellbook.");
+                    return;
+                }
+
+                Spellbook spellbook = target as Spellbook;
+
+                Item item = from.FindItemOnLayer(Layer.FirstValid);
+                
+                if (!(spellbook.IsChildOf(from.Backpack) || item == spellbook))
+                {
+                    from.SendMessage("You may only target spellbooks you have equipped or in your backpack.");
+                    return;
+                }
+
+                List<SpellScroll> m_Scrolls = from.Backpack.FindItemsByType<SpellScroll>();
+
+                int totalCount = 0;
+
+                Queue m_Queue = new Queue();
+
+                foreach (SpellScroll spellScroll in m_Scrolls)
+                {
+                    if (spellScroll.MasterStatus != 0)
+                        continue;
+
+                    SpellbookType type = GetTypeForSpell(spellScroll.SpellID);
+
+                    if (type != spellbook.SpellbookType)
+                        continue;
+
+                    if (spellbook.HasSpell(spellScroll.SpellID))
+                        continue;
+
+                    m_Queue.Enqueue(spellScroll);
+                }
+
+                while (m_Queue.Count > 0)
+                {
+                    SpellScroll spellScroll = (SpellScroll)m_Queue.Dequeue();
+
+                    if (spellbook.HasSpell(spellScroll.SpellID))
+                        continue;
+
+                    int val = spellScroll.SpellID - spellbook.BookOffset;
+
+                    if (val >= 0 && val < spellbook.BookCount)
+                    {
+                        totalCount++;
+
+                        spellbook.m_Content |= (ulong)1 << val;
+                        ++spellbook.m_Count;
+
+                        spellbook.InvalidateProperties();
+
+                        if (spellScroll.Amount > 1)
+                            spellScroll.Amount--;
+
+                        else
+                            spellScroll.Delete();
+                    }
+                }
+
+                if (totalCount > 0)
+                {
+                    from.SendSound(0x249);
+                    from.SendMessage("You add " + totalCount.ToString() + " spells into the spellbook.");
+                }
+
+                else
+                {
+                    if (m_Scrolls.Count == 0)
+                        from.SendMessage("You do not have any spell scrolls in your backpack.");
+
+                    else
+                        from.SendMessage("That spellbook already has those spells present within.");                    
+                }
+            }
+        }
 
 		private static void EventSink_OpenSpellbookRequest( OpenSpellbookRequestEventArgs e )
 		{
@@ -532,7 +639,7 @@ namespace Server.Items
 		public override void OnDoubleClick( Mobile from )
 		{
 			Container pack = from.Backpack;
-
+            
 			if ( Parent == from || ( pack != null && Parent == pack ) )
 				DisplayTo( from );
 

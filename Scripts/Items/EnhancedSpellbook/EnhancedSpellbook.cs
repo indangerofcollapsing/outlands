@@ -52,9 +52,7 @@ namespace Server.Items
             m_ChargesRemaining = Utility.RandomMinMax(200, 300);
 
             if (EnhancedType != null && EnhancedType == EnhancedSpellbookType.Slayer)
-                SlayerGroup = slayerGroupType;               
-            
-            AddEnhancedScrolls();
+                SlayerGroup = slayerGroupType;   
         }
 
         [Constructable]
@@ -71,7 +69,6 @@ namespace Server.Items
             m_ChargesRemaining = Utility.RandomMinMax(200, 300);
 
             EnhancedType = type;
-            AddEnhancedScrolls();
         }
         
         [Constructable]
@@ -96,14 +93,6 @@ namespace Server.Items
             m_ChargesRemaining = Utility.RandomMinMax(200, 300);
 		}
 
-        public EnhancedSpellbook(Serial serial) : base(serial)
-		{
-            Hue = 101;
-
-            LootType = Server.LootType.Regular;
-            Layer = Layer.OneHanded; 
-		}
-
         public void OnSpellCast(Mobile from)
         {
             m_ChargesRemaining--;
@@ -113,76 +102,7 @@ namespace Server.Items
                 from.SendMessage("The spellbook runs out of charges and crumbles to dust in your hands.");
                 Delete();
             }
-        }
-       
-        public void AddEnhancedScrolls()
-        {
-            if (EnhancedType == EnhancedSpellbookType.Energy)
-            {                    
-                AddScroll(this, new HarmScroll());
-                AddScroll(this, new LightningScroll());
-                AddScroll(this, new EnergyBoltScroll());
-                AddScroll(this, new ChainLightningScroll());
-            }
-
-            else if (EnhancedType == EnhancedSpellbookType.Fire)
-            {
-                AddScroll(this, new MagicArrowScroll());
-                AddScroll(this, new FireballScroll());
-                AddScroll(this, new FireFieldScroll());
-                AddScroll(this, new ExplosionScroll());
-                AddScroll(this, new FlamestrikeScroll());
-                AddScroll(this, new MeteorSwarmScroll());
-            }
-
-            else if (EnhancedType == EnhancedSpellbookType.Summoner)
-            {
-                AddScroll(this, new SummonCreatureScroll());
-                AddScroll(this, new BladeSpiritsScroll ());
-                AddScroll(this, new SummonDaemonScroll());
-                AddScroll(this, new SummonAirElementalScroll());
-                AddScroll(this, new SummonEarthElementalScroll());
-                AddScroll(this, new SummonFireElementalScroll());
-                AddScroll(this, new SummonWaterElementalScroll());
-                AddScroll(this, new EnergyVortexScroll());
-            }
-
-            else if (EnhancedType == EnhancedSpellbookType.Warlock)
-            {
-                AddScroll(this, new WeakenScroll());
-                AddScroll(this, new ClumsyScroll());
-                AddScroll(this, new FeeblemindScroll());
-                AddScroll(this, new CurseScroll());
-                AddScroll(this, new ParalyzeScroll());
-                AddScroll(this, new ParalyzeFieldScroll());
-                AddScroll(this, new ManaDrainScroll());
-                AddScroll(this, new ManaVampireScroll());
-            }
-
-            else if (EnhancedType == EnhancedSpellbookType.Wizard)
-            {
-                AddScroll(this, new ReactiveArmorScroll());
-                AddScroll(this, new StrengthScroll());
-                AddScroll(this, new AgilityScroll());
-                AddScroll(this, new CunningScroll());
-                AddScroll(this, new ProtectionScroll());
-                AddScroll(this, new BlessScroll());
-                AddScroll(this, new ArchProtectionScroll());
-                AddScroll(this, new MagicReflectScroll());                
-            }
-
-            else if (EnhancedType == EnhancedSpellbookType.Slayer)
-            {
-                //Add All Spells
-                if (BookCount == 64)
-                    Content = ulong.MaxValue;
-                else
-                    Content = (1ul << BookCount) - 1;
-            }
-
-            else            
-                return;            
-        }
+        }       
 
         public override void OnSingleClick(Mobile from)
         {
@@ -235,6 +155,10 @@ namespace Server.Items
         }
 
         #endregion
+
+        public EnhancedSpellbook(Serial serial): base(serial)
+        {
+        }
 
         public override void Serialize( GenericWriter writer )
 		{

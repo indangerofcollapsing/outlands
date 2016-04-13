@@ -175,7 +175,6 @@ namespace Server.Items
                 enhancedSpellbook = new EnhancedSpellbook(m_EnhancedSpellbookType);            
 
             enhancedSpellbook.CraftedBy = player;
-            enhancedSpellbook.AddEnhancedScrolls();
                       
             player.Backpack.AddItem(enhancedSpellbook);
 
