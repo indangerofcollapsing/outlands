@@ -26,12 +26,18 @@ namespace Server.Items
 
         public static double DiscordanceModifier = .25;
 
-        public static double ExceptionalQualitySkillBonus = 5;
+        public static double LowQualitySkillBonus = -10;
+        public static double HighQualitySkillBonus = 10;
+        public static double MagicLevelSkillBonus = 5;
         public static double SlayerSkillBonus = 15;
+
+        public static double MinimumEffectiveChanceScalar = .0015;
 
         public static int PacifiedTextHue = 2599;
         public static int ProvokedTextHue = 149;
         public static int DiscordedTextHue = 2601;
+
+        public override CraftResource DefaultResource { get { return CraftResource.RegularWood; } }
 
         private InstrumentDurabilityLevel m_DurabilityLevel;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -89,7 +95,26 @@ namespace Server.Items
         public int UsesRemaining
         {
             get { return m_UsesRemaining; }
-            set { m_UsesRemaining = value; InvalidateProperties(); }
+            set
+            {
+                m_UsesRemaining = value;
+
+                if (m_UsesRemaining > MaxUses)
+                    MaxUses = m_UsesRemaining;
+
+                InvalidateProperties();
+            }
+        }
+
+        private int m_MaxUses;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int MaxUses
+        {
+            get { return m_MaxUses; }
+            set
+            {
+                m_MaxUses = value;
+            }
         }
 
         public override void QualityChange()
@@ -325,41 +350,34 @@ namespace Server.Items
             double bonusBardSkill = 0;
 
             if (instrument.Quality == Quality.Low)
-                bonusBardSkill -= 10;
+                bonusBardSkill += LowQualitySkillBonus;
 
             if (instrument.Quality == Quality.Exceptional)
-                bonusBardSkill += 10;
+                bonusBardSkill += HighQualitySkillBonus;
 
-            switch (instrument.ArtistryLevel)
-            {
-                case InstrumentArtistryLevel.Melodist: bonusBardSkill += 5; break;
-                case InstrumentArtistryLevel.Jongleur: bonusBardSkill += 10; break;
-                case InstrumentArtistryLevel.Minstrel: bonusBardSkill += 15; break;
-                case InstrumentArtistryLevel.Troubadour: bonusBardSkill += 20; break;
-                case InstrumentArtistryLevel.Balladeer: bonusBardSkill += 25; break;
-            }
+            bonusBardSkill += ((double)instrument.ArtistryLevel * MagicLevelSkillBonus);
 
             BaseCreature bc_Target = target as BaseCreature;
 
             if (bc_Target != null)
             {
                 if (bc_Target.SlayerGroup == instrument.SlayerGroup)
-                    bonusBardSkill += 15;
+                    bonusBardSkill += SlayerSkillBonus;
             }
 
             return bonusBardSkill;
         }
-
+        
         public static double GetBardSuccessChance(double effectiveBardSkill, double targetDifficulty)
         {
             double baseSuccessChance = (effectiveBardSkill - (targetDifficulty * 1.5)) * .02;
-            double minimumSuccessChance = effectiveBardSkill * .0015;
+            double minimumSuccessChance = effectiveBardSkill * MinimumEffectiveChanceScalar;
 
             if (baseSuccessChance < minimumSuccessChance)
-                return minimumSuccessChance;
+                baseSuccessChance = minimumSuccessChance;
 
             return baseSuccessChance;
-        }
+        }        
 
         public static TimeSpan GetBardDuration(Mobile target, double targetDifficulty)
         {
@@ -397,11 +415,13 @@ namespace Server.Items
                 pm_From.LastInstrument = item;
         }
 
-        public BaseInstrument(int itemID, int wellSound, int badlySound)
-            : base(itemID)
+        public BaseInstrument(int itemID, int wellSound, int badlySound): base(itemID)
         {
+            Resource = CraftResource.RegularWood;
+
             m_SuccessSound = wellSound;
             m_FailureSound = badlySound;
+
             UsesRemaining = Utility.RandomMinMax(InitMinUses, InitMaxUses);
         }
 
@@ -558,6 +578,7 @@ namespace Server.Items
             writer.Write((int)m_ArtistryLevel);
             writer.Write((int)m_SlayerGroup);
             writer.Write(UsesRemaining);
+            writer.Write(MaxUses);
             writer.Write(m_SuccessSound);
             writer.Write(m_FailureSound);
         }
@@ -571,12 +592,13 @@ namespace Server.Items
             //Version 0
             if (version >= 0)
             {
-                m_DurabilityLevel = (InstrumentDurabilityLevel)reader.ReadInt();
-                m_ArtistryLevel = (InstrumentArtistryLevel)reader.ReadInt();
-                m_SlayerGroup = (SlayerGroupType)reader.ReadInt();
-                m_UsesRemaining = reader.ReadInt();
-                m_SuccessSound = reader.ReadInt();
-                m_FailureSound = reader.ReadInt();
+                DurabilityLevel = (InstrumentDurabilityLevel)reader.ReadInt();
+                ArtistryLevel = (InstrumentArtistryLevel)reader.ReadInt();
+                SlayerGroup = (SlayerGroupType)reader.ReadInt();
+                UsesRemaining = reader.ReadInt();
+                MaxUses = reader.ReadInt();
+                SuccessSound = reader.ReadInt();
+                FailureSound = reader.ReadInt();
             }
         }
     }

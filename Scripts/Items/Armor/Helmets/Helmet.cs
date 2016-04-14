@@ -30,6 +30,7 @@ namespace Server.Items
 		[Constructable]
 		public Helmet() : base( 5131 )
 		{
+            Name = "helmet";
 			Weight = 5.0;
 		}
 

@@ -36,6 +36,7 @@ namespace Server.Items
 		[Constructable]
 		public LeatherArms() : base( 5061 )
 		{
+            Name = "leather arms";
 			Weight = 2.0;
 		}
 

@@ -29,6 +29,7 @@ namespace Server.Items
 		[Constructable]
 		public ChaosShield() : base( 7107 )
 		{
+            Name = "chaos shield";
 			Weight = 5.0;
 		}
 

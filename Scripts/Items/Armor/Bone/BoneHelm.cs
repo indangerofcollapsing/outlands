@@ -31,6 +31,7 @@ namespace Server.Items
 		[Constructable]
 		public BoneHelm() : base( 0x1451 )
 		{
+            Name = "bone helm";
 			Weight = 3.0;
 		}
 

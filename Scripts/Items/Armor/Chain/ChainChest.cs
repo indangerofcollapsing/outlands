@@ -35,6 +35,7 @@ namespace Server.Items
 		[Constructable]
 		public ChainChest() : base( 5060 )
 		{
+            Name = "chainmail chest";
 			Weight = 7.0;
 		}
 

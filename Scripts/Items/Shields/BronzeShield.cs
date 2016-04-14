@@ -27,6 +27,7 @@ namespace Server.Items
         [Constructable]
         public BronzeShield() : base(7026)
         {
+            Name = "bronze shield";
             Weight = 6.0;
         }
 

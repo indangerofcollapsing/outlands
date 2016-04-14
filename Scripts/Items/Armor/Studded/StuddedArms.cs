@@ -36,6 +36,7 @@ namespace Server.Items
 		[Constructable]
 		public StuddedArms() : base( 5076 )
 		{
+            Name = "studded arms";
 			Weight = 4.0;
 		}
 

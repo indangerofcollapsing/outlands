@@ -35,28 +35,11 @@ namespace Server.Items
             }
         }
         #endregion
-
-
-
-        /* Armor internals work differently now (Jun 19 2003)
-		 * 
-		 * The attributes defined below default to -1.
-		 * If the value is -1, the corresponding virtual 'Aos/Old' property is used.
-		 * If not, the attribute value itself is used. Here's the list:
-		 *  - ArmorBase
-		 *  - StrBonus
-		 *  - DexBonus
-		 *  - IntBonus
-		 *  - StrReq
-		 *  - DexReq
-		 *  - IntReq
-		 *  - MeditationAllowance
-		 */
-
+        
         // Instance values. These values must are unique to each armor piece.
         private int m_MaxHitPoints;
-        private int m_HitPoints;        
-        private ArmorDurabilityLevel m_Durability;
+        private int m_HitPoints;
+        private ArmorDurabilityLevel m_Durability = ArmorDurabilityLevel.Regular;
         private ArmorProtectionLevel m_Protection;   
         private int m_PhysicalBonus, m_FireBonus, m_ColdBonus, m_PoisonBonus, m_EnergyBonus;
 
@@ -100,6 +83,8 @@ namespace Server.Items
         public virtual int IconHue { get { return Hue; } }
         public virtual int IconOffsetX { get { return 0; } } //Base is 85
         public virtual int IconOffsetY { get { return 0; } } //Base is 80
+
+        public override CraftResource DefaultResource { get { return CraftResource.Iron; } }
 
         public virtual string BlessedInRegionName { get { return ""; } }
         
@@ -1069,18 +1054,15 @@ namespace Server.Items
                 ((Mobile)Parent).CheckStatTimers();
         }
 
-        public virtual CraftResource DefaultResource { get { return CraftResource.Iron; } }
-
         public BaseArmor(int itemID) : base(itemID)
         {
-            m_Durability = ArmorDurabilityLevel.Regular;
+            Layer = (Layer)ItemData.Quality;
 
-            Resource = DefaultResource;
             Hue = CraftResources.GetHue(Resource);
 
-            m_HitPoints = m_MaxHitPoints = Utility.RandomMinMax(InitMinHits, InitMaxHits);
+            m_HitPoints = m_MaxHitPoints = Utility.RandomMinMax(InitMinHits, InitMaxHits);           
 
-            this.Layer = (Layer)ItemData.Quality;
+            //-----
 
             m_AosAttributes = new AosAttributes(this);
             m_AosArmorAttributes = new AosArmorAttributes(this);

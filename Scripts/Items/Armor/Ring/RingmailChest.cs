@@ -35,6 +35,7 @@ namespace Server.Items
 		[Constructable]
 		public RingmailChest() : base( 5101 )
 		{
+            Name = "ringmail chest";
 			Weight = 8.0;
 		}
 

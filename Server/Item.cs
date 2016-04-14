@@ -989,11 +989,14 @@ namespace Server
             }
         }
 
+        public virtual CraftResource DefaultResource { get { return CraftResource.None; } }
+
         private CraftResource m_Resource = CraftResource.None;
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get { return m_Resource; }
+            get { return m_Resource;  }
+
             set
             {
                 m_Resource = value;
@@ -5353,10 +5356,11 @@ namespace Server
         }
 
         [Constructable]
-        public Item(int itemID)
-            : this()
+        public Item(int itemID): this()
         {
             m_ItemID = itemID;
+
+            Resource = DefaultResource; 
         }
 
         public Item(Serial serial)

@@ -27,6 +27,7 @@ namespace Server.Items
         [Constructable]
         public Buckler(): base(7027)
         {
+            Name = "buckler";
             Weight = 5.0;
         }
 

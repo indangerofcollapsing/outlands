@@ -35,6 +35,7 @@ namespace Server.Items
 		[Constructable]
 		public LeatherGorget() : base( 5063 )
 		{
+            Name = "leather gorget";
 			Weight = 1.0;
 		}
 

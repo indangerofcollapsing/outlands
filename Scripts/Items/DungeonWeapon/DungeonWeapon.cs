@@ -246,7 +246,12 @@ namespace Server.Items
 
             int weaponTier = m_Weapon.TierLevel;
             string dungeonName = BaseWeapon.GetDungeonName(m_Weapon.Dungeon) + " Dungeon";
-            string weaponName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(m_Weapon.Name);
+            string weaponName = m_Weapon.Name;
+
+            if (weaponName == null)
+                weaponName = "";
+
+            weaponName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(weaponName);
             int newDurability = DungeonWeapon.BaselineDurability + (DungeonWeapon.IncreasedDurabilityPerTier * weaponTier);
 
             int adjustedBlessedCharges = DungeonWeapon.ArcaneMaxCharges;

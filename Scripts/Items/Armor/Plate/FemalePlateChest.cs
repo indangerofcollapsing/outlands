@@ -35,6 +35,7 @@ namespace Server.Items
 		[Constructable]
 		public FemalePlateChest() : base( 7173 )
 		{
+            Name = "female platemail chest";
 			Weight = 4.0;
 		}
 

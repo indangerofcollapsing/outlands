@@ -145,8 +145,8 @@ namespace Server.Mobiles
 				Add( typeof( FemaleStuddedChest ), 50 );
 				Add( typeof( LeatherShorts ), 28 );
 				Add( typeof( LeatherSkirt ), 22 );
-				Add( typeof( LeatherBustierArms ), 22 );
-				Add( typeof( StuddedBustierArms ), 54 );
+				Add( typeof( LeatherBustier ), 22 );
+				Add( typeof( StuddedBustier ), 54 );
 
 				Add( typeof( Bascinet ), 45 );
 				Add( typeof( CloseHelm ), 45 );

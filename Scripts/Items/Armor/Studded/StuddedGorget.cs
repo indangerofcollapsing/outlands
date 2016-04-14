@@ -35,6 +35,7 @@ namespace Server.Items
 		[Constructable]
 		public StuddedGorget() : base( 5078 )
 		{
+            Name = "studded gorget";
 			Weight = 1.0;
 		}
 

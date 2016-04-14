@@ -27,6 +27,7 @@ namespace Server.Items
         [Constructable]
         public MetalShield(): base(7035)
         {
+            Name = "metal shield";
             Weight = 6.0;
         }
 

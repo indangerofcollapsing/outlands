@@ -35,6 +35,7 @@ namespace Server.Items
 		[Constructable]
 		public ChainCoif() : base( 5056 )
 		{
+            Name = "chainmail coif";
 			Weight = 1.0;
 		}
 

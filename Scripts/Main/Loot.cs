@@ -421,14 +421,14 @@ namespace Server
 				typeof( ChainLegs ),			typeof( ChainCoif ),			typeof( Bascinet ),
 				typeof( CloseHelm ),			typeof( Helmet ),				typeof( NorseHelm ),
 				typeof( OrcHelm ),				typeof( FemaleLeatherChest ),	typeof( LeatherArms ),
-				typeof( LeatherBustierArms ),	typeof( LeatherChest ),			typeof( LeatherGloves ),
+				typeof( LeatherBustier ),	typeof( LeatherChest ),			typeof( LeatherGloves ),
 				typeof( LeatherGorget ),		typeof( LeatherLegs ),			typeof( LeatherShorts ),
 				typeof( LeatherSkirt ),			typeof( LeatherCap ),			typeof( FemalePlateChest ),
 				typeof( PlateArms ),			typeof( PlateChest ),			typeof( PlateGloves ),
 				typeof( PlateGorget ),			typeof( PlateHelm ),			typeof( PlateLegs ),
 				typeof( RingmailArms ),			typeof( RingmailChest ),		typeof( RingmailGloves ),
 				typeof( RingmailLegs ),			typeof( FemaleStuddedChest ),	typeof( StuddedArms ),
-				typeof( StuddedBustierArms ),	typeof( StuddedChest ),			typeof( StuddedGloves ),
+				typeof( StuddedBustier ),	typeof( StuddedChest ),			typeof( StuddedGloves ),
 				typeof( StuddedGorget ),		typeof( StuddedLegs )
 			};
 

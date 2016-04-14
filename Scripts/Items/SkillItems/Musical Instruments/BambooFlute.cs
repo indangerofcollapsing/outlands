@@ -13,7 +13,7 @@ namespace Server.Items
 		public BambooFlute() : base( 10245, 0x504, 0x503 )
 		{
             Name = "bamboo flute";
-			Weight = 2.0;
+			Weight = 2.0;            
 		}
 
 		public BambooFlute( Serial serial ) : base( serial )

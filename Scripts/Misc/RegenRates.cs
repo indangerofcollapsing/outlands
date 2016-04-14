@@ -11,8 +11,8 @@ namespace Server.Misc
 		[CallPriority( 10 )]
 		public static void Configure()
 		{
-			Mobile.DefaultHitsRate = TimeSpan.FromSeconds( 10.0 );
-			Mobile.DefaultStamRate = TimeSpan.FromSeconds(  5.0 );
+			Mobile.DefaultHitsRate = TimeSpan.FromSeconds(  5.0 );
+			Mobile.DefaultStamRate = TimeSpan.FromSeconds(  3.0 );
 			Mobile.DefaultManaRate = TimeSpan.FromSeconds(  7.0 );
 
             Mobile.HitsRegenRateHandler = new RegenRateHandler(Mobile_HitsRegenRate);

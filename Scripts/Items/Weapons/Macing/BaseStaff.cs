@@ -13,6 +13,8 @@ namespace Server.Items
 		public override WeaponType BaseType{ get{ return WeaponType.Bashing; } }
 		public override WeaponAnimation BaseAnimation { get{ return WeaponAnimation.Bash2H; } }
 
+        public override CraftResource DefaultResource { get { return CraftResource.RegularWood; } }
+
 		public BaseStaff( int itemID ) : base( itemID )
 		{
 		}

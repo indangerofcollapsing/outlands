@@ -26,7 +26,7 @@ namespace Server.Mobiles
 				Add( new GenericBuyInfo( typeof( StuddedGorget ), 73, 20, 0x13D6, 0 ) );
 				Add( new GenericBuyInfo( typeof( StuddedLegs ), 103, 20, 0x13DA, 0 ) );
 				Add( new GenericBuyInfo( typeof( FemaleStuddedChest ), 142, 20, 0x1C02, 0 ) );
-				Add( new GenericBuyInfo( typeof( StuddedBustierArms ), 120, 20, 0x1c0c, 0 ) );
+				Add( new GenericBuyInfo( typeof( StuddedBustier ), 120, 20, 0x1c0c, 0 ) );
 			}
 		}
 
@@ -40,7 +40,7 @@ namespace Server.Mobiles
 				Add( typeof( StuddedGorget ), 30 );
 				Add( typeof( StuddedLegs ), 36 );
 				Add( typeof( FemaleStuddedChest ), 41 );
-				Add( typeof( StuddedBustierArms ), 40 );
+				Add( typeof( StuddedBustier ), 40 );
 			}
 		}
 	}

@@ -42,8 +42,8 @@ namespace Server.Mobiles
 				{
 					case 0: AddItem( new FemaleLeatherChest() ); break;
 					case 1: AddItem( new FemaleStuddedChest() ); break;
-					case 2: AddItem( new LeatherBustierArms() ); break;
-					case 3: AddItem( new StuddedBustierArms() ); break;
+					case 2: AddItem( new LeatherBustier() ); break;
+					case 3: AddItem( new StuddedBustier() ); break;
 					case 4: AddItem( new FemalePlateChest() ); break;
 				}
 			}

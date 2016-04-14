@@ -35,6 +35,7 @@ namespace Server.Items
 		[Constructable]
 		public RingmailGloves() : base( 5106 )
 		{
+            Name = "ringmail gloves";
 			Weight = 2.0;
 		}
 

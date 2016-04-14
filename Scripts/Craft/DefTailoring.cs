@@ -128,7 +128,7 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(LeatherLegs), "Leather Armor", "Leather Legs", 66.3, 91.3, typeof(Leather), 1044462, 10, 1044463);
             AddCraft(1, typeof(LeatherShorts), "Leather Armor", "Leather Shorts", 62.2, 87.2, typeof(Leather), 1044462, 8, 1044463);
             AddCraft(1, typeof(LeatherSkirt), "Leather Armor", "Leather Skirt", 58.0, 83.0, typeof(Leather), 1044462, 6, 1044463);
-            AddCraft(1, typeof(LeatherBustierArms), "Leather Armor", "Leather Bustier Arms", 58.0, 83.0, typeof(Leather), 1044462, 6, 1044463);
+            AddCraft(1, typeof(LeatherBustier), "Leather Armor", "Leather Bustier", 58.0, 83.0, typeof(Leather), 1044462, 6, 1044463);
             AddCraft(1, typeof(FemaleLeatherChest), "Leather Armor", "Female Leather Chest", 62.2, 87.2, typeof(Leather), 1044462, 8, 1044463);
             AddCraft(1, typeof(LeatherChest), "Leather Armor", "Leather Chest", 70.5, 95.5, typeof(Leather), 1044462, 12, 1044463);
 
@@ -137,7 +137,7 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(StuddedGloves), "Studded Leather Armor", "Studded Gloves", 55, 85, typeof(Leather), 1044462, 8, 1044463);
             AddCraft(1, typeof(StuddedArms), "Studded Leather Armor", "Studded Arms", 65, 95, typeof(Leather), 1044462, 10, 1044463);
             AddCraft(1, typeof(StuddedLegs), "Studded Leather Armor", "Studded Legs", 65, 95, typeof(Leather), 1044462, 12, 1044463);
-            AddCraft(1, typeof(StuddedBustierArms), "Studded Leather Armor", "Studded Bustier Arms", 70, 100, typeof(Leather), 1044462, 8, 1044463);
+            AddCraft(1, typeof(StuddedBustier), "Studded Leather Armor", "Studded Bustier", 70, 100, typeof(Leather), 1044462, 8, 1044463);
             AddCraft(1, typeof(StuddedChest), "Studded Leather Armor", "Studded Chest", 75, 105, typeof(Leather), 1044462, 14, 1044463);
             AddCraft(1, typeof(FemaleStuddedChest), "Studded Leather Armor", "Studded Female Chest", 70, 100, typeof(Leather), 1044462, 10, 1044463);
 

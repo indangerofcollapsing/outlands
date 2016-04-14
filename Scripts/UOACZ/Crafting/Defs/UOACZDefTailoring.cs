@@ -144,7 +144,7 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(LeatherShorts), "Leather Armor", "Leather Shorts", 5, 30, typeof(Leather), 1044462, 2, 1044463);
             AddCraft(1, typeof(LeatherSkirt), "Leather Armor", "Leather Skirt", 5, 30, typeof(Leather), 1044462, 2, 1044463);
             AddCraft(1, typeof(LeatherChest), "Leather Armor", "Leather Chest", 5, 30, typeof(Leather), 1044462, 3, 1044463);
-            AddCraft(1, typeof(LeatherBustierArms), "Leather Armor", "Leather Bustier Arms", 5, 30, typeof(Leather), 1044462, 3, 1044463);
+            AddCraft(1, typeof(LeatherBustier), "Leather Armor", "Leather Bustier", 5, 30, typeof(Leather), 1044462, 3, 1044463);
             AddCraft(1, typeof(FemaleLeatherChest), "Leather Armor", "Female Leather Chest", 5, 30, typeof(Leather), 1044462, 3, 1044463);
 
             //Studded Armor
@@ -153,7 +153,7 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(StuddedArms), "Studded Leather Armor", "Studded Arms", 10, 35, typeof(Leather), 1044462, 2, 1044463);
             AddCraft(1, typeof(StuddedLegs), "Studded Leather Armor", "Studded Legs", 10, 35, typeof(Leather), 1044462, 3, 1044463);
             AddCraft(1, typeof(StuddedChest), "Studded Leather Armor", "Studded Chest", 10, 35, typeof(Leather), 1044462, 4, 1044463);
-            AddCraft(1, typeof(StuddedBustierArms), "Studded Leather Armor", "Studded Bustier Arms", 10, 35, typeof(Leather), 1044462, 4, 1044463);
+            AddCraft(1, typeof(StuddedBustier), "Studded Leather Armor", "Studded Bustier", 10, 35, typeof(Leather), 1044462, 4, 1044463);
             AddCraft(1, typeof(FemaleStuddedChest), "Studded Leather Armor", "Female Studded Chest", 10, 35, typeof(Leather), 1044462, 4, 1044463);
 
             //Bone Armor

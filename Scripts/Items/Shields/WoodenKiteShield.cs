@@ -24,9 +24,12 @@ namespace Server.Items
         public override int IconOffsetX { get { return 5; } }
         public override int IconOffsetY { get { return 6; } }
 
+        public override CraftResource DefaultResource { get { return CraftResource.RegularWood; } }
+
         [Constructable]
         public WoodenKiteShield(): base(7033)
         {
+            Name = "wooden kite shield";
             Weight = 5.0;
         }
 

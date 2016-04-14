@@ -19,14 +19,14 @@ namespace Server.Items
         public override SkillName BaseSkill { get { return SkillName.Archery; } }
         public override WeaponType BaseType { get { return WeaponType.Ranged; } }
         public override WeaponAnimation BaseAnimation { get { return WeaponAnimation.ShootXBow; } }
+
+        public override CraftResource DefaultResource { get { return CraftResource.RegularWood; } }
         
-        public BaseRanged(int itemID)
-            : base(itemID)
+        public BaseRanged(int itemID): base(itemID)
         {
         }
 
-        public BaseRanged(Serial serial)
-            : base(serial)
+        public BaseRanged(Serial serial): base(serial)
         {
         }
 

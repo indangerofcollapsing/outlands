@@ -28,6 +28,8 @@ namespace Server.Items
         public virtual WeaponType BaseType { get { return WeaponType.Slashing; } }
         public virtual WeaponAnimation BaseAnimation { get { return WeaponAnimation.Slash1H; } }
 
+        public override CraftResource DefaultResource { get { return CraftResource.Iron; } }
+
         public virtual int InitMinHits { get { return 40; } }
         public virtual int InitMaxHits { get { return 60; } }
 
@@ -53,6 +55,10 @@ namespace Server.Items
         public static double CreatureVsPlayerDamageScalar = 1.0;
         public static double CreatureVsTamedCreatureDamageScalar = 1.0;
         public static double CreatureVsCreatureDamageScalar = 1.0;
+
+        public static double WeaponParrySkillScalar = .005;
+        public static double WeaponParryDamageScalar = .25;
+        public static double WeaponParryDurabilityLossChance = .05;
 
         public SkillMod m_SkillMod;
 
@@ -1414,21 +1420,18 @@ namespace Server.Items
             if (owner == null)
                 return damage;
 
-            double successChance = (owner.Skills[SkillName.Parry].Value / 100) * .5;
+            double successChance = owner.Skills[SkillName.Parry].Value * WeaponParrySkillScalar;
             
             if (owner.CheckSkill(SkillName.Parry, successChance, 1.0))
             {
-                double damageScalar = 0.25;
-                double durabilityLossChance = .05;
-
-                damage = (int)(Math.Round((double)damage * damageScalar));
+                damage = (int)(Math.Round((double)damage * WeaponParryDamageScalar));
 
                 if (damage < 1)
                     damage = 1;
 
                 owner.FixedEffect(0x37B9, 10, 16);
 
-                if (Utility.RandomDouble() <= durabilityLossChance && LootType != LootType.Blessed && MaxHitPoints > 0)
+                if (Utility.RandomDouble() <= WeaponParryDurabilityLossChance && LootType != LootType.Blessed && MaxHitPoints > 0)
                 {
                     if (HitPoints > 1)  
                     {
@@ -2809,18 +2812,16 @@ namespace Server.Items
             if (UseSkillMod && Quality == Quality.Exceptional && Parent is Mobile)
                 OnEquip(Parent as Mobile);
         }
+
         #endregion
 
-        public BaseWeapon(int itemID)
-            : base(itemID)
+        public BaseWeapon(int itemID) : base(itemID)
         {
             Layer = (Layer)ItemData.Quality;
 
-            Quality = Quality.Regular;
+            Hue = CraftResources.GetHue(Resource);            
 
             m_Hits = m_MaxHits = Utility.RandomMinMax(InitMinHits, InitMaxHits);
-
-            Resource = CraftResource.Iron;
         }
 
         public BaseWeapon(Serial serial)
@@ -3221,303 +3222,6 @@ namespace Server.Items
                 resourceType = craftItem.Resources.GetAt(0).ItemType;
 
             Resource = CraftResources.GetFromType(resourceType);
-
-            /*
-            //For Runic Hammer
-            if (tool is BaseRunicTool)
-            {
-                CraftResource thisResource = CraftResources.GetFromType(resourceType);
-
-                //MUST USE THE SAME INGOT COLOR FOR THE RUNIC HAMMER TO GIVE MAGIC PROPERTIES!!!!!!
-                if (thisResource == ((BaseRunicTool)tool).Resource)
-                {
-                    Resource = thisResource;
-
-                    CraftContext context = craftSystem.GetContext(from);
-
-                    if (context != null && context.DoNotColor)
-                        Hue = 0;
-
-                    int tier = 0;
-
-                    switch (thisResource)
-                    {
-                        case CraftResource.DullCopper:
-                            {
-                                Identified = true;
-                                tier = 1;
-                                DamageLevel = WeaponDamageLevel.Ruin;
-                                AccuracyLevel = WeaponAccuracyLevel.Accurate;
-
-                                break;
-                            }
-
-                        case CraftResource.ShadowIron:
-                            {
-                                Identified = true;
-                                tier = 2;
-                                DamageLevel = WeaponDamageLevel.Ruin;
-                                AccuracyLevel = WeaponAccuracyLevel.Accurate;
-
-                                break;
-                            }
-
-                        case CraftResource.Copper:
-                            {
-                                Identified = true;
-                                tier = 3;
-                                DamageLevel = WeaponDamageLevel.Might;
-                                AccuracyLevel = WeaponAccuracyLevel.Surpassingly;
-
-                                break;
-                            }
-
-                        case CraftResource.Bronze:
-                            {
-                                Identified = true;
-                                tier = 4;
-                                DamageLevel = WeaponDamageLevel.Might;
-                                AccuracyLevel = WeaponAccuracyLevel.Surpassingly;
-
-                                break;
-                            }
-
-                        case CraftResource.Gold:
-                            {
-                                Identified = true;
-                                tier = 5;
-                                DamageLevel = WeaponDamageLevel.Might;
-                                AccuracyLevel = WeaponAccuracyLevel.Surpassingly;
-
-                                break;
-                            }
-
-                        case CraftResource.Agapite:
-                            {
-                                Identified = true;
-                                tier = 6;
-                                DamageLevel = WeaponDamageLevel.Force;
-                                AccuracyLevel = WeaponAccuracyLevel.Eminently;
-
-                                break;
-                            }
-
-                        case CraftResource.Verite:
-                            {
-                                Identified = true;
-                                tier = 7;
-                                DamageLevel = WeaponDamageLevel.Force;
-                                AccuracyLevel = WeaponAccuracyLevel.Eminently;
-
-                                break;
-                            }
-
-                        case CraftResource.Valorite:
-                            {
-                                Identified = true;
-                                tier = 8;
-                                DamageLevel = WeaponDamageLevel.Force;
-                                AccuracyLevel = WeaponAccuracyLevel.Eminently;
-
-                                break;
-                            }
-
-                        case CraftResource.Lunite:
-                            {
-                                Identified = true;
-                                tier = 9;
-                                DamageLevel = WeaponDamageLevel.Force;
-                                AccuracyLevel = WeaponAccuracyLevel.Eminently;
-
-                                break;
-                            }
-                    }
-
-                    from.SendMessage("The slayer weapon you've been working on is finally completed!");
-                }
-            }
-
-            //Add small chance of obtain slayer archery wep from colored woods
-            else if (from is PlayerMobile && craftSystem is DefCarpentry)
-            {
-                CraftResource thisResource = CraftResources.GetFromType(resourceType);
-                Resource = thisResource;
-
-                PlayerMobile crafter = from as PlayerMobile;
-                Double crafterSkill = 0.0;
-
-                crafterSkill = crafter.Skills.Carpentry.Value;
-
-                Double slayerCraftChance = 0.03; //3%
-
-                //Check if there is any bonus from having higher than 100
-                if (crafterSkill > 100)
-                {
-                    Double bonusFromSkill = crafterSkill - 100;
-                    slayerCraftChance += bonusFromSkill / 1000.0;
-                }
-
-                CraftContext context = craftSystem.GetContext(from);
-
-                if (context != null && context.DoNotColor)
-                    Hue = 0;
-
-                if (thisResource != CraftResource.RegularWood && Utility.RandomDouble() < slayerCraftChance)
-                {
-                    int tier = 0;
-                    switch (thisResource)
-                    {
-                        case CraftResource.OakWood:
-                            {
-                                Identified = true;
-                                tier = 1;
-                                break;
-                            }
-
-                        case CraftResource.AshWood:
-                            {
-                                Identified = true;
-                                tier = 2;
-                                break;
-                            }
-
-                        case CraftResource.YewWood:
-                            {
-                                Identified = true;
-                                tier = 3;
-                                break;
-                            }
-
-                        case CraftResource.Bloodwood:
-                            {
-                                Identified = true;
-                                tier = 4;
-                                break;
-                            }
-
-                        case CraftResource.Heartwood:
-                            {
-                                Identified = true;
-                                tier = 5;
-                                break;
-                            }
-
-                        case CraftResource.Frostwood:
-                            {
-                                Identified = true;
-                                tier = 6;
-                                break;
-                            }
-                    }
-
-                    from.SendMessage("The slayer weapon you've been working on is finally completed!");
-                }
-            }
-
-            else if (from is PlayerMobile && craftSystem is DefBlacksmithy)
-            {
-                CraftResource thisResource = CraftResources.GetFromType(resourceType);
-                Resource = thisResource;
-
-                var crafter = from as PlayerMobile;
-                var crafterBlackSmithSkill = crafter.Skills.Blacksmith.Value;
-                var slayerCraftChance = 0.06; //6%
-
-                //Check if there is any bonus from having higher than 100 blacksmithy
-                if (crafterBlackSmithSkill > 100)
-                {
-                    var extraSkill = crafterBlackSmithSkill - 100;
-                    slayerCraftChance += extraSkill / 1000;
-                }
-
-                CraftContext context = craftSystem.GetContext(from);
-
-                if (context != null && context.DoNotColor)
-                    Hue = 0;
-
-                int tier = 0;
-
-                if (thisResource != CraftResource.Iron && Utility.RandomDouble() < slayerCraftChance)
-                {
-                    switch (thisResource)
-                    {
-                        case CraftResource.DullCopper:
-                            {
-                                Identified = true;
-                                tier = 1;
-
-                                break;
-                            }
-
-                        case CraftResource.ShadowIron:
-                            {
-                                Identified = true;
-                                tier = 2;
-
-                                break;
-                            }
-
-                        case CraftResource.Copper:
-                            {
-                                Identified = true;
-                                tier = 3;
-
-                                break;
-                            }
-
-                        case CraftResource.Bronze:
-                            {
-                                Identified = true;
-                                tier = 4;
-
-                                break;
-                            }
-
-                        case CraftResource.Gold:
-                            {
-                                Identified = true;
-                                tier = 5;
-
-                                break;
-                            }
-
-                        case CraftResource.Agapite:
-                            {
-                                Identified = true;
-                                tier = 6;
-
-                                break;
-                            }
-
-                        case CraftResource.Verite:
-                            {
-                                Identified = true;
-                                tier = 7;
-
-                                break;
-                            }
-
-                        case CraftResource.Valorite:
-                            {
-                                Identified = true;
-                                tier = 8;
-
-                                break;
-                            }
-
-                        case CraftResource.Lunite:
-                            {
-                                Identified = true;
-                                tier = 9;
-
-                                break;
-                            }
-                    }
-
-                    from.SendMessage("The slayer weapon you've been working on is finally complete!");
-                }
-            }
-            */
 
             return quality;
         }

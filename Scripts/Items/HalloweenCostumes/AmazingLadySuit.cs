@@ -142,7 +142,7 @@ namespace Server.Items
         }
     }
 
-    public class AmazingLadyBustier : LeatherBustierArms, IScissorable
+    public class AmazingLadyBustier : LeatherBustier, IScissorable
     {
         public override bool AllowMaleWearer { get { return true; } }
 

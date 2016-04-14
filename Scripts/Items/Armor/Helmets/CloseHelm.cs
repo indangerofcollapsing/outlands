@@ -29,6 +29,7 @@ namespace Server.Items
 		[Constructable]
 		public CloseHelm() : base( 5129 )
 		{
+            Name = "close helm";
 			Weight = 5.0;
 		}
 

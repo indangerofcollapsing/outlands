@@ -10,6 +10,10 @@ namespace Server.Items
     {
         public override ArmorMaterialType MaterialType { get { return ArmorMaterialType.Plate; } }
 
+        public static double ShieldParrySkillScalar = .005;
+        public static double ShieldParryDamageScalar = .25;
+        public static double DurabilityLossChance = .1;
+
         public BaseShield(int itemID): base(itemID)
         {
         }
@@ -83,21 +87,18 @@ namespace Server.Items
             if (DecorativeEquipment)
                 return damage;
 
-            double successChance = (owner.Skills[SkillName.Parry].Value / 100.0) * .5;
+            double successChance = owner.Skills[SkillName.Parry].Value * ShieldParrySkillScalar;
 
             if (owner.CheckSkill(SkillName.Parry, successChance, 1.0))
             {
-                double damageScalar = 0.25;
-                double durabilityLossChance = .10;
-
-                damage = (int)(Math.Round((double)damage * damageScalar));
+                damage = (int)(Math.Round((double)damage * ShieldParryDamageScalar));
 
                 if (damage < 1)
                     damage = 1;
 
                 owner.FixedEffect(0x37B9, 10, 16);
 
-                if (Utility.RandomDouble() <= durabilityLossChance && LootType != LootType.Blessed && MaxHitPoints > 0)
+                if (Utility.RandomDouble() <= DurabilityLossChance && LootType != LootType.Blessed && MaxHitPoints > 0)
                 {
                     if (HitPoints > 1)
                     {

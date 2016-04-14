@@ -12,7 +12,6 @@ namespace Server.Items
 		public override int BasePoisonResistance{ get{ return 3; } }
 		public override int BaseEnergyResistance{ get{ return 3; } }
 
-        //Changed to IPY Values
 		public override int InitMinHits{ get{ return 31; } }
 		public override int InitMaxHits{ get{ return 37; } }
 
@@ -37,6 +36,7 @@ namespace Server.Items
 		[Constructable]
 		public LeatherChest() : base( 5075 )
 		{
+            Name = "leather chest";
 			Weight = 6.0;
 		}
 

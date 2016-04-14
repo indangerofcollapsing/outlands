@@ -29,6 +29,7 @@ namespace Server.Items
 		[Constructable]
 		public OrderShield() : base( 7109 )
 		{
+            Name = "order shield";
 			Weight = 7.0;
 		}
 

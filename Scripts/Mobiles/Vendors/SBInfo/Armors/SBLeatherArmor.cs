@@ -27,7 +27,7 @@ namespace Server.Mobiles
 				Add( new GenericBuyInfo( typeof( LeatherLegs ), 80, 20, 0x13cb, 0 ) );
 				Add( new GenericBuyInfo( typeof( LeatherCap ), 10, 20, 0x1DB9, 0 ) );
 				Add( new GenericBuyInfo( typeof( FemaleLeatherChest ), 116, 20, 0x1C06, 0 ) );
-				Add( new GenericBuyInfo( typeof( LeatherBustierArms ), 97, 20, 0x1C0A, 0 ) );
+				Add( new GenericBuyInfo( typeof( LeatherBustier ), 97, 20, 0x1C0A, 0 ) );
 				Add( new GenericBuyInfo( typeof( LeatherShorts ), 86, 20, 0x1C00, 0 ) );
 				Add( new GenericBuyInfo( typeof( LeatherSkirt ), 87, 20, 0x1C08, 0 ) );
 			}
@@ -44,7 +44,7 @@ namespace Server.Mobiles
 				Add( typeof( LeatherLegs ), 20 );
 				Add( typeof( LeatherCap ), 4 );
 				Add( typeof( FemaleLeatherChest ), 40 );
-				Add( typeof( LeatherBustierArms ), 35 );
+				Add( typeof( LeatherBustier ), 35 );
 				Add( typeof( LeatherShorts ), 33 );
 				Add( typeof( LeatherSkirt ), 33 );
 			}

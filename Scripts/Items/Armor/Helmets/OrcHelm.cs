@@ -33,6 +33,7 @@ namespace Server.Items
 		[Constructable]
 		public OrcHelm() : base( 7947 )
 		{
+            Name = "orc helm";
 			Weight = 1;
 		}
 

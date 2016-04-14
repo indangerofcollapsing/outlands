@@ -19,6 +19,8 @@ namespace Server.Items
         public override int IconOffsetX { get { return -2; } }
         public override int IconOffsetY { get { return -1; } }
 
+        public override CraftResource DefaultResource { get { return CraftResource.RegularWood; } }
+
 		[Constructable]
 		public Club() : base( 0x13B4 )
 		{

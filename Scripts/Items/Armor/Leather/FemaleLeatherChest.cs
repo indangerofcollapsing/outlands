@@ -36,6 +36,7 @@ namespace Server.Items
 		[Constructable]
 		public FemaleLeatherChest() : base( 7175 )
 		{
+            Name = "female leather chest";
 			Weight = 1.0;
 		}
 

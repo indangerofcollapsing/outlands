@@ -23,7 +23,6 @@ namespace Server.Items
 
     public abstract class BaseClothing : Item, IDyable, IScissorable, IFactionItem, ICraftable, IWearableDurability
     {
-        // IPY 
         private bool m_IsInvisible = false;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -35,21 +34,9 @@ namespace Server.Items
                 if (m_IsInvisible != value)
                 {
                     m_IsInvisible = value;
-                    //ReleaseWorldPackets();
-                    //Delta(ItemDelta.Update);
                 }
             }
         }
-
-        //public override int GetPacketFlags()
-        //{
-        //    int flags = base.GetPacketFlags();
-        //    if (m_IsInvisible)
-        //        flags |= 0x80;
-        //    return flags;
-        //}
-
-        // END IPY
 
         #region Factions
         private FactionItem m_FactionState;
@@ -79,7 +66,6 @@ namespace Server.Items
         private AosArmorAttributes m_AosClothingAttributes;
         private AosSkillBonuses m_AosSkillBonuses;
         private AosElementAttributes m_AosResistances;
-
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxHitPoints

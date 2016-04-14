@@ -27,6 +27,7 @@ namespace Server.Items
         [Constructable]
         public HeaterShield(): base(7031)
         {
+            Name = "heater shield";
             Weight = 8.0;
         }
 

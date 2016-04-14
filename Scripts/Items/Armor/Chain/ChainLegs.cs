@@ -35,6 +35,7 @@ namespace Server.Items
 		[Constructable]
 		public ChainLegs() : base( 5059 )
 		{
+            Name = "chainmail leggings";
 			Weight = 7.0;
 		}
 

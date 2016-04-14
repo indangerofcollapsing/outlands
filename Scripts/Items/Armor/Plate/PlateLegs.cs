@@ -36,7 +36,7 @@ namespace Server.Items
 		[Constructable]
 		public PlateLegs() : base( 5146 )
 		{
-            Name = "platemail legs";
+            Name = "platemail leggings";
 			Weight = 7.0;            
 		}
 

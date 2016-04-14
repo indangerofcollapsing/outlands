@@ -27,11 +27,11 @@ namespace Server.Items
         [Constructable]
         public MetalKiteShield(): base(7029)
         {
+            Name = "metal kite shield";
             Weight = 7.0;
         }
 
-        public MetalKiteShield(Serial serial)
-            : base(serial)
+        public MetalKiteShield(Serial serial): base(serial)
         {
         }
 
