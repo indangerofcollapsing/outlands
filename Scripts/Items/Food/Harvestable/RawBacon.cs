@@ -10,7 +10,7 @@ namespace Server.Items
         }
 
         [Constructable]
-        public RawBacon(int amount): base( 2422)
+        public RawBacon(int amount): base(2422)
         {
             Name = "raw bacon";
 

@@ -2,20 +2,37 @@ using System;
 
 namespace Server.Items
 {
-    [FlipableAttribute(0x171f, 0x1720)]
     public class Banana : Food
     {
+        public override string DisplayName { get { return "banana"; } }
+        public override SatisfactionLevelType Satisfaction { get { return SatisfactionLevelType.Paltry; } }
+
+        public override int IconItemId { get { return 5919; } }
+        public override int IconItemHue { get { return Hue; } }
+        public override int IconOffsetX { get { return -7; } }
+        public override int IconOffsetY { get { return 7; } }
+
+        public override int FillFactor { get { return 3; } }
+        public override bool IsStackable { get { return true; } }
+        public override int MaxCharges { get { return 1; } }
+        public override double WeightPerCharge { get { return .2; } }
+
+        public override bool Decays { get { return false; } }
+        public override TimeSpan DecayDuration { get { return TimeSpan.FromDays(3); } }
+
+        public override int MinStaminaRegained { get { return 5; } }
+        public override int MaxStaminaRegained { get { return 10; } }
+
         [Constructable]
         public Banana(): this(1)
         {
         }
 
         [Constructable]
-        public Banana(int amount): base(0x171f)
+        public Banana(int amount): base(5919)
         {
             Name = "banana";
 
-            Weight = 1.0;
             Amount = amount;
         }
 

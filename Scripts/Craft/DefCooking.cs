@@ -107,219 +107,112 @@ namespace Server.Engines.Craft
 
             int index = -1;
 
+            //Ingredients
             index = AddCraft(5, typeof(Dough), "Ingredients", "Dough", 0.0, 25.0, typeof(SackOfFlour), "Sack of Flour", 1, missingIngredients);
             AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
 
-            /*
-            index = AddCraft(1, typeof(SackFlour), 1044495, 1024153, 0.0, 100.0, typeof(WheatSheaf), 1044489, 2, 1044490);
-            SetNeedMill(index, true);
+            //Meagre Food
+            index = AddCraft(1, typeof(BreadRoll), "Meagre Food", "Bread Roll", 0.0, 100.0, typeof(Dough), "Dough", 1, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
 
-            index = AddCraft(1, typeof(Dough), 1044495, 1024157, 0.0, 100.0, typeof(SackFlour), 1044468, 1, 1044253);
-            AddRes(index, typeof(BaseBeverage), 1046458, 1, 1044253);
+            AddCraft(1, typeof(CookedEggs), "Meagre Food", "Cooked Eggs", 0.0, 100.0, typeof(Eggs), "Eggs", 3, missingIngredients);
+            AddCraft(1, typeof(CookedRibs), "Meagre Food", "Cooked Ribs", 0.0, 100.0, typeof(RawRibs), "Raw Ribs", 1, missingIngredients);
+            AddCraft(1, typeof(CookedFishsteak), "Meagre Food", "Cooked Fishsteak", 0.0, 100.0, typeof(RawFishSteak), "Raw Fishsteak", 1, missingIngredients);
+            AddCraft(1, typeof(CookedDrumstick), "Adequate Food", "Cooked Drumstick", 50.0, 120.0, typeof(RawDrumstick), "Raw Drumstick", 1, missingIngredients);
+            
+            index = AddCraft(1, typeof(GardenSalad), "Meagre Food", "Garden Salad", 0.0, 100.0, typeof(Lettuce), "Lettuce", 1, missingIngredients);
+            AddRes(index, typeof(Carrot), "Carrot", 1, missingIngredients);
+            AddRes(index, typeof(Turnip), "Turnip", 1, missingIngredients);
 
-            index = AddCraft(1, typeof(SweetDough), 1044495, 1041340, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            AddRes(index, typeof(JarHoney), 1044472, 1, 1044253);
+            index = AddCraft(1, typeof(FruitDish), "Meagre Food", "Fruit Dish", 0.0, 100.0, typeof(Pear), "Pear", 1, missingIngredients);
+            AddRes(index, typeof(Grapes), "Grapes", 1, missingIngredients);
+            AddRes(index, typeof(Honeydew), "Honeydew", 1, missingIngredients);
 
-            index = AddCraft(1, typeof(CakeMix), 1044495, 1041002, 0.0, 100.0, typeof(SackFlour), 1044468, 1, 1044253);
-            AddRes(index, typeof(SweetDough), 1044475, 1, 1044253);
+            //Adequate Food
+            AddCraft(1, typeof(CookedSteaks), "Adequate Food", "Cooked Steaks", 50.0, 120.0, typeof(RawSteaks), "Raw Steaks", 1, missingIngredients);
+            AddCraft(1, typeof(CookedHam), "Adequate Food", "Cooked Ham", 50.0, 120.0, typeof(RawHam), "Raw Ham", 1, missingIngredients);
+            AddCraft(1, typeof(CookedBird), "Adequate Food", "Cooked Bird", 50.0, 120.0, typeof(RawBird), "Raw Bird", 1, missingIngredients);
+            AddCraft(1, typeof(CookedFishFillet), "Adequate Food", "Cooked Fish Fillet", 50.0, 120.0, typeof(RawFishFillet), "Raw Fish Fillet", 1, missingIngredients);
+            AddCraft(1, typeof(CookedLobster), "Adequate Food", "Cooked Lobster", 50.0, 120.0, typeof(RawLobster), "Raw Lobster", 1, missingIngredients);
+            AddCraft(1, typeof(CookedCrab), "Adequate Food", "Cooked Crab", 50.0, 120.0, typeof(RawCrab), "Raw Crab", 1, missingIngredients);
+            AddCraft(1, typeof(CookedMeatShank), "Adequate Food", "Cooked Meat Shank", 50.0, 120.0, typeof(RawMeatShank), "Raw Meat Shank", 1, missingIngredients);
+            AddCraft(1, typeof(CookedBacon), "Adequate Food", "Cooked Bacon", 50.0, 120.0, typeof(RawBacon), "Raw Bacon", 1, missingIngredients);
+            AddCraft(1, typeof(CookedSausage), "Adequate Food", "Cooked Sausage", 50.0, 120.0, typeof(RawSausage), "Raw Sausage", 1, missingIngredients);
+            AddCraft(1, typeof(SearedMushrooms), "Adequate Food", "Seared Mushrooms", 50.0, 120.0, typeof(WildMushroom), "Wild Mushroom", 1, missingIngredients);
 
-            index = AddCraft(1, typeof(CookieMix), 1044495, 1024159, 0.0, 100.0, typeof(JarHoney), 1044472, 1, 1044253);
-            AddRes(index, typeof(SweetDough), 1044475, 1, 1044253);
+            index = AddCraft(1, typeof(HoneyBreadLoaves), "Adequate Food", "Honey Bread Loaves", 50.0, 120.0, typeof(Dough), "Dough", 1, missingIngredients);
+            AddRes(index, typeof(JarOfHoney), "Jar Of Honey", 1, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
+            
+            index = AddCraft(1, typeof(CheesePastry), "Adequate Food", "Cheese Pastry", 50.0, 120.0, typeof(Dough), "Dough", 1, missingIngredients);
+            AddRes(index, typeof(Eggs), "Eggs", 3, missingIngredients);
+            AddRes(index, typeof(CheeseWedge), "Cheese Wedge", 1, missingIngredients);
 
-            if (Core.ML)
-            {
-                index = AddCraft(1, typeof(CocoaButter), 1044495, 1079998, 0.0, 100.0, typeof(CocoaPulp), 1080530, 1, 1044253);
-                SetItemHue(index, 0x457);
-                SetNeededExpansion(index, Expansion.ML);
-                SetNeedOven(index, true);
+            index = AddCraft(1, typeof(Cornbread), "Adequate Food", "Cornbread", 50.0, 120.0, typeof(Dough), "Dough", 1, missingIngredients);
+            AddRes(index, typeof(Corn), "Corn", 3, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
 
-                index = AddCraft(1, typeof(CocoaLiquor), 1044495, 1079999, 0.0, 100.0, typeof(CocoaPulp), 1080530, 1, 1044253);
-                AddRes(index, typeof(EmptyPewterBowl), 1025629, 1, 1044253);
-                SetItemHue(index, 0x46A);
-                SetNeededExpansion(index, Expansion.ML);
-                SetNeedOven(index, true);
-            }
+            //Appetizing Food
+            index = AddCraft(1, typeof(FigSweetrolls), "Appetizing Food", "Fig Sweetrolls", 75.0, 120.0, typeof(Dough), "Dough", 2, missingIngredients);
+            AddRes(index, typeof(Figs), "Figs", 2, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
 
-            index = AddCraft(1, typeof(UnbakedQuiche), 1044496, 1041339, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            AddRes(index, typeof(Eggs), 1044477, 1, 1044253);
+            index = AddCraft(1, typeof(CoconutShortbread), "Adequate Food", "Coconut Shortbread", 75.0, 120.0, typeof(Dough), "Dough", 2, missingIngredients);
+            AddRes(index, typeof(Coconut), "Coconut", 1, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
 
-            // TODO: This must also support chicken and lamb legs
-            index = AddCraft(1, typeof(UnbakedMeatPie), 1044496, 1041338, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            AddRes(index, typeof(RawRibs), 1044482, 1, 1044253);
+            index = AddCraft(1, typeof(PumpkinSoup), "Appetizing Food", "Pumpkin Soup", 75.0, 120.0, typeof(Pumpkin), "Pumpkin", 3, missingIngredients);
+            AddRes(index, typeof(Squash), "Squash", 2, missingIngredients);
 
-            index = AddCraft(1, typeof(UncookedSausagePizza), 1044496, 1041337, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            AddRes(index, typeof(Sausage), 1044483, 1, 1044253);
+            index = AddCraft(1, typeof(MushroomSoup), "Appetizing Food", "Mushroom Soup", 75.0, 120.0, typeof(WildMushroom), "Wild Mushroom", 3, missingIngredients);
+            AddRes(index, typeof(Onion), "Onion", 2, missingIngredients);  
 
-            index = AddCraft(1, typeof(UncookedCheesePizza), 1044496, 1041341, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            AddRes(index, typeof(CheeseWheel), 1044486, 1, 1044253);
+            index = AddCraft(1, typeof(CabbageStew), "Appetizing Food", "Cabbage Stew", 75.0, 120.0, typeof(Cabbage), "Cabbage", 3, missingIngredients);
+            AddRes(index, typeof(Gourd), "Gourd", 2, missingIngredients);
+            
+            index = AddCraft(1, typeof(FruitPie), "Appetizing Food", "Fruit Pie", 75.0, 120.0, typeof(Dough), "Dough", 2, missingIngredients);
+            AddRes(index, typeof(Apple), "Apple", 1, missingIngredients);
+            AddRes(index, typeof(Peach), "Peach", 1, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);            
 
-            index = AddCraft(1, typeof(UnbakedFruitPie), 1044496, 1041334, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            AddRes(index, typeof(Pear), 1044481, 1, 1044253);
+            index = AddCraft(1, typeof(MeatPie), "Appetizing Food", "Meat Pie", 75.0, 120.0, typeof(Dough), "Dough", 2, missingIngredients);
+            AddRes(index, typeof(RawRibs), "Raw Ribs", 2, missingIngredients);
+            AddRes(index, typeof(RawSausage), "Raw Sausage", 1, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
 
-            index = AddCraft(1, typeof(UnbakedPeachCobbler), 1044496, 1041335, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            AddRes(index, typeof(Peach), 1044480, 1, 1044253);
+            index = AddCraft(1, typeof(FishPie), "Appetizing Food", "Fish Pie", 75.0, 120.0, typeof(Dough), "Dough", 2, missingIngredients);
+            AddRes(index, typeof(RawFishSteak), "Raw Fishsteak", 2, missingIngredients);
+            AddRes(index, typeof(RawFishFillet), "Raw Fish Fillet", 1, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
 
-            index = AddCraft(1, typeof(UnbakedApplePie), 1044496, 1041336, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            AddRes(index, typeof(Apple), 1044479, 1, 1044253);
+            index = AddCraft(1, typeof(ChickenPotPie), "Appetizing Food", "Chicken Pot Pie", 75.0, 120.0, typeof(Dough), "Dough", 2, missingIngredients);
+            AddRes(index, typeof(RawDrumstick), "Raw Drumstick", 1, missingIngredients);
+            AddRes(index, typeof(Carrot), "Carrot", 1, missingIngredients);
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
 
-            index = AddCraft(1, typeof(UnbakedPumpkinPie), 1044496, 1041342, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            AddRes(index, typeof(Pumpkin), 1044484, 1, 1044253);
+            index = AddCraft(1, typeof(CrabPuffs), "Appetizing Food", "Crab Puffs", 75.0, 120.0, typeof(Dough), "Dough", 2, missingIngredients);
+            AddRes(index, typeof(RawCrab), "Raw Crab", 2, missingIngredients);
 
-            if (Core.SE)
-            {
-                index = AddCraft(1, typeof(GreenTea), 1044496, 1030315, 80.0, 130.0, typeof(GreenTeaBasket), 1030316, 1, 1044253);
-                AddRes(index, typeof(BaseBeverage), 1046458, 1, 1044253);
-                SetNeededExpansion(index, Expansion.SE);
-                SetNeedOven(index, true);
+            index = AddCraft(1, typeof(LobsterRolls), "Appetizing Food", "Lobster Rolls", 75.0, 120.0, typeof(Dough), "Dough", 2, missingIngredients);
+            AddRes(index, typeof(RawLobster), "Raw Lobster", 2, missingIngredients);
 
-                index = AddCraft(1, typeof(WasabiClumps), 1044496, 1029451, 70.0, 120.0, typeof(BaseBeverage), 1046458, 1, 1044253);
-                AddRes(index, typeof(WoodenBowlOfPeas), 1025633, 3, 1044253);
-                SetNeededExpansion(index, Expansion.SE);
+            //Delectable Food
+            index = AddCraft(1, typeof(BeefStew), "Delectable Food", "Beef Stew", 99.9, 120.0, typeof(RawRibs), "Raw Ribs", 1, missingIngredients);
+            AddRes(index, typeof(RawSteaks), "Raw Steaks", 1, missingIngredients);
+            AddRes(index, typeof(RawMeatShank), "Raw Meat Shank", 1, missingIngredients);
+            AddRes(index, typeof(RawBacon), "Raw Bacon", 1, missingIngredients);
 
-                index = AddCraft(1, typeof(SushiRolls), 1044496, 1030303, 90.0, 120.0, typeof(BaseBeverage), 1046458, 1, 1044253);
-                AddRes(index, typeof(RawFishSteak), 1044476, 10, 1044253);
-                SetNeededExpansion(index, Expansion.SE);
+            index = AddCraft(1, typeof(RoastPig), "Delectable Food", "Roast Pig", 99.9, 120.0, typeof(RawHam), "Raw Ham", 4, missingIngredients);
+            AddRes(index, typeof(Apple), "Apple", 1, missingIngredients);
 
-                index = AddCraft(1, typeof(SushiPlatter), 1044496, 1030305, 90.0, 120.0, typeof(BaseBeverage), 1046458, 1, 1044253);
-                AddRes(index, typeof(RawFishSteak), 1044476, 10, 1044253);
-                SetNeededExpansion(index, Expansion.SE);
-            }
+            index = AddCraft(1, typeof(LemonLimeSearedFish), "Delectable Food", "Lemon-Lime Seared Fish", 99.9, 120.0, typeof(RawFishFillet), "Raw Fish Fillet", 3, missingIngredients);
+            AddRes(index, typeof(Lemon), "Lemon", 1, missingIngredients);
+            AddRes(index, typeof(Lemon), "Lime", 1, missingIngredients);
 
-            if (Core.SE)
-            {
-                index = AddCraft(1, typeof(EggBomb), 1044496, 1030249, 90.0, 120.0, typeof(Eggs), 1044477, 1, 1044253);
-                AddRes(index, typeof(SackFlour), 1044468, 3, 1044253);
-                SetNeededExpansion(index, Expansion.SE);
-            }
-
-            index = AddCraft(1, typeof(BreadLoaf), 1044497, 1024156, 0.0, 100.0, typeof(Dough), 1044469, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(Cookies), 1044497, 1025643, 0.0, 100.0, typeof(CookieMix), 1044474, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(Cake), 1044497, 1022537, 0.0, 100.0, typeof(CakeMix), 1044471, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(Muffins), 1044497, 1022539, 0.0, 100.0, typeof(SweetDough), 1044475, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(Quiche), 1044497, 1041345, 0.0, 100.0, typeof(UnbakedQuiche), 1044518, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(MeatPie), 1044497, 1041347, 0.0, 100.0, typeof(UnbakedMeatPie), 1044519, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(SausagePizza), 1044497, 1044517, 0.0, 100.0, typeof(UncookedSausagePizza), 1044520, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(CheesePizza), 1044497, 1044516, 0.0, 100.0, typeof(UncookedCheesePizza), 1044521, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(FruitPie), 1044497, 1041346, 0.0, 100.0, typeof(UnbakedFruitPie), 1044522, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(PeachCobbler), 1044497, 1041344, 0.0, 100.0, typeof(UnbakedPeachCobbler), 1044523, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(ApplePie), 1044497, 1041343, 0.0, 100.0, typeof(UnbakedApplePie), 1044524, 1, 1044253);
-            SetNeedOven(index, true);
-
-            index = AddCraft(1, typeof(PumpkinPie), 1044497, 1041348, 0.0, 100.0, typeof(UnbakedPumpkinPie), 1046461, 1, 1044253);
-            SetNeedOven(index, true);
-
-            if (Core.SE)
-            {
-                index = AddCraft(1, typeof(MisoSoup), 1044497, 1030317, 60.0, 110.0, typeof(RawFishSteak), 1044476, 1, 1044253);
-                AddRes(index, typeof(BaseBeverage), 1046458, 1, 1044253);
-                SetNeededExpansion(index, Expansion.SE);
-                SetNeedOven(index, true);
-
-                index = AddCraft(1, typeof(WhiteMisoSoup), 1044497, 1030318, 60.0, 110.0, typeof(RawFishSteak), 1044476, 1, 1044253);
-                AddRes(index, typeof(BaseBeverage), 1046458, 1, 1044253);
-                SetNeededExpansion(index, Expansion.SE);
-                SetNeedOven(index, true);
-
-                index = AddCraft(1, typeof(RedMisoSoup), 1044497, 1030319, 60.0, 110.0, typeof(RawFishSteak), 1044476, 1, 1044253);
-                AddRes(index, typeof(BaseBeverage), 1046458, 1, 1044253);
-                SetNeededExpansion(index, Expansion.SE);
-                SetNeedOven(index, true);
-
-                index = AddCraft(1, typeof(AwaseMisoSoup), 1044497, 1030320, 60.0, 110.0, typeof(RawFishSteak), 1044476, 1, 1044253);
-                AddRes(index, typeof(BaseBeverage), 1046458, 1, 1044253);
-                SetNeededExpansion(index, Expansion.SE);
-                SetNeedOven(index, true);
-            }
-
-            index = AddCraft(1, typeof(CookedBird), 1044498, 1022487, 0.0, 100.0, typeof(RawBird), 1044470, 1, 1044253);
-            SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
-
-            index = AddCraft(1, typeof(ChickenLeg), 1044498, 1025640, 0.0, 100.0, typeof(RawChickenLeg), 1044473, 1, 1044253);
-            SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
-
-            index = AddCraft(1, typeof(FishSteak), 1044498, 1022427, 0.0, 120.0, typeof(RawFishSteak), 1044476, 1, 1044253);
-            SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
-
-            index = AddCraft(1, typeof(FishSteak), 1044498, "fish steak (single)", 0.0, 120.0, typeof(RawFishSteak), 1044476, 1, 1044253);
-            SetNeedHeat(index, true);
-
-            index = AddCraft(1, typeof(FriedEggs), 1044498, 1022486, 0.0, 100.0, typeof(Eggs), 1044477, 1, 1044253);
-            SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
-
-            index = AddCraft(1, typeof(LambLeg), 1044498, 1025642, 0.0, 100.0, typeof(RawLambLeg), 1044478, 1, 1044253);
-            SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
-
-            index = AddCraft(1, typeof(Ribs), 1044498, 1022546, 0.0, 120.0, typeof(RawRibs), 1044485, 1, 1044253);
-            SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
-
-            index = AddCraft(1, typeof(Ribs), 1044498, "cut of ribs (single)", 0.0, 120.0, typeof(RawRibs), 1044485, 1, 1044253);
-            SetNeedHeat(index, true);
-
-            index = AddCraft(1, typeof(Lobster), 1044498, "lobster", 0.0, 100.0, typeof(RawLobster), "Raw Lobster", 1, 1044253);
-            SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
-
-            index = AddCraft(1, typeof(Crab), 1044498, "crab", 0.0, 100.0, typeof(RawCrab), "Raw Crab", 1, 1044253);
-            SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
-
-            //Specialty Items
-            index = AddCraft(1, typeof(Server.Custom.Items.VeterinarySalts), "Specialty Items", "Veterinary Salts", 88.0, 100.0, typeof(Server.Custom.Items.RareBerries), "rare berries", 1, "You do not have the neccessary rare berries required to cook this.");
-            AddRes(index, typeof(Bottle), "bottle", 1, "You do not have the neccesary bottle required to cook this.");
-            SetNeedHeat(index, true);
-
-            //Luthius Expansion            
-            index = AddCraft(1, typeof(FaintLure), "Specialty Items", "Faint Lure", 40, 80, typeof(RawFishSteak), "Raw Fish Steak", 100, "You do not have the neccessary raw fish steaks required to cook this.");
-            AddRes(index, typeof(CockatriceEgg), "Cockatrice Egg", 1, "You do not have the neccesary crafting component needed to make this");
-
-            index = AddCraft(1, typeof(PotentLure), "Specialty Items", "Potent Lure", 60, 100, typeof(RawFishSteak), "Raw Fish Steak", 150, "You do not have the neccessary raw fish steaks required to cook this.");
-            AddRes(index, typeof(CockatriceEgg), "Cockatrice Egg", 1, "You do not have the neccesary crafting component needed to make this");
-
-            index = AddCraft(1, typeof(IrresistibleLure), "Specialty Items", "Irresistable Lure", 80, 120, typeof(RawFishSteak), "Raw Fish Steak", 200, "You do not have the neccessary raw fish steaks required to cook this.");
-            AddRes(index, typeof(CockatriceEgg), "Cockatrice Egg", 1, "You do not have the neccesary crafting component needed to make this");
-
-            //Kin Paints
-            index = AddCraft(1, typeof(TribalKinPaint), "Kin Paints", "tribal kin paint", 60.0, 65.0, typeof(Bloodroot), "bloodroot", 1, "You do not have the neccessary bloodroot required to cook this.");
-            SetNeedHeat(index, true);
-
-            index = AddCraft(1, typeof(DrowKinPaint), "Kin Paints", "drow kin paint", 60.0, 65.0, typeof(StrangeMushrooms), "strange mushrooms", 1, "You do not have the neccessary strange mushrooms required to cook this.");
-            SetNeedHeat(index, true);
-
-            index = AddCraft(1, typeof(UndeadKinPaint), "Kin Paints", "undead kin paint", 60.0, 65.0, typeof(Bonemeal), "bonemeal", 1, "You do not have the neccessary bonemeal required to cook this.");
-            SetNeedHeat(index, true);
-
-            index = AddCraft(1, typeof(GreenOrcKinPaint), "Kin Paints", "green orc kin paint", 60.0, 65.0, typeof(CaveMoss), "cave moss", 1, "You do not have the neccessary cave moss required to cook this.");
-            SetNeedHeat(index, true);
-
-            index = AddCraft(1, typeof(BrownOrcKinPaint), "Kin Paints", "brown orc kin paint", 60.0, 65.0, typeof(CaveMoss), "cave moss", 1, "You do not have the neccessary cave moss required to cook this.");
-            SetNeedHeat(index, true);
-            */
+            index = AddCraft(1, typeof(BananaCake), "Delectable Food", "Banana Cake", 99.9, 120.0, typeof(Dough), "Dough", 5, missingIngredients);
+            AddRes(index, typeof(Eggs), "Eggs", 5, missingIngredients);
+            AddRes(index, typeof(Banana), "Banana", 3, missingIngredients);            
+            AddRes(index, typeof(BaseBeverage), "Water", 1, missingIngredients);
         }        
     }
 }

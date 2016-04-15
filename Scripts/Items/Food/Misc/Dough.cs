@@ -10,12 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public Dough(int amount): base(0x103d)
+        public Dough(int amount): base(4157)
         {
             Name = "dough";
 
             Stackable = true;
-            Weight = 1;
+            Weight = .1;
             Amount = amount;
         }
 

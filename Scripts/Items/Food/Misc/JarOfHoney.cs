@@ -2,20 +2,37 @@ using System;
 
 namespace Server.Items
 {
-    public class JarOfHoney : Item
+    public class JarOfHoney : Food
     {
+        public override string DisplayName { get { return "jar of honey"; } }
+        public override SatisfactionLevelType Satisfaction { get { return SatisfactionLevelType.Meagre; } }
+
+        public override int IconItemId { get { return 2540; } }
+        public override int IconItemHue { get { return Hue; } }
+        public override int IconOffsetX { get { return -1; } }
+        public override int IconOffsetY { get { return 3; } }
+
+        public override int FillFactor { get { return 6; } }
+        public override bool IsStackable { get { return true; } }
+        public override int MaxCharges { get { return 1; } }
+        public override double WeightPerCharge { get { return 1; } }
+
+        public override bool Decays { get { return false; } }
+        public override TimeSpan DecayDuration { get { return TimeSpan.FromDays(3); } }
+
+        public override int MinStaminaRegained { get { return 10; } }
+        public override int MaxStaminaRegained { get { return 20; } }
+
         [Constructable]
         public JarOfHoney(): this(1)
         {
         }
 
         [Constructable]
-        public JarOfHoney(int amount): base(0x9ec)
+        public JarOfHoney(int amount): base(2540)
         {
             Name = "jar of honey";
 
-            Stackable = true;
-            Weight = 1;
             Amount = amount;
         }
 

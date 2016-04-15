@@ -10,9 +10,10 @@ namespace Server.Items
         }
 
         [Constructable]
-        public RawCrab(int amount): base(0x44D1)
+        public RawCrab(int amount): base(17617)
         {
             Name = "raw crab";
+            Hue = 2117;
 
             Stackable = true;
             Weight = 0.1;

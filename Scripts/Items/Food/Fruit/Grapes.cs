@@ -4,17 +4,35 @@ namespace Server.Items
 {
     public class Grapes : Food
     {
+        public override string DisplayName { get { return "grapes"; } }
+        public override SatisfactionLevelType Satisfaction { get { return SatisfactionLevelType.Paltry; } }
+
+        public override int IconItemId { get { return 2513; } }
+        public override int IconItemHue { get { return Hue; } }
+        public override int IconOffsetX { get { return -4; } }
+        public override int IconOffsetY { get { return 9; } }
+
+        public override int FillFactor { get { return 3; } }
+        public override bool IsStackable { get { return true; } }
+        public override int MaxCharges { get { return 1; } }
+        public override double WeightPerCharge { get { return .2; } }
+
+        public override bool Decays { get { return false; } }
+        public override TimeSpan DecayDuration { get { return TimeSpan.FromDays(3); } }
+
+        public override int MinStaminaRegained { get { return 5; } }
+        public override int MaxStaminaRegained { get { return 10; } }
+
         [Constructable]
         public Grapes(): this(1)
         {
         }
 
         [Constructable]
-        public Grapes(int amount): base( 0x9D1)
+        public Grapes(int amount): base(2513)
         {
             Name = "grapes";
 
-            Weight = 1.0;
             Amount = amount;
         }
 

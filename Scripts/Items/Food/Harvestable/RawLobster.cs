@@ -10,9 +10,10 @@ namespace Server.Items
         }
 
         [Constructable]
-        public RawLobster(int amount): base(0x44D3)
+        public RawLobster(int amount): base(17619)
         {
             Name = "raw lobster";
+            Hue = 38;
 
             Stackable = true;
             Weight = 0.1;

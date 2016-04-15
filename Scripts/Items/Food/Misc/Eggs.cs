@@ -1,33 +1,33 @@
 using System;
+using Server;
 
 namespace Server.Items
 {
-    [FlipableAttribute(0xC66, 0xC67)]
-    public class GreenGourd : Food
-    {
+    public class Eggs : Item
+    {  
         [Constructable]
-        public GreenGourd(): this(1)
+        public Eggs(): this(1)
         {
         }
 
         [Constructable]
-        public GreenGourd(int amount): base(0xC66)
+        public Eggs(int amount): base(2485)
         {
-            Name = "green gourd";
+            Name = "eggs";
 
             Stackable = true;
-            Weight = 1.0;
+            Weight = .1;
             Amount = amount;
         }
 
-        public GreenGourd(Serial serial): base(serial)
+        public Eggs(Serial serial): base(serial)
         {
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write((int)0); // version
+            writer.Write((int)0);
         }
 
         public override void Deserialize(GenericReader reader)

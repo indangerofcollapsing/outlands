@@ -119,7 +119,6 @@ namespace Server.Mobiles
         Bacon,
         Ham, 
         Steaks,
-        MeatScraps,
         MeatShank,
         Sausage,        
         Bird,
@@ -4221,7 +4220,6 @@ namespace Server.Mobiles
                         case MeatType.Bacon: DropCarvedItem(corpse, typeof(RawBacon), MeatAmount); break;
                         case MeatType.Ham: DropCarvedItem(corpse, typeof(RawHam), MeatAmount); break;
                         case MeatType.Steaks: DropCarvedItem(corpse, typeof(RawSteaks), MeatAmount); break;
-                        case MeatType.MeatScraps: DropCarvedItem(corpse, typeof(RawMeatScraps), MeatAmount); break;
                         case MeatType.MeatShank: DropCarvedItem(corpse, typeof(RawMeatShank), MeatAmount); break;
                         case MeatType.Sausage: DropCarvedItem(corpse, typeof(RawSausage), MeatAmount); break;
                         case MeatType.Bird: DropCarvedItem(corpse, typeof(RawBird), MeatAmount); break;
@@ -4245,14 +4243,13 @@ namespace Server.Mobiles
 
                             if (Utility.RandomDouble() <= specialMeatScalar)
                             {
-                                switch (Utility.RandomMinMax(1, 6))
+                                switch (Utility.RandomMinMax(1, 5))
                                 {
                                     case 1: DropCarvedItem(corpse, typeof(RawBacon), MeatAmount); break;
                                     case 2: DropCarvedItem(corpse, typeof(RawHam), MeatAmount); break;
                                     case 3: DropCarvedItem(corpse, typeof(RawSteaks), MeatAmount); break;
-                                    case 4: DropCarvedItem(corpse, typeof(RawMeatScraps), MeatAmount); break;
-                                    case 5: DropCarvedItem(corpse, typeof(RawMeatShank), MeatAmount); break;
-                                    case 6: DropCarvedItem(corpse, typeof(RawSausage), MeatAmount); break;
+                                    case 4: DropCarvedItem(corpse, typeof(RawMeatShank), MeatAmount); break;
+                                    case 5: DropCarvedItem(corpse, typeof(RawSausage), MeatAmount); break;
                                 }
                             }
                         break;
@@ -4277,7 +4274,6 @@ namespace Server.Mobiles
                         case MeatType.Bacon: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawBacon), meatAmount); break;
                         case MeatType.Ham: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawHam), meatAmount); break;
                         case MeatType.Steaks: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawSteaks), meatAmount); break;
-                        case MeatType.MeatScraps: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawMeatScraps), meatAmount); break;
                         case MeatType.MeatShank: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawMeatShank), meatAmount); break;
                         case MeatType.Sausage: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawSausage), meatAmount); break;
                         case MeatType.Bird: meatAmount = 1 + (int)(Math.Round(InitialDifficulty * specialMeatScalar)); DropCarvedItem(corpse, typeof(RawBird), meatAmount); break;

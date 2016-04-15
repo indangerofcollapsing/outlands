@@ -5,7 +5,7 @@ namespace Server.Items
     public class SheafOfHay : Item
     {
         [Constructable]
-        public SheafOfHay(): base(0xF36)
+        public SheafOfHay(): base(3894)
         {
             Name = "sheaf of hay";
 

@@ -256,7 +256,7 @@ namespace Server.SkillHandlers
             AddLabel(16, -3, 149, "Guide");
 
             //Item
-            AddItem(37 + food.IconOffsetX, 95 + food.IconOffsetX, food.IconItemId, food.IconItemHue);
+            AddItem(45 + food.IconOffsetX, 105 + food.IconOffsetX, food.IconItemId, food.IconItemHue);
 
             //Description
             AddLabel(114, 15, 2550, foodNameText);

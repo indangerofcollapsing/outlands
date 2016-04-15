@@ -40,7 +40,7 @@ namespace Server.Mobiles
 			Fame = 4200;	
 			Karma = -4200;
 
-			PackItem( new GreenGourd() );
+			PackItem( new Gourd() );
 			PackItem( new ExecutionersAxe() );
 
 			if( Utility.RandomBool() )

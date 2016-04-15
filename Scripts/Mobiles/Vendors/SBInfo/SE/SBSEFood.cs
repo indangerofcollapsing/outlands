@@ -20,11 +20,6 @@ namespace Server.Mobiles
 		{
 			public InternalBuyInfo()
 			{
-				Add( new GenericBuyInfo( typeof( Wasabi ), 2, 20, 0x24E8, 0 ) );
-				Add( new GenericBuyInfo( typeof( Wasabi ), 2, 20, 0x24E9, 0 ) );
-				Add( new GenericBuyInfo( typeof( BentoBox ), 6, 20, 0x2836, 0 ) );
-				Add( new GenericBuyInfo( typeof( BentoBox ), 6, 20, 0x2837, 0 ) );
-				Add( new GenericBuyInfo( typeof( GreenTeaBasket ), 2, 20, 0x284B, 0 ) );
 			}
 		}
 
@@ -32,9 +27,6 @@ namespace Server.Mobiles
 		{
 			public InternalSellInfo()
 			{
-				Add( typeof( Wasabi ), 1 );
-				Add( typeof( BentoBox ), 3 );
-				Add( typeof( GreenTeaBasket ), 1 );
 			}
 		}
 	}

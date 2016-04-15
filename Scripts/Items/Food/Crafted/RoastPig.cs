@@ -7,10 +7,10 @@ namespace Server.Items
         public override string DisplayName { get { return "roast pig"; } }
         public override SatisfactionLevelType Satisfaction { get { return SatisfactionLevelType.Delectable; } }
 
-        public override int IconItemId { get { return ItemID; } }
+        public override int IconItemId { get { return 2491; } }
         public override int IconItemHue { get { return Hue; } }
-        public override int IconOffsetX { get { return 0; } }
-        public override int IconOffsetY { get { return 0; } }
+        public override int IconOffsetX { get { return -7; } }
+        public override int IconOffsetY { get { return -9; } }
 
         public override int FillFactor { get { return 30; } }
         public override bool IsStackable { get { return false; } }
@@ -26,6 +26,7 @@ namespace Server.Items
         [Constructable]
         public RoastPig(): base(2491)
         {
+            Name = "roast pig";
         }
 
         public RoastPig(Serial serial): base(serial)

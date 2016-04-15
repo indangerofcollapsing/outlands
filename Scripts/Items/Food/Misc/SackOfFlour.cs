@@ -10,12 +10,12 @@ namespace Server.Items
         }
 
         [Constructable]
-        public SackOfFlour(int amount): base(0x1039)
+        public SackOfFlour(int amount): base(4153)
         {
             Name = "sack of flour";
 
             Stackable = true;
-            Weight = 3;
+            Weight = 2;
             Amount = amount;
         }
 

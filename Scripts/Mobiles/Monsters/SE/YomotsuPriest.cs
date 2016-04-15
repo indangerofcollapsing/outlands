@@ -42,7 +42,7 @@ namespace Server.Mobiles
 			Karma = -9000;
 
 
-			PackItem( new GreenGourd() );
+			PackItem( new Gourd() );
 			PackItem( new ExecutionersAxe() );
 
 			switch ( Utility.Random( 3 ) )

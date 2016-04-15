@@ -2,21 +2,37 @@ using System;
 
 namespace Server.Items
 {
-    [FlipableAttribute(0xc6d, 0xc6e)]
     public class Onion : Food
     {
+        public override string DisplayName { get { return "onion"; } }
+        public override SatisfactionLevelType Satisfaction { get { return SatisfactionLevelType.Paltry; } }
+
+        public override int IconItemId { get { return 3181; } }
+        public override int IconItemHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 0; } }
+        public override int IconOffsetY { get { return 2; } }
+
+        public override int FillFactor { get { return 3; } }
+        public override bool IsStackable { get { return true; } }
+        public override int MaxCharges { get { return 1; } }
+        public override double WeightPerCharge { get { return .2; } }
+
+        public override bool Decays { get { return false; } }
+        public override TimeSpan DecayDuration { get { return TimeSpan.FromDays(3); } }
+
+        public override int MinStaminaRegained { get { return 5; } }
+        public override int MaxStaminaRegained { get { return 10; } }
+
         [Constructable]
         public Onion() : this(1)
         {
         }
 
         [Constructable]
-        public Onion(int amount) : base(0xc6d)
+        public Onion(int amount) : base(3181)
         {
             Name = "onion";
 
-            Stackable = true;
-            Weight = 1.0;
             Amount = amount;
         }
 

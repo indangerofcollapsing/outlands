@@ -4,17 +4,35 @@ namespace Server.Items
 {
     public class Peach : Food
     {
+        public override string DisplayName { get { return "peach"; } }
+        public override SatisfactionLevelType Satisfaction { get { return SatisfactionLevelType.Paltry; } }
+
+        public override int IconItemId { get { return 2514; } }
+        public override int IconItemHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 0; } }
+        public override int IconOffsetY { get { return 12; } }
+
+        public override int FillFactor { get { return 3; } }
+        public override bool IsStackable { get { return true; } }
+        public override int MaxCharges { get { return 1; } }
+        public override double WeightPerCharge { get { return .2; } }
+
+        public override bool Decays { get { return false; } }
+        public override TimeSpan DecayDuration { get { return TimeSpan.FromDays(3); } }
+
+        public override int MinStaminaRegained { get { return 5; } }
+        public override int MaxStaminaRegained { get { return 10; } }
+
         [Constructable]
         public Peach(): this(1)
         {
         }
 
         [Constructable]
-        public Peach(int amount): base( 0x9D2)
+        public Peach(int amount): base(2514)
         {
             Name = "peach";
 
-            Weight = 1.0;
             Amount = amount;
         }
 
