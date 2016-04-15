@@ -137,10 +137,9 @@ namespace Server.Multis
             
             else
             {
-                from.SendLocalizedMessage(1010433); /* House placement cancellation could result in a
-													   * 60 second delay in the return of your deed.
-													   */
-
+                
+                //from.SendLocalizedMessage(1010433); //House placement cancellation could result in a 60 second delay in the return of your deed.
+								
                 from.Target = new HousePlacementTarget(this);
             }
         }
@@ -224,18 +223,33 @@ namespace Server.Multis
 
                             break;
                         }
-                    case HousePlacementResult.BadItem:
-                    case HousePlacementResult.BadLand:
-                    case HousePlacementResult.BadStatic:
-                    case HousePlacementResult.BadRegionHidden:
+
+                    case HousePlacementResult.BadRegionExistingHouse:
                     {
-                        from.SendLocalizedMessage(1043287); // The house could not be created here.  Either something is blocking the house, or the house would not be on valid terrain.
+                        from.SendMessage(149, "A house already exists at that location.");
                         break;
                     }
 
+                    case HousePlacementResult.BadRegionHidden:
+                    {
+                        from.SendMessage(149, "That location does not allow housing.");
+                        break;
+                    }
+
+                    case HousePlacementResult.BadItem:
+                    case HousePlacementResult.BadLand:
+                    case HousePlacementResult.BadStatic:
+                    {
+
+                        from.SendMessage(149, "House placement failed: White fire indicates tiles blocked by terrain and Blue fire indicates tiles violating housing proximity limits."); 
+                        //from.SendLocalizedMessage(1043287); // The house could not be created here.  Either something is blocking the house, or the house would not be on valid terrain.
+                        break;
+                    }                    
+
                     case HousePlacementResult.NoSurface:
                     {
-                        from.SendMessage("The house could not be created here.  Part of the foundation would not be on any surface.");
+                        from.SendMessage(149, "House placement failed: White fire indicates tiles blocked by terrain and Blue fire indicates tiles violating housing proximity limits."); 
+                        //from.SendMessage("The house could not be created here.  Part of the foundation would not be on any surface.");
                         break;
                     }
 

@@ -521,15 +521,36 @@ namespace Server.Items
 
 					break;
 				}
-				case HousePlacementResult.BadItem:
-				case HousePlacementResult.BadLand:
-				case HousePlacementResult.BadStatic:
-				case HousePlacementResult.BadRegionHidden:
-				case HousePlacementResult.NoSurface:
-				{
-					from.SendLocalizedMessage( 1043287 ); // The house could not be created here.  Either something is blocking the house, or the house would not be on valid terrain.
-					break;
-				}
+
+                case HousePlacementResult.BadRegionExistingHouse:
+                {
+                    from.SendMessage(149, "A house already exists at that location.");
+                    break;
+                }
+
+                case HousePlacementResult.BadRegionHidden:
+                {
+                    from.SendMessage(149, "That location does not allow housing.");
+                    break;
+                }
+
+                case HousePlacementResult.BadItem:
+                case HousePlacementResult.BadLand:
+                case HousePlacementResult.BadStatic:
+                {
+
+                    from.SendMessage(149, "House placement failed: White fire indicates tiles blocked by terrain and Blue fire indicates tiles violating housing proximity limits.");
+                    //from.SendLocalizedMessage(1043287); // The house could not be created here.  Either something is blocking the house, or the house would not be on valid terrain.
+                    break;
+                }
+
+                case HousePlacementResult.NoSurface:
+                {
+                    from.SendMessage(149, "House placement failed: White fire indicates tiles blocked by terrain and Blue fire indicates tiles violating housing proximity limits.");
+                    //from.SendMessage("The house could not be created here.  Part of the foundation would not be on any surface.");
+                    break;
+                }
+
 				case HousePlacementResult.BadRegion:
 				{
 					from.SendLocalizedMessage( 501265 ); // Housing cannot be created in this area.
@@ -586,6 +607,7 @@ namespace Server.Items
 						return e;
 				}
 			}
+
 			else if ( obj is Hashtable )
 			{
 				Hashtable table = (Hashtable)obj;

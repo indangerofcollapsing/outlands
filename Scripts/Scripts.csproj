@@ -787,6 +787,7 @@
     <Compile Include="Items\Packs\SpookyPack.cs" />
     <Compile Include="Multis\Houses\HouseDeeds.cs" />
     <Compile Include="Multis\HouseDeed.cs" />
+    <Compile Include="Multis\BlockedHousingTimedStatic.cs" />
     <Compile Include="Pirates\Contracts\GuildDockContractsGump.cs" />
     <Compile Include="Pirates\Contracts\OceanEvent.cs" />
     <Compile Include="Pirates\Contracts\ShipBountyContract.cs" />
