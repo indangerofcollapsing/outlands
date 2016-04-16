@@ -263,7 +263,7 @@ namespace Server.Engines.Craft
             //Other Helmets
             AddCraft(1, typeof(Bascinet), "Other Helmets", "Bascinet", 5, 30, typeof(IronIngot), 1044036, 5, 1044037);
             AddCraft(1, typeof(CloseHelm), "Other Helmets", "Close Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(1, typeof(Helmet), "Other Helmets", "Helmet", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(RingmailCoif), "Other Helmets", "Helmet", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
             AddCraft(1, typeof(NorseHelm), "Other Helmets", "Norse Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);                                   
 
             // Set the overridable material

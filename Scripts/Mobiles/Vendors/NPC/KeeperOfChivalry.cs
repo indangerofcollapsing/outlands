@@ -36,7 +36,7 @@ namespace Server.Mobiles
 				case 0: AddItem( new PlateHelm() ); break;
 				case 1: AddItem( new NorseHelm() ); break;
 				case 2: AddItem( new CloseHelm() ); break;
-				case 3: AddItem( new Helmet() ); break;
+				case 3: AddItem( new RingmailCoif() ); break;
 			}
 
 			switch ( Utility.Random( 3 ) )

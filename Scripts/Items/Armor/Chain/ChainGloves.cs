@@ -4,12 +4,12 @@ using Server.Items;
 namespace Server.Items
 {
 	[FlipableAttribute( 0x13eb, 0x13f2 )]
-	public class RingmailGloves : BaseArmor
+	public class ChainGloves : BaseArmor
 	{
 		public override int InitMinHits{ get{ return 40; } }
 		public override int InitMaxHits{ get{ return 50; } }
-
-        public override int ArmorBase { get { return 25; } }
+		
+        public override int ArmorBase { get { return 30; } }
         public override int OldDexBonus { get { return 0; } }
 
         public override int IconItemId { get { return 5106; } }
@@ -17,19 +17,21 @@ namespace Server.Items
         public override int IconOffsetX { get { return 3; } }
         public override int IconOffsetY { get { return 5; } }
 
-        public override ArmorMaterialType MaterialType { get { return ArmorMaterialType.Ringmail; } }
         public override CraftResource DefaultResource { get { return CraftResource.Iron; } }
+        public override ArmorMaterialType MaterialType { get { return ArmorMaterialType.Chainmail; } }
 
-        public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.Half; } }
+        public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.Quarter; } }
 
 		[Constructable]
-		public RingmailGloves() : base( 5106 )
+		public ChainGloves() : base( 5106 )
 		{
-            Name = "ringmail gloves";
+            Name = "chainmail gloves";
+            Hue = 2500;
+
 			Weight = 2.0;
 		}
 
-		public RingmailGloves( Serial serial ) : base( serial )
+		public ChainGloves( Serial serial ) : base( serial )
 		{
 		}
 		

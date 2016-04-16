@@ -124,7 +124,7 @@ namespace Server.Custom
                 case 1: m_Items.Add(new ChainCoif() { LootType = LootType.Blessed }); break;
                 case 2: m_Items.Add(new CloseHelm() { LootType = LootType.Blessed }); break;
                 case 3: m_Items.Add(new NorseHelm() { LootType = LootType.Blessed }); break;
-                case 4: m_Items.Add(new Helmet() { LootType = LootType.Blessed }); break;
+                case 4: m_Items.Add(new RingmailCoif() { LootType = LootType.Blessed }); break;
             }
 
             m_Items.Add(new Boots() { LootType = LootType.Blessed });

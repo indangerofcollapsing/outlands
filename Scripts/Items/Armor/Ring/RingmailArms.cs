@@ -6,21 +6,8 @@ namespace Server.Items
 	[FlipableAttribute( 0x13ee, 0x13ef )]
 	public class RingmailArms : BaseArmor
 	{
-		public override int BasePhysicalResistance{ get{ return 3; } }
-		public override int BaseFireResistance{ get{ return 3; } }
-		public override int BaseColdResistance{ get{ return 1; } }
-		public override int BasePoisonResistance{ get{ return 5; } }
-		public override int BaseEnergyResistance{ get{ return 3; } }
-
 		public override int InitMinHits{ get{ return 40; } }
 		public override int InitMaxHits{ get{ return 50; } }
-
-		public override int AosStrReq{ get{ return 40; } }
-		public override int OldStrReq{ get{ return 20; } }
-       
-        public override int RevertArmorBase{ get{ return 2; } }
-
-		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Ringmail; } }
 
         public override int ArmorBase { get { return 25; } }
         public override int OldDexBonus { get { return 0; } }
@@ -29,6 +16,9 @@ namespace Server.Items
         public override int IconHue { get { return Hue; } }
         public override int IconOffsetX { get { return 3; } }
         public override int IconOffsetY { get { return 4; } }
+
+        public override ArmorMaterialType MaterialType { get { return ArmorMaterialType.Ringmail; } }
+        public override CraftResource DefaultResource { get { return CraftResource.Iron; } }
 
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.Half; } }
 

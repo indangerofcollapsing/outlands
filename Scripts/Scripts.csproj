@@ -157,6 +157,11 @@
     <Compile Include="Items\AnCorpSupporterSandals.cs" />
     <Compile Include="Items\AnCorpSupporterTunic.cs" />
     <Compile Include="Items\AnCorpSupporterShirt.cs" />
+    <Compile Include="Items\Armor\Bone\BoneGorget.cs" />
+    <Compile Include="Items\Armor\Chain\ChainGorget.cs" />
+    <Compile Include="Items\Armor\Chain\ChainArms.cs" />
+    <Compile Include="Items\Armor\Chain\ChainGloves.cs" />
+    <Compile Include="Items\Armor\Ring\RingmailGorget.cs" />
     <Compile Include="Items\Champion Artifacts\Decorative\ArtifactLargeVase.cs" />
     <Compile Include="Items\Champion Artifacts\Decorative\ArtifactVase.cs" />
     <Compile Include="Items\Champion Artifacts\Decorative\DemonSkull.cs" />
@@ -2889,7 +2894,7 @@
     <Compile Include="Items\Armor\Helmets\CloseHelm.cs" />
     <Compile Include="Items\Armor\Other\DaemonHelm.cs" />
     <Compile Include="Items\Armor\Other\GemmedCirclet.cs" />
-    <Compile Include="Items\Armor\Helmets\Helmet.cs" />
+    <Compile Include="Items\Armor\Ring\RingmailCoif.cs" />
     <Compile Include="Items\Armor\Leather\LeatherCap.cs" />
     <Compile Include="Items\Armor\Other\LichHelm.cs" />
     <Compile Include="Items\Armor\Helmets\NorseHelm.cs" />

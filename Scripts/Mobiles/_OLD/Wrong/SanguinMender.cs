@@ -40,7 +40,7 @@ namespace Server.Mobiles
 
             Utility.AssignRandomHair(this, hairHue);
 
-            AddItem(new Helmet() { Movable = false, Hue = itemHue });
+            AddItem(new RingmailCoif() { Movable = false, Hue = itemHue });
             AddItem(new LeatherGorget() { Movable = false, Hue = itemHue });
             AddItem(new PlateArms() { Movable = false, Hue = weaponHue });
             AddItem(new LeatherGloves() { Movable = false, Hue = itemHue });

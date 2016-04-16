@@ -41,8 +41,8 @@ namespace Server.Mobiles
 				Add( new GenericBuyInfo( typeof( PlateHelm ), 21, 20, 0x1412, 0 ) );
 				Add( new GenericBuyInfo( typeof( CloseHelm ), 18, 20, 0x1408, 0 ) );
 				Add( new GenericBuyInfo( typeof( CloseHelm ), 18, 20, 0x1409, 0 ) );
-				Add( new GenericBuyInfo( typeof( Helmet ), 31, 20, 0x140A, 0 ) );
-				Add( new GenericBuyInfo( typeof( Helmet ), 18, 20, 0x140B, 0 ) );
+				Add( new GenericBuyInfo( typeof( RingmailCoif ), 31, 20, 0x140A, 0 ) );
+				Add( new GenericBuyInfo( typeof( RingmailCoif ), 18, 20, 0x140B, 0 ) );
 				Add( new GenericBuyInfo( typeof( NorseHelm ), 18, 20, 0x140E, 0 ) );
 				Add( new GenericBuyInfo( typeof( NorseHelm ), 18, 20, 0x140F, 0 ) );
 				Add( new GenericBuyInfo( typeof( Bascinet ), 18, 20, 0x140C, 0 ) );
@@ -150,7 +150,7 @@ namespace Server.Mobiles
 
 				Add( typeof( Bascinet ), 45 );
 				Add( typeof( CloseHelm ), 45 );
-				Add( typeof( Helmet ), 45 );
+				Add( typeof( RingmailCoif ), 45 );
 				Add( typeof( NorseHelm ),45 );
 				Add( typeof( PlateHelm ), 45 );
 

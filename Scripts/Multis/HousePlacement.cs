@@ -510,7 +510,7 @@ namespace Server.Multis
 
                         badTile = yard[i];
 
-                        if (!m_BadProximityTiles.Contains(badTile))
+                        if (!m_BadProximityTiles.Contains(badTile) && !m_BlockedTiles.Contains(badTile))
                             m_BadProximityTiles.Add(badTile);
                     }
 				}

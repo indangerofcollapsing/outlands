@@ -1,21 +1,20 @@
 using System;
-using Server;
+using Server.Items;
 
 namespace Server.Items
 {
-	[FlipableAttribute( 0x13BB, 0x13C0 )]
-	public class ChainCoif : BaseArmor
-	{
-		public override int InitMinHits{ get{ return 35; } }
-		public override int InitMaxHits{ get{ return 60; } }		
+	public class ChainGorget : BaseArmor
+	{     
+		public override int InitMinHits{ get{ return 31; } }
+		public override int InitMaxHits{ get{ return 37; } }
+
+        public override int IconItemId { get { return 5063; } }
+        public override int IconHue { get { return Hue; } }
+        public override int IconOffsetX { get { return 8; } }
+        public override int IconOffsetY { get { return 8; } }		
 
         public override int ArmorBase { get { return 30; } }
         public override int OldDexBonus { get { return 0; } }
-
-        public override int IconItemId { get { return 5056; } }
-        public override int IconHue { get { return Hue; } }
-        public override int IconOffsetX { get { return -4; } }
-        public override int IconOffsetY { get { return 10; } }
 
         public override ArmorMaterialType MaterialType { get { return ArmorMaterialType.Chainmail; } }
         public override CraftResource DefaultResource { get { return CraftResource.Iron; } }
@@ -23,13 +22,15 @@ namespace Server.Items
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.Quarter; } }
 
 		[Constructable]
-		public ChainCoif() : base( 5056 )
+		public ChainGorget() : base( 5063 )
 		{
-            Name = "chainmail coif";
+            Name = "chainmail gorget";
+            Hue = 2500;
+
 			Weight = 1.0;
 		}
 
-		public ChainCoif( Serial serial ) : base( serial )
+		public ChainGorget( Serial serial ) : base( serial )
 		{
 		}
 		

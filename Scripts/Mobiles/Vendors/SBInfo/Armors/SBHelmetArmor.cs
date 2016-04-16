@@ -22,7 +22,6 @@ namespace Server.Mobiles
 			{
 				Add( new GenericBuyInfo( typeof( Bascinet ), 127, 20, 0x140C, 0 ) );
 				Add( new GenericBuyInfo( typeof( CloseHelm ), 145, 20, 0x1408, 0 ) );
-				Add( new GenericBuyInfo( typeof( Helmet ), 116, 20, 0x140A, 0 ) );
 				Add( new GenericBuyInfo( typeof( NorseHelm ), 145, 20, 0x140E, 0 ) );
 			}
 		}
@@ -33,7 +32,7 @@ namespace Server.Mobiles
 			{
 				Add( typeof( Bascinet ), 45 );
 				Add( typeof( CloseHelm ), 45 );
-				Add( typeof( Helmet ), 45 );
+				Add( typeof( RingmailCoif ), 45 );
 				Add( typeof( NorseHelm ),45 );
 				Add( typeof( PlateHelm ), 45 );
 			}

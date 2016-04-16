@@ -129,7 +129,20 @@ namespace Server.Engines.Craft
 			Type type = m_CraftItem.ItemType;
 
             int itemID = CraftItem.ItemIDOf(type);
-            int itemHue = CraftItem.BaseHueOf(type);
+            int originalHue = 0;
+
+            Item itemCopy = null;
+
+            try { itemCopy = Activator.CreateInstance(type) as Item; }
+            catch { }
+
+            if (itemCopy != null)
+            {
+                originalHue = itemCopy.Hue;
+                itemCopy.Delete();
+            }
+
+            int itemHue = originalHue;
 
             if (CraftItem.RetainsColor(type))
             {                
@@ -148,10 +161,12 @@ namespace Server.Engines.Craft
 
                     CraftSubRes resource = craftSubRes.GetAt(resIndex);
 
-                    itemHue = CraftItem.BaseHueOf(resource.ItemType);
+                    //Apply Different Material Color
+                    if (resIndex > 0)
+                        itemHue = CraftItem.BaseHueOf(resource.ItemType);                    
                 }
             }
-
+            
             AddItem(20, 50, itemID, itemHue);
 
 			if ( m_CraftItem.IsMarkable( type ) )

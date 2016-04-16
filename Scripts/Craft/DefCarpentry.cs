@@ -135,50 +135,52 @@ namespace Server.Engines.Craft
             int index = -1;
 
             //Fletching
-            index = AddCraft(1, typeof(Kindling), "Bowcraft and Fletching", "Kindling", 0.0, 00.0, typeof(Board), 1044041, 1, 1044351);
+            index = AddCraft(1, typeof(Kindling), "Bowcraft and Fletching", "Kindling", 0.0, 0.0, typeof(Board), 1044041, 1, 1044351);
             SetUseAllRes(index, true);
 
-            index = AddCraft(1, typeof(Shaft), "Bowcraft and Fletching", "Shaft", 0.0, 40.0, typeof(Board), 1044041, 1, 1044351);
+            index = AddCraft(1, typeof(Shaft), "Bowcraft and Fletching", "Shaft", -10.0, 40.0, typeof(Board), 1044041, 1, 1044351);
             SetUseAllRes(index, true);
 
-            index = AddCraft(1, typeof(Arrow), "Bowcraft and Fletching", "Arrow", 0.0, 40.0, typeof(Shaft), 1044560, 1, 1044561);
+            index = AddCraft(1, typeof(Arrow), "Bowcraft and Fletching", "Arrow", -10.0, 40.0, typeof(Shaft), 1044560, 1, 1044561);
             AddRes(index, typeof(Feather), 1044562, 1, 1044563);
             SetUseAllRes(index, true);
 
-            index = AddCraft(1, typeof(Bolt), "Bowcraft and Fletching", "Bolt", 0.0, 40.0, typeof(Shaft), 1044560, 1, 1044561);
+            index = AddCraft(1, typeof(Bolt), "Bowcraft and Fletching", "Bolt", -10.0, 40.0, typeof(Shaft), 1044560, 1, 1044561);
             AddRes(index, typeof(Feather), 1044562, 1, 1044563);
             SetUseAllRes(index, true);
 
-            AddCraft(1, typeof(Bow), "Bowcraft and Fletching", "Bow", 30.0, 70.0, typeof(Board), 1044041, 7, 1044351);
-            AddCraft(1, typeof(Crossbow), "Bowcraft and Fletching", "Crossbow", 60.0, 100.0, typeof(Board), 1044041, 7, 1044351);
-            AddCraft(1, typeof(HeavyCrossbow), "Bowcraft and Fletching", "Heavy Crossbow", 80.0, 120.0, typeof(Board), 1044041, 10, 1044351);
+            AddCraft(1, typeof(Bow), "Bowcraft and Fletching", "Bow", 30.0, 80.0, typeof(Board), 1044041, 8, 1044351);
+            AddCraft(1, typeof(Crossbow), "Bowcraft and Fletching", "Crossbow", 50.0, 100.0, typeof(Board), 1044041, 10, 1044351);
+            AddCraft(1, typeof(HeavyCrossbow), "Bowcraft and Fletching", "Heavy Crossbow", 70.0, 120.0, typeof(Board), 1044041, 12, 1044351);
 
             //Weapons and Shields
-            AddCraft(1, typeof(Club), "Weapons and Shields", "Club", 65, 100, typeof(Board), 1044041, 10, 1044351);
-            AddCraft(1, typeof(ShepherdsCrook), "Weapons and Shields", "Shepherds Crook", 78.9, 103.9, typeof(Board), 1044041, 7, 1044351);
-            AddCraft(1, typeof(QuarterStaff), "Weapons and Shields", "Quarter Staff", 73.6, 98.6, typeof(Board), 1044041, 6, 1044351);
-            AddCraft(1, typeof(GnarledStaff), "Weapons and Shields", "Gnarled Staff", 78.9, 103.9, typeof(Board), 1044041, 7, 1044351);
-            AddCraft(1, typeof(BlackStaff), "Weapons and Shields", "Black Staff", 81.5, 105.0, typeof(Board), 1044041, 9, 1044351);
-            AddCraft(1, typeof(WoodenShield), "Weapons and Shields", "Wooden Shield", 52.6, 77.6, typeof(Board), 1044041, 9, 1044351);
-            AddCraft(1, typeof(WoodenKiteShield), "Weapons and Shields", "Wooden Kite Shield", 75, 100, typeof(Board), 1044041, 12, 1044351);
+            AddCraft(1, typeof(Club), "Weapons and Shields", "Club", -10, 40, typeof(Board), 1044041, 8, 1044351);
+
+            AddCraft(1, typeof(ShepherdsCrook), "Weapons and Shields", "Shepherds Crook", 20.0, 70.0, typeof(Board), 1044041, 10, 1044351);
+            AddCraft(1, typeof(QuarterStaff), "Weapons and Shields", "Quarter Staff", 40.0, 90.0, typeof(Board), 1044041, 12, 1044351);
+            AddCraft(1, typeof(GnarledStaff), "Weapons and Shields", "Gnarled Staff", 40.0, 90.0, typeof(Board), 1044041, 12, 1044351);
+            AddCraft(1, typeof(BlackStaff), "Weapons and Shields", "Black Staff", 40.0, 90.0, typeof(Board), 1044041, 12, 1044351);
+
+            AddCraft(1, typeof(WoodenShield), "Weapons and Shields", "Wooden Shield", 20.0, 70.0, typeof(Board), 1044041, 12, 1044351);
+            AddCraft(1, typeof(WoodenKiteShield), "Weapons and Shields", "Wooden Kite Shield", 50.0, 100, typeof(Board), 1044041, 14, 1044351);
 
             //Instruments
-            index = AddCraft(1, typeof(Harp), "Instruments", "Harp", 78.9, 103.9, typeof(Board), 1044041, 35, 1044351);
+            index = AddCraft(1, typeof(Harp), "Instruments", "Harp", 50.0, 100.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(Cloth), 1044286, 15, 1044287);
                         
-            index = AddCraft(1, typeof(Drums), "Instruments", "Drums", 57.8, 82.8, typeof(Board), 1044041, 20, 1044351);
+            index = AddCraft(1, typeof(Drums), "Instruments", "Drums", 50.0, 100.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
 
-            index = AddCraft(1, typeof(Lute), "Instruments", "Lute", 68.4, 93.4, typeof(Board), 1044041, 25, 1044351);
+            index = AddCraft(1, typeof(Lute), "Instruments", "Lute", 50.0, 100.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
 
-            index = AddCraft(1, typeof(Tambourine), "Instruments", "Tambourine", 57.8, 82.8, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(Cloth), 1044286, 10, 1044287);           
-            
-            index = AddCraft(1, typeof(StandingHarp), "Instruments", "Standing Harp", 63.1, 88.1, typeof(Board), 1044041, 20, 1044351);
+            index = AddCraft(1, typeof(Tambourine), "Instruments", "Tambourine", 50.0, 100.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
 
-            AddCraft(1, typeof(BambooFlute), "Instruments", "Bamboo Flute", 80.0, 105.0, typeof(Board), 1044041, 15, 1044351);
+            AddCraft(1, typeof(BambooFlute), "Instruments", "Bamboo Flute", 70.0, 120.0, typeof(Board), 1044041, 20, 1044351);
+
+            index = AddCraft(1, typeof(StandingHarp), "Instruments", "Standing Harp", 70.0, 120.0, typeof(Board), 1044041, 80, 1044351);
+            AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
 
             // Furniture
             AddCraft(1, typeof(FootStool), "Furniture", "Foot Stool", 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
@@ -190,6 +192,7 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(WoodenBench), "Furniture", "Wooden Bench", 52.6, 77.6, typeof(Board), 1044041, 17, 1044351);
             AddCraft(1, typeof(WoodenThrone), "Furniture", "Wooden Throne", 52.6, 77.6, typeof(Board), 1044041, 17, 1044351);
             AddCraft(1, typeof(Throne), "Furniture", "Throne", 73.6, 98.6, typeof(Board), 1044041, 19, 1044351);
+
             AddCraft(1, typeof(Nightstand), "Furniture", "Nightstand", 42.1, 67.1, typeof(Board), 1044041, 17, 1044351);
             AddCraft(1, typeof(WritingTable), "Furniture", "Writing Table", 63.1, 88.1, typeof(Board), 1044041, 17, 1044351);
             AddCraft(1, typeof(YewWoodTable), "Furniture", "Yew Wood Table", 63.1, 88.1, typeof(Board), 1044041, 23, 1044351);

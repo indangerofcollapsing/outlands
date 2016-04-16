@@ -11,17 +11,7 @@ namespace Server.Items
 		public override int BaseColdResistance{ get{ return 4; } }
 		public override int BasePoisonResistance{ get{ return 1; } }
 		public override int BaseEnergyResistance{ get{ return 2; } }
-
-		public override int InitMinHits{ get{ return 45; } }
-		public override int InitMaxHits{ get{ return 60; } }
-
-		public override int AosStrReq{ get{ return 60; } }
-		public override int OldStrReq{ get{ return 20; } }
-
-        public override int RevertArmorBase{ get{ return 6; } }
-
-		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Chainmail; } }
-
+		
         public override int ArmorBase { get { return 30; } }
         public override int OldDexBonus { get { return -2; } }
 
@@ -29,6 +19,10 @@ namespace Server.Items
         public override int IconHue { get { return Hue; } }
         public override int IconOffsetX { get { return 3; } }
         public override int IconOffsetY { get { return 5; } }
+
+        public override ArmorMaterialType MaterialType { get { return ArmorMaterialType.Chainmail; } }
+
+        public override CraftResource DefaultResource { get { return CraftResource.Iron; } }
 
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.Quarter; } }
 

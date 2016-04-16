@@ -6,21 +6,8 @@ namespace Server.Items
 	[FlipableAttribute( 0x1410, 0x1417 )]
 	public class PlateArms : BaseArmor
 	{
-		public override int BasePhysicalResistance{ get{ return 5; } }
-		public override int BaseFireResistance{ get{ return 3; } }
-		public override int BaseColdResistance{ get{ return 2; } }
-		public override int BasePoisonResistance{ get{ return 3; } }
-		public override int BaseEnergyResistance{ get{ return 2; } }
-
-		public override int InitMinHits{ get{ return 60; } }
+        public override int InitMinHits{ get{ return 60; } }
 		public override int InitMaxHits{ get{ return 100; } }
-
-		public override int AosStrReq{ get{ return 80; } }
-		public override int OldStrReq{ get{ return 40; } }
-
-        public override int RevertArmorBase{ get{ return 4; } }
-
-		public override ArmorMaterialType MaterialType{ get{ return ArmorMaterialType.Plate; } }
 
         public override int ArmorBase { get { return 40; } }
         public override int OldDexBonus { get { return -1; } }
@@ -29,6 +16,9 @@ namespace Server.Items
         public override int IconHue { get { return Hue; } }
         public override int IconOffsetX { get { return 4; } }
         public override int IconOffsetY { get { return 4; } }
+
+        public override ArmorMaterialType MaterialType { get { return ArmorMaterialType.Plate; } }
+        public override CraftResource DefaultResource { get { return CraftResource.Iron; } }
 
         public override ArmorMeditationAllowance DefMedAllowance { get { return ArmorMeditationAllowance.None; } }
 

@@ -6,20 +6,11 @@ namespace Server.Items
 	[FlipableAttribute( 0x1c06, 0x1c07 )]
 	public class FemaleLeatherChest : BaseArmor
 	{
-		public override int BasePhysicalResistance{ get{ return 2; } }
-		public override int BaseFireResistance{ get{ return 4; } }
-		public override int BaseColdResistance{ get{ return 3; } }
-		public override int BasePoisonResistance{ get{ return 3; } }
-		public override int BaseEnergyResistance{ get{ return 3; } }
-
 		public override int InitMinHits{ get{ return 30; } }
 		public override int InitMaxHits{ get{ return 40; } }
 
-		public override int AosStrReq{ get{ return 25; } }
-		public override int OldStrReq{ get{ return 15; } }
-
-		public override int ArmorBase{ get{ return 13; } }
-        public override int RevertArmorBase{ get{ return 6; } }
+        public override int ArmorBase { get { return 15; } }
+        public override int OldDexBonus { get { return 0; } }
 
         public override int IconItemId { get { return 7175; } }
         public override int IconHue { get { return Hue; } }
