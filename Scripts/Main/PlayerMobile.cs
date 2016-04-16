@@ -972,6 +972,8 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public BaseBoat BoatOccupied { get { return m_BoatOccupied; } set { m_BoatOccupied = value; } }
 
+        public BoatHotbarGump.ShipPlayerControlSettings m_ShipControlSettings = null;
+
         public TitleCollection m_TitleCollection = null;
         public AchievementAccountEntry m_AchievementAccountEntry = null;
         public PlayerEnhancementAccountEntry m_PlayerEnhancementAccountEntry = null;

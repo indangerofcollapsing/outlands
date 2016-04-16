@@ -381,14 +381,14 @@ namespace Server.Engines.Craft
             index = AddCraft(1, typeof(BritainNavyPaintUpgrade), "Ship Items", "Ship Paint: Britain Naval Forces", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 3, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(FishermanPaintUpgrade), "Ship Items", "Ship Paint: Fisherman", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 3, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(PiratePaintUpgrade), "Ship Items", "Ship Paint: Pirate", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 3, "You do not have the neccessary number of ship parts to construct that upgrade.");
-            index = AddCraft(1, typeof(GhostShipPaintUpgrade), "Ship Items", "Ship Paint: Undead", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 3, "You do not have the neccessary number of ship parts to construct that upgrade.");
+            index = AddCraft(1, typeof(UndeadPaintUpgrade), "Ship Items", "Ship Paint: Undead", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 3, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(OrcPaintUpgrade), "Ship Items", "Ship Paint: Orc", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 3, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(OrghereimPaintUpgrade), "Ship Items", "Ship Paint: Orghereim", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 3, "You do not have the neccessary number of ship parts to construct that upgrade.");
 
             index = AddCraft(1, typeof(BritainNavyThemeUpgrade), "Ship Items", "Ship Theme: Britain Naval Forces", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 4, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(FishermanThemeUpgrade), "Ship Items", "Ship Theme: Fisherman", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 4, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(PirateThemeUpgrade), "Ship Items", "Ship Theme: Pirate", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 4, "You do not have the neccessary number of ship parts to construct that upgrade.");
-            index = AddCraft(1, typeof(GhostShipThemeUpgrade), "Ship Items", "Ship Theme: Undead", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 4, "You do not have the neccessary number of ship parts to construct that upgrade.");
+            index = AddCraft(1, typeof(UndeadThemeUpgrade), "Ship Items", "Ship Theme: Undead", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 4, "You do not have the neccessary number of ship parts to construct that upgrade.");
 
             //Misc
             index = AddCraft(1, typeof(CarpentryDungeonMould), "Misc", "Carpentry Dungeon Mould", 90, 105, typeof(Board), "Board", 250, "You do not have the neccessary boards to construct that.");
