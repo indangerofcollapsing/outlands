@@ -970,7 +970,22 @@ namespace Server.Mobiles
 
         private BaseBoat m_BoatOccupied = null;
         [CommandProperty(AccessLevel.GameMaster)]
-        public BaseBoat BoatOccupied { get { return m_BoatOccupied; } set { m_BoatOccupied = value; } }
+        public BaseBoat BoatOccupied
+        { 
+            get { return m_BoatOccupied; }
+            set 
+            {
+                BaseBoat m_OldValue = m_BoatOccupied;
+
+                m_BoatOccupied = value;
+
+                if (m_OldValue != m_BoatOccupied && HasGump(typeof(BoatHotbarGump)))
+                {
+                    CloseGump(typeof(BoatHotbarGump));
+                    SendGump(new BoatHotbarGump(this));
+                }
+            }
+        }
 
         public BoatHotbarGump.ShipPlayerControlSettings m_ShipControlSettings = null;
 
@@ -3609,9 +3624,9 @@ namespace Server.Mobiles
             BaseBoat boat = BaseBoat.FindBoatAt(Location, Map);
 
             if (boat == null)
-                m_BoatOccupied = null;
+                BoatOccupied = null;
             else
-                m_BoatOccupied = boat;
+                BoatOccupied = boat;
 
             #region Dueling
             if (m_DuelContext != null)
@@ -5272,7 +5287,7 @@ namespace Server.Mobiles
                 m_ShowProvocationDamage = (DamageDisplayMode)reader.ReadInt();
                 m_ShowPoisonDamage = (DamageDisplayMode)reader.ReadInt();
                 m_AutoStealth = reader.ReadBool();
-                m_BoatOccupied = (BaseBoat)reader.ReadItem();
+                BoatOccupied = (BaseBoat)reader.ReadItem();
                 KinPaintHue = reader.ReadInt();
                 KinPaintExpiration = reader.ReadDateTime();
                 m_ShowMeleeDamage = (DamageDisplayMode)reader.ReadInt();

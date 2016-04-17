@@ -81,8 +81,673 @@ namespace Server.Multis
         public TimeSpan BoatDecayDelay = TimeSpan.FromHours(72);
         public TimeSpan TemporaryAccessDuration = TimeSpan.FromMinutes(5.0);
 
-        #region Properties
+        private static void EventSink_WorldSave(WorldSaveEventArgs e)
+        {
+            new UpdateAllTimer().Start();
+        }
 
+        public static void Initialize()
+        {
+            new UpdateAllTimer().Start();
+
+            EventSink.WorldSave += new WorldSaveEventHandler(EventSink_WorldSave);
+
+            CommandSystem.Register("ShipHotbar", AccessLevel.Player, new CommandEventHandler(ShipHotbarCommand));
+
+            CommandSystem.Register("Ship", AccessLevel.Player, new CommandEventHandler(ShipSelectionCommand));
+            CommandSystem.Register("Boat", AccessLevel.Player, new CommandEventHandler(ShipSelectionCommand));
+            CommandSystem.Register("Tillerman", AccessLevel.Player, new CommandEventHandler(ShipSelectionCommand));
+
+            CommandSystem.Register("FireLeftCannons", AccessLevel.Player, new CommandEventHandler(FireLeftCannonsCommand));
+            CommandSystem.Register("FireRightCannons", AccessLevel.Player, new CommandEventHandler(FireRightCannonsCommand));            
+
+            CommandSystem.Register("RaiseAnchor", AccessLevel.Player, new CommandEventHandler(RaiseAnchorCommand));
+            CommandSystem.Register("LowerAnchor", AccessLevel.Player, new CommandEventHandler(LowerAnchorCommand));
+
+            CommandSystem.Register("Stop", AccessLevel.Player, new CommandEventHandler(StopCommand));
+
+            CommandSystem.Register("Forward", AccessLevel.Player, new CommandEventHandler(ForwardCommand));
+            CommandSystem.Register("ForwardLeft", AccessLevel.Player, new CommandEventHandler(ForwardLeftCommand));
+            CommandSystem.Register("ForwardRight", AccessLevel.Player, new CommandEventHandler(ForwardRightCommand));
+            CommandSystem.Register("Left", AccessLevel.Player, new CommandEventHandler(LeftCommand));
+            CommandSystem.Register("Right", AccessLevel.Player, new CommandEventHandler(RightCommand));
+            CommandSystem.Register("Backward", AccessLevel.Player, new CommandEventHandler(BackwardCommand));
+            CommandSystem.Register("BackwardLeft", AccessLevel.Player, new CommandEventHandler(BackwardLeftCommand));
+            CommandSystem.Register("BackwardRight", AccessLevel.Player, new CommandEventHandler(BackwardRightCommand));
+            CommandSystem.Register("TurnLeft", AccessLevel.Player, new CommandEventHandler(TurnLeftCommand));
+            CommandSystem.Register("TurnRight", AccessLevel.Player, new CommandEventHandler(TurnRightCommand));
+
+            CommandSystem.Register("ForwardOne", AccessLevel.Player, new CommandEventHandler(ForwardOneCommand));
+            CommandSystem.Register("ForwardLeftOne", AccessLevel.Player, new CommandEventHandler(ForwardLeftOneCommand));
+            CommandSystem.Register("ForwardRightOne", AccessLevel.Player, new CommandEventHandler(ForwardRightOneCommand));
+            CommandSystem.Register("LeftOne", AccessLevel.Player, new CommandEventHandler(LeftOneCommand));
+            CommandSystem.Register("RightOne", AccessLevel.Player, new CommandEventHandler(RightOneCommand));
+            CommandSystem.Register("BackwardOne", AccessLevel.Player, new CommandEventHandler(BackwardOne_OnCommand));
+            CommandSystem.Register("BackwardOneLeft", AccessLevel.Player, new CommandEventHandler(BackwardOneLeft_OnCommand));
+            CommandSystem.Register("BackwardOneRight", AccessLevel.Player, new CommandEventHandler(BackwardOneRight_OnCommand));
+
+            //-----
+
+            CommandSystem.Register("ShipLocationOffsets", AccessLevel.GameMaster, new CommandEventHandler(ShipLocationOffsets));
+            CommandSystem.Register("DeleteAllNPCShips", AccessLevel.GameMaster, new CommandEventHandler(DeleteAllNPCShips_OnCommand));
+        }
+
+        #region Commands
+
+        [Usage("[ShipHotbar")]
+        [Description("Displays the ship hotbar gump")]
+        public static void ShipHotbarCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            if (player == null)
+                return;
+
+            player.CloseGump(typeof(BoatHotbarGump));
+            player.SendGump(new BoatHotbarGump(player));
+        }
+
+        [Usage("[Ship or [Boat or [Tillerman")]
+        [Description("Player targets a ship which open's that ship's gump")]
+        public static void ShipSelectionCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            ShipSelection(player);
+        }
+
+        [Usage("FireLeftCannons")]
+        [Description("Acts as if player double-clicked any cannon on the left side of the ship")]
+        public static void FireLeftCannonsCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            FireCannons(player, true);
+        }
+
+        [Usage("FireRightCannons")]
+        [Description("Acts as if player double-clicked any cannon on the right side of the ship")]
+        public static void FireRightCannonsCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            FireCannons(player, false);
+        }
+
+        [Usage("RaiseAnchor")]
+        [Description("Raises the ship's Anchor")]
+        private static void RaiseAnchorCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            RaiseAnchor(player);           
+        }
+
+        public static void RaiseAnchor(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.RaiseAnchor(true);
+        }
+
+        [Usage("LowerAnchor")]
+        [Description("Lowers the ship's Anchor")]
+        private static void LowerAnchorCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            LowerAnchor(player);     
+        }
+
+        public static void LowerAnchor(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.LowerAnchor(true);
+        }
+
+        [Usage("Stop")]
+        [Description("Stops the player's ship")]
+        private static void StopCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            Stop(player);            
+        }
+
+        public static void Stop(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StopMove(false);
+        }
+
+        [Usage("Forward")]
+        [Description("Moves the player's ship forward")]
+        private static void ForwardCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartMoveForward(player);     
+        }
+
+        public static void StartMoveForward(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartMove(Forward, true, false);
+        }
+
+        [Usage("ForwardLeft")]
+        [Description("Moves the player's ship forward left")]
+        private static void ForwardLeftCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartMoveForwardLeft(player);
+        }
+
+        public static void StartMoveForwardLeft(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartMove(ForwardLeft, true, false);
+        }
+
+        [Usage("ForwardRight")]
+        [Description("Moves the player's ship forward right")]
+        private static void ForwardRightCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartMoveForwardRight(player);
+        }
+
+        public static void StartMoveForwardRight(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartMove(ForwardRight, true, false);
+        }
+
+        [Usage("Left")]
+        [Description("Moves the player's ship left")]
+        private static void LeftCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartMoveLeft(player);
+        }
+
+        public static void StartMoveLeft(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartMove(Left, true, false);
+        }
+
+        [Usage("Right")]
+        [Description("Moves the player's ship right")]
+        private static void RightCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartMoveRight(player);
+        }
+
+        public static void StartMoveRight(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartMove(Right, true, false);
+        }
+
+        [Usage("Backwards")]
+        [Description("Moves the player's ship backward")]
+        private static void BackwardCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartMoveBackward(player);
+        }
+
+        public static void StartMoveBackward(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartMove(Backward, true, false);
+        }
+
+        [Usage("BackwardLeft")]
+        [Description("Moves the player's ship backward left")]
+        private static void BackwardLeftCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartMoveBackwardLeft(player);
+        }
+
+        public static void StartMoveBackwardLeft(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartMove(BackwardLeft, true, false);
+        }
+
+        [Usage("BackwardRight")]
+        [Description("Moves the player's ship backward right")]
+        private static void BackwardRightCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartMoveBackwardRight(player);
+        }
+
+        public static void StartMoveBackwardRight(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartMove(BackwardRight, true, false);
+        }
+
+        [Usage("TurnLeft")]
+        [Description("Turns the player's ship left")]
+        private static void TurnLeftCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartTurnLeft(player);
+        }
+
+        public static void StartTurnLeft(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartTurn(-2, false);
+        }
+
+        [Usage("TurnRight")]
+        [Description("Turns the player's ship right")]
+        private static void TurnRightCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            StartTurnRight(player);
+        }
+
+        public static void StartTurnRight(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.StartTurn(2, false);
+        }
+
+        [Usage("ForwardOne")]
+        [Description("Moves the player's ship forward one space")]
+        private static void ForwardOneCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            OneMoveForward(player);
+        }
+
+        public static void OneMoveForward(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.OneMove(Forward);
+        }
+
+        [Usage("ForwardLeftOne")]
+        [Description("Moves the player's ship forward left one space")]
+        private static void ForwardLeftOneCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            OneMoveForwardLeft(player);
+        }
+
+        public static void OneMoveForwardLeft(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.OneMove(ForwardLeft);
+        }
+
+        [Usage("ForwardRightOne")]
+        [Description("Moves the player's ship forward right one space")]
+        private static void ForwardRightOneCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            OneMoveForwardRight(player);
+        }
+
+        public static void OneMoveForwardRight(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.OneMove(ForwardRight);
+        }
+
+        [Usage("LeftOne")]
+        [Description("Moves the player's ship left one space")]
+        private static void LeftOneCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            OneMoveLeft(player);
+        }
+
+        public static void OneMoveLeft(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.OneMove(Left);
+        }
+
+        [Usage("RightOne")]
+        [Description("Moves the player's ship right one space")]
+        private static void RightOneCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            OneMoveRight(player);
+        }
+
+        public static void OneMoveRight(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.OneMove(Right);
+        }
+
+        [Usage("BackwardOne")]
+        [Description("Moves the player's ship backward one space")]
+        private static void BackwardOne_OnCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            OneMoveBackward(player);
+        }
+
+        public static void OneMoveBackward(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.OneMove(Backward);
+        }
+
+        [Usage("BackwardOneLeft")]
+        [Description("Moves the player's ship backward left one space")]
+        private static void BackwardOneLeft_OnCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            OneMoveBackwardLeft(player);
+        }
+
+        public static void OneMoveBackwardLeft(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.OneMove(BackwardLeft);
+        }
+
+        [Usage("BackwardOneRight")]
+        [Description("Moves the player's ship backward right one space")]
+        private static void BackwardOneRight_OnCommand(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            OneMoveBackwardRight(player);
+        }
+
+        public static void OneMoveBackwardRight(PlayerMobile player)
+        {
+            if (player == null) return;
+            if (player.BoatOccupied == null) return;
+
+            if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
+                player.BoatOccupied.OneMove(BackwardRight);
+        }
+
+        [Usage("[ShipLocationOffsets")]
+        [Description("Gets the players location offsets relative to the ship location")]
+        public static void ShipLocationOffsets(CommandEventArgs arg)
+        {
+            PlayerMobile player = arg.Mobile as PlayerMobile;
+
+            if (player != null)
+            {
+                BaseBoat playerBoat = BaseBoat.FindBoatAt(player.Location, player.Map);
+
+                if (playerBoat != null)
+                {
+                    int x = player.Location.X - playerBoat.Location.X;
+                    int y = player.Location.Y - playerBoat.Location.Y;
+                    int z = player.Location.Z - playerBoat.Location.Z;
+
+                    player.SendMessage("Offsets: " + x + "," + y + "," + z);
+                }
+            }
+        }
+
+        [Usage("DeleteAllNPCShips")]
+        [Description("Deletes All NPC Ships Currently Spawned")]
+        private static void DeleteAllNPCShips_OnCommand(CommandEventArgs e)
+        {
+            Mobile mobile = e.Mobile;
+
+            PlayerMobile player = mobile as PlayerMobile;
+
+            if (player == null)
+                return;
+
+            int boatCount = m_Instances.Count;
+            int deleteCount = 0;
+            {
+                for (int a = 0; a < boatCount; a++)
+                {
+                    int index = a - deleteCount;
+
+                    BaseBoat boat = m_Instances[index];
+
+                    if (boat.MobileControlType != MobileControlType.Player)
+                    {
+                        m_Instances.RemoveAt(index);
+                        boat.Delete();
+                        deleteCount++;
+                    }
+                }
+            }
+
+            player.SendMessage("All NPC Ships deleted.");
+        }
+
+        #endregion
+
+        public static void FireCannons(Mobile from, bool leftSide)
+        {
+            BaseBoat boat = BaseBoat.FindBoatAt(from.Location, from.Map);
+            Server.Custom.Pirates.BaseCannon cannonToUse = null;
+
+            if (boat == null)
+            {
+                from.SendMessage("You are not currently on a boat.");
+                return;
+            }
+
+            if (boat.m_Cannons.Count == 0)
+            {
+                from.SendMessage("That ship does not have any cannons.");
+                return;
+            }
+
+            if (!(boat.IsOwner(from) || boat.IsCoOwner(from)))
+            {
+                from.SendMessage("You do not have permission to fire cannons on that boat.");
+                return;
+            }
+
+            foreach (Server.Custom.Pirates.BaseCannon cannon in boat.Cannons)
+            {
+                //Ship North
+                if (boat.Facing == Direction.North)
+                {
+                    if (leftSide && cannon.Facing == Direction.West)
+                    {
+                        cannonToUse = cannon;
+                        break;
+                    }
+
+                    if (!leftSide && cannon.Facing == Direction.East)
+                    {
+                        cannonToUse = cannon;
+                        break;
+                    }
+                }
+
+                //Ship East
+                if (boat.Facing == Direction.East)
+                {
+                    if (leftSide && cannon.Facing == Direction.North)
+                    {
+                        cannonToUse = cannon;
+                        break;
+                    }
+
+                    if (!leftSide && cannon.Facing == Direction.South)
+                    {
+                        cannonToUse = cannon;
+                        break;
+                    }
+                }
+
+                //Ship South
+                if (boat.Facing == Direction.South)
+                {
+                    if (leftSide && cannon.Facing == Direction.East)
+                    {
+                        cannonToUse = cannon;
+                        break;
+                    }
+
+                    if (!leftSide && cannon.Facing == Direction.West)
+                    {
+                        cannonToUse = cannon;
+                        break;
+                    }
+                }
+
+                //Ship West
+                if (boat.Facing == Direction.West)
+                {
+                    if (leftSide && cannon.Facing == Direction.South)
+                    {
+                        cannonToUse = cannon;
+                        break;
+                    }
+
+                    if (!leftSide && cannon.Facing == Direction.North)
+                    {
+                        cannonToUse = cannon;
+                        break;
+                    }
+                }
+            }
+
+            if (cannonToUse != null)
+                cannonToUse.OnDoubleClick(from);
+        }
+
+        public static void ShipSelection(PlayerMobile player)
+        {
+            if (player == null)
+                return;
+
+            player.SendMessage("Which ship would you like to select?");
+            player.Target = new ShipTarget(player);
+        }
+
+        private class ShipTarget : Target
+        {
+            private Mobile m_Mobile;
+
+            public ShipTarget(Mobile mobile): base(25, true, TargetFlags.None)
+            {
+                m_Mobile = mobile;
+            }
+
+            protected override void OnTarget(Mobile from, object o)
+            {
+                IPoint3D p = o as IPoint3D;
+
+                if (p != null)
+                {
+                    if (p is Item)
+                        p = ((Item)p).GetWorldTop();
+
+                    else if (p is Mobile)
+                        p = ((Mobile)p).Location;
+
+                    BaseBoat boatAtLocation = BaseBoat.FindBoatAt(p, from.Map);
+
+                    if (boatAtLocation != null)
+                    {
+                        if (boatAtLocation.Owner != null)
+                        {
+                            if (!boatAtLocation.m_ScuttleInProgress)
+                                from.SendGump(new BoatGump(from, boatAtLocation));
+                        }
+                    }
+
+                    else
+                        from.SendMessage("That is not a targetable ship.");
+                }
+            }
+        }        
+        
         private Hold m_Hold;
         private TillerMan m_TillerMan;
         public ShipTrashBarrel m_ShipTrashBarrel;
@@ -1091,6 +1756,66 @@ namespace Server.Multis
             return null;
         }
 
+        public class EmbarkTarget : Target
+        {
+            private Mobile m_From;
+            private bool m_Followers;
+
+            public EmbarkTarget(Mobile from, bool followers): base(20, true, TargetFlags.None)
+            {
+                if (from == null)
+                    return;
+
+                m_From = from;
+                m_Followers = followers;
+
+                CheckLOS = true;
+            }
+
+            protected override void OnTarget(Mobile from, object target)
+            {
+                if (m_From == null) 
+                    return;
+
+                IPoint3D location = target as IPoint3D;
+
+                if (location != null)
+                {
+                    if (location is Item)
+                        location = ((Item)location).GetWorldTop();
+
+                    else if (location is Mobile)
+                        location = ((Mobile)location).Location;
+
+                    BaseBoat boatAtLocation = BaseBoat.FindBoatAt(location, from.Map);
+
+                    if (boatAtLocation != null)
+                    {
+                        if (boatAtLocation.Deleted || boatAtLocation.m_SinkTimer != null)
+                            boatAtLocation = null;                        
+                    }
+
+                    if (boatAtLocation != null)
+                    {
+                        if (boatAtLocation.IsFriend(m_From) || boatAtLocation.IsCoOwner(m_From) || boatAtLocation.IsOwner(m_From))
+                        {
+                            if (m_Followers)
+                                boatAtLocation.EmbarkFollowers(m_From);
+
+                            else
+                                boatAtLocation.Embark(m_From, false);
+                        }
+
+                        else
+                            from.SendMessage("You must use a boarding rope to access that ship.");                        
+                    }                        
+
+                    else                    
+                        from.SendMessage("That is not a targetable ship.");
+                }
+            }
+        }
+
         public class DisembarkTarget : Target
         {
             private BaseBoat m_Boat;
@@ -1341,15 +2066,16 @@ namespace Server.Multis
             private PlayerMobile m_Player;
             private BaseBoat m_Boat;
 
-            public ThrowOverboardTarget(PlayerMobile player, BaseBoat boat): base(15, false, TargetFlags.None)
+            public ThrowOverboardTarget(Mobile from, BaseBoat boat): base(15, false, TargetFlags.None)
             {
-                if (player == null || boat == null)
+                PlayerMobile m_Player = from as PlayerMobile;
+
+                if (m_Player == null || boat == null) 
                     return;
 
-                CheckLOS = false;
-
-                m_Player = player;
                 m_Boat = boat;
+
+                CheckLOS = false;               
             }
 
             protected override void OnTarget(Mobile from, object targeted)
@@ -1739,7 +2465,10 @@ namespace Server.Multis
             if (m == null)
                 return false;
 
-            if (m == m_Owner || m.AccessLevel >= AccessLevel.GameMaster)
+            if (m.AccessLevel > AccessLevel.Player)
+                return true;
+
+            if (m == m_Owner)
                 return true;
 
             return false;
@@ -1749,6 +2478,9 @@ namespace Server.Multis
         {
             if (m == null || m_CoOwners == null)
                 return false;
+
+            if (m.AccessLevel > AccessLevel.Player)
+                return true;
 
             if (m_CoOwners.Contains(m))
                 return true;
@@ -1760,6 +2492,9 @@ namespace Server.Multis
         {
             if (m == null || Owner == null)
                 return false;
+
+            if (m.AccessLevel > AccessLevel.Player)
+                return true;
 
             //Same Guild And Auto-Guild Friendship Turned On
             if (GuildAsFriends)
@@ -1794,9 +2529,7 @@ namespace Server.Multis
 
         private static List<BaseBoat> m_Instances = new List<BaseBoat>();
         public static List<BaseBoat> AllBoatInstances { get { return m_Instances; } }
-
-        #endregion
-
+        
         public BaseBoat() : base(0x0)
         {
             m_CoOwners = new ArrayList();
@@ -1887,639 +2620,7 @@ namespace Server.Multis
             }
 
             Refresh();
-        }
-
-        public static void Initialize()
-        {
-            new UpdateAllTimer().Start();
-
-            EventSink.WorldSave += new WorldSaveEventHandler(EventSink_WorldSave);
-
-            CommandSystem.Register("ShipLocationOffsets", AccessLevel.Player, new CommandEventHandler(ShipLocationOffsets));
-
-            CommandSystem.Register("FireLeftCannons", AccessLevel.Player, new CommandEventHandler(FireLeftCannons));
-            CommandSystem.Register("FireRightCannons", AccessLevel.Player, new CommandEventHandler(FireRightCannons));
-
-            CommandSystem.Register("Ship", AccessLevel.Player, new CommandEventHandler(TillermanCommand));
-            CommandSystem.Register("Boat", AccessLevel.Player, new CommandEventHandler(TillermanCommand));
-            CommandSystem.Register("Tillerman", AccessLevel.Player, new CommandEventHandler(TillermanCommand));
-
-            CommandSystem.Register("RaiseAnchor", AccessLevel.Player, new CommandEventHandler(RaiseAnchor_OnCommand));
-            CommandSystem.Register("LowerAnchor", AccessLevel.Player, new CommandEventHandler(LowerAnchor_OnCommand));
-
-            CommandSystem.Register("Stop", AccessLevel.Player, new CommandEventHandler(Stop_OnCommand));
-
-            CommandSystem.Register("Forward", AccessLevel.Player, new CommandEventHandler(Forward_OnCommand));
-            CommandSystem.Register("ForwardLeft", AccessLevel.Player, new CommandEventHandler(ForwardLeft_OnCommand));
-            CommandSystem.Register("ForwardRight", AccessLevel.Player, new CommandEventHandler(ForwardRight_OnCommand));
-            CommandSystem.Register("Left", AccessLevel.Player, new CommandEventHandler(Left_OnCommand));
-            CommandSystem.Register("Right", AccessLevel.Player, new CommandEventHandler(Right_OnCommand));
-            CommandSystem.Register("Backward", AccessLevel.Player, new CommandEventHandler(Backward_OnCommand));
-            CommandSystem.Register("TurnLeft", AccessLevel.Player, new CommandEventHandler(TurnLeft_OnCommand));
-            CommandSystem.Register("TurnRight", AccessLevel.Player, new CommandEventHandler(TurnRight_OnCommand));
-
-            CommandSystem.Register("ForwardOne", AccessLevel.Player, new CommandEventHandler(ForwardOne_OnCommand));
-            CommandSystem.Register("ForwardLeftOne", AccessLevel.Player, new CommandEventHandler(ForwardLeftOne_OnCommand));
-            CommandSystem.Register("ForwardRightOne", AccessLevel.Player, new CommandEventHandler(ForwardRightOne_OnCommand));
-            CommandSystem.Register("LeftOne", AccessLevel.Player, new CommandEventHandler(LeftOne_OnCommand));
-            CommandSystem.Register("RightOne", AccessLevel.Player, new CommandEventHandler(RightOne_OnCommand));
-            CommandSystem.Register("BackwardOne", AccessLevel.Player, new CommandEventHandler(BackwardOne_OnCommand));
-
-            CommandSystem.Register("ShipUpgrades", AccessLevel.Player, new CommandEventHandler(ShipUpgrades_OnCommand));
-
-            CommandSystem.Register("DeleteAllNPCShips", AccessLevel.GameMaster, new CommandEventHandler(DeleteAllNPCShips_OnCommand));
-        }
-
-        private static void EventSink_WorldSave(WorldSaveEventArgs e)
-        {
-            new UpdateAllTimer().Start();
-        }
-
-        #region ShipCommands
-
-        [Usage("FireLeftCannons")]
-        [Description("Acts as if player double-clicked any cannon on the left side of the ship")]
-        public static void FireLeftCannons(CommandEventArgs arg)
-        {
-            PlayerMobile pm_Mobile = arg.Mobile as PlayerMobile;
-
-            if (pm_Mobile == null)
-                return;
-
-            FireCannonCommand(pm_Mobile, true);
-        }
-
-        [Usage("FireRightCannons")]
-        [Description("Acts as if player double-clicked any cannon on the right side of the ship")]
-        public static void FireRightCannons(CommandEventArgs arg)
-        {
-            PlayerMobile pm_Mobile = arg.Mobile as PlayerMobile;
-
-            if (pm_Mobile == null)
-                return;
-
-            FireCannonCommand(pm_Mobile, false);
-        }
-
-        public static void FireCannonCommand(Mobile from, bool leftSide)
-        {
-            BaseBoat boat = BaseBoat.FindBoatAt(from.Location, from.Map);
-            Server.Custom.Pirates.BaseCannon cannonToUse = null;
-
-            if (boat == null)
-            {
-                from.SendMessage("You are not currently on a boat.");
-                return;
-            }
-
-            if (boat.m_Cannons.Count == 0)
-            {
-                from.SendMessage("That ship does not have any cannons.");
-                return;
-            }
-
-            if (!(boat.IsOwner(from) || boat.IsCoOwner(from)))
-            {
-                from.SendMessage("You do not have permission to fire cannons on that boat.");
-                return;
-            }
-
-            foreach (Server.Custom.Pirates.BaseCannon cannon in boat.Cannons)
-            {
-                //Ship North
-                if (boat.Facing == Direction.North)
-                {
-                    if (leftSide && cannon.Facing == Direction.West)
-                    {
-                        cannonToUse = cannon;
-                        break;
-                    }
-
-                    if (!leftSide && cannon.Facing == Direction.East)
-                    {
-                        cannonToUse = cannon;
-                        break;
-                    }
-                }
-
-                //Ship East
-                if (boat.Facing == Direction.East)
-                {
-                    if (leftSide && cannon.Facing == Direction.North)
-                    {
-                        cannonToUse = cannon;
-                        break;
-                    }
-
-                    if (!leftSide && cannon.Facing == Direction.South)
-                    {
-                        cannonToUse = cannon;
-                        break;
-                    }
-                }
-
-                //Ship South
-                if (boat.Facing == Direction.South)
-                {
-                    if (leftSide && cannon.Facing == Direction.East)
-                    {
-                        cannonToUse = cannon;
-                        break;
-                    }
-
-                    if (!leftSide && cannon.Facing == Direction.West)
-                    {
-                        cannonToUse = cannon;
-                        break;
-                    }
-                }
-
-                //Ship West
-                if (boat.Facing == Direction.West)
-                {
-                    if (leftSide && cannon.Facing == Direction.South)
-                    {
-                        cannonToUse = cannon;
-                        break;
-                    }
-
-                    if (!leftSide && cannon.Facing == Direction.North)
-                    {
-                        cannonToUse = cannon;
-                        break;
-                    }
-                }
-            }
-
-            if (cannonToUse != null)
-                cannonToUse.OnDoubleClick(from);
-        }
-
-        [Usage("[ShipLocationOffsets")]
-        [Description("Gets the players location offsets relative to the ship location")]
-        public static void ShipLocationOffsets(CommandEventArgs arg)
-        {
-            PlayerMobile player = arg.Mobile as PlayerMobile;
-
-            if (player != null)
-            {
-                BaseBoat playerBoat = BaseBoat.FindBoatAt(player.Location, player.Map);
-
-                if (playerBoat != null)
-                {
-                    int x = player.Location.X - playerBoat.Location.X;
-                    int y = player.Location.Y - playerBoat.Location.Y;
-                    int z = player.Location.Z - playerBoat.Location.Z;
-
-                    player.SendMessage("Offsets: " + x + "," + y + "," + z);
-                }
-            }
-        }
-
-        [Usage("[Tillerman or [Boat")]
-        [Description("Opens The Gump for the Ship the Player is Currently On Or Targets")]
-        public static void TillermanCommand(CommandEventArgs arg)
-        {
-            PlayerMobile player = arg.Mobile as PlayerMobile;
-
-            if (player != null)
-            {
-                player.SendMessage("Which ship would you like to interact with?");
-                player.Target = new ShipTarget(player);
-            }
-        }
-
-        private class ShipTarget : Target
-        {
-            private Mobile m_Mobile;
-
-            public ShipTarget(Mobile mobile)
-                : base(25, true, TargetFlags.None)
-            {
-                m_Mobile = mobile;
-            }
-
-            protected override void OnTarget(Mobile from, object o)
-            {
-                IPoint3D p = o as IPoint3D;
-
-                if (p != null)
-                {
-                    if (p is Item)
-                        p = ((Item)p).GetWorldTop();
-
-                    else if (p is Mobile)
-                        p = ((Mobile)p).Location;
-
-                    BaseBoat boatAtLocation = BaseBoat.FindBoatAt(p, from.Map);
-
-                    if (boatAtLocation != null)
-                    {
-                        if (boatAtLocation.Owner != null)
-                        {
-                            if (!boatAtLocation.m_ScuttleInProgress)
-                                from.SendGump(new BoatGump(from, boatAtLocation));
-                        }
-                    }
-
-                    else
-                        from.SendMessage("That is not a targetable ship.");
-                }
-            }
-        }
-
-        [Usage("RaiseAnchor")]
-        [Description("Raises the ship's Anchor")]
-        private static void RaiseAnchor_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-                targetBoat.RaiseAnchor(true);
-        }
-
-        [Usage("LowerAnchor")]
-        [Description("Lowers the ship's Anchor")]
-        private static void LowerAnchor_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-                targetBoat.LowerAnchor(true);
-        }
-
-        [Usage("Stop")]
-        [Description("Stops the player's ship")]
-        private static void Stop_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.StopMove(false);
-            }
-        }
-
-        [Usage("Forward")]
-        [Description("Moves the player's ship forward")]
-        private static void Forward_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.StartMove(Forward, true, false);
-            }
-        }
-
-        [Usage("ForwardLeft")]
-        [Description("Moves the player's ship forward left")]
-        private static void ForwardLeft_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.StartMove(ForwardLeft, true, false);
-            }
-        }
-
-        [Usage("ForwardRight")]
-        [Description("Moves the player's ship forward right")]
-        private static void ForwardRight_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.StartMove(ForwardRight, true, false);
-            }
-        }
-
-        [Usage("Left")]
-        [Description("Moves the player's ship left")]
-        private static void Left_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.StartMove(Left, true, false);
-            }
-        }
-
-        [Usage("Right")]
-        [Description("Moves the player's ship right")]
-        private static void Right_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.StartMove(Right, true, false);
-            }
-        }
-
-        [Usage("Backwards")]
-        [Description("Moves the player's ship backward")]
-        private static void Backward_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.StartMove(Backward, true, false);
-            }
-        }
-
-        [Usage("TurnLeft")]
-        [Description("Turns the player's ship left")]
-        private static void TurnLeft_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.StartTurn(-2, false);
-            }
-        }
-
-        [Usage("TurnRight")]
-        [Description("Turns the player's ship right")]
-        private static void TurnRight_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.StartTurn(2, false);
-            }
-        }
-
-        [Usage("ForwardOne")]
-        [Description("Moves the player's ship forward one space")]
-        private static void ForwardOne_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.OneMove(Forward);
-            }
-        }
-
-        [Usage("ForwardLeftOne")]
-        [Description("Moves the player's ship forward left one space")]
-        private static void ForwardLeftOne_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.OneMove(ForwardLeft);
-            }
-        }
-
-        [Usage("ForwardRightOne")]
-        [Description("Moves the player's ship forward right one space")]
-        private static void ForwardRightOne_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.OneMove(ForwardRight);
-            }
-        }
-
-        [Usage("LeftOne")]
-        [Description("Moves the player's ship left one space")]
-        private static void LeftOne_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.OneMove(Left);
-            }
-        }
-
-        [Usage("RightOne")]
-        [Description("Moves the player's ship right one space")]
-        private static void RightOne_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.OneMove(Right);
-            }
-        }
-
-        [Usage("BackwardOne")]
-        [Description("Moves the player's ship backward one space")]
-        private static void BackwardOne_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            BaseBoat targetBoat = BaseBoat.FindBoatAt(mobile.Location, e.Mobile.Map);
-
-            if (targetBoat == null)
-                return;
-
-            if (targetBoat.IsOwner(mobile) || targetBoat.IsCoOwner(mobile))
-            {
-                targetBoat.OneMove(Backward);
-            }
-        }
-
-        [Usage("ShipUpgrades")]
-        [Description("Open's the ship's Upgrades Gump")]
-        private static void ShipUpgrades_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            if (mobile == null)
-                return;
-
-            PlayerMobile player = mobile as PlayerMobile;
-
-            if (player != null)
-            {
-                if (player.BoatOccupied != null)
-                {
-                    if (player.BoatOccupied.IsOwner(player) || player.BoatOccupied.IsCoOwner(player))
-                    {
-                        mobile.CloseGump(typeof(BoatGump.ShipUpgradesGump));
-                        mobile.SendGump(new BoatGump.ShipUpgradesGump(player.BoatOccupied, player, 0));
-                    }
-                }
-            }
-        }
-
-        [Usage("DeleteAllNPCShips")]
-        [Description("Deletes All NPC Ships Currently Spawned")]
-        private static void DeleteAllNPCShips_OnCommand(CommandEventArgs e)
-        {
-            Mobile mobile = e.Mobile;
-
-            PlayerMobile player = mobile as PlayerMobile;
-
-            if (player == null)
-                return;
-
-            int boatCount = m_Instances.Count;
-            int deleteCount = 0;
-            {
-                for (int a = 0; a < boatCount; a++)
-                {
-                    int index = a - deleteCount;
-
-                    BaseBoat boat = m_Instances[index];
-
-                    if (boat.MobileControlType != MobileControlType.Player)
-                    {
-                        m_Instances.RemoveAt(index);
-                        boat.Delete();
-                        deleteCount++;
-                    }
-                }
-            }
-
-            player.SendMessage("All NPC Ships deleted.");
-        }
+        }        
 
         public class UpdateAllTimer : Timer
         {
@@ -2533,9 +2634,7 @@ namespace Server.Multis
                 UpdateAllComponents();
             }
         }
-
-        #endregion
-
+        
         public bool StartMove(Direction dir, bool fast, bool message)
         {
             if (m_ScuttleInProgress)
@@ -3515,6 +3614,54 @@ namespace Server.Multis
                 return DamageType.Guns;
 
             return DamageType.Hull;
+        }        
+
+        public void ThrowOverboardCommand(Mobile from)
+        {
+            if (from == null)
+                return;
+
+            if (!(IsFriend(from) || IsCoOwner(from) || IsOwner(from)))
+                return;
+
+            from.SendMessage("Target the person or creature you wish to throw overboard.");
+            from.Target = new BaseBoat.ThrowOverboardTarget(from, this);            
+        }
+
+        public void AddCoOwnerCommand(Mobile from)
+        {
+            if (from == null)
+                return;
+
+            if (IsOwner(from))
+            {
+                from.SendMessage("Target the person you wish to name a co-owner of this boat.");
+                from.Target = new Server.Multis.BaseBoat.BoatCoOwnerTarget(true, this);
+            }
+        }
+
+        public void AddFriendCommand(Mobile from)
+        {
+            if (from == null)
+                return;
+
+            if (IsCoOwner(from) || IsOwner(from))
+            {
+                from.SendMessage("Target the person you wish to name a friend of this boat.");
+                from.Target = new BaseBoat.BoatFriendTarget(true, this);
+            }
+        }        
+
+        public static void TargetedEmbark(Mobile from)
+        {
+            from.SendMessage("Where do you wish to embark?");
+            from.Target = new BaseBoat.EmbarkTarget(from, false);
+        }
+
+        public static void TargetedEmbarkFollowers(Mobile from)
+        {
+            from.SendMessage("Where do you wish to your followers to embark?");
+            from.Target = new BaseBoat.EmbarkTarget(from, true);
         }
 
         public bool Embark(Mobile from, bool boarding)
@@ -3588,8 +3735,8 @@ namespace Server.Multis
             if (bc_Creature != null)
                 bc_Creature.BoatOccupied = this;
 
-            if (this.IsOwner(from) || this.IsCoOwner(from) || this.IsFriend(from))
-                this.Refresh();
+            if (IsOwner(from) || IsCoOwner(from) || IsFriend(from))
+                Refresh();
 
             return true;
         }
@@ -5439,9 +5586,7 @@ namespace Server.Multis
 
             //Custom Speech Handling
             string text = e.Speech.Trim().ToLower();
-
-            #region Custom Speech
-
+            
             if (from.Alive)
             {
                 if (text.IndexOf("lower anchor") != -1 && !Contains(from))
@@ -5495,57 +5640,49 @@ namespace Server.Multis
                 if (text.IndexOf("fire left cannons") != -1 && Contains(from))
                 {
                     if (IsCoOwner(from) || IsOwner(from))
-                        FireCannonCommand(from, true);
+                        FireCannons(from, true);
                 }
 
                 if (text.IndexOf("fire the left cannons") != -1 && Contains(from))
                 {
                     if (IsCoOwner(from) || IsOwner(from))
-                        FireCannonCommand(from, true);
+                        FireCannons(from, true);
                 }
 
                 if (text.IndexOf("fire right cannons") != -1 && Contains(from))
                 {
                     if (IsCoOwner(from) || IsOwner(from))
-                        FireCannonCommand(from, false);
+                        FireCannons(from, false);
                 }
 
                 if (text.IndexOf("fire the right cannons") != -1 && Contains(from))
                 {
                     if (IsCoOwner(from) || IsOwner(from))
-                        FireCannonCommand(from, false);
+                        FireCannons(from, false);
                 }
 
                 if (text.IndexOf("target random") != -1 && Contains(from))
                 {
-                    if (IsCoOwner(from) || IsOwner(from))
-                    {
-                        SetTargetingMode(TargetingMode.Random);
-                    }
+                    if (IsCoOwner(from) || IsOwner(from))                    
+                        SetTargetingMode(TargetingMode.Random);                    
                 }
 
                 if (text.IndexOf("target anywhere") != -1 && Contains(from))
                 {
-                    if (IsCoOwner(from) || IsOwner(from))
-                    {
-                        SetTargetingMode(TargetingMode.Random);
-                    }
+                    if (IsCoOwner(from) || IsOwner(from))                    
+                        SetTargetingMode(TargetingMode.Random);                    
                 }
 
                 if (text.IndexOf("target their hull") != -1 && Contains(from))
                 {
-                    if (IsCoOwner(from) || IsOwner(from))
-                    {
-                        SetTargetingMode(TargetingMode.Hull);
-                    }
+                    if (IsCoOwner(from) || IsOwner(from))                    
+                        SetTargetingMode(TargetingMode.Hull);                    
                 }
 
                 if (text.IndexOf("target their sail") != -1 && Contains(from))
                 {
-                    if (IsCoOwner(from) || IsOwner(from))
-                    {
-                        SetTargetingMode(TargetingMode.Sails);
-                    }
+                    if (IsCoOwner(from) || IsOwner(from))                    
+                        SetTargetingMode(TargetingMode.Sails);                    
                 }
 
                 if (((text.IndexOf("target their cannon") != -1) || (text.IndexOf("target their gun") != -1)) && Contains(from))
@@ -5565,17 +5702,11 @@ namespace Server.Multis
                     }
                 }
 
-                if (text.IndexOf("i wish to throw overboard") != -1)
-                {
-                    from.SendMessage("Target the person or creature you wish to throw overboard.");
-                    from.Target = new BaseBoat.ThrowOverboardTarget(player, this);
-                }
+                if (text.IndexOf("i wish to throw overboard") != -1)                
+                    ThrowOverboardCommand(from);  
 
                 if (text.IndexOf("i wish to throw someone overboard") != -1)
-                {
-                    from.SendMessage("Target the person or creature you wish to throw overboard.");
-                    from.Target = new BaseBoat.ThrowOverboardTarget(player, this);                   
-                }                
+                    ThrowOverboardCommand(from);              
 
                 if (text.IndexOf("i wish to embark") != -1)
                 {
@@ -5595,20 +5726,14 @@ namespace Server.Multis
 
                 if ((text.IndexOf("i wish to add a coowner") != -1) || (text.IndexOf("i wish to add a co-owner") != -1))
                 {
-                    if (IsOwner(from))
-                    {
-                        from.SendMessage("Target the person you wish to name a co-owner of this boat.");
-                        from.Target = new Server.Multis.BaseBoat.BoatCoOwnerTarget(true, this);
-                    }
+                    if (IsOwner(from))                    
+                        AddCoOwnerCommand(from);                    
                 }
 
                 if ((text.IndexOf("i wish to add a friend") != -1))
                 {
-                    if (IsCoOwner(from) || IsOwner(from))
-                    {
-                        from.SendMessage("Target the person you wish to name a friend of this boat.");
-                        from.Target = new Server.Multis.BaseBoat.BoatFriendTarget(true, this);
-                    }
+                    if (IsCoOwner(from) || IsOwner(from))                    
+                        AddFriendCommand(from);                    
                 }
 
                 if ((text.IndexOf("i wish to scuttle the ship") != -1) && !m_ScuttleInProgress)
@@ -5626,7 +5751,6 @@ namespace Server.Multis
 
             if (text.IndexOf("i wish for my followers to disembark") != -1)
                 DisembarkFollowers(from);
-            #endregion
 
             //Owner and Co-Owner Commands: Only Useable Onboard Ship
             if ((IsOwner(from) || IsCoOwner(from)) && Contains(from) && from.Alive && !m_ScuttleInProgress)
@@ -7664,9 +7788,7 @@ namespace Server.Multis
 
             boat.ReceiveDamage(null, null, 5, DamageType.Hull);
         }
-
-        #region High Seas
-
+        
         public override bool AllowsRelativeDrop
         {
             get { return true; }
@@ -7806,8 +7928,6 @@ namespace Server.Multis
                 m_Stream.Write((short)count);
             }
         }
-
-        #endregion
     }
 
     public class ShipDamageEntry

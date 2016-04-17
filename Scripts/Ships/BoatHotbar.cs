@@ -22,11 +22,17 @@ namespace Server
 
         public enum ShipAction
         {
-            EmbarkDisembark,
-            EmbarkDisembarkFollowers,
+            Embark,
+            EmbarkFollowers,
+            Disembark,
+            DisembarkFollowers,
+            RaiseAnchor,
+            LowerAnchor,            
             Dock,
             ClearDeck,            
-            DividePlunder,            
+            DividePlunder, 
+            AddFriend,
+            AddCoOwner,
             ThrowTargetOverboard
         }
 
@@ -38,7 +44,7 @@ namespace Server
             public EpicAbilityType m_EpicAbility = EpicAbilityType.None;
 
             public MovementMode m_MovementMode = MovementMode.Full;
-            public ShipAction m_ShipAction = ShipAction.EmbarkDisembark;
+            public ShipAction m_ShipAction = ShipAction.Embark;
 
             public ShipPlayerControlSettings()
             {
@@ -189,12 +195,12 @@ namespace Server
                 AddButton(83, 328, 4014, 4016, 9, GumpButtonType.Reply, 0);
                 AddButton(140, 328, 4017, 4019, 10, GumpButtonType.Reply, 0);
                 AddButton(196, 328, 4005, 4007, 11, GumpButtonType.Reply, 0);
-
+                
                 //Movement Mode
-                AddLabel(110, 411, 187, "Movement Mode");
-                AddLabel(Utility.CenteredTextOffset(160, movementMode), 433, textHue, movementMode);
-                AddButton(110, 438, 2223, 2223, 12, GumpButtonType.Reply, 0);
-                AddButton(185, 438, 2224, 2224, 13, GumpButtonType.Reply, 0);
+                AddLabel(34, 167, 187, "Movement Mode");
+                AddLabel(Utility.CenteredTextOffset(85, movementMode), 189, textHue, movementMode);
+                AddButton(33, 194, 2223, 2223, 12, GumpButtonType.Reply, 0);
+                AddButton(109, 194, 2224, 2224, 13, GumpButtonType.Reply, 0);
 
                 //Action
                 string actionText = "Embark/Disembark";
@@ -203,14 +209,38 @@ namespace Server
 
                 switch (m_Player.m_ShipControlSettings.m_ShipAction)
                 {
-                    case ShipAction.EmbarkDisembark:
-                        actionText = "Embark/Disembark";
+                    case ShipAction.RaiseAnchor:
+                        actionText = "Raise Anchor";
+                        buttonID = 4014;
+                        buttonPressedID = 4016;
+                    break;
+
+                    case ShipAction.LowerAnchor:
+                        actionText = "Lower Anchor";
+                        buttonID = 4005;
+                        buttonPressedID = 4007;
+                    break;
+
+                    case ShipAction.Embark:
+                        actionText = "Embark";
                         buttonID = 4002;
                         buttonPressedID = 4004;
                     break;
 
-                    case ShipAction.EmbarkDisembarkFollowers:
-                        actionText = "Embark/Disembark Followers";
+                    case ShipAction.EmbarkFollowers:
+                        actionText = "Embark Followers";
+                        buttonID = 4008;
+                        buttonPressedID = 4010;
+                    break;
+
+                    case ShipAction.Disembark:
+                        actionText = "Disembark";
+                        buttonID = 4002;
+                        buttonPressedID = 4004;
+                    break;
+
+                    case ShipAction.DisembarkFollowers:
+                        actionText = "Disembark Followers";
                         buttonID = 4008;
                         buttonPressedID = 4010;
                     break;
@@ -233,17 +263,29 @@ namespace Server
                         buttonPressedID = 4031;
                     break;
 
+                    case ShipAction.AddFriend:
+                        actionText = "Add Friend";
+                        buttonID = 4003;
+                        buttonPressedID = 4002;
+                    break;
+
+                    case ShipAction.AddCoOwner:
+                        actionText = "Add Co-Owner";
+                        buttonID = 4003;
+                        buttonPressedID = 4002;
+                    break;
+
                     case ShipAction.ThrowTargetOverboard:
-                        actionText = "Throw Overboard";
+                        actionText = "Throw Target Overboard";
                         buttonID = 4014;
                         buttonPressedID = 4016;
                     break;
                 }
-
-                AddLabel(Utility.CenteredTextOffset(157, actionText), 167, 169, actionText);
-                AddButton(108, 194, 2223, 2223, 14, GumpButtonType.Reply, 0);
-                AddButton(177, 194, 2224, 2224, 15, GumpButtonType.Reply, 0);
-                AddButton(138, 189, buttonID, buttonPressedID, 16, GumpButtonType.Reply, 0);
+                
+                AddLabel(Utility.CenteredTextOffset(232, actionText), 167, 169, actionText);
+                AddButton(181, 194, 2223, 2223, 14, GumpButtonType.Reply, 0);
+                AddButton(252, 194, 2224, 2224, 15, GumpButtonType.Reply, 0);
+                AddButton(212, 189, buttonID, buttonPressedID, 16, GumpButtonType.Reply, 0);
 
                 //Left Cannon
                 AddItem(2, 206, 733);
@@ -406,6 +448,11 @@ namespace Server
                 case 1:
                     if (m_Boat != null)
                     {
+                        if (m_Player.m_ShipControlSettings.m_MovementMode == MovementMode.Full)
+                            BaseBoat.StartMoveForward(m_Player);
+
+                        else
+                            BaseBoat.OneMoveForward(m_Player);
                     }
 
                     closeGump = false;
@@ -415,6 +462,11 @@ namespace Server
                 case 2:
                     if (m_Boat != null)
                     {
+                        if (m_Player.m_ShipControlSettings.m_MovementMode == MovementMode.Full)
+                            BaseBoat.StartMoveForwardRight(m_Player);
+
+                        else
+                            BaseBoat.OneMoveForwardRight(m_Player);
                     }
 
                     closeGump = false;
@@ -424,6 +476,11 @@ namespace Server
                 case 3:
                     if (m_Boat != null)
                     {
+                        if (m_Player.m_ShipControlSettings.m_MovementMode == MovementMode.Full)
+                            BaseBoat.StartMoveRight(m_Player);
+
+                        else
+                            BaseBoat.OneMoveRight(m_Player);
                     }
 
                     closeGump = false;
@@ -433,15 +490,25 @@ namespace Server
                 case 4:
                     if (m_Boat != null)
                     {
+                        if (m_Player.m_ShipControlSettings.m_MovementMode == MovementMode.Full)
+                            BaseBoat.StartMoveBackwardRight(m_Player);
+
+                        else
+                            BaseBoat.OneMoveBackwardRight(m_Player);
                     }
 
                     closeGump = false;
                 break;
 
-                //Backwards
+                //Backward
                 case 5:
                     if (m_Boat != null)
                     {
+                        if (m_Player.m_ShipControlSettings.m_MovementMode == MovementMode.Full)
+                            BaseBoat.StartMoveBackward(m_Player);
+
+                        else
+                            BaseBoat.OneMoveBackward(m_Player);
                     }
 
                     closeGump = false;
@@ -451,6 +518,11 @@ namespace Server
                 case 6:
                     if (m_Boat != null)
                     {
+                        if (m_Player.m_ShipControlSettings.m_MovementMode == MovementMode.Full)
+                            BaseBoat.StartMoveBackwardLeft(m_Player);
+
+                        else
+                            BaseBoat.OneMoveBackwardLeft(m_Player);
                     }
 
                     closeGump = false;
@@ -460,6 +532,11 @@ namespace Server
                 case 7:
                     if (m_Boat != null)
                     {
+                        if (m_Player.m_ShipControlSettings.m_MovementMode == MovementMode.Full)
+                            BaseBoat.StartMoveLeft(m_Player);
+
+                        else
+                            BaseBoat.OneMoveLeft(m_Player);
                     }
 
                     closeGump = false;
@@ -469,6 +546,12 @@ namespace Server
                 case 8:
                     if (m_Boat != null)
                     {
+                        if (m_Player.m_ShipControlSettings.m_MovementMode == MovementMode.Full)
+                            BaseBoat.StartMoveForwardLeft(m_Player);
+
+                        else
+                            BaseBoat.OneMoveForwardLeft(m_Player);
+
                     }
 
                     closeGump = false;
@@ -477,8 +560,7 @@ namespace Server
                 //Turn Left
                 case 9:
                     if (m_Boat != null)
-                    {
-                    }
+                        BaseBoat.StartTurnLeft(m_Player);
 
                     closeGump = false;
                 break;
@@ -486,8 +568,7 @@ namespace Server
                 //Stop
                 case 10:
                     if (m_Boat != null)
-                    {
-                    }
+                        BaseBoat.Stop(m_Player);
 
                     closeGump = false;
                 break;
@@ -495,8 +576,7 @@ namespace Server
                 //Turn Right
                 case 11:
                     if (m_Boat != null)
-                    {
-                    }
+                        BaseBoat.StartTurnRight(m_Player);
 
                     closeGump = false;
                 break;
@@ -557,12 +637,74 @@ namespace Server
                 case 16:
                     switch (m_Player.m_ShipControlSettings.m_ShipAction)
                     {
-                        case ShipAction.EmbarkDisembark: break;
-                        case ShipAction.EmbarkDisembarkFollowers: break;
-                        case ShipAction.Dock: break;
-                        case ShipAction.ClearDeck: break;
-                        case ShipAction.DividePlunder: break;
-                        case ShipAction.ThrowTargetOverboard: break;
+                        case ShipAction.RaiseAnchor:
+                            if (m_Boat != null)
+                            {
+                                if (m_Boat.IsCoOwner(m_Player) || m_Boat.IsOwner(m_Player))
+                                    BaseBoat.RaiseAnchor(m_Player);
+                            }
+                        break;
+
+                        case ShipAction.LowerAnchor:
+                            if (m_Boat != null)
+                            {
+                                if (m_Boat.IsCoOwner(m_Player) || m_Boat.IsOwner(m_Player))
+                                    BaseBoat.LowerAnchor(m_Player);
+                            }
+                        break;
+
+                        case ShipAction.Embark:
+                            BaseBoat.TargetedEmbark(m_Player);                           
+                        break;
+
+                        case ShipAction.EmbarkFollowers:
+                            BaseBoat.TargetedEmbarkFollowers(m_Player);
+                        break;
+
+                        case ShipAction.Disembark:
+                            if (m_Boat != null)
+                                m_Boat.Disembark(m_Player);
+                        break;
+
+                        case ShipAction.DisembarkFollowers:
+                            if (m_Boat != null)
+                                m_Boat.DisembarkFollowers(m_Player);
+                        break;
+
+                        case ShipAction.Dock:
+                            if (m_Boat != null)
+                            {
+                                if (m_Boat.IsOwner(m_Player))
+                                    m_Boat.BeginDryDock(m_Player);
+                            }
+                        break;
+
+                        case ShipAction.ClearDeck:
+                            //TEST: Finish
+                        break;
+
+                        case ShipAction.DividePlunder:
+                            if (m_Boat != null)
+                            {
+                                if (m_Boat.IsOwner(m_Player))
+                                    m_Boat.BeginDivideThePlunder(m_Player);
+                            }
+                        break;
+
+                        case ShipAction.AddFriend:                        
+                            if (m_Boat != null)
+                                m_Boat.AddFriendCommand(m_Player);                            
+                        break;
+
+                        case ShipAction.AddCoOwner:
+                            if (m_Boat != null)
+                                m_Boat.AddCoOwnerCommand(m_Player);      
+                        break;
+
+                        case ShipAction.ThrowTargetOverboard:
+                            if (m_Boat != null)
+                                m_Boat.ThrowOverboardCommand(m_Player);
+                        break;
                     }
 
                     closeGump = false;
@@ -572,6 +714,8 @@ namespace Server
                 case 17:
                     if (m_Boat != null)
                     {
+                        if (m_Boat.IsCoOwner(m_Player) || m_Boat.IsOwner(m_Player))
+                            BaseBoat.FireCannons(m_Player, true);
                     }
 
                     closeGump = false;
@@ -581,6 +725,8 @@ namespace Server
                 case 18:
                     if (m_Boat != null)
                     {
+                        if (m_Boat.IsCoOwner(m_Player) || m_Boat.IsOwner(m_Player))
+                            BaseBoat.FireCannons(m_Player, false);
                     }
 
                     closeGump = false;
@@ -590,6 +736,16 @@ namespace Server
                 case 19:
                     if (m_Boat != null)
                     {
+                        if (m_Boat.IsCoOwner(m_Player) || m_Boat.IsOwner(m_Player))
+                        {
+                            switch (m_Boat.TargetingMode)
+                            {
+                                case TargetingMode.Random: m_Boat.SetTargetingMode(TargetingMode.Guns); break;
+                                case TargetingMode.Hull: m_Boat.SetTargetingMode(TargetingMode.Random); break;
+                                case TargetingMode.Sails: m_Boat.SetTargetingMode(TargetingMode.Hull); break;
+                                case TargetingMode.Guns: m_Boat.SetTargetingMode(TargetingMode.Sails); break;
+                            }
+                        }   
                     }
 
                     closeGump = false;
@@ -599,6 +755,16 @@ namespace Server
                 case 20:
                     if (m_Boat != null)
                     {
+                        if (m_Boat.IsCoOwner(m_Player) || m_Boat.IsOwner(m_Player))
+                        {
+                            switch (m_Boat.TargetingMode)
+                            {
+                                case TargetingMode.Random: m_Boat.SetTargetingMode(TargetingMode.Hull); break;
+                                case TargetingMode.Hull: m_Boat.SetTargetingMode(TargetingMode.Sails); break;
+                                case TargetingMode.Sails: m_Boat.SetTargetingMode(TargetingMode.Guns); break;
+                                case TargetingMode.Guns: m_Boat.SetTargetingMode(TargetingMode.Random); break;
+                            }
+                        }  
                     }
 
                     closeGump = false;
@@ -667,6 +833,8 @@ namespace Server
 
                 //Ship Selection
                 case 28:
+                    BaseBoat.ShipSelection(m_Player);
+
                     closeGump = false;
                 break;
             }
