@@ -134,7 +134,7 @@ namespace Server.Items
                     m_Boat.Refresh();            
 
                 //Don't Have Access
-                if (!(m_Boat.IsOwner(from) || m_Boat.IsCoOwner(from) || m_Boat.m_TemporaryAccessPlayers.Contains(from)))
+                if (!(m_Boat.IsOwner(from) || m_Boat.IsCoOwner(from)))
                 {
                     from.SendMessage("You must use a lockpick to attempt to access that.");
                     return;

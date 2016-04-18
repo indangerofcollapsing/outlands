@@ -302,7 +302,7 @@ namespace Server.Items
 
             boat.Name = factionName + " " + boatType;
 
-            boat.m_TargetingMode = TargetingMode.Random;            
+            boat.TargetingMode = TargetingMode.Random;            
         }
     }
 }

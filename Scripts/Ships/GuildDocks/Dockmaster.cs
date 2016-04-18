@@ -330,7 +330,7 @@ namespace Server.Mobiles
                     return;
                 }
 
-                if (m_Boat.m_TimeLastMoved + m_Boat.DryDockMinimumLastMovement >= DateTime.UtcNow)
+                if (m_Boat.TimeLastMoved + m_Boat.DryDockMinimumLastMovement >= DateTime.UtcNow)
                 {
                     if (m_Dockmaster.m_RepairingBoats.Contains(m_Boat))
                         m_Dockmaster.m_RepairingBoats.Remove(m_Boat);
@@ -341,7 +341,7 @@ namespace Server.Mobiles
                     return;
                 }
 
-                if (m_Boat.m_LastCombatTime + m_Boat.TimeNeededToBeOutOfCombat >= DateTime.UtcNow)
+                if (m_Boat.LastCombatTime + m_Boat.TimeNeededToBeOutOfCombat >= DateTime.UtcNow)
                 {
                     if (m_Dockmaster.m_RepairingBoats.Contains(m_Boat))
                         m_Dockmaster.m_RepairingBoats.Remove(m_Boat);

@@ -336,7 +336,7 @@ namespace Server.Custom.Pirates
                     });
                 }
 
-                m_Boat.TimeLastDamaged = DateTime.UtcNow;
+                m_Boat.LastCombatTime = DateTime.UtcNow;
 
                 //Ship Cooldown Time (Average of Delay for Each Cannon Type that is Firing)
                 double cooldown = cannonDelayTotal / cannonsFiring;
@@ -414,7 +414,7 @@ namespace Server.Custom.Pirates
                         double movementAccuracyPenalty = 0;
 
                         //Own Ship Movement Penalty
-                        TimeSpan timeStationary = DateTime.UtcNow - m_Boat.m_TimeLastMoved;
+                        TimeSpan timeStationary = DateTime.UtcNow - m_Boat.TimeLastMoved;
                         double secondsStationary = (double)timeStationary.TotalSeconds;
 
                         if (secondsStationary > m_MovementAccuracyCooldown)
@@ -422,7 +422,7 @@ namespace Server.Custom.Pirates
 
                         if (targetBoat != null)
                         {
-                            TimeSpan timeTargetStationary = DateTime.UtcNow - targetBoat.m_TimeLastMoved;
+                            TimeSpan timeTargetStationary = DateTime.UtcNow - targetBoat.TimeLastMoved;
                             double secondsOpponentStationary = (double)timeStationary.TotalSeconds;
 
                             if (secondsOpponentStationary > m_MovementAccuracyCooldown)
@@ -673,7 +673,7 @@ namespace Server.Custom.Pirates
                         targetLocation.Y += yOffset;
                     }
 
-                    m_Boat.m_LastCombatTime = DateTime.UtcNow;
+                    m_Boat.LastCombatTime = DateTime.UtcNow;
 
                     Effects.PlaySound(cannon.Location, map, 0x664);
 

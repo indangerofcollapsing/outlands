@@ -140,12 +140,12 @@ namespace Server.Items
                 }
 
                 //Last Repair Action Was Made During Combat, But Ship is Now Out of Combat (Reduce Repair Timer)
-                if (boat.m_LastCombatTime + boat.TimeNeededToBeOutOfCombat <= DateTime.UtcNow && boat.m_NextTimeRepairable > DateTime.UtcNow + RepairDuration)
-                    boat.m_NextTimeRepairable = DateTime.UtcNow;
+                if (boat.LastCombatTime + boat.TimeNeededToBeOutOfCombat <= DateTime.UtcNow && boat.NextTimeRepairable > DateTime.UtcNow + RepairDuration)
+                    boat.NextTimeRepairable = DateTime.UtcNow;
                 
-                if (boat.m_NextTimeRepairable > DateTime.UtcNow)
+                if (boat.NextTimeRepairable > DateTime.UtcNow)
                 {
-                    string repairString = Utility.CreateTimeRemainingString(DateTime.UtcNow, boat.m_NextTimeRepairable, false, false, false, true, true);
+                    string repairString = Utility.CreateTimeRemainingString(DateTime.UtcNow, boat.NextTimeRepairable, false, false, false, true, true);
 
                     from.SendMessage("This ship cannot be repaired for another " + repairString + ".");
 
@@ -752,7 +752,7 @@ namespace Server.Items
                 return;
 
             //Repair Timer Refreshed (Other player repaired before this player finished)
-            if (boat.m_NextTimeRepairable > DateTime.UtcNow)
+            if (boat.NextTimeRepairable > DateTime.UtcNow)
             {
                 from.SendMessage("You finish your repairs, however someone has more recently completed repairs on the ship.");
                 return;
@@ -899,17 +899,17 @@ namespace Server.Items
                 break;
             }
             
-            boat.m_TimeLastRepaired = DateTime.UtcNow;
+            boat.TimeLastRepaired = DateTime.UtcNow;
 
             if (from.AccessLevel == AccessLevel.Player)
             {
                 //Out of Ship Combat
-                if (boat.m_LastCombatTime + boat.TimeNeededToBeOutOfCombat <= DateTime.UtcNow)
-                    boat.m_NextTimeRepairable = DateTime.UtcNow; // + RepairDuration;
+                if (boat.LastCombatTime + boat.TimeNeededToBeOutOfCombat <= DateTime.UtcNow)
+                    boat.NextTimeRepairable = DateTime.UtcNow; // + RepairDuration;
 
                 //Still in Ship Combat
                 else
-                    boat.m_NextTimeRepairable = DateTime.UtcNow + InCombatRepairCooldown;
+                    boat.NextTimeRepairable = DateTime.UtcNow + InCombatRepairCooldown;
             }
 
             if (doubleTimeActive)

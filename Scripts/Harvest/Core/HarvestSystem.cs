@@ -179,7 +179,9 @@ namespace Server.Engines.Harvest
                             if (ownerBoat != null)
                             {
                                 if (ownerBoat.IsOwner(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsFriend(from))
-                                    ownerBoat.fishCaught++;
+                                {
+                                    //ownerBoat.fishCaught++;
+                                }
                             }
                         }
 

@@ -17,20 +17,6 @@ using Server.Guilds;
 
 namespace Server.Multis
 {
-    public enum BoatOrder
-    {
-        Move,
-        Course,
-        Single
-    }
-
-    public enum BoatOrderLevel
-    {
-        Keyholder,
-        Alive,
-        Ghost
-    }
-
     public enum DamageType
     {
         Hull,
@@ -69,18 +55,7 @@ namespace Server.Multis
     }
 
     public abstract class BaseBoat : BaseMulti, ILogoutRetain
-    {
-        Point3D ILogoutRetain.LoginLocation { get { return GetMarkedLocation(); } }
-        Map ILogoutRetain.LoginMap { get { return Map; } }
-
-        private static Rectangle2D[] m_BritWrap = new Rectangle2D[] { new Rectangle2D(16, 16, 5120 - 32, 4096 - 32), new Rectangle2D(5136, 2320, 992, 1760) };
-        private static Rectangle2D[] m_IlshWrap = new Rectangle2D[] { new Rectangle2D(16, 16, 2304 - 32, 1600 - 32) };
-        private static Rectangle2D[] m_TokunoWrap = new Rectangle2D[] { new Rectangle2D(16, 16, 1448 - 32, 1448 - 32) };
-
-        public TimeSpan DamageEntryDuration = TimeSpan.FromMinutes(60);
-        public TimeSpan BoatDecayDelay = TimeSpan.FromHours(72);
-        public TimeSpan TemporaryAccessDuration = TimeSpan.FromMinutes(5.0);
-
+    {   
         private static void EventSink_WorldSave(WorldSaveEventArgs e)
         {
             new UpdateAllTimer().Start();
@@ -131,6 +106,80 @@ namespace Server.Multis
             CommandSystem.Register("ShipLocationOffsets", AccessLevel.GameMaster, new CommandEventHandler(ShipLocationOffsets));
             CommandSystem.Register("DeleteAllNPCShips", AccessLevel.GameMaster, new CommandEventHandler(DeleteAllNPCShips_OnCommand));
         }
+
+        Point3D ILogoutRetain.LoginLocation { get { return GetMarkedLocation(); } }
+        Map ILogoutRetain.LoginMap { get { return Map; } }
+
+        private static Rectangle2D[] m_BritWrap = new Rectangle2D[] { new Rectangle2D(16, 16, 5120 - 32, 4096 - 32), new Rectangle2D(5136, 2320, 992, 1760) };
+        private static Rectangle2D[] m_IlshWrap = new Rectangle2D[] { new Rectangle2D(16, 16, 2304 - 32, 1600 - 32) };
+        private static Rectangle2D[] m_TokunoWrap = new Rectangle2D[] { new Rectangle2D(16, 16, 1448 - 32, 1448 - 32) };
+
+        public const int MaxFriends = 100;
+        public const int MaxCoOwners = 100;
+
+        public static double shipBasedDamageToPlayerScalar = 0.5;
+        public static double shipBasedDamageToCreatureScalar = 0.5;
+
+        public TimeSpan TimeNeededToBeOutOfCombat = TimeSpan.FromSeconds(60); //Time Needed to Be Out of Combat For Fast Ship Repair and Dry Docking
+        public TimeSpan DryDockMinimumLastMovement = TimeSpan.FromSeconds(10); //Minimum Time Needed Since Last Movement for Ship Docking
+        
+        public TimeSpan DamageEntryDuration = TimeSpan.FromMinutes(60);
+        public TimeSpan BoatDecayDelay = TimeSpan.FromHours(72);  
+
+        public ActiveAbilityType m_ActiveAbility = ActiveAbilityType.None;
+        public DateTime m_ActiveAbilityExpiration = DateTime.UtcNow;
+        public DateTime m_NextActiveAbilityAllowed = DateTime.UtcNow;
+
+        public EpicAbilityType m_EpicAbility = EpicAbilityType.None;
+        public DateTime m_EpicAbilityExpiration = DateTime.UtcNow;
+        public DateTime m_NextEpicAbilityAllowed = DateTime.UtcNow;   
+
+        public const double ActiveAbilityDuration = 30; //Length of Active Ability Effect
+        public const double ActiveAbilityCooldown = 120; //Cooldown Before Active Ability Effect Can Be Reused
+
+        public const double EpicAbilityDuration = 295; //Length of Epic Ability Effect (Usually Manually Ended)
+        public const double EpicAbilityCooldown = 300; //Cooldown Before Epic Ability Effect Can Be Reused
+
+        public const double ExceptionalRiggingBonus = .25; //25% Speed Increase
+        public const double ReinforcedHullBonus = .25; //25% Hull Damage Reduction
+        public const double MastercraftCannonsBonus = 1.25; //25% Bonus to Cannon Accuracy
+        public const double BoardingHooksBonus = .25; //25% Bonus Chance For Boarding Hook Attempt Success
+
+        public const double SeamstressSailPointsBonusScalar = 1.1;
+        public const double GunsmithGunPointsBonusScalar = 1.1;
+        public const double CarpenterHullPointsBonusScalar = 1.05;
+
+        public const double MunitionsSpecialistcEpicAbilityCooldownScalar = .9;
+
+        private double m_AcquireTargetDelayAmount = Utility.RandomMinMax(3, 5);
+        private double m_AcquireNewTargetDelayAmount = Utility.RandomMinMax(8, 10);       
+
+        public int BaseMaxHitPoints = 1000;
+        public int BaseMaxSailPoints = 500;
+        public int BaseMaxGunPoints = 500;
+
+        public MobileControlType BaseMobileControlType = MobileControlType.Player;
+        public MobileFactionType BaseMobileFactionType = MobileFactionType.None;
+
+        public int BasePerceptionRange = 24;
+
+        public double BaseCannonAccuracyModifer = 1.0;
+        public double BaseCannonRangeScalar = 1.0;
+        public double BaseCannonDamageScalar = 1.0;
+        public double BaseCannonReloadTimeScalar = 1.0;
+        public double BaseDamageFromPlayerBoatScalar = 1.0;
+
+        public double BaseFastInterval = 0.20;
+        public double BaseFastDriftInterval = 0.40;
+
+        public double BaseSlowInterval = 0.40;
+        public double BaseSlowDriftInterval = 1.0;
+
+        public int BaseDoubloonValue = 0;
+
+        public virtual int ReducedSpeedModeMinDuration { get { return 10; } }
+        public virtual int ReducedSpeedModeMaxDuration { get { return 20; } }
+        public virtual int ReducedSpeedModeCooldown { get { return 10; } }
 
         #region Commands
 
@@ -605,8 +654,6 @@ namespace Server.Multis
             player.SendMessage("All NPC Ships deleted.");
         }
 
-        #endregion
-
         public static void FireCannons(Mobile from, bool leftSide)
         {
             BaseBoat boat = BaseBoat.FindBoatAt(from.Location, from.Map);
@@ -746,55 +793,47 @@ namespace Server.Multis
                         from.SendMessage("That is not a targetable ship.");
                 }
             }
-        }        
+        }
+
+        #endregion               
+
+        #region Properties
+
         
-        private Hold m_Hold;
-        private TillerMan m_TillerMan;
-        public ShipTrashBarrel m_ShipTrashBarrel;
+        public ArrayList m_CoOwners = new ArrayList();
+        public ArrayList CoOwners
+        {
+            get { return m_CoOwners; }
+            set { m_CoOwners = value; }
+        }
 
-        public const int MaxFriends = 100;
-        public const int MaxCoOwners = 100;
+        private ArrayList m_Friends = new ArrayList();
+        public ArrayList Friends
+        {
+            get { return m_Friends; }
+            set { m_Friends = value; }
+        }
 
-        public Mobile m_Owner;
-        public ArrayList m_CoOwners;
-        public ArrayList m_Friends;
+        private ArrayList m_ParticipatingMobiles = new ArrayList();
+        public ArrayList ParticipatingMobiles
+        { 
+            get { return m_ParticipatingMobiles; } 
+            set { m_ParticipatingMobiles = value; }
+        }
 
-        public ArrayList m_Crew;
-        public ArrayList m_ExtraMobiles;
-        public ArrayList m_EmbarkedMobiles;
-        public ArrayList m_ParticipatingMobiles;
+        private ArrayList m_EmbarkedMobiles = new ArrayList();
+        public ArrayList EmbarkedMobiles
+        { 
+            get { return m_EmbarkedMobiles; } 
+            set { m_EmbarkedMobiles = value; } 
+        }
 
-        public ArrayList CoOwners { get { return m_CoOwners; } set { m_CoOwners = value; } }
-        public ArrayList Friends { get { return m_Friends; } set { m_Friends = value; } }
-        public ArrayList Crew { get { return m_Crew; } set { m_Crew = value; } }
-        public ArrayList ExtraMobiles { get { return m_ExtraMobiles; } set { m_ExtraMobiles = value; } }
-        public ArrayList EmbarkedMobiles { get { return m_EmbarkedMobiles; } set { m_EmbarkedMobiles = value; } }
-        public ArrayList ParticipatingMobiles { get { return m_ParticipatingMobiles; } set { m_ParticipatingMobiles = value; } }
-
-        public ActiveAbilityType m_ActiveAbility = ActiveAbilityType.None;
-        public DateTime m_ActiveAbilityExpiration = DateTime.UtcNow;
-        public DateTime m_NextActiveAbilityAllowed = DateTime.UtcNow;
-
-        public const double ActiveAbilityDuration = 30; //Length of Active Ability Effect
-        public const double ActiveAbilityCooldown = 120; //Cooldown Before Active Ability Effect Can Be Reused
-
-        public EpicAbilityType m_EpicAbility = EpicAbilityType.None;
-        public DateTime m_EpicAbilityExpiration = DateTime.UtcNow;
-        public DateTime m_NextEpicAbilityAllowed = DateTime.UtcNow;
-
-        public const double EpicAbilityDuration = 295; //Length of Epic Ability Effect (Usually Manually Ended)
-        public const double EpicAbilityCooldown = 300; //Cooldown Before Epic Ability Effect Can Be Reused
-
-        public const double ExceptionalRiggingBonus = .25; //25% Speed Increase
-        public const double ReinforcedHullBonus = .25; //25% Hull Damage Reduction
-        public const double MastercraftCannonsBonus = 1.25; //25% Bonus to Cannon Accuracy
-        public const double BoardingHooksBonus = .25; //25% Bonus Chance For Boarding Hook Attempt Success
-
-        public const double SeamstressSailPointsBonusScalar = 1.1;
-        public const double GunsmithGunPointsBonusScalar = 1.1;
-        public const double CarpenterHullPointsBonusScalar = 1.05;
-
-        public const double MunitionsSpecialistcEpicAbilityCooldownScalar = .9;
+        private ArrayList m_Crew = new ArrayList();
+        public ArrayList Crew
+        {
+            get { return m_Crew; }
+            set { m_Crew = value; } 
+        }   
 
         private double m_TempSpeedModifier = 1.0;
         [CommandProperty(AccessLevel.Counselor)]
@@ -813,7 +852,29 @@ namespace Server.Multis
         {
             get { return m_TempSpeedModifierExpiration; }
             set { m_TempSpeedModifierExpiration = value; }
+        }        
+
+        private bool m_AdminControlled = false;
+        [CommandProperty(AccessLevel.Counselor)]
+        public bool AdminControlled
+        {
+            get { return m_AdminControlled; }
+            set { m_AdminControlled = value; }
         }
+
+        private BaseBoat m_BoatCombatant = null;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public BaseBoat BoatCombatant
+        {
+            get { return m_BoatCombatant; }
+            set
+            {
+                if (value != this)
+                    m_BoatCombatant = value;
+            }
+        }
+
+        public GuildDockGuildInfo GuildDockGuildInfo;
 
         private Guild m_Guild = null;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -831,8 +892,6 @@ namespace Server.Multis
             set { m_GuildDock = value; }
         }
 
-        public GuildDockGuildInfo GuildDockGuildInfo;
-        
         private bool m_GuildAsFriends = true;
         [CommandProperty(AccessLevel.GameMaster)]
         public bool GuildAsFriends
@@ -841,39 +900,26 @@ namespace Server.Multis
             set { m_GuildAsFriends = value; }
         }
 
-        private bool m_AdminControlled = false;
-        [CommandProperty(AccessLevel.Counselor)]
-        public bool AdminControlled
-        {
-            get { return m_AdminControlled; }
-            set { m_AdminControlled = value; }
-        }
+        public List<BaseBoatUpgradeDeed> m_Upgrades = new List<BaseBoatUpgradeDeed>();       
 
-        public List<Mobile> m_TemporaryAccessPlayers = new List<Mobile>();
-        public List<DateTime> m_TemporaryAccessExpirations = new List<DateTime>();
-
-        private Direction m_Facing;
-
-        private Direction m_Moving;
-        private int m_Speed;
-        private int m_ClientSpeed;
-
-        private bool m_Anchored;
+        
+        
+        
+        
+       
+        
+                
+       
+        private int m_ClientSpeed;        
         private string m_ShipName;
 
-        private BoatOrder m_Order;
-
         private MapItem m_MapItem;
-        private int m_NextNavPoint;
+        private int m_NextNavPoint;       
 
-        public Plank m_PPlank, m_SPlank;
-
-        private Timer m_TurnTimer;
-        private Timer m_MoveTimer;
+        private Timer m_TurnTimer;        
 
         private Timer m_ShipDamageEntryTimer;
         private Timer m_CannonCooldownTimer;
-        private Timer m_TemporaryAccessTimer;
 
         public Timer m_DecayTimer;
         public Timer m_SinkTimer;
@@ -882,84 +928,16 @@ namespace Server.Multis
         public bool m_ScuttleInProgress = false;
 
         private Timer m_ConfigureShipTimer;
-        public List<Item> m_ShipItems = new List<Item>();
 
-        public static double shipBasedDamageToPlayerScalar = 0.5;
-        public static double shipBasedDamageToCreatureScalar = 0.5;
-
-        //Stats Tracking
-        public int playerShipsSunk = 0;
-        public int NPCShipsSunk = 0;
-        public int doubloonsEarned = 0;
-        public int netsCast = 0;
-        public int MIBsRecovered = 0;
-        public int fishCaught = 0;
-
+        public List<Item> m_ShipItems = new List<Item>();       
+        
         public ShipSpawner m_ShipSpawner;
 
         public Timer m_BoatAITimer;
-
-        private WayPoint m_CurrentWaypoint;
-        private List<WayPoint> m_VisitedWaypoints = new List<WayPoint>();
-        private WayPointOrder m_WaypointOrder = WayPointOrder.Forward;
-        private DateTime m_NextWaypointAction;
-
-        private DateTime m_LastAcquireTarget;
-        private double m_AcquireTargetDelayAmount = Utility.RandomMinMax(3, 5);
-        private double m_AcquireNewTargetDelayAmount = Utility.RandomMinMax(8, 10);
-
-        private BaseBoat m_BoatCombatant = null;
+        private DateTime m_LastAcquireTarget;         
 
         public List<Item> m_ItemsToSink = new List<Item>();
-        public List<Mobile> m_MobilesToSink = new List<Mobile>();
-
-        public List<BaseBoatUpgradeDeed> m_Upgrades = new List<BaseBoatUpgradeDeed>();
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BaseBoat BoatCombatant
-        {
-            get { return m_BoatCombatant; }
-            set
-            {
-                if (value != this)
-                    m_BoatCombatant = value;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public WayPoint CurrentWaypoint { get { return m_CurrentWaypoint; } set { m_CurrentWaypoint = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public List<WayPoint> VisitedWaypoints { get { return m_VisitedWaypoints; } set { m_VisitedWaypoints = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public WayPointOrder WaypointOrder { get { return m_WaypointOrder; } set { m_WaypointOrder = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime NextWaypointAction { get { return m_NextWaypointAction; } set { m_NextWaypointAction = value; } }
-
-        public int BaseMaxHitPoints = 1000;
-        public int BaseMaxSailPoints = 500;
-        public int BaseMaxGunPoints = 500;
-
-        public MobileControlType BaseMobileControlType = MobileControlType.Player;
-        public MobileFactionType BaseMobileFactionType = MobileFactionType.None;
-
-        public int BasePerceptionRange = 24;
-
-        public double BaseCannonAccuracyModifer = 1.0;
-        public double BaseCannonRangeScalar = 1.0;
-        public double BaseCannonDamageScalar = 1.0;
-        public double BaseCannonReloadTimeScalar = 1.0;
-        public double BaseDamageFromPlayerBoatScalar = 1.0;
-
-        public double BaseFastInterval = 0.20;
-        public double BaseFastDriftInterval = 0.40;
-
-        public double BaseSlowInterval = 0.40;
-        public double BaseSlowDriftInterval = 1.0;
-
-        public int BaseDoubloonValue = 0;
+        public List<Mobile> m_MobilesToSink = new List<Mobile>();        
 
         private int m_HitPoints;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -1436,8 +1414,7 @@ namespace Server.Multis
             }
         }
 
-        public DateTime m_CannonCooldown = DateTime.UtcNow;
-
+        private DateTime m_CannonCooldown = DateTime.UtcNow;
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime CannonCooldown
         {
@@ -1445,8 +1422,7 @@ namespace Server.Multis
             set { m_CannonCooldown = value; }
         }
 
-        public TargetingMode m_TargetingMode = TargetingMode.Hull;
-
+        private TargetingMode m_TargetingMode = TargetingMode.Hull;
         [CommandProperty(AccessLevel.GameMaster)]
         public TargetingMode TargetingMode
         {
@@ -1457,7 +1433,6 @@ namespace Server.Multis
         public abstract List<Point3D> m_EmbarkLocations();
         public abstract List<Point3D> m_MastLocations();
         public abstract List<Point3D> m_CannonLocations();
-
         public abstract List<Point3D> m_BoatFireLocations();
 
         private List<BoatFireItem> m_BoatFires = new List<BoatFireItem>();
@@ -1476,15 +1451,7 @@ namespace Server.Multis
 
         private bool m_Destroyed = false;
 
-        public DateTime m_TimeLastMoved;
-        public DateTime m_LastCombatTime;
-
-        public DateTime m_TimeLastRepaired;
-        public DateTime m_NextTimeRepairable;
-
-        public TimeSpan TimeNeededToBeOutOfCombat = TimeSpan.FromSeconds(60); //Time Needed to Be Out of Combat For Fast Ship Repair and Dry Docking
-        public TimeSpan DryDockMinimumLastMovement = TimeSpan.FromSeconds(10); //Minimum Time Needed Since Last Movement for Ship Docking
-
+        private DateTime m_TimeLastMoved;
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime TimeLastMoved
         {
@@ -1492,13 +1459,15 @@ namespace Server.Multis
             set { m_TimeLastMoved = value; }
         }
 
+        private DateTime m_LastCombatTime;
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime TimeLastDamaged
+        public DateTime LastCombatTime
         {
             get { return m_LastCombatTime; }
-            set { m_TimeLastRepaired = value; }
+            set { m_LastCombatTime = value; }
         }
 
+        private DateTime m_TimeLastRepaired;
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime TimeLastRepaired
         {
@@ -1506,6 +1475,7 @@ namespace Server.Multis
             set { m_TimeLastRepaired = value; }
         }
 
+        private DateTime m_NextTimeRepairable;
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime NextTimeRepairable
         {
@@ -1531,13 +1501,6 @@ namespace Server.Multis
 
         private static bool NewBoatMovement { get { return true; } }
 
-        public virtual int ReducedSpeedModeMinDuration { get { return 10; } }
-        public virtual int ReducedSpeedModeMaxDuration { get { return 20; } }
-        public virtual int ReducedSpeedModeCooldown { get { return 10; } }
-
-        private Boolean m_ReducedSpeedMode; //If ship is currently in reduced speed mode
-        private DateTime m_ReducedSpeedModeTime; //Time ship can leave reduced speed mode
-
         private static int SlowSpeed = 1;
         private static int FastSpeed = 1;
 
@@ -1555,6 +1518,7 @@ namespace Server.Multis
         private static Direction Port = Left;
         private static Direction Starboard = Right;
 
+        private Boolean m_ReducedSpeedMode;
         [CommandProperty(AccessLevel.GameMaster)]
         public Boolean ReducedSpeedMode
         {
@@ -1562,6 +1526,7 @@ namespace Server.Multis
             set { m_ReducedSpeedMode = value; }
         }
 
+        private DateTime m_ReducedSpeedModeTime;
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime ReducedSpeedModeTime
         {
@@ -1606,21 +1571,46 @@ namespace Server.Multis
             set { m_CannonHue = value; }
         }
 
+        private Hold m_Hold;
         [CommandProperty(AccessLevel.GameMaster)]
-        public Hold Hold { get { return m_Hold; } set { m_Hold = value; } }
+        public Hold Hold 
+        { 
+            get { return m_Hold; } 
+            set { m_Hold = value; } 
+        }
 
+        private TillerMan m_TillerMan;
         [CommandProperty(AccessLevel.GameMaster)]
-        public TillerMan TillerMan { get { return m_TillerMan; } set { m_TillerMan = value; } }
+        public TillerMan TillerMan
+        {
+            get { return m_TillerMan; } 
+            set { m_TillerMan = value; } 
+        }
 
+        private ShipTrashBarrel m_ShipTrashBarrel;
         [CommandProperty(AccessLevel.GameMaster)]
-        public ShipTrashBarrel ShipTrashBarrel { get { return m_ShipTrashBarrel; } set { m_ShipTrashBarrel = value; } }
+        public ShipTrashBarrel ShipTrashBarrel
+        {
+            get { return m_ShipTrashBarrel; } 
+            set { m_ShipTrashBarrel = value; } 
+        }
 
+        private Plank m_PPlank;
         [CommandProperty(AccessLevel.GameMaster)]
-        public Plank PPlank { get { return m_PPlank; } set { m_PPlank = value; } }
+        public Plank PPlank 
+        { get { return m_PPlank; }
+            set { m_PPlank = value; } 
+        }
 
+        private Plank m_SPlank;
         [CommandProperty(AccessLevel.GameMaster)]
-        public Plank SPlank { get { return m_SPlank; } set { m_SPlank = value; } }
+        public Plank SPlank
+        {
+            get { return m_SPlank; } 
+            set { m_SPlank = value; }
+        }
 
+        private Mobile m_Owner;
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Owner
         {
@@ -1642,32 +1632,57 @@ namespace Server.Multis
             }
         }
 
+        private Direction m_Facing;
         [CommandProperty(AccessLevel.GameMaster)]
-        public Direction Facing { get { return m_Facing; } set { SetFacing(value); } }
+        public Direction Facing 
+        { 
+            get { return m_Facing; } 
+            set { SetFacing(value); } 
+        }
+
+        private Direction m_Moving;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Direction Moving 
+        { 
+            get { return m_Moving; } 
+            set { m_Moving = value; } 
+        }
+
+        private Timer m_MoveTimer;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool IsMoving 
+        {
+            get { return (m_MoveTimer != null); }
+        }
+
+        private int m_Speed;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int Speed
+        { 
+            get { return m_Speed; }
+            set { m_Speed = value; } 
+        }
+
+        private bool m_Anchored;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool Anchored 
+        { 
+            get { return m_Anchored; } 
+            set { m_Anchored = value; }
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Direction Moving { get { return m_Moving; } set { m_Moving = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsMoving { get { return (m_MoveTimer != null); } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int Speed { get { return m_Speed; } set { m_Speed = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Anchored { get { return m_Anchored; } set { m_Anchored = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string ShipName { get { return m_ShipName; } set { m_ShipName = value; if (m_TillerMan != null) m_TillerMan.InvalidateProperties(); } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BoatOrder Order { get { return m_Order; } set { m_Order = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public MapItem MapItem { get { return m_MapItem; } set { m_MapItem = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int NextNavPoint { get { return m_NextNavPoint; } set { m_NextNavPoint = value; } }
+        public string ShipName 
+        { 
+            get { return m_ShipName; }
+            set
+            { 
+                m_ShipName = value; 
+                if (m_TillerMan != null) m_TillerMan.InvalidateProperties();
+            } 
+        }
+        
+        #endregion
 
         public static bool UseShipBasedDamageModifer(Mobile from, Mobile target)
         {
@@ -2031,36 +2046,6 @@ namespace Server.Multis
             }
         }
 
-        public class BoatGrantAccessTarget : Target
-        {
-            private BaseBoat m_Boat;
-            private bool m_Add;
-
-            public BoatGrantAccessTarget(bool add, BaseBoat boat)
-                : base(15, false, TargetFlags.None)
-            {
-                CheckLOS = false;
-
-                m_Boat = boat;
-                m_Add = add;
-            }
-
-            protected override void OnTarget(Mobile from, object targeted)
-            {
-                if (m_Boat.Deleted)
-                    return;
-
-                if (targeted is PlayerMobile)
-                {
-                    Mobile mobile = targeted as Mobile;
-                    m_Boat.GrantTemporaryAccess(from, mobile);
-                }
-
-                else
-                    from.SendMessage("That can't be granted temporary ship access.");
-            }
-        }
-
         public class ThrowOverboardTarget : Target
         {
             private PlayerMobile m_Player;
@@ -2314,51 +2299,6 @@ namespace Server.Multis
 
             return outfittingUpgrade;
         }
-
-        public void GrantTemporaryAccess(Mobile from, Mobile target)
-        {
-            if (from == null || target == null)
-                return;
-
-            if (m_TemporaryAccessPlayers.Contains(target))
-            {
-                for (int a = 0; a < m_TemporaryAccessPlayers.Count; a++)
-                {
-                    if (m_TemporaryAccessPlayers[a] == target)
-                    {
-                        if (m_TemporaryAccessExpirations[a] != null)
-                        {
-                            m_TemporaryAccessExpirations[a] = DateTime.UtcNow + TemporaryAccessDuration;
-
-                            from.SendMessage("You extend that player's temporary access to the ship.");
-                            target.SendMessage("Your temporary access to the ship has been extended.");
-
-                            TemporaryAccessTimer temporaryAccessTimer = new TemporaryAccessTimer(this);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            else
-            {
-                m_TemporaryAccessPlayers.Add(target);
-
-                DateTime accessExpiration = new DateTime();
-                accessExpiration = DateTime.UtcNow + TemporaryAccessDuration;
-
-                m_TemporaryAccessExpirations.Add(accessExpiration);
-
-                from.SendMessage("You grant the player temporary access to the ship.");
-                target.SendMessage("You have been granted temporary access to the ship.");
-            }
-
-            if (m_TemporaryAccessTimer == null)
-                m_TemporaryAccessTimer = new TemporaryAccessTimer(this);
-
-            m_TemporaryAccessTimer.Start();
-        }
-
         public void AddCoOwner(Mobile from, Mobile targ)
         {
             bool wasFriend = false;
@@ -2535,12 +2475,8 @@ namespace Server.Multis
             m_CoOwners = new ArrayList();
             m_Friends = new ArrayList();
             m_Crew = new ArrayList();
-            m_ExtraMobiles = new ArrayList();
             m_EmbarkedMobiles = new ArrayList();
             m_ParticipatingMobiles = new ArrayList();
-
-            m_TemporaryAccessPlayers = new List<Mobile>();
-            m_TemporaryAccessExpirations = new List<DateTime>();
 
             m_TillerMan = new TillerMan(this);
             m_Hold = new Hold(this);
@@ -2718,7 +2654,6 @@ namespace Server.Multis
             m_Moving = dir;
             m_Speed = speed;
             m_ClientSpeed = clientSpeed;
-            m_Order = BoatOrder.Move;
 
             if (m_MoveTimer != null)
                 m_MoveTimer.Stop();
@@ -2788,10 +2723,6 @@ namespace Server.Multis
                 if (foundBoatController == false)
                     m_Boat.StopMove(false);
 
-                //Boat Unable to Move
-                else if (!m_Boat.DoMovement(true))
-                    m_Boat.StopMove(false);
-
                 //Valid Boat Movement
                 else
                 {
@@ -2852,95 +2783,6 @@ namespace Server.Multis
             }
         }
 
-        public bool DoMovement(bool message)
-        {
-            Direction dir;
-            int speed, clientSpeed;
-
-            if (this.Order == BoatOrder.Move)
-            {
-                dir = m_Moving;
-                speed = m_Speed;
-                clientSpeed = m_ClientSpeed;
-            }
-
-            else if (MapItem == null || MapItem.Deleted)
-            {
-                if (message && TillerMan != null)
-                    TillerMan.Say(502513); // I have seen no map, sir.
-
-                return false;
-            }
-
-            else if (this.Map != MapItem.Map || !this.Contains(MapItem.GetWorldLocation()))
-            {
-                if (message && TillerMan != null)
-                    TillerMan.Say(502514); // The map is too far away from me, sir.
-
-                return false;
-            }
-
-            else if ((this.Map != Map.Trammel && this.Map != Map.Felucca) || NextNavPoint < 0 || NextNavPoint >= MapItem.Pins.Count)
-            {
-                if (message && TillerMan != null)
-                    TillerMan.Say(1042551); // I don't see that navpoint, sir.
-
-                return false;
-            }
-
-            else
-            {
-                Point2D dest = (Point2D)MapItem.Pins[NextNavPoint];
-
-                int x, y;
-                MapItem.ConvertToWorld(dest.X, dest.Y, out x, out y);
-
-                int maxSpeed;
-                dir = GetMovementFor(x, y, out maxSpeed);
-
-                if (maxSpeed == 0)
-                {
-                    if (message && this.Order == BoatOrder.Single && TillerMan != null)
-                        TillerMan.Say(1042874, (NextNavPoint + 1).ToString()); // We have arrived at nav point ~1_POINT_NUM~ , sir.
-
-                    if (NextNavPoint + 1 < MapItem.Pins.Count)
-                    {
-                        NextNavPoint++;
-
-                        if (this.Order == BoatOrder.Course)
-                        {
-                            if (message && TillerMan != null)
-                                TillerMan.Say(1042875, (NextNavPoint + 1).ToString()); // Heading to nav point ~1_POINT_NUM~, sir.
-
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                    else
-                    {
-                        NextNavPoint = -1;
-
-                        if (message && this.Order == BoatOrder.Course && TillerMan != null)
-                            TillerMan.Say(502515); // The course is completed, sir.
-
-                        return false;
-                    }
-                }
-
-                if (dir == Left || dir == BackwardLeft || dir == Backward)
-                    return Turn(-2, true);
-
-                else if (dir == Right || dir == BackwardRight)
-                    return Turn(2, true);
-
-                speed = Math.Min(this.Speed, maxSpeed);
-                clientSpeed = 0x4;
-            }
-
-            return Move(dir, speed, clientSpeed, true);
-        }
 
         public bool Move(Direction dir, int speed, int clientSpeed, bool message)
         {
@@ -3127,12 +2969,6 @@ namespace Server.Multis
 
             else
             {
-                if (m_MoveTimer != null && this.Order != BoatOrder.Move)
-                {
-                    m_MoveTimer.Stop();
-                    m_MoveTimer = null;
-                }
-
                 if (m_TurnTimer != null)
                     m_TurnTimer.Stop();
 
@@ -3483,15 +3319,15 @@ namespace Server.Multis
 
                         if (MobileControlType == Multis.MobileControlType.Player)
                         {
-                            attackingBoat.playerShipsSunk++;                           
+                            //attackingBoat.playerShipsSunk++;                           
                         }
 
                         else
                         {
-                            attackingBoat.NPCShipsSunk++;                            
+                            //attackingBoat.NPCShipsSunk++;                            
                         }
 
-                        attackingBoat.doubloonsEarned += finalDoubloonAmount;
+                        //attackingBoat.doubloonsEarned += finalDoubloonAmount;
                     }
 
                     else
@@ -4372,10 +4208,7 @@ namespace Server.Multis
 
             if (m_CannonCooldownTimer != null)
                 m_CannonCooldownTimer.Stop();
-
-            if (m_TemporaryAccessTimer != null)
-                m_TemporaryAccessTimer.Stop();
-
+            
             if (m_ShipDamageEntryTimer != null)
                 m_ShipDamageEntryTimer.Stop();
 
@@ -5235,13 +5068,6 @@ namespace Server.Multis
             boatDeed.m_Owner = Owner;
             boatDeed.m_ShipName = m_ShipName;
 
-            boatDeed.playerShipsSunk = playerShipsSunk;
-            boatDeed.NPCShipsSunk = NPCShipsSunk;
-            boatDeed.doubloonsEarned = doubloonsEarned;
-            boatDeed.netsCast = netsCast;
-            boatDeed.MIBsRecovered = MIBsRecovered;
-            boatDeed.fishCaught = fishCaught;
-
             boatDeed.m_TargetingMode = m_TargetingMode;
             boatDeed.m_TimeLastRepaired = m_TimeLastRepaired;
             boatDeed.m_NextTimeRepairable = m_NextTimeRepairable;
@@ -5436,144 +5262,9 @@ namespace Server.Multis
                 m_TillerMan.Say(1042881, m_ShipName); // This is the ~1_BOAT_NAME~.
         }
 
-        public void GiveNavPoint()
-        {
-            if (TillerMan == null || m_ScuttleInProgress)
-                return;
-
-            if (NextNavPoint < 0)
-                TillerMan.Say(1042882); // I have no current nav point.
-            else
-                TillerMan.Say(1042883, (NextNavPoint + 1).ToString()); // My current destination navpoint is nav ~1_NAV_POINT_NUM~.
-        }
-
-        public void AssociateMap(MapItem map)
-        {
-            if (m_ScuttleInProgress)
-                return;
-
-            if (map is BlankMap)
-            {
-                if (TillerMan != null)
-                    TillerMan.Say(502575); // Ar, that is not a map, tis but a blank piece of paper!
-            }
-            else if (map.Pins.Count == 0)
-            {
-                if (TillerMan != null)
-                    TillerMan.Say(502576); // Arrrr, this map has no course on it!
-            }
-            else
-            {
-                StopMove(false);
-
-                MapItem = map;
-                NextNavPoint = -1;
-
-                if (TillerMan != null)
-                    TillerMan.Say(502577); // A map!
-            }
-        }
-
-        public bool StartCourse(string navPoint, bool single, bool message)
-        {
-            int number = -1;
-
-            int start = -1;
-            for (int i = 0; i < navPoint.Length; i++)
-            {
-                if (Char.IsDigit(navPoint[i]))
-                {
-                    start = i;
-                    break;
-                }
-            }
-
-            if (start != -1)
-            {
-                string sNumber = navPoint.Substring(start);
-
-                if (!int.TryParse(sNumber, out number))
-                    number = -1;
-
-                if (number != -1)
-                {
-                    number--;
-
-                    if (MapItem == null || number < 0 || number >= MapItem.Pins.Count)
-                    {
-                        number = -1;
-                    }
-                }
-            }
-
-            if (number == -1)
-            {
-                if (message && TillerMan != null)
-                    TillerMan.Say(1042551); // I don't see that navpoint, sir.
-
-                return false;
-            }
-
-            NextNavPoint = number;
-            return StartCourse(single, message);
-        }
-
-        public bool StartCourse(bool single, bool message)
-        {
-            if (m_ScuttleInProgress)
-                return false;
-
-            if (Anchored)
-            {
-                if (message && TillerMan != null)
-                    TillerMan.Say(501419); // Ar, the anchor is down sir!
-
-                return false;
-            }
-
-            else if (MapItem == null || MapItem.Deleted)
-            {
-                if (message && TillerMan != null)
-                    TillerMan.Say(502513); // I have seen no map, sir.
-
-                return false;
-            }
-
-            else if (this.Map != MapItem.Map || !this.Contains(MapItem.GetWorldLocation()))
-            {
-                if (message && TillerMan != null)
-                    TillerMan.Say(502514); // The map is too far away from me, sir.
-
-                return false;
-            }
-
-            else if ((this.Map != Map.Trammel && this.Map != Map.Felucca) || NextNavPoint < 0 || NextNavPoint >= MapItem.Pins.Count)
-            {
-                if (message && TillerMan != null)
-                    TillerMan.Say(1042551); // I don't see that navpoint, sir.
-
-                return false;
-            }
-
-            Speed = FastSpeed;
-            Order = single ? BoatOrder.Single : BoatOrder.Course;
-
-            if (m_MoveTimer != null)
-                m_MoveTimer.Stop();
-
-            m_MoveTimer = new MoveTimer(this, TimeSpan.FromSeconds(FastInterval), false);
-            m_MoveTimer.Start();
-
-            if (message && TillerMan != null)
-                TillerMan.Say(501429); // Aye aye sir.
-
-            return true;
-        }
-
         public override bool HandlesOnSpeech { get { return true; } }
 
         private DateTime m_TillermanRelease;
-        private BoatOrderLevel m_OrderLevel;
         private static readonly TimeSpan m_TillermanHoldTime = TimeSpan.FromSeconds(15);
 
         public override void OnSpeech(SpeechEventArgs e)
@@ -5687,19 +5378,8 @@ namespace Server.Multis
 
                 if (((text.IndexOf("target their cannon") != -1) || (text.IndexOf("target their gun") != -1)) && Contains(from))
                 {
-                    if (IsCoOwner(from) || IsOwner(from))
-                    {
-                        SetTargetingMode(TargetingMode.Guns);
-                    }
-                }
-
-                if (text.IndexOf("i wish to grant access") != -1)
-                {
-                    if (IsOwner(from))
-                    {
-                        from.SendMessage("Target the person you wish to grant temporary access to this ship to.");
-                        from.Target = new Server.Multis.BaseBoat.BoatGrantAccessTarget(true, this);
-                    }
+                    if (IsCoOwner(from) || IsOwner(from))                    
+                        SetTargetingMode(TargetingMode.Guns);                    
                 }
 
                 if (text.IndexOf("i wish to throw overboard") != -1)                
@@ -5710,18 +5390,14 @@ namespace Server.Multis
 
                 if (text.IndexOf("i wish to embark") != -1)
                 {
-                    if (IsFriend(from) || IsCoOwner(from) || IsOwner(from) || m_TemporaryAccessPlayers.Contains(from))
-                    {
-                        Embark(from, false);
-                    }
+                    if (IsFriend(from) || IsCoOwner(from) || IsOwner(from) )                    
+                        Embark(from, false);                    
                 }
 
                 if (text.IndexOf("i wish for my followers to embark") != -1)
                 {
-                    if (IsFriend(from) || IsCoOwner(from) || IsOwner(from) || m_TemporaryAccessPlayers.Contains(from))
-                    {
-                        EmbarkFollowers(from);
-                    }
+                    if (IsFriend(from) || IsCoOwner(from) || IsOwner(from))                    
+                        EmbarkFollowers(from);                    
                 }
 
                 if ((text.IndexOf("i wish to add a coowner") != -1) || (text.IndexOf("i wish to add a co-owner") != -1))
@@ -5806,12 +5482,6 @@ namespace Server.Multis
                             case 0x69: StopMove(false); break;
                             case 0x6A: LowerAnchor(true); break;
                             case 0x6B: RaiseAnchor(true); break;
-
-                            case 0x60: GiveNavPoint(); break; // nav
-                            case 0x61: NextNavPoint = 0; StartCourse(false, true); break; // start
-                            case 0x62: StartCourse(false, true); break; // continue
-                            case 0x63: StartCourse(e.Speech, false, true); break; // goto*
-                            case 0x64: StartCourse(e.Speech, true, true); break; // single*
                         }
 
                         e.Handled = true;
@@ -6252,57 +5922,6 @@ namespace Server.Multis
                         this.Stop();
                     }
                 }
-            }
-        }
-
-        private class TemporaryAccessTimer : Timer
-        {
-            private BaseBoat m_Boat;
-
-            public TemporaryAccessTimer(BaseBoat boat)
-                : base(TimeSpan.Zero, TimeSpan.FromSeconds(1))
-            {
-                m_Boat = boat;
-                Priority = TimerPriority.TwoFiftyMS;
-            }
-
-            protected override void OnTick()
-            {
-                int accessCount = m_Boat.m_TemporaryAccessExpirations.Count;
-
-                for (int a = 0; a < accessCount; a++)
-                {
-                    if (m_Boat.m_TemporaryAccessExpirations[a] != null)
-                    {
-                        //Access Instance Expired
-                        if (m_Boat.m_TemporaryAccessExpirations[a] < DateTime.UtcNow)
-                        {
-                            //Find Matching Player
-                            if (m_Boat.m_TemporaryAccessPlayers[a] != null)
-                            {
-                                Mobile accessor = m_Boat.m_TemporaryAccessPlayers[a];
-                                DateTime expiration = m_Boat.m_TemporaryAccessExpirations[a];
-
-                                accessor.SendMessage("Your temporary access to the ship expires.");
-
-                                m_Boat.m_TemporaryAccessPlayers.RemoveAt(a);
-                                m_Boat.m_TemporaryAccessExpirations.RemoveAt(a);
-
-                                break;
-                            }
-
-                            else
-                            {
-                                m_Boat.m_TemporaryAccessExpirations.RemoveAt(a);
-
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (m_Boat.m_TemporaryAccessExpirations.Count == 0)
-                    this.Stop();
             }
         }
 
@@ -7297,13 +6916,6 @@ namespace Server.Multis
             writer.Write(m_Anchored);
             writer.Write(m_ShipName);
 
-            writer.Write((int)playerShipsSunk);
-            writer.Write((int)NPCShipsSunk);
-            writer.Write((int)doubloonsEarned);
-            writer.Write((int)netsCast);
-            writer.Write((int)MIBsRecovered);
-            writer.Write((int)fishCaught);
-
             writer.Write((bool)m_ScuttleInProgress);
 
             writer.Write((byte)m_TargetingMode);
@@ -7315,18 +6927,6 @@ namespace Server.Multis
 
             writer.Write((bool)m_ReducedSpeedMode);
             writer.Write((DateTime)m_ReducedSpeedModeTime);
-
-            writer.WriteEncodedInt(m_TemporaryAccessPlayers.Count);
-            for (int a = 0; a < m_TemporaryAccessPlayers.Count; a++)
-            {
-                writer.Write((Mobile)m_TemporaryAccessPlayers[a]);
-            }
-
-            writer.WriteEncodedInt(m_TemporaryAccessExpirations.Count);
-            for (int a = 0; a < m_TemporaryAccessExpirations.Count; a++)
-            {
-                writer.Write((DateTime)m_TemporaryAccessExpirations[a]);
-            }
 
             writer.Write(m_ShipDamageEntries.Count);
             foreach (ShipDamageEntry entry in m_ShipDamageEntries)
@@ -7341,18 +6941,6 @@ namespace Server.Multis
             writer.Write(m_ShipSpawner);
 
             writer.Write(m_BoatCombatant);
-
-            writer.Write(m_CurrentWaypoint);
-
-            writer.Write((int)m_WaypointOrder);
-            writer.Write(m_NextWaypointAction);
-
-            int visitedWaypoints = m_VisitedWaypoints.Count;
-            writer.Write(visitedWaypoints);
-            for (int a = 0; a < visitedWaypoints; a++)
-            {
-                writer.Write(m_VisitedWaypoints[a]);
-            }
 
             int upgradesCount = m_Upgrades.Count;
             writer.Write(upgradesCount);
@@ -7381,7 +6969,6 @@ namespace Server.Multis
             writer.Write(m_LastActivated);
 
             //Version 6
-            writer.WriteMobileList(m_ExtraMobiles);
             writer.WriteMobileList(m_EmbarkedMobiles);
 
             //Version 7
@@ -7442,8 +7029,6 @@ namespace Server.Multis
             int version = reader.ReadInt();
 
             m_Cannons = new List<Custom.Pirates.BaseCannon>();
-            m_TemporaryAccessPlayers = new List<Mobile>();
-            m_TemporaryAccessExpirations = new List<DateTime>();
             m_ShipDamageEntries = new List<ShipDamageEntry>();
 
             //Version 0
@@ -7489,13 +7074,6 @@ namespace Server.Multis
             m_Anchored = reader.ReadBool();
             m_ShipName = reader.ReadString();
 
-            playerShipsSunk = reader.ReadInt();
-            NPCShipsSunk = reader.ReadInt();
-            doubloonsEarned = reader.ReadInt();
-            netsCast = reader.ReadInt();
-            MIBsRecovered = reader.ReadInt();
-            fishCaught = reader.ReadInt();
-
             m_ScuttleInProgress = reader.ReadBool();
 
             m_TargetingMode = (TargetingMode)reader.ReadByte();
@@ -7519,14 +7097,6 @@ namespace Server.Multis
                 else
                     m_ScuttleTimer.Start();
             }
-
-            int temporaryAccessPlayersCount = reader.ReadEncodedInt();
-            for (int i = 0; i < temporaryAccessPlayersCount; i++)
-                m_TemporaryAccessPlayers.Add((PlayerMobile)reader.ReadMobile());
-
-            int temporaryAccessExpirationsCount = reader.ReadEncodedInt();
-            for (int i = 0; i < temporaryAccessExpirationsCount; i++)
-                m_TemporaryAccessExpirations.Add(reader.ReadDateTime());
 
             int shipDamageEntriesCount = reader.ReadInt();
             for (int a = 0; a < shipDamageEntriesCount; a++)
@@ -7563,23 +7133,9 @@ namespace Server.Multis
 
             if (boatItem == null)
                 m_BoatCombatant = null;
+
             else
                 m_BoatCombatant = (BaseBoat)boatItem;
-
-            m_CurrentWaypoint = (WayPoint)reader.ReadItem();
-
-            m_WaypointOrder = (WayPointOrder)reader.ReadInt();
-            m_NextWaypointAction = reader.ReadDateTime();
-
-            m_VisitedWaypoints = new List<WayPoint>();
-            int visitedWaypoints = reader.ReadInt();
-            for (int a = 0; a < visitedWaypoints; a++)
-            {
-                WayPoint visitedWaypoint = reader.ReadItem() as WayPoint;
-
-                if (m_VisitedWaypoints.IndexOf(visitedWaypoint) < 0)
-                    m_VisitedWaypoints.Add(visitedWaypoint);
-            }
 
             m_Upgrades = new List<BaseBoatUpgradeDeed>();
             int upgradesCount = reader.ReadInt();
@@ -7624,12 +7180,10 @@ namespace Server.Multis
                 m_LastActivated = reader.ReadDateTime();
 
             //Version 6
-            m_ExtraMobiles = new ArrayList();
             m_EmbarkedMobiles = new ArrayList();
 
             if (version >= 6)
             {
-                m_ExtraMobiles = reader.ReadMobileList();
                 m_EmbarkedMobiles = reader.ReadMobileList();
             }
 

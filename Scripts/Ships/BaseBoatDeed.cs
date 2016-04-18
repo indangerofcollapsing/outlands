@@ -284,23 +284,16 @@ namespace Server.Multis
                         }
 
                         //Set Boat Properties Stored in Deed
-                        boat.m_CoOwners = m_CoOwners;
-                        boat.m_Friends = m_Friends;
+                        boat.CoOwners = m_CoOwners;
+                        boat.Friends = m_Friends;
                         boat.GuildAsFriends = GuildAsFriends;
 
                         boat.Owner = from;
                         boat.ShipName = m_ShipName;
 
-                        boat.playerShipsSunk = playerShipsSunk;
-                        boat.NPCShipsSunk = NPCShipsSunk;
-                        boat.doubloonsEarned = doubloonsEarned;
-                        boat.netsCast = netsCast;
-                        boat.MIBsRecovered = MIBsRecovered;
-                        boat.fishCaught = fishCaught;
-
-                        boat.m_TargetingMode = m_TargetingMode;
-                        boat.m_TimeLastRepaired = m_TimeLastRepaired;
-                        boat.m_NextTimeRepairable = m_NextTimeRepairable;
+                        boat.TargetingMode = m_TargetingMode;
+                        boat.TimeLastRepaired = m_TimeLastRepaired;
+                        boat.NextTimeRepairable = m_NextTimeRepairable;
 
                         boat.m_ActiveAbilityExpiration = m_ActiveAbilityExpiration;
                         boat.m_NextActiveAbilityAllowed = m_NextActiveAbilityAllowed;

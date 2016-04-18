@@ -65,8 +65,8 @@ namespace Server.Multis
         {
             base.ConfigureShip();
 
-            m_PPlank.Visible = false;
-            m_SPlank.Visible = false;
+            PPlank.Visible = false;
+            SPlank.Visible = false;
         }
 
 		[Constructable]

@@ -485,8 +485,6 @@ namespace Server.Engines.Harvest
                         {
                             if (ownerBoat.IsFriend(player) || ownerBoat.IsOwner(player) || ownerBoat.IsCoOwner(player))
                             {
-                                ownerBoat.MIBsRecovered++;
-
                                 double doubloonValue = Utility.RandomMinMax(25, 50);
                                 
                                 int finalDoubloonAmount = (int)doubloonValue;                                
@@ -518,7 +516,7 @@ namespace Server.Engines.Harvest
                                 if (shipOwner)
                                 {                                    
                                     player.PirateScore += finalDoubloonAmount;
-                                    ownerBoat.doubloonsEarned += finalDoubloonAmount * 2;
+                                    //ownerBoat.doubloonsEarned += finalDoubloonAmount * 2;
 
                                     if (bankDoubloonsValid && holdPlacementValid)
                                         player.SendMessage("You've received " + (finalDoubloonAmount * 2).ToString() + " doubloons for completing a message in a bottle! They have been evenly split between your bank box and your ship's hold.");
@@ -532,7 +530,7 @@ namespace Server.Engines.Harvest
 
                                 else
                                 {
-                                    ownerBoat.doubloonsEarned += finalDoubloonAmount;
+                                    //ownerBoat.doubloonsEarned += finalDoubloonAmount;
                                     player.PirateScore += finalDoubloonAmount;
 
                                     if (bankDoubloonsValid)

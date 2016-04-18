@@ -685,7 +685,7 @@ namespace Server.Gumps
 
             AddPage(0);
 
-            if (m_Boat.IsFriend(from) || m_Boat.IsCoOwner(from) || m_Boat.IsOwner(from) || m_Boat.m_TemporaryAccessPlayers.Contains(from))
+            if (m_Boat.IsFriend(from) || m_Boat.IsCoOwner(from) || m_Boat.IsOwner(from))
             {
                 AddBackground(0, 0, 420, 430, 5054);
                 AddBackground(10, 10, 400, 410, 3000);
@@ -708,7 +708,7 @@ namespace Server.Gumps
                 }
             }
 
-            if (!m_Boat.IsFriend(from) && !m_Boat.IsCoOwner(from) && !m_Boat.IsOwner(from) && !m_Boat.m_TemporaryAccessPlayers.Contains(from))
+            if (!m_Boat.IsFriend(from) && !m_Boat.IsCoOwner(from) && !m_Boat.IsOwner(from))
                 return;
 
             AddHtml(55, 103, 75, 20, "Ship Info", false, false);
@@ -741,6 +741,7 @@ namespace Server.Gumps
             AddHtml(25, 150, 200, 20, "Items in Hold:", false, false);
             AddHtml(145, 150, 50, 20, m_Boat.Hold.TotalItems.ToString(), false, false);
 
+            /*
             //Left: Combat Stats
             AddHtml(25, 175, 200, 20, "Player Ships Sunk:", false, false);
             AddHtml(145, 175, 150, 20, m_Boat.playerShipsSunk.ToString(), false, false);
@@ -760,6 +761,7 @@ namespace Server.Gumps
 
             AddHtml(220, 225, 275, 20, "Fish Caught:", false, false);
             AddHtml(325, 225, 150, 20, m_Boat.fishCaught.ToString(), false, false);
+            */
 
             //Ship Stats
             int hullPercent = (int)(Math.Floor(100 * (float)boat.HitPoints / (float)boat.MaxHitPoints));
@@ -839,7 +841,7 @@ namespace Server.Gumps
 
             Mobile from = sender.Mobile;
 
-            if (!(m_Boat.IsFriend(from) || m_Boat.IsCoOwner(from) || m_Boat.IsOwner(from) || m_Boat.m_TemporaryAccessPlayers.Contains(from)))
+            if (!(m_Boat.IsFriend(from) || m_Boat.IsCoOwner(from) || m_Boat.IsOwner(from)))
                 return;
 
             switch (info.ButtonID)
@@ -1011,7 +1013,7 @@ namespace Server.Gumps
                         if (!from.Alive)
                             from.SendMessage("You must be alive to do this.");
 
-                        else if (m_Boat.IsOwner(from) || m_Boat.IsCoOwner(from) || m_Boat.IsFriend(from) || m_Boat.m_TemporaryAccessPlayers.Contains(from))
+                        else if (m_Boat.IsOwner(from) || m_Boat.IsCoOwner(from) || m_Boat.IsFriend(from))
                             m_Boat.Embark(from, false);                        
 
                         else                        
@@ -1028,7 +1030,7 @@ namespace Server.Gumps
                         if (!from.Alive)
                             from.SendMessage("You must be alive to do this.");
 
-                        else if (m_Boat.IsOwner(from) || m_Boat.IsCoOwner(from) || m_Boat.IsFriend(from) || m_Boat.m_TemporaryAccessPlayers.Contains(from))                        
+                        else if (m_Boat.IsOwner(from) || m_Boat.IsCoOwner(from) || m_Boat.IsFriend(from))                        
                             m_Boat.EmbarkFollowers(from);                        
 
                         else                        
@@ -1076,17 +1078,6 @@ namespace Server.Gumps
 
                         else                        
                             from.SendMessage("Only the owner of this boat may dry dock it");                        
-
-                        break;
-                    }
-
-                case 17: // Grant temporary access
-                    {
-                        if (m_Boat.IsOwner(from))
-                        {
-                            from.SendMessage("Target the person you wish to grant temporary access to this ship to");
-                            from.Target = new Server.Multis.BaseBoat.BoatGrantAccessTarget(true, m_Boat);
-                        }
 
                         break;
                     }
@@ -1353,8 +1344,8 @@ namespace Server.Gumps
                 return;
 
             //Make Sure Owner is Always In Participating Mobiles
-            if (!m_Boat.ParticipatingMobiles.Contains(m_Boat.m_Owner))
-                m_Boat.ParticipatingMobiles.Add(m_Boat.m_Owner);
+            if (!m_Boat.ParticipatingMobiles.Contains(m_Boat.Owner))
+                m_Boat.ParticipatingMobiles.Add(m_Boat.Owner);
 
             switch (m_DivideMode)
             {

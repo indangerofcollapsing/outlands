@@ -161,8 +161,6 @@ namespace Server.Items
                 {
                     if (ownerBoat.IsFriend(player) || ownerBoat.IsOwner(player) || ownerBoat.IsCoOwner(player))
                     {
-                        ownerBoat.netsCast++;
-
                         double doubloonValue = Utility.RandomMinMax(5, 10);
 
                         int finalDoubloonAmount = (int)doubloonValue;
@@ -194,7 +192,7 @@ namespace Server.Items
                         if (shipOwner)
                         {
                             player.PirateScore += finalDoubloonAmount;
-                            ownerBoat.doubloonsEarned += finalDoubloonAmount * 2;
+                            //ownerBoat.doubloonsEarned += finalDoubloonAmount * 2;
 
                             if (bankDoubloonsValid && holdPlacementValid)
                                 player.SendMessage("You've received " + (finalDoubloonAmount * 2).ToString() + " doubloons for using a net! They have been evenly split between your bank box and your ship's hold.");
@@ -209,7 +207,7 @@ namespace Server.Items
                         else
                         {
                             player.PirateScore += finalDoubloonAmount;
-                            ownerBoat.doubloonsEarned += finalDoubloonAmount;
+                            //ownerBoat.doubloonsEarned += finalDoubloonAmount;
 
                             if (bankDoubloonsValid)
                                 player.SendMessage("You've earned " + finalDoubloonAmount.ToString() + " doubloons for using a net! They have been placed in your bank box.");

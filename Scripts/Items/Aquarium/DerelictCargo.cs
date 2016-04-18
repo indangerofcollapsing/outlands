@@ -142,7 +142,7 @@ namespace Server.Items
                             player.SendSound(doubloonPile.GetDropSound());
                             doubloonPile.Delete();
 
-                            playerBoat.doubloonsEarned += doubloonValue;
+                            //playerBoat.doubloonsEarned += doubloonValue;
 
                             player.SendMessage("You have recovered " + doubloonValue.ToString() + " doubloons worth of materials in the cargo! The coins have been placed in your ship's hold.");
 
