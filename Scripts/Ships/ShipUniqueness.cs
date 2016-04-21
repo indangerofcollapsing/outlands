@@ -204,59 +204,7 @@ namespace Server.Items
                 DamageFromPlayerBoatScalar = 2.0;
 
                 boat.DoubloonValue = 125 + (Utility.RandomMinMax(50 * (shipLevel - 1), 75 * (shipLevel - 1)));             
-            }
-
-            //Outfitting
-            BaseBoatOutfittingUpgradeDeed outfitting = boat.GetOutfittingUpgrade();
-
-            if (outfitting != null)
-            {
-                switch (outfitting.Outfitting)
-                {
-                    case OutfittingType.Runner:
-                        BaseMaxSailPoints = (int)(Math.Round((double)BaseMaxSailPoints * 1.5));
-
-                        BaseFastInterval *= 0.8;
-                        BaseFastDriftInterval *= 0.8;
-                        BaseSlowInterval *= 0.8;
-                        BaseSlowDriftInterval *= 0.8;
-                    break;
-
-                    case OutfittingType.Merchant:
-                        BaseMaxHitPoints = (int)(Math.Round((double)BaseMaxHitPoints * 1.1));
-                        BaseMaxSailPoints = (int)(Math.Round((double)BaseMaxSailPoints * 1.5));
-
-                        BaseFastInterval *= 0.9;
-                        BaseFastDriftInterval *= 0.9;
-                        BaseSlowInterval *= 0.9;
-                        BaseSlowDriftInterval *= 0.9;
-                    break;
-
-                    case OutfittingType.Hunter:
-                        BaseFastInterval *= 0.9;
-                        BaseFastDriftInterval *= 0.9;
-                        BaseSlowInterval *= 0.9;
-                        BaseSlowDriftInterval *= 0.9;
-
-                        CannonReloadTimeScalar *= 0.5;
-                        CannonAccuracyModifer *= 1.1; 
-                    break;
-
-                    case OutfittingType.Destroyer:
-                        BaseMaxGunPoints = (int)(Math.Round((double)BaseMaxGunPoints * 1.5));
-
-                        CannonReloadTimeScalar *= 0.75;
-                        CannonRangeScalar *= 1.25;
-                        CannonDamageScalar *= 1.1;
-                    break;
-
-                    case OutfittingType.Dreadnought:
-                        BaseMaxHitPoints = (int)(Math.Round((double)BaseMaxHitPoints * 1.2));
-                        BaseMaxSailPoints = (int)(Math.Round((double)BaseMaxSailPoints * 1.5));
-                        BaseMaxGunPoints = (int)(Math.Round((double)BaseMaxGunPoints * 1.5));
-                    break;
-                }
-            }
+            }            
 
             boat.BaseMaxHitPoints = BaseMaxHitPoints;
             boat.BaseMaxSailPoints = BaseMaxSailPoints;

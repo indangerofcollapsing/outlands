@@ -101,6 +101,7 @@ namespace Server.Items
                 {
                     if (p is Item)
                     {
+                        /*
                         //If Targeted a Cannon on a Ship: Override Location to Ship Location For Later Lookup
                         Custom.Pirates.BaseCannon cannon = p as Custom.Pirates.BaseCannon;
 
@@ -116,7 +117,10 @@ namespace Server.Items
                         }
 
                         else                       
-                            p = ((Item)p).GetWorldTop();                                         
+                            p = ((Item)p).GetWorldTop(); 
+                      */
+
+                        p = ((Item)p).GetWorldTop(); 
                     }
 
                     else if (p is Mobile)                    
@@ -162,17 +166,7 @@ namespace Server.Items
                         hullPercentFactor = 0;                    
 
                     double finalSuccessChance = hullPercentFactor * baseSuccessChance;
-
-                    //Active Ability: Boarding Hooks
-                    if (fromBoat != null)
-                    {
-                        if (fromBoat.IsFriend(from) || fromBoat.IsCoOwner(from) || fromBoat.IsOwner(from))
-                        {
-                            if (fromBoat.m_ActiveAbility == ActiveAbilityType.BoardingHooks && fromBoat.m_ActiveAbilityExpiration > DateTime.UtcNow)
-                                finalSuccessChance *= (1 + BaseBoat.BoardingHooksBonus);
-                        }
-                    }
-
+                    
                     if (targetBoat.MobileControlType != MobileControlType.Player);
                         finalSuccessChance *= m_NPCShipBonusMultiplier;
                     

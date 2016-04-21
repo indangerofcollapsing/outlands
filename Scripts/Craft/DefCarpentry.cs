@@ -351,8 +351,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Hammer), "Hammer", 1, "You require a hammer to construct a ship repair tool");
             AddRes(index, typeof(Saw), "Saw", 1, "You require a saw to construct a ship repair tool");
 
-            index = AddCraft(1, typeof(DockDeed), "Ship Items", "Guild Dock Deed", 95, 100, typeof(Board), "Board", 300, "You do not have the necessary boards to construct the guild dock deed.");
-
             index = AddCraft(1, typeof(SmallBoatDeed), "Ship Items", "Small Boat Deed", 70.0, 75.0, typeof(ShipParts), "Ship Parts", 10, "You do not have the neccessary number of ship parts to construct that ship.");
             index = AddCraft(1, typeof(SmallDragonBoatDeed), "Ship Items", "Small Dragon Boat Deed", 70.0, 75.0, typeof(ShipParts), "Ship Parts", 11, "You do not have the neccessary number of ship parts to construct that ship.");
             index = AddCraft(1, typeof(MediumBoatDeed), "Ship Items", "Medium Boat Deed", 80.0, 85.0, typeof(ShipParts), "Ship Parts", 12, "You do not have the neccessary number of ship parts to construct that ship.");
@@ -368,6 +366,7 @@ namespace Server.Engines.Craft
             index = AddCraft(1, typeof(CarrackFishermansBoatDeed), "Ship Items", "Fisherman's Carrack Deed ", 90.0, 95.0, typeof(ShipParts), "Ship Parts", 10, "You do not have the neccessary number of ship parts to construct that ship.");
             index = AddCraft(1, typeof(GalleonFishermansBoatDeed), "Ship Items", "Fisherman's Galleon Deed", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 15, "You do not have the neccessary number of ship parts to construct that ship.");
 
+            /*
             index = AddCraft(1, typeof(CrowsNestUpgrade), "Ship Items", "Ship Upgrade: Crows Nest", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 1, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(ExpandedHoldUpgrade), "Ship Items", "Ship Upgrade: Expanded Hold", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 1, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(FishingTrawlerUpgrade), "Ship Items", "Ship Upgrade: Fishing Trawler", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 1, "You do not have the neccessary number of ship parts to construct that upgrade.");
@@ -389,7 +388,8 @@ namespace Server.Engines.Craft
             index = AddCraft(1, typeof(FishermanThemeUpgrade), "Ship Items", "Ship Theme: Fisherman", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 4, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(PirateThemeUpgrade), "Ship Items", "Ship Theme: Pirate", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 4, "You do not have the neccessary number of ship parts to construct that upgrade.");
             index = AddCraft(1, typeof(UndeadThemeUpgrade), "Ship Items", "Ship Theme: Undead", 95.0, 100.0, typeof(ShipParts), "Ship Parts", 4, "You do not have the neccessary number of ship parts to construct that upgrade.");
-
+            */
+            
             //Misc
             index = AddCraft(1, typeof(CarpentryDungeonMould), "Misc", "Carpentry Dungeon Mould", 90, 105, typeof(Board), "Board", 250, "You do not have the neccessary boards to construct that.");
             AddRes(index, typeof(GhoulHide), "Ghoul Hide", 3, "You do not have the crafting components required to make this.");

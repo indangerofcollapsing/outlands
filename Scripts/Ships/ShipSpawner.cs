@@ -417,7 +417,7 @@ namespace Server.Items
         {
             m_Boats.Remove(boat);
 
-            foreach (BaseBoat checkboat in BaseBoat.AllBoatInstances)
+            foreach (BaseBoat checkboat in BaseBoat.m_Instances)
             {
                 if (checkboat != null)
                 {

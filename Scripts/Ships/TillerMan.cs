@@ -90,8 +90,8 @@ namespace Server.Items
             //Ship Gump  
             if (m_Boat.Owner != null)
             {
-                if (!m_Boat.m_ScuttleInProgress)
-                    from.SendGump(new BoatGump(from, m_Boat));
+                //if (!m_Boat.m_ScuttleInProgress)
+                    //from.SendGump(new BoatGump(from, m_Boat));
             }
         }
 

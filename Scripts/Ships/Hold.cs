@@ -26,10 +26,7 @@ namespace Server.Items
         public Hold(BaseBoat boat): base(0x3EAE)
         {
             m_Boat = boat;
-            Movable = false;
-
-            if (m_Boat.CheckForUpgrade(typeof(ExpandedHoldUpgrade)))
-                MaxItems = 150;                     
+            Movable = false;                  
         }
 
         public Hold(Serial serial): base(serial)
@@ -188,10 +185,7 @@ namespace Server.Items
                 double lockpickingSkill = from.Skills[SkillName.Lockpicking].Value;
                 double successChance = (lockpickingSkill - 95) * .02; //10% At GM
                 double chanceResult = Utility.RandomDouble();
-                
-                if ( m_Boat.CheckForUpgrade(typeof(SecureHoldUpgrade)))
-                    successChance *= .50;
-                
+                                
                 //Succeed Lockpicking
                 if (chanceResult < successChance)
                 {
@@ -248,20 +242,17 @@ namespace Server.Items
             switch (version)
             {
                 case 0:
-                    {
-                        m_Boat = reader.ReadItem() as BaseBoat;
+                {
+                    m_Boat = reader.ReadItem() as BaseBoat;
 
-                        if (m_Boat == null || Parent != null)
-                            Delete();
+                    if (m_Boat == null || Parent != null)
+                        Delete();
 
-                        Movable = false;
+                    Movable = false;
 
-                        break;
-                    }
+                    break;
+                }
             }
-
-            if (m_Boat.CheckForUpgrade(typeof(ExpandedHoldUpgrade)))
-                MaxItems = 150;
         }
     }
 }

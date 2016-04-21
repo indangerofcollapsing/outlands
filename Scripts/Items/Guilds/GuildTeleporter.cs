@@ -73,68 +73,31 @@ namespace Server.Items
 			{
 				from.SendLocalizedMessage( 1042001 ); // That must be in your pack for you to use it.
 			}
+
 			else if ( stone == null || stone.Deleted || stone.Guild == null || stone.Guild.Teleporter != this )
 			{
 				from.SendLocalizedMessage( 501197 ); // This teleporting object can not determine what guildstone to teleport
 			}
-			else
-			{
-                BaseGuildDock dock;
-                BaseGuildDock.m_GuildDockDictionary.TryGetValue(stone.Guild, out dock);
-                if (dock == null || dock.Deleted)
-                {
-                    BaseHouse house = BaseHouse.FindHouseAt(from);
 
-                    if (house == null)
-                    {
-                        from.SendLocalizedMessage(501138); // You can only place a guildstone in a house.
-                    }
-                    else if (!house.IsOwner(from))
-                    {
-                        from.SendLocalizedMessage(501141); // You can only place a guildstone in a house you own!
-                    }
-                    else if (house.FindGuildstone() != null && house.FindGuildstone() != m_Stone)
-                    {
-                        from.SendLocalizedMessage(501142);//Only one guildstone may reside in a given house.
-                    }
-                    else
-                    {
-                        m_Stone.MoveToWorld(from.Location, from.Map);
-                        Delete();
-                        stone.Guild.Teleporter = null;
-                    }
-                }
+			else
+			{               
+                BaseHouse house = BaseHouse.FindHouseAt(from);
+
+                if (house == null)                    
+                    from.SendLocalizedMessage(501138); // You can only place a guildstone in a house.
+                    
+                else if (!house.IsOwner(from))                    
+                    from.SendLocalizedMessage(501141); // You can only place a guildstone in a house you own!
+                    
+                else if (house.FindGuildstone() != null && house.FindGuildstone() != m_Stone)                    
+                    from.SendLocalizedMessage(501142);//Only one guildstone may reside in a given house.
+                    
                 else
                 {
-                    if (from.InRange(dock.Location, 35))
-                    {
-                        BaseHouse house = BaseHouse.FindHouseAt(from);
-
-                        if (house == null)
-                        {
-                            from.SendLocalizedMessage(501138); // You can only place a guildstone in a house.
-                        }
-                        else if (!house.IsOwner(from))
-                        {
-                            from.SendLocalizedMessage(501141); // You can only place a guildstone in a house you own!
-                        }
-                        else if (house.FindGuildstone() != null)
-                        {
-                            from.SendLocalizedMessage(501142);//Only one guildstone may reside in a given house.
-                        }
-                        else
-                        {
-                            m_Stone.MoveToWorld(from.Location, from.Map);
-                            Delete();
-                            stone.Guild.Teleporter = null;
-                        }
-                    }
-                    else
-                    {
-                        from.SendMessage("Your guildstone must be placed closer to your Guild Dock.");
-                    }
-
-                }
+                    m_Stone.MoveToWorld(from.Location, from.Map);
+                    Delete();
+                    stone.Guild.Teleporter = null;
+                }                
 			}
 		}
 	}

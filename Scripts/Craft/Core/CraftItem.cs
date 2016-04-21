@@ -967,11 +967,6 @@ namespace Server.Engines.Craft
 
         public bool IgnoreMinChanceToGain(Type typeRes)
         {
-            if (typeRes == typeof(LightCannonDeed) ||
-                typeRes == typeof(HeavyCannonDeed) ||
-                typeRes == typeof(DockDeed))
-                return true;
-
             return false;
         }
 

@@ -139,7 +139,7 @@ namespace Server.Spells.Fourth
 		{
 			PlayerMobile pm = Caster as PlayerMobile;
 
-            BaseBoat boat = Server.Multis.BaseBoat.FindBoatAt(loc, map);
+            BaseBoat boat = BaseBoat.FindBoatAt(loc, map);
 
             WarpBlockerTotem recallBlocker = WarpBlockerTotem.RecallBlockerTriggered(Caster, WarpBlockerTotem.MovementMode.RecallIn, loc, map);
 

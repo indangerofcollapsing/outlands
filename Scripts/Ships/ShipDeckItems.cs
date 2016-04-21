@@ -24,63 +24,7 @@ namespace Server.Items
             if (boat is CarrackBoat) shipLevel = 4;
             if (boat is GalleonBoat) shipLevel = 5;
 
-            int deckItems = 5 + (shipLevel * 3);
-
-            //Apply Theme Upgrade
-            if (boat.MobileControlType == MobileControlType.Player)
-            {
-                BaseBoatThemeUpgradeDeed themUpgrade = boat.GetThemeUpgrade();
-
-                if (themUpgrade == null)
-                    return;
-
-                for (int a = 0; a < deckItems; a++)
-                {
-                    Item item = null;
-
-                    switch (themUpgrade.Theme)
-                    {
-                        case Theme.BritainNavy: item = GetRandomBritainNavalForcesShipItem(); break;
-                        case Theme.Pirate: item = GetRandomPirateShipItem(); break;
-                        case Theme.Fisherman: item = GetRandomFishermanShipItem(); break;
-                        case Theme.Undead: item = GetRandomUndeadShipItem(); break;
-                        case Theme.Derelict: item = GetRandomDerelictShipItem(); break;
-                        case Theme.Treasure: item = GetRandomTreasureShipItem(); break;
-                    }
-
-                    if (item != null)
-                    {
-                        item.ShipItem = true;
-                        item.MoveToWorld(boat.GetRandomEmbarkLocation(false), boat.Map);
-
-                        boat.m_ShipItems.Add(item);
-                    }
-                }
-            }
-
-            else
-            {
-                for (int a = 0; a < deckItems; a++)
-                {
-                    Item item = null;
-
-                    switch (boat.MobileFactionType)
-                    {
-                        case MobileFactionType.Fishing: item = GetRandomFishermanShipItem(); break;
-                        case MobileFactionType.Pirate: item = GetRandomPirateShipItem(); break;
-                        case MobileFactionType.Britain: item = GetRandomBritainNavalForcesShipItem(); break;
-                        case MobileFactionType.Orc: item = GetRandomPirateShipItem(); break;
-                        case MobileFactionType.Orghereim: item = GetRandomBritainNavalForcesShipItem(); break;
-                        case MobileFactionType.Undead: item = GetRandomUndeadShipItem(); break;
-                    }
-
-                    if (item != null)
-                    {
-                        item.ShipItem = true;
-                        item.MoveToWorld(boat.GetRandomEmbarkLocation(false), boat.Map);
-                    }
-                }
-            }
+            int deckItems = 5 + (shipLevel * 3);            
         }
 
         public static Item GetRandomTreasureShipItem()

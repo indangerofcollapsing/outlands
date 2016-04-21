@@ -820,14 +820,7 @@ namespace Server.Items
 
             bool doubleTimeActive = false;
             double doubleTimeBonus = 0;
-
-            //Epic Ability: Double Time
-            if (boat.m_EpicAbility == EpicAbilityType.DoubleTime && boat.m_EpicAbilityExpiration > DateTime.UtcNow)
-            {
-                doubleTimeBonus = 1;
-                doubleTimeActive = true;
-            }
-
+            
             int repairAssistants = 0;
             double bonusPerRepairAssistant = .25;           
 
@@ -910,12 +903,6 @@ namespace Server.Items
                 //Still in Ship Combat
                 else
                     boat.NextTimeRepairable = DateTime.UtcNow + InCombatRepairCooldown;
-            }
-
-            if (doubleTimeActive)
-            {
-                boat.m_EpicAbility = EpicAbilityType.None;
-                boat.m_EpicAbilityExpiration = DateTime.MinValue;
             }
 
             CurrentCharges--;                     

@@ -228,7 +228,7 @@ namespace Server.Custom
 
             List<BaseBoat> m_Boats = new List<BaseBoat>();
 
-            foreach (BaseBoat boat in BaseBoat.AllBoatInstances)
+            foreach (BaseBoat boat in BaseBoat.m_Instances)
             {
                 if (boat == null) continue;
                 if (boat.Deleted) continue;

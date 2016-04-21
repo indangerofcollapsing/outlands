@@ -22,7 +22,6 @@ namespace Server.Mobiles
 			public InternalBuyInfo() 
 			{ 
 				Add( new GenericBuyInfo( typeof( FishingPole ), 15, 20, 0xDC0, 0 ) );
-                Add( new GenericBuyInfo( typeof( LobsterTrap), 6, 40, 0x44D0, 0));
 			} 
 		} 
 

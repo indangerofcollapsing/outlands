@@ -135,6 +135,7 @@ namespace Server.Engines.Harvest
             if (map == null || map == Map.Internal)
                 return false;
 
+            /*
             Sector sector = map.GetSector(p.X, p.Y);
 
             for (int i = 0; i < sector.Multis.Count; ++i)
@@ -146,6 +147,7 @@ namespace Server.Engines.Harvest
                     return true;
                 }
             }
+            */
 
             return false;
         }
@@ -162,17 +164,7 @@ namespace Server.Engines.Harvest
 
             BaseBoat ownerBoat = BaseBoat.FindBoatAt(from.Location, from.Map);
             double chanceModifier = 1;
-
-            //Crows Nest on Boat
-            if (ownerBoat != null)
-            {
-                if (ownerBoat.IsFriend(from) || ownerBoat.IsCoOwner(from) || ownerBoat.IsOwner(from))
-                {
-                    if (ownerBoat.CheckForUpgrade(typeof(FishingTrawlerUpgrade)))
-                        chanceModifier = 1.25;
-                }
-            }
-
+            
             for (int i = 0; i < m_MutateTable.Length; ++i)
             {
                 MutateEntry entry = m_MutateTable[i];
@@ -233,28 +225,7 @@ namespace Server.Engines.Harvest
 
         public override Item Construct(Type type, Mobile from, Item _i, HarvestDefinition _d, HarvestBank _b, HarvestResource _r)
         {
-            if (type == typeof(SunkenShipContainer))
-            {
-                /*
-                SunkenShipContainer c = Custom.Pirates.PirateFishing.OnFish(from.Location); //if there has been a sunken ship in this grid location...
-
-                if (c != null)
-                    return c;
-
-                else
-                {
-                    switch (Utility.RandomMinMax(1, 4))
-                    {
-                        case 1: { return new PrizedFish(); }
-                        case 2: { return new WondrousFish(); }
-                        case 3: { return new TrulyRareFish(); }
-                        case 4: { return new PeculiarFish(); }
-                    }
-                }
-                */
-            }
-
-            else if (type == typeof(TreasureMap))
+            if (type == typeof(TreasureMap))
             {
                 int level = 1;
 
@@ -601,7 +572,7 @@ namespace Server.Engines.Harvest
                 return true;
             }
 
-            if (item is WoodenChest || item is MetalGoldenChest || item is SunkenShipContainer)
+            if (item is WoodenChest || item is MetalGoldenChest)
                 placeAtFeet = true;
 
             from.PlaySound(0x025);
@@ -611,10 +582,7 @@ namespace Server.Engines.Harvest
 
         public override void SendSuccessTo(Mobile from, Item item, HarvestResource resource)
         {
-            if (item is SunkenShipContainer)            
-                from.SendMessage("You pull up the contents of a sunken ship's hold!");
-
-            else if (item is RawLargeFish)            
+           if (item is RawLargeFish)            
                 from.SendLocalizedMessage(1042635); // Your fishing pole bends as you pull a big fish from the depths!            
 
             else if (item is WoodenChest || item is MetalGoldenChest)            

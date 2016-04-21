@@ -113,6 +113,7 @@ namespace Server.Custom.Donations
                 new DonationItem("Light Pink Pet Dye", "Tired of the same old Hellhound? Change it up! 5 Charges. <i>Nonblessed</i>", 4033, 2633, 1000, false, typeof(PetDye)),
                 new DonationItem("Bright Pink Pet Dye", "Tired of the same old Drake? Change it up! 5 Charges. <i>Nonblessed</i>", 4033, 329, 1000, false, typeof(PetDye)),
 
+                /*
                 new DonationItem("Black Ship Paint", "Looking to sail the seas in style? Paint that boat! <i>Nonblessed</i>", 5363, 2019, 500, false, typeof(BlackPaintUpgrade)),
                 new DonationItem("Blue Ship Paint", "Looking to sail the seas in style? Paint that boat! <i>Nonblessed</i>", 5363, 399, 500, false, typeof(BluePaintUpgrade)),
                 new DonationItem("Bone Ship Paint", "Looking to sail the seas in style? Paint that boat! <i>Nonblessed</i>", 5363, 2107, 500, false, typeof(BonePaintUpgrade)),
@@ -129,6 +130,7 @@ namespace Server.Custom.Donations
                 new DonationItem("Red Ship Paint", "Looking to sail the seas in style? Paint that boat! <i>Nonblessed</i>", 5363, 1775, 500, false, typeof(RedPaintUpgrade)),
                 new DonationItem("Sea Green Ship Paint", "Looking to sail the seas in style? Paint that boat! <i>Nonblessed</i>", 5363, 1353, 500, false, typeof(SeaGreenPaintUpgrade)),
                 new DonationItem("Tan Ship Paint", "Looking to sail the seas in style? Paint that boat! <i>Nonblessed</i>", 5363, 1031, 500, false, typeof(TanPaintUpgrade)),
+                */
 
                 new DonationItem("Special Hair Dye", "Looking for a makeover? Dye your hair something fierce with this special hair dye. <i>Newbied.</i>", 3622, 0, 875, false, typeof(SpecialHairDye)),
                 new DonationItem("Special Beard Dye", "Can't have new hair without a sweet beard to match! <i>Newbied.</i>", 3622, 0, 875, false, typeof(SpecialBeardDye)),

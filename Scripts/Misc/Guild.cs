@@ -1472,15 +1472,6 @@ namespace Server.Guilds
             if (!NewGuildSystem && m_Guildstone != null)
                 m_Guildstone.Delete();
 
-            Server.Multis.BaseGuildDock gd;
-            Server.Multis.BaseGuildDock.m_GuildDockDictionary.TryGetValue(this, out gd);
-
-            if (gd != null)
-            {
-                gd.Delete();
-                Server.Multis.BaseGuildDock.m_GuildDockDictionary.Remove(this);
-            }
-
             m_Guildstone = null;
 
             CheckExpiredWars();

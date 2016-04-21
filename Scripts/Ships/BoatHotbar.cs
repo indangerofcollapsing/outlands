@@ -40,8 +40,8 @@ namespace Server
         {
             public bool m_CollapseMode = false;
 
-            public ActiveAbilityType m_ActiveAbility = ActiveAbilityType.None;
-            public EpicAbilityType m_EpicAbility = EpicAbilityType.None;
+            //public ActiveAbilityType m_ActiveAbility = ActiveAbilityType.None;
+            //public EpicAbilityType m_EpicAbility = EpicAbilityType.None;
 
             public MovementMode m_MovementMode = MovementMode.Full;
             public ShipAction m_ShipAction = ShipAction.Embark;
@@ -182,14 +182,14 @@ namespace Server
                 AddButton(6, 62, 1210, 1209, 28, GumpButtonType.Reply, 0);
 
                 //Directions            
-                AddButton(129, 269, 4500, 4500, 1, GumpButtonType.Reply, 0);
-                AddButton(189, 269, 4501, 4501, 2, GumpButtonType.Reply, 0);
-                AddButton(236, 312, 4502, 4502, 3, GumpButtonType.Reply, 0);
-                AddButton(189, 357, 4503, 4503, 4, GumpButtonType.Reply, 0);
-                AddButton(129, 357, 4504, 4504, 5, GumpButtonType.Reply, 0);
-                AddButton(69, 357, 4505, 4505, 6, GumpButtonType.Reply, 0);
-                AddButton(24, 312, 4506, 4506, 7, GumpButtonType.Reply, 0);
-                AddButton(69, 269, 4507, 4507, 8, GumpButtonType.Reply, 0);
+                AddButton(129, 269, 4500, 4500, 1, GumpButtonType.Reply, 0); //Forward
+                AddButton(189, 269, 4501, 4501, 2, GumpButtonType.Reply, 0); //Forward Right
+                AddButton(236, 312, 4502, 4502, 3, GumpButtonType.Reply, 0); //Right
+                AddButton(236, 357, 4503, 4503, 4, GumpButtonType.Reply, 0); //Backwards Right //x=189
+                AddButton(129, 357, 4504, 4504, 5, GumpButtonType.Reply, 0); //Backwards
+                AddButton(24, 357, 4505, 4505, 6, GumpButtonType.Reply, 0); //Backwards Left //x=69
+                AddButton(24, 312, 4506, 4506, 7, GumpButtonType.Reply, 0); //Left
+                AddButton(69, 269, 4507, 4507, 8, GumpButtonType.Reply, 0); //Forward Right
 
                 //Center Controls
                 AddButton(83, 328, 4014, 4016, 9, GumpButtonType.Reply, 0);

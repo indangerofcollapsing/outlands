@@ -630,10 +630,7 @@ namespace Server.Mobiles
                             int finalDamage = mobileDamage;
 
                             PlayerMobile pm_Target = mobile as PlayerMobile;
-
-                            if (pm_Target != null)
-                                finalDamage = (int)((double)finalDamage * Custom.Pirates.BaseCannon.PlayerDamageMultiplier);
-
+                            
                             creature.DoHarmful(mobile);
                             AOS.Damage(mobile, creature, finalDamage, 100, 0, 0, 0, 0);
                             new Blood().MoveToWorld(mobile.Location, mobile.Map);

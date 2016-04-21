@@ -158,11 +158,7 @@ namespace Server.Engines.Craft
         {
             int index = -1;
 
-            //Utility
-            index = AddCraft(1, typeof(BagOfCannonShot), "Utility", "Bag of Cannon Shot", 50, 60, typeof(IronIngot), "Iron Ingot", 50, "You do not have the neccesary ingots to construct a bag of cannon shot.");
-            AddRes(index, typeof(SulfurousAsh), "Sulfuroush Ash", 50, "You do not have the neccessary sulfurous ash to construct a bag of cannon shot.");
-            AddRes(index, typeof(Leather), "Leather", 2, "You do not have the neccessary leather to construct a bag of cannon shot.");
-
+            //Utility            
             AddCraft(1, typeof(Spyglass), "Utility", 1025365, 60.0, 130.0, typeof(IronIngot), 1044036, 4, 1044037);
 
             index = AddCraft(1, typeof(PotionKeg), "Utility", "Potion Keg", 75.0, 100.0, typeof(Keg), 1044255, 1, 1044253);

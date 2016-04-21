@@ -108,8 +108,8 @@ namespace Server.Items
             if (gold > 0)
                 boat.Hold.DropItem(new Gold(gold));            
 
-            if (cannonShot > 0)
-                boat.Hold.DropItem(new CannonShot(cannonShot));
+            //if (cannonShot > 0)
+                //boat.Hold.DropItem(new CannonShot(cannonShot));
 
             if (boards > 0)
                 boat.Hold.DropItem(new Board(boards));
@@ -147,6 +147,7 @@ namespace Server.Items
             Dictionary<Type, int> DictItemTypes = new Dictionary<Type, int>();
 
             //Rares Possible
+            /*
             DictItemTypes.Add(typeof(DullCopperCannonMetalUpgradeDeed), 2);
             DictItemTypes.Add(typeof(CopperCannonMetalUpgradeDeed), 2);
             DictItemTypes.Add(typeof(BronzeCannonMetalUpgradeDeed), 2);
@@ -180,6 +181,7 @@ namespace Server.Items
 
             DictItemTypes.Add(typeof(DerelictThemeUpgrade), 2);
             DictItemTypes.Add(typeof(TreasureThemeUpgrade), 2);
+            */
             
             int TotalValues = 0;
 

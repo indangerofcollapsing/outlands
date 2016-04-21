@@ -60,7 +60,7 @@ namespace Server.Mobiles
                 if (BoatOccupied.Deleted) return;
                 if (BoatOccupied.m_SinkTimer != null) return;
 
-                BoatOccupied.ReceiveDamage(this, null, Utility.RandomMinMax(10, 20), Multis.DamageType.Hull);
+                BoatOccupied.ReceiveDamage(this, null, Utility.RandomMinMax(10, 20), DamageType.Hull);
 
                 Say("*chews on the ship*");
                 SpecialAbilities.HinderSpecialAbility(1.0, this, this, 1.0, 1, true, Utility.RandomList(0x134, 0x133), false, "", "");

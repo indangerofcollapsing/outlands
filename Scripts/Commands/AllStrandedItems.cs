@@ -121,7 +121,7 @@ namespace Server.Gumps
                 if(i.Parent == null &&
                  !(i is Fists || i is HarvestTracker.HarvestTrackerPersistance || i is MountItem || i is EffectItem || i is ICommodity || i is MovingCrate ||
                         i is EthicsPersistance || i is SellingPersistance || i is FactionPersistance || i is StealableArtifactsSpawner || 
-                        i is Custom.Pirates.PirateFishing.PirateFishingPersistance || i is Server.Regions.SpawnPersistence || i is BankBox)
+                        i is Server.Regions.SpawnPersistence || i is BankBox)
                   )
                     list.Add( i );
                 }

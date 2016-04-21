@@ -130,7 +130,7 @@ namespace Server.Gumps
                 {
                     if (!(i is Fists || i is HarvestTracker.HarvestTrackerPersistance || i is MountItem || i is EffectItem || i is ICommodity || i is MovingCrate ||
                         i is EthicsPersistance || i is SellingPersistance || i is FactionPersistance || i is StealableArtifactsSpawner ||
-                        i is Custom.Pirates.PirateFishing.PirateFishingPersistance || i is Server.Regions.SpawnPersistence || i is BankBox || i is Plank || i is Hold)
+                        i is Server.Regions.SpawnPersistence || i is BankBox || i is Plank || i is Hold)
                       )
                     {
                         list.Add(i);
@@ -143,7 +143,7 @@ namespace Server.Gumps
                 {
                     if (!(i is Fists || i is HarvestTracker.HarvestTrackerPersistance || i is MountItem || i is EffectItem || i is ICommodity || i is MovingCrate ||
                         i is EthicsPersistance || i is SellingPersistance || i is FactionPersistance || i is StealableArtifactsSpawner ||
-                        i is Custom.Pirates.PirateFishing.PirateFishingPersistance || i is Server.Regions.SpawnPersistence || i is BankBox || i is Plank || i is Hold)
+                        i is Server.Regions.SpawnPersistence || i is BankBox || i is Plank || i is Hold)
                       )
                     {
                         if (i.GetType().ToString().ToLower().IndexOf(m_Filter, 0) != -1)

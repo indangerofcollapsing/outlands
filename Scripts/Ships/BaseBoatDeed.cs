@@ -31,8 +31,8 @@ namespace Server.Multis
         public virtual double DoubloonMultiplier { get { return 1.0; } }
 
         public Mobile m_Owner;
-        public ArrayList m_CoOwners = new ArrayList();
-        public ArrayList m_Friends = new ArrayList();
+        public List<Mobile> m_CoOwners = new List<Mobile>();
+        public List<Mobile> m_Friends = new List<Mobile>();
 
         public bool GuildAsFriends = true;
 
@@ -42,28 +42,10 @@ namespace Server.Multis
 
         public string m_ShipName;
 
-        public int playerShipsSunk = 0;
-        public int NPCShipsSunk = 0;
-        public int doubloonsEarned = 0;
-        public int netsCast = 0;
-        public int MIBsRecovered = 0;
-        public int fishCaught = 0;
-
-        public int m_BoatHue = 0;
-        public int m_CannonHue = 0;
-
         public TargetingMode m_TargetingMode = TargetingMode.Random;
 
         public DateTime m_TimeLastRepaired;
         public DateTime m_NextTimeRepairable;
-
-        public List<BaseBoatUpgradeDeed> m_Upgrades = new List<BaseBoatUpgradeDeed>();
-
-        public DateTime m_ActiveAbilityExpiration = DateTime.UtcNow;
-        public DateTime m_NextActiveAbilityAllowed = DateTime.UtcNow;
-
-        public DateTime m_EpicAbilityExpiration = DateTime.UtcNow;
-        public DateTime m_NextEpicAbilityAllowed = DateTime.UtcNow;
 
         [Constructable]
         public BaseBoatDeed(int id, Point3D offset): base(0x14F2)
@@ -206,6 +188,15 @@ namespace Server.Multis
                     return;
                 }
 
+                foreach(BaseBoat boatInstance in BaseBoat.m_Instances)
+                {
+                    if (boatInstance.Owner == from)
+                    {
+                        from.SendMessage("You already have a boat at sea.");
+                        return;
+                    }
+                }
+
                 BaseBoat boat = Boat;
 
                 if (boat == null)
@@ -265,136 +256,74 @@ namespace Server.Multis
                 }
 
                 if (BaseBoat.IsValidLocation(p, map) && boat.CanFit(p, map, shipFacingItemID))
-                {
-                    if (BaseBoat.TryAddBoat(from, boat))
-                    {
-                        //Guild Dock Info
-                        GuildDockGuildInfo guildDockInfo = GuildDockPersistance.GetPlayerGuildDockGuildInfo(from);
-                        BaseGuildDock guildDock = BaseGuildDock.GetGuildDockAt(from.Location, from.Map);
+                {   
+                    //Set Boat Properties Stored in Deed
+                    boat.CoOwners = m_CoOwners;
+                    boat.Friends = m_Friends;
+                    boat.GuildAsFriends = GuildAsFriends;
 
-                        boat.Guild = (Guild)from.Guild;
-                        boat.GuildDock = null;
-                        boat.GuildDockGuildInfo = guildDockInfo;
+                    boat.Owner = from;
+                    boat.ShipName = m_ShipName;
 
-                        //Launched from GuildDock
-                        if (from.Guild != null && guildDock != null)
-                        {
-                            if (from.Guild == guildDock.m_Guild)
-                                boat.GuildDock = guildDock;
-                        }
+                    boat.TargetingMode = m_TargetingMode;
+                    boat.TimeLastRepaired = m_TimeLastRepaired;
+                    boat.NextTimeRepairable = m_NextTimeRepairable;                   
 
-                        //Set Boat Properties Stored in Deed
-                        boat.CoOwners = m_CoOwners;
-                        boat.Friends = m_Friends;
-                        boat.GuildAsFriends = GuildAsFriends;
-
-                        boat.Owner = from;
-                        boat.ShipName = m_ShipName;
-
-                        boat.TargetingMode = m_TargetingMode;
-                        boat.TimeLastRepaired = m_TimeLastRepaired;
-                        boat.NextTimeRepairable = m_NextTimeRepairable;
-
-                        boat.m_ActiveAbilityExpiration = m_ActiveAbilityExpiration;
-                        boat.m_NextActiveAbilityAllowed = m_NextActiveAbilityAllowed;
-
-                        boat.m_EpicAbilityExpiration = m_EpicAbilityExpiration;
-                        boat.m_NextEpicAbilityAllowed = m_NextEpicAbilityAllowed;
-
-                        boat.m_Upgrades = m_Upgrades;
-
-                        boat.DecayTime = DateTime.UtcNow + boat.BoatDecayDelay;                        
+                    boat.DecayTime = DateTime.UtcNow + boat.BoatDecayDelay;                        
                         
-                        boat.Anchored = true;
+                    boat.Anchored = true;
 
-                        boat.Hue = m_BoatHue;
-                        boat.CannonHue = m_CannonHue;
+                    ShipUniqueness.GenerateShipUniqueness(boat);                       
 
-                        ShipUniqueness.GenerateShipUniqueness(boat);                       
+                    boat.HitPoints = HitPoints;
+                    boat.SailPoints = SailPoints;
+                    boat.GunPoints = GunPoints;
 
-                        boat.HitPoints = HitPoints;
-                        boat.SailPoints = SailPoints;
-                        boat.GunPoints = GunPoints;
+                    bool fullSailPoints = (boat.SailPoints == boat.BaseMaxSailPoints);
+                    bool fullGunPoints = (boat.GunPoints == boat.BaseMaxGunPoints);
+                    bool fullHitPoints = (boat.HitPoints == boat.BaseMaxHitPoints);   
+                    
+                    boat.SetFacing(newDirection);
 
-                        bool fullSailPoints = (boat.SailPoints == boat.BaseMaxSailPoints);
-                        bool fullGunPoints = (boat.GunPoints == boat.BaseMaxGunPoints);
-                        bool fullHitPoints = (boat.HitPoints == boat.BaseMaxHitPoints);   
+                    boat.MoveToWorld(p, map);                       
 
-                        if (boat.GuildDock != null)
-                        {
-                            if (GuildDockPersistance.PlayerHasGuildDockUpgrade(player, GuildDockUpgradeType.Seamstress))
-                            {
-                                boat.BaseMaxSailPoints = (int)(Math.Round((double)boat.BaseMaxSailPoints * BaseBoat.SeamstressSailPointsBonusScalar));
+                    Delete();
 
-                                if (fullSailPoints)
-                                    boat.SailPoints = boat.BaseMaxSailPoints;
-                            }
+                    BoatRune boatRune = new BoatRune(boat, from);
+                    boat.BoatRune = boatRune;
 
-                            if (GuildDockPersistance.PlayerHasGuildDockUpgrade(player, GuildDockUpgradeType.Gunsmith))
-                            {
-                                boat.BaseMaxGunPoints = (int)(Math.Round((double)boat.BaseMaxGunPoints * BaseBoat.GunsmithGunPointsBonusScalar));
-                            
-                                if (fullGunPoints)
-                                    boat.GunPoints = boat.BaseMaxGunPoints;
-                            }
+                    BoatRune boatBankRune = new BoatRune(boat, from);
+                    boat.BoatBankRune = boatBankRune;                        
 
-                            if (GuildDockPersistance.PlayerHasGuildDockUpgrade(player, GuildDockUpgradeType.Carpenter))
-                            {
-                                boat.BaseMaxHitPoints = (int)(Math.Round((double)boat.BaseMaxHitPoints * BaseBoat.CarpenterHullPointsBonusScalar));
-                                
-                                if (fullHitPoints)
-                                    boat.HitPoints = boat.BaseMaxHitPoints;
-                            }                        
-                        }                        
+                    bool addedToPack = false;
+                    bool addedToBank = false;
 
-                        boat.SetFacing(newDirection);
+                    if (from.AddToBackpack(boatRune))
+                        addedToPack = true;
 
-                        boat.MoveToWorld(p, map);                       
+                    BankBox bankBox = from.FindBankNoCreate();
 
-                        Delete();
-
-                        BoatRune boatRune = new BoatRune(boat, from);
-                        boat.BoatRune = boatRune;
-
-                        BoatRune boatBankRune = new BoatRune(boat, from);
-                        boat.BoatBankRune = boatBankRune;                        
-
-                        bool addedToPack = false;
-                        bool addedToBank = false;
-
-                        if (from.AddToBackpack(boatRune))
-                            addedToPack = true;
-
-                        BankBox bankBox = from.FindBankNoCreate();
-
-                        if (bankBox != null)
-                        {
-                            if (bankBox.Items.Count < bankBox.MaxItems)
-                            {
-                                bankBox.AddItem(boatBankRune);
-                                addedToBank = true;
-                            }
-                        }
-
-                        string message = "You place the ship at sea. A boat rune has been placed both in your bankbox and your backpack.";
-
-                        if (!addedToPack && !addedToBank)
-                            message = "You place the ship at sea. However, there was no room in neither your bankbox nor your backpack to place boat runes.";
-
-                        else if (!addedToPack)
-                            message = "You place the ship at sea. A boat rune was placed in your bankbox, however, there was no room in your backpack to place a boat rune.";
-
-                        else if (!addedToBank)
-                            message = "You place the ship at sea. A boat rune was placed in your backpack, however, there was no room in your bankbox to place a boat rune.";
-
-                        from.SendMessage(message);
-                    }
-
-                    else
+                    if (bankBox != null)
                     {
-                        boat.Delete();
-                        from.SendMessage("You already have a boat currently at sea.");
+                        if (bankBox.Items.Count < bankBox.MaxItems)
+                        {
+                            bankBox.AddItem(boatBankRune);
+                            addedToBank = true;
+                        }
                     }
+
+                    string message = "You place the ship at sea. A boat rune has been placed both in your bankbox and your backpack.";
+
+                    if (!addedToPack && !addedToBank)
+                        message = "You place the ship at sea. However, there was no room in neither your bankbox nor your backpack to place boat runes.";
+
+                    else if (!addedToPack)
+                        message = "You place the ship at sea. A boat rune was placed in your bankbox, however, there was no room in your backpack to place a boat rune.";
+
+                    else if (!addedToBank)
+                        message = "You place the ship at sea. A boat rune was placed in your backpack, however, there was no room in your bankbox to place a boat rune.";
+
+                    from.SendMessage(message);
                 }
 
                 else
@@ -439,83 +368,40 @@ namespace Server.Multis
             }
         }
 
-        public bool CheckForUpgrade(Type upgrade)
-        {
-            bool foundUpgrade = false;
-
-            foreach (BaseBoatUpgradeDeed upgradeDeed in m_Upgrades)
-            {
-                if (upgradeDeed.GetType() == upgrade)
-                    return true;
-            }
-
-            return foundUpgrade;
-        }
-
-        public bool CheckForUpgradeType(BaseBoatUpgradeDeed upgrade)
-        {
-            bool foundUpgrade = false;
-
-            foreach (BaseBoatUpgradeDeed upgradeDeed in m_Upgrades)
-            {
-                if (upgradeDeed.UpgradeType == upgrade.UpgradeType)
-                    return true;
-            }
-
-            return foundUpgrade;
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
 
-            writer.Write((int)2); //Version
+            writer.Write((int)0); //Version
 
-            //Deed Properties
+            //Version 0
             writer.Write(m_MultiID);
             writer.Write(m_Offset);
 
-            //Ship Properties
-            writer.WriteMobileList(m_CoOwners, true);
-            writer.WriteMobileList(m_Friends, true);
+            writer.Write(m_CoOwners.Count);
+            for (int a = 0; a < m_CoOwners.Count; a++)
+            {
+                writer.Write(m_CoOwners[a]);
+            }
+
+            writer.Write(m_Friends.Count);
+            for (int a = 0; a < m_Friends.Count; a++)
+            {
+                writer.Write(m_Friends[a]);
+            }
+
             writer.Write(GuildAsFriends);
 
-            writer.Write((int)HitPoints);
-            writer.Write((int)SailPoints);
-            writer.Write((int)GunPoints);
+            writer.Write(HitPoints);
+            writer.Write(SailPoints);
+            writer.Write(GunPoints);
 
             writer.Write(m_Owner);
             writer.Write(m_ShipName);
 
-            writer.Write((int)playerShipsSunk);
-            writer.Write((int)NPCShipsSunk);
-            writer.Write((int)doubloonsEarned);
-            writer.Write((int)netsCast);
-            writer.Write((int)MIBsRecovered);
-            writer.Write((int)fishCaught);
-
-            writer.Write((byte)m_TargetingMode);
-            writer.Write((DateTime)m_TimeLastRepaired);
-            writer.Write((DateTime)m_NextTimeRepairable);
-
-            int upgradesCount = m_Upgrades.Count;
-            writer.Write(upgradesCount);
-            for (int a = 0; a < upgradesCount; a++)
-            {
-                writer.Write(m_Upgrades[a]);
-            }
-
-            //Version 1
-            writer.Write(m_BoatHue);
-
-            //Version 2
-            writer.Write(m_CannonHue);
-
-            writer.Write(m_ActiveAbilityExpiration);
-            writer.Write(m_NextActiveAbilityAllowed);
-
-            writer.Write(m_EpicAbilityExpiration);
-            writer.Write(m_NextEpicAbilityAllowed);
+            writer.Write((int)m_TargetingMode);
+            writer.Write(m_TimeLastRepaired);
+            writer.Write(m_NextTimeRepairable);            
         }
 
         public override void Deserialize(GenericReader reader)
@@ -525,60 +411,38 @@ namespace Server.Multis
             int version = reader.ReadInt();
             
             //Version 0
-
-            //Deed Properties
-            m_MultiID = reader.ReadInt();
-            m_Offset = reader.ReadPoint3D();
-
-            //Ship Properties                   
-            m_CoOwners = reader.ReadMobileList();
-            m_Friends = reader.ReadMobileList();
-            GuildAsFriends = reader.ReadBool();
-
-            HitPoints = reader.ReadInt();
-            SailPoints = reader.ReadInt();
-            GunPoints = reader.ReadInt();
-
-            m_Owner = reader.ReadMobile();
-
-            m_ShipName = reader.ReadString();
-
-            playerShipsSunk = reader.ReadInt();
-            NPCShipsSunk = reader.ReadInt();
-            doubloonsEarned = reader.ReadInt();
-            netsCast = reader.ReadInt();
-            MIBsRecovered = reader.ReadInt();
-            fishCaught = reader.ReadInt();
-
-            m_TargetingMode = (TargetingMode)reader.ReadByte();
-
-            m_TimeLastRepaired = reader.ReadDateTime();
-            m_NextTimeRepairable = reader.ReadDateTime();
-
-            m_Upgrades = new List<BaseBoatUpgradeDeed>();
-            int upgradesCount = reader.ReadInt();
-            for (int a = 0; a < upgradesCount; a++)
+            if (version >= 0)
             {
-                m_Upgrades.Add((BaseBoatUpgradeDeed)reader.ReadItem());
+                m_MultiID = reader.ReadInt();
+                m_Offset = reader.ReadPoint3D();
+
+                int coOwnerCount = reader.ReadInt();
+                for (int a = 0; a < coOwnerCount; a++)
+                {
+                    m_CoOwners.Add(reader.ReadMobile());
+                }
+
+                int friendCount = reader.ReadInt();
+                for (int a = 0; a < friendCount; a++)
+                {
+                    m_Friends.Add(reader.ReadMobile());
+                }
+
+                GuildAsFriends = reader.ReadBool();
+
+                HitPoints = reader.ReadInt();
+                SailPoints = reader.ReadInt();
+                GunPoints = reader.ReadInt();
+
+                m_Owner = reader.ReadMobile();
+
+                m_ShipName = reader.ReadString();
+
+                m_TargetingMode = (TargetingMode)reader.ReadInt();
+
+                m_TimeLastRepaired = reader.ReadDateTime();
+                m_NextTimeRepairable = reader.ReadDateTime();
             }
-
-            //Version 1
-            if (version >= 1)
-            {
-                m_BoatHue = reader.ReadInt();
-            }
-
-            //Version 2
-            if (version >= 2)
-            {
-                m_CannonHue = reader.ReadInt();
-
-                m_ActiveAbilityExpiration = reader.ReadDateTime();
-                m_NextActiveAbilityAllowed = reader.ReadDateTime();
-
-                m_EpicAbilityExpiration = reader.ReadDateTime();
-                m_NextEpicAbilityAllowed = reader.ReadDateTime();
-            } 
         }
     }
 
@@ -587,16 +451,15 @@ namespace Server.Multis
         BaseBoatDeed m_BaseBoatDeed;
         PlayerMobile m_Player;
 
-        public BindBaseBoatDeedGump(BaseBoatDeed baseBoatDeed, PlayerMobile player)
-            : base(50, 50)
+        public BindBaseBoatDeedGump(BaseBoatDeed baseBoatDeed, PlayerMobile player): base(50, 50)
         {
             m_BaseBoatDeed = baseBoatDeed;
             m_Player = player;
 
-            this.Closable = true;
-            this.Disposable = true;
-            this.Dragable = true;
-            this.Resizable = false;
+            Closable = true;
+            Disposable = true;
+            Dragable = true;
+            Resizable = false;
 
             AddPage(0);
 

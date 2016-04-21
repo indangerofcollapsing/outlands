@@ -480,7 +480,7 @@ namespace Server.Mobiles
 
             int tentacles = 1 + (int)(Math.Ceiling(5 * spawnPercent));
 
-            foreach (BaseBoat targetBoat in BaseBoat.AllBoatInstances)
+            foreach (BaseBoat targetBoat in BaseBoat.m_Instances)
             {
                 if (targetBoat.Deleted) continue;
 
@@ -591,7 +591,7 @@ namespace Server.Mobiles
                    });
                 }
 
-                foreach (BaseBoat targetBoat in BaseBoat.AllBoatInstances)
+                foreach (BaseBoat targetBoat in BaseBoat.m_Instances)
                 {
                     if (targetBoat.Deleted) continue;
 
@@ -817,7 +817,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                foreach (BaseBoat targetBoat in BaseBoat.AllBoatInstances)
+                foreach (BaseBoat targetBoat in BaseBoat.m_Instances)
                 {
                     if (targetBoat.Deleted) continue;
 
@@ -980,7 +980,7 @@ namespace Server.Mobiles
                     });
                 }
 
-                foreach (BaseBoat targetBoat in BaseBoat.AllBoatInstances)
+                foreach (BaseBoat targetBoat in BaseBoat.m_Instances)
                 {
                     if (targetBoat.Deleted) continue;
 
@@ -1321,7 +1321,7 @@ namespace Server.Mobiles
 
                 List<BaseBoat> m_PossibleBoatCombatants = new List<BaseBoat>();
 
-                foreach (BaseBoat targetBoat in BaseBoat.AllBoatInstances)
+                foreach (BaseBoat targetBoat in BaseBoat.m_Instances)
                 {
                     if (targetBoat.Deleted) continue;
                     if (targetBoat.MobileControlType != MobileControlType.Player) continue;
@@ -1465,7 +1465,7 @@ namespace Server.Mobiles
 
                         Dictionary<BaseBoat, int> m_PossibleBoatCombatants = new Dictionary<BaseBoat, int>();
 
-                        foreach (BaseBoat targetBoat in BaseBoat.AllBoatInstances)
+                        foreach (BaseBoat targetBoat in BaseBoat.m_Instances)
                         {
                             if (targetBoat.Deleted) continue;
                             if (targetBoat.MobileControlType != MobileControlType.Player) continue;
@@ -1609,7 +1609,7 @@ namespace Server.Mobiles
                         {
                             List<BaseBoat> m_NearbyBoats = new List<BaseBoat>();
 
-                            foreach (BaseBoat targetBoat in BaseBoat.AllBoatInstances)
+                            foreach (BaseBoat targetBoat in BaseBoat.m_Instances)
                             {
                                 if (targetBoat.Deleted) continue;
                                 if (targetBoat.MobileControlType != MobileControlType.Player) continue;
