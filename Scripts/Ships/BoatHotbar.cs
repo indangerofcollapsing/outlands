@@ -22,17 +22,17 @@ namespace Server
 
         public enum ShipAction
         {
-            Embark,
-            EmbarkFollowers,
+            AddCoOwner,
+            AddFriend,
+            ClearDeck,       
             Disembark,
             DisembarkFollowers,
-            RaiseAnchor,
-            LowerAnchor,            
+            DividePlunder,
             Dock,
-            ClearDeck,            
-            DividePlunder, 
-            AddFriend,
-            AddCoOwner,
+            Embark,
+            EmbarkFollowers,
+            LowerAnchor,              
+            RaiseAnchor,
             ThrowTargetOverboard
         }
 

@@ -875,6 +875,32 @@ namespace Server
         public double BaseCannonReloadTimeScalar = 1.0;
         public double BaseDamageFromPlayerBoatScalar = 1.0;
 
+        public static int CannonMaxAmmunition = 10;
+        public static int CannonMaxRange = 12;
+
+        public static int CannonFiringLoops = 3;
+        public static double CannonLoopDelay = .5;
+
+        public static int CannonExplosionRange = 1; //How large is the cannon blast radius
+
+        public static double CannonOceanCreatureDamageMultiplier = .75; //Damage scalar for creatures (on Water)
+        public static double CannonMobileDamageMultiplier = .5; //Damage scalar for creatures & NPCs (on Land or Ships)
+        public static double CannonPlayerDamageMultiplier = .5; //Damage scalar for players (on Land or Ships)
+        public static double CannonIndirectHitDamageMultiplier = .25; //If explosion range is larger than 1, damage modifier for Mobiles outside of target location
+        public static double CannonShipIndirectHitDamageMultiplier = .75; //Ship damage modifier if player directly hit instead of the ship
+
+        public static double CannonMovementMaxAccuracyPenalty = 0.2; //Maximum Accuracy Penalty for Ship Moving or Having Recently Moved
+        public static double CannonTargetMovementMaxAccuracyPenalty = 0.2; //Maximum Accuracy Penalty for Opponent's Moving or Having Recently Moved
+        public static double CannonMovementAccuracyCooldown = 10.0; //Seconds after stopping ship movement before no penalty to accuracy exists: scales from 0 to this number of seconds
+
+        public static double CannonMaxMisfireChance = 0.40;
+
+        public static double CannonAccuracy = 0.8;
+        public static int CannonDamageMin = 20;
+        public static int CannonDamageMax = 30;
+        public static double CannonCooldownTime = 10.0;
+        public static double CannonReloadTime = 2.0;
+
         public double BaseFastInterval = 0.20;
         public double BaseFastDriftInterval = 0.40;
 
@@ -6230,9 +6256,11 @@ namespace Server
 
         public bool CanHitTargetShip(BaseBoat targetBoat, bool considerRange)
         {
-            /*
+            if (this == null) return false;
             if (targetBoat == null) return false;
             if (targetBoat.Deleted) return false;
+
+            int modifiedRange = (int)(Math.Round((double)CannonMaxRange * CannonRangeScalar));
 
             foreach (ShipCannon shipCannon in m_Cannons)
             {
@@ -6254,9 +6282,8 @@ namespace Server
                         return true;
                 }
             }
-            */
 
-            return false;            
+            return false;
         }
 
         public virtual void OnThink()
@@ -6302,6 +6329,10 @@ namespace Server
                         m_BoatCombatant = null;
                 }
             }
+
+            //Ship Doesn't Have Cannons
+            if (m_Cannons.Count == 0)
+                return;
 
             //Current Combatant is Out of Active Range
             if (m_BoatCombatant != null)
@@ -6357,37 +6388,36 @@ namespace Server
                 }
             }
 
-            /*
             //Reload Cannons         
             bool needReload = false;
 
-            foreach (Custom.Pirates.BaseCannon cannon in m_Cannons)
+            foreach (ShipCannon shipCannon in m_Cannons)
             {
-                if (cannon.m_CurrentCharges == 0)
+                if (shipCannon.Ammunition == 0)
                 {
                     needReload = true;
                     break;
                 }
             }
 
-            int totalReloadTime = 0;
+            double totalReloadTime = 0;
 
             if (needReload)
             {
-                foreach (Custom.Pirates.BaseCannon cannon in m_Cannons)
+                foreach (ShipCannon shipCannon in m_Cannons)
                 {
-                    if (cannon.m_CurrentCharges < Custom.Pirates.BaseCannon.MaxCharges)
+                    if (shipCannon.Ammunition < shipCannon.GetMaxAmmunition())
                     {
-                        cannon.m_CurrentCharges = Custom.Pirates.BaseCannon.MaxCharges;
-                        totalReloadTime += cannon.ReloadTime;
+                        shipCannon.Ammunition = shipCannon.GetMaxAmmunition();
+                        totalReloadTime += CannonReloadTime;
                     }
                 }
 
                 if (CannonCooldown < DateTime.UtcNow)
-                    CannonCooldown = DateTime.UtcNow + TimeSpan.FromSeconds((double)totalReloadTime);
+                    CannonCooldown = DateTime.UtcNow + TimeSpan.FromSeconds(totalReloadTime);
 
                 else
-                    CannonCooldown += TimeSpan.FromSeconds((double)totalReloadTime);
+                    CannonCooldown += TimeSpan.FromSeconds(totalReloadTime);
 
                 Effects.PlaySound(Location, Map, 0x3e4);
 
@@ -6398,10 +6428,10 @@ namespace Server
             bool readyToFire = false;
             bool firedAnyCannon = false;
 
-            Custom.Pirates.BaseCannon cannonToFire = null;
+            ShipCannon cannonToFire = null;
 
             //Fire Cannons
-            if (DateTime.UtcNow >= CannonCooldown && m_BoatCombatant != null && Cannons.Count > 0)
+            if (DateTime.UtcNow >= CannonCooldown && m_BoatCombatant != null)
             {
                 readyToFire = true;
 
@@ -6413,24 +6443,24 @@ namespace Server
                 bool canHitCenter = false;
                 bool canHitTillerman = false;
 
-                Custom.Pirates.BaseCannon bestCannon = null;
+                ShipCannon bestCannon = null;
 
-                int modifiedRange = (int)((double)Custom.Pirates.BaseCannon.Range * CannonRangeScalar);
+                int modifiedRange = (int)(Math.Round((double)CannonMaxRange * CannonRangeScalar));
 
-                foreach (Custom.Pirates.BaseCannon cannon in m_Cannons)
+                foreach (ShipCannon shipCannon in m_Cannons)
                 {
                     if (m_BoatCombatant == null) break;
                     if (m_BoatCombatant.Deleted) break;
 
-                    if (this.GetBoatToLocationDistance(m_BoatCombatant, Location) <= modifiedRange)
+                    if (GetBoatToLocationDistance(m_BoatCombatant, Location) <= modifiedRange)
                         inRange = true;
 
-                    if (cannon.m_CurrentCharges > 0)
+                    if (shipCannon.Ammunition > 0)
                         hasAmmo = true;
 
-                    if (cannon.InAngle(m_BoatCombatant.Location))
+                    if (shipCannon.InAngle(m_BoatCombatant.Location))
                     {
-                        bestCannon = cannon;
+                        bestCannon = shipCannon;
 
                         canHitCenter = true;
                         canFire = true;
@@ -6438,10 +6468,10 @@ namespace Server
 
                     if (m_BoatCombatant.Hold != null)
                     {
-                        if (cannon.InAngle(m_BoatCombatant.Hold.Location))
+                        if (shipCannon.InAngle(m_BoatCombatant.Hold.Location))
                         {
                             if (bestCannon == null)
-                                bestCannon = cannon;
+                                bestCannon = shipCannon;
 
                             canHitHold = true;
                             canFire = true;
@@ -6450,10 +6480,10 @@ namespace Server
 
                     if (m_BoatCombatant.TillerMan != null)
                     {
-                        if (cannon.InAngle(m_BoatCombatant.TillerMan.Location))
+                        if (shipCannon.InAngle(m_BoatCombatant.TillerMan.Location))
                         {
                             if (bestCannon == null)
-                                bestCannon = cannon;
+                                bestCannon = shipCannon;
 
                             canHitTillerman = true;
                             canFire = true;
@@ -6476,24 +6506,24 @@ namespace Server
                 if (!hasAmmo)
                     readyToFire = false;
             }
-            */
 
-            //Ship Was Ready to Fire At Target But Couldn't: Make Maneuvers To Adjust
-            /*
+            int baseCannonRange = (int)(Math.Round((double)CannonMaxRange * CannonRangeScalar));
+
+            //Ship Was Ready to Fire At Target But Couldn't: Make Maneuvers To Adjust            
             if (readyToFire && !firedAnyCannon && m_BoatCombatant != null)
             {
                 int distance = GetBoatToBoatDistance(this, m_BoatCombatant);
                 bool turned = false;
                 bool needMovement = false;
 
-                //In LOS (Probably Not In Range Though)
+                //In LOS But Out of Range
                 if (CanHitTargetShip(m_BoatCombatant, false))
                 {
                     //Move Towards Ship
                 }
 
-                //Within Firing Distance (Just Not In LOS): Try Rotating
-                else if (distance <= (int)((double)Custom.Pirates.BaseCannon.Range * CannonRangeScalar))
+                //Within Cannon Range but Not in LOS
+                else if (distance <= baseCannonRange)
                 {
                     needMovement = true;
 
@@ -6504,12 +6534,12 @@ namespace Server
                         turned = true;
                 }
 
-                //Need To Move In Order to Be Able to Turn To A Firing Position
+                //Not in LOS Nor Cannon Range
                 if (needMovement && !turned)
                 {
+                    //Move + Steer Towards Ship
                 }
-            }
-            */
+            }            
         }
 
         #endregion
