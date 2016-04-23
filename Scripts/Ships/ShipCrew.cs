@@ -195,6 +195,7 @@ namespace Server.Items
 
                 case MobileFactionType.Orc:
                     #region Orc
+                    
                     crewNumber = 3 + shipLevel;
 
                     DictCrewOptions = new Dictionary<Type, int>();
@@ -300,6 +301,7 @@ namespace Server.Items
                             CumulativeAmount += AdditionalAmount;
                         }
                     }
+
                     #endregion
                 break;
 

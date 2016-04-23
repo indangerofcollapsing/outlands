@@ -26,6 +26,7 @@ namespace Server.Items
         public Hold(BaseBoat boat): base(0x3EAE)
         {
             m_Boat = boat;
+
             Movable = false;                  
         }
 

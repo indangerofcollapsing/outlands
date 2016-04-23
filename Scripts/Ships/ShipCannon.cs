@@ -1156,6 +1156,8 @@ namespace Server
 
             //-----
 
+            Movable = false;
+
             if (m_Boat != null)
             {
                 m_Boat.m_Cannons.Add(this);

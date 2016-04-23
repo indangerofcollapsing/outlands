@@ -1283,7 +1283,7 @@ namespace Server.Items
                 //Check Durability Loss on Armor Piece Hit
                 BaseArmor armorHit = armorItem as BaseArmor;
 
-                if (armorHit != null)
+                if (armorHit != null && attacker != null)
                 {
                     BaseWeapon attackerWeapon = attacker.Weapon as BaseWeapon;
 

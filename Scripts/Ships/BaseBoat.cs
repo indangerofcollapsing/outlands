@@ -6764,6 +6764,8 @@ namespace Server
                 
                 //-----
 
+                Movable = false;
+
                 if (m_ScuttleInProgress)
                 {
                     if (m_ScuttleTimer == null)

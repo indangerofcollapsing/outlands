@@ -8943,7 +8943,10 @@ namespace Server
                                 }
                             }
 
-                            Timer.DelayCall(TimeSpan.Zero, delegate { item.Delete(); });
+                            Timer.DelayCall(TimeSpan.Zero, delegate 
+                            {
+                                item.Delete(); 
+                            });
                         }
                     }
 

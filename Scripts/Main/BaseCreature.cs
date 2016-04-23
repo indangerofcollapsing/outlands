@@ -2238,8 +2238,7 @@ namespace Server.Mobiles
         {
             private Mobile m;
 
-            public DeleteTimer(Mobile creature, TimeSpan delay)
-                : base(delay)
+            public DeleteTimer(Mobile creature, TimeSpan delay): base(delay)
             {
                 m = creature;
                 Priority = TimerPriority.OneMinute;
@@ -5477,16 +5476,12 @@ namespace Server.Mobiles
             if (bc != null)
             {
                 //Enhanced Spellbook: Summoner (Possible Dispel Prevention Against Monsters)
-                if (Utility.RandomDouble() >= bc.DispelResist)
-                {
-                    m.Delete();
-                }
+                if (Utility.RandomDouble() >= bc.DispelResist)                
+                    m.Delete();                
             }
 
-            else
-            {
-                m.Delete();
-            }
+            else            
+                m.Delete();            
         }
 
         public virtual bool DeleteOnRelease { get { return m_Summoned; } }
@@ -7153,8 +7148,8 @@ namespace Server.Mobiles
         {
             if (Summoned || item == null || NoKillAwards)
             {
-                if (item != null)
-                    item.Delete();
+                if (item != null)                
+                    item.Delete();                
 
                 return;
             }
@@ -8085,7 +8080,9 @@ namespace Server.Mobiles
                 base.OnDeath(c);
 
                 if (DeleteCorpseOnDeath)
+                {
                     c.Delete();
+                }
             }
         }
 
@@ -8347,7 +8344,7 @@ namespace Server.Mobiles
                 {
                     if (i >= pack.Items.Count)
                         continue;
-
+                    
                     pack.Items[i].Delete();
                 }
             }

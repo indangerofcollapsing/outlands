@@ -5237,9 +5237,9 @@ namespace Server.Mobiles
 
                         int destroyables = 0;
 
-                        IPooledEnumerable eable = map.GetItemsInRange(new Point3D(x, y, bc_Creature.Location.Z), 1);
+                        IPooledEnumerable nearbyItems = map.GetItemsInRange(new Point3D(x, y, bc_Creature.Location.Z), 1);
 
-                        foreach (Item item in eable)
+                        foreach (Item item in nearbyItems)
                         {
                             if (canOpenDoors && item is BaseDoor && (item.Z + item.ItemData.Height) > bc_Creature.Z && (bc_Creature.Z + 16) > item.Z)
                             {
@@ -5250,24 +5250,15 @@ namespace Server.Mobiles
 
                                 if (!door.Locked || !door.UseLocks())
                                     m_Obstacles.Enqueue(door);
-
-                                if (!canDestroyObstacles)
-                                    break;
                             }
 
-                            else if (!item.IsLockedDown)
-                                m_Obstacles.Enqueue(item);
+                            else if (!canDestroyObstacles)
+                                continue;
 
-                            else if (canDestroyObstacles && item.Movable && item.ItemData.Impassable && (item.Z + item.ItemData.Height) > bc_Creature.Z && (bc_Creature.Z + 16) > item.Z)
-                            {
-                                if (!bc_Creature.InRange(item.GetWorldLocation(), 1))
-                                    continue;
+                            else if (!item.Movable)
+                                continue;
 
-                                m_Obstacles.Enqueue(item);
-                                ++destroyables;
-                            }
-
-                            else if ((canDestroyObstacles && item.Movable) && (item is FootStool || item is Candelabra))
+                            else if (canDestroyObstacles && item.ItemData.Impassable && (item.Z + item.ItemData.Height) > bc_Creature.Z && (bc_Creature.Z + 16) > item.Z)
                             {
                                 if (!bc_Creature.InRange(item.GetWorldLocation(), 1))
                                     continue;
@@ -5277,7 +5268,7 @@ namespace Server.Mobiles
                             }
                         }
 
-                        eable.Free();
+                        nearbyItems.Free();
 
                         if (destroyables > 0)
                             Effects.PlaySound(new Point3D(x, y, bc_Creature.Z), bc_Creature.Map, 0x3B3);
@@ -5289,18 +5280,11 @@ namespace Server.Mobiles
                         {
                             Item item = (Item)m_Obstacles.Dequeue();
 
-                            if (item is BaseDoor)
-                            {
-                                bc_Creature.DebugSay("Little do they expect, I've learned how to open doors. Didn't they read the script??");
-                                bc_Creature.DebugSay("*twist*");
-
-                                ((BaseDoor)item).Use(bc_Creature);
-                            }
+                            if (item is BaseDoor)                            
+                                ((BaseDoor)item).Use(bc_Creature);                            
 
                             else
                             {
-                                bc_Creature.DebugSay("Ugabooga. I'm so big and tough I can destroy it: {0}", item.GetType().Name);
-
                                 if (item is Container)
                                 {
                                     Container cont = (Container)item;
@@ -5313,11 +5297,19 @@ namespace Server.Mobiles
                                             m_Obstacles.Enqueue(check);
                                     }
 
+                                    //TEST
+                                    Console.Write("Creature deleting: " + cont.ToString() + "\n");
+
                                     cont.Destroy();
                                 }
 
                                 else
+                                {
+                                    //TEST
+                                    Console.Write("Creature deleting: " + item.ToString() + "\n");
+
                                     item.Delete();
+                                }
                             }
                         }
 

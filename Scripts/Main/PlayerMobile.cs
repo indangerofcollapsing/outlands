@@ -6077,9 +6077,7 @@ namespace Server.Mobiles
             TransformContext context = TransformationSpellHelper.GetContext(this);
             
             bool running = ((dir & Direction.Running) != 0);
-
-            //TEST: Mount Speeds
-
+            
             bool onHorse = (Mount != null);
 
             if (onHorse)
