@@ -189,7 +189,7 @@ namespace Server.Custom
                 }
             }
 
-            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, -1, true, "", "Their vicious attack causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, -1, true, "", "Their vicious attack causes you to bleed!", "-1");
         }
         
         public HenchmanPirateFirstMate(Serial serial): base(serial)

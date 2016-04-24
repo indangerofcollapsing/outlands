@@ -112,7 +112,7 @@ namespace Server.Mobiles
             double fireballDelay = .1;
             double totalDelay = 1 + directionDelay + initialDelay + ((double)fireballs * fireballDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
             
             PublicOverheadMessage(MessageType.Regular, 0, false, "*ignites*");
 

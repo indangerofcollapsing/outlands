@@ -151,7 +151,7 @@ namespace Server.Mobiles
                     Point3D mobileLocation = mobileTarget.Location;
                     Map mobileMap = mobileTarget.Map;
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, 1, true, 0, false, "", "");
+                    SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, 1, true, 0, false, "", "", "-1");
 
                     IEntity startLocation = new Entity(Serial.Zero, new Point3D(location.X, location.Y, location.Z + 7), map);
                     IEntity endLocation = new Entity(Serial.Zero, new Point3D(mobileTarget.X, mobileTarget.Y, mobileTarget.Z), mobileMap);
@@ -171,7 +171,7 @@ namespace Server.Mobiles
 
                     PublicOverheadMessage(MessageType.Regular, 2586, false, "* .net *");
 
-                    SpecialAbilities.EntangleSpecialAbility(1.0, null, mobileTarget, 1, duration, 0, true, "", "You have been ensnared in a net!");
+                    SpecialAbilities.EntangleSpecialAbility(1.0, null, mobileTarget, 1, duration, 0, true, "", "You have been ensnared in a net!", "-1");
 
                     Effects.PlaySound(location, map, Utility.RandomList(0x5D2, 0x5D3));
 

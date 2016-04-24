@@ -111,7 +111,7 @@ namespace Server.Custom
                 }
             }
 
-            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, 0x516, true, "", "The creature's blade cuts deep, causing you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, 0x516, true, "", "The creature's blade cuts deep, causing you to bleed!", "-1");
         }
         
         public override void SetUniqueAI()

@@ -67,7 +67,7 @@ namespace Server.Mobiles
 
                 defender.SendMessage("You have been wrapped in a web!");
 
-                SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1.0, Utility.RandomMinMax(3, 5), false, -1, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1.0, Utility.RandomMinMax(3, 5), false, -1, false, "", "", "-1");
             }            
         }
 

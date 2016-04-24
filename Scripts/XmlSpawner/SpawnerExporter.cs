@@ -217,7 +217,7 @@ namespace Server.Mobiles
 			int count = int.Parse( GetText( node["count"], "1" ) );
 			int homeRange = int.Parse( GetText( node["homerange"], "4" ) );
 
-			int walkingRange = int.Parse(GetText(node["walkingrange"], "-1"));
+            int walkingRange = int.Parse(GetText(node["walkingrange"], "-1"));
 
 			int team = int.Parse( GetText( node["team"], "0" ) );
 			

@@ -66,7 +66,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.EntangleSpecialAbility(0.05, this, defender, 1.0, 5, -1, true, "", "Their arrow pins you in place!");
+            SpecialAbilities.EntangleSpecialAbility(0.05, this, defender, 1.0, 5, -1, true, "", "Their arrow pins you in place!", "-1");
         }
 
         public OrghereimTracker(Serial serial): base(serial)

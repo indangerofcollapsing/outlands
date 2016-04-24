@@ -48,7 +48,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.BleedSpecialAbility(.3, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(.3, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!", "-1");
         }
 
         public Devourer(Serial serial): base(serial)

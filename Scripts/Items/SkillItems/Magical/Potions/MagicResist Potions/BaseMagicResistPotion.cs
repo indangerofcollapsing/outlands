@@ -30,9 +30,7 @@ namespace Server.Items
 
 		public bool DoMagicResist( Mobile from )
 		{
-            double currentMagicResist;
-
-            from.GetSpecialAbilityEntryValue(SpecialAbilityEffect.MagicResist, out currentMagicResist);
+            double currentMagicResist = from.GetSpecialAbilityEntryValue(SpecialAbilityEffect.MagicResist);
 
             if (currentMagicResist < MagicResist)
             {

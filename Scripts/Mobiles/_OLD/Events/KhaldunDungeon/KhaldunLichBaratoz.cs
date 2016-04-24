@@ -173,23 +173,10 @@ namespace Server.Mobiles
             if (AbilityInProgress)
                 return;
 
-            double totalValue = 0;
+            double diseaseValue = from.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease);
 
-            if (bc_Defender != null)
-            {
-                bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease, out totalValue);
-
-                if (totalValue > 0)
-                    return;
-            }
-
-            if (pm_Defender != null)
-            {
-                pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease, out totalValue);
-
-                if (totalValue > 0)
-                    return;
-            }
+            if (diseaseValue > 0)
+                return;
 
             Animate(15, 8, 1, true, false, 0); //Staff
 
@@ -231,7 +218,7 @@ namespace Server.Mobiles
             NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
             NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < 2; a++)
             {

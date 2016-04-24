@@ -70,6 +70,7 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Daemonic; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }

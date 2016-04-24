@@ -107,7 +107,7 @@ namespace Server.Mobiles
 
             if (Utility.RandomDouble() < .1 && DateTime.UtcNow >= m_NextAssaultAllowed)
             {
-                SpecialAbilities.CourageSpecialAbility(1.0, this, defender, .25, 20, -1, true, "", "", "*begins to strike with fury*");
+                SpecialAbilities.ExpertiseSpecialAbility(1.0, this, defender, .25, 20, -1, true, "", "", "*begins to strike with fury*");
                 SpecialAbilities.EnrageSpecialAbility(1.0, null, this, .5, 20, 0, false, "", "", "-1");
 
                 m_NextAssaultAllowed = DateTime.UtcNow + NextAssaultDelay;

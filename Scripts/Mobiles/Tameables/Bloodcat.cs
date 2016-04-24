@@ -67,6 +67,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -84,7 +85,7 @@ namespace Server.Mobiles
                     effectChance = .20;                
             }
 
-            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, -1, true, "", "Their bite causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, -1, true, "", "Their bite causes you to bleed!", "-1");
 
             effectChance = .20;
 

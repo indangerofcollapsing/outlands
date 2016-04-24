@@ -68,6 +68,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -90,7 +91,7 @@ namespace Server.Mobiles
                 }
             }
 
-            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, 0x516, true, "", "The beast gores you with it's horns, causing you to bleed!");            
+            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, 0x516, true, "", "The beast gores you with it's horns, causing you to bleed!", "-1");            
         }
 
         public override void OnThink()

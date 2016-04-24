@@ -27,7 +27,7 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.MagicResist, 25);
 
-            VirtualArmor = 25;             
+            VirtualArmor = 50;             
 
             Tameable = true;
             ControlSlots = 1;
@@ -67,6 +67,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Swarm; } }
@@ -92,7 +93,7 @@ namespace Server.Mobiles
                 }
             }
 
-            SpecialAbilities.StunSpecialAbility(effectChance, this, defender, .10, 10, -1, true, "", "The creature buzzes about, making it difficult to swing your weapon!");
+            SpecialAbilities.DisorientSpecialAbility(effectChance, this, defender, .10, 10, -1, true, "", "The creature buzzes about, disorienting you!", "-1");
         }
 
         public override void OnThink()

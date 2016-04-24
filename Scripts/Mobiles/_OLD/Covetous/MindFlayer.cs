@@ -76,7 +76,7 @@ namespace Server.Mobiles
                 defender.FixedParticles(0x374A, 10, 30, 5038, 0x075, 0, EffectLayer.Head);
                 defender.PlaySound(0x581);
 
-                SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1, 1.0, false, -1, false, "", "The creature feeds upon your brain!");
+                SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1, 1.0, false, -1, false, "", "The creature feeds upon your brain!", "-1");
                 new Blood().MoveToWorld(defender.Location, defender.Map);
 
                 AOS.Damage(defender, this, (int)damageAmount, 0, 100, 0, 0, 0);

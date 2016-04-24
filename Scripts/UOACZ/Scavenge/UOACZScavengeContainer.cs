@@ -283,13 +283,9 @@ namespace Server.Custom
 
             int minimumPlayerValue = 50;
 
-            double totalValue = 0;
+            double searcherValue = 1 + player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Searcher);
 
-            player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Searcher, out totalValue);
-
-            totalValue += 1;
-
-            minimumPlayerValue = (int)(Math.Round((double)minimumPlayerValue * totalValue));
+            minimumPlayerValue = (int)(Math.Round((double)minimumPlayerValue * searcherValue));
 
             if (lockpickAttempt)
             {

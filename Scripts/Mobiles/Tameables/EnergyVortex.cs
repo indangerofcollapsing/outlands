@@ -27,7 +27,7 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.MagicResist, 100);
 
-            VirtualArmor = 50;
+            VirtualArmor = 25;
 
             Fame = 0;
             Karma = 0;            
@@ -40,6 +40,7 @@ namespace Server.Mobiles
             ReturnsHome = false;
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.None; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Berserk; } }

@@ -57,7 +57,7 @@ namespace Server.Items
             Effects.PlaySound(mobile.Location, mobile.Map, 0x62A);
             mobile.FixedParticles(0x374A, 10, 20, 5021, 2596, 0, EffectLayer.LeftFoot);
 
-            SpecialAbilities.EntangleSpecialAbility(1.0, null, mobile, 1.0, 1.0, 0x5D9, false, "", "");
+            SpecialAbilities.EntangleSpecialAbility(1.0, null, mobile, 1.0, 1.0, 0x5D9, false, "", "", "-1");
             mobile.SendMessage("Your feet sink into the creep...");
 
             return true;

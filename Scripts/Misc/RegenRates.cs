@@ -45,13 +45,11 @@ namespace Server.Misc
 
             if (player != null && from.Region is UOACZRegion)
             {
-                double totalValue = 0;
                 double regenRate = UOACZSystem.HitsRegen;
+                double regenValue = player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hardy);
 
-                player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hardy, out totalValue);
-
-                if (totalValue > 0)                
-                    regenRate *= totalValue;                
+                if (regenValue > 0)
+                    regenRate *= regenValue;                
 
                 return TimeSpan.FromSeconds(regenRate);
             }              

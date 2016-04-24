@@ -93,7 +93,7 @@ namespace Server.Mobiles
 
             double effectChance = .10;
 
-            SpecialAbilities.CrippleSpecialAbility(effectChance, this, defender, .25, 10, -1, true, "", "The creature has transfixed you with it's gaze, slowing your actions!");            
+            SpecialAbilities.CrippleSpecialAbility(effectChance, this, defender, .25, 10, -1, true, "", "The creature has transfixed you with it's gaze, slowing your actions!", "-1");            
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)

@@ -55,7 +55,7 @@ namespace Server.Mobiles
 
             double belowDuration = 15;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, defender, 1.0, belowDuration, false, -1, false, "", "You have been 'taken below' and cannot move or speak!");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, defender, 1.0, belowDuration, false, -1, false, "", "You have been 'taken below' and cannot move or speak!", "-1");
 
             defender.Squelched = true;
             defender.Hidden = true;
@@ -75,7 +75,7 @@ namespace Server.Mobiles
             Effects.PlaySound(location, defender.Map, 0x246); //0x0FB
 
             PublicOverheadMessage(MessageType.Regular, 0, false, "*takes them down below...*");
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, belowDuration, false, -1, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, belowDuration, false, -1, false, "", "", "-1");
 
             Effects.SendLocationParticles(EffectItem.Create(location, defender.Map, TimeSpan.FromSeconds(0.25)), 0x3709, 10, 30, 2051, 0, 5029, 0);
 

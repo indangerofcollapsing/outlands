@@ -96,7 +96,7 @@ namespace Server.Mobiles
             Fame = 20000;
             Karma = -20000;
 
-            VirtualArmor = 75;            
+            VirtualArmor = 50;            
 
             CanSwim = true;
         }
@@ -472,7 +472,7 @@ namespace Server.Mobiles
             Animate(28, 12, 1, true, false, 0);
 
             Effects.PlaySound(Location, Map, 0x667);
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 3, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 3, true, 0, false, "", "", "-1");
 
             PublicOverheadMessage(MessageType.Regular, 0, false, "*calls for aid from the deep*");
 
@@ -532,7 +532,7 @@ namespace Server.Mobiles
             PlaySound(0x64F);
 
             AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(stationaryDelay);
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, stationaryDelay, true, 0, false, "", "", "-1");
 
             Animate(30, 12, 1, true, false, 0);
 
@@ -741,7 +741,7 @@ namespace Server.Mobiles
             Effects.PlaySound(Location, Map, 0x656);            
 
             AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(stationaryDelay);
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, stationaryDelay, true, 0, false, "", "", "-1");
 
             Animate(27, 10, 1, true, false, 0);
 
@@ -953,7 +953,7 @@ namespace Server.Mobiles
             PlaySound(0x64F);
 
             AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(stationaryDelay);
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, stationaryDelay, true, 0, false, "", "", "-1");
 
             Animate(28, 12, 1, true, false, 0);
 
@@ -1297,7 +1297,7 @@ namespace Server.Mobiles
 
                 double submergeDuration = Math.Round(SinkBelowDurationBase - (SinkBelowDurationMaxReduction * spawnPercent));
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, submergeDuration, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, submergeDuration, true, 0, false, "", "", "-1");
 
                 m_NextSinkBelowAllowed = DateTime.UtcNow + NextSinkBelowDelay;
                 m_SinkBelowExpiration = DateTime.UtcNow + TimeSpan.FromSeconds(submergeDuration);
@@ -1431,14 +1431,14 @@ namespace Server.Mobiles
                 if (Combatant != null)
                 {
                     if (Utility.GetDistance(Location, Combatant.Location) <= 3)
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, true, 0, false, "", "");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, true, 0, false, "", "", "-1");
                 }
 
                 //If In Range of BoatCombatant, Don't Move
                 if (m_BoatCombatant != null)
                 {
                     if (!m_BoatCombatant.Deleted && m_BoatCombatant.m_SinkTimer == null && m_BoatCombatant.GetBoatToLocationDistance(m_BoatCombatant, Location) <= 4)
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, true, 0, false, "", "");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, true, 0, false, "", "", "-1");
                 }
             }
 
@@ -1532,7 +1532,7 @@ namespace Server.Mobiles
                     }
 
                     else
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, true, 0, false, "", "");   
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, true, 0, false, "", "", "-1");   
                 }
             }
 
@@ -1654,7 +1654,7 @@ namespace Server.Mobiles
             m_NextMeleeAttackAllowed = DateTime.UtcNow + TimeSpan.FromSeconds(attackDelay);
             LastCombatTime = DateTime.UtcNow;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 2, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 2, true, 0, false, "", "", "-1");
 
             Point3D targetLocation = target.Location;
             Map map = target.Map;
@@ -1843,7 +1843,7 @@ namespace Server.Mobiles
             m_NextMeleeAttackAllowed = DateTime.UtcNow + TimeSpan.FromSeconds(attackDelay);
             LastCombatTime = DateTime.UtcNow;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 2, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 2, true, 0, false, "", "", "-1");
 
             Point3D targetLocation = boat.Location;
             Map map = boat.Map;

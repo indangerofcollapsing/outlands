@@ -83,7 +83,8 @@ namespace Server.Mobiles
             SpellDelayMin *= 1.5;
             SpellDelayMax *= 1.5;
         }
-        
+
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage1; } }

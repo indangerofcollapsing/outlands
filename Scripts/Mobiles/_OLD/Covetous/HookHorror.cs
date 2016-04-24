@@ -53,7 +53,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.BleedSpecialAbility(.20, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(.20, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!", "-1");
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)

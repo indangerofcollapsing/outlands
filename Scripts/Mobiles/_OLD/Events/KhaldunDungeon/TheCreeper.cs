@@ -117,7 +117,7 @@ namespace Server.Mobiles
 
                 defender.SendMessage("You have been covered in creep, slowing your actions!");
 
-                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .50, 15, -1, false, "", "");
+                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .50, 15, -1, false, "", "", "-1");
             }
         }
 

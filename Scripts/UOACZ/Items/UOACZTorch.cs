@@ -103,7 +103,7 @@ namespace Server.Items
                 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
                 m_Torch.Delete();
 

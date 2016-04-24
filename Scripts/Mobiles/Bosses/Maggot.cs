@@ -285,10 +285,10 @@ namespace Server.Mobiles
 
             defender.SendMessage("You have been covered in foul, black bile!");
 
-            SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 1, -1, false, "", "");
-            SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8, -1, false, "", "");
-            SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .25, 15, -1, false, "", "");
-            SpecialAbilities.StunSpecialAbility(1.0, this, defender, .15, 15, -1, false, "", "");
+            SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 1, -1, false, "", "", "-1");
+            SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8, -1, false, "", "", "-1");
+            SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .25, 15, -1, false, "", "", "-1");
+            SpecialAbilities.DisorientSpecialAbility(1.0, this, defender, .15, 15, -1, false, "", "", "-1");
             */
         }
 
@@ -310,7 +310,7 @@ namespace Server.Mobiles
 
             PlaySound(0x5DA);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextSwallowAllowed = DateTime.UtcNow + NextSwallowDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);
@@ -350,8 +350,8 @@ namespace Server.Mobiles
                 if (mobileTarget is PlayerMobile)
                     damage *= .5;
 
-                SpecialAbilities.BleedSpecialAbility(1.0, this, mobileTarget, damage, swallowDuration, 0, true, "", "");
-                SpecialAbilities.HinderSpecialAbility(1.0, null, mobileTarget, 1.0, swallowDuration, false, -1, false, "", "You have been 'swallowed' and cannot move or speak!");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, mobileTarget, damage, swallowDuration, 0, true, "", "", "-1");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, mobileTarget, 1.0, swallowDuration, false, -1, false, "", "You have been 'engulfed' and cannot move or speak!", "-1");
 
                 mobileTarget.Squelched = true;
                 mobileTarget.Hidden = true;
@@ -413,7 +413,7 @@ namespace Server.Mobiles
 
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(.5);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             Timer.DelayCall(TimeSpan.FromSeconds(stationaryDelay), delegate
             {
@@ -478,7 +478,7 @@ namespace Server.Mobiles
             DamageIntervalInProgress = true;
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(stationaryDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             Timer.DelayCall(TimeSpan.FromSeconds(stationaryDelay), delegate
             {

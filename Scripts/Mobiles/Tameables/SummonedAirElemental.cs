@@ -32,7 +32,7 @@ namespace Server.Mobiles
             SetSkill(SkillName.EvalInt, 50);
             SetSkill(SkillName.Magery, 50);            
 
-            VirtualArmor = 50;
+            VirtualArmor = 25;
 
             ControlSlots = 2;
         }
@@ -47,6 +47,7 @@ namespace Server.Mobiles
             UpdateAI(false);
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Elemental; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage2; } }

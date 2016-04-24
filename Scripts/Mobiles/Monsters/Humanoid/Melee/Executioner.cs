@@ -62,7 +62,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.BleedSpecialAbility(.2, this, defender, DamageMax, 8.0, -1, true, "", "Their strike causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(.2, this, defender, DamageMax, 8.0, -1, true, "", "Their strike causes you to bleed!", "-1");
         }
 
         public override bool AlwaysMurderer { get { return true; } }

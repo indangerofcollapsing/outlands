@@ -51,9 +51,9 @@ namespace Server.Mobiles
                 Blood blood = new Blood();
                 blood.ItemID = Utility.RandomList(4650, 4651, 4652, 4653, 4654, 4655);
                 blood.MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z), Map);
-            }            
+            }
 
-            SpecialAbilities.BleedSpecialAbility(0.25, this, defender, DamageMax, 8.0, Utility.RandomList(0x5D9, 0x5DB), true, "", "Their attack causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(0.25, this, defender, DamageMax, 8.0, Utility.RandomList(0x5D9, 0x5DB), true, "", "Their attack causes you to bleed!", "-1");
         }
 
         public override bool CanRummageCorpses { get { return true; } }

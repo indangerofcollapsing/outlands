@@ -173,7 +173,7 @@ namespace Server.Custom
                 }
             }
 
-            SpecialAbilities.CourageSpecialAbility(effectChance, this, defender, .05, 10, -1, true, "", "", "draws upon courage*");
+            SpecialAbilities.ExpertiseSpecialAbility(effectChance, this, defender, .05, 10, -1, true, "", "", "draws upon expertise*");
         }
 
         public override void OnGotMeleeAttack(Mobile attacker)

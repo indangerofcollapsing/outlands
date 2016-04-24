@@ -71,6 +71,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Monstrous; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VerySlow; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -110,23 +111,10 @@ namespace Server.Mobiles
             BaseCreature bc_Defender = defender as BaseCreature;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
-            double totalValue;
+            double diseaseValue = defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease);
 
-            if (bc_Defender != null)
-            {
-                bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease, out totalValue);
-
-                if (totalValue > 0)
-                    return;
-            }
-
-            if (pm_Defender != null)
-            {
-                pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease, out totalValue);
-
-                if (totalValue > 0)
-                    return;
-            }
+            if (diseaseValue > 0)
+                return;
 
             if (Utility.RandomDouble() <= effectChance)
             {

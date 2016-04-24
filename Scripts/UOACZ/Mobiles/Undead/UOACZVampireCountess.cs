@@ -114,7 +114,7 @@ namespace Server
 
                 PublicOverheadMessage(MessageType.Regular, 0, false, "*transfixes target*");
 
-                SpecialAbilities.PetrifySpecialAbility(1.0, this, attacker, 1.0, 5.0, -1, true, "", "You are transfixed by their gaze!");
+                SpecialAbilities.PetrifySpecialAbility(1.0, this, attacker, 1.0, 5.0, -1, true, "", "You are transfixed by their gaze!", "-1");
             }
             
             else if (Utility.RandomDouble() <= .10)

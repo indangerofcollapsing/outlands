@@ -84,7 +84,7 @@ namespace Server.Mobiles
             Fame = 20000;
             Karma = -20000;
 
-            VirtualArmor = 300;
+            VirtualArmor = 100;
         }
 
         public virtual int AttackRange { get { return 2; } }
@@ -194,7 +194,7 @@ namespace Server.Mobiles
 
                     if (intervalCount % 8 == 0)
                     {
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 2, true, 0, false, "", "");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 2, true, 0, false, "", "", "-1");
 
                         Animate(15, 12, 1, true, false, 0);
                         PlaySound(GetAngerSound());
@@ -457,7 +457,7 @@ namespace Server.Mobiles
 
             double totalDelay = directionDelay + initialDelay + distanceDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextRockWaveAllowed = DateTime.UtcNow + NextRockWaveDelay + TimeSpan.FromSeconds(totalDelay);
             AbilityInProgress = true;            
@@ -692,7 +692,7 @@ namespace Server.Mobiles
 
             double totalDelay = directionDelay + initialDelay + durationDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextRockslideAllowed = DateTime.UtcNow + NextRockslideDelay + TimeSpan.FromSeconds(totalDelay);
             AbilityInProgress = true;
@@ -895,7 +895,7 @@ namespace Server.Mobiles
 
             double totalDelay = directionDelay + initialDelay + 1;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextBoulderAllowed = DateTime.UtcNow + NextBoulderDelay + TimeSpan.FromSeconds(totalDelay);
             AbilityInProgress = true;
@@ -1042,7 +1042,7 @@ namespace Server.Mobiles
 
             double totalDelay = directionDelay + initialDelay + 1;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextHarmonicRefractorAllowed = DateTime.UtcNow + NextHarmonicRefractorDelay;
             AbilityInProgress = true;
@@ -1199,7 +1199,7 @@ namespace Server.Mobiles
 
             double totalDelay = directionDelay + initialDelay + ((double)boulderCount * .5);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextBoulderAllowed = DateTime.UtcNow + NextBoulderDelay + TimeSpan.FromSeconds(totalDelay);
             AbilityInProgress = true;
@@ -1386,7 +1386,7 @@ namespace Server.Mobiles
 
             double totalDelay = directionDelay + initialDelay + durationDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextRockslideAllowed = DateTime.UtcNow + NextRockslideDelay + TimeSpan.FromSeconds(totalDelay);
             AbilityInProgress = true;            
@@ -1563,7 +1563,7 @@ namespace Server.Mobiles
             double initialDelay = 2;
             double totalDelay = directionDelay + initialDelay + 1;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             AbilityInProgress = true;
             DamageIntervalInProgress = true;
@@ -1692,7 +1692,7 @@ namespace Server.Mobiles
 
             Blessed = true;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             AbilityInProgress = true;
             DamageIntervalInProgress = true;
@@ -1772,7 +1772,7 @@ namespace Server.Mobiles
             {
                 double riseTime = 1.25;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, riseTime, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, riseTime, true, 0, false, "", "", "-1");
 
                 Hidden = false;   
 
@@ -1839,7 +1839,7 @@ namespace Server.Mobiles
                 creature.MoveToWorld(creatureLocation, Map);
                 creature.PlaySound(creature.GetIdleSound());
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, 2, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, 2, true, 0, false, "", "", "-1");
 
                 TimedStatic floorCrack = new TimedStatic(Utility.RandomList(6913, 6914, 6915, 6916, 6917, 6918, 6919, 6920), 3);
                 floorCrack.Name = "floor crack";
@@ -1862,7 +1862,7 @@ namespace Server.Mobiles
 
                     creature.Hidden = false;
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, 1, true, 0, false, "", "");
+                    SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, 1, true, 0, false, "", "", "-1");
 
                     int animation = Utility.RandomMinMax(2, 3);
                     int frameCount = 4;

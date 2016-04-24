@@ -27,7 +27,7 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.MagicResist, 25);
 
-            VirtualArmor = 25;
+            VirtualArmor = 50;
 
 			Fame = 600;
 			Karma = -600;
@@ -67,6 +67,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -95,7 +96,7 @@ namespace Server.Mobiles
                 }
             }
 
-            SpecialAbilities.EntangleSpecialAbility(effectChance, this, defender, 5.0, 1, -1, true, "", "The creature grasps you with its jaws, holding you in place!");
+            SpecialAbilities.EntangleSpecialAbility(effectChance, this, defender, 5.0, 1, -1, true, "", "The creature grasps you with its jaws, holding you in place!", "-1");
         }
 
         public override void OnThink()

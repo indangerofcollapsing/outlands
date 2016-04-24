@@ -68,8 +68,8 @@ namespace Server.Mobiles
 
                 defender.SendMessage("You have weakened by the creature's venom!");
 
-                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .25, 10, -1, false, "", "");
-                SpecialAbilities.StunSpecialAbility(1.0, this, defender, .15, 10, -1, false, "", "");
+                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .25, 10, -1, false, "", "", "-1");
+                SpecialAbilities.DisorientSpecialAbility(1.0, this, defender, .15, 10, -1, false, "", "", "-1");
             }            
         }
 

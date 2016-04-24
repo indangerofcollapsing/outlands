@@ -83,7 +83,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -151,7 +151,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -268,7 +268,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
                 player.Direction = Utility.GetDirection(player.Location, bc_Wildlife.Location);
 
@@ -419,7 +419,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -532,7 +532,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
             
             Timer.DelayCall(TimeSpan.FromSeconds(directionDelay), delegate
             {
@@ -639,7 +639,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -739,7 +739,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
                 
@@ -798,7 +798,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -922,7 +922,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -1024,7 +1024,7 @@ namespace Server
 
                         player.DoHarmful(mobile);
                         
-                        SpecialAbilities.BleedSpecialAbility(1.0, player, mobile, damage, 8, -1, true, "", "You begin to bleed!.");
+                        SpecialAbilities.BleedSpecialAbility(1.0, player, mobile, damage, 8, -1, true, "", "You begin to bleed!.", "-1");
                     }
                 });
             });
@@ -1040,7 +1040,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -1108,7 +1108,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -1252,7 +1252,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
                 
@@ -1469,7 +1469,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -1683,7 +1683,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -1818,7 +1818,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -1877,7 +1877,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
                 
@@ -2032,7 +2032,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -2157,7 +2157,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 0.5, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 0.5, 1, true, 0, false, "", "", "-1");
                                 
                 player.Direction = Utility.GetDirection(player.Location, mobileTarget.Location);
 
@@ -2187,7 +2187,7 @@ namespace Server
                     }
 
                     double damageScalar = 1.5;
-                    double pierceAmount = .33;
+                    double pierceAmount = 50;
 
                     double duration = 15;
 
@@ -2211,7 +2211,7 @@ namespace Server
 
                     if (attackHit)
                     {
-                        SpecialAbilities.PierceSpecialAbility(1.0, player, mobileTarget, pierceAmount, duration, -1, true, "", "Their attack cuts through your armor!");
+                        SpecialAbilities.PierceSpecialAbility(1.0, player, mobileTarget, pierceAmount, duration, -1, true, "", "Their attack cuts through your armor!", "-1");
                         weapon.OnHit(player, mobileTarget, damageScalar);
 
                         Timer.DelayCall(TimeSpan.FromSeconds(30), delegate
@@ -2241,7 +2241,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -2392,7 +2392,7 @@ namespace Server
 
             int stationarySeconds = 2;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, stationarySeconds, true, 0, false, "", "");  
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, stationarySeconds, true, 0, false, "", "", "-1");  
 
             Point3D location = player.Location;
             Map map = player.Map;
@@ -2678,7 +2678,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -2831,7 +2831,7 @@ namespace Server
                 double directionDelay = .25;
                 double totalDelay = directionDelay + 2;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -2958,7 +2958,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay + 1;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -3084,7 +3084,7 @@ namespace Server
 
                         player.DoHarmful(mobileTarget);
 
-                        SpecialAbilities.EntangleSpecialAbility(1.0, player, mobileTarget, 1.0, duration, -1, true, "", "The foul stench of the dead stuns you, leaving you unable to move.");
+                        SpecialAbilities.EntangleSpecialAbility(1.0, player, mobileTarget, 1.0, duration, -1, true, "", "The foul stench of the dead stuns you, leaving you unable to move.", "-1");
 
                         new Blood().MoveToWorld(mobileTarget.Location, mobileTarget.Map);
                         AOS.Damage(mobileTarget, player, (int)damage, 0, 100, 0, 0, 0);
@@ -3177,7 +3177,7 @@ namespace Server
                                 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 2.2, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 2.2, true, 0, false, "", "", "-1");
 
                 for (int a = 0; a < 2; a++)
                 {
@@ -3327,7 +3327,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -3588,7 +3588,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
                 
@@ -3760,7 +3760,7 @@ namespace Server
 
                 bool wasHidden = player.Hidden;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
                 player.Direction = Utility.GetDirection(player.Location, mobileTarget.Location);
 
@@ -3982,7 +3982,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -4072,7 +4072,7 @@ namespace Server
                         Effects.PlaySound(player.Location, player.Map, 0x593);
                         Effects.SendLocationParticles(EffectItem.Create(mobile.Location, mobile.Map, TimeSpan.FromSeconds(0.5)), 0x3728, 10, 30, 2610, 0, 5029, 0);
 
-                        SpecialAbilities.CrippleSpecialAbility(1.0, player, mobile, slowdownAmount, duration, 0, false, "", "You have been struck by a malediction and your attacks have been slowed!"); 
+                        SpecialAbilities.CrippleSpecialAbility(1.0, player, mobile, slowdownAmount, duration, 0, false, "", "You have been struck by a malediction and your attacks have been slowed!", "-1"); 
                     }
                 });
             });
@@ -4146,7 +4146,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
                 
@@ -4468,7 +4468,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
                 player.Direction = Utility.GetDirection(player.Location, mobileTarget.Location);
 
@@ -4528,7 +4528,7 @@ namespace Server
 
                     if (attackHit)
                     {
-                        SpecialAbilities.PetrifySpecialAbility(1.0, player, mobileTarget, 1.0, transfixDuration, -1, true, "", "You are transfixed by their gaze!"); 
+                        SpecialAbilities.PetrifySpecialAbility(1.0, player, mobileTarget, 1.0, transfixDuration, -1, true, "", "You are transfixed by their gaze!", "-1"); 
 
                         weapon.OnHit(player, mobileTarget, damageScalar);
                     }
@@ -4551,7 +4551,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
                 
@@ -4685,7 +4685,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
                 player.Direction = Utility.GetDirection(player.Location, mobileTarget.Location);
 
@@ -4891,7 +4891,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -5030,7 +5030,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -5229,7 +5229,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -5470,7 +5470,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -5688,7 +5688,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -5844,7 +5844,7 @@ namespace Server
             double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
             player.RevealingAction();
 
@@ -5923,7 +5923,7 @@ namespace Server
                         Mobile mobile = (Mobile)m_Queue.Dequeue();
 
                         mobile.Location = player.Location;
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, 1, true, 0, false, "", "You have been engulfed!");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, 1, true, 0, false, "", "You have been engulfed!", "-1");
 
                         Effects.PlaySound(mobile.Location, mobile.Map, 0x101);
 
@@ -6023,7 +6023,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -6143,7 +6143,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -6322,7 +6322,7 @@ namespace Server
                 double fireballDelay = .1;
                 double totalDelay = 1 + directionDelay + initialDelay + ((double)fireballs * fireballDelay);
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -6537,7 +6537,7 @@ namespace Server
 
             player.RevealingAction();
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 2.0, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 2.0, true, 0, false, "", "", "-1");
 
             int animation = player.m_UOACZAccountEntry.UndeadProfile.SpecialAnimation;
             int animationFrames = player.m_UOACZAccountEntry.UndeadProfile.SpecialAnimationFrames;  
@@ -6703,7 +6703,7 @@ namespace Server
                 double initialDelay = UOACZSystem.AbilityInitialDelaySeconds;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, totalDelay, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 

@@ -29,14 +29,14 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.Poisoning, 15);
 
+            VirtualArmor = 25;
+
             Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 60;
 
             Fame = 500;
             Karma = -500;
-
-            PackItem(new Bone(6));
         }
 
         public override int TamedItemId { get { return 17046; } }
@@ -69,6 +69,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }

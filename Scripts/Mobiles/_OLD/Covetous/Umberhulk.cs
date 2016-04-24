@@ -46,7 +46,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.StunSpecialAbility(.10, this, defender, .10, 10, -1, true, "", "Their attack stuns you!");
+            SpecialAbilities.DisorientSpecialAbility(.10, this, defender, .10, 10, -1, true, "", "Their attack disorients you!", "-1");
         }
 
 		public override int GetAngerSound(){return 0x4E7;}

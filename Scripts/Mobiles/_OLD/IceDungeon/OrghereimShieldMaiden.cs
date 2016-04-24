@@ -68,7 +68,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.PierceSpecialAbility(0.05, this, defender, .5, 10, -1, true, "", "Their spear pierces your armor!");
+            SpecialAbilities.PierceSpecialAbility(0.05, this, defender, 50, 10, -1, true, "", "Their spear pierces your armor!", "-1");
         }
 		
 		public OrghereimShieldMaiden( Serial serial ) : base( serial ) 

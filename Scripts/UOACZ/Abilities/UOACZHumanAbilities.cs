@@ -553,7 +553,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 2, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 2, 1, true, 0, false, "", "", "-1");
                 player.SendMessage("You take aim...");
 
                 player.Direction = Utility.GetDirection(player.Location, mobileTarget.Location);
@@ -816,7 +816,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, 2, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, 2, true, 0, false, "", "", "-1");
 
                 player.SendMessage("You aim for it's heart...");
 
@@ -903,7 +903,7 @@ namespace Server
                         if (attackHit)
                         {
                             new Blood().MoveToWorld(mobileTarget.Location, mobileTarget.Map);
-                            SpecialAbilities.BleedSpecialAbility(1.0, player, mobileTarget, bleedAmount, 8, -1, true, "", "You have been hit with a heartpierce arrow and begin to bleed.");
+                            SpecialAbilities.BleedSpecialAbility(1.0, player, mobileTarget, bleedAmount, 8, -1, true, "", "You have been hit with a heartpierce arrow and begin to bleed.", "-1");
 
                             weapon.OnHit(player, mobileTarget);
                         }
@@ -995,7 +995,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, 2, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, 2, true, 0, false, "", "", "-1");
 
                 player.SendMessage("You aim for it's legs...");
 
@@ -1098,7 +1098,7 @@ namespace Server
                         if (attackHit)
                         {
                             new Blood().MoveToWorld(mobileTarget.Location, mobileTarget.Map);
-                            SpecialAbilities.EntangleSpecialAbility(1.0, player, mobileTarget, 1.0, entangleDuration, -1, true, "", "You have been hamstrung and can't move!");
+                            SpecialAbilities.EntangleSpecialAbility(1.0, player, mobileTarget, 1.0, entangleDuration, -1, true, "", "You have been hamstrung and can't move!", "-1");
 
                             weapon.OnHit(player, mobileTarget, damageScalar);
                         }
@@ -1288,7 +1288,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
                 int throwSound = 0x5D3;
 
@@ -1497,7 +1497,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
                 player.Direction = Utility.GetDirection(player.Location, mobileTarget.Location);
 
@@ -1696,7 +1696,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
                 player.Direction = Utility.GetDirection(player.Location, mobileTarget.Location);
 
@@ -1962,7 +1962,7 @@ namespace Server
 
                 player.Direction = Utility.GetDirection(player.Location, mobileTarget.Location);
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, .75, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, .75, 1, true, 0, false, "", "", "-1");
 
                 player.RevealingAction();
 
@@ -2220,7 +2220,7 @@ namespace Server
 
             player.RevealingAction();
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
             Timer.DelayCall(TimeSpan.FromSeconds(.25), delegate
             {
@@ -2349,7 +2349,7 @@ namespace Server
 
                 player.RevealingAction();
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 1, true, 0, false, "", "", "-1");
 
                 player.Direction = Utility.GetDirection(player.Location, mobileTarget.Location);
 

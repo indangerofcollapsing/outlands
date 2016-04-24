@@ -119,7 +119,7 @@ namespace Server.Custom
                 }
             }
 
-            SpecialAbilities.PetrifySpecialAbility(effectChance, this, defender, 1.0, 5.0, -1, true, "", "You are petrified by their gaze!");
+            SpecialAbilities.PetrifySpecialAbility(effectChance, this, defender, 1.0, 5.0, -1, true, "", "You are petrified by their gaze!", "-1");
         }
         
         public override void SetUniqueAI()

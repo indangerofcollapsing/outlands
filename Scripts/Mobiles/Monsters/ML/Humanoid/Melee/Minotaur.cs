@@ -78,7 +78,7 @@ namespace Server.Mobiles
             {
                 PlaySound(GetAngerSound());
 
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, -1, true, "", "The beast gores you with their horns, causing you to bleed!");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, -1, true, "", "The beast gores you with their horns, causing you to bleed!", "-1");
             }
         }
 

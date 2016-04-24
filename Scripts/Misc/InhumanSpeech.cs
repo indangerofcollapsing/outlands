@@ -34,60 +34,60 @@ namespace Server.Misc
 					m_RatmanSpeech.Flags = IHSFlags.All;
 
 					m_RatmanSpeech.Keywords = new string[]
-						{
-							"meat", "gold", "kill", "killing", "slay",
-							"sword", "axe", "spell", "magic", "spells",
-							"swords", "axes", "mace", "maces", "monster",
-							"monsters", "food", "run", "escape", "away",
-							"help", "dead", "die", "dying", "lose",
-							"losing", "life", "lives", "death", "ghost",
-							"ghosts", "british", "blackthorn", "guild",
-							"guilds", "dragon", "dragons", "game", "games",
-							"ultima", "silly", "stupid", "dumb", "idiot",
-							"idiots", "cheesy", "cheezy", "crazy", "dork",
-							"jerk", "fool", "foolish", "ugly", "insult", "scum"
-						};
+					{
+						"meat", "gold", "kill", "killing", "slay",
+						"sword", "axe", "spell", "magic", "spells",
+						"swords", "axes", "mace", "maces", "monster",
+						"monsters", "food", "run", "escape", "away",
+						"help", "dead", "die", "dying", "lose",
+						"losing", "life", "lives", "death", "ghost",
+						"ghosts", "british", "blackthorn", "guild",
+						"guilds", "dragon", "dragons", "game", "games",
+						"ultima", "silly", "stupid", "dumb", "idiot",
+						"idiots", "cheesy", "cheezy", "crazy", "dork",
+						"jerk", "fool", "foolish", "ugly", "insult", "scum"
+					};
 
 					m_RatmanSpeech.Responses = new string[]
-						{
-							"meat", "kill", "pound", "crush", "yum yum",
-							"crunch", "destroy", "murder", "eat", "munch",
-							"massacre", "food", "monster", "evil", "run",
-							"die", "lose", "dumb", "idiot", "fool", "crazy",
-							"dinner", "lunch", "breakfast", "fight", "battle",
-							"doomed", "rip apart", "tear apart", "smash",
-							"edible?", "shred", "disembowel", "ugly", "smelly",
-							"stupid", "hideous", "smell", "tasty", "invader",
-							"attack", "raid", "plunder", "pillage", "treasure",
-							"loser", "lose", "scum"
-						};
+					{
+						"meat", "kill", "pound", "crush", "yum yum",
+						"crunch", "destroy", "murder", "eat", "munch",
+						"massacre", "food", "monster", "evil", "run",
+						"die", "lose", "dumb", "idiot", "fool", "crazy",
+						"dinner", "lunch", "breakfast", "fight", "battle",
+						"doomed", "rip apart", "tear apart", "smash",
+						"edible?", "shred", "disembowel", "ugly", "smelly",
+						"stupid", "hideous", "smell", "tasty", "invader",
+						"attack", "raid", "plunder", "pillage", "treasure",
+						"loser", "lose", "scum"
+					};
 
 					m_RatmanSpeech.Syllables = new string[]
-						{
-							"skrit",
+					{
+						"skrit",
 
-							"ch", "ch",
-							"it", "ti", "it", "ti",
+						"ch", "ch",
+						"it", "ti", "it", "ti",
 
-							"ak", "ek", "ik", "ok", "uk", "yk",
-							"ka", "ke", "ki", "ko", "ku", "ky",
-							"at", "et", "it", "ot", "ut", "yt",
+						"ak", "ek", "ik", "ok", "uk", "yk",
+						"ka", "ke", "ki", "ko", "ku", "ky",
+						"at", "et", "it", "ot", "ut", "yt",
 
-							"cha", "che", "chi", "cho", "chu", "chy",
-							"ach", "ech", "ich", "och", "uch", "ych",
-							"att", "ett", "itt", "ott", "utt", "ytt",
-							"tat", "tet", "tit", "tot", "tut", "tyt",
-							"tta", "tte", "tti", "tto", "ttu", "tty",
-							"tak", "tek", "tik", "tok", "tuk", "tyk",
-							"ack", "eck", "ick", "ock", "uck", "yck",
-							"cka", "cke", "cki", "cko", "cku", "cky",
-							"rak", "rek", "rik", "rok", "ruk", "ryk",
+						"cha", "che", "chi", "cho", "chu", "chy",
+						"ach", "ech", "ich", "och", "uch", "ych",
+						"att", "ett", "itt", "ott", "utt", "ytt",
+						"tat", "tet", "tit", "tot", "tut", "tyt",
+						"tta", "tte", "tti", "tto", "ttu", "tty",
+						"tak", "tek", "tik", "tok", "tuk", "tyk",
+						"ack", "eck", "ick", "ock", "uck", "yck",
+						"cka", "cke", "cki", "cko", "cku", "cky",
+						"rak", "rek", "rik", "rok", "ruk", "ryk",
 
-							"tcha", "tche", "tchi", "tcho", "tchu", "tchy",
-							"rach", "rech", "rich", "roch", "ruch", "rych",
-							"rrap", "rrep", "rrip", "rrop", "rrup", "rryp",
-							"ccka", "ccke", "ccki", "ccko", "ccku", "ccky"
-						};
+						"tcha", "tche", "tchi", "tcho", "tchu", "tchy",
+						"rach", "rech", "rich", "roch", "ruch", "rych",
+						"rrap", "rrep", "rrip", "rrop", "rrup", "rryp",
+						"ccka", "ccke", "ccki", "ccko", "ccku", "ccky"
+					};
 				}
 
 				return m_RatmanSpeech;
@@ -95,7 +95,6 @@ namespace Server.Misc
 		}
 
 		private static InhumanSpeech m_OrcSpeech;
-
 		public static InhumanSpeech Orc
 		{
 			get
@@ -110,71 +109,71 @@ namespace Server.Misc
 					m_OrcSpeech.Flags = IHSFlags.All;
 
 					m_OrcSpeech.Keywords = new string[]
-						{
-							"meat", "gold", "kill", "killing", "slay",
-							"sword", "axe", "spell", "magic", "spells",
-							"swords", "axes", "mace", "maces", "monster",
-							"monsters", "food", "run", "escape", "away",
-							"help", "dead", "die", "dying", "lose",
-							"losing", "life", "lives", "death", "ghost",
-							"ghosts", "british", "blackthorn", "guild",
-							"guilds", "dragon", "dragons", "game", "games",
-							"ultima", "silly", "stupid", "dumb", "idiot",
-							"idiots", "cheesy", "cheezy", "crazy", "dork",
-							"jerk", "fool", "foolish", "ugly", "insult", "scum"
-						};
+					{
+						"meat", "gold", "kill", "killing", "slay",
+						"sword", "axe", "spell", "magic", "spells",
+						"swords", "axes", "mace", "maces", "monster",
+						"monsters", "food", "run", "escape", "away",
+						"help", "dead", "die", "dying", "lose",
+						"losing", "life", "lives", "death", "ghost",
+						"ghosts", "british", "blackthorn", "guild",
+						"guilds", "dragon", "dragons", "game", "games",
+						"ultima", "silly", "stupid", "dumb", "idiot",
+						"idiots", "cheesy", "cheezy", "crazy", "dork",
+						"jerk", "fool", "foolish", "ugly", "insult", "scum"
+					};
 
 					m_OrcSpeech.Responses = new string[]
-						{
-							"meat", "kill", "pound", "crush", "yum yum",
-							"crunch", "destroy", "murder", "eat", "munch",
-							"massacre", "food", "monster", "evil", "run",
-							"die", "lose", "dumb", "idiot", "fool", "crazy",
-							"dinner", "lunch", "breakfast", "fight", "battle",
-							"doomed", "rip apart", "tear apart", "smash",
-							"edible?", "shred", "disembowel", "ugly", "smelly",
-							"stupid", "hideous", "smell", "tasty", "invader",
-							"attack", "raid", "plunder", "pillage", "treasure",
-							"loser", "lose", "scum"
-						};
+					{
+						"meat", "kill", "pound", "crush", "yum yum",
+						"crunch", "destroy", "murder", "eat", "munch",
+						"massacre", "food", "monster", "evil", "run",
+						"die", "lose", "dumb", "idiot", "fool", "crazy",
+						"dinner", "lunch", "breakfast", "fight", "battle",
+						"doomed", "rip apart", "tear apart", "smash",
+						"edible?", "shred", "disembowel", "ugly", "smelly",
+						"stupid", "hideous", "smell", "tasty", "invader",
+						"attack", "raid", "plunder", "pillage", "treasure",
+						"loser", "lose", "scum"
+					};
 
 					m_OrcSpeech.Syllables = new string[]
-						{
-							"bu", "du", "fu", "ju", "gu",
-							"ulg", "gug", "gub", "gur", "oog",
-							"gub", "log", "ru", "stu", "glu",
-							"ug", "ud", "og", "log", "ro", "flu",
-							"bo", "duf", "fun", "nog", "dun", "bog",
-							"dug", "gh", "ghu", "gho", "nug", "ig",
-							"igh", "ihg", "luh", "duh", "bug", "dug",
-							"dru", "urd", "gurt", "grut", "grunt",
-							"snarf", "urgle", "igg", "glu", "glug",
-							"foo", "bar", "baz", "ghat", "ab", "ad",
-							"gugh", "guk", "ag", "alm", "thu", "log",
-							"bilge", "augh", "gha", "gig", "goth",
-							"zug", "pig", "auh", "gan", "azh", "bag",
-							"hig", "oth", "dagh", "gulg", "ugh", "ba",
-							"bid", "gug", "bug", "rug", "hat", "brui",
-							"gagh", "buad", "buil", "buim", "bum",
-							"hug", "hug", "buo", "ma", "buor", "ghed",
-							"buu", "ca", "guk", "clog", "thurg", "car",
-							"cro", "thu", "da", "cuk", "gil", "cur", "dak",
-							"dar", "deak", "der", "dil", "dit", "at", "ag",
-							"dor", "gar", "dre", "tk", "dri", "gka", "rim",
-							"eag", "egg", "ha", "rod", "eg", "lat", "eichel",
-							"ek", "ep", "ka", "it", "ut", "ewk", "ba", "dagh",
-							"faugh", "foz", "fog", "fid", "fruk", "gag", "fub",
-							"fud", "fur", "bog", "fup", "hagh", "gaa", "kt",
-							"rekk", "lub", "lug", "tug", "gna", "urg", "l",
-							"gno", "gnu", "gol", "gom", "kug", "ukk", "jak",
-							"jek", "rukk", "jja", "akt", "nuk", "hok", "hrol",
-							"olm", "natz", "i", "i", "o", "u", "ikk", "ign",
-							"juk", "kh", "kgh", "ka", "hig", "ke", "ki", "klap",
-							"klu", "knod", "kod", "knu", "thnu", "krug", "nug",
-							"nar", "nag", "neg", "neh", "oag", "ob", "ogh", "oh",
-							"om", "dud", "oo", "pa", "hrak", "qo", "quad", "quil",
-							"ghig", "rur", "sag", "sah", "sg"
-						};
+					{
+						"bu", "du", "fu", "ju", "gu",
+						"ulg", "gug", "gub", "gur", "oog",
+						"gub", "log", "ru", "stu", "glu",
+						"ug", "ud", "og", "log", "ro", "flu",
+						"bo", "duf", "fun", "nog", "dun", "bog",
+						"dug", "gh", "ghu", "gho", "nug", "ig",
+						"igh", "ihg", "luh", "duh", "bug", "dug",
+						"dru", "urd", "gurt", "grut", "grunt",
+						"snarf", "urgle", "igg", "glu", "glug",
+						"foo", "bar", "baz", "ghat", "ab", "ad",
+						"gugh", "guk", "ag", "alm", "thu", "log",
+						"bilge", "augh", "gha", "gig", "goth",
+						"zug", "pig", "auh", "gan", "azh", "bag",
+						"hig", "oth", "dagh", "gulg", "ugh", "ba",
+						"bid", "gug", "bug", "rug", "hat", "brui",
+						"gagh", "buad", "buil", "buim", "bum",
+						"hug", "hug", "buo", "ma", "buor", "ghed",
+						"buu", "ca", "guk", "clog", "thurg", "car",
+						"cro", "thu", "da", "cuk", "gil", "cur", "dak",
+						"dar", "deak", "der", "dil", "dit", "at", "ag",
+						"dor", "gar", "dre", "tk", "dri", "gka", "rim",
+						"eag", "egg", "ha", "rod", "eg", "lat", "eichel",
+						"ek", "ep", "ka", "it", "ut", "ewk", "ba", "dagh",
+						"faugh", "foz", "fog", "fid", "fruk", "gag", "fub",
+						"fud", "fur", "bog", "fup", "hagh", "gaa", "kt",
+						"rekk", "lub", "lug", "tug", "gna", "urg", "l",
+						"gno", "gnu", "gol", "gom", "kug", "ukk", "jak",
+						"jek", "rukk", "jja", "akt", "nuk", "hok", "hrol",
+						"olm", "natz", "i", "i", "o", "u", "ikk", "ign",
+						"juk", "kh", "kgh", "ka", "hig", "ke", "ki", "klap",
+						"klu", "knod", "kod", "knu", "thnu", "krug", "nug",
+						"nar", "nag", "neg", "neh", "oag", "ob", "ogh", "oh",
+						"om", "dud", "oo", "pa", "hrak", "qo", "quad", "quil",
+						"ghig", "rur", "sag", "sah", "sg"
+					};
 				}
 
 				return m_OrcSpeech;
@@ -182,7 +181,6 @@ namespace Server.Misc
 		}
 
 		private static InhumanSpeech m_LizardmanSpeech;
-
 		public static InhumanSpeech Lizardman
 		{
 			get
@@ -197,48 +195,48 @@ namespace Server.Misc
 					m_LizardmanSpeech.Flags = IHSFlags.All;
 
 					m_LizardmanSpeech.Keywords = new string[]
-						{
-							"meat", "gold", "kill", "killing", "slay",
-							"sword", "axe", "spell", "magic", "spells",
-							"swords", "axes", "mace", "maces", "monster",
-							"monsters", "food", "run", "escape", "away",
-							"help", "dead", "die", "dying", "lose",
-							"losing", "life", "lives", "death", "ghost",
-							"ghosts", "british", "blackthorn", "guild",
-							"guilds", "dragon", "dragons", "game", "games",
-							"ultima", "silly", "stupid", "dumb", "idiot",
-							"idiots", "cheesy", "cheezy", "crazy", "dork",
-							"jerk", "fool", "foolish", "ugly", "insult", "scum"
-						};
+					{
+						"meat", "gold", "kill", "killing", "slay",
+						"sword", "axe", "spell", "magic", "spells",
+						"swords", "axes", "mace", "maces", "monster",
+						"monsters", "food", "run", "escape", "away",
+						"help", "dead", "die", "dying", "lose",
+						"losing", "life", "lives", "death", "ghost",
+						"ghosts", "british", "blackthorn", "guild",
+						"guilds", "dragon", "dragons", "game", "games",
+						"ultima", "silly", "stupid", "dumb", "idiot",
+						"idiots", "cheesy", "cheezy", "crazy", "dork",
+						"jerk", "fool", "foolish", "ugly", "insult", "scum"
+					};
 
 					m_LizardmanSpeech.Responses = new string[]
-						{
-							"meat", "kill", "pound", "crush", "yum yum",
-							"crunch", "destroy", "murder", "eat", "munch",
-							"massacre", "food", "monster", "evil", "run",
-							"die", "lose", "dumb", "idiot", "fool", "crazy",
-							"dinner", "lunch", "breakfast", "fight", "battle",
-							"doomed", "rip apart", "tear apart", "smash",
-							"edible?", "shred", "disembowel", "ugly", "smelly",
-							"stupid", "hideous", "smell", "tasty", "invader",
-							"attack", "raid", "plunder", "pillage", "treasure",
-							"loser", "lose", "scum"
-						};
+					{
+						"meat", "kill", "pound", "crush", "yum yum",
+						"crunch", "destroy", "murder", "eat", "munch",
+						"massacre", "food", "monster", "evil", "run",
+						"die", "lose", "dumb", "idiot", "fool", "crazy",
+						"dinner", "lunch", "breakfast", "fight", "battle",
+						"doomed", "rip apart", "tear apart", "smash",
+						"edible?", "shred", "disembowel", "ugly", "smelly",
+						"stupid", "hideous", "smell", "tasty", "invader",
+						"attack", "raid", "plunder", "pillage", "treasure",
+						"loser", "lose", "scum"
+					};
 
 					m_LizardmanSpeech.Syllables = new string[]
-						{
-							"ss", "sth", "iss", "is", "ith", "kth",
-							"sith", "this", "its", "sit", "tis", "tsi",
-							"ssi", "sil", "lis", "sis", "lil", "thil",
-							"lith", "sthi", "lish", "shi", "shash", "sal",
-							"miss", "ra", "tha", "thes", "ses", "sas", "las",
-							"les", "sath", "sia", "ais", "isa", "asi", "asth",
-							"stha", "sthi", "isth", "asa", "ath", "tha", "als",
-							"sla", "thth", "ci", "ce", "cy", "yss", "ys", "yth",
-							"syth", "thys", "yts", "syt", "tys", "tsy", "ssy",
-							"syl", "lys", "sys", "lyl", "thyl", "lyth", "sthy",
-							"lysh", "shy", "myss", "ysa", "sthy", "ysth"
-						};
+					{
+						"ss", "sth", "iss", "is", "ith", "kth",
+						"sith", "this", "its", "sit", "tis", "tsi",
+						"ssi", "sil", "lis", "sis", "lil", "thil",
+						"lith", "sthi", "lish", "shi", "shash", "sal",
+						"miss", "ra", "tha", "thes", "ses", "sas", "las",
+						"les", "sath", "sia", "ais", "isa", "asi", "asth",
+						"stha", "sthi", "isth", "asa", "ath", "tha", "als",
+						"sla", "thth", "ci", "ce", "cy", "yss", "ys", "yth",
+						"syth", "thys", "yts", "syt", "tys", "tsy", "ssy",
+						"syl", "lys", "sys", "lyl", "thyl", "lyth", "sthy",
+						"lysh", "shy", "myss", "ysa", "sthy", "ysth"
+					};
 				}
 
 				return m_LizardmanSpeech;
@@ -246,7 +244,6 @@ namespace Server.Misc
 		}
 
 		private static InhumanSpeech m_WispSpeech;
-
 		public static InhumanSpeech Wisp
 		{
 			get
@@ -261,14 +258,14 @@ namespace Server.Misc
 					m_WispSpeech.Flags = IHSFlags.OnMovement;
 
 					m_WispSpeech.Syllables = new string[]
-						{
-							"b", "c", "d", "f", "g", "h", "i",
-							"j", "k", "l", "m", "n", "p", "r",
-							"s", "t", "v", "w", "x", "z", "c",
-							"c", "x", "x", "x", "x", "x", "y",
-							"y", "y", "y", "t", "t", "k", "k",
-							"l", "l", "m", "m", "m", "m", "z"
-						};
+					{
+						"b", "c", "d", "f", "g", "h", "i",
+						"j", "k", "l", "m", "n", "p", "r",
+						"s", "t", "v", "w", "x", "z", "c",
+						"c", "x", "x", "x", "x", "x", "y",
+						"y", "y", "y", "t", "t", "k", "k",
+						"l", "l", "m", "m", "m", "m", "z"
+					};
 				}
 
 				return m_WispSpeech;
@@ -288,17 +285,18 @@ namespace Server.Misc
 
 		public string[] Syllables
 		{
-			get{ return m_Syllables; }
-			set{ m_Syllables = value; }
+			get { return m_Syllables; }
+			set { m_Syllables = value; }
 		}
 
 		public string[] Keywords
 		{
-			get{ return m_Keywords; }
+			get { return m_Keywords; }
 			set
 			{
 				m_Keywords = value;
 				m_KeywordHash = new Dictionary<string, string>( m_Keywords.Length, StringComparer.OrdinalIgnoreCase );
+
 				for ( int i = 0; i < m_Keywords.Length; ++i )
 					m_KeywordHash[m_Keywords[i]] = m_Keywords[i];
 			}
@@ -306,26 +304,26 @@ namespace Server.Misc
 
 		public string[] Responses
 		{
-			get{ return m_Responses; }
-			set{ m_Responses = value; }
+			get { return m_Responses; }
+			set { m_Responses = value; }
 		}
 
 		public int Hue
 		{
-			get{ return m_Hue; }
-			set{ m_Hue = value; }
+			get { return m_Hue; }
+			set { m_Hue = value; }
 		}
 
 		public int Sound
 		{
-			get{ return m_Sound; }
-			set{ m_Sound = value; }
+			get { return m_Sound; }
+			set { m_Sound = value; }
 		}
 
 		public IHSFlags Flags
 		{
-			get{ return m_Flags; }
-			set{ m_Flags = value; }
+			get { return m_Flags; }
+			set { m_Flags = value; }
 		}
 
 		public string GetRandomSyllable()
@@ -351,20 +349,20 @@ namespace Server.Misc
 
 			for ( int i = 0; i < wordCount; ++i )
 			{
-				if ( i > 0 ) // not first word )
+				if ( i > 0 )
 				{
 					int random = Utility.RandomMinMax( 1, 15 );
 
-					if ( random < 11 )
-					{
-						sentance.Append( ' ' );
-					}
+					if ( random < 11 )					
+						sentance.Append( ' ' );					
+
 					else
 					{
 						needUpperCase = true;
 
 						if ( random > 13 )
 							sentance.Append( "! " );
+
 						else
 							sentance.Append( ". " );
 					}
@@ -389,6 +387,7 @@ namespace Server.Misc
 
 			if ( Utility.RandomMinMax( 1, 5 ) == 1 )
 				sentance.Append( '!' );
+
 			else
 				sentance.Append( '.' );
 
@@ -434,6 +433,7 @@ namespace Server.Misc
 			for ( int i = 0; i < split.Length; ++i )
 			{
 				string keyword;
+
 				m_KeywordHash.TryGetValue( split[i], out keyword );
 
 				if ( keyword != null )
@@ -446,6 +446,7 @@ namespace Server.Misc
 
 				if ( Utility.RandomBool() )
 					responseWord = GetRandomResponseWord( keywordsFound );
+
 				else
 					responseWord = keywordsFound[Utility.Random( keywordsFound.Count )];
 
@@ -456,42 +457,54 @@ namespace Server.Misc
 				switch ( Utility.Random( 6 ) )
 				{
 					default:
+
 					case 0:
 					{
 						response.Append( "Me " ).Append( responseWord ).Append( '?' );
-						break;
+						
+                        break;
 					}
+
 					case 1:
 					{
 						response.Append( responseWord ).Append( " thee!" );
 						response.Replace( responseWord[0], Char.ToUpper( responseWord[0] ), 0, 1 );
-						break;
+						
+                        break;
 					}
+
 					case 2:
 					{
 						response.Append( responseWord ).Append( '?' );
 						response.Replace( responseWord[0], Char.ToUpper( responseWord[0] ), 0, 1 );
-						break;
+						
+                        break;
 					}
+
 					case 3:
 					{
 						response.Append( responseWord ).Append( "! " ).Append( secondResponseWord ).Append( '.' );
 						response.Replace( responseWord[0], Char.ToUpper( responseWord[0] ), 0, 1 );
 						response.Replace( secondResponseWord[0], Char.ToUpper( secondResponseWord[0] ), responseWord.Length + 2, 1 );
-						break;
+						
+                        break;
 					}
+
 					case 4:
 					{
 						response.Append( responseWord ).Append( '.' );
 						response.Replace( responseWord[0], Char.ToUpper( responseWord[0] ), 0, 1 );
-						break;
+						
+                        break;
 					}
+
 					case 5:
 					{
 						response.Append( responseWord ).Append( "? " ).Append( secondResponseWord ).Append( '.' );
 						response.Replace( responseWord[0], Char.ToUpper( responseWord[0] ), 0, 1 );
 						response.Replace( secondResponseWord[0], Char.ToUpper( secondResponseWord[0] ), responseWord.Length + 2, 1 );
-						break;
+						
+                        break;
 					}
 				}
 
@@ -499,6 +512,7 @@ namespace Server.Misc
 
 				if ( maxWords < 2 )
 					maxWords = 2;
+
 				else if ( maxWords > 6 )
 					maxWords = 6;
 
@@ -516,8 +530,8 @@ namespace Server.Misc
 			if ( (m_Flags & IHSFlags.OnDeath) == 0 )
 				return; // not enabled
 
-			if ( 90 > Utility.Random( 100 ) )
-				return; // 90% chance to do nothing; 10% chance to talk
+            if (Utility.RandomDouble() >= .10)
+				return;
 
 			SayRandomTranslate( mob,
 				"Revenge!",
@@ -541,8 +555,8 @@ namespace Server.Misc
 			if ( !mob.InRange( mover, 5 ) || mob.InRange( oldLocation, 5 ) )
 				return; // only talk when they enter 5 tile range
 
-			if ( 90 > Utility.Random( 100 ) )
-				return; // 90% chance to do nothing; 10% chance to talk
+            if (Utility.RandomDouble() >= .10)
+				return;
 
 			SaySentance( mob, 6 );
 		}
@@ -550,10 +564,10 @@ namespace Server.Misc
 		public void OnDamage( Mobile mob, int amount )
 		{
 			if ( (m_Flags & IHSFlags.OnDamaged) == 0 )
-				return; // not enabled
+				return;
 
-			if ( 90 > Utility.Random( 100 ) )
-				return; // 90% chance to do nothing; 10% chance to talk
+			if (Utility.RandomDouble() >= .10)
+				return;
 
 			if ( amount < 5 )
 			{
@@ -564,9 +578,10 @@ namespace Server.Misc
 					"Thy blows soft!",
 					"You bad with weapon!" );
 			}
+
 			else
 			{
-				SayRandomTranslate( mob,
+				SayRandomTranslate(mob,
 					"Ouch! Me hurt!",
 					"No, kill me not!",
 					"Me hurt!",

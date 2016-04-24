@@ -458,7 +458,7 @@ namespace Server.Mobiles
                         if (mobile is BaseCreature)
                             damage = (int)((double)damage * 2);
 
-                        SpecialAbilities.PierceSpecialAbility(1.0, this, mobile, .50, 30, -1, true, "", "Bone shards pierce your armor, reducing it's effectiveness!");
+                        SpecialAbilities.PierceSpecialAbility(1.0, this, mobile, 50, 30, -1, true, "", "Bone shards pierce your armor, reducing it's effectiveness!", "-1");
 
                         new Blood().MoveToWorld(mobile.Location, mobile.Map);
                         AOS.Damage(mobile, damage, 100, 0, 0, 0, 0);

@@ -258,7 +258,7 @@ namespace Server.Mobiles
 
                         from.FixedParticles(0x3967, 10, 40, 5036, 2603, 0, EffectLayer.CenterFeet);
 
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, from, 1.0, duration, false, -1, false, "", "You have been shocked!");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, from, 1.0, duration, false, -1, false, "", "You have been shocked!", "-1");
 
                         new Blood().MoveToWorld(from.Location, from.Map);
                         AOS.Damage(from, damage, 0, 100, 0, 0, 0);
@@ -308,7 +308,7 @@ namespace Server.Mobiles
             NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
             NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");            
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");            
 
             Point3D location = Location;
             Map map = Map;
@@ -426,7 +426,7 @@ namespace Server.Mobiles
 
                             target.FixedParticles(0x3967, 10, 40, 5036, 2603, 0, EffectLayer.CenterFeet);
 
-                            SpecialAbilities.HinderSpecialAbility(1.0, null, target, 1.0, duration, false, -1, false, "", "You have been shocked!");
+                            SpecialAbilities.HinderSpecialAbility(1.0, null, target, 1.0, duration, false, -1, false, "", "You have been shocked!", "-1");
 
                             new Blood().MoveToWorld(target.Location, target.Map);
                             AOS.Damage(target, damage, 0, 100, 0, 0, 0);

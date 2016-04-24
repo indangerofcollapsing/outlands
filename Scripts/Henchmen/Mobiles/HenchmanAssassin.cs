@@ -244,7 +244,7 @@ namespace Server.Custom
                 {
                     if (combatant.Alive && CanBeHarmful(combatant) && InLOS(combatant) && GetDistanceToSqrt(combatant) <= 8)
                     {
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, 1.5, true, Utility.RandomList(0x5D2, 0x5D3), false, "", "");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, 1.5, true, Utility.RandomList(0x5D2, 0x5D3), false, "", "", "-1");
 
                         m_NextDaggerAllowed = DateTime.UtcNow + NextDaggerDelay;
 

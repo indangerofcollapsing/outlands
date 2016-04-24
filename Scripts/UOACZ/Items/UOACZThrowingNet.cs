@@ -120,7 +120,7 @@ namespace Server.Custom
                     return;
                 }
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, 1, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1, 1, true, 0, false, "", "", "-1");
 
                 if (!from.Mounted)
                     player.Animate(31, 7, 1, true, false, 0);                                                           
@@ -193,8 +193,8 @@ namespace Server.Custom
                 {
                     if (!UOACZSystem.IsUOACZValidMobile(mobileTarget)) return;
                     if (Utility.GetDistance(playerLocation, mobileLocation) >= 25) return;
-                        
-                    SpecialAbilities.HinderSpecialAbility(1.0, player, mobileTarget, 1, duration, true, -1, true, "You ensnare them in a net", "You have been ensnared in a net!");
+
+                    SpecialAbilities.HinderSpecialAbility(1.0, player, mobileTarget, 1, duration, true, -1, true, "You ensnare them in a net", "You have been ensnared in a net!", "-1");
                     
                     for (int a = 0; a < 9; a++)
                     {

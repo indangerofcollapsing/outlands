@@ -223,23 +223,10 @@ namespace Server.Mobiles
                                                 BaseCreature bc_Mobile = mobile as BaseCreature;
                                                 PlayerMobile pm_Mobile = mobile as PlayerMobile;
 
-                                                double bleedValue = 0;
+                                                double bleedValue = bc_Mobile.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Bleed);
 
-                                                if (bc_Mobile != null)
-                                                {
-                                                    bc_Mobile.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Bleed, out bleedValue);
-                                                    
-                                                    if (bleedValue == 0)
-                                                        SpecialAbilities.BleedSpecialAbility(1.0, creature, mobile, creature.DamageMax, 8.0, -1, true, "", "");
-                                                }
-
-                                                if (pm_Mobile != null)
-                                                {   
-                                                    pm_Mobile.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Bleed, out bleedValue);
-
-                                                    if (bleedValue == 0)
-                                                        SpecialAbilities.BleedSpecialAbility(1.0, creature, mobile, creature.DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!");
-                                                }                                                
+                                                if (bleedValue == 0)
+                                                    SpecialAbilities.BleedSpecialAbility(1.0, creature, mobile, creature.DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!", "-1");
                                                 
                                                 AOS.Damage(mobile, creature, damage, 100, 0, 0, 0, 0);                                                
                                                 new Blood().MoveToWorld(mobile.Location, mobile.Map);

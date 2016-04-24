@@ -45,9 +45,9 @@ namespace Server.Mobiles
 
             if (Utility.RandomDouble() < .2)
             {
-                SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 3, -1, false, "", "The creature's strike stuns you!");
-                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .2, 10, -1, false, "", "");
-                SpecialAbilities.StunSpecialAbility(1.0, this, defender, .10, 10, -1, true, "", "");
+                SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 3, -1, false, "", "The creature's strike stuns you!", "-1");
+                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .2, 10, -1, false, "", "", "-1");
+                SpecialAbilities.DisorientSpecialAbility(1.0, this, defender, .10, 10, -1, true, "", "", "-1");
             }
         }
 

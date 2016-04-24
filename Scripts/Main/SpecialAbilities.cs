@@ -669,6 +669,1112 @@ namespace Server.Mobiles
 
         #endregion
 
+        //-----
+
+        #region Disorient
+
+        public static void DisorientSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string overheadMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            if (bc_Defender != null)
+                value *= bc_Defender.SpecialEffectReduction;
+
+            if (showEffect)
+                defender.FixedEffect(0x5683, 10, 20);
+
+            if (soundOverride == -1)
+                Effects.PlaySound(defender.Location, defender.Map, 0x5FC);
+
+            else if (soundOverride > 0)
+                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            defender.SendMessage(defenderMessage);
+
+            if (overheadMessage != "-1")
+            {
+                if (overheadMessage == "")
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*disoriented*");
+
+                else
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+            }
+            
+            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Disorient, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion                
+
+        #region Debilitate
+
+        public static void Debilitate(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string overheadMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            if (bc_Defender != null)
+                value *= bc_Defender.SpecialEffectReduction;
+
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
+            {
+                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
+                {
+                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
+                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
+
+                    return;
+                }
+            }
+
+            if (showEffect)
+                defender.FixedEffect(0x5683, 10, 20);
+
+            if (soundOverride == -1)
+                Effects.PlaySound(defender.Location, defender.Map, 0x510);
+
+            else if (soundOverride > 0)
+                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            defender.SendMessage(defenderMessage);
+
+            if (overheadMessage != "-1")
+            {
+                if (overheadMessage == "")
+                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, "*debilitated*");
+
+                else
+                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+            }
+
+            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Debilitate, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion
+
+        #region Pierce
+
+        public static void PierceSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string overheadMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            if (bc_Defender != null)
+                value *= bc_Defender.SpecialEffectReduction;
+
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
+            {
+                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
+                {
+                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
+                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
+
+                    return;
+                }
+            }
+
+            if (showEffect)
+                defender.FixedEffect(0x5683, 10, 20);
+
+            if (soundOverride == -1)
+                Effects.PlaySound(defender.Location, defender.Map, 0x525);
+
+            else if (soundOverride > 0)
+                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            defender.SendMessage(defenderMessage);
+
+            
+
+            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Pierce, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion                       
+        
+        #region Bleed
+
+        public static void BleedSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string overheadMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            BaseCreature bc_Attacker = attacker as BaseCreature;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            if (showEffect)
+                defender.FixedEffect(0x5683, 10, 20);
+
+            if (soundOverride == -1)
+                Effects.PlaySound(defender.Location, defender.Map, 0x51e);
+
+            else if (soundOverride > 0)
+                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            defender.SendMessage(defenderMessage);
+
+            if (overheadMessage != "-1")
+            {
+                if (overheadMessage == "")
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*bleeds*");
+
+                else
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+            }
+
+            if (bc_Attacker != null)
+            {
+                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile && pm_Defender != null)
+                    value *= bc_Attacker.PvPAbilityDamageScalar;
+            }
+
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(defender, null);
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
+                value *= defenderDungeonArmor.DungeonArmorDetail.BleedDamageReceivedScalar;
+
+            int intervalFrequency = 2;
+            int numberOfIntervals = (int)(Math.Floor(expirationSeconds / intervalFrequency));
+            int damage = (int)((double)value / (double)numberOfIntervals);
+
+            if (damage < 1)
+                damage = 1;
+
+            for (int a = 0; a < numberOfIntervals; a++)
+            {
+                defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Bleed, attacker, damage, DateTime.UtcNow + TimeSpan.FromSeconds((a + 1) * intervalFrequency)));
+            }
+        }
+
+        #endregion
+
+        #region Hinder
+
+        public static void HinderSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, bool ignoreImmunity, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string overheadMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            PlayerMobile bc_Attacker = attacker as PlayerMobile;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            if (bc_Defender != null)
+            {
+                expirationSeconds *= bc_Defender.SpecialEffectReduction;
+
+                bool immune = false;
+
+                if (bc_Defender.MovementRestrictionImmune && !ignoreImmunity)
+                    immune = true;
+
+                if (Utility.RandomDouble() <= bc_Defender.MovementImmunityChance && !ignoreImmunity)
+                    immune = true;
+
+                if (immune == true && bc_Attacker != null)
+                {
+                    if (attacker != null)
+                        attacker.DoHarmful(defender);
+
+                    if (soundOverride == -1)
+                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, 0x525);
+
+                    else if (soundOverride > 0)
+                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, soundOverride);
+
+                    if (showEffect)
+                        bc_Defender.FixedEffect(0x5683, 10, 20);
+
+                    int damage = Utility.RandomMinMax(20, 30);
+
+                    AOS.Damage(bc_Defender, attacker, damage, 100, 0, 0, 0, 0);
+
+                    return;
+                }
+
+                double hinderValue = bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder);
+
+                if (hinderValue <= 0)
+                {
+                    if (bc_Defender.Spell != null)
+                        bc_Defender.Spell = null;
+
+                    if (showEffect)
+                        defender.FixedEffect(0x5683, 10, 20);
+
+                    if (soundOverride == -1)
+                        Effects.PlaySound(defender.Location, defender.Map, 0x51c);
+
+                    else if (soundOverride > 0)
+                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+                    if (attacker != null)
+                        attacker.SendMessage(attackerMessage);
+
+                    defender.SendMessage(defenderMessage);
+
+                    if (overheadMessage != "-1")
+                    {
+                        if (overheadMessage == "")
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*hindered*");
+
+                        else
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+                    }
+
+                    bc_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Hinder, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+
+                    if (bc_Defender.AIObject != null)
+                    {
+                        bc_Defender.Frozen = true;
+
+                        bc_Defender.NextDecisionTime = DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds);
+
+                        bc_Defender.DelayNextMovement(expirationSeconds);
+                        bc_Defender.DelayNextCombatTime(expirationSeconds);
+
+                        bc_Defender.NextSpellTime = bc_Defender.NextSpellTime + TimeSpan.FromSeconds(expirationSeconds);
+                        bc_Defender.NextCombatSpecialActionAllowed = bc_Defender.NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(expirationSeconds);
+                        bc_Defender.NextCombatEpicActionAllowed = bc_Defender.NextCombatEpicActionAllowed + TimeSpan.FromSeconds(expirationSeconds);
+                        bc_Defender.NextCombatHealActionAllowed = bc_Defender.NextCombatHealActionAllowed + TimeSpan.FromSeconds(expirationSeconds);
+                    }
+                }
+            }
+
+            else if (pm_Defender != null)
+            {
+                double hinderValue = pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder);
+
+                if (pm_Defender.Spell != null)
+                    pm_Defender.Spell.OnCasterHurt();
+
+                if (hinderValue <= 0)
+                {
+                    if (showEffect)
+                        defender.FixedEffect(0x5683, 10, 20);
+
+                    if (soundOverride == -1)
+                        Effects.PlaySound(defender.Location, defender.Map, 0x51c);
+
+                    else if (soundOverride > 0)
+                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+                    if (attacker != null)
+                        attacker.SendMessage(attackerMessage);
+
+                    defender.SendMessage(defenderMessage);
+
+                    if (overheadMessage != "-1")
+                    {
+                        if (overheadMessage == "")
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*hindered*");
+
+                        else
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+                    }
+
+                    pm_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Hinder, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+
+                    pm_Defender.Frozen = true;
+                    pm_Defender.NextCombatTime = pm_Defender.NextCombatTime + TimeSpan.FromSeconds(expirationSeconds);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Entangle
+
+        public static void EntangleSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string overheadMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            PlayerMobile pm_Attacker = attacker as PlayerMobile;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
+            {
+                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
+                {
+                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
+                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
+
+                    return;
+                }
+            }
+
+            bool immune = false;
+
+            if (bc_Defender != null)
+            {
+                expirationSeconds *= bc_Defender.SpecialEffectReduction;
+
+                if (bc_Defender.MovementRestrictionImmune)
+                    immune = true;
+
+                if (Utility.RandomDouble() <= bc_Defender.MovementImmunityChance)
+                    immune = true;
+
+                if (immune == true)
+                {
+                    if (attacker != null)
+                        attacker.DoHarmful(bc_Defender);
+
+                    if (soundOverride == -1)
+                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, 0x525);
+
+                    else if (soundOverride > 0)
+                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, soundOverride);
+
+                    if (showEffect)
+                        bc_Defender.FixedEffect(0x5683, 10, 20);
+
+                    int damage = Utility.RandomMinMax(20, 30);
+
+                    AOS.Damage(bc_Defender, attacker, damage, 100, 0, 0, 0, 0);
+
+                    if (pm_Attacker != null)
+                    {
+                        attacker.SendMessage("Your target overpowered your entangle effect, and you instead strike a vicious hit against them.");
+
+                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
+                            pm_Attacker.SendMessage(pm_Attacker.PlayerMeleeDamageTextHue, "Your vicious hit against " + defender.RawName + " deals " + damage.ToString() + " damage.");
+
+                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
+                            defender.PrivateOverheadMessage(MessageType.Regular, pm_Attacker.PlayerMeleeDamageTextHue, false, "-" + damage.ToString(), pm_Attacker.NetState);
+                    }
+
+                    return;
+                }
+
+                double hinderValue = bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Entangle);
+                double entangleValue = bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Entangle);
+
+                if (hinderValue <= 0 || entangleValue <= 0)
+                {
+                    if (showEffect)
+                        defender.FixedEffect(0x5683, 10, 20);
+
+                    if (soundOverride == -1)
+                        Effects.PlaySound(defender.Location, defender.Map, 0x51c);
+
+                    else if (soundOverride > 0)
+                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+                    if (attacker != null)
+                        attacker.SendMessage(attackerMessage);
+
+                    defender.SendMessage(defenderMessage);
+
+                    if (overheadMessage != "-1")
+                    {
+                        if (overheadMessage == "")
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*entangled*");
+
+                        else
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+                    }
+
+                    bc_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Entangle, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+
+                    if (bc_Defender.AIObject != null)
+                        bc_Defender.DelayNextMovement(expirationSeconds);
+                }
+            }
+
+            else if (pm_Defender != null)
+            {
+                double hinderValue = pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Entangle);
+                double entangleValue = pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Entangle);
+
+                if (hinderValue <= 0 || entangleValue <= 0)
+                {
+                    if (showEffect)
+                        defender.FixedEffect(0x5683, 10, 20);
+
+                    if (soundOverride == -1)
+                        Effects.PlaySound(defender.Location, defender.Map, 0x51c);
+
+                    else if (soundOverride > 0)
+                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+                    if (attacker != null)
+                        attacker.SendMessage(attackerMessage);
+
+                    defender.SendMessage(defenderMessage);
+
+                    if (overheadMessage != "-1")
+                    {
+                        if (overheadMessage == "")
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*entangled*");
+
+                        else
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+                    }
+
+                    pm_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Entangle, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+
+                    pm_Defender.CantWalk = true;
+                }
+            }
+        }
+
+        #endregion                
+
+        #region Petrify
+
+        public static void PetrifySpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string overheadMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            PlayerMobile pm_Attacker = attacker as PlayerMobile;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
+            {
+                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
+                {
+                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
+                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
+
+                    return;
+                }
+            }
+
+            if (bc_Defender != null)
+            {
+                expirationSeconds *= bc_Defender.SpecialEffectReduction;
+
+                bool immune = false;
+
+                if (bc_Defender.MovementRestrictionImmune)
+                    immune = true;
+
+                if (Utility.RandomDouble() <= bc_Defender.MovementImmunityChance)
+                    immune = true;
+
+                if (immune == true)
+                {
+                    if (attacker != null)
+                        attacker.DoHarmful(defender);
+
+                    if (soundOverride == -1)
+                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, 0x65A);
+
+                    else if (soundOverride > 0)
+                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, soundOverride);
+
+                    if (showEffect)
+                        bc_Defender.FixedEffect(0x5683, 10, 20);
+
+                    int damage = Utility.RandomMinMax(30, 50);
+
+                    AOS.Damage(bc_Defender, attacker, damage, 100, 0, 0, 0, 0);
+
+                    if (pm_Attacker != null)
+                    {
+                        attacker.SendMessage("Your target overpowered your petrify effect, and you instead strike a vicious hit against them.");
+
+                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
+                            pm_Attacker.SendMessage(pm_Attacker.PlayerMeleeDamageTextHue, "Your vicious hit against " + defender.RawName + " deals " + damage.ToString() + " damage.");
+
+                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
+                            defender.PrivateOverheadMessage(MessageType.Regular, pm_Attacker.PlayerMeleeDamageTextHue, false, "-" + damage.ToString(), pm_Attacker.NetState);
+                    }
+
+                    return;
+                }
+
+                double petrifyValue = bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Petrify);
+
+                if (petrifyValue <= 0)
+                {
+                    if (showEffect)
+                        Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(0.25)), 0x376A, 10, 20, 911, 0, 5029, 0);
+
+                    if (soundOverride == -1)
+                        Effects.PlaySound(defender.Location, defender.Map, 0x65A);
+
+                    else if (soundOverride > 0)
+                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+                    if (attacker != null)
+                        attacker.SendMessage(attackerMessage);
+
+                    defender.SendMessage(defenderMessage);
+
+                    if (overheadMessage != "-1")
+                    {
+                        if (overheadMessage == "")
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*petrified*");
+
+                        else
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+                    }
+
+                    bc_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Petrify, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+
+                    if (bc_Defender.AIObject != null)
+                    {
+                        bc_Defender.Frozen = true;
+                        bc_Defender.DelayNextMovement(expirationSeconds);
+                        bc_Defender.DelayNextCombatTime(expirationSeconds);
+
+                        if (bc_Defender.HueMod == -1)
+                            bc_Defender.HueMod = 911;
+                    }
+
+                }
+            }
+
+            else if (pm_Defender != null)
+            {
+                double petrifyValue = pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Petrify);
+
+                if (petrifyValue <= 0)
+                {
+                    if (showEffect)
+                        Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(0.25)), 0x376A, 10, 20, 911, 0, 5029, 0);
+
+                    if (soundOverride == -1)
+                        Effects.PlaySound(defender.Location, defender.Map, 0x65A);
+
+                    else if (soundOverride > 0)
+                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+                    if (attacker != null)
+                        attacker.SendMessage(attackerMessage);
+
+                    defender.SendMessage(defenderMessage);
+
+                    if (overheadMessage != "-1")
+                    {
+                        if (overheadMessage == "")
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*petrified*");
+
+                        else
+                            defender.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+                    }
+
+                    pm_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Petrify, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+
+                    if (!KinPaint.IsWearingKinPaint(pm_Defender) || pm_Defender.HueMod == -1)
+                        pm_Defender.HueMod = 911;
+
+                    pm_Defender.Frozen = true;
+                    pm_Defender.NextCombatTime = pm_Defender.NextCombatTime + TimeSpan.FromSeconds(expirationSeconds);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Cripple
+
+        public static void CrippleSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string overheadMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            if (bc_Defender != null)
+                value *= bc_Defender.SpecialEffectReduction;
+
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
+            {
+                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
+                {
+                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
+                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
+
+                    return;
+                }
+            }
+
+            if (showEffect)
+                defender.FixedEffect(0x5683, 10, 20);
+
+            if (soundOverride == -1)
+                Effects.PlaySound(defender.Location, defender.Map, 0x510);
+
+            else if (soundOverride > 0)
+                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            defender.SendMessage(defenderMessage);
+
+            if (overheadMessage != "-1")
+            {
+                if (overheadMessage == "")
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*crippled*");
+
+                else
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, overheadMessage);
+            }
+
+            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Cripple, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion
+
+        #region Expertise
+
+        public static void ExpertiseSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(attacker)) return;
+
+            double totalValue = attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Expertise);
+
+            if (totalValue > 0)
+                return;
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            if (defender != null)
+                defender.SendMessage(defenderMessage);
+
+            int effectHue = 2588;
+
+            if (soundOverride == -1)
+                attacker.PlaySound(0x28E);
+
+            else if (soundOverride > 0)
+                attacker.PlaySound(soundOverride);
+
+            if (showEffect)
+                attacker.FixedParticles(0x375A, 10, 30, 5010, effectHue, 0, EffectLayer.Waist);
+
+            if (emoteMessage != "-1")
+            {
+                if (emoteMessage == "")
+                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, "*draws upon expertise*");
+
+                else
+                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
+            }
+
+            attacker.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Expertise, defender, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion
+
+        #region Evasion
+
+        public static void EvasionSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            /*
+            double totalValue;
+
+            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Evasion, out totalValue);
+
+            if (totalValue > 0)
+                return;
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            if (defender != null)
+                defender.SendMessage(defenderMessage);
+
+            if (showEffect)
+            {
+                int effectHue = 2503;
+
+                if (soundOverride == -1)
+                    attacker.PlaySound(0x650);
+
+                else if (soundOverride > 0)
+                    attacker.PlaySound(soundOverride);
+
+                if (showEffect)
+                    attacker.FixedParticles(0x373A, 10, 15, 5036, effectHue, 0, EffectLayer.Head);
+
+                if (emoteMessage != "-1")
+                {
+                    if (emoteMessage == "")
+                        attacker.PublicOverheadMessage(MessageType.Regular, 0, false, "*draws upon courage*");
+                    else
+                        attacker.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
+                }
+            }
+
+            if (soundOverride == -1)
+                defender.PlaySound(0x512);
+
+            else if (soundOverride > 0)
+                defender.PlaySound(soundOverride);
+
+            if (emoteMessage != "-1")
+            {
+                if (emoteMessage == "")
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*begins to evade*");
+
+                else
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
+            }
+            */
+
+            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Evasion, defender, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion
+
+        #region Frenzy
+
+        public static void FrenzySpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(attacker)) return;
+
+            double frenzyValue = attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Frenzy);
+
+            if (frenzyValue > 0)
+                return;
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            if (defender != null)
+                defender.SendMessage(defenderMessage);
+
+            if (soundOverride == -1)
+                attacker.PlaySound(attacker.GetAngerSound());
+
+            else if (soundOverride > 0)
+                attacker.PlaySound(soundOverride);
+
+            if (emoteMessage != "-1")
+            {
+                if (emoteMessage == "")
+                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, "*becomes frenzied*");
+
+                else
+                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
+            }
+
+            attacker.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Frenzy, defender, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion
+
+        #region Enrage
+
+        public static void EnrageSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            double enrageValue = defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Enrage);
+
+            if (enrageValue > 0)
+                return;
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            if (defender != null)
+                defender.SendMessage(defenderMessage);
+
+            if (soundOverride == -1)
+                defender.PlaySound(defender.GetAngerSound());
+
+            else if (soundOverride > 0)
+                defender.PlaySound(soundOverride);
+
+            if (showEffect)
+                defender.FixedParticles(0x373A, 10, 15, 5036, 2116, 0, EffectLayer.Head);
+
+            if (emoteMessage != "-1")
+            {
+                if (emoteMessage == "")
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*becomes enraged*");
+
+                else
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
+            }
+
+            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Enrage, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion
+
+        #region Fortitude
+
+        public static void FortitudeSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            double fortitudeValue = attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude);
+
+            if (fortitudeValue > 0)
+                return;
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            if (defender != null)
+                defender.SendMessage(defenderMessage);
+
+            int effectHue = 2503;
+
+            if (soundOverride == -1)
+                defender.PlaySound(0x65A);
+
+            else if (soundOverride > 0)
+                defender.PlaySound(soundOverride);
+
+            if (showEffect)
+                defender.FixedParticles(0x375A, 10, 30, 5011, effectHue, 0, EffectLayer.Head);
+
+            if (emoteMessage != "-1")
+            {
+                if (emoteMessage == "")
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*draws upon fortitude*");
+                else
+                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
+            }
+
+            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Fortitude, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion
+
+        #region Disease
+
+        public static void DiseaseSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            BaseCreature bc_Attacker = attacker as BaseCreature;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            double diseaseValue = defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease);
+
+            if (diseaseValue > 0)
+                return;
+
+            if (showEffect)
+                Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(0.2)), 0x372A, 6, 20, 2053, 0, 5029, 0);
+
+            if (soundOverride == -1)
+                Effects.PlaySound(defender.Location, defender.Map, 0x5CC);
+
+            else if (soundOverride > 0)
+                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            defender.SendMessage(defenderMessage);
+
+            if (bc_Attacker != null && bc_Defender != null)
+            {
+                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile && pm_Defender != null)
+                    value *= bc_Attacker.PvPAbilityDamageScalar;
+            }
+
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(defender, null);
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
+                value *= defenderDungeonArmor.DungeonArmorDetail.DiseaseDamageReceivedScalar;
+
+            int intervalFrequency = 6;
+            int numberOfIntervals = (int)(Math.Floor(expirationSeconds / intervalFrequency));
+
+            for (int a = 0; a < numberOfIntervals; a++)
+            {
+                defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Disease, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds((a + 1) * intervalFrequency)));
+            }
+        }
+
+        #endregion
+
+        #region Flamestrike
+
+        public static void FlamestrikeSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            BaseCreature bc_Attacker = attacker as BaseCreature;
+
+            BaseCreature bc_Defender = defender as BaseCreature;
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+
+            if (showEffect)
+                defender.FixedParticles(0x3709, 10, 30, 5052, EffectLayer.LeftFoot);
+
+            if (soundOverride == -1)
+                Effects.PlaySound(defender.Location, defender.Map, 0x5CF);
+
+            else if (soundOverride > 0)
+                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            defender.SendMessage(defenderMessage);
+
+            if (bc_Attacker != null)
+            {
+                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile && pm_Defender != null)
+                    value *= bc_Attacker.PvPAbilityDamageScalar;
+            }
+
+            if (attacker != null)
+                attacker.DoHarmful(defender);
+
+            AOS.Damage(defender, attacker, (int)value, 0, 100, 0, 0, 0);
+        }
+
+        #endregion
+
+        #region Energy Siphon
+
+        public static void EnergySiphonSpecialAbility(double chance, Mobile attacker, Mobile defender, double scalar, int range, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(attacker)) return;
+
+            BaseCreature bc_Attacker = attacker as BaseCreature;
+
+            bool defenderExists = true;
+
+            if (!SpecialAbilities.Exists(defender))
+                defenderExists = false;
+
+            if (showEffect && defenderExists)
+                Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(0.2)), 0x372A, 6, 20, 2636, 0, 5029, 0);
+
+            if (soundOverride == -1)
+            {
+                Effects.PlaySound(attacker.Location, defender.Map, 0x457);
+
+                if (defenderExists)
+                    Effects.PlaySound(defender.Location, defender.Map, 0x457);
+            }
+
+            else if (soundOverride > 0)
+            {
+                Effects.PlaySound(attacker.Location, defender.Map, soundOverride);
+
+                if (defenderExists)
+                    Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+            }
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            if (defenderExists)
+            {
+                defender.SendMessage(defenderMessage);
+                attacker.DoHarmful(defender);
+            }
+
+            int hitsRegen = (int)(Math.Round((double)attacker.HitsMax * .125 * scalar));
+            int stamRegen = (int)(Math.Round((double)attacker.StamMax * .15 * scalar));
+            int manaRegen = (int)(Math.Round((double)attacker.ManaMax * .10 * scalar));
+
+            attacker.Heal(hitsRegen);
+            attacker.Stam += stamRegen;
+            attacker.Mana += manaRegen;
+        }
+
+        #endregion
+
+        #region Backlash
+
+        public static void BacklashSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
+        {
+            if (Utility.RandomDouble() > chance) return;
+            if (!SpecialAbilities.Exists(defender)) return;
+
+            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(defender, null);
+
+            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
+            {
+                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
+                {
+                    Effects.PlaySound(defender.Location, defender.Map, 0x64B);
+                    Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
+
+                    return;
+                }
+            }
+
+            if (showEffect)
+                defender.FixedEffect(0x91B, 10, 20, 2593, 0);
+
+            if (soundOverride == -1)
+                Effects.PlaySound(defender.Location, defender.Map, 0x5C5);
+
+            else if (soundOverride > 0)
+                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
+
+            if (attacker != null)
+                attacker.SendMessage(attackerMessage);
+
+            defender.SendMessage(defenderMessage);
+            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Backlash, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
+        }
+
+        #endregion
+
+        //-----
+
         #region Massive Breath Attack
 
         public static bool DoMassiveBreathAttack(BaseCreature creature, Point3D startLocation, Direction breathDirection, int breathLength, bool animate, BreathType breathType, bool tamedCreature)
@@ -695,7 +1801,7 @@ namespace Server.Mobiles
                         creature.Animate(12, 5, 2, true, false, 0);
                 }
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, 2.5, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, 2.5, true, 0, false, "", "", "-1");
 
                 Effects.PlaySound(creature.Location, creature.Map, creature.GetAngerSound());
 
@@ -1048,9 +2154,9 @@ namespace Server.Mobiles
                                     damage *= .75;
 
                                     if (mobile is PlayerMobile)
-                                        SpecialAbilities.CrippleSpecialAbility(1.0, creature, mobile, .15, 10, -1, true, "", "The blast of ice has slowed your actions!");
+                                        SpecialAbilities.CrippleSpecialAbility(1.0, creature, mobile, .15, 10, -1, true, "", "The blast of ice has slowed your actions!", "-1");
                                     else
-                                        SpecialAbilities.CrippleSpecialAbility(1.0, creature, mobile, .33, 10, -1, true, "", "The blast of ice has slowed your actions!");
+                                        SpecialAbilities.CrippleSpecialAbility(1.0, creature, mobile, .33, 10, -1, true, "", "The blast of ice has slowed your actions!", "-1");
                                 }
                             break;
 
@@ -1085,7 +2191,7 @@ namespace Server.Mobiles
                                 {
                                     damage *= .75;
 
-                                    SpecialAbilities.PierceSpecialAbility(1.0, creature, mobile, .50, 30, -1, true, "", "Bone shards pierce your armor, reducing it's effectiveness!");
+                                    SpecialAbilities.PierceSpecialAbility(1.0, creature, mobile, 50, 10, -1, true, "", "Bone shards pierce your armor, reducing it's effectiveness!", "-1");
                                 }
                             break;
 
@@ -1093,7 +2199,7 @@ namespace Server.Mobiles
                                 {
                                     damage *= .75;
 
-                                    SpecialAbilities.EntangleSpecialAbility(1.0, creature, mobile, 1.0, 2.0, -1, true, "", "Vegetation grasps at your legs and holds you in place!");
+                                    SpecialAbilities.EntangleSpecialAbility(1.0, creature, mobile, 1.0, 2.0, -1, true, "", "Vegetation grasps at your legs and holds you in place!", "-1");
                                 }
                             break;
 
@@ -1101,7 +2207,7 @@ namespace Server.Mobiles
                                 {
                                     damage *= .75;
 
-                                    SpecialAbilities.HinderSpecialAbility(1.0, creature, mobile, 1.0, 1.0, true, 0x5C3, true, "", "You have been shocked by electricity!");                                    
+                                    SpecialAbilities.HinderSpecialAbility(1.0, creature, mobile, 1.0, 1.0, true, 0x5C3, true, "", "You have been shocked by electricity!", "-1");                                    
                                 }
                             break;
                         }
@@ -1171,7 +2277,7 @@ namespace Server.Mobiles
             if (directionTo == null)
                 return;
 
-            SpecialAbilities.HinderSpecialAbility(1, attacker, defender, 1.0, 2.5, false, -1, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1, attacker, defender, 1.0, 2.5, false, -1, false, "", "", "-1");
 
             if (pm_Defender != null)
             {
@@ -1707,7 +2813,7 @@ namespace Server.Mobiles
                 if (!foundLocation)
                     return false;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", ""); 
+                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", "", "-1"); 
 
                 creature.Hidden = true;
                 creature.IsStealthing = true;
@@ -1723,7 +2829,7 @@ namespace Server.Mobiles
 
             else
             {
-                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", ""); 
+                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", "", "-1"); 
 
                 creature.Hidden = true;
                 creature.IsStealthing = true;
@@ -1793,7 +2899,7 @@ namespace Server.Mobiles
 
             else
             {
-                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", ""); 
+                SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", "", "-1"); 
 
                 creature.RevealingAction();
 
@@ -1815,7 +2921,7 @@ namespace Server.Mobiles
             if (!SpecialAbilities.Exists(creature)) return;
             if (!SpecialAbilities.Exists(target)) return;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", ""); 
+            SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", "", "-1"); 
 
             if (creature.Body.IsHuman)
                 creature.Animate(31, 7, 1, true, false, 0);
@@ -1905,7 +3011,7 @@ namespace Server.Mobiles
             Point3D destination = target.Location;
             Map map = target.Map;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", ""); 
+            SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, actionsCooldown, true, 0, false, "", "", "-1"); 
 
             if (creature.Body.IsHuman)
                 creature.Animate(31, 7, 1, true, false, 0);
@@ -2021,7 +3127,7 @@ namespace Server.Mobiles
 
                             case PotionAbilityEffectType.Paralyze:
                                 if (creature != null)
-                                    SpecialAbilities.EntangleSpecialAbility(1.0, creature, mobile, 1, duration, -1, true, "", "You are held in place by mystical energy!");
+                                    SpecialAbilities.EntangleSpecialAbility(1.0, creature, mobile, 1, duration, -1, true, "", "You are held in place by mystical energy!", "-1");
                             break;
 
                             case PotionAbilityEffectType.Poison:
@@ -2036,7 +3142,7 @@ namespace Server.Mobiles
                                     damage *= 1.5;
 
                                 if (creature != null)
-                                    SpecialAbilities.CrippleSpecialAbility(1.0, creature, mobile, value, duration, -1, true, "", "The blast of ice has slowed your actions!");
+                                    SpecialAbilities.CrippleSpecialAbility(1.0, creature, mobile, value, duration, -1, true, "", "The blast of ice has slowed your actions!", "-1");
 
                                 AOS.Damage(mobile, (int)damage, 0, 100, 0, 0, 0);
                             break;
@@ -2065,1158 +3171,6 @@ namespace Server.Mobiles
                     }
                 });
             });
-        }
-
-        #endregion
-
-        #region Petrify
-
-        public static void PetrifySpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            PlayerMobile pm_Attacker = attacker as PlayerMobile;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
-            {
-                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
-                {
-                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
-                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
-
-                    return;
-                }
-            }
-
-            if (bc_Defender != null)
-            {
-                expirationSeconds *= bc_Defender.SpecialEffectReduction;
-
-                bool immune = false;
-
-                if (bc_Defender.MovementRestrictionImmune)
-                    immune = true;
-
-                if (Utility.RandomDouble() <= bc_Defender.MovementImmunityChance)
-                    immune = true;
-
-                if (immune == true)
-                {
-                    if (attacker != null)
-                        attacker.DoHarmful(defender);
-
-                    if (soundOverride == -1)
-                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, 0x65A);
-
-                    else if (soundOverride > 0)
-                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, soundOverride);
-
-                    if (showEffect)
-                        bc_Defender.FixedEffect(0x5683, 10, 20);
-
-                    int damage = Utility.RandomMinMax(30, 50);
-
-                    AOS.Damage(bc_Defender, attacker, damage, 100, 0, 0, 0, 0);
-
-                    if (pm_Attacker != null)
-                    {
-                        attacker.SendMessage("Your target overpowered your petrify effect, and you instead strike a vicious hit against them.");
-
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
-                            pm_Attacker.SendMessage(pm_Attacker.PlayerMeleeDamageTextHue, "Your vicious hit against " + defender.RawName + " deals " + damage.ToString() + " damage.");
-
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
-                            defender.PrivateOverheadMessage(MessageType.Regular, pm_Attacker.PlayerMeleeDamageTextHue, false, "-" + damage.ToString(), pm_Attacker.NetState);
-                    }
-
-                    return;
-                }
-
-                double totalValue;
-
-                bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Petrify, out totalValue);
-
-                if (totalValue <= 0)
-                {
-                    if (showEffect)
-                        Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(0.25)), 0x376A, 10, 20, 911, 0, 5029, 0);
-
-                    if (soundOverride == -1)
-                        Effects.PlaySound(defender.Location, defender.Map, 0x65A);
-
-                    else if (soundOverride > 0)
-                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-                    if (attacker != null)
-                        attacker.SendMessage(attackerMessage);
-
-                    defender.SendMessage(defenderMessage);
-
-                    bc_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Petrify, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-
-                    if (bc_Defender.AIObject != null)
-                    {
-                        bc_Defender.Frozen = true;
-                        bc_Defender.DelayNextMovement(expirationSeconds);
-                        bc_Defender.DelayNextCombatTime(expirationSeconds);
-
-                        if (bc_Defender.HueMod == -1)
-                            bc_Defender.HueMod = 911;
-                    }
-
-                }
-            }
-
-            else if (pm_Defender != null)
-            {
-                double totalValue;
-
-                pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Petrify, out totalValue);
-
-                if (totalValue <= 0)
-                {
-                    if (showEffect)
-                        Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(0.25)), 0x376A, 10, 20, 911, 0, 5029, 0);
-
-                    if (soundOverride == -1)
-                        Effects.PlaySound(defender.Location, defender.Map, 0x65A);
-
-                    else if (soundOverride > 0)
-                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-                    if (attacker != null)
-                        attacker.SendMessage(attackerMessage);
-
-                    defender.SendMessage(defenderMessage);
-
-                    pm_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Petrify, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-
-                    if (!KinPaint.IsWearingKinPaint(pm_Defender) || pm_Defender.HueMod == -1)
-                        pm_Defender.HueMod = 911;
-
-                    pm_Defender.Frozen = true;
-                    pm_Defender.NextCombatTime = pm_Defender.NextCombatTime + TimeSpan.FromSeconds(expirationSeconds);
-                }
-            }
-        }
-
-        #endregion
-
-        #region Entangle
-
-        public static void EntangleSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            PlayerMobile pm_Attacker = attacker as PlayerMobile;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
-            {
-                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
-                {
-                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
-                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
-
-                    return;
-                }
-            }
-
-            bool immune = false;
-
-            if (bc_Defender != null)
-            {
-                expirationSeconds *= bc_Defender.SpecialEffectReduction;
-
-                if (bc_Defender.MovementRestrictionImmune)
-                    immune = true;
-
-                if (Utility.RandomDouble() <= bc_Defender.MovementImmunityChance)
-                    immune = true;
-
-                if (immune == true)
-                {
-                    if (attacker != null)
-                        attacker.DoHarmful(bc_Defender);
-
-                    if (soundOverride == -1)
-                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, 0x525);
-
-                    else if (soundOverride > 0)
-                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, soundOverride);
-
-                    if (showEffect)
-                        bc_Defender.FixedEffect(0x5683, 10, 20);
-
-                    int damage = Utility.RandomMinMax(20, 40);
-
-                    AOS.Damage(bc_Defender, attacker, damage, 100, 0, 0, 0, 0);
-
-                    if (pm_Attacker != null)
-                    {
-                        attacker.SendMessage("Your target overpowered your entangle effect, and you instead strike a vicious hit against them.");
-
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
-                            pm_Attacker.SendMessage(pm_Attacker.PlayerMeleeDamageTextHue, "Your vicious hit against " + defender.RawName + " deals " + damage.ToString() + " damage.");
-
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
-                            defender.PrivateOverheadMessage(MessageType.Regular, pm_Attacker.PlayerMeleeDamageTextHue, false, "-" + damage.ToString(), pm_Attacker.NetState);
-                    }
-
-                    return;
-                }
-
-                double hinderValue;
-                double entangleValue;
-
-                bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Entangle, out hinderValue);
-                bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Entangle, out entangleValue);
-
-                if (hinderValue <= 0 || entangleValue <= 0)
-                {
-                    if (showEffect)
-                        defender.FixedEffect(0x5683, 10, 20);
-
-                    if (soundOverride == -1)
-                        Effects.PlaySound(defender.Location, defender.Map, 0x51c);
-
-                    else if (soundOverride > 0)
-                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-                    if (attacker != null)
-                        attacker.SendMessage(attackerMessage);
-
-                    defender.SendMessage(defenderMessage);
-
-                    bc_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Entangle, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-
-                    if (bc_Defender.AIObject != null)                    
-                        bc_Defender.DelayNextMovement(expirationSeconds);                    
-                }
-            }
-
-            else if (pm_Defender != null)
-            {
-                double hinderValue;
-                double entangleValue;
-
-                pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Entangle, out hinderValue);
-                pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Entangle, out entangleValue);
-
-                if (hinderValue <= 0 || entangleValue <= 0)
-                {
-                    if (showEffect)
-                        defender.FixedEffect(0x5683, 10, 20);
-
-                    if (soundOverride == -1)
-                        Effects.PlaySound(defender.Location, defender.Map, 0x51c);
-
-                    else if (soundOverride > 0)
-                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-                    if (attacker != null)
-                        attacker.SendMessage(attackerMessage);
-
-                    defender.SendMessage(defenderMessage);
-
-                    pm_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Entangle, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-
-                    pm_Defender.CantWalk = true;
-                }
-            }
-        }
-
-        #endregion
-
-        #region Stun
-
-        public static void StunSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            if (bc_Defender != null)            
-                value *= bc_Defender.SpecialEffectReduction;             
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
-            {
-                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
-                {
-                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
-                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
-
-                    return;
-                }
-            }
-
-            if (showEffect)
-                defender.FixedEffect(0x5683, 10, 20);
-
-            if (soundOverride == -1)
-                Effects.PlaySound(defender.Location, defender.Map, 0x5FC);
-
-            else if (soundOverride > 0)
-                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            defender.SendMessage(defenderMessage);
-            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Stun, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-        }
-
-        #endregion        
-
-        #region Hinder
-
-        public static void HinderSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, bool ignoreImmunity, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            PlayerMobile pm_Attacker = attacker as PlayerMobile;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
-            {
-                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
-                {
-                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
-                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
-
-                    return;
-                }
-            }
-
-            if (bc_Defender != null)
-            {
-                expirationSeconds *= bc_Defender.SpecialEffectReduction;
-
-                bool immune = false;
-
-                if (bc_Defender.MovementRestrictionImmune && !ignoreImmunity)
-                    immune = true;
-
-                if (Utility.RandomDouble() <= bc_Defender.MovementImmunityChance && !ignoreImmunity)
-                    immune = true;
-
-                if (immune == true)
-                {
-                    if (attacker != null)
-                        attacker.DoHarmful(defender);
-
-                    if (soundOverride == -1)
-                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, 0x525);
-
-                    else if (soundOverride > 0)
-                        Effects.PlaySound(bc_Defender.Location, bc_Defender.Map, soundOverride);
-
-                    if (showEffect)
-                        bc_Defender.FixedEffect(0x5683, 10, 20);
-
-                    int damage = Utility.RandomMinMax(40, 60);
-
-                    AOS.Damage(bc_Defender, attacker, damage, 100, 0, 0, 0, 0);
-
-                    if (pm_Attacker != null)
-                    {
-                        attacker.SendMessage("Your target overpowered your hinder effect, and you instead strike a vicious hit against them.");
-
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
-                            pm_Attacker.SendMessage(pm_Attacker.PlayerMeleeDamageTextHue, "Your vicious hit against " + defender.RawName + " deals " + damage.ToString() + " damage.");
-
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
-                            defender.PrivateOverheadMessage(MessageType.Regular, pm_Attacker.PlayerMeleeDamageTextHue, false, "-" + damage.ToString(), pm_Attacker.NetState);
-                    }
-
-                    return;
-                }
-
-                double totalValue;
-
-                bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder, out totalValue);
-
-                if (totalValue <= 0)
-                {
-                    if (bc_Defender.Spell != null)
-                        bc_Defender.Spell = null;
-
-                    if (showEffect)
-                        defender.FixedEffect(0x5683, 10, 20);
-
-                    if (soundOverride == -1)
-                        Effects.PlaySound(defender.Location, defender.Map, 0x51c);
-
-                    else if (soundOverride > 0)
-                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-                    if (attacker != null)
-                        attacker.SendMessage(attackerMessage);
-
-                    defender.SendMessage(defenderMessage);
-
-                    bc_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Hinder, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-
-                    if (bc_Defender.AIObject != null)
-                    {
-                        bc_Defender.Frozen = true;
-
-                        bc_Defender.NextDecisionTime = DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds);
-
-                        bc_Defender.DelayNextMovement(expirationSeconds);
-                        bc_Defender.DelayNextCombatTime(expirationSeconds);
-
-                        bc_Defender.NextSpellTime = bc_Defender.NextSpellTime + TimeSpan.FromSeconds(expirationSeconds);
-                        bc_Defender.NextCombatSpecialActionAllowed = bc_Defender.NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(expirationSeconds);
-                        bc_Defender.NextCombatEpicActionAllowed = bc_Defender.NextCombatEpicActionAllowed + TimeSpan.FromSeconds(expirationSeconds);
-                        bc_Defender.NextCombatHealActionAllowed = bc_Defender.NextCombatHealActionAllowed + TimeSpan.FromSeconds(expirationSeconds);
-                    }
-                }
-            }
-
-            else if (pm_Defender != null)
-            {
-                double totalValue;
-
-                pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder, out totalValue);
-
-                if (pm_Defender.Spell != null)
-                    pm_Defender.Spell.OnCasterHurt();
-
-                if (totalValue <= 0)
-                {
-                    if (showEffect)
-                        defender.FixedEffect(0x5683, 10, 20);
-
-                    if (soundOverride == -1)
-                        Effects.PlaySound(defender.Location, defender.Map, 0x51c);
-
-                    else if (soundOverride > 0)
-                        Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-                    if (attacker != null)
-                        attacker.SendMessage(attackerMessage);
-
-                    defender.SendMessage(defenderMessage);
-
-                    pm_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Hinder, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-
-                    pm_Defender.Frozen = true;
-                    pm_Defender.NextCombatTime = pm_Defender.NextCombatTime + TimeSpan.FromSeconds(expirationSeconds);
-                }
-            }
-        }
-
-        #endregion
-
-        #region Cripple
-
-        public static void CrippleSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            if (bc_Defender != null)            
-                value *= bc_Defender.SpecialEffectReduction;            
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
-            {
-                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
-                {
-                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
-                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
-
-                    return;
-                }
-            }
-
-            if (showEffect)
-                defender.FixedEffect(0x5683, 10, 20);
-
-            if (soundOverride == -1)
-                Effects.PlaySound(defender.Location, defender.Map, 0x510);
-
-            else if (soundOverride > 0)
-                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            defender.SendMessage(defenderMessage);
-            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Cripple, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));           
-        }
-
-        #endregion
-
-        #region Bleed
-
-        public static void BleedSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            BaseCreature bc_Attacker = attacker as BaseCreature;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            if (showEffect)
-                defender.FixedEffect(0x5683, 10, 20);
-
-            if (soundOverride == -1)
-                Effects.PlaySound(defender.Location, defender.Map, 0x51e);
-
-            else if (soundOverride > 0)
-                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            defender.SendMessage(defenderMessage);
-
-            if (bc_Attacker != null)
-            {
-                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile && pm_Defender != null)
-                    value *= bc_Attacker.PvPAbilityDamageScalar;
-            }
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
-                value *= defenderDungeonArmor.DungeonArmorDetail.BleedDamageReceivedScalar;
-
-            int intervalFrequency = 2;
-            int numberOfIntervals = (int)(Math.Floor(expirationSeconds / intervalFrequency));
-            int damage = (int)((double)value / (double)numberOfIntervals);
-
-            if (damage < 1)
-                damage = 1;
-
-            for (int a = 0; a < numberOfIntervals; a++)
-            {
-                defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Bleed, attacker, damage, DateTime.UtcNow + TimeSpan.FromSeconds((a + 1) * intervalFrequency)));
-            }
-        }
-
-        #endregion
-
-        #region Disease
-
-        public static void DiseaseSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            BaseCreature bc_Attacker = attacker as BaseCreature;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            double totalValue;
-            
-            defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease, out totalValue);
-
-            if (totalValue > 0)
-                return;            
-
-            if (showEffect)
-                Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(0.2)), 0x372A, 6, 20, 2053, 0, 5029, 0);
-
-            if (soundOverride == -1)
-                Effects.PlaySound(defender.Location, defender.Map, 0x5CC);
-
-            else if (soundOverride > 0)
-                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            defender.SendMessage(defenderMessage);
-
-            if (bc_Attacker != null && bc_Defender != null)
-            {
-                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile && pm_Defender != null)
-                    value *= bc_Attacker.PvPAbilityDamageScalar;
-            }
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
-                value *= defenderDungeonArmor.DungeonArmorDetail.DiseaseDamageReceivedScalar;
-
-            int intervalFrequency = 6;
-            int numberOfIntervals = (int)(Math.Floor(expirationSeconds / intervalFrequency));
-
-            for (int a = 0; a < numberOfIntervals; a++)
-            {
-                defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Disease, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds((a + 1) * intervalFrequency)));
-            }
-        }
-
-        #endregion
-
-        #region Crushing Blow
-
-        public static void CrushingBlowSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            BaseCreature bc_Attacker = attacker as BaseCreature;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            if (showEffect)
-                defender.FixedEffect(0x5683, 10, 20);
-
-            if (soundOverride == -1)
-                Effects.PlaySound(defender.Location, defender.Map, 0x525);
-
-            else if (soundOverride > 0)
-                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            defender.SendMessage(defenderMessage);
-
-            if (bc_Attacker != null)
-            {
-                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile && pm_Defender != null)
-                    value *= bc_Attacker.PvPAbilityDamageScalar;
-            }
-
-            double stamPercent = (double)defender.Stam / (double)defender.StamMax;
-
-            double minDamage = value * .5;
-            double damage = minDamage + (value * (1 - stamPercent));
-
-            if (damage < 1)
-                damage = 1;
-
-            if (attacker != null)
-                attacker.DoHarmful(defender);
-
-            AOS.Damage(defender, attacker, (int)damage, 100, 0, 0, 0, 0);
-        }
-
-        #endregion
-
-        #region Pierce
-
-        public static void PierceSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            if (bc_Defender != null)
-                value *= bc_Defender.SpecialEffectReduction;
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
-            {
-                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
-                {
-                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
-                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
-
-                    return;
-                }
-            }
-
-            if (showEffect)
-                defender.FixedEffect(0x5683, 10, 20);
-
-            if (soundOverride == -1)
-                Effects.PlaySound(defender.Location, defender.Map, 0x525);
-
-            else if (soundOverride > 0)
-                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            defender.SendMessage(defenderMessage);
-            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Pierce, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-        }
-
-        #endregion
-
-        #region Debilitate
-
-        public static void Debilitate(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            if (bc_Defender != null)
-                value *= bc_Defender.SpecialEffectReduction;
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(pm_Defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat && attacker is BaseCreature && pm_Defender != null)
-            {
-                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
-                {
-                    Effects.PlaySound(pm_Defender.Location, pm_Defender.Map, 0x64B);
-                    Effects.SendLocationParticles(EffectItem.Create(pm_Defender.Location, pm_Defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
-
-                    return;
-                }
-            }
-
-            if (showEffect)
-                defender.FixedEffect(0x5683, 10, 20);
-
-            if (soundOverride == -1)
-                Effects.PlaySound(defender.Location, defender.Map, 0x510);
-
-            else if (soundOverride > 0)
-                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            defender.SendMessage(defenderMessage);
-            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Debilitate, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-        }
-
-        #endregion
-
-        #region Frenzy
-
-        public static void FrenzySpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(attacker)) return;            
-           
-            double totalValue;
-
-            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Frenzy, out totalValue);
-                        
-            if (totalValue > 0)
-                return;
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            if (defender != null)
-                defender.SendMessage(defenderMessage);
-
-            if (soundOverride == -1)
-                attacker.PlaySound(attacker.GetAngerSound());
-
-            else if (soundOverride > 0)
-                attacker.PlaySound(soundOverride);
-
-            if (emoteMessage != "-1")
-            {
-                if (emoteMessage == "")
-                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, "*becomes frenzied*");
-
-                else
-                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
-            }
-
-            attacker.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Frenzy, defender, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));            
-        }
-
-        #endregion
-
-        #region Enrage
-
-        public static void EnrageSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            double totalValue;
-
-            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Enrage, out totalValue);
-
-            if (totalValue > 0)
-                return;
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            if (defender != null)
-                defender.SendMessage(defenderMessage);
-                        
-            if (soundOverride == -1)
-                defender.PlaySound(defender.GetAngerSound());
-
-            else if (soundOverride > 0)
-                defender.PlaySound(soundOverride);
-
-            if (showEffect)
-                defender.FixedParticles(0x373A, 10, 15, 5036, 2116, 0, EffectLayer.Head);
-
-            if (emoteMessage != "-1")
-            {
-                if (emoteMessage == "")
-                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*becomes enraged*");
-
-                else
-                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
-            }
-
-            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Enrage, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));           
-        }
-
-        #endregion
-
-        #region Courage
-
-        public static void CourageSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(attacker)) return;
-
-            double totalValue;
-
-            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Courage, out totalValue);
-
-            if (totalValue > 0)
-                return;
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            if (defender != null)
-                defender.SendMessage(defenderMessage);
-
-            int effectHue = 2503;
-            
-            if (soundOverride == -1)
-                attacker.PlaySound(0x650);
-
-            else if (soundOverride > 0)
-                attacker.PlaySound(soundOverride);
-
-            if (showEffect)
-                attacker.FixedParticles(0x373A, 10, 15, 5036, effectHue, 0, EffectLayer.Head);
-
-            if (emoteMessage != "-1")
-            {
-                if (emoteMessage == "")
-                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, "*draws upon courage*");
-                else
-                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
-            }
-
-            attacker.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Courage, defender, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-        }
-
-        #endregion
-
-        #region Fortitude
-
-        public static void FortitudeSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            double totalValue;
-
-            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude, out totalValue);
-
-            if (totalValue > 0)
-                return;
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            if (defender != null)
-                defender.SendMessage(defenderMessage);
-
-            int effectHue = 2503;
-           
-            if (soundOverride == -1)
-                defender.PlaySound(0x65A);
-
-            else if (soundOverride > 0)
-                defender.PlaySound(soundOverride);
-
-            if (showEffect)
-                defender.FixedParticles(0x375A, 10, 30, 5011, effectHue, 0, EffectLayer.Head);
-
-            if (emoteMessage != "-1")
-            {
-                if (emoteMessage == "")
-                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*draws upon fortitude*");
-                else
-                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
-            }
-
-            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Fortitude, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
-        }
-
-        #endregion
-
-        #region Flamestrike
-
-        public static void FlamestrikeSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            BaseCreature bc_Attacker = attacker as BaseCreature;
-
-            BaseCreature bc_Defender = defender as BaseCreature;
-            PlayerMobile pm_Defender = defender as PlayerMobile;
-
-            if (showEffect)
-                defender.FixedParticles(0x3709, 10, 30, 5052, EffectLayer.LeftFoot);
-
-            if (soundOverride == -1)
-                Effects.PlaySound(defender.Location, defender.Map, 0x5CF);
-
-            else if (soundOverride > 0)
-                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            defender.SendMessage(defenderMessage);
-
-            if (bc_Attacker != null)
-            {
-                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile && pm_Defender != null)
-                    value *= bc_Attacker.PvPAbilityDamageScalar;
-            }
-
-            if (attacker != null)
-                attacker.DoHarmful(defender);
-
-            AOS.Damage(defender, attacker, (int)value, 0, 100, 0, 0, 0);
-        }
-
-        #endregion
-
-        #region Energy Siphon
-
-        public static void EnergySiphonSpecialAbility(double chance, Mobile attacker, Mobile defender, double scalar, int range, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(attacker)) return;
-
-            BaseCreature bc_Attacker = attacker as BaseCreature;
-
-            bool defenderExists = true;
-
-            if (!SpecialAbilities.Exists(defender))
-                defenderExists = false;
-
-            if (showEffect && defenderExists)
-                Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, TimeSpan.FromSeconds(0.2)), 0x372A, 6, 20, 2636, 0, 5029, 0);
-
-            if (soundOverride == -1)
-            {
-                Effects.PlaySound(attacker.Location, defender.Map, 0x457);
-
-                if (defenderExists)
-                    Effects.PlaySound(defender.Location, defender.Map, 0x457);
-            }
-
-            else if (soundOverride > 0)
-            {
-                Effects.PlaySound(attacker.Location, defender.Map, soundOverride);
-
-                if (defenderExists)
-                    Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-            }
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            if (defenderExists)
-            {
-                defender.SendMessage(defenderMessage);
-                attacker.DoHarmful(defender);
-            }
-
-            int hitsRegen = (int)(Math.Round((double)attacker.HitsMax * .125 * scalar));
-            int stamRegen = (int)(Math.Round((double)attacker.StamMax * .15 * scalar));
-            int manaRegen = (int)(Math.Round((double)attacker.ManaMax * .10 * scalar));
-
-            attacker.Heal(hitsRegen);
-            attacker.Stam += stamRegen;
-            attacker.Mana += manaRegen;
-        }
-
-        #endregion
-
-        #region Expertise
-
-        public static void ExpertiseSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(attacker)) return;
-
-            double totalValue;
-
-            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Expertise, out totalValue);
-
-            if (totalValue > 0)
-                return;
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            if (defender != null)
-                defender.SendMessage(defenderMessage);
-
-            int effectHue = 2588;
-            
-            if (soundOverride == -1)
-                attacker.PlaySound(0x28E);
-
-            else if (soundOverride > 0)
-                attacker.PlaySound(soundOverride);
-
-            if (showEffect)
-                attacker.FixedParticles(0x375A, 10, 30, 5010, effectHue, 0, EffectLayer.Waist);
-
-            if (emoteMessage != "-1")
-            {
-                if (emoteMessage == "")
-                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, "*draws upon expertise*");
-
-                else
-                    attacker.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
-            }
-
-            attacker.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Expertise, defender, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));            
-        }
-
-        #endregion
-
-        #region Evasion
-
-        public static void EvasionSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage, string emoteMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            double totalValue;
-
-            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Evasion, out totalValue);
-
-            if (totalValue > 0)
-                return;
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            if (defender != null)
-                defender.SendMessage(defenderMessage);
-
-            if (showEffect)
-            {
-                int projectiles = 6;
-                int particleSpeed = 4;
-
-                for (int a = 0; a < projectiles; a++)
-                {
-                    Point3D newLocation = new Point3D(defender.X + Utility.RandomList(-5, -4, -3, -2, -1, 1, 2, 3, 4, 5), defender.Y + Utility.RandomList(-5, -4, -3, -2, -1, 1, 2, 3, 4, 5), defender.Z);
-                    SpellHelper.AdjustField(ref newLocation, defender.Map, 12, false);
-
-                    IEntity effectStartLocation = new Entity(Serial.Zero, new Point3D(defender.X, defender.Y, defender.Z), defender.Map);
-                    IEntity effectEndLocation = new Entity(Serial.Zero, new Point3D(newLocation.X, newLocation.Y, newLocation.Z + 5), defender.Map);
-
-                    Effects.SendMovingEffect(effectStartLocation, effectEndLocation, Utility.RandomList(0x37B9), particleSpeed, 0, false, false, 0, 0);
-                }
-            }
-           
-            if (soundOverride == -1)
-                defender.PlaySound(0x512);
-
-            else if (soundOverride > 0)
-                defender.PlaySound(soundOverride);
-
-            if (emoteMessage != "-1")
-            {
-                if (emoteMessage == "")
-                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, "*begins to evade*");
-
-                else
-                    defender.PublicOverheadMessage(MessageType.Regular, 0, false, emoteMessage);
-            }
-
-            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Evasion, defender, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));            
-        }
-
-        #endregion
-
-        #region Backlash
-
-        public static void BacklashSpecialAbility(double chance, Mobile attacker, Mobile defender, double value, double expirationSeconds, int soundOverride, bool showEffect, string attackerMessage, string defenderMessage)
-        {
-            if (Utility.RandomDouble() > chance) return;
-            if (!SpecialAbilities.Exists(defender)) return;
-
-            DungeonArmor.PlayerDungeonArmorProfile defenderDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(defender, null);
-
-            if (defenderDungeonArmor.MatchingSet && !defenderDungeonArmor.InPlayerCombat)
-            {
-                if (Utility.RandomDouble() <= defenderDungeonArmor.DungeonArmorDetail.SpecialEffectAvoidanceChance)
-                {
-                    Effects.PlaySound(defender.Location, defender.Map, 0x64B);
-                    Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, defenderDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
-
-                    return;
-                }
-            }
-
-            if (showEffect)
-                defender.FixedEffect(0x91B, 10, 20, 2593, 0);
-
-            if (soundOverride == -1)
-                Effects.PlaySound(defender.Location, defender.Map, 0x5C5);
-
-            else if (soundOverride > 0)
-                Effects.PlaySound(defender.Location, defender.Map, soundOverride);
-
-            if (attacker != null)
-                attacker.SendMessage(attackerMessage);
-
-            defender.SendMessage(defenderMessage);
-            defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Backlash, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
         }
 
         #endregion

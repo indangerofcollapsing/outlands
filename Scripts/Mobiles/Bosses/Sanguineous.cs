@@ -134,7 +134,7 @@ namespace Server.Mobiles
             Fame = 8000;
             Karma = -8000;
 
-            VirtualArmor = 200;
+            VirtualArmor = 100;
 
             Horse mount = new Horse();
             mount.Body = 226;
@@ -293,7 +293,7 @@ namespace Server.Mobiles
                 case BossPhase.sanguinous:
                     bleedChance = .25;
 
-                    SpecialAbilities.BleedSpecialAbility(bleedChance, this, defender, DamageMin, 1.0, -1, true, "", "Their strike causes you to bleed!");
+                    SpecialAbilities.BleedSpecialAbility(bleedChance, this, defender, DamageMin, 1.0, -1, true, "", "Their strike causes you to bleed!", "-1");
                 break;
             }
         }
@@ -320,7 +320,7 @@ namespace Server.Mobiles
                 {
                     MagicDamageAbsorb = 1;
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, false, -1, false, "", "");
+                    SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, false, -1, false, "", "", "-1");
                     
                     Animate(30, 5, 1, true, false, 0);
                     PublicOverheadMessage(MessageType.Regular, SpeechHue, false, "*parries spell*");
@@ -515,6 +515,8 @@ namespace Server.Mobiles
             BodyValue = 741;
             Hue = 0;
 
+            VirtualArmor = 50;
+
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
 
             PublicOverheadMessage(MessageType.Regular, SpeechHue, false, "*becomes trueform sanguinous*");
@@ -591,7 +593,7 @@ namespace Server.Mobiles
             else
                 PublicOverheadMessage(MessageType.Regular, SpeechHue, false, "*parries arrow*");
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, false, -1, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, .5, false, -1, false, "", "", "-1");
 
             Timer.DelayCall(TimeSpan.FromSeconds(destinationDelay), delegate
             {
@@ -843,7 +845,7 @@ namespace Server.Mobiles
 
                 mobile.PublicOverheadMessage(MessageType.Regular, 0, false, "*trampled*");
 
-                SpecialAbilities.HinderSpecialAbility(1.0, this, mobile, 1.0, 2, false, -1, false, "", "You have been trampled and knocked down");
+                SpecialAbilities.HinderSpecialAbility(1.0, this, mobile, 1.0, 2, false, -1, false, "", "You have been trampled and knocked down", "-1");
 
                 new Blood(BloodDuration).MoveToWorld(Combatant.Location, Combatant.Map);
                 AOS.Damage(Combatant, (int)damage, 100, 0, 0, 0, 0);
@@ -943,7 +945,7 @@ namespace Server.Mobiles
             double initialDelay = 1 - (.5 * spawnPercent);
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             Point3D location = Location;
             Map map = Map;
@@ -1094,7 +1096,7 @@ namespace Server.Mobiles
 
             double totalDelay = directionDelay + initialDelay + 1;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextConfigureTraps = DateTime.UtcNow + NextConfigureTrapsDelay;
             AbilityInProgress = true;
@@ -1330,7 +1332,7 @@ namespace Server.Mobiles
             double initialDelay = 1 - (.5 * spawnPercent);
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             Point3D location = Location;
             Map map = Map;
@@ -1559,7 +1561,7 @@ namespace Server.Mobiles
 
             double totalDelay = directionDelay + initialDelay + directionDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
            
             Animate(12, 8, 3, true, false, 0);                    
 
@@ -1807,7 +1809,7 @@ namespace Server.Mobiles
 
             double totalDelay = directionDelay + initialDelay + postDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");            
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");            
 
             AbilityInProgress = true;
 
@@ -1965,7 +1967,7 @@ namespace Server.Mobiles
                             if (mobile is BaseCreature)
                                 finalBleedAmount *= 2;
 
-                            SpecialAbilities.BleedSpecialAbility(1.0, this, mobile, finalBleedAmount, 1.0, -1, true, "", "You are showered in blood!");
+                            SpecialAbilities.BleedSpecialAbility(1.0, this, mobile, finalBleedAmount, 1.0, -1, true, "", "You are showered in blood!", "-1");
                         }
                     }
                 });
@@ -2067,7 +2069,7 @@ namespace Server.Mobiles
                 }
             }
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
 
@@ -2290,7 +2292,7 @@ namespace Server.Mobiles
             m_NextBloodBurstAllowed = DateTime.UtcNow + NextBloodBurstDelay;
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, stationaryDelay, true, 0, false, "", "", "-1");
 
             Animate(10, 8, 1, true, false, 0);
 
@@ -2313,7 +2315,7 @@ namespace Server.Mobiles
                         if (!SpecialAbilities.Exists(this))
                             return;
 
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 1, true, 0, false, "", "");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 1, true, 0, false, "", "", "-1");
 
                         Animate(10, 8, 1, true, false, 0);
 
@@ -2459,7 +2461,7 @@ namespace Server.Mobiles
             
             double totalDelay = initialDelay + (lightningStrikes * lightningStrikeDelay) + 1;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             AbilityInProgress = true;
 
@@ -2588,7 +2590,7 @@ namespace Server.Mobiles
 
             double totalDelay = initialDelay + stationaryDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             AbilityInProgress = true;
 

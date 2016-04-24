@@ -81,7 +81,7 @@ namespace Server.Mobiles
                     {
                         RevealingAction();
 
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 1.0, true, 0, false, "", "");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 1.0, true, 0, false, "", "", "-1");
 
                         double entangleDuration = 3;
                         double pierceAmount = .25;
@@ -144,7 +144,7 @@ namespace Server.Mobiles
                                     combatant.SendMessage("You have been covered in sticky blood!");
                                     combatant.FixedParticles(0x374A, 10, 15, 5021, 38, 0, EffectLayer.Waist);
 
-                                    SpecialAbilities.EntangleSpecialAbility(1.0, this, combatant, 2, entangleDuration, 0, false, "", "");
+                                    SpecialAbilities.EntangleSpecialAbility(1.0, this, combatant, 2, entangleDuration, 0, false, "", "", "-1");
                                 }
 
                                 weapon.OnHit(this, combatant, damageScalar);

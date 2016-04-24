@@ -63,7 +63,7 @@ namespace Server.Mobiles
                 BoatOccupied.ReceiveDamage(this, null, Utility.RandomMinMax(10, 20), DamageType.Hull);
 
                 Say("*chews on the ship*");
-                SpecialAbilities.HinderSpecialAbility(1.0, this, this, 1.0, 1, true, Utility.RandomList(0x134, 0x133), false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, this, this, 1.0, 1, true, Utility.RandomList(0x134, 0x133), false, "", "", "-1");
 
                 m_NextBoatChewAllowed = DateTime.UtcNow + NextBoatChewDelay;
             }

@@ -66,7 +66,7 @@ namespace Server
 
             double effectChance = .15;
 
-            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, -1, true, "", "Their bite causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(effectChance, this, defender, DamageMax, 8.0, -1, true, "", "Their bite causes you to bleed!", "-1");
         }
 
         public UOACZGiantBat(Serial serial): base(serial)

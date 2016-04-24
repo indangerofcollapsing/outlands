@@ -4781,11 +4781,9 @@ namespace Server.Mobiles
             if (mobileTarget == null)
                 return false;
 
-            double totalValue = 0;
+            double phalanxValue = GetSpecialAbilityEntryValue(SpecialAbilityEffect.Phalanx);
 
-            GetSpecialAbilityEntryValue(SpecialAbilityEffect.Phalanx, out totalValue);
-
-            int extraRange = (int)(Math.Floor(totalValue));
+            int extraRange = (int)(Math.Floor(phalanxValue));
 
             BaseWeapon weapon = Weapon as BaseWeapon;
 
@@ -4823,9 +4821,7 @@ namespace Server.Mobiles
 
         public override bool IsHindered()
         {
-            double hinderValue = 0;
-
-            GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder, out hinderValue);
+            double hinderValue = GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder);
 
             if (hinderValue != 0)
                 return true;
@@ -5782,19 +5778,17 @@ namespace Server.Mobiles
             {
                 if (IsUOACZUndead)
                 {
-                    double totalValue = 0;
+                    double igniteValue = GetSpecialAbilityEntryValue(SpecialAbilityEffect.Ignite);
 
-                    GetSpecialAbilityEntryValue(SpecialAbilityEffect.Ignite, out totalValue);
-
-                    if (Utility.RandomDouble() <= totalValue)
+                    if (Utility.RandomDouble() <= igniteValue)
                     {
                         PlaySound(0x208);
                         new UOACZFirefield(this).MoveToWorld(Location, Map);
                     }
 
-                    GetSpecialAbilityEntryValue(SpecialAbilityEffect.Bile, out totalValue);
+                    double bileValue = GetSpecialAbilityEntryValue(SpecialAbilityEffect.Bile);
 
-                    if (Utility.RandomDouble() <= totalValue)
+                    if (Utility.RandomDouble() <= bileValue)
                     {
                         PlaySound(0x230);
                         new UOACZBile(this).MoveToWorld(Location, Map);

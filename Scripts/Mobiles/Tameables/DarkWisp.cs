@@ -87,6 +87,7 @@ namespace Server.Mobiles
             SpellDelayMax *= 1.33;
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Elemental; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Mage4; } }

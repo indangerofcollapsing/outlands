@@ -265,9 +265,7 @@ namespace Server.Spells
             m_Caster.CheckSkill(SkillName.SpiritSpeak, 0.0, 120.0, 1.0);
 
             double targetMagicResist = target.Skills[SkillName.MagicResist].Value;      
-            double magicResistBonus = 0;
-
-            target.GetSpecialAbilityEntryValue(SpecialAbilityEffect.MagicResist, out magicResistBonus);
+            double magicResistBonus = target.GetSpecialAbilityEntryValue(SpecialAbilityEffect.MagicResist);
             
             //Player vs Player
             if (m_Caster is PlayerMobile && target is PlayerMobile)
@@ -587,16 +585,11 @@ namespace Server.Spells
                         {
                             BaseCreature creature = m_Caster as BaseCreature;
 
-                            double castDelayMultiplier = 0;
-
-                            creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder, out castDelayMultiplier);
-                            castDelayMultiplier += 1;
-
-                            //Upscale creature casting times slightly to account for animation delays
+                            //Animation Duration
                             double castDelayInSeconds = castDelay.TotalSeconds;
                             double spellSpeedSCalar = creature.SpellSpeedScalar;
 
-                            castDelay = castDelay + TimeSpan.FromSeconds(castDelayInSeconds * .4 * castDelayMultiplier * spellSpeedSCalar);
+                            castDelay = castDelay + TimeSpan.FromSeconds(castDelayInSeconds * .4 * spellSpeedSCalar);
 
                             count = (int)Math.Ceiling((castDelay.TotalSeconds) / AnimateDelay.TotalSeconds);
 
@@ -606,18 +599,8 @@ namespace Server.Spells
                                 m_AnimTimer.Start();
                             }
 
-                            //Special Weapon Attack Increasing Delay
-                            double speedScalar = 1;
-                            double crippleModifier = 0;
-                            double discordModifier = 0;
-
-                            //Cripple Effect on Creature
-                            creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple, out crippleModifier);
-
-                            //Discord
-                            discordModifier = creature.DiscordEffect;
-
-                            speedScalar += crippleModifier + discordModifier;
+                            //Next Spellcast Allowed Delay
+                            double speedScalar = 1 + creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple);
 
                             double mageryModifier = 1.0;
                             double experienceModifier = 1.0;
@@ -627,8 +610,7 @@ namespace Server.Spells
                                 mageryModifier = 1 / creature.TamedBaseMageryCreationScalar;
                                 experienceModifier = 1 - (.20 * (double)creature.Experience / (double)creature.MaxExperience);                               
                             }
-
-                            //Set Delay Before Next Creature Spellcast
+                            
                             double SpellDelay = (creature.SpellDelayMin + ((creature.SpellDelayMax - creature.SpellDelayMin) * Utility.RandomDouble())) * speedScalar * mageryModifier * experienceModifier;
 
                             if (SpellDelay < .1)
@@ -829,22 +811,15 @@ namespace Server.Spells
                 BaseCreature bc_Creature = m_Caster as BaseCreature;
                 PlayerMobile player = m_Caster as PlayerMobile;
 
-                if (bc_Creature != null)
-                   bc_Creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Backlash, out totalValue);
-
-                if (player != null)
-                    player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Backlash, out totalValue);
-
-                if (totalValue > 0)
+                double backlashValue = m_Caster.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Backlash);
+               
+                if (Utility.RandomDouble() <= backlashValue)
                 {
-                    if (Utility.RandomDouble() <= totalValue)
-                    {
-                        DoFizzle();
-                        m_Caster.SendMessage("Backlash causes your spell to fizzle."); 
+                    DoFizzle();
+                    m_Caster.SendMessage("Backlash causes your spell to fizzle."); 
 
-                        return false;
-                    }
-                }
+                    return false;
+                }                
 
                 DungeonArmor.PlayerDungeonArmorProfile casterDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(m_Caster, null);
 

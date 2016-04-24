@@ -283,7 +283,7 @@ namespace Server
                         new Blood().MoveToWorld(newLocation, player.Map);
                     }
 
-                    SpecialAbilities.BleedSpecialAbility(1.0, null, player, bleedAmount, 8, -1, true, "", "");
+                    SpecialAbilities.BleedSpecialAbility(1.0, null, player, bleedAmount, 8, -1, true, "", "", "-1");
 
                     if (player.NetState != null)
                         player.PrivateOverheadMessage(MessageType.Regular, 0, false, "Curses! A dagger hidden in an apple!", player.NetState);
@@ -313,7 +313,7 @@ namespace Server
 
                     duration = 5;
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, duration, false, -1, false, "", "");
+                    SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, duration, false, -1, false, "", "", "-1");
 
                     new Blood().MoveToWorld(player.Location, player.Map);
                     AOS.Damage(player, damage, 0, 100, 0, 0, 0);
@@ -335,7 +335,7 @@ namespace Server
                     glue.Hue = 2067;
                     glue.MoveToWorld(player.Location, player.Map);                    
 
-                    SpecialAbilities.EntangleSpecialAbility(1.0, null, player, 1.0, 30, -1, true, "", "");
+                    SpecialAbilities.EntangleSpecialAbility(1.0, null, player, 1.0, 30, -1, true, "", "", "-1");
 
                     if (player.NetState != null)
                         player.PrivateOverheadMessage(MessageType.Regular, 0, false, "Your feet have been glued to the floor!", player.NetState);
@@ -381,7 +381,7 @@ namespace Server
                 break;
 
                 case 8:
-                    SpecialAbilities.PetrifySpecialAbility(1.0, null, player, 1.0, 15, -1, true, "", "");
+                    SpecialAbilities.PetrifySpecialAbility(1.0, null, player, 1.0, 15, -1, true, "", "", "-1");
 
                     if (player.NetState != null)
                         player.PrivateOverheadMessage(MessageType.Regular, 0, false, "Rock candy!", player.NetState);

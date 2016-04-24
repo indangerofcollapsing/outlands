@@ -418,7 +418,7 @@ namespace Server.Mobiles
             CantWalk = true;
 
             Say("*begins to dig a tunnel back to its magical lair*");
-            SpecialAbilities.HinderSpecialAbility(1.0, this, this, 1.0, 1, true, digSound, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, this, this, 1.0, 1, true, digSound, false, "", "", "-1");
 
             digging = true;
 
@@ -448,7 +448,7 @@ namespace Server.Mobiles
                     Animate(3, 5, 1, true, false, 0);
 
                     Say("*digs*");
-                    SpecialAbilities.HinderSpecialAbility(1.0, this, this, 1.0, 1, false, digSound, false, "", "");    
+                    SpecialAbilities.HinderSpecialAbility(1.0, this, this, 1.0, 1, false, digSound, false, "", "", "-1");    
 
                     //Dirt
                     int extraDirtCount = Utility.RandomMinMax(2, 3);
@@ -624,7 +624,7 @@ namespace Server.Mobiles
 
                         case EggType.Entangle:
                             if (mobile != null)
-                                SpecialAbilities.EntangleSpecialAbility(1.0, null, mobile, 1, 10, -1, true, "", "You are held in place!");
+                                SpecialAbilities.EntangleSpecialAbility(1.0, null, mobile, 1, 10, -1, true, "", "You are held in place!", "-1");
                         break;
 
                         case EggType.Poison:
@@ -637,8 +637,8 @@ namespace Server.Mobiles
 
                             if (mobile is BaseCreature)
                                 damage *= 1.5;
-                                                        
-                                SpecialAbilities.CrippleSpecialAbility(1.0, null, mobile, .5, 10, -1, true, "", "A blast of ice has slowed your actions!");
+
+                            SpecialAbilities.CrippleSpecialAbility(1.0, null, mobile, .5, 10, -1, true, "", "A blast of ice has slowed your actions!", "-1");
 
                             AOS.Damage(mobile, (int)damage, 0, 100, 0, 0, 0);
                         break;
@@ -648,7 +648,7 @@ namespace Server.Mobiles
                         break;
 
                         case EggType.Banish:
-                            SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, 5, false, -1, false, "", "You cannot move or speak!");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, 5, false, -1, false, "", "You cannot move or speak!", "-1");
             
                             mobile.Squelched = true;
                             mobile.Hidden = true;
@@ -663,7 +663,7 @@ namespace Server.Mobiles
                         break;
 
                         case EggType.Bloody:
-                            SpecialAbilities.BleedSpecialAbility(1.0, null, mobile, 40, 8.0, 0x44D, true, "", "You begin to bleed!");
+                            SpecialAbilities.BleedSpecialAbility(1.0, null, mobile, 40, 8.0, 0x44D, true, "", "You begin to bleed!", "-1");
                         break;
                     }
                 }

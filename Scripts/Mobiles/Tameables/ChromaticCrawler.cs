@@ -29,7 +29,7 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.Poisoning, 40);
 
-            VirtualArmor = 150;               
+            VirtualArmor = 75;               
 
 			Fame = 2000;
 			Karma = -2000;
@@ -69,6 +69,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Slow; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }

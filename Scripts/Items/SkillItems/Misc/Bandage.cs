@@ -489,12 +489,10 @@ namespace Server.Items
                                 toHeal += 20;
                         }
 
-                        double totalValue = 0;
+                        double superiorHealing = playerHealer.GetSpecialAbilityEntryValue(SpecialAbilityEffect.SuperiorHealing);
 
-                        playerHealer.GetSpecialAbilityEntryValue(SpecialAbilityEffect.SuperiorHealing, out totalValue);
-
-                        if (totalValue > 0)
-                            toHeal *= totalValue;
+                        if (superiorHealing > 0)
+                            toHeal *= superiorHealing;
                     }
 
                     if (toHeal < 1)
@@ -617,17 +615,10 @@ namespace Server.Items
                 if (patient.Region is UOACZRegion)
                     seconds = 10;
 
-                double totalValue = 0;
+                double rapidTreatmentValue = healer.GetSpecialAbilityEntryValue(SpecialAbilityEffect.RapidTreatment);
 
-                PlayerMobile playerHealer = healer as PlayerMobile;
-
-                if (playerHealer != null)
-                {
-                    playerHealer.GetSpecialAbilityEntryValue(SpecialAbilityEffect.RapidTreatment, out totalValue);
-
-                    if (totalValue > 0)
-                        seconds *= totalValue;
-                }
+                if (rapidTreatmentValue > 0)
+                    seconds *= rapidTreatmentValue;
 
                 context = new BandageContext(healer, patient, TimeSpan.FromSeconds(seconds));
 

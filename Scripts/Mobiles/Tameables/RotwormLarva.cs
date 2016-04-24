@@ -69,6 +69,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Monstrous; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VerySlow; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -105,7 +106,7 @@ namespace Server.Mobiles
 
                 double damage = DamageMax * 5;
 
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 30, 0x4F1, true, "", "");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 30, 0x4F1, true, "", "", "-1");
 
                 int projectiles = 6;
                 int particleSpeed = 4;

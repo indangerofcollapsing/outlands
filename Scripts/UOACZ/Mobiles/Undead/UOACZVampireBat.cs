@@ -91,7 +91,7 @@ namespace Server
                 Blood blood = new Blood();
                 blood.MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z + 1), Map);
 
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, 0x44D, true, "", "The creature sinks its fangs into you, healing itself and causing you to bleed!");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, 0x44D, true, "", "The creature sinks its fangs into you, healing itself and causing you to bleed!", "-1");
             }            
         }
 

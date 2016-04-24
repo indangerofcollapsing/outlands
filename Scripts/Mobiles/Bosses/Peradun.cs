@@ -86,7 +86,7 @@ namespace Server.Mobiles
             Fame = 20000;
             Karma = -20000;
 
-            VirtualArmor = 100;
+            VirtualArmor = 50;
         }
 
         public virtual int AttackRange { get { return 2; } }
@@ -192,7 +192,7 @@ namespace Server.Mobiles
 
             PublicOverheadMessage(MessageType.Regular, 0, false, "*raises a fiery fist*");
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextFlameSlamAllowed = DateTime.UtcNow + NextFlameSlamDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
@@ -331,7 +331,7 @@ namespace Server.Mobiles
             double fireballDelay = .1;
             double totalDelay = 1 + directionDelay + initialDelay + ((double)fireballs * fireballDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextFireBarrageAllowed = DateTime.UtcNow + NextFireBarrageDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
@@ -501,7 +501,7 @@ namespace Server.Mobiles
 
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextLavaOrbAllowed = DateTime.UtcNow + NextLavaOrbDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
@@ -710,7 +710,7 @@ namespace Server.Mobiles
 
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             AbilityInProgress = true;
             DamageIntervalInProgress = true;
@@ -874,7 +874,7 @@ namespace Server.Mobiles
 
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             AbilityInProgress = true;
             DamageIntervalInProgress = true;

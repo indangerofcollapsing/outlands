@@ -65,7 +65,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.BleedSpecialAbility(0.15, this, defender, DamageMax, 8, -1, true, "", "Their deft swordcut causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(0.15, this, defender, DamageMax, 8, -1, true, "", "Their deft swordcut causes you to bleed!", "-1");
         }
 
 		public OrghereimSwordThane( Serial serial ) : base( serial ) 

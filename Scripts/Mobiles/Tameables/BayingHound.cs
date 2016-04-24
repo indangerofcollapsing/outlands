@@ -68,6 +68,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -92,7 +93,7 @@ namespace Server.Mobiles
                 }
             }
 
-            SpecialAbilities.StunSpecialAbility(effectChance, this, defender, .10, 10, -1, true, "", "The creature clings to you, making it difficult to use your weapon!");
+            SpecialAbilities.DisorientSpecialAbility(effectChance, this, defender, .10, 10, -1, true, "", "The creature grips you with its jaws, disorienting you!", "-1");
         }
 
         public override void OnThink()

@@ -67,6 +67,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -101,12 +102,12 @@ namespace Server.Mobiles
                 blood.MoveToWorld(new Point3D(defender.X + Utility.RandomMinMax(-1, 1), defender.Y + Utility.RandomMinMax(-1, 1), defender.Z + 1), Map);
 
                 if (defender is PlayerMobile)
-                    SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, 0x44D, true, "", "The creature sinks its fangs into you, causing you to bleed!");
+                    SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, 0x44D, true, "", "The creature sinks its fangs into you, causing you to bleed!", "-1");
 
                 else
                 {
-                    SpecialAbilities.StunSpecialAbility(1.0, this, defender, .15, 10, -1, false, "", "");
-                    SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, 0x44D, true, "", "The creature sinks its fangs into you, stunning you and causing you to bleed!");
+                    SpecialAbilities.DisorientSpecialAbility(1.0, this, defender, .15, 10, -1, false, "", "", "-1");
+                    SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, 0x44D, true, "", "The creature sinks its fangs into you, stunning you and causing you to bleed!", "-1");
                 }
             }
         }

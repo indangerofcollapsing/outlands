@@ -119,7 +119,7 @@ namespace Server.Mobiles
                 m_NextFeedAllowed = DateTime.UtcNow + NextFeedDelay;
                 m_FeedExpiration = DateTime.UtcNow + FeedDuration;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 10, true, 0, false, "", "");                
+                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 10, true, 0, false, "", "", "-1");                
 
                 FixedParticles(0x376A, 9, 32, 5030, EffectLayer.Waist);
 
@@ -135,8 +135,8 @@ namespace Server.Mobiles
 
                 Animate(34, 5, 1, true, false, 0);
 
-                SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 10, -1, true, "", "");
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 10.0, 0x44D, true, "", "The creature sinks its fangs into you, ensnaring and feeding upon your blood!");
+                SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 10, -1, true, "", "", "-1");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 10.0, 0x44D, true, "", "The creature sinks its fangs into you, ensnaring and feeding upon your blood!", "-1");
             }            
         }
 

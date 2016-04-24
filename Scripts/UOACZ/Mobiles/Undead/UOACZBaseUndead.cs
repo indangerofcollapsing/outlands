@@ -408,7 +408,7 @@ namespace Server.Mobiles
                     if (ControlMaster is PlayerMobile)
                     {
                         delay = 1;
-                        SpecialAbilities.EntangleSpecialAbility(1.0, null, this, 1, delay, 0, false, "", "");
+                        SpecialAbilities.EntangleSpecialAbility(1.0, null, this, 1, delay, 0, false, "", "", "-1");
                     }
 
                     else
@@ -418,17 +418,17 @@ namespace Server.Mobiles
                         {
                             delay = 10;
 
-                            SpecialAbilities.EntangleSpecialAbility(1.0, null, this, 1, delay, 0, false, "", "");
+                            SpecialAbilities.EntangleSpecialAbility(1.0, null, this, 1, delay, 0, false, "", "", "-1");
                             m_NextBreakableStaticAttackAllowed = DateTime.UtcNow + BreakableStaticAttackDelay;
                         }
 
                         else
                         {
                             if (Utility.RandomDouble() <= .5)
-                                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, delay, true, 0, false, "", "");
+                                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, delay, true, 0, false, "", "", "-1");
 
                             else
-                                SpecialAbilities.EntangleSpecialAbility(1.0, null, this, 1, delay, 0, false, "", "");
+                                SpecialAbilities.EntangleSpecialAbility(1.0, null, this, 1, delay, 0, false, "", "", "-1");
 
                             m_NextBreakableStaticAttackAllowed = DateTime.UtcNow + BreakableStaticAttackDelay;
                         }

@@ -131,7 +131,7 @@ namespace Server.Mobiles
                 double initialDelay = .5;
                 double totalDelay = directionDelay + initialDelay;
 
-                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
                 Point3D location = Location;
                 Map map = Map;

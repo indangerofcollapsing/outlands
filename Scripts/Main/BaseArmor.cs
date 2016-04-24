@@ -1221,7 +1221,7 @@ namespace Server.Items
 
             double adjustedArmorRating = defender.ArmorRating;
             double fortitudeBonus = 0;
-            double pierceEffect = 0;
+            double pierceReduction = 0;
 
             PlayerMobile pm_Defender = defender as PlayerMobile;
             BaseCreature bc_Defender = defender as BaseCreature;
@@ -1233,13 +1233,10 @@ namespace Server.Items
             }
 
             if (bc_Defender != null)
-                adjustedArmorRating = defender.VirtualArmor + defender.VirtualArmorMod;            
-
-            defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude, out fortitudeBonus);
-            adjustedArmorRating += fortitudeBonus;
-
-            defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Pierce, out pierceEffect);
-            adjustedArmorRating *= (1 - pierceEffect);
+                adjustedArmorRating = defender.VirtualArmor + defender.VirtualArmorMod; 
+           
+            adjustedArmorRating += defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude);
+            adjustedArmorRating -= defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Pierce);
 
             if (adjustedArmorRating < 0)
                 adjustedArmorRating = 0;

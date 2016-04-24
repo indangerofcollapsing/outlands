@@ -100,7 +100,7 @@ namespace Server.Mobiles
                     double discordModifier = 0;
 
                     //Cripple Effect on Creature
-                    creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple, out crippleModifier);
+                    crippleModifier = creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple);
 
                     //Discordance Effect on Creature                   
                     discordModifier = creature.DiscordEffect;
@@ -384,7 +384,7 @@ namespace Server.Mobiles
             else
                 creature.Animate(12, 5, 1, true, false, 0);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, 1.5, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, creature, 1.0, 1.5, true, 0, false, "", "", "-1");
 
             Timer.DelayCall(TimeSpan.FromSeconds(1.3), delegate
             {
@@ -443,9 +443,9 @@ namespace Server.Mobiles
                                 baseDamage = (double)creature.DamageMax * .75;
 
                                 if (target is PlayerMobile)
-                                    SpecialAbilities.CrippleSpecialAbility(1.0, creature, target, .05, 10, -1, true, "", "The blast of ice has slowed your actions!");                                    
+                                    SpecialAbilities.CrippleSpecialAbility(1.0, creature, target, .05, 10, -1, true, "", "The blast of ice has slowed your actions!", "-1");                                    
                                 else
-                                    SpecialAbilities.CrippleSpecialAbility(1.0, creature, target, .10, 10, -1, true, "", "The blast of ice has slowed your actions!");  
+                                    SpecialAbilities.CrippleSpecialAbility(1.0, creature, target, .10, 10, -1, true, "", "The blast of ice has slowed your actions!", "-1");  
 
                                 Effects.PlaySound(target.Location, target.Map, 0x208);
                                 Effects.SendLocationParticles(EffectItem.Create(target.Location, target.Map, TimeSpan.FromSeconds(0.25)), 0x3779, 10, 20, 1153, 0, 5029, 0);

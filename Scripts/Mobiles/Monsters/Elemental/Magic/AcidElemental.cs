@@ -57,7 +57,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.PierceSpecialAbility(.25, this, defender, .5, 15, -1, true, "", "Their acid momentarily weakens your armor!");
+            SpecialAbilities.PierceSpecialAbility(.25, this, defender, 50, 15, -1, true, "", "Their acid momentarily weakens your armor!", "-1");
                         
             Acid acid = new Acid();
             acid.MoveToWorld(defender.Location, Map);

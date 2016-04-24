@@ -159,7 +159,7 @@ namespace Server.Mobiles
 
                 if (damageProgress >= damageIntervalThreshold)
                 {
-                    SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, 5, true, 0, false, "", "");
+                    SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, 5, true, 0, false, "", "", "-1");
 
                     Effects.PlaySound(Location, Map, GetAngerSound());
 
@@ -454,7 +454,7 @@ namespace Server.Mobiles
 
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             CreateFlashText(Location, Map, "*intrusion detected...purging*", IntrusionTextHue);
 
@@ -620,7 +620,7 @@ namespace Server.Mobiles
             double initialDelay = .75;
             double totalDelay = 1 + directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
                         
             m_NextTraceRouteAllowed = DateTime.UtcNow + NextTraceRouteDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);
@@ -904,8 +904,8 @@ namespace Server.Mobiles
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay;
 
             m_EngulfedMobiles.Add(mobile);
-            
-            SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, duration, false, -1, false, "", "You have been 'null routed' and cannot move or speak!");
+
+            SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, duration, false, -1, false, "", "You have been 'null routed' and cannot move or speak!", "-1");
 
             mobile.Squelched = true;
             mobile.Hidden = true;
@@ -1014,8 +1014,8 @@ namespace Server.Mobiles
             {
                 Mobile mobile = (Mobile)m_Queue.Dequeue();
                 Point3D mobileLocation = mobile.Location;
-                                                
-                SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, duration, false, -1, false, "", "You have been 'null routed' and cannot move or speak!");
+
+                SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, duration, false, -1, false, "", "You have been 'null routed' and cannot move or speak!", "-1");
 
                 mobile.Squelched = true;
                 mobile.Hidden = true;
@@ -1040,7 +1040,7 @@ namespace Server.Mobiles
                 {
                     Mobile mobile = m_ValidMobiles[Utility.RandomMinMax(0, m_ValidMobiles.Count - 1)];
                     
-                    SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, duration, false, -1, false, "", "You have been 'null routed' and cannot move or speak!");
+                    SpecialAbilities.HinderSpecialAbility(1.0, null, mobile, 1.0, duration, false, -1, false, "", "You have been 'null routed' and cannot move or speak!", "-1");
 
                     mobile.Squelched = true;
                     mobile.Hidden = true;

@@ -77,28 +77,7 @@ namespace Server.Mobiles
 			Karma = -20000;
 
 			VirtualArmor = 25;
-
-            SetBackupLocations();
 		}
-
-        public void SetBackupLocations()
-        {
-            m_BackupLocations = new List<Point3D>();
-
-            #region Locations
-
-            m_BackupLocations.Add(new Point3D(5443, 1816, 0));
-            m_BackupLocations.Add(new Point3D(5437, 1822, 0));
-            m_BackupLocations.Add(new Point3D(5428, 1821, 0));
-            m_BackupLocations.Add(new Point3D(5424, 1815, 0));
-            m_BackupLocations.Add(new Point3D(5426, 1810, 0));
-            m_BackupLocations.Add(new Point3D(5428, 1803, 0));
-            m_BackupLocations.Add(new Point3D(5437, 1799, 0));
-            m_BackupLocations.Add(new Point3D(5443, 1801, 0));
-            m_BackupLocations.Add(new Point3D(5446, 1808, 0));
-
-            #endregion
-        }
 
         public override void SetUniqueAI()
         {
@@ -115,7 +94,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.BleedSpecialAbility(.33, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(.33, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!", "-1");
 
             if (Utility.RandomDouble() < .10)
             {
@@ -124,7 +103,7 @@ namespace Server.Mobiles
 
                 defender.SendMessage("You have been wrapped in a web!");
 
-                SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1.0, Utility.RandomMinMax(4, 6), false, -1, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, this, defender, 1.0, Utility.RandomMinMax(4, 6), false, -1, false, "", "", "-1");
             }
         }
 
@@ -412,7 +391,7 @@ namespace Server.Mobiles
                     if (creature.CanBeHarmful(mobile) && validTarget && !mobile.Hidden && Utility.RandomDouble() <= chance)
                     {
                         Effects.PlaySound(mobile.Location, player.Map, 0x580);
-                        SpecialAbilities.HinderSpecialAbility(1.0, creature, mobile, 1.0, Utility.RandomMinMax(4, 8), false, -1, false, "", "You have been wrapped in a web!");
+                        SpecialAbilities.HinderSpecialAbility(1.0, creature, mobile, 1.0, Utility.RandomMinMax(4, 8), false, -1, false, "", "You have been wrapped in a web!", "-1");
 
                         int webId = Utility.RandomList(3811, 3812, 3813, 3814, 4306, 4307, 4308, 4308);
 
@@ -633,8 +612,6 @@ namespace Server.Mobiles
                     m_Creatures.Add(creature);
                 }
             }
-
-            SetBackupLocations();
 		}
 	}
 }

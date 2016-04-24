@@ -112,7 +112,7 @@ namespace Server.Items
 
             player.BeginAction(typeof(NewbieDungeonRune));
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 5, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 5, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < 5; a++)
             {

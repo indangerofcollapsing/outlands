@@ -40,7 +40,7 @@ namespace Server.Items
                     return;                
                 }
 
-                SpecialAbilities.CourageSpecialAbility(1.0, from, null, .10, 120, -1, true, "You begin to strike with increased accuracy.", "", "-1");
+                SpecialAbilities.ExpertiseSpecialAbility(1.0, from, null, .10, 120, -1, true, "You begin to strike with increased accuracy.", "", "-1");
 
                 from.BeginAction(typeof(UOACZGreaterTruestrikePotion));  
 

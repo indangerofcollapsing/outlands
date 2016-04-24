@@ -27,7 +27,7 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.MagicResist, 150);
 
-            VirtualArmor = 75;
+            VirtualArmor = 100;
 
             Tameable = true;
             ControlSlots = 1;
@@ -67,6 +67,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Monstrous; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -91,7 +92,7 @@ namespace Server.Mobiles
                 }
             }
 
-            SpecialAbilities.CrippleSpecialAbility(effectChance, this, defender, .33, 10, -1, true, "", "The creature has transfixed you with it's gaze, slowing your actions!");
+            SpecialAbilities.CrippleSpecialAbility(effectChance, this, defender, .33, 10, -1, true, "", "The creature has transfixed you with it's gaze, slowing your actions!", "-1");
         }
 
         public override void OnThink()

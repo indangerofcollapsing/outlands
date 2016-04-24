@@ -232,7 +232,7 @@ namespace Server.Mobiles
                         }
                     }
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, this, Combatant, 1.0, 1, false, -1, false, "", "You have been trampled and can't move!");
+                    SpecialAbilities.HinderSpecialAbility(1.0, this, Combatant, 1.0, 1, false, -1, false, "", "You have been trampled and can't move!", "-1");
 
                     clearCharge = true;
                 }
@@ -330,7 +330,7 @@ namespace Server.Mobiles
                         }
                     }
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, this, mobile, 1.0, 1, false, -1, false, "", "You have been trampled and can't move!");
+                    SpecialAbilities.HinderSpecialAbility(1.0, this, mobile, 1.0, 1, false, -1, false, "", "You have been trampled and can't move!", "-1");
                 }                
 
                 CheckChargeResolved();

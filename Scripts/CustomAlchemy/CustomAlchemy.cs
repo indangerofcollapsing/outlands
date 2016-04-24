@@ -408,7 +408,7 @@ namespace Server.Items
 
             ConsumePotion(player, potion);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 0.75, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, 0.75, true, 0, false, "", "", "-1");
 
             Point3D location = player.Location;
             Map map = player.Map;

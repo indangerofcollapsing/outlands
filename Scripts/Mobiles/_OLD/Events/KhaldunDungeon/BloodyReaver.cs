@@ -169,7 +169,7 @@ namespace Server.Mobiles
             }
 
             else
-                SpecialAbilities.BleedSpecialAbility(bleedChance, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!");            
+                SpecialAbilities.BleedSpecialAbility(bleedChance, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!", "-1");            
         }
 
         public override void OnThink()
@@ -421,7 +421,7 @@ namespace Server.Mobiles
                         }
 
                         new Blood().MoveToWorld(Combatant.Location, Combatant.Map);
-                        SpecialAbilities.BleedSpecialAbility(1.0, this, Combatant, damage, 10.0, -1, true, "", "The reaver's lance impales you, causing you to bleed!");
+                        SpecialAbilities.BleedSpecialAbility(1.0, this, Combatant, damage, 10.0, -1, true, "", "The reaver's lance impales you, causing you to bleed!", "-1");
                         AOS.Damage(Combatant, (int)damage, 100, 0, 0, 0, 0);
 
                         if (Combatant is PlayerMobile)
@@ -444,7 +444,7 @@ namespace Server.Mobiles
                             }
                         }
 
-                        SpecialAbilities.HinderSpecialAbility(1.0, this, Combatant, 1.0, 3, false, -1, false, "", "You have been trampled and can't move!");
+                        SpecialAbilities.HinderSpecialAbility(1.0, this, Combatant, 1.0, 3, false, -1, false, "", "You have been trampled and can't move!", "-1");
                     }
                 }
             }
@@ -562,7 +562,7 @@ namespace Server.Mobiles
                     }
 
                     new Blood().MoveToWorld(Combatant.Location, Combatant.Map);
-                    SpecialAbilities.BleedSpecialAbility(1.0, this, Combatant, damage, 10.0, -1, true, "", "The reaver's lance impales you, causing you to bleed!");
+                    SpecialAbilities.BleedSpecialAbility(1.0, this, Combatant, damage, 10.0, -1, true, "", "The reaver's lance impales you, causing you to bleed!", "-1");
                     AOS.Damage(Combatant, (int)damage, 100, 0, 0, 0, 0); 
 
                     if (mobile is PlayerMobile)
@@ -585,7 +585,7 @@ namespace Server.Mobiles
                         }
                     }                    
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, this, mobile, 1.0, 2, false, -1, false, "", "You have been trampled and can't move!");
+                    SpecialAbilities.HinderSpecialAbility(1.0, this, mobile, 1.0, 2, false, -1, false, "", "You have been trampled and can't move!", "-1");
                 }
             }
 

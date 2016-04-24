@@ -132,7 +132,7 @@ namespace Server.Mobiles
             double spawnPercent = (double)intervalCount / (double)totalIntervals;
             double bleedChance = .20 + +(.20 * spawnPercent);
 
-            SpecialAbilities.BleedSpecialAbility(bleedChance, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(bleedChance, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!", "-1");
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)
@@ -213,7 +213,7 @@ namespace Server.Mobiles
             double bombDelay = 2 - (1.0 * spawnPercent);
             double totalDelay = 1 + directionDelay + initialDelay + bombDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
             
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);
 
@@ -590,8 +590,8 @@ namespace Server.Mobiles
                         damage *= 1.5;
 
                     new Blood().MoveToWorld(Combatant.Location, Combatant.Map);
-                    
-                    SpecialAbilities.BleedSpecialAbility(1.0, this, Combatant, damage, 10.0, -1, true, "", "Ichibod's scythe carves you fiercely, causing you to bleed!");
+
+                    SpecialAbilities.BleedSpecialAbility(1.0, this, Combatant, damage, 10.0, -1, true, "", "Ichibod's scythe carves you fiercely, causing you to bleed!", "-1");
 
                     AOS.Damage(Combatant, (int)damage, 100, 0, 0, 0, 0);
 
@@ -615,7 +615,7 @@ namespace Server.Mobiles
                         }
                     }
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, this, Combatant, 1.0, 1, false, -1, false, "", "You have been trampled and can't move!");
+                    SpecialAbilities.HinderSpecialAbility(1.0, this, Combatant, 1.0, 1, false, -1, false, "", "You have been trampled and can't move!", "-1");
 
                     clearCharge = true;
                 }
@@ -703,7 +703,7 @@ namespace Server.Mobiles
             double pumpkinDelay = .1;
             double totalDelay = 1 + directionDelay + initialDelay + ((double)pumpkins * pumpkinDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextPumpkinTossAllowed = DateTime.UtcNow + NextPumpkinTossDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);
@@ -938,7 +938,7 @@ namespace Server.Mobiles
             double initialDelay = .75;
             double totalDelay = 1 + directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextBouncingPumpkinAllowed = DateTime.UtcNow + NextBouncingPumpkinDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);
@@ -1151,7 +1151,7 @@ namespace Server.Mobiles
                         damage *= 1.5;
 
                     new Blood().MoveToWorld(mobile.Location, mobile.Map);
-                    SpecialAbilities.BleedSpecialAbility(1.0, this, mobile, damage, 10.0, -1, true, "", "Ichibod's scythe grazes you, causing you to bleed!");
+                    SpecialAbilities.BleedSpecialAbility(1.0, this, mobile, damage, 10.0, -1, true, "", "Ichibod's scythe grazes you, causing you to bleed!", "-1");
 
                     AOS.Damage(mobile, (int)damage, 100, 0, 0, 0, 0);
 
@@ -1175,7 +1175,7 @@ namespace Server.Mobiles
                         }
                     }
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, this, mobile, 1.0, 1, false, -1, false, "", "You have been trampled and can't move!");
+                    SpecialAbilities.HinderSpecialAbility(1.0, this, mobile, 1.0, 1, false, -1, false, "", "You have been trampled and can't move!", "-1");
                 }                
 
                 CheckChargeResolved();

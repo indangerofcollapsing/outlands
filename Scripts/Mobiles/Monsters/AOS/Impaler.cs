@@ -45,8 +45,8 @@ namespace Server.Mobiles
 
             if (Utility.RandomDouble() < .20)
             {
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, -1, true, "", "Their claws rip through your armor and causes you to bleed!");
-                SpecialAbilities.PierceSpecialAbility(1.0, this, defender, .5, 10, -1, true, "", "");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, -1, true, "", "Their claws rip through your armor and causes you to bleed!", "-1");
+                SpecialAbilities.PierceSpecialAbility(1.0, this, defender, 50, 10, -1, true, "", "", "-1");
             }
         }
 

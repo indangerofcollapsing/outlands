@@ -40,7 +40,7 @@ namespace Server.Mobiles
             SetSkill(SkillName.EvalInt, 50);
             SetSkill(SkillName.Meditation, 100);
 
-            VirtualArmor = 25;
+            VirtualArmor = 50;
 
             Fame = 15000;
             Karma = -15000;
@@ -92,6 +92,7 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;    
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage2; } }

@@ -21,14 +21,14 @@ namespace Server.Mobiles
 
             SetDamage(6, 12);
 
-            SetSkill(SkillName.Wrestling, 60);
+            SetSkill(SkillName.Wrestling, 50);
             SetSkill(SkillName.Tactics, 100);
 
             SetSkill(SkillName.MagicResist, 25);
 
             SetSkill(SkillName.Poisoning, 20);
 
-            VirtualArmor = 25;               
+            VirtualArmor = 100;               
 
 			Fame = 2000;
 			Karma = -2000;
@@ -68,6 +68,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Slow; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }

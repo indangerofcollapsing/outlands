@@ -70,6 +70,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Monstrous; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VerySlow; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -93,7 +94,7 @@ namespace Server.Mobiles
                 }
             }
 
-            SpecialAbilities.PierceSpecialAbility(effectChance, this, defender, .25, 10, -1, true, "", "Their acid momentarily weakens your armor!");
+            SpecialAbilities.PierceSpecialAbility(effectChance, this, defender, 50, 10, -1, true, "", "Their acid momentarily weakens your armor!", "-1");
         }
 
         public override void OnThink()

@@ -116,23 +116,10 @@ namespace Server.Custom
             BaseCreature bc_Defender = defender as BaseCreature;
             PlayerMobile pm_Defender = defender as PlayerMobile;
 
-            double totalValue;
+            double diseaseValue = defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease);
 
-            if (bc_Defender != null)
-            {
-                bc_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease, out totalValue);
-
-                if (totalValue > 0)
-                    return;
-            }
-
-            if (pm_Defender != null)
-            {
-                pm_Defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disease, out totalValue);
-
-                if (totalValue > 0)
-                    return;
-            }
+            if (diseaseValue > 0)
+                return;
 
             if (Utility.RandomDouble() <= effectChance)
             {

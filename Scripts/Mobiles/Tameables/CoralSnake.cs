@@ -28,6 +28,8 @@ namespace Server.Mobiles
             SetSkill(SkillName.MagicResist, 25);
 
             SetSkill(SkillName.Poisoning, 15);
+
+            VirtualArmor = 25;
             
             Tameable = true;
             ControlSlots = 1;
@@ -67,6 +69,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }

@@ -41,7 +41,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.PierceSpecialAbility(.20, this, defender, .5, 20, -1, true, "", "Their crushing bite momentarily weakens your armor!");
+            SpecialAbilities.PierceSpecialAbility(.20, this, defender, 50, 20, -1, true, "", "Their crushing bite momentarily weakens your armor!", "-1");
         }
 
 		public override void OnDeath( Container c )

@@ -53,7 +53,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.EntangleSpecialAbility(.15, this, defender, 1.0, 4.0, -1, false, "", "The creature entangles you with its branches!");
+            SpecialAbilities.EntangleSpecialAbility(.15, this, defender, 1.0, 4.0, -1, false, "", "The creature entangles you with its branches!", "-1");
         }        
 
 		public NightbarkTree( Serial serial ) : base( serial )

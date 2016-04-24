@@ -137,7 +137,7 @@ namespace Server.Mobiles
             FixedParticles(0x375A, 10, 15, 5037, 2499, 0, EffectLayer.Waist);
 
             PublicOverheadMessage(MessageType.Regular, 0, false, "*gaze turns them into stone*");
-            SpecialAbilities.PetrifySpecialAbility(1.0, this, from, 1.0, 5.0, -1, true, "", "You are petrified by their gaze!"); 
+            SpecialAbilities.PetrifySpecialAbility(1.0, this, from, 1.0, 5.0, -1, true, "", "You are petrified by their gaze!", "-1"); 
         }
 
         public override void OnThink()
@@ -386,7 +386,7 @@ namespace Server.Mobiles
                                                 Effects.SendLocationParticles(EffectItem.Create(explosionLocation, target.Map, TimeSpan.FromSeconds(0.25)), 0x3779, 10, 15, 1153, 0, 5029, 0);
                                             }
 
-                                            SpecialAbilities.CrippleSpecialAbility(1.0, this, target, .25, 10, 0x64F, false, "", "The medusa's arrow has slowed your actions!");
+                                            SpecialAbilities.CrippleSpecialAbility(1.0, this, target, .25, 10, 0x64F, false, "", "The medusa's arrow has slowed your actions!", "-1");
 
                                             new Blood().MoveToWorld(target.Location, target.Map);
                                             AOS.Damage(target, this, damage, 100, 0, 0, 0, 0);                                            
@@ -460,7 +460,7 @@ namespace Server.Mobiles
 
                                 DoHarmful(Combatant);
 
-                                SpecialAbilities.EntangleSpecialAbility(0.33, this, Combatant, 1.0, 5, -1, true, "", "Their arrow pins you in place!");
+                                SpecialAbilities.EntangleSpecialAbility(0.33, this, Combatant, 1.0, 5, -1, true, "", "Their arrow pins you in place!", "-1");
 
                                 new Blood().MoveToWorld(Combatant.Location, Combatant.Map);
                                 AOS.Damage(Combatant, this, damage, 100, 0, 0, 0, 0);                                

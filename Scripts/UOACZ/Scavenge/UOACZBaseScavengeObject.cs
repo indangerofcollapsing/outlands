@@ -297,7 +297,7 @@ namespace Server.Custom
 
             double totalInteractTime = startDelay.TotalSeconds + ScavengeDuration.TotalSeconds;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, totalInteractTime, true, 0, false, "", InteractText);
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, totalInteractTime, true, 0, false, "", InteractText, "-1");
 
             player.BeginAction(typeof(UOACZBaseScavengeObject));
 
@@ -353,7 +353,7 @@ namespace Server.Custom
             if (lockpickKit.Charges <= 0)
                 lockpickKit.Delete();
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, totalInteractTime, true, 0, false, "", InteractText);
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, totalInteractTime, true, 0, false, "", InteractText, "-1");
 
             player.BeginAction(typeof(UOACZBaseScavengeObject));
 
@@ -416,8 +416,8 @@ namespace Server.Custom
             TimeSpan startDelay = TimeSpan.FromSeconds(.25);
 
             double totalInteractTime = startDelay.TotalSeconds + ScavengeDuration.TotalSeconds;
-            
-            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, totalInteractTime, true, 0, false, "", "You begin to examine the object.");
+
+            SpecialAbilities.HinderSpecialAbility(1.0, null, player, 1.0, totalInteractTime, true, 0, false, "", "You begin to examine the object.", "-1");
 
             player.BeginAction(typeof(UOACZBaseScavengeObject));
 
@@ -469,9 +469,7 @@ namespace Server.Custom
             if (!UOACZSystem.IsUOACZValidMobile(player))
                 return;
 
-            double searcherChance = 0;
-
-            player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Searcher, out searcherChance);
+            double searcherChance = player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Searcher);
 
             if (!lockpickAttempt)
             {
@@ -770,7 +768,7 @@ namespace Server.Custom
 
                     from.SendMessage("You are trapped in place!");
 
-                    SpecialAbilities.EntangleSpecialAbility(1.0, null, from, 1.0, duration, -1, true, "", "");
+                    SpecialAbilities.EntangleSpecialAbility(1.0, null, from, 1.0, duration, -1, true, "", "", "-1");
                 break;
 
                 case ScavengeTrapType.Poison:

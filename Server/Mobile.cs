@@ -336,25 +336,34 @@ namespace Server
 
     public enum SpecialAbilityEffect
     {
-        Hinder,
-        Petrify,
-        Cripple,
-        Debilitate,
-        Pierce,
-        Bleed,
-        Stun,
-        Entangle,
-        Silence,
-        Frenzy,
-        Enrage,
-        Disease,
-        Courage,
-        Fortitude,
-        Backlash,
-        Expertise,
-        Evasion,
-        MagicResist,        
+        Disorient, //Reduce Attack Skill
+        Debilitate, //Reduce Defense Slill
+
+        Hinder, //Full Paralysis
+        Petrify, //Full Paralysis (and Grey Hue)
+        Entangle, //Cannot Move  
+     
+        Cripple, //Melee and Casting Speed Reduced
+       
+        Pierce, //Reduce Target's Armor (or Gain +50% Damage if Target At 0 Armor)        
+
+        Expertise, //Increase Attack Skill
+        Evasion, //Increase Defense Skill
+        MagicResist, //Increase Magic Resist Skill
+
+        Prowess, //Increase Special Weapon Effect Chance
+
+        Fortitude, //Increase Armor Rating
+
+        Bleed, //Damage Dealt Over Time
+        Disease, //Unpreventable Damage Over Time        
         
+        Frenzy, //Attack Speed Increased
+        Enrage, //Damage Increased
+        
+        Silence, //Unable to Cast Spells
+        Backlash, //Chance on Spellcast to Fizzle        
+
         //UOACZ
         Inspiration,
         EmergencyRepairs,
@@ -12372,7 +12381,7 @@ namespace Server
             }
         }
 
-        public void GetSpecialAbilityEntryValue(SpecialAbilityEffect effectType, out double value)
+        public double GetSpecialAbilityEntryValue(SpecialAbilityEffect effectType)
         {
             double totalValue = 0;
 
@@ -12389,7 +12398,7 @@ namespace Server
                 SpecialAbilityEffectLookupInProgress = false;
             }
 
-            value = totalValue;
+            return totalValue;
         }
 
         #endregion

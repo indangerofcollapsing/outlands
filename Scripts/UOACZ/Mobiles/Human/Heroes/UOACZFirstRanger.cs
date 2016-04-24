@@ -220,7 +220,7 @@ namespace Server.Mobiles
             double arrowDelay = .1;
             double totalDelay = 1 + directionDelay + initialDelay + ((double)arrows * arrowDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextArrowStormAllowed = DateTime.UtcNow + NextArrowStormDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);

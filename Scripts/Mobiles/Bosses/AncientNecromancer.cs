@@ -307,7 +307,7 @@ namespace Server.Mobiles
 
                         from.FixedParticles(0x3967, 10, 40, 5036, 2603, 0, EffectLayer.CenterFeet);
 
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, from, 1.0, duration, false, -1, false, "", "You have been shocked!");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, from, 1.0, duration, false, -1, false, "", "You have been shocked!", "-1");
 
                         new Blood().MoveToWorld(from.Location, from.Map);
                         AOS.Damage(from, damage, 0, 100, 0, 0, 0);
@@ -385,7 +385,7 @@ namespace Server.Mobiles
             Effects.PlaySound(from.Location, from.Map, 0x457);
 
             SpecialAbilities.BacklashSpecialAbility(1.0, this, from, .33, 60, -1, true, "", "You have been struck with an evil hex, slowing your attacks and causing havoc with your spellcasting!");
-            SpecialAbilities.CrippleSpecialAbility(1.0, this, from, .25, 60, -1, true, "", "");
+            SpecialAbilities.CrippleSpecialAbility(1.0, this, from, .25, 60, -1, true, "", "", "-1");
         }
 
         public void RaiseDead()
@@ -421,7 +421,7 @@ namespace Server.Mobiles
             double initialDelay = 1.5;
             double totalDelay = 2 + directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextRaiseDeadAllowed = DateTime.UtcNow + NextRaiseDeadDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
@@ -550,7 +550,7 @@ namespace Server.Mobiles
         {
             double totalDelay = 3;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             Effects.PlaySound(Location, Map, GetAngerSound());
 
@@ -599,7 +599,7 @@ namespace Server.Mobiles
 
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             PublicOverheadMessage(MessageType.Regular, 0, false, "*draws upon the breath of the living*");
 
@@ -781,7 +781,7 @@ namespace Server.Mobiles
 
             PublicOverheadMessage(MessageType.Regular, 0, false, "*discharges giant surge of energy*");
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             Point3D location = Location;
             Map map = Map;
@@ -879,7 +879,7 @@ namespace Server.Mobiles
 
                             target.FixedParticles(0x3967, 10, 40, 5036, 2603, 0, EffectLayer.CenterFeet);
 
-                            SpecialAbilities.HinderSpecialAbility(1.0, null, target, 1.0, duration, false, -1, false, "", "You have been shocked!");
+                            SpecialAbilities.HinderSpecialAbility(1.0, null, target, 1.0, duration, false, -1, false, "", "You have been shocked!", "-1");
 
                             new Blood().MoveToWorld(target.Location, target.Map);
                             AOS.Damage(target, damage, 0, 100, 0, 0, 0);
@@ -913,7 +913,7 @@ namespace Server.Mobiles
 
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < loops; a++)
             {
@@ -1044,7 +1044,7 @@ namespace Server.Mobiles
 
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < castingMotions; a++)
             {

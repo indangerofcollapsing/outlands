@@ -48,8 +48,8 @@ namespace Server.Mobiles
         public override void OnGaveMeleeAttack(Mobile defender)
         {
             base.OnGaveMeleeAttack(defender);
-           
-            SpecialAbilities.HinderSpecialAbility(.1, this, defender, 1.0, 5.0, false, -1, true, "", "You are transfixed by their gaze!");           
+
+            SpecialAbilities.HinderSpecialAbility(.1, this, defender, 1.0, 5.0, false, -1, true, "", "You are transfixed by their gaze!", "-1");           
         }
 
 		public override bool OnBeforeDeath()

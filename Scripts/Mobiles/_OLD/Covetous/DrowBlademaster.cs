@@ -80,7 +80,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.BleedSpecialAbility(.2, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(.2, this, defender, DamageMax, 8.0, -1, true, "", "Their attack causes you to bleed!", "-1");
         }
 
         public DrowBlademaster(Serial serial): base(serial)

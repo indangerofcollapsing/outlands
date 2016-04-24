@@ -129,7 +129,7 @@ namespace Server.Mobiles
             {
                 PublicOverheadMessage(MessageType.Regular, 0, false, "*pecks with razor sharp beak*");
 
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, -1, true, "", "Their razor sharp beak causes you to bleed!");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 8.0, -1, true, "", "Their razor sharp beak causes you to bleed!", "-1");
             }
 
             Point3D defenderLocation = defender.Location;
@@ -374,7 +374,7 @@ namespace Server.Mobiles
             double initialDelay = 1;
             double totalDelay = 1 + directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
             
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);
 
@@ -465,7 +465,7 @@ namespace Server.Mobiles
             double initialDelay = 1;
             double totalDelay = directionDelay + initialDelay;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextEnrageAllowed = DateTime.UtcNow + NextEnrageDelay;
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);
@@ -530,7 +530,7 @@ namespace Server.Mobiles
             int loops = (int)(Math.Ceiling((double)wings / 10));
             double totalDelay = loops + 2.5;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextHeartyWingBuffetAllowed = DateTime.UtcNow + NextHeartyWingBuffetDelay;
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);
@@ -717,7 +717,7 @@ namespace Server.Mobiles
             double fireballDelay = .1;
             double totalDelay = 1 + directionDelay + initialDelay + ((double)fireballs * fireballDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextRoastAllowed = DateTime.UtcNow + NextRoastDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);

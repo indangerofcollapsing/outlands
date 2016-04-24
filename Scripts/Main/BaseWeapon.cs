@@ -429,32 +429,10 @@ namespace Server.Items
             if (bc_Creature != null)
                 speed = bc_Creature.AttackSpeed;
 
-            //Frenzy Effect
-            if (bc_Creature != null)
-            {
-                double totalValue;
+            //Frenzy Effect           
+            double frenzyValue = 1 + mobile.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Frenzy);
 
-                bc_Creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Frenzy, out totalValue);
-
-                double speedMultiplier = 1;
-
-                speedMultiplier += totalValue;
-
-                speed = (int)((double)speed * speedMultiplier);
-            }
-
-            if (pm_Mobile != null)
-            {
-                double totalValue;
-
-                pm_Mobile.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Frenzy, out totalValue);
-
-                double speedMultiplier = 1;
-
-                speedMultiplier += totalValue;
-
-                speed = (int)((double)speed * speedMultiplier);
-            }
+            speed = (int)((double)speed * frenzyValue);            
 
             double delayInSeconds;
 
@@ -505,13 +483,9 @@ namespace Server.Items
                 return TimeSpan.FromSeconds(delayInSeconds);
 
             //Cripple Effect
-            if (bc_Creature != null)
-            {
-                double crippleModifier;
+            double crippleModifier = mobile.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple);
 
-                bc_Creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple, out crippleModifier);
-                delayInSeconds *= 1 + crippleModifier;
-            }
+            delayInSeconds *= 1 + crippleModifier;            
 
             //Discordance Effect
             if (bc_Creature != null)            
@@ -801,12 +775,10 @@ namespace Server.Items
                 double baseChance = 0.1;
                 double armsLoreSkillBonus = (attacker.Skills[SkillName.ArmsLore].Value / 100) * .1;
                 double stealthAttackBonus = 0;
-                double dungeonArmorBonus = 0;
-                double expertiseBonus = 0;
+                double dungeonArmorBonus = 0;                
 
-                //Special Ability Effect: Expertise
-                if (pm_Attacker != null)
-                    pm_Attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Expertise, out expertiseBonus);
+                //Special Ability Effect: Prowess
+                double prowessBonus = attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Prowess);
 
                 if (!doStealthAttack)
                     stealthAttackBonus = 0;
@@ -815,7 +787,7 @@ namespace Server.Items
                     dungeonArmorBonus = attackerDungeonArmor.DungeonArmorDetail.SpecialWeaponAttackBonus;
 
                 double result = Utility.RandomDouble();
-                double totalChance = baseChance + armsLoreSkillBonus + stealthAttackBonus + dungeonArmorBonus + expertiseBonus;
+                double totalChance = baseChance + armsLoreSkillBonus + stealthAttackBonus + dungeonArmorBonus + prowessBonus;
 
                 //Success
                 if (result <= totalChance)
@@ -867,8 +839,8 @@ namespace Server.Items
                         expirationSeconds = 12;
 
                         damageScalar += .5;
-                       
-                        SpecialAbilities.CourageSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x510, true, "Your strike disorients your target, lowering their accuracy!", "Their attack disorients you!", "");
+
+                        SpecialAbilities.DisorientSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x510, true, "Your strike disorients your target, lowering their accuracy!", "Their attack disorients you!", "-1");
                     }
 
                     //Weapon Attack
@@ -887,9 +859,15 @@ namespace Server.Items
 
                                 if (doStealthAttack)
                                     expirationSeconds = maxDuration;
+                                
+                                if (bc_Defender.CheckMovementEffectImmunity(attacker) || bc_Defender.MovementRestrictionImmune)
+                                {
+                                    attacker.SendMessage("Your target overpowers your hinder effect, but receives a vicious wound!");
+                                    damageScalar += .5;
+                                }
 
-                                if (bc_Defender != null)
-                                    SpecialAbilities.HinderSpecialAbility(1, attacker, defender, value, expirationSeconds, false, 0x51c, true, "Your shot hinders your target!", "Their attack hinders you!");
+                                else                                    
+                                    SpecialAbilities.HinderSpecialAbility(1, attacker, defender, value, expirationSeconds, false, 0x51c, true, "Your shot hinders your target!", "Their attack hinders you!", "-1"); 
                             break;
 
                             case SkillName.Fencing:
@@ -904,8 +882,7 @@ namespace Server.Items
                                 if (doStealthAttack)
                                     expirationSeconds = maxDuration;
 
-                                if (bc_Defender != null)
-                                    SpecialAbilities.Debilitate(1.0, attacker, defender, value, expirationSeconds, 0x520, true, "Your attack debiliates your target, lowering their guard!", "Their attack debilitates you, lowering your guard!");
+                                SpecialAbilities.Debilitate(1.0, attacker, defender, value, expirationSeconds, 0x520, true, "Your attack debiliates your target, lowering their guard!", "Their attack debilitates you, lowering your guard!", "-1");
                             break;
                                 
                             case SkillName.Macing:
@@ -920,7 +897,22 @@ namespace Server.Items
                                 if (doStealthAttack)
                                     expirationSeconds = maxDuration;
 
-                                SpecialAbilities.PierceSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x525, true, "Your attack crushes their armor!", "Their attack crushes your armor!");
+                                double adjustedArmorRating = defender.VirtualArmor + defender.VirtualArmorMod;
+
+                                double fortitudeBonus = defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Fortitude);
+                                adjustedArmorRating += fortitudeBonus;
+
+                                double pierceReduction = defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Pierce);
+                                adjustedArmorRating -= pierceReduction;
+
+                                if (adjustedArmorRating <= 0)
+                                {
+                                    attacker.SendMessage("You smash through the remainder of their armor, dealing grevious damage!");
+                                    damageScalar += .5;
+                                }                                
+
+                                else
+                                    SpecialAbilities.PierceSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x525, true, "Your attack crushes their armor!", "Their attack crushes your armor!", "-1");
                             break;
 
                             case SkillName.Swords:
@@ -979,9 +971,7 @@ namespace Server.Items
 
             #region Enrage Effect Attack Damage Bonus
         
-            double enrageValue;
-
-            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Enrage, out enrageValue);
+            double enrageValue = attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Enrage);
 
             damageScalar += enrageValue;
 
@@ -992,9 +982,7 @@ namespace Server.Items
             //Iron Fists
             if (weapon is Fists)
             {
-                double ironFistsValue;
-
-                attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.IronFists, out ironFistsValue);
+                double ironFistsValue = attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.IronFists);
 
                 if (pm_Defender != null)
                     ironFistsValue *= .5;
@@ -1327,7 +1315,7 @@ namespace Server.Items
                 if (doStealthAttack)
                     value *= .33;
 
-                SpecialAbilities.BleedSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x51e, true, "Your attack causes your target to bleed!", "Their attack causes you to bleed!");
+                SpecialAbilities.BleedSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x51e, true, "Your attack causes your target to bleed!", "Their attack causes you to bleed!", "-1");
             }            
 
             #endregion
@@ -1812,29 +1800,21 @@ namespace Server.Items
 
             #region Special Effects
 
-            //Special Ability Effect: Courage  
-            double courageBonus = 0;
+            //Special Ability Effect: Expertise  
+            double expertiseBonus = attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Expertise);
+            chance += expertiseBonus;
 
-            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Courage, out courageBonus);
-            chance += courageBonus;
-
-            //Specil Ability Effect: Stun
-            double stunBonus = 0;
-
-            attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Stun, out stunBonus);
-            chance -= stunBonus;
+            //Specil Ability Effect: Disorient
+            double disorientReduction = attacker.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Disorient);
+            chance -= disorientReduction;
 
             //Special Ability Effect: Debilitation
-            double debilitationBonus = 0;
-                        
-            defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Debilitate, out debilitationBonus);
+            double debilitationBonus = defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Debilitate);
             chance += debilitationBonus;          
 
             //Special Ability Effect: Evasion
-            double evasionBonus = 0;
-
-            defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Evasion, out evasionBonus);
-            chance -= evasionBonus;
+            double evasionReduction = defender.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Evasion);
+            chance -= evasionReduction;
 
             #endregion
 

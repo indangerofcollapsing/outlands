@@ -371,7 +371,7 @@ namespace Server.Mobiles
             CantWalk = true;
             Frozen = true;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < castingMotions; a++)
             {
@@ -525,7 +525,7 @@ namespace Server.Mobiles
             NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
             NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < castingMotions; a++)
             {
@@ -619,7 +619,7 @@ namespace Server.Mobiles
                     PlayerMobile player = mobile as PlayerMobile;
 
                     if (player != null)
-                        SpecialAbilities.EntangleSpecialAbility(0.33, this, player, 1.0, duration, 0x1FE, false, "", "");
+                        SpecialAbilities.EntangleSpecialAbility(0.33, this, player, 1.0, duration, 0x1FE, false, "", "", "-1");
 
                     BaseCreature bc_Creature = mobile as BaseCreature;
 
@@ -673,7 +673,7 @@ namespace Server.Mobiles
             NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
             NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < castingMotions; a++)
             {
@@ -751,7 +751,7 @@ namespace Server.Mobiles
                     double duration = 60;
 
                     SpecialAbilities.BacklashSpecialAbility(1.0, null, mobile, effect, duration, -1, false, "", "");
-                    SpecialAbilities.StunSpecialAbility(1.0, null, mobile, effect, duration, -1, false, "", "");
+                    SpecialAbilities.DisorientSpecialAbility(1.0, null, mobile, effect, duration, -1, false, "", "", "-1");
 
                     mobile.FixedParticles(0x374A, 10, 15, 5028, spellHue, 0, EffectLayer.Waist);
                     mobile.PlaySound(0x1FB);                                       
@@ -791,7 +791,7 @@ namespace Server.Mobiles
             NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
             NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < castingMotions; a++)
             {
@@ -861,8 +861,8 @@ namespace Server.Mobiles
                     Point3D mobileLocation = mobile.Location;
 
                     mobile.SendMessage(149, "A wave of vast, unending emptiness washes over you...");
-                    
-                    SpecialAbilities.PetrifySpecialAbility(1.0, null, mobile, 1.0, duration, -1, true, "", "");
+
+                    SpecialAbilities.PetrifySpecialAbility(1.0, null, mobile, 1.0, duration, -1, true, "", "", "-1");
 
                     mobile.PlaySound(0x104);
 
@@ -961,7 +961,7 @@ namespace Server.Mobiles
             NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
             NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < castingMotions; a++)
             {
@@ -1175,7 +1175,7 @@ namespace Server.Mobiles
             NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
             NextCombatEpicActionAllowed = NextCombatEpicActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1, stationaryDelay, true, 0, false, "", "", "-1");
 
             for (int a = 0; a < castingMotions; a++)
             {

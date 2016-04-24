@@ -233,6 +233,14 @@ namespace Server.Mobiles
             }
         }
 
+        public bool CheckMovementEffectImmunity(Mobile attacker)
+        {
+            if (Utility.RandomDouble() >= MovementImmunityChance)
+                return false;
+
+            return true;
+        }
+
         public override bool Paralyze(Mobile from, double duration)
         {
             if (MovementRestrictionImmune)
@@ -2618,6 +2626,7 @@ namespace Server.Mobiles
         public DateTime m_NextWeaponChangeAllowed = DateTime.UtcNow;
         public TimeSpan NextWeaponChangeDelay = TimeSpan.FromSeconds(Utility.RandomMinMax(4, 6));
 
+        public virtual SlayerGroupType SlayerGroup { get { return SlayerGroupType.Monstrous; } }
         public virtual SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public virtual AIGroupType AIBaseGroup { get { return AIGroupType.None; } }
         public virtual AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -2697,8 +2706,6 @@ namespace Server.Mobiles
 
             set { m_UniqueCreatureDifficultyScalar = value; }
         }
-
-        public virtual SlayerGroupType SlayerGroup { get { return SlayerGroupType.Monstrous; } }
 
         public StamFreeMoveAuraTimer m_StamFreeMoveAuraTimer { get; set; }
 
@@ -3724,11 +3731,9 @@ namespace Server.Mobiles
             if (mobileTarget == null)
                 return false;
 
-            double totalValue = 0;
+            double phalanxValue = GetSpecialAbilityEntryValue(SpecialAbilityEffect.Phalanx);
 
-            GetSpecialAbilityEntryValue(SpecialAbilityEffect.Phalanx, out totalValue);
-
-            int extraRange = (int)(Math.Floor(totalValue));
+            int extraRange = (int)(Math.Floor(phalanxValue));
 
             BaseWeapon weapon = Weapon as BaseWeapon;
 
@@ -3766,9 +3771,7 @@ namespace Server.Mobiles
 
         public override bool IsHindered()
         {
-            double hinderValue = 0;
-
-            GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder, out hinderValue);
+            double hinderValue = GetSpecialAbilityEntryValue(SpecialAbilityEffect.Hinder);
 
             if (hinderValue != 0)
                 return true;
@@ -7490,7 +7493,7 @@ namespace Server.Mobiles
                     if (bc_Killer.GetDistanceToSqrt(this) <= 2)
                     {
                         //Stay Still for 5 seconds
-                        SpecialAbilities.EntangleSpecialAbility(1, this, bc_Killer, 1.0, 5, bc_Killer.GetIdleSound(), false, "", "");
+                        SpecialAbilities.EntangleSpecialAbility(1, this, bc_Killer, 1.0, 5, bc_Killer.GetIdleSound(), false, "", "", "-1");
 
                         bc_Killer.Say("*feeds*");
                         bc_Killer.AnimateIdle();

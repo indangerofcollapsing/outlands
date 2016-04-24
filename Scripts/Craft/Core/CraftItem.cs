@@ -937,11 +937,9 @@ namespace Server.Engines.Craft
 
             if (player != null)
             {
-                double totalValue;
+                double inspirationValue = player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Inspiration);
 
-                player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Inspiration, out totalValue);
-
-                chance += totalValue;
+                chance += inspirationValue;
             }
 
             if (chance > 0)
@@ -1323,30 +1321,30 @@ namespace Server.Engines.Craft
 
                     PlayerMobile player = from as PlayerMobile;
                     
-                    double totalValue;
+                    double bonusValue;
                     double chance = 0;
 
                     if (player != null)
                     {
                         if (craftSystem is UOACZDefCooking)
                         {
-                            player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Provider, out totalValue);
+                            bonusValue = player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Provider);
 
-                            chance = totalValue * (player.Skills.Cooking.Value / 100);
+                            chance = bonusValue * (player.Skills.Cooking.Value / 100);
                         }
 
                         if (craftSystem is UOACZDefAlchemy)
                         {
-                            player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Scientist, out totalValue);
+                            bonusValue = player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Scientist);
 
-                            chance = totalValue * (player.Skills.Alchemy.Value / 100);
+                            chance = bonusValue * (player.Skills.Alchemy.Value / 100);
                         }
 
                         if (craftSystem is UOACZDefTinkering)
                         {
-                            player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Technician, out totalValue);
+                            bonusValue = player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Technician);
 
-                            chance = totalValue * (player.Skills.Tinkering.Value / 100);
+                            chance = bonusValue * (player.Skills.Tinkering.Value / 100);
                         }
 
                         if (Utility.RandomDouble() <= chance)

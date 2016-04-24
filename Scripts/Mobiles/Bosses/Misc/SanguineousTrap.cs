@@ -107,7 +107,7 @@ namespace Server.Items
                                 if (mobile is BaseCreature)
                                     bleedDamage *= 2;
 
-                                SpecialAbilities.BleedSpecialAbility(1.0, null, mobile, bleedDamage, 8.0, -1, true, "", "The trap cuts into you deeply, causing you to bleed.");
+                                SpecialAbilities.BleedSpecialAbility(1.0, null, mobile, bleedDamage, 8.0, -1, true, "", "The trap cuts into you deeply, causing you to bleed.", "-1");
                             }
 
                             if (hitMobile)                            
@@ -175,7 +175,7 @@ namespace Server.Items
                             {
                                 Mobile mobile = (Mobile)m_Queue.Dequeue();
 
-                                SpecialAbilities.PierceSpecialAbility(1.0, null, mobile, .1, 60, -1, true, "", "The trap pierces your armor, temporarily weakening it!");
+                                SpecialAbilities.PierceSpecialAbility(1.0, null, mobile, 15, 60, -1, true, "", "The trap pierces your armor, temporarily weakening it!", "-1");
 
                                 double damage = (double)Utility.RandomMinMax(4, 8);
 

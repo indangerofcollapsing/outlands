@@ -49,7 +49,7 @@ namespace Server.Mobiles
         {   
             base.OnGaveMeleeAttack(defender);
                 
-            SpecialAbilities.StunSpecialAbility(.20, this, defender, .20, 10, -1, true, "", "The creature stuns you with its strike!");
+            SpecialAbilities.DisorientSpecialAbility(.20, this, defender, .20, 10, -1, true, "", "The creature disorients you with its strike!", "-1");
         }
        
         public override int PoisonResistance { get { return 5; } }

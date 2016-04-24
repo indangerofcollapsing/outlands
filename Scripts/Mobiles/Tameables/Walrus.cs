@@ -17,7 +17,7 @@ namespace Server.Mobiles
             SetDex(25);
             SetInt(25);
 
-            SetHits(175);
+            SetHits(250);
 
             SetDamage(8, 16);
 
@@ -66,6 +66,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Slow; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }

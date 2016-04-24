@@ -26,7 +26,7 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.MagicResist, 50);           
             
-            VirtualArmor = 150;
+            VirtualArmor = 125;
 
             ControlSlots = 2;
         }
@@ -39,6 +39,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Elemental; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }

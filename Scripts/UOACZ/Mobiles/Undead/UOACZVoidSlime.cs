@@ -89,7 +89,7 @@ namespace Server
                     {
                         RevealingAction();
 
-                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 1.0, true, 0, false, "", "");
+                        SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, 1.0, true, 0, false, "", "", "-1");
 
                         double entangleDuration = 3;
                         double pierceAmount = .25;
@@ -173,9 +173,9 @@ namespace Server
                                     combatant.SendMessage("You have been covered in void residue!");
                                     combatant.FixedParticles(0x374A, 10, 15, 5021, 2051, 0, EffectLayer.Waist);
 
-                                    SpecialAbilities.EntangleSpecialAbility(1.0, this, combatant, 1, entangleDuration, 0, false, "", "");
-                                    SpecialAbilities.PierceSpecialAbility(1.0, this, combatant, pierceAmount, 10, 0, false, "", "");
-                                    SpecialAbilities.CrippleSpecialAbility(1.0, this, combatant, crippleAmount, 10, 0, false, "", "");
+                                    SpecialAbilities.EntangleSpecialAbility(1.0, this, combatant, 1, entangleDuration, 0, false, "", "", "-1");
+                                    SpecialAbilities.PierceSpecialAbility(1.0, this, combatant, pierceAmount, 50, 0, false, "", "", "-1");
+                                    SpecialAbilities.CrippleSpecialAbility(1.0, this, combatant, crippleAmount, 10, 0, false, "", "", "-1");
                                 }
 
                                 weapon.OnHit(this, combatant, damageScalar);

@@ -74,11 +74,11 @@ namespace Server.Mobiles
 
                 defender.SendMessage("You have been covered in an evil ichor!");
 
-                SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 3, -1, false, "", "");
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 10, -1, false, "", "");
-                SpecialAbilities.PierceSpecialAbility(1.0, this, defender, .33, 15, -1, false, "", "");
-                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .15, 15, -1, false, "", "");
-                SpecialAbilities.StunSpecialAbility(1.0, this, defender, .10, 15, -1, false, "", "");
+                SpecialAbilities.EntangleSpecialAbility(1.0, this, defender, 1.0, 3, -1, false, "", "", "-1");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, DamageMax, 10, -1, false, "", "", "-1");
+                SpecialAbilities.PierceSpecialAbility(1.0, this, defender, 50, 15, -1, false, "", "", "-1");
+                SpecialAbilities.CrippleSpecialAbility(1.0, this, defender, .15, 15, -1, false, "", "", "-1");
+                SpecialAbilities.DisorientSpecialAbility(1.0, this, defender, .10, 15, -1, false, "", "", "-1");
             }            
         }
 

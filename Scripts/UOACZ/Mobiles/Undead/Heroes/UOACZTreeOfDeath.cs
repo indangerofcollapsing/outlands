@@ -105,7 +105,7 @@ namespace Server
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.EntangleSpecialAbility(.33, this, defender, 1.0, 4.0, -1, false, "", "The creature entangles you with its branches!");
+            SpecialAbilities.EntangleSpecialAbility(.33, this, defender, 1.0, 4.0, -1, false, "", "The creature entangles you with its branches!", "-1");
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)

@@ -239,11 +239,9 @@ namespace Server.Items
                     if (tinkeringScalar > bestScalar)
                         bestScalar = tinkeringScalar;
 
-                    double totalValue = 0;
+                    double repairValue = m_Player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.EmergencyRepairs);
 
-                    m_Player.GetSpecialAbilityEntryValue(SpecialAbilityEffect.EmergencyRepairs, out totalValue);
-
-                    bestScalar += totalValue;  
+                    bestScalar += repairValue;  
                   
                     bool outpostWasRepaired = false;
 

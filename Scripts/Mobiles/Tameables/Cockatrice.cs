@@ -68,6 +68,7 @@ namespace Server.Mobiles
         {
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
@@ -95,7 +96,7 @@ namespace Server.Mobiles
                 }
             }
 
-            SpecialAbilities.PetrifySpecialAbility(effectChance, this, defender, 1.0, 5.0, -1, true, "", "You are petrified by their gaze!"); 
+            SpecialAbilities.PetrifySpecialAbility(effectChance, this, defender, 1.0, 5.0, -1, true, "", "You are petrified by their gaze!", "-1"); 
         }
 
         public override void OnThink()

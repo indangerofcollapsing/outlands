@@ -75,7 +75,7 @@ namespace Server
                 if (defender is BaseCreature)
                     damage *= 3;
 
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 30, -1, true, "", "");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 30, -1, true, "", "", "-1");
 
                 Effects.PlaySound(Location, Map, 0x4F1);
 

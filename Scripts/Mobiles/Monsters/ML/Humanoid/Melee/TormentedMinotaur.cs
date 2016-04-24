@@ -40,7 +40,7 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);
 
-            SpecialAbilities.BleedSpecialAbility(.2, this, defender, DamageMax, 8.0, -1, true, "", "The beast gores you with it's horns, causing you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(.2, this, defender, DamageMax, 8.0, -1, true, "", "The beast gores you with it's horns, causing you to bleed!", "-1");
         }
                 
 		public override int GetDeathSound()	{ return 0x596; }

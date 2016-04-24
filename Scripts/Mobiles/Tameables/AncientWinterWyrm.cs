@@ -34,7 +34,7 @@ namespace Server.Mobiles
             SetSkill(SkillName.EvalInt, 75);
             SetSkill(SkillName.Meditation, 100);
 
-            VirtualArmor = 25;
+            VirtualArmor = 75;
 
 			Fame = 18000;
 			Karma = -18000;
@@ -79,6 +79,7 @@ namespace Server.Mobiles
             MassiveBreathRange = 6;
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.MeleeMage3; } }
@@ -103,7 +104,7 @@ namespace Server.Mobiles
                 {
                     double totalDelay = 3;
 
-                    SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+                    SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
                     Effects.PlaySound(Location, Map, GetAngerSound());
 

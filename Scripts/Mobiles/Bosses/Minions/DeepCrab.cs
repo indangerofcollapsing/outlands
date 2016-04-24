@@ -74,7 +74,7 @@ namespace Server.Mobiles
 
                 Say("*chews on the ship*");
                 
-                SpecialAbilities.HinderSpecialAbility(1.0, this, this, 1.0, 3, true, 0, false, "", "");
+                SpecialAbilities.HinderSpecialAbility(1.0, this, this, 1.0, 3, true, 0, false, "", "", "-1");
                 
                 m_NextBoatChewAllowed = DateTime.UtcNow + NextBoatChewDelay;
 

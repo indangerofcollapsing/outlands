@@ -69,7 +69,7 @@ namespace Server.Mobiles
 
             defender.PlaySound(0x234);
 
-            SpecialAbilities.BleedSpecialAbility(.25, this, defender, DamageMax, 8.0, -1, true, "", "Their precise shot causes you to bleed!");
+            SpecialAbilities.BleedSpecialAbility(.25, this, defender, DamageMax, 8.0, -1, true, "", "Their precise shot causes you to bleed!", "-1");
         }
 
         public override void OnThink()

@@ -88,7 +88,7 @@ namespace Server
 
                 PlaySound(0x379);
 
-                SpecialAbilities.StunSpecialAbility(1.0, this, defender, .05, 20, -1, false, "", "You have been cursed by dark energy and you feel less accurate with your swings.");
+                SpecialAbilities.DisorientSpecialAbility(1.0, this, defender, .05, 20, -1, false, "", "You have been cursed by dark energy and are disoriented.", "-1");
             }
         }
 

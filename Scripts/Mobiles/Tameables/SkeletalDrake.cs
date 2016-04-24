@@ -26,7 +26,7 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.MagicResist, 50);
 
-            VirtualArmor = 25;               
+            VirtualArmor = 75;               
 
             Fame = 5500;
             Karma = -5500;
@@ -70,6 +70,7 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.FireBreathAttack] = 1;
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Undead; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.EvilMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }

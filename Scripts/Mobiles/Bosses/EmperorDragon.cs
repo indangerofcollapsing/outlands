@@ -79,7 +79,7 @@ namespace Server.Mobiles
             Fame = 20000;
             Karma = -20000;
 
-            VirtualArmor = 150;
+            VirtualArmor = 75;
         }
 
         public override int AttackRange { get { return 2; } }
@@ -180,7 +180,7 @@ namespace Server.Mobiles
 
             PublicOverheadMessage(MessageType.Regular, 0, false, "*lashes out violently*");
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             m_NextKnockbackAllowed = DateTime.UtcNow + NextKnockbackDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
@@ -235,7 +235,7 @@ namespace Server.Mobiles
 
             double totalDelay = 3;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             Effects.PlaySound(Location, Map, GetAngerSound());
 
@@ -313,7 +313,7 @@ namespace Server.Mobiles
             double fireballDelay = .1;
             double totalDelay = 1 + directionDelay + initialDelay + ((double)fireballs * fireballDelay);
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
                         
             m_NextFireBarrageAllowed = DateTime.UtcNow + NextFireBarrageDelay + TimeSpan.FromSeconds(totalDelay);
             m_NextAbilityAllowed = DateTime.UtcNow + GetNextAbilityDelay();
@@ -530,7 +530,7 @@ namespace Server.Mobiles
                     AbilityInProgress = false;
             });
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             Direction = Utility.GetDirection(Location, targetLocation);
 
@@ -636,7 +636,7 @@ namespace Server.Mobiles
 
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
 
             AbilityInProgress = true;
             DamageIntervalInProgress = true;
@@ -716,7 +716,7 @@ namespace Server.Mobiles
             
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");
            
             AbilityInProgress = true;
             DamageIntervalInProgress = true;
@@ -774,7 +774,7 @@ namespace Server.Mobiles
 
             Combatant = null;
 
-            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "");                    
+            SpecialAbilities.HinderSpecialAbility(1.0, null, this, 1.0, totalDelay, true, 0, false, "", "", "-1");                    
 
             PublicOverheadMessage(MessageType.Regular, 0, false, "*calls for aid*");
 

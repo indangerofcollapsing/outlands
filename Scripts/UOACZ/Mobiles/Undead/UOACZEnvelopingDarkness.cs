@@ -114,8 +114,8 @@ namespace Server
 
                 defender.Location = Location;
 
-                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 30, -1, true, "", "");
-                SpecialAbilities.HinderSpecialAbility(1.0, null, defender, 1.0, belowDuration, false, -1, false, "", "You have been 'engulfed' and cannot move or speak!");
+                SpecialAbilities.BleedSpecialAbility(1.0, this, defender, damage, 30, -1, true, "", "", "-1");
+                SpecialAbilities.HinderSpecialAbility(1.0, null, defender, 1.0, belowDuration, false, -1, false, "", "You have been 'engulfed' and cannot move or speak!", "-1");
 
                 defender.Squelched = true;
                 defender.Hidden = true;

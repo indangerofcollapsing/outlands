@@ -27,7 +27,7 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.MagicResist, 25);
 
-            VirtualArmor = 25;            
+            VirtualArmor = 50;            
 
             SetSkill(SkillName.Hiding, 95);
             SetSkill(SkillName.Stealth, 95);
@@ -79,6 +79,7 @@ namespace Server.Mobiles
             SetSkill(SkillName.Stealth, 100);
         }
 
+        public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Beastial; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.VeryFast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.NeutralMonster; } }
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
