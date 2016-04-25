@@ -454,13 +454,6 @@ namespace Server.Mobiles
         private bool m_Predator = false;
         private bool m_Prey = false;
 
-        private bool m_bBardProvoked = false;
-        private bool m_bBardPacified = false;
-        private Mobile m_bBardMaster = null;
-        private Mobile m_bBardTarget = null;
-
-        private DateTime m_timeBardEnd;
-
         private WayPoint m_CurrentWaypoint = null;
 
         public virtual int WaypointCompletionProximityNeeded { get { return 0; } }
@@ -515,6 +508,10 @@ namespace Server.Mobiles
         public double PvPMeleeDamageScalar = BasePvPMeleeDamageScalar;
         public double PvPSpellDamageScalar = BasePvPSpellDamageScalar;
         public double PvPAbilityDamageScalar = BasePvPAbilityDamageScalar;
+
+        public static double HerdingFocusedAggressionDuration = 60;
+        public static double HerdingFocusedAggressionDamageBonus = .20;
+        public static double HerdingFocusedAggressionPvPDamageScalar = .50;
 
         public virtual void SetRare()
         {
@@ -704,9 +701,6 @@ namespace Server.Mobiles
             get { return m_CreaturesKilled; }
             set { m_CreaturesKilled = value; }
         }
-
-        public static double HerdingDamageScalar = 0; //Maximum Bonus to Tamed Creature Damage from Herding Skill
-        public static double HerdingAbilityChanceScalar = 0; //Maximum Bonus Chance of Tamed Creature Ability Chance from Herding Skill
 
         public DateTime m_NextExperienceGain = DateTime.UtcNow;
 
@@ -5257,6 +5251,7 @@ namespace Server.Mobiles
             }
         }
 
+        private bool m_bBardProvoked = false;
         [CommandProperty(AccessLevel.GameMaster)]
         public bool BardProvoked
         {
@@ -5270,6 +5265,7 @@ namespace Server.Mobiles
             }
         }
 
+        private bool m_bBardPacified = false;
         [CommandProperty(AccessLevel.GameMaster)]
         public bool BardPacified
         {
@@ -5351,6 +5347,7 @@ namespace Server.Mobiles
             }
         }
 
+        private Mobile m_bBardMaster = null;
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile BardMaster
         {
@@ -5364,6 +5361,7 @@ namespace Server.Mobiles
             }
         }
 
+        private Mobile m_bBardTarget = null;
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile BardTarget
         {
@@ -5377,6 +5375,7 @@ namespace Server.Mobiles
             }
         }
 
+        private DateTime m_timeBardEnd;
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime BardEndTime
         {
@@ -5388,6 +5387,30 @@ namespace Server.Mobiles
             {
                 m_timeBardEnd = value;
             }
+        }
+
+        private Mobile m_FocusedAggressionTarget;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Mobile FocusedAggressionTarget
+        {
+            get { return m_FocusedAggressionTarget; }
+            set { m_FocusedAggressionTarget = value; }
+        }
+
+        private double m_FocusedAggresionValue = 0;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public double FocusedAggresionValue
+        {
+            get { return m_FocusedAggresionValue; }
+            set { m_FocusedAggresionValue = value; }
+        }
+
+        private DateTime m_FocusedAggressionExpiration;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime FocusedAggressionExpiration
+        {
+            get { return m_FocusedAggressionExpiration; }
+            set { m_FocusedAggressionExpiration = value; }
         }
 
         private double m_MinTameSkill;

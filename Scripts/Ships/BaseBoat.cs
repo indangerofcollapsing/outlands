@@ -5119,7 +5119,7 @@ namespace Server
                 }
 
                 else
-                    from.SendGump(new ConfirmDryDockGump(from, this));
+                    from.SendGump(new ConfirmDryDockGump(from, this));                
             }
         }
 
@@ -5834,8 +5834,8 @@ namespace Server
                 {
                     if (IsOwner(from))
                     {
-                        from.CloseGump(typeof(BoatDemolishGump));
-                        from.SendGump(new BoatDemolishGump(from, this));
+                        from.CloseGump(typeof(BoatScuttleGump));
+                        from.SendGump(new BoatScuttleGump(from, this));
                     }
                 }
             }

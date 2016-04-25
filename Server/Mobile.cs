@@ -820,7 +820,7 @@ namespace Server
         private DateTime m_StealthSquelchedExpiration = DateTime.MinValue;
         private int m_MeleeDamageAbsorb;
         private int m_MagicDamageAbsorb;
-        private int m_Followers, m_FollowersMax;
+        
         private List<object> _actions; // prefer List<object> over ArrayList for more specific profiling information
         private Queue<MovementRecord> m_MoveRecords;
         private int m_WarmodeChanges = 0;
@@ -2920,6 +2920,7 @@ namespace Server
             }
         }
 
+        private int m_Followers;
         [CommandProperty(AccessLevel.GameMaster)]
         public int Followers
         {
@@ -2938,6 +2939,7 @@ namespace Server
             }
         }
 
+        private int m_FollowersMax;
         [CommandProperty(AccessLevel.GameMaster)]
         public int FollowersMax
         {

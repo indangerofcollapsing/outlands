@@ -1745,6 +1745,7 @@ namespace Server.Mobiles
             {
                 if (m_AllFollowers == null)
                     m_AllFollowers = new List<Mobile>();
+
                 return m_AllFollowers;
             }
         }

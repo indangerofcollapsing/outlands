@@ -3,7 +3,8 @@ using Server.Network;
 using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
-using Server.Engines.CannedEvil;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -69,84 +70,148 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile from )
 		{
-			from.SendLocalizedMessage( 502464 ); // Target the animal you wish to herd.
-			from.Target = new HerdingTarget();
+            PlayerMobile player = from as PlayerMobile;
+
+            if (player == null)
+                return;
+
+            if (Core.TickCount - player.NextSkillTime < 0 || !player.CanBeginAction(typeof(ShepherdsCrook)))
+			{
+                player.SendMessage("You must wait a few moments before using another skill.");
+                return;
+			}
+
+            if (player.AllFollowers.Count == 0)
+            {
+                player.SendMessage("You must have one or more followers in order to focus their aggression.");
+                return;
+            }
+
+            int validFollowers = 0;
+
+            foreach (BaseCreature creature in player.AllFollowers)
+            {
+                if (creature == null) continue;
+                if (!creature.Alive) continue;
+                if (Utility.GetDistance(player.Location, creature.Location) > 12) continue;
+
+                validFollowers++;
+            }
+
+            if (validFollowers == 0)
+            {
+                player.SendMessage("You do not have any followers close enough to hear your command.");
+                return;
+            }
+
+            player.SendMessage("What do you wish to focus your follower's aggression towards?");
+            player.Target = new FocusedAggressionTarget();			
 		}
 
-		private class HerdingTarget : Target
+		private class FocusedAggressionTarget : Target
 		{
-			public HerdingTarget() : base( 10, false, TargetFlags.None )
+			public FocusedAggressionTarget() : base( 12, false, TargetFlags.None )
 			{
 			}
 
-			protected override void OnTarget( Mobile from, object targ )
+			protected override void OnTarget( Mobile from, object target )
 			{
-				if ( targ is BaseCreature )
-				{
-					BaseCreature bc = (BaseCreature)targ;
+                PlayerMobile player = from as PlayerMobile;
 
-					if ( IsHerdable( bc ) )
-					{
-						if ( bc.Controlled )						
-							bc.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 502467, from.NetState ); // That animal looks tame already.
-						
-						else 
-						{
-							from.SendLocalizedMessage( 502475 ); // Click where you wish the animal to go.
-							from.Target = new InternalTarget( bc );
-						}
-					}
+                if (player == null)
+                    return;
 
-					else					
-						from.SendLocalizedMessage( 502468 ); // That is not a herdable animal.					
-				}
+                Mobile mobile = target as Mobile;
 
-				else				
-					from.SendLocalizedMessage( 502472 ); // You don't seem to be able to persuade that to move.				
-			}
-            
-			private bool IsHerdable( BaseCreature bc )
-			{
-				if ( bc.IsParagon )
-					return false;
+                if (mobile == null)
+                {
+                    player.SendMessage("You cannot focus your follower's aggression against that.");
+                    return;
+                }
 
-				if ( bc.Tameable )
-					return true;
+                if (!player.InLOS(mobile) || mobile.Hidden)
+                {
+                    player.SendMessage("That target is out of your line of sight.");
+                    return;
+                }
 
-				Map map = bc.Map;
+                if (!mobile.CanBeDamaged() || mobile.AccessLevel > AccessLevel.Player)
+                {
+                    player.SendMessage("That is not a valid target.");
+                    return;
+                }
 
-				return false;
-			}
+                if (player.AllFollowers.Count == 0)
+                {
+                    player.SendMessage("You must have one or more followers in order to focus their aggression.");
+                    return;
+                }
 
-			private class InternalTarget : Target
-			{
-				private BaseCreature m_Creature;
+                List<BaseCreature> m_FocusedCreatures = new List<BaseCreature>();
 
-				public InternalTarget( BaseCreature c ) : base( 10, true, TargetFlags.None )
-				{
-					m_Creature = c;
-				}
+                int validFollowers = 0;
 
-				protected override void OnTarget( Mobile from, object targ )
-				{
-					if ( targ is IPoint2D )
-					{
-						if ( from.CheckTargetSkill( SkillName.Herding, m_Creature, 0, 120, 1.0 ) )
-						{
-							m_Creature.TargetLocation = new Point2D( (IPoint2D)targ );
-							from.SendLocalizedMessage( 502479 ); // The animal walks where it was instructed to.
+                foreach (BaseCreature creature in player.AllFollowers)
+                {
+                    if (creature == null) continue;
+                    if (!creature.Alive) continue;
+                    if (Utility.GetDistance(player.Location, creature.Location) > 12) continue;
 
-                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.HerdingSuccessCooldown * 1000);
-						}
+                    m_FocusedCreatures.Add(creature);
+                }
 
-						else
-						{
-							from.SendLocalizedMessage( 502472 ); // You don't seem to be able to persuade that to move.
-                            from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.HerdingFailureCooldown * 1000);
-						}
-					}
-				}
-			}
+                if (m_FocusedCreatures.Count == 0)
+                {
+                    player.SendMessage("You do not have any followers close enough to hear your command.");
+                    return;
+                }
+
+                if (player.CheckTargetSkill(SkillName.Herding, 0, 120, 1.0))
+                {
+                    double aggressionAmount = BaseCreature.HerdingFocusedAggressionDamageBonus * ((double)player.Skills.Herding.Value / 100);
+
+                    foreach (BaseCreature creature in m_FocusedCreatures)
+                    {
+                        creature.FocusedAggressionTarget = mobile;
+                        creature.FocusedAggresionValue = aggressionAmount;
+                        creature.FocusedAggressionExpiration = DateTime.UtcNow + TimeSpan.FromMinutes(BaseCreature.HerdingFocusedAggressionDuration);                        
+                    }                                       
+                    
+                    from.FixedParticles(0x373A, 10, 30, 5036, 2116, 0, EffectLayer.Head);
+                    from.PlaySound(0x650);
+
+                    mobile.PublicOverheadMessage(MessageType.Regular, 2117, false, "*focused aggression*");
+                    mobile.FixedParticles(0x373A, 10, 30, 5036, 2116, 0, EffectLayer.Head);
+                    mobile.PlaySound(0x650);
+
+                    from.SendMessage("You focus your follower's aggression towards your target.");     
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.HerdingSuccessCooldown * 1000);
+
+                    from.BeginAction(typeof(ShepherdsCrook));
+                    Timer.DelayCall(TimeSpan.FromMilliseconds(SkillCooldown.HerdingSuccessCooldown * 1000), delegate
+                    {
+                        if (from == null)
+                            return;
+
+                        from.EndAction(typeof(ShepherdsCrook));
+                    });                    
+                }
+
+                else
+                {
+                    from.SendMessage("You fail to focus your followers aggression.");                  
+                    from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.HerdingFailureCooldown * 1000);
+
+                    from.BeginAction(typeof(ShepherdsCrook));
+                    Timer.DelayCall(TimeSpan.FromMilliseconds(SkillCooldown.HerdingFailureCooldown * 1000), delegate
+                    {
+                        if (from == null)
+                            return;
+
+                        from.EndAction(typeof(ShepherdsCrook));
+                    }); 
+                }
+			}            
 		}
 	}
 }
