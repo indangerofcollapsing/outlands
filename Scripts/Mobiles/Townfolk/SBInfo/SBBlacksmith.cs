@@ -41,16 +41,16 @@ namespace Server.Mobiles
 				Add( new GenericBuyInfo( typeof( PlateHelm ), 21, 20, 0x1412, 0 ) );
 				Add( new GenericBuyInfo( typeof( CloseHelm ), 18, 20, 0x1408, 0 ) );
 				Add( new GenericBuyInfo( typeof( CloseHelm ), 18, 20, 0x1409, 0 ) );
-				Add( new GenericBuyInfo( typeof( RingmailCoif ), 31, 20, 0x140A, 0 ) );
-				Add( new GenericBuyInfo( typeof( RingmailCoif ), 18, 20, 0x140B, 0 ) );
+				Add( new GenericBuyInfo( typeof( RingmailHelm ), 31, 20, 0x140A, 0 ) );
+				Add( new GenericBuyInfo( typeof( RingmailHelm ), 18, 20, 0x140B, 0 ) );
 				Add( new GenericBuyInfo( typeof( NorseHelm ), 18, 20, 0x140E, 0 ) );
 				Add( new GenericBuyInfo( typeof( NorseHelm ), 18, 20, 0x140F, 0 ) );
 				Add( new GenericBuyInfo( typeof( Bascinet ), 18, 20, 0x140C, 0 ) );
 				Add( new GenericBuyInfo( typeof( PlateHelm ), 21, 20, 0x1419, 0 ) );
 
-				Add( new GenericBuyInfo( typeof( ChainCoif ), 17, 20, 0x13BB, 0 ) );
-				Add( new GenericBuyInfo( typeof( ChainChest ), 143, 20, 0x13BF, 0 ) );
-				Add( new GenericBuyInfo( typeof( ChainLegs ), 149, 20, 0x13BE, 0 ) );
+				Add( new GenericBuyInfo( typeof( ChainmailCoif ), 17, 20, 0x13BB, 0 ) );
+				Add( new GenericBuyInfo( typeof( ChainmailChest ), 143, 20, 0x13BF, 0 ) );
+				Add( new GenericBuyInfo( typeof( ChainmailLegs ), 149, 20, 0x13BE, 0 ) );
 
 				Add( new GenericBuyInfo( typeof( RingmailChest ), 121, 20, 0x13ec, 0 ) );
 				Add( new GenericBuyInfo( typeof( RingmailLegs ), 90, 20, 0x13F0, 0 ) );
@@ -150,13 +150,13 @@ namespace Server.Mobiles
 
 				Add( typeof( Bascinet ), 45 );
 				Add( typeof( CloseHelm ), 45 );
-				Add( typeof( RingmailCoif ), 45 );
+				Add( typeof( RingmailHelm ), 45 );
 				Add( typeof( NorseHelm ),45 );
 				Add( typeof( PlateHelm ), 45 );
 
-				Add( typeof( ChainCoif ), 30 );
-				Add( typeof( ChainChest ), 60 );
-				Add( typeof( ChainLegs ), 54 );
+				Add( typeof( ChainmailCoif ), 30 );
+				Add( typeof( ChainmailChest ), 60 );
+				Add( typeof( ChainmailLegs ), 54 );
 
 				Add( typeof( RingmailArms ), 42 );
 				Add( typeof( RingmailChest ), 54 );

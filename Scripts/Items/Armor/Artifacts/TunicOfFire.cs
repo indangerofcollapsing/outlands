@@ -3,7 +3,7 @@ using Server;
 
 namespace Server.Items
 {
-	public class TunicOfFire : ChainChest
+	public class TunicOfFire : ChainmailChest
 	{
 		public override int LabelNumber{ get{ return 1061099; } } // Tunic of Fire
 		public override int ArtifactRarity{ get{ return 11; } }

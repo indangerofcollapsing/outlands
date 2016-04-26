@@ -5551,13 +5551,7 @@ namespace Server.Mobiles
                     bc_Creature.SayTo(from, "Your pet refuses to attack this creature!");
                     return;
                 }
-
-                if (target is Factions.BaseFactionGuard)
-                {
-                    bc_Creature.SayTo(from, "Your pet refuses to attack the guard.");
-                    return;
-                }
-
+                
                 bool flagTamerToTarget = true;
 
                 if (target is BaseCreature)

@@ -16,7 +16,7 @@ using Server.Items;
 using Server.Mobiles;
 using Server.ContextMenus;
 using Server.Engines.PartySystem;
-using Server.Factions;
+
 using Server.SkillHandlers;
 
 using Server.Guilds;
@@ -2157,10 +2157,7 @@ namespace Server.Mobiles
             get { return m_SummonEnd; }
             set { m_SummonEnd = value; }
         }
-
-        public virtual Faction FactionAllegiance { get { return null; } }
-        public virtual int FactionSilverWorth { get { return 30; } }
-
+        
         #region Bonding
         public const bool BondingEnabled = true;
 
@@ -2860,47 +2857,7 @@ namespace Server.Mobiles
         public BaseAI AIObject { get { return m_AI; } }
 
         public const int MaxOwners = 5;
-
-        #region Allegiance
-
-        public virtual Ethics.Ethic EthicAllegiance { get { return null; } }
-
-        public enum Allegiance
-        {
-            None,
-            Ally,
-            Enemy
-        }
-
-        public virtual Allegiance GetFactionAllegiance(Mobile mob)
-        {
-            if (mob == null || mob.Map != Faction.Facet || FactionAllegiance == null)
-                return Allegiance.None;
-
-            Faction fac = Faction.Find(mob, true);
-
-            if (fac == null)
-                return Allegiance.None;
-
-            return (fac == FactionAllegiance ? Allegiance.Ally : Allegiance.Enemy);
-        }
-
-        public virtual Allegiance GetEthicAllegiance(Mobile mob)
-        {
-            if (mob == null || mob.Map != Faction.Facet || EthicAllegiance == null)
-                return Allegiance.None;
-
-            Ethics.Ethic ethic = Ethics.Ethic.Find(mob, true);
-
-            if (ethic == null)
-                return Allegiance.None;
-
-            return (ethic == EthicAllegiance ? Allegiance.Ally : Allegiance.Enemy);
-        }
-
-        #endregion
-
-        // UOAC
+        
         protected List<Mobile> AcquireSpellTargets(int range, int numOfTargets)
         {
             List<Mobile> targets = new List<Mobile>();
@@ -2924,29 +2881,7 @@ namespace Server.Mobiles
             }
 
             return null;
-        }
-
-        public virtual bool IsEnemy(Mobile m)
-        {
-            if (m is BaseGuard)
-                return false;
-
-            if (GetFactionAllegiance(m) == Allegiance.Ally)
-                return false;
-
-            Ethics.Ethic ourEthic = EthicAllegiance;
-            Ethics.Player pl = Ethics.Player.Find(m, true);
-
-            if (pl != null && pl.IsShielded && (ourEthic == null || ourEthic == pl.Ethic))
-                return false;
-
-            if (!(m is BaseCreature))
-                return true;
-
-            BaseCreature c = (BaseCreature)m;
-
-            return (m_iTeam != c.m_iTeam || ((m_Summoned || m_bControlled) != (c.m_Summoned || c.m_bControlled))/* || c.Combatant == this*/ );
-        }
+        }       
 
         public override string ApplyNameSuffix(string suffix)
         {
@@ -6437,23 +6372,7 @@ namespace Server.Mobiles
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (AcquireOnApproach && (!Controlled && !Summoned) && FightMode != FightMode.Aggressor)
-            {
-                if (InRange(m.Location, AcquireOnApproachRange) && !InRange(oldLocation, AcquireOnApproachRange))
-                {
-                    if (CanBeHarmful(m) && IsEnemy(m))
-                    {
-                        Combatant = FocusMob = m;
-
-                        if (AIObject != null)
-                            AIObject.MoveTo(m, true, 1);
-
-                        DoHarmful(m);
-                    }
-                }
-            }
-
-            else if (ReacquireOnMovement)
+           if (ReacquireOnMovement)
                 ForceReacquire();
 
             InhumanSpeech speechType = this.SpeechType;
@@ -7919,8 +7838,7 @@ namespace Server.Mobiles
 
                     List<DamageStore> list = GetLootingRights(this.DamageEntries, this.HitsMax);
 
-                    bool givenQuestKill = false;
-                    bool givenFactionKill = false;
+                    bool givenQuestKill = false;                   
 
                     for (int i = 0; i < list.Count; ++i)
                     {
@@ -7941,16 +7859,10 @@ namespace Server.Mobiles
 
                         FameKarmaTitles.AwardFame(ds.m_Mobile, totalFame, true);
                         FameKarmaTitles.AwardKarma(ds.m_Mobile, totalKarma, true);
-                        // modification to support XmlQuest Killtasks
+
                         XmlQuest.RegisterKill(this, ds.m_Mobile);
 
                         OnKilledBy(ds.m_Mobile);
-
-                        if (!givenFactionKill)
-                        {
-                            givenFactionKill = true;
-                            Faction.HandleDeath(this, ds.m_Mobile);
-                        }
 
                         if (givenQuestKill)
                             continue;
@@ -8194,9 +8106,6 @@ namespace Server.Mobiles
 
         public override bool CanBeHarmful(Mobile target, bool message, bool ignoreOurBlessedness)
         {
-            if (target is BaseFactionGuard )
-                return false;
-
             if ((target is BaseCreature && ((BaseCreature)target).IsInvulnerable) || target is PlayerVendor)
             {
                 if (message)

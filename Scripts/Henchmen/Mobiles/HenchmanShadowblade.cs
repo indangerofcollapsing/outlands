@@ -121,12 +121,12 @@ namespace Server.Custom
                     case 1: m_Items.Add(new Skirt(colorTheme) { LootType = LootType.Blessed }); break;
                 }
             }
-            m_Items.Add(new ChainChest() { LootType = LootType.Blessed });
+            m_Items.Add(new ChainmailChest() { LootType = LootType.Blessed });
 
             m_Items.Add(new PlateGorget() { Hue = customHue, LootType = LootType.Blessed });          
             m_Items.Add(new RingmailArms() { Hue = customHue, LootType = LootType.Blessed });
             m_Items.Add(new RingmailGloves() { Hue = customHue, LootType = LootType.Blessed });
-            m_Items.Add(new ChainLegs() { Hue = customHue, LootType = LootType.Blessed });
+            m_Items.Add(new ChainmailLegs() { Hue = customHue, LootType = LootType.Blessed });
             m_Items.Add(new Boots() { Hue = customHue, LootType = LootType.Blessed });
 
             switch (Utility.RandomMinMax(1, 3))

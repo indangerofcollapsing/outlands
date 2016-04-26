@@ -13,17 +13,17 @@ namespace Server.Items
 			Hue = 0x35; 
 			Name = "a bag of Chain Armor";
 
-			ChainChest chest = new ChainChest();
+			ChainmailChest chest = new ChainmailChest();
             chest.Quality = Quality.Exceptional;
 			chest.LootType = LootType.Blessed;
 			DropItem( chest );
 
-			ChainLegs legs = new ChainLegs();
+			ChainmailLegs legs = new ChainmailLegs();
             legs.Quality = Quality.Exceptional;
 			legs.LootType = LootType.Blessed;
 			DropItem( legs );
 
-			ChainCoif coif = new ChainCoif();
+			ChainmailCoif coif = new ChainmailCoif();
             coif.Quality = Quality.Exceptional;
 			coif.LootType = LootType.Blessed;
 			DropItem( coif );

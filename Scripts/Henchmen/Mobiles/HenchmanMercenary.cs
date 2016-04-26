@@ -117,7 +117,7 @@ namespace Server.Custom
             switch (Utility.RandomMinMax(1, 2))
             {
                 case 1: m_Items.Add(new RingmailLegs() { LootType = LootType.Blessed }); break;
-                case 2: m_Items.Add(new ChainLegs() { LootType = LootType.Blessed }); break;
+                case 2: m_Items.Add(new ChainmailLegs() { LootType = LootType.Blessed }); break;
             }
 
             switch (Utility.RandomMinMax(1, 2))
@@ -148,7 +148,7 @@ namespace Server.Custom
 
             switch (Utility.RandomMinMax(1, 3))
             {
-                case 1: m_Items.Add(new ChainCoif() { LootType = LootType.Blessed }); break;
+                case 1: m_Items.Add(new ChainmailCoif() { LootType = LootType.Blessed }); break;
                 case 2: m_Items.Add(new LeatherCap() { LootType = LootType.Blessed }); break;
                 case 3: m_Items.Add(new BoneHelm() { LootType = LootType.Blessed }); break;
             }

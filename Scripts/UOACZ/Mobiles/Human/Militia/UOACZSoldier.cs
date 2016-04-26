@@ -50,9 +50,9 @@ namespace Server.Mobiles
 
             Utility.AssignRandomHair(this, Utility.RandomHairHue());
            
-            AddItem(new ChainCoif() { Movable = false, Hue = PrimaryHue });
+            AddItem(new ChainmailCoif() { Movable = false, Hue = PrimaryHue });
             AddItem(new PlateGorget() { Movable = false, Hue = PrimaryHue });
-            AddItem(new ChainChest() { Movable = false, Hue = PrimaryHue });
+            AddItem(new ChainmailChest() { Movable = false, Hue = PrimaryHue });
             AddItem(new PlateLegs() { Movable = false, Hue = PrimaryHue });
             AddItem(new PlateArms() { Movable = false, Hue = PrimaryHue });
             AddItem(new PlateGloves() { Movable = false, Hue = PrimaryHue });

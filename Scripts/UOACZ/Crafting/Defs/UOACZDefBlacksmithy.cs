@@ -247,9 +247,9 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(RingmailChest), "Ringmail Armor", "Ringmail Chest", 15, 40, typeof(IronIngot), 1044036, 15, 1044037);
 
             //Chainmail
-            AddCraft(1, typeof(ChainCoif), "Chainmail Armor", "Chainmail Coif", 25, 50, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(1, typeof(ChainLegs), "Chainmail Armor", "Chainmail Legs", 25, 50, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(1, typeof(ChainChest), "Chainmail Armor", "Chainmail Chest", 25, 50, typeof(IronIngot), 1044036, 15, 1044037);
+            AddCraft(1, typeof(ChainmailCoif), "Chainmail Armor", "Chainmail Coif", 25, 50, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(ChainmailLegs), "Chainmail Armor", "Chainmail Legs", 25, 50, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(ChainmailChest), "Chainmail Armor", "Chainmail Chest", 25, 50, typeof(IronIngot), 1044036, 15, 1044037);
 
             //Platemail
             AddCraft(1, typeof(PlateGorget), "Platemail Armor", "Platemail Gorget", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
@@ -263,7 +263,7 @@ namespace Server.Engines.Craft
             //Other Helmets
             AddCraft(1, typeof(Bascinet), "Other Helmets", "Bascinet", 5, 30, typeof(IronIngot), 1044036, 5, 1044037);
             AddCraft(1, typeof(CloseHelm), "Other Helmets", "Close Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
-            AddCraft(1, typeof(RingmailCoif), "Other Helmets", "Helmet", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(RingmailHelm), "Other Helmets", "Helmet", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);
             AddCraft(1, typeof(NorseHelm), "Other Helmets", "Norse Helm", 35, 60, typeof(IronIngot), 1044036, 5, 1044037);                                   
 
             // Set the overridable material

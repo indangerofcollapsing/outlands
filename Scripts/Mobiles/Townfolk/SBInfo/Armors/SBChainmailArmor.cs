@@ -20,9 +20,9 @@ namespace Server.Mobiles
 		{
 			public InternalBuyInfo()
 			{
-				Add( new GenericBuyInfo( typeof( ChainChest ), 207, 20, 0x13BF, 0 ) );
-				Add( new GenericBuyInfo( typeof( ChainLegs ), 166, 20, 0x13BE, 0 ) );
-				Add( new GenericBuyInfo( typeof( ChainCoif ), 130, 20, 0x13BB, 0 ) );
+				Add( new GenericBuyInfo( typeof( ChainmailChest ), 207, 20, 0x13BF, 0 ) );
+				Add( new GenericBuyInfo( typeof( ChainmailLegs ), 166, 20, 0x13BE, 0 ) );
+				Add( new GenericBuyInfo( typeof( ChainmailCoif ), 130, 20, 0x13BB, 0 ) );
 			}
 		}
 
@@ -30,9 +30,9 @@ namespace Server.Mobiles
 		{
 			public InternalSellInfo()
 			{
-				Add( typeof( ChainCoif ), 30 );
-				Add( typeof( ChainChest ), 60 );
-				Add( typeof( ChainLegs ), 54 );
+				Add( typeof( ChainmailCoif ), 30 );
+				Add( typeof( ChainmailChest ), 60 );
+				Add( typeof( ChainmailLegs ), 54 );
 			}
 		}
 	}

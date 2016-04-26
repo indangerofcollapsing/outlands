@@ -65,12 +65,6 @@ namespace Server.Spells.Seventh
 
                 return false;
             }
-
-            else if (Factions.Sigil.ExistsOn(Caster))
-            {
-                Caster.SendLocalizedMessage(1061632); // You can't do that while carrying the sigil.
-                return false;
-            }
             
             else if (Caster.Criminal)
             {
@@ -134,9 +128,6 @@ namespace Server.Spells.Seventh
                 else
                     Caster.SendMessage(WarpBlockerTotem.DefaultGateOutResponse);               
             }
-
-			else if (Factions.Sigil.ExistsOn(Caster))			
-				Caster.SendLocalizedMessage( 1061632 ); // You can't do that while carrying the sigil.			
 
 			else if ( map == null || (!Core.AOS && Caster.Map != map) )			
 				Caster.SendLocalizedMessage( 1005570 ); // You can not gate to another facet.			

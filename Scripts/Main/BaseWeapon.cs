@@ -5,7 +5,7 @@ using Server.Network;
 using Server.Targeting;
 using Server.Mobiles;
 using Server.Spells;
-using Server.Factions;
+
 using Server.Engines.Craft;
 using System.Collections.Generic;
 using Server.Guilds;
@@ -1534,9 +1534,6 @@ namespace Server.Items
 
         public override bool AllowSecureTrade(Mobile from, Mobile to, Mobile newOwner, bool accepted)
         {
-            if (!Ethics.Ethic.CheckTrade(from, to, newOwner, this))
-                return false;
-
             return base.AllowSecureTrade(from, to, newOwner, accepted);
         }
 
@@ -1544,9 +1541,6 @@ namespace Server.Items
 
         public override bool CanEquip(Mobile from)
         {
-            if (!Ethics.Ethic.CheckEquip(from, this))
-                return false;
-
             if (RequiredRace != null && from.Race != RequiredRace)
             {
                 if (RequiredRace == Race.Elf)

@@ -3,7 +3,6 @@ using Server;
 using Server.Mobiles;
 using Server.Gumps;
 using Server.Network;
-using Server.Factions;
 using Server.Prompts;
 using Server.Items;
 
@@ -46,11 +45,14 @@ namespace Server.Guilds
 
 			AddImageTiled( 65, 148, 160, 26, 0xA40 );
 			AddImageTiled( 67, 150, 156, 22, 0xBBC );
+
+            /*
 			AddHtmlLocalized( 70, 151, 100, 20, 1063084, 0x0, false, false ); // <i>Guild Faction</i>
 
 			Faction f = Faction.Find( guild.Leader );
 			if( f != null )
 				AddHtml( 233, 152, 320, 26, f.ToString(), false, false );
+            */
 
             AddImageTiled(65, 196, 480, 4, 0x238D);
             AddImageTiled(65, 196 + 120, 480, 4, 0x238D);

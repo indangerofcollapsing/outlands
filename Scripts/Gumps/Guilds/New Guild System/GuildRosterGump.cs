@@ -5,7 +5,7 @@ using Server.Network;
 using Server.Mobiles;
 using System.Collections;
 using Server.Targets;
-using Server.Factions;
+
 using System.Collections.Generic;
 
 namespace Server.Guilds
@@ -205,57 +205,25 @@ namespace Server.Guilds
 			PlayerMobile targ = targeted as PlayerMobile;
 
 			Guild g = state as Guild;
+            
+			if( pm == null || !IsMember( pm, guild ) || !pm.GuildRank.GetFlag( RankFlags.CanInvitePlayer ) )			
+				pm.SendLocalizedMessage( 503301 ); // You don't have permission to do that.			
 
-			PlayerState guildState = PlayerState.Find( g.Leader );
-			PlayerState targetState = PlayerState.Find( targ );
-
-			Faction guildFaction = ( guildState == null ? null : guildState.Faction );
-			Faction targetFaction = ( targetState == null ? null : targetState.Faction );
-
-			if( pm == null || !IsMember( pm, guild ) || !pm.GuildRank.GetFlag( RankFlags.CanInvitePlayer ) )
-			{
-				pm.SendLocalizedMessage( 503301 ); // You don't have permission to do that.
-			}
-			else if( targ == null )
-			{
+			else if( targ == null )			
 				pm.SendLocalizedMessage( 1063334 ); // That isn't a valid player.
-			}
-			else if( !targ.AcceptGuildInvites )
-			{
+			
+			else if( !targ.AcceptGuildInvites )			
 				pm.SendLocalizedMessage( 1063049, targ.Name ); // ~1_val~ is not accepting guild invitations.
-			}
-			else if( g.IsMember( targ ) )
-			{
+			
+			else if( g.IsMember( targ ) )			
 				pm.SendLocalizedMessage( 1063050, targ.Name ); // ~1_val~ is already a member of your guild!
-			}
-			else if( targ.Guild != null )
-			{
+			
+			else if( targ.Guild != null )			
 				pm.SendLocalizedMessage( 1063051, targ.Name ); // ~1_val~ is already a member of a guild.
-			}
+			
 			else if( targ.HasGump( typeof( BaseGuildGump ) ) || targ.HasGump( typeof( CreateGuildGump ) ))	//TODO: Check message if CreateGuildGump Open
-			{
-				pm.SendLocalizedMessage( 1063052, targ.Name ); // ~1_val~ is currently considering another guild invitation.
-			}
-			#region Factions
-			else if( targ.Young && guildFaction != null )
-			{
-				pm.SendLocalizedMessage( 1070766 ); // You cannot invite a young player to your faction-aligned guild.
-			}
-			else if ( guildFaction != targetFaction )
-			{
-				if ( guildFaction == null )
-					pm.SendLocalizedMessage( 1013027 ); // That player cannot join a non-faction guild.
-				else if ( targetFaction == null )
-					pm.SendLocalizedMessage( 1013026 ); // That player must be in a faction before joining this guild.
-				else
-					pm.SendLocalizedMessage( 1013028 ); // That person has a different faction affiliation.
-			}
-			else if ( targetState != null && targetState.IsLeaving )
-			{
-				// OSI does this quite strangely, so we'll just do it this way
-				pm.SendMessage( "That person is quitting their faction and so you may not recruit them." );
-			}
-			#endregion
+			    pm.SendLocalizedMessage( 1063052, targ.Name ); // ~1_val~ is currently considering another guild invitation.
+						
 			else
 			{
 				pm.SendLocalizedMessage( 1063053, targ.Name ); // You invite ~1_val~ to join your guild.

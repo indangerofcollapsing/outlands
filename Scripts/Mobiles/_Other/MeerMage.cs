@@ -77,7 +77,7 @@ namespace Server.Mobiles
 			{
 				Mobile combatant = this.Combatant;
 
-				if ( combatant != null && combatant.Map == this.Map && combatant.InRange( this, 12 ) && IsEnemy( combatant ) && !UnderEffect( combatant ) )
+				if ( combatant != null && combatant.Map == this.Map && combatant.InRange( this, 12 ) && !UnderEffect( combatant ) )
 				{
 					m_NextAbilityTime = DateTime.UtcNow + TimeSpan.FromSeconds( Utility.RandomMinMax( 20, 30 ) );
 

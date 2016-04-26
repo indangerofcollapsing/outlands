@@ -2288,46 +2288,13 @@ namespace Server.Mobiles
                 #endregion
 
                 Mobile from = this;
-
-                #region Ethics
-                Ethics.Ethic ethic = Ethics.Ethic.Find(from);
-                #endregion
-
+                
                 for (int i = items.Count - 1; i >= 0; --i)
                 {
                     if (i >= items.Count)
                         continue;
 
-                    Item item = items[i];
-
-                    #region Ethics
-                    if ((item.SavedFlags & 0x100) != 0)
-                    {
-                        if (item.Hue != Ethics.Ethic.Hero.Definition.PrimaryHue)
-                        {
-                            item.SavedFlags &= ~0x100;
-                        }
-                        else if (ethic != Ethics.Ethic.Hero)
-                        {
-                            from.AddToBackpack(item);
-                            moved = true;
-                            continue;
-                        }
-                    }
-                    else if ((item.SavedFlags & 0x200) != 0)
-                    {
-                        if (item.Hue != Ethics.Ethic.Evil.Definition.PrimaryHue)
-                        {
-                            item.SavedFlags &= ~0x200;
-                        }
-                        else if (ethic != Ethics.Ethic.Evil)
-                        {
-                            from.AddToBackpack(item);
-                            moved = true;
-                            continue;
-                        }
-                    }
-                    #endregion
+                    Item item = items[i];                    
 
                     if (item is BaseWeapon)
                     {
@@ -2437,27 +2404,7 @@ namespace Server.Mobiles
                             from.AddToBackpack(clothing);
                             moved = true;
                         }
-                    }
-
-                    Factions.FactionItem factionItem = Factions.FactionItem.Find(item);
-
-                    if (factionItem != null)
-                    {
-                        bool drop = false;
-
-                        Factions.Faction ourFaction = Factions.Faction.Find(this);
-
-                        if (ourFaction == null || ourFaction != factionItem.Faction)
-                            drop = true;
-                        else if (++factionItemCount > Factions.FactionItem.GetMaxWearables(this))
-                            drop = true;
-
-                        if (drop)
-                        {
-                            from.AddToBackpack(item);
-                            moved = true;
-                        }
-                    }
+                    }                    
                 }
 
                 if (moved)
@@ -3444,45 +3391,7 @@ namespace Server.Mobiles
             if (m_DuelContext != null && !m_DuelContext.AllowItemEquip(this, item))
                 return false;
             #endregion
-
-            #region Factions
-            Factions.FactionItem factionItem = Factions.FactionItem.Find(item);
-
-            if (factionItem != null)
-            {
-                Factions.Faction faction = Factions.Faction.Find(this);
-
-                if (faction == null)
-                {
-                    SendLocalizedMessage(1010371); // You cannot equip a faction item!
-                    return false;
-                }
-                else if (faction != factionItem.Faction)
-                {
-                    SendLocalizedMessage(1010372); // You cannot equip an opposing faction's item!
-                    return false;
-                }
-                else
-                {
-                    int maxWearables = Factions.FactionItem.GetMaxWearables(this);
-
-                    for (int i = 0; i < Items.Count; ++i)
-                    {
-                        Item equiped = Items[i];
-
-                        if (item != equiped && Factions.FactionItem.Find(equiped) != null)
-                        {
-                            if (--maxWearables == 0)
-                            {
-                                SendLocalizedMessage(1010373); // You do not have enough rank to equip more faction items!
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-            #endregion
-
+                        
             if (this.AccessLevel < AccessLevel.GameMaster && item.Layer != Layer.Mount && this.HasTrade)
             {
                 BounceInfo bounce = item.GetBounce();
@@ -3748,9 +3657,6 @@ namespace Server.Mobiles
             if (AccessLevel == AccessLevel.Player)
                 if (Mount != null)
                     Mount.Rider = null;
-
-            if ((Map != Factions.Faction.Facet && oldMap == Factions.Faction.Facet) || (Map == Factions.Faction.Facet && oldMap != Factions.Faction.Facet))
-                InvalidateProperties();
 
             #region Dueling
             if (m_DuelContext != null)
@@ -5525,11 +5431,6 @@ namespace Server.Mobiles
         {
             base.OnAfterDelete();
 
-            Factions.Faction faction = Factions.Faction.Find(this);
-
-            if (faction != null)
-                faction.RemoveMember(this);
-
             BaseHouse.HandleDeletion(this);
 
             DisguiseTimers.RemoveTimer(this);
@@ -5539,42 +5440,7 @@ namespace Server.Mobiles
 
         public override void GetProperties(ObjectPropertyList list)
         {
-            base.GetProperties(list);
-
-            if (Map == Factions.Faction.Facet)
-            {
-                Factions.PlayerState pl = Factions.PlayerState.Find(this);
-
-                if (pl != null)
-                {
-                    Factions.Faction faction = pl.Faction;
-
-                    if (faction.Commander == this)
-                        list.Add(1042733, faction.Definition.PropName); // Commanding Lord of the ~1_FACTION_NAME~
-                    else if (pl.Sheriff != null)
-                        list.Add(1042734, "{0}\t{1}", pl.Sheriff.Definition.FriendlyName, faction.Definition.PropName); // The Sheriff of  ~1_CITY~, ~2_FACTION_NAME~
-                    else if (pl.Finance != null)
-                        list.Add(1042735, "{0}\t{1}", pl.Finance.Definition.FriendlyName, faction.Definition.PropName); // The Finance Minister of ~1_CITY~, ~2_FACTION_NAME~
-                    else if (pl.MerchantTitle != Factions.MerchantTitle.None)
-                        list.Add(1060776, "{0}\t{1}", Factions.MerchantTitles.GetInfo(pl.MerchantTitle).Title, faction.Definition.PropName); // ~1_val~, ~2_val~
-                    else
-                        list.Add(1060776, "{0}\t{1}", pl.Rank.Title, faction.Definition.PropName); // ~1_val~, ~2_val~
-                }
-            }
-
-            if (Core.ML)
-            {
-                for (int i = AllFollowers.Count - 1; i >= 0; i--)
-                {
-                    BaseCreature c = AllFollowers[i] as BaseCreature;
-
-                    if (c != null && c.ControlOrder == OrderType.Guard)
-                    {
-                        list.Add(501129); // guarded
-                        break;
-                    }
-                }
-            }
+            base.GetProperties(list);            
         }
 
         //IPY: Added this for Custom Titles (Sean)
@@ -5889,29 +5755,9 @@ namespace Server.Mobiles
                 }
             }
         }
-
-        #region Ethics
-        private Ethics.Player m_EthicPlayer;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Ethics.Player EthicPlayer
-        {
-            get { return m_EthicPlayer; }
-            set { m_EthicPlayer = value; }
-        }
-        #endregion
-
-        #region Factions
-        private Factions.PlayerState m_FactionPlayerState;
-
-        public Factions.PlayerState FactionPlayerState
-        {
-            get { return m_FactionPlayerState; }
-            set { m_FactionPlayerState = value; }
-        }
-        #endregion
-
+                
         #region Dueling
+
         private Engines.ConPVP.DuelContext m_DuelContext;
         private Engines.ConPVP.DuelPlayer m_DuelPlayer;
 
@@ -6270,35 +6116,10 @@ namespace Server.Mobiles
                     suffix = "(Young)";
                 else
                     suffix = String.Concat(suffix, " (Young)");
-            }
-
-            #region Ethics
-            if (m_EthicPlayer != null)
-            {
-                if (suffix.Length == 0)
-                    suffix = m_EthicPlayer.Ethic.Definition.Adjunct.String;
-                else
-                    suffix = String.Concat(suffix, " ", m_EthicPlayer.Ethic.Definition.Adjunct.String);
-            }
-            #endregion
-
-            if (Core.ML && this.Map == Factions.Faction.Facet)
-            {
-                Factions.Faction faction = Factions.Faction.Find(this);
-
-                if (faction != null)
-                {
-                    string adjunct = String.Format("[{0}]", faction.Definition.Abbreviation);
-                    if (suffix.Length == 0)
-                        suffix = adjunct;
-                    else
-                        suffix = String.Concat(suffix, " ", adjunct);
-                }
-            }
+            }            
 
             return base.ApplyNameSuffix(suffix);
         }
-
 
         public override TimeSpan GetLogoutDelay()
         {

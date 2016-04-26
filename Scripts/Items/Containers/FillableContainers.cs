@@ -768,7 +768,7 @@ namespace Server.Items
 			},
 			new FillableEntry[]
 			{
-				new FillableEntry( 2, typeof( ChainCoif ) ),
+				new FillableEntry( 2, typeof( ChainmailCoif ) ),
 				new FillableEntry( 1, typeof( PlateGorget ) ),
 				new FillableEntry( 1, typeof( BronzeShield ) ),
 				new FillableEntry( 1, typeof( Buckler ) ),

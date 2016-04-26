@@ -43,7 +43,7 @@ namespace Server.Mobiles
             AddItem(new BoneChest() { Hue = 1766, Movable = false });
             AddItem(new PlateArms() { Hue = 1175, Movable = false });
             AddItem(new PlateGorget() { Hue = 1175, Movable = false });
-            AddItem(new ChainLegs() { Hue = 1175, Movable = false });
+            AddItem(new ChainmailLegs() { Hue = 1175, Movable = false });
             AddItem(new Boots() { Hue = 1175, Movable = false });
             AddItem(new RingmailGloves() { Hue = 1175, Movable = false });
 

@@ -264,7 +264,7 @@ namespace Server.Engines.BulkOrders
 			{
 				// Armors
 				new RewardType( 200, typeof( RingmailGloves ), typeof( RingmailChest ), typeof( RingmailArms ), typeof( RingmailLegs ) ),
-				new RewardType( 300, typeof( ChainCoif ), typeof( ChainLegs ), typeof( ChainChest ) ),
+				new RewardType( 300, typeof( ChainmailCoif ), typeof( ChainmailLegs ), typeof( ChainmailChest ) ),
 				new RewardType( 400, typeof( PlateArms ), typeof( PlateLegs ), typeof( PlateHelm ), typeof( PlateGorget ), typeof( PlateGloves ), typeof( PlateChest ) ),
 
 				// Weapons

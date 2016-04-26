@@ -49,10 +49,10 @@ namespace Server.Mobiles
             Karma = -1500;
 
             AddItem(new PlateGorget() { Movable = false, Hue = itemHue });
-            AddItem(new ChainChest() { Movable = false, Hue = itemHue });
+            AddItem(new ChainmailChest() { Movable = false, Hue = itemHue });
             AddItem(new RingmailArms() { Movable = false, Hue = itemHue });
             AddItem(new RingmailGloves() { Movable = false, Hue = itemHue });
-            AddItem(new ChainLegs() { Movable = false, Hue = itemHue });
+            AddItem(new ChainmailLegs() { Movable = false, Hue = itemHue });
             AddItem(new Boots() { Movable = false, Hue = itemHue });
 
             Utility.AssignRandomHair(this, hairHue);

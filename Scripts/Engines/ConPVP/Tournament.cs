@@ -9,10 +9,6 @@ using Server.ContextMenus;
 using Server.Mobiles;
 using Server.Targeting;
 using System.Collections.Generic;
-using Server.Factions;
-using Server.Ethics;
-using Server.Ethics.Evil;
-using Server.Ethics.Hero;
 
 namespace Server.Engines.ConPVP
 {
@@ -83,12 +79,7 @@ namespace Server.Engines.ConPVP
                     if (entry != null && Ladder.GetLevel(entry.Experience) < tourny.LevelRequirement)
                         return;
                 }
-
-                if (tourny.IsFactionRestricted && Faction.Find(m) == null)
-                {
-                    return;
-                }
-
+                
                 if (tourny.HasParticipant(m))
                     return;
 
@@ -221,18 +212,7 @@ namespace Server.Engines.ConPVP
                                         break;
                                     }
                                 }
-
-                                if (tourny.IsFactionRestricted && Faction.Find(from) == null)
-                                {
-                                    if (m_Registrar != null)
-                                    {
-                                        m_Registrar.PrivateOverheadMessage(MessageType.Regular,
-                                            0x35, false, "Only those who have declared their faction allegiance may participate.", from.NetState);
-                                    }
-
-                                    break;
-                                }
-
+                                
                                 if (DisguiseTimers.IsDisguised(from))
                                 {
                                     if (m_Registrar != null)
@@ -436,11 +416,6 @@ namespace Server.Engines.ConPVP
             {
                 sb.Append(tourny.ParticipantsPerMatch);
                 sb.Append("-Team");
-            }
-            else if (tourny.TournyType == TournyType.Faction)
-            {
-                sb.Append(tourny.ParticipantsPerMatch);
-                sb.Append("-Team Faction");
             }
             else if (tourny.TournyType == TournyType.RedVsBlue)
             {
@@ -674,17 +649,6 @@ namespace Server.Engines.ConPVP
                                             m_Registrar.PrivateOverheadMessage(MessageType.Regular,
                                                 0x35, false, String.Format("{0} has not yet proven themselves a worthy dueler.", mob.RawName), from.NetState);
                                         }
-                                    }
-
-                                    m_From.SendGump(new ConfirmSignupGump(m_From, m_Registrar, m_Tournament, m_Players));
-                                    return;
-                                }
-                                else if (tourny.IsFactionRestricted && Faction.Find(mob) == null)
-                                {
-                                    if (m_Registrar != null)
-                                    {
-                                        m_Registrar.PrivateOverheadMessage(MessageType.Regular,
-                                            0x35, false, "Only those who have declared their faction allegiance may participate.", from.NetState);
                                     }
 
                                     m_From.SendGump(new ConfirmSignupGump(m_From, m_Registrar, m_Tournament, m_Players));
@@ -987,11 +951,7 @@ namespace Server.Engines.ConPVP
                 sb.Append(tourny.ParticipantsPerMatch);
                 sb.Append("-Team");
             }
-            else if (tourny.TournyType == TournyType.Faction)
-            {
-                sb.Append(tourny.ParticipantsPerMatch);
-                sb.Append("-Team Faction");
-            }
+
             else if (tourny.TournyType == TournyType.RedVsBlue)
             {
                 sb.Append("Red v Blue");
@@ -1624,7 +1584,6 @@ namespace Server.Engines.ConPVP
         FreeForAll,
         RandomTeam,
         RedVsBlue,
-        Faction
     }
 
     [PropertyObject]
@@ -1785,15 +1744,7 @@ namespace Server.Engines.ConPVP
             get { return m_Undefeated; }
             set { m_Undefeated = value; }
         }
-
-        public bool IsFactionRestricted
-        {
-            get
-            {
-                return (m_FactionRestricted || m_TournyType == TournyType.Faction);
-            }
-        }
-
+        
         public bool HasParticipant(Mobile mob)
         {
             for (int i = 0; i < m_Participants.Count; ++i)
@@ -2227,11 +2178,7 @@ namespace Server.Engines.ConPVP
                 sb.Append(m_ParticipantsPerMatch);
                 sb.Append("-Team");
             }
-            else if (m_TournyType == TournyType.Faction)
-            {
-                sb.Append(m_ParticipantsPerMatch);
-                sb.Append("-Team Faction");
-            }
+
             else if (m_TournyType == TournyType.RedVsBlue)
             {
                 sb.Append("Red v Blue");
@@ -2299,7 +2246,7 @@ namespace Server.Engines.ConPVP
                         {
                             Mobile check = (Mobile)part.Players[j];
 
-                            if (check.Deleted || check.Map == null || check.Map == Map.Internal || !check.Alive || Factions.Sigil.ExistsOn(check) || check.Region.IsPartOf(typeof(Regions.Jail)))
+                            if (check.Deleted || check.Map == null || check.Map == Map.Internal || !check.Alive || check.Region.IsPartOf(typeof(Regions.Jail)))
                             {
                                 bad = true;
                                 break;
@@ -2371,47 +2318,7 @@ namespace Server.Engines.ConPVP
                             Alert("The tournament has completed!", String.Format("Team {0} has won!", m_EventController.GetTeamName(((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner))));
                         else if (m_TournyType == TournyType.RandomTeam)
                             Alert("The tournament has completed!", String.Format("Team {0} has won!", ((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner) + 1));
-                        else if (m_TournyType == TournyType.Faction)
-                        {
-                            if (m_ParticipantsPerMatch == 4)
-                            {
-                                string name = "(null)";
-
-                                switch (((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner))
-                                {
-                                    case 0:
-                                        {
-                                            name = "Minax";
-                                            break;
-                                        }
-                                    case 1:
-                                        {
-                                            name = "Council of Mages";
-                                            break;
-                                        }
-                                    case 2:
-                                        {
-                                            name = "True Britannians";
-                                            break;
-                                        }
-                                    case 3:
-                                        {
-                                            name = "Shadowlords";
-                                            break;
-                                        }
-                                }
-
-                                Alert("The tournament has completed!", String.Format("The {0} team has won!", name));
-                            }
-                            else if (m_ParticipantsPerMatch == 2)
-                            {
-                                Alert("The tournament has completed!", String.Format("The {0} team has won!", ((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner) == 0 ? "Evil" : "Hero"));
-                            }
-                            else
-                            {
-                                Alert("The tournament has completed!", String.Format("Team {0} has won!", ((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner) + 1));
-                            }
-                        }
+                        
                         else if (m_TournyType == TournyType.RedVsBlue)
                             Alert("The tournament has completed!", String.Format("Team {0} has won!", ((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner) == 0 ? "Red" : "Blue"));
                         else
@@ -2462,7 +2369,7 @@ namespace Server.Engines.ConPVP
                             {
                                 Mobile check = (Mobile)part.Players[j];
 
-                                if (check.Deleted || check.Map == null || check.Map == Map.Internal || !check.Alive || Factions.Sigil.ExistsOn(check) || check.Region.IsPartOf(typeof(Regions.Jail)))
+                                if (check.Deleted || check.Map == null || check.Map == Map.Internal || !check.Alive || check.Region.IsPartOf(typeof(Regions.Jail)))
                                 {
                                     bad = true;
                                     break;
@@ -2486,47 +2393,7 @@ namespace Server.Engines.ConPVP
                                             Alert("The tournament has completed!", String.Format("Team {0} has won", m_EventController.GetTeamName(((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner))));
                                         else if (m_TournyType == TournyType.RandomTeam)
                                             Alert("The tournament has completed!", String.Format("Team {0} has won!", ((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner) + 1));
-                                        else if (m_TournyType == TournyType.Faction)
-                                        {
-                                            if (m_ParticipantsPerMatch == 4)
-                                            {
-                                                string name = "(null)";
-
-                                                switch (((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner))
-                                                {
-                                                    case 0:
-                                                        {
-                                                            name = "Minax";
-                                                            break;
-                                                        }
-                                                    case 1:
-                                                        {
-                                                            name = "Council of Mages";
-                                                            break;
-                                                        }
-                                                    case 2:
-                                                        {
-                                                            name = "True Britannians";
-                                                            break;
-                                                        }
-                                                    case 3:
-                                                        {
-                                                            name = "Shadowlords";
-                                                            break;
-                                                        }
-                                                }
-
-                                                Alert("The tournament has completed!", String.Format("The {0} team has won!", name));
-                                            }
-                                            else if (m_ParticipantsPerMatch == 2)
-                                            {
-                                                Alert("The tournament has completed!", String.Format("The {0} team has won!", ((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner) == 0 ? "Evil" : "Hero"));
-                                            }
-                                            else
-                                            {
-                                                Alert("The tournament has completed!", String.Format("Team {0} has won!", ((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner) + 1));
-                                            }
-                                        }
+                                        
                                         else if (m_TournyType == TournyType.RedVsBlue)
                                             Alert("The tournament has completed!", String.Format("Team {0} has won!", ((TournyMatch)((PyramidLevel)m_Pyramid.Levels[0]).Matches[0]).Participants.IndexOf(winner) == 0 ? "Red" : "Blue"));
                                         else
@@ -2626,57 +2493,7 @@ namespace Server.Engines.ConPVP
 
                         level.Matches.Add(new TournyMatch(new ArrayList(parts)));
                         break;
-                    }
-                case TournyType.Faction:
-                    {
-                        TournyParticipant[] parts = new TournyParticipant[partsPerMatch];
-
-                        for (int i = 0; i < parts.Length; ++i)
-                            parts[i] = new TournyParticipant(new ArrayList());
-
-                        for (int i = 0; i < copy.Count; ++i)
-                        {
-                            ArrayList players = ((TournyParticipant)copy[i]).Players;
-
-                            for (int j = 0; j < players.Count; ++j)
-                            {
-                                Mobile mob = (Mobile)players[j];
-
-                                int index = -1;
-
-                                if (partsPerMatch == 4)
-                                {
-                                    Faction fac = Faction.Find(mob);
-
-                                    if (fac != null)
-                                    {
-                                        index = fac.Definition.Sort;
-                                    }
-                                }
-                                else if (partsPerMatch == 2)
-                                {
-                                    if (Ethic.Evil.IsEligible(mob))
-                                    {
-                                        index = 0;
-                                    }
-                                    else if (Ethic.Hero.IsEligible(mob))
-                                    {
-                                        index = 1;
-                                    }
-                                }
-
-                                if (index < 0 || index >= partsPerMatch)
-                                {
-                                    index = i % partsPerMatch;
-                                }
-
-                                parts[index].Players.Add(mob);
-                            }
-                        }
-
-                        level.Matches.Add(new TournyMatch(new ArrayList(parts)));
-                        break;
-                    }
+                    }                
                 case TournyType.RandomTeam:
                     {
                         TournyParticipant[] parts = new TournyParticipant[partsPerMatch];
@@ -3189,11 +3006,6 @@ namespace Server.Engines.ConPVP
                         {
                             sb.Append("Red v Blue");
                         }
-                        else if (tourny.TournyType == TournyType.Faction)
-                        {
-                            sb.Append(tourny.ParticipantsPerMatch);
-                            sb.Append("-Team Faction");
-                        }
                         else
                         {
                             for (int i = 0; i < tourny.ParticipantsPerMatch; ++i)
@@ -3558,7 +3370,7 @@ namespace Server.Engines.ConPVP
                                     sb.Append(txt);
                                 }
                             }
-                            else if (m_Tournament.EventController != null || m_Tournament.TournyType == TournyType.RandomTeam || m_Tournament.TournyType == TournyType.RedVsBlue || m_Tournament.TournyType == TournyType.Faction)
+                            else if (m_Tournament.EventController != null || m_Tournament.TournyType == TournyType.RandomTeam || m_Tournament.TournyType == TournyType.RedVsBlue)
                             {
                                 for (int j = 0; j < match.Participants.Count; ++j)
                                 {
@@ -3572,47 +3384,7 @@ namespace Server.Engines.ConPVP
                                         txt = String.Format("Team {0} ({1})", m_Tournament.EventController.GetTeamName(j), part.Players.Count);
                                     else if (m_Tournament.TournyType == TournyType.RandomTeam)
                                         txt = String.Format("Team {0} ({1})", j + 1, part.Players.Count);
-                                    else if (m_Tournament.TournyType == TournyType.Faction)
-                                    {
-                                        if (m_Tournament.ParticipantsPerMatch == 4)
-                                        {
-                                            string name = "(null)";
-
-                                            switch (j)
-                                            {
-                                                case 0:
-                                                    {
-                                                        name = "Minax";
-                                                        break;
-                                                    }
-                                                case 1:
-                                                    {
-                                                        name = "Council of Mages";
-                                                        break;
-                                                    }
-                                                case 2:
-                                                    {
-                                                        name = "True Britannians";
-                                                        break;
-                                                    }
-                                                case 3:
-                                                    {
-                                                        name = "Shadowlords";
-                                                        break;
-                                                    }
-                                            }
-
-                                            txt = String.Format("{0} ({1})", name, part.Players.Count);
-                                        }
-                                        else if (m_Tournament.ParticipantsPerMatch == 2)
-                                        {
-                                            txt = String.Format("{0} Team ({1})", j == 0 ? "Evil" : "Hero", part.Players.Count);
-                                        }
-                                        else
-                                        {
-                                            txt = String.Format("Team {0} ({1})", j + 1, part.Players.Count);
-                                        }
-                                    }
+                                    
                                     else
                                         txt = String.Format("Team {0} ({1})", j == 0 ? "Red" : "Blue", part.Players.Count);
 
@@ -3667,7 +3439,7 @@ namespace Server.Engines.ConPVP
                                 AddRightArrow(25, 113 + (i * 18), ToButtonID(6, i), part.NameList);
                             }
                         }
-                        else if (m_Tournament.EventController != null || m_Tournament.TournyType == TournyType.RandomTeam || m_Tournament.TournyType == TournyType.RedVsBlue || m_Tournament.TournyType == TournyType.Faction)
+                        else if (m_Tournament.EventController != null || m_Tournament.TournyType == TournyType.RandomTeam || m_Tournament.TournyType == TournyType.RedVsBlue)
                         {
                             for (int i = 0; i < match.Participants.Count; ++i)
                             {
@@ -3675,49 +3447,10 @@ namespace Server.Engines.ConPVP
 
                                 if (m_Tournament.EventController != null)
                                     AddRightArrow(25, 113 + (i * 18), ToButtonID(6, i), String.Format("Team {0} ({1})", m_Tournament.EventController.GetTeamName(i), part.Players.Count));
+                                
                                 else if (m_Tournament.TournyType == TournyType.RandomTeam)
                                     AddRightArrow(25, 113 + (i * 18), ToButtonID(6, i), String.Format("Team {0} ({1})", i + 1, part.Players.Count));
-                                else if (m_Tournament.TournyType == TournyType.Faction)
-                                {
-                                    if (m_Tournament.ParticipantsPerMatch == 4)
-                                    {
-                                        string name = "(null)";
-
-                                        switch (i)
-                                        {
-                                            case 0:
-                                                {
-                                                    name = "Minax";
-                                                    break;
-                                                }
-                                            case 1:
-                                                {
-                                                    name = "Council of Mages";
-                                                    break;
-                                                }
-                                            case 2:
-                                                {
-                                                    name = "True Britannians";
-                                                    break;
-                                                }
-                                            case 3:
-                                                {
-                                                    name = "Shadowlords";
-                                                    break;
-                                                }
-                                        }
-
-                                        AddRightArrow(25, 113 + (i * 18), ToButtonID(6, i), String.Format("{0} ({1})", name, part.Players.Count));
-                                    }
-                                    else if (m_Tournament.ParticipantsPerMatch == 2)
-                                    {
-                                        AddRightArrow(25, 113 + (i * 18), ToButtonID(6, i), String.Format("{0} Team ({1})", i == 0 ? "Evil" : "Hero", part.Players.Count));
-                                    }
-                                    else
-                                    {
-                                        AddRightArrow(25, 113 + (i * 18), ToButtonID(6, i), String.Format("Team {0} ({1})", i + 1, part.Players.Count));
-                                    }
-                                }
+                                
                                 else
                                     AddRightArrow(25, 113 + (i * 18), ToButtonID(6, i), String.Format("Team {0} ({1})", i == 0 ? "Red" : "Blue", part.Players.Count));
                             }

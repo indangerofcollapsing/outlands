@@ -154,11 +154,8 @@ namespace Server.Items
                 m.SendLocalizedMessage(1005561, "", 0x22); // Thou'rt a criminal and cannot escape so easily.
                 return;
             }
-
-            if (Factions.Sigil.ExistsOn(m))
-                m.SendLocalizedMessage(1061632); // You can't do that while carrying the sigil.
-
-            else if ((m_TargetMap == Map.Tokuno && (flags & ClientFlags.Tokuno) == 0) || (m_TargetMap == Map.Malas && (flags & ClientFlags.Tokuno) == 0) || (m_TargetMap == Map.Ilshenar && (flags & ClientFlags.Ilshenar) == 0))
+            
+            if ((m_TargetMap == Map.Tokuno && (flags & ClientFlags.Tokuno) == 0) || (m_TargetMap == Map.Malas && (flags & ClientFlags.Tokuno) == 0) || (m_TargetMap == Map.Ilshenar && (flags & ClientFlags.Ilshenar) == 0))
                 m.SendLocalizedMessage(1019004); // You are not allowed to travel there.			
 
             else if (m.Spell != null)

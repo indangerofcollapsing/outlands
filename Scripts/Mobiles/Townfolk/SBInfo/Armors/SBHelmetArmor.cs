@@ -32,7 +32,7 @@ namespace Server.Mobiles
 			{
 				Add( typeof( Bascinet ), 45 );
 				Add( typeof( CloseHelm ), 45 );
-				Add( typeof( RingmailCoif ), 45 );
+				Add( typeof( RingmailHelm ), 45 );
 				Add( typeof( NorseHelm ),45 );
 				Add( typeof( PlateHelm ), 45 );
 			}

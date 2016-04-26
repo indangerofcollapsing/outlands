@@ -1,4 +1,3 @@
-#define FACTIONS
 using System;
 using System.IO;
 using System.Xml;
@@ -741,12 +740,7 @@ namespace Server.Engines.XmlSpawner2
 
 					if(r.Killer.Guild != null) 
 						guildname = r.Killer.Guild.Abbreviation;
-#if(FACTIONS)
-					string factionname = null;
-
-					if(r.Killer is PlayerMobile && ((PlayerMobile)r.Killer).FactionPlayerState != null) 
-						factionname = ((PlayerMobile)r.Killer).FactionPlayerState.Faction.ToString();
-#endif
+                    
 					// check for any ranking change and update rank date
 					if(r.Rank != a.Rank)
 					{
@@ -871,12 +865,11 @@ namespace Server.Engines.XmlSpawner2
 
 					if(r.Killer.Guild != null)
 						guildname = HtmlSpecialEncoding(r.Killer.Guild.Abbreviation);
-#if(FACTIONS)
-					string factionname = null;
 
-					if(r.Killer is PlayerMobile && ((PlayerMobile)r.Killer).FactionPlayerState != null) 
-						factionname = ((PlayerMobile)r.Killer).FactionPlayerState.Faction.ToString();
-#endif
+                    #if(FACTIONS)
+					string factionname = null;					
+                    #endif
+
 					// check for any ranking change and update rank date
 					if(r.Rank != a.Rank)
 					{

@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using Server;
 using Server.Commands;
 using Server.Network;
-
-//<Items>
 using Server.Items;
 using Server.Mobiles;
 using Server.Misc;
 using Server.Multis;
-using Server.Ethics;
-using Server.Factions;
 using Server.Custom;
-//<Items/>
 
 namespace Server.Gumps
 {
@@ -129,7 +124,7 @@ namespace Server.Gumps
                 foreach (Item i in World.Items.Values)
                 {
                     if (!(i is Fists || i is HarvestTracker.HarvestTrackerPersistance || i is MountItem || i is EffectItem || i is ICommodity || i is MovingCrate ||
-                        i is EthicsPersistance || i is SellingPersistance || i is FactionPersistance || i is StealableArtifactsSpawner ||
+                        i is SellingPersistance || i is StealableArtifactsSpawner ||
                         i is Server.Regions.SpawnPersistence || i is BankBox || i is Plank || i is Hold)
                       )
                     {
@@ -142,7 +137,7 @@ namespace Server.Gumps
                 foreach (Item i in World.Items.Values)
                 {
                     if (!(i is Fists || i is HarvestTracker.HarvestTrackerPersistance || i is MountItem || i is EffectItem || i is ICommodity || i is MovingCrate ||
-                        i is EthicsPersistance || i is SellingPersistance || i is FactionPersistance || i is StealableArtifactsSpawner ||
+                        i is SellingPersistance || i is StealableArtifactsSpawner ||
                         i is Server.Regions.SpawnPersistence || i is BankBox || i is Plank || i is Hold)
                       )
                     {

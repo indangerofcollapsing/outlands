@@ -120,7 +120,7 @@ namespace Server.Custom
             m_Items.Add(new ThighBoots() { LootType = LootType.Blessed });
             m_Items.Add(new PlateArms() { LootType = LootType.Blessed });
             m_Items.Add(new PlateGloves() { LootType = LootType.Blessed });
-            m_Items.Add(new ChainChest() { LootType = LootType.Blessed });            
+            m_Items.Add(new ChainmailChest() { LootType = LootType.Blessed });            
             m_Items.Add(new StuddedLegs() { LootType = LootType.Blessed });
 
             m_Items.Add(new BodySash(colorTheme) { LootType = LootType.Blessed });

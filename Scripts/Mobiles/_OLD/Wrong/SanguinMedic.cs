@@ -44,7 +44,7 @@ namespace Server.Mobiles
             AddItem(new StuddedArms() { Movable = false, Hue = weaponHue });
             AddItem(new StuddedGloves() { Movable = false, Hue = weaponHue });
             AddItem(new Kilt() { Movable = false, Hue = weaponHue });
-            AddItem(new ChainLegs() { Movable = false, Hue = itemHue });
+            AddItem(new ChainmailLegs() { Movable = false, Hue = itemHue });
             AddItem(new Sandals() { Movable = false, Hue = itemHue });
             AddItem(new Cloak() { Movable = false, Hue = weaponHue });
 

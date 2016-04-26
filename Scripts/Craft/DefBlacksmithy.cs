@@ -190,18 +190,18 @@ namespace Server.Engines.Craft
             //Ringmail
             AddCraft(1, typeof(RingmailGorget), "Ringmail Armor", "Ringmail Gorget", 5.0, 55.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(RingmailGloves), "Ringmail Armor", "Ringmail Gloves", 10.0, 60.0, typeof(IronIngot), 1044036, 6, 1044037);
-            AddCraft(1, typeof(RingmailCoif), "Ringmail Armor", "Ringmail Coif", 15.0, 65.0, typeof(IronIngot), 1044036, 8, 1044037);  
+            AddCraft(1, typeof(RingmailHelm), "Ringmail Armor", "Ringmail Coif", 15.0, 65.0, typeof(IronIngot), 1044036, 8, 1044037);  
             AddCraft(1, typeof(RingmailArms), "Ringmail Armor", "Ringmail Arms", 20.0, 70.0, typeof(IronIngot), 1044036, 8, 1044037);
             AddCraft(1, typeof(RingmailLegs), "Ringmail Armor", "Ringmail Legs", 25.0, 75.0, typeof(IronIngot), 1044036, 10, 1044037);
             AddCraft(1, typeof(RingmailChest), "Ringmail Armor", "Ringmail Chest", 30.0, 80.0, typeof(IronIngot), 1044036, 14, 1044037);
 
             //Chainmail
-            AddCraft(1, typeof(ChainGorget), "Chainmail Armor", "Chainmail Gorget", 25.0, 75.0, typeof(IronIngot), 1044036, 6, 1044037);
-            AddCraft(1, typeof(ChainGloves), "Chainmail Armor", "Chainmail Gloves", 30.0, 80.0, typeof(IronIngot), 1044036, 8, 1044037);
-            AddCraft(1, typeof(ChainCoif), "Chainmail Armor", "Chainmail Coif", 35.0, 85.0, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(1, typeof(ChainArms), "Chainmail Armor", "Chainmail Arms", 40.0, 90.0, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(1, typeof(ChainLegs), "Chainmail Armor", "Chainmail Legs", 45.0, 95.0, typeof(IronIngot), 1044036, 12, 1044037);
-            AddCraft(1, typeof(ChainChest), "Chainmail Armor", "Chainmail Chest", 50.0, 100.0, typeof(IronIngot), 1044036, 16, 1044037);
+            AddCraft(1, typeof(ChainmailGorget), "Chainmail Armor", "Chainmail Gorget", 25.0, 75.0, typeof(IronIngot), 1044036, 6, 1044037);
+            AddCraft(1, typeof(ChainmailGloves), "Chainmail Armor", "Chainmail Gloves", 30.0, 80.0, typeof(IronIngot), 1044036, 8, 1044037);
+            AddCraft(1, typeof(ChainmailCoif), "Chainmail Armor", "Chainmail Coif", 35.0, 85.0, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(ChainmailArms), "Chainmail Armor", "Chainmail Arms", 40.0, 90.0, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(ChainmailLegs), "Chainmail Armor", "Chainmail Legs", 45.0, 95.0, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(ChainmailChest), "Chainmail Armor", "Chainmail Chest", 50.0, 100.0, typeof(IronIngot), 1044036, 16, 1044037);
 
             //Platemail
             AddCraft(1, typeof(PlateGorget), "Platemail Armor", "Plate Gorget", 45.0, 95.0, typeof(IronIngot), 1044036, 6, 1044037);

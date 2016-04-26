@@ -792,11 +792,7 @@ namespace Server.Engines.ConPVP
             {
                 sb.Append("Red v Blue");
             }
-            else if (tourny != null && tourny.TournyType == TournyType.Faction)
-            {
-                sb.Append(tourny.ParticipantsPerMatch);
-                sb.Append("-team Faction");
-            }
+
             else if (tourny != null)
             {
                 for (int i = 0; i < tourny.ParticipantsPerMatch; ++i)

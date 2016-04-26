@@ -209,12 +209,11 @@ namespace Server.Engines.XmlSpawner2
 
 					if(r.Quester.Guild != null)
 						guildname = r.Quester.Guild.Abbreviation;
-#if(FACTIONS)
-					string factionname = null;
 
-					if(r.Quester is PlayerMobile && ((PlayerMobile)r.Quester).FactionPlayerState != null) 
-						factionname = ((PlayerMobile)r.Quester).FactionPlayerState.Faction.ToString();
-#endif
+                    #if(FACTIONS)
+					string factionname = null;					
+                    #endif
+
 					// check for any ranking change and update rank date
 					if(r.Rank != a.Rank)
 					{
@@ -314,12 +313,7 @@ namespace Server.Engines.XmlSpawner2
 
 					if(r.Quester.Guild != null)
 						guildname = r.Quester.Guild.Abbreviation;
-#if(FACTIONS)
-					string factionname = null;
 
-					if(r.Quester is PlayerMobile && ((PlayerMobile)r.Quester).FactionPlayerState != null) 
-						factionname = ((PlayerMobile)r.Quester).FactionPlayerState.Faction.ToString();
-#endif
 					// check for any ranking change and update rank date
 					if(r.Rank != a.Rank)
 					{
@@ -339,19 +333,6 @@ namespace Server.Engines.XmlSpawner2
 					}
 					catch{}
 
-#if(FACTIONS)
-					// write out the entry information
-					sw.WriteLine( "<TR><TH><TD>{0}<TD>{1}<TD>{2}<TD>{3}<TD>{4}<TD>{5}<TD>{6}<TD>{7}",
-						r.Quester.Name,
-						guildname,
-						factionname,
-						a.Points,
-						quests,
-						a.Rank,
-						a.DeltaRank,
-						timeranked
-						);
-#else
                     // write out the entry information
 					sw.WriteLine( "<TR><TH><TD>{0}<TD>{1}<TD>{2}<TD>{3}<TD>{4}<TD>{5}<TD>{6}",
 					r.Quester.Name,
@@ -362,15 +343,11 @@ namespace Server.Engines.XmlSpawner2
 					a.DeltaRank,
 					timeranked
 					);
-
-#endif
-
 				}
 			}
 			sw.WriteLine( "</TABLE>");
 			sw.Close();
 		}
-
 
 		public static void WriteQuestLeaderboard(string filename, int nranks)
 		{
@@ -596,12 +573,6 @@ namespace Server.Engines.XmlSpawner2
 
 						if(r.Quester.Guild != null) guildname = r.Quester.Guild.Abbreviation;
 
-#if(FACTIONS)
-						string factionname = null;
-    
-						if(r.Quester is PlayerMobile && ((PlayerMobile)r.Quester).FactionPlayerState != null) 
-							factionname = ((PlayerMobile)r.Quester).FactionPlayerState.Faction.ToString();
-#endif
 						// check for any ranking change and update rank date
 						if(r.Rank != a.Rank)
 						{
@@ -672,11 +643,7 @@ namespace Server.Engines.XmlSpawner2
 						AddLabel( xloc, y, 0, r.Quester.Name );
 						xloc += 177;
 						AddLabel( xloc, y, 0, guildname );
-#if(FACTIONS)
-						xloc += 35;
-						AddLabelCropped( xloc, y, 60, 21, 0, factionname );
-						xloc += 15;
-#endif
+
 						xloc += 50;
 						AddLabel( xloc, y, 0, a.Points.ToString() );
 						xloc += 50;

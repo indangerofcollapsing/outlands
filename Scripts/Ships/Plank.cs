@@ -144,97 +144,12 @@ namespace Server.Items
 		
         public void DestroyOpen()
         {
-            //OVERRIDE: No Longer Using Planks
             return;
-            
-            m_broken = true;
-
-            if (IsOpen || Deleted)
-                return;
-
-            if (m_CloseTimer != null)
-                m_CloseTimer.Stop();
-
-            switch (ItemID)
-            {
-                case 0x3EB1: ItemID = 0x3ED5; break;
-                case 0x3E8A: ItemID = 0x3E89; break;
-                case 0x3EB2: ItemID = 0x3ED4; break;
-                case 0x3E85: ItemID = 0x3E84; break;
-            }
-
-            if (m_Boat != null)
-                m_Boat.Refresh();
         }		
 
 		public override bool OnMoveOver( Mobile from )
 		{
-            //OVERRIDE: No Longer Using Planks
-            return false;
-            
-            if ( IsOpen )
-			{
-                if (m_Boat != null && !m_Boat.Contains(from) && Locked)
-                    return false;
-
-				if ( (from.Direction & Direction.Running) != 0 || (m_Boat != null && !m_Boat.Contains( from )) )
-					return true;
-
-				Map map = Map;
-
-				if ( map == null )
-					return false;
-
-				int rx = 0, ry = 0;
-
-				if ( ItemID == 0x3ED4 )
-					rx = 1;
-				else if ( ItemID == 0x3ED5 )
-					rx = -1;
-				else if ( ItemID == 0x3E84 )
-					ry = 1;
-				else if ( ItemID == 0x3E89 )
-					ry = -1;
-
-				for ( int i = 1; i <= 6; ++i )
-				{
-					int x = X + (i*rx);
-					int y = Y + (i*ry);
-					int z;
-
-					for ( int j = -8; j <= 8; ++j )
-					{
-						z = from.Z + j;
-
-						if ( map.CanFit( x, y, z, 16, false, false ) && !Server.Spells.SpellHelper.CheckMulti( new Point3D( x, y, z ), map ) && !Region.Find( new Point3D( x, y, z ), map ).IsPartOf( typeof( Factions.StrongholdRegion ) ) )
-						{
-							if ( i == 1 && j >= -2 && j <= 2 )
-								return true;
-
-							from.Location = new Point3D( x, y, z );
-							return false;
-						}
-					}
-
-					z = map.GetAverageZ( x, y );
-
-					if ( map.CanFit( x, y, z, 16, false, false ) && !Server.Spells.SpellHelper.CheckMulti( new Point3D( x, y, z ), map ) && !Region.Find( new Point3D( x, y, z ), map ).IsPartOf( typeof( Factions.StrongholdRegion ) ) )
-					{
-						if ( i == 1 )
-							return true;
-
-						from.Location = new Point3D( x, y, z );
-						return false;
-					}
-				}
-
-				return true;
-			}
-
-			else
-			{
-				return false;
-			}
+            return false;            
 		}
 
 		public bool CanClose()

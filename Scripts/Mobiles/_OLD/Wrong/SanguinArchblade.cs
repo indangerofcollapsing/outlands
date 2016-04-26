@@ -39,10 +39,10 @@ namespace Server.Mobiles
             AddItem(new Sandals() { Movable = false, Hue = 1775 });
             AddItem(new BodySash() { Movable = false, Hue = 2051 });
             AddItem(new OverseerSunderedBlade() { Movable = false, Hue = 2051, Name = "a fanatic's blade" });
-            AddItem(new ChainChest() { Movable = false, Hue = 1775 });
+            AddItem(new ChainmailChest() { Movable = false, Hue = 1775 });
             AddItem(new WizardsHat() { Movable = false, Hue = 2051 });
             AddItem(new RingmailGloves() { Movable = false, Hue = 1775 });
-            AddItem(new ChainLegs() { Movable = false, Hue = 1775 });
+            AddItem(new ChainmailLegs() { Movable = false, Hue = 1775 });
 
             SpellDelayMin = 3;
             SpellDelayMax = 4;

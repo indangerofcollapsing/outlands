@@ -4,7 +4,7 @@ using Server;
 using Server.Gumps;
 using Server.Items;
 using Server.Network;
-using Server.Factions;
+
 #if XMLSPAWNER
 using System.Xml;
 

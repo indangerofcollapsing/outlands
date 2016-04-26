@@ -176,12 +176,8 @@ namespace Server.Menus.Questions
 		public override void OnResponse( NetState state, RelayInfo info )
 		{
 			StopClose();
-
-			if ( Factions.Sigil.ExistsOn( m_Mobile ) )
-			{
-				m_Mobile.SendLocalizedMessage( 1061632 ); // You can't do that while carrying the sigil.
-			}
-			else if ( info.ButtonID == 0 )
+            
+            if ( info.ButtonID == 0 )
 			{
 				if ( m_Mobile == m_Sender )
 					m_Mobile.SendLocalizedMessage( 1010588 ); // You choose not to go to any city.

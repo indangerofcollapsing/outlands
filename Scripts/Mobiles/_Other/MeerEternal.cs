@@ -86,12 +86,6 @@ namespace Server.Mobiles
 		{
 			ArrayList list = new ArrayList();
 
-			foreach ( Mobile m in this.GetMobilesInRange( 6 ) )
-			{
-				if ( this.CanBeHarmful( m ) && this.IsEnemy( m ) )
-					list.Add( m );
-			}
-
 			if ( list.Count == 0 )
 			{
 				this.Say( true, "Bah! You have escaped my grasp this time, mortal!" );

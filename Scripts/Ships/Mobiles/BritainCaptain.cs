@@ -81,7 +81,7 @@ namespace Server.Custom.Pirates
 
             AddItem(new PlateArms() { Movable = true, Hue = 0 });
             AddItem(new PlateGloves() { Movable = true, Hue = 0 });
-            AddItem(new ChainChest() { Movable = true, Hue = 0 });
+            AddItem(new ChainmailChest() { Movable = true, Hue = 0 });
             AddItem(new StuddedLegs() { Movable = true, Hue = 0 });
             AddItem(new Boots() { Movable = true, Hue = 0 });
 

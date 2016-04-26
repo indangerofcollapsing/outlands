@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Server;
 using Server.Engines.Craft;
-using Server.Factions;
 using Server.Network;
 
 namespace Server.Items
@@ -21,7 +20,7 @@ namespace Server.Items
         int MaxArcaneCharges { get; set; }
     }
 
-    public abstract class BaseClothing : Item, IDyable, IScissorable, IFactionItem, ICraftable, IWearableDurability
+    public abstract class BaseClothing : Item, IDyable, IScissorable, ICraftable, IWearableDurability
     {
         private bool m_IsInvisible = false;
 
@@ -37,24 +36,6 @@ namespace Server.Items
                 }
             }
         }
-
-        #region Factions
-        private FactionItem m_FactionState;
-
-        public FactionItem FactionItemState
-        {
-            get { return m_FactionState; }
-            set
-            {
-                m_FactionState = value;
-
-                if (m_FactionState == null)
-                    Hue = 0;
-
-                LootType = (m_FactionState == null ? LootType.Regular : LootType.Blessed);
-            }
-        }
-        #endregion
         
         private int m_MaxHitPoints;
         private int m_HitPoints;       
@@ -168,9 +149,6 @@ namespace Server.Items
 
         public override bool AllowSecureTrade(Mobile from, Mobile to, Mobile newOwner, bool accepted)
         {
-            if (!Ethics.Ethic.CheckTrade(from, to, newOwner, this))
-                return false;
-
             return base.AllowSecureTrade(from, to, newOwner, accepted);
         }
 
@@ -178,9 +156,6 @@ namespace Server.Items
 
         public override bool CanEquip(Mobile from)
         {
-            if (!Ethics.Ethic.CheckEquip(from, this))
-                return false;
-
             if (from.AccessLevel < AccessLevel.GameMaster)
             {
                 if (RequiredRace != null && from.Race != RequiredRace)
@@ -555,12 +530,7 @@ namespace Server.Items
 
         public override void GetProperties(ObjectPropertyList list)
         {
-            base.GetProperties(list);            
-
-            #region Factions
-            if (m_FactionState != null)
-                list.Add(1041350); // faction item
-            #endregion
+            base.GetProperties(list);    
 
             if (Quality == Quality.Exceptional)
                 list.Add(1060636); // exceptional
@@ -889,12 +859,6 @@ namespace Server.Items
             if (!IsChildOf(from.Backpack))
             {
                 from.SendLocalizedMessage(502437); // Items you wish to cut must be in your backpack.
-                return false;
-            }
-
-            if (Ethics.Ethic.IsImbued(this))
-            {
-                from.SendLocalizedMessage(502440); // Scissors can not be used on that to produce anything.
                 return false;
             }
 

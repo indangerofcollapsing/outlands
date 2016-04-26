@@ -417,9 +417,9 @@ namespace Server
         private static Type[] m_ArmorTypes = new Type[]
 			{
 				typeof( BoneArms ),				typeof( BoneChest ),			typeof( BoneGloves ),
-				typeof( BoneLegs ),				typeof( BoneHelm ),				typeof( ChainChest ),
-				typeof( ChainLegs ),			typeof( ChainCoif ),			typeof( Bascinet ),
-				typeof( CloseHelm ),			typeof( RingmailCoif ),				typeof( NorseHelm ),
+				typeof( BoneLegs ),				typeof( BoneHelm ),				typeof( ChainmailChest ),
+				typeof( ChainmailLegs ),			typeof( ChainmailCoif ),			typeof( Bascinet ),
+				typeof( CloseHelm ),			typeof( RingmailHelm ),				typeof( NorseHelm ),
 				typeof( OrcHelm ),				typeof( FemaleLeatherChest ),	typeof( LeatherArms ),
 				typeof( LeatherBustier ),	typeof( LeatherChest ),			typeof( LeatherGloves ),
 				typeof( LeatherGorget ),		typeof( LeatherLegs ),			typeof( LeatherShorts ),

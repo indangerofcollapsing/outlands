@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Server.Network;
 using Server.Engines.Craft;
-using Server.Factions;
+
 using System.Linq;
 using AMA = Server.Items.ArmorMeditationAllowance;
 using AMT = Server.Items.ArmorMaterialType;
@@ -16,28 +16,8 @@ using System.Globalization;
 
 namespace Server.Items
 {
-    public abstract class BaseArmor : Item, IScissorable, IFactionItem, ICraftable, IWearableDurability
-    {
-        #region Factions
-        private FactionItem m_FactionState;
-
-        public FactionItem FactionItemState
-        {
-            get { return m_FactionState; }
-            set
-            {
-                m_FactionState = value;
-
-                if (m_FactionState == null)
-                    Hue = CraftResources.GetHue(Resource);
-
-                LootType = (m_FactionState == null ? LootType.Regular : LootType.Blessed);
-            }
-        }
-        #endregion
-        
-        // Instance values. These values must are unique to each armor piece.
-        private int m_MaxHitPoints;
+    public abstract class BaseArmor : Item, IScissorable, ICraftable, IWearableDurability
+    {        
         private int m_HitPoints;
         private ArmorDurabilityLevel m_Durability = ArmorDurabilityLevel.Regular;
         private ArmorProtectionLevel m_Protection;   
@@ -46,8 +26,7 @@ namespace Server.Items
         private AosAttributes m_AosAttributes;
         private AosArmorAttributes m_AosArmorAttributes;
         private AosSkillBonuses m_AosSkillBonuses;
-
-        // Overridable values. These values are provided to override the defaults which get defined in the individual armor scripts.
+        
         private int m_ArmorBase = -1;
         private int m_StrBonus = -1, m_DexBonus = -1, m_IntBonus = -1;
         private int m_StrReq = -1, m_DexReq = -1, m_IntReq = -1;
@@ -238,6 +217,7 @@ namespace Server.Items
             }
         }
 
+        private int m_MaxHitPoints;
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxHitPoints
         {
@@ -1071,9 +1051,6 @@ namespace Server.Items
 
         public override bool AllowSecureTrade(Mobile from, Mobile to, Mobile newOwner, bool accepted)
         {
-            if (!Ethics.Ethic.CheckTrade(from, to, newOwner, this))
-                return false;
-
             return base.AllowSecureTrade(from, to, newOwner, accepted);
         }
 
@@ -1081,9 +1058,6 @@ namespace Server.Items
 
         public override bool CanEquip(Mobile from)
         {
-            if (!Ethics.Ethic.CheckEquip(from, this))
-                return false;
-
             if (from.AccessLevel < AccessLevel.GameMaster)
             {
                 if (RequiredRace != null && from.Race != RequiredRace)

@@ -1755,13 +1755,7 @@ namespace Server.Spells
 
         public static bool CheckCast(Mobile caster, Spell spell)
         {
-            if (Factions.Sigil.ExistsOn(caster))
-            {
-                caster.SendLocalizedMessage(1061632); // You can't do that while carrying the sigil.
-                return false;
-            }
-
-            else if (!caster.CanBeginAction(typeof(PolymorphSpell)))
+            if (!caster.CanBeginAction(typeof(PolymorphSpell)))
             {
                 caster.SendLocalizedMessage(1061628); // You can't do that while polymorphed.
                 return false;
@@ -1777,11 +1771,7 @@ namespace Server.Spells
             if (transformSpell == null)
                 return false;
 
-            if (Factions.Sigil.ExistsOn(caster))
-            {
-                caster.SendLocalizedMessage(1061632); // You can't do that while carrying the sigil.
-            }
-            else if (!caster.CanBeginAction(typeof(PolymorphSpell)))
+            if (!caster.CanBeginAction(typeof(PolymorphSpell)))
             {
                 caster.SendLocalizedMessage(1061628); // You can't do that while polymorphed.
             }

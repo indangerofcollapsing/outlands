@@ -103,7 +103,7 @@ namespace Server.Custom
             int colorTheme = Utility.RandomDyedHue();
             int customTheme = 0;
            
-            m_Items.Add(new ChainLegs() { LootType = LootType.Blessed });            
+            m_Items.Add(new ChainmailLegs() { LootType = LootType.Blessed });            
             m_Items.Add(new RingmailGloves() { LootType = LootType.Blessed });
             m_Items.Add(new StuddedGorget() { LootType = LootType.Blessed });
             m_Items.Add(new RingmailArms() { LootType = LootType.Blessed });

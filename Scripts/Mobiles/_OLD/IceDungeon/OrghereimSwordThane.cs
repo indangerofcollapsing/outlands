@@ -36,7 +36,7 @@ namespace Server.Mobiles
 
             Utility.AssignRandomHair(this, hairHue);
 
-            AddItem(new ChainCoif() { Movable = false, Hue = itemHue });
+            AddItem(new ChainmailCoif() { Movable = false, Hue = itemHue });
             AddItem(new StuddedGorget() { Movable = false, Hue = itemHue });
             AddItem(new BodySash() { Movable = false, Hue = itemHue });
             AddItem(new Kilt() { Movable = false, Hue = itemHue });

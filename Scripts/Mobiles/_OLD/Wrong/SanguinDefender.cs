@@ -40,8 +40,8 @@ namespace Server.Mobiles
 
             Utility.AssignRandomHair(this, hairHue);
 
-            AddItem(new ChainCoif() { Movable = false, Hue = itemHue });
-            AddItem(new ChainChest() { Movable = false, Hue = itemHue });
+            AddItem(new ChainmailCoif() { Movable = false, Hue = itemHue });
+            AddItem(new ChainmailChest() { Movable = false, Hue = itemHue });
             AddItem(new PlateArms() { Movable = false, Hue = weaponHue });
             AddItem(new LeatherGloves() { Movable = false, Hue = itemHue });
             AddItem(new Kilt() { Movable = false, Hue = weaponHue });

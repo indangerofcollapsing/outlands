@@ -1446,7 +1446,7 @@ namespace Server
                                     case 2: m_Items.Add(new RingmailChest()); break;
                                     case 3: m_Items.Add(new RingmailLegs()); break;
                                     case 4: m_Items.Add(new RingmailGloves()); break;
-                                    case 5: m_Items.Add(new ChainCoif()); break;
+                                    case 5: m_Items.Add(new ChainmailCoif()); break;
                                     case 6: m_Items.Add(new NorseHelm()); break;
                                 }
                             break;

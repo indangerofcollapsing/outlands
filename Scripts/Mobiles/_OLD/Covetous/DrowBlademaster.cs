@@ -45,7 +45,7 @@ namespace Server.Mobiles
             AddItem(new PlateArms() { Movable = false, Hue = itemHue });
             AddItem(new PlateGloves() { Movable = false, Hue = itemHue });
 
-            AddItem(new ChainLegs() { Movable = false, Hue = itemHue });
+            AddItem(new ChainmailLegs() { Movable = false, Hue = itemHue });
             AddItem(new Boots() { Movable = false, Hue = itemHue });
 
             Utility.AssignRandomHair(this, hairHue);
