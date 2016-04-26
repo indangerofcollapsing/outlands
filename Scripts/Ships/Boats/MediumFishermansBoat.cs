@@ -10,13 +10,6 @@ namespace Server.Multis
     {        
         public override BaseBoatDeed BoatDeed { get { return new MediumFishermansBoatDeed(); } }
         
-        public override List<Point3D> m_CannonLocations()
-        {
-            List<Point3D> list = new List<Point3D>();
-
-            return list;
-        }
-
         [Constructable]
         public MediumFishermansBoat()
         {

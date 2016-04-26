@@ -9,14 +9,7 @@ namespace Server.Multis
     public class GalleonFishermansBoat : GalleonBoat
     {
         public override BaseBoatDeed BoatDeed { get { return new GalleonFishermansBoatDeed(); } }
-
-        public override List<Point3D> m_CannonLocations()
-        {
-            List<Point3D> list = new List<Point3D>();           
-
-            return list;
-        }
-
+        
         [Constructable]
         public GalleonFishermansBoat()
         {

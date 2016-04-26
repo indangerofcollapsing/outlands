@@ -916,15 +916,7 @@ namespace Server
         public static TimeSpan ScuttleInterval = TimeSpan.FromSeconds(10);
         public static TimeSpan PlayerShipDecayDamageDelay = TimeSpan.FromSeconds(10);
         public static TimeSpan NPCShipUncrewedDamageDelay = TimeSpan.FromSeconds(10);
-
-        public abstract List<Point3D> m_CannonLocations();
-        /*
-        public abstract List<Point3D> m_LeftCannonLocations();
-        public abstract List<Point3D> m_RightCannonLocations();
-        public abstract List<Point3D> m_FrontCannonLocations();
-        public abstract List<Point3D> m_RearCannonLocations();
-        */
-
+        
         public List<ShipCannon> m_Cannons = new List<ShipCannon>();
         public List<ShipCannon> m_LeftCannons = new List<ShipCannon>();
         public List<ShipCannon> m_RightCannons = new List<ShipCannon>();

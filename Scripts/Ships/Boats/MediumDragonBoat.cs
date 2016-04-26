@@ -48,25 +48,19 @@ namespace Server.Multis
             return list;
         }
 
-        public override List<Point3D> m_CannonLocations()
+        public override void GenerateShipCannons()
         {
-            List<Point3D> list = new List<Point3D>();
+            base.GenerateShipCannons();
 
-            list.Add(new Point3D(-2, -2, 0));
-            list.Add(new Point3D(-2, -1, 0));
-            list.Add(new Point3D(-2, 0, 0));
-            list.Add(new Point3D(-2, 1, 0));
-            list.Add(new Point3D(-2, 2, 0));
-            list.Add(new Point3D(-2, 3, 0));
+            ShipCannon.PlaceShipCannon(this, new Point3D(-2, -1, 0), ShipCannon.CannonType.Small, ShipCannon.CannonPosition.Left);
+            ShipCannon.PlaceShipCannon(this, new Point3D(-2, 0, 0), ShipCannon.CannonType.Small, ShipCannon.CannonPosition.Left);
+            ShipCannon.PlaceShipCannon(this, new Point3D(-2, 1, 0), ShipCannon.CannonType.Small, ShipCannon.CannonPosition.Left);
+            ShipCannon.PlaceShipCannon(this, new Point3D(-2, 2, 0), ShipCannon.CannonType.Small, ShipCannon.CannonPosition.Left);
 
-            list.Add(new Point3D(2, -2, 0));
-            list.Add(new Point3D(2, -1, 0));
-            list.Add(new Point3D(2, 0, 0));
-            list.Add(new Point3D(2, 1, 0));
-            list.Add(new Point3D(2, 2, 0));
-            list.Add(new Point3D(2, 3, 0));
-
-            return list;
+            ShipCannon.PlaceShipCannon(this, new Point3D(2, -1, 0), ShipCannon.CannonType.Small, ShipCannon.CannonPosition.Right);
+            ShipCannon.PlaceShipCannon(this, new Point3D(2, 0, 0), ShipCannon.CannonType.Small, ShipCannon.CannonPosition.Right);
+            ShipCannon.PlaceShipCannon(this, new Point3D(2, 1, 0), ShipCannon.CannonType.Small, ShipCannon.CannonPosition.Right);
+            ShipCannon.PlaceShipCannon(this, new Point3D(2, 2, 0), ShipCannon.CannonType.Small, ShipCannon.CannonPosition.Right);
         }
 
         public override List<Point3D> m_BoatFireLocations()

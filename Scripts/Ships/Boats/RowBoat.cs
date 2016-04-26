@@ -43,13 +43,6 @@ namespace Server.Multis
             return list;
         }
 
-        public override List<Point3D> m_CannonLocations()
-        {
-            List<Point3D> list = new List<Point3D>();          
-
-            return list;
-        }
-
         public override List<Point3D> m_BoatFireLocations()
         {
             List<Point3D> list = new List<Point3D>();
