@@ -1,7 +1,9 @@
 ﻿using System;
-using Server.Items;
 using System.Collections;
 using System.Collections.Generic;
+using Server.Items;
+using Server.Mobiles;
+using Server.Network;
 
 namespace Server
 {
@@ -10,6 +12,7 @@ namespace Server
         public static List<Type> FactionCaptureLocationList = new List<Type>()
         { 
             typeof(PrevaliaBankAndShipwrightCaptureLocation),
+            typeof(PrevaliaTownsquareAndSlumsCaptureLocation),
         };
 
         public int SchedulePosition = 1;
@@ -22,8 +25,12 @@ namespace Server
         public bool Completed = false;
 
         public FactionCaptureLocation CaptureLocation;
-       
-        public FactionCaptureEvent()
+
+        public List<CaptureEventData> FactionEventData = new List<CaptureEventData>();
+        public List<PlayerMobile> ParticipatingPlayers = new List<PlayerMobile>();
+
+        [Constructable]
+        public FactionCaptureEvent(): base()
         {
         }
         
@@ -49,6 +56,17 @@ namespace Server
         {
             if (CaptureLocation != null)
                 CaptureLocation.OnEventStart();
+
+            foreach (NetState state in NetState.Instances)
+            {
+                Mobile mobile = state.Mobile;
+                PlayerMobile player = mobile as PlayerMobile;
+
+                if (player == null)
+                    continue;
+
+                player.SendMessage(Faction.purpleTextHue, "Faction Capture Event has begun!");
+            }           
         }
 
         public void OnEventTick()
@@ -60,7 +78,36 @@ namespace Server
         public void OnEventCompletion()
         {
             if (CaptureLocation != null)
-                CaptureLocation.OnEventCompletetion();
+                CaptureLocation.OnEventCompletetion();            
+
+            foreach (NetState state in NetState.Instances)
+            {
+                Mobile mobile = state.Mobile;
+                PlayerMobile player = mobile as PlayerMobile;
+
+                if (player == null)
+                    continue;
+
+                player.SendMessage(Faction.purpleTextHue, "Capture event has has ended. The result is a tie.");
+            }
+
+            ResolveCaptureEventScores();
+        }
+
+        public void ResolveCaptureEventScores()
+        {
+            //Resolve Scores
+
+            //Clear Player Profile Data
+            foreach (PlayerMobile player in ParticipatingPlayers)
+            {
+                if (player == null)
+                    continue;
+
+                Faction.CheckCreateFactionPlayerProfile(player);
+
+                player.m_FactionPlayerProfile.ResetCaptureEventValues();
+            }
         }
 
         public override void OnAfterDelete()
@@ -87,6 +134,19 @@ namespace Server
             writer.Write(EventStart);
             writer.Write(EventCompletion);
             writer.Write(Completed);
+
+            writer.Write(FactionEventData.Count);
+            for (int a = 0; a < FactionEventData.Count; a++)
+            {
+                writer.Write(FactionEventData[a].Faction);
+                writer.Write(FactionEventData[a].Score);               
+            }
+
+            writer.Write(ParticipatingPlayers.Count);
+            for (int a = 0; a < ParticipatingPlayers.Count; a++)
+            {
+                writer.Write(ParticipatingPlayers[a]);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -104,7 +164,38 @@ namespace Server
                 EventStart = reader.ReadDateTime();
                 EventCompletion = reader.ReadDateTime();
                 Completed = reader.ReadBool();
+
+                int factionCount = reader.ReadInt();
+                for (int a = 0; a < factionCount; a++)
+                {
+                    CaptureEventData factionScore = new CaptureEventData();
+
+                    Faction faction = (Faction)reader.ReadItem();
+                    double score = reader.ReadDouble();
+
+                    factionScore.Faction = faction;
+                    factionScore.Score = score;                 
+
+                    FactionEventData.Add(factionScore);                    
+                }
+
+                int participatingPlayersCount = reader.ReadInt();
+                for (int a = 0; a < participatingPlayersCount; a++)
+                {
+                    PlayerMobile player = (PlayerMobile)reader.ReadMobile();
+                    ParticipatingPlayers.Add(player);
+                }
             }
         }
-    }
+
+        public class CaptureEventData
+        {
+            public Faction Faction;
+            public double Score;
+
+            public CaptureEventData()
+            {
+            }
+        }
+    }    
 }

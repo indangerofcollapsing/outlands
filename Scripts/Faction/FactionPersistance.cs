@@ -14,14 +14,6 @@ namespace Server
 {
     public static class FactionPersistance
     {    
-        private static List<Type> FactionList = new List<Type>() 
-        {
-            typeof(Freedom), 
-            typeof(Unity), 
-        };
-
-        public static List<Faction> Factions = new List<Faction>();
-
         public static FactionPersistanceItem PersistanceItem;
 
         public static bool AnnouncementMade = false;
@@ -94,13 +86,13 @@ namespace Server
                     PersistanceItem = new FactionPersistanceItem();
 
                 //Create Faction Instances
-                foreach (Type type in FactionList)
+                foreach (Type type in Faction.FactionList)
                 {
                     bool foundFaction = false;
 
-                    for (int a = 0; a < Factions.Count; a++)
+                    for (int a = 0; a < Faction.Factions.Count; a++)
                     {
-                        if (Factions[a].GetType() == type)
+                        if (Faction.Factions[a].GetType() == type)
                         {
                             foundFaction = true;
                             break;
@@ -114,7 +106,7 @@ namespace Server
                 }
 
                 //Audit Faction
-                foreach (Faction faction in Factions)
+                foreach (Faction faction in Faction.Factions)
                 {
                     faction.Audit();
                 }
@@ -446,37 +438,13 @@ namespace Server
             }
 
             m_Timer = new FactionTimer();
-            m_Timer.Start();
-
-            foreach (NetState state in NetState.Instances)
-            {
-                Mobile mobile = state.Mobile;
-                PlayerMobile player = mobile as PlayerMobile;
-
-                if (player == null)
-                    continue;
-
-                player.SendMessage(Faction.purpleTextHue, "Faction Capture Event has begun!");
-            }
+            m_Timer.Start();            
         }
 
         public static void EndCaptureEvent()
         {
             if (!Active)
                 return;
-
-            foreach (NetState state in NetState.Instances)
-            {
-                Mobile mobile = state.Mobile;
-                PlayerMobile player = mobile as PlayerMobile;
-
-                if (player == null)
-                    continue;
-
-                player.SendMessage(Faction.purpleTextHue, "Capture event has has ended. The result is a tie.");
-            }
-
-            ResolveCaptureEventScores();
 
             Active = false;
             TimeElapsed = TimeSpan.FromSeconds(0);
@@ -518,11 +486,7 @@ namespace Server
                 timeUntilNextEvent = timeUntilNextEvent + CycleDowntime;
 
             FactionPersistance.NextScheduledCaptureEventStartTime = FactionPersistance.NextScheduledCaptureEventStartTime + timeUntilNextEvent;                        
-        }        
-
-        public static void ResolveCaptureEventScores()
-        {
-        }
+        }   
         
         public static void ResolveScheduleCompletion()
         {

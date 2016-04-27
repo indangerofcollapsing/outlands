@@ -781,6 +781,9 @@ namespace Server.Mobiles
                     pm_From.Send(SpeedControl.MountSpeed);
             }
 
+            //Faction
+            Faction.OnLogin(pm_From);
+
             //Titles
             TitlePersistance.OnLogin(pm_From);
 
@@ -1001,6 +1004,7 @@ namespace Server.Mobiles
         public static TimeSpan EmoteCooldownLong = TimeSpan.FromSeconds(120);
         public static TimeSpan EmoteCooldownShort = TimeSpan.FromSeconds(30);
 
+        public FactionPlayerProfile m_FactionPlayerProfile = null;
         public EventCalendarAccount m_EventCalendarAccount = null;
         public MHSPlayerEntry m_MHSPlayerEntry = null;
         public WorldChatAccountEntry m_WorldChatAccountEntry = null;
@@ -5065,6 +5069,7 @@ namespace Server.Mobiles
 
             writer.Write((int)m_SatisfactionLevel);
             writer.Write(m_SatisfactionExpiration);
+            writer.Write(m_FactionPlayerProfile);
             writer.Write(m_EventCalendarAccount);
             writer.Write(m_BonusSkillCap);
             writer.Write(m_MHSPlayerEntry);
@@ -5169,6 +5174,7 @@ namespace Server.Mobiles
 
                 m_SatisfactionLevel = (Food.SatisfactionLevelType)reader.ReadInt();
                 m_SatisfactionExpiration = reader.ReadDateTime();
+                m_FactionPlayerProfile = (FactionPlayerProfile)reader.ReadItem() as FactionPlayerProfile;
                 m_EventCalendarAccount = (EventCalendarAccount)reader.ReadItem() as EventCalendarAccount;
                 m_BonusSkillCap = reader.ReadInt();
                 m_MHSPlayerEntry = (MHSPlayerEntry)reader.ReadItem() as MHSPlayerEntry;

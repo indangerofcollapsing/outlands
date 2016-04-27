@@ -9,6 +9,7 @@ namespace Server
     {
         public override bool Active { get { return true; } }
 
+        public override FactionTypeValue FactionType { get { return FactionTypeValue.Unity; } }
         public override string FactionName { get { return "Unity"; } }
 
         public override int TextHue { get { return 2603; } }
@@ -23,8 +24,25 @@ namespace Server
         public override int FlagIconOffsetX { get { return 0; } }
         public override int FlagIconOffsetY { get { return 0; } }
 
-        public Unity()
+        [Constructable]
+        public Unity(): base()
         {
+        }
+
+        public Unity(Serial serial): base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            int version = reader.ReadInt();
         }
     }
 }

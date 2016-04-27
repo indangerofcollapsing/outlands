@@ -6,9 +6,25 @@ using Server.Mobiles;
 
 namespace Server
 {
-    public class Faction
+    public class Faction : Item
     {
+        public enum FactionTypeValue
+        {
+            Freedom,
+            Unity
+        }
+
+        public static List<Type> FactionList = new List<Type>() 
+        {
+            typeof(Freedom), 
+            typeof(Unity), 
+        };
+
+        public static List<Faction> Factions = new List<Faction>();
+
         public virtual bool Active { get { return true; } }
+
+        public virtual FactionTypeValue FactionType { get { return FactionTypeValue.Freedom; } }
         public virtual string FactionName { get { return "Faction Name"; } }
 
         public virtual int TextHue { get { return 2550; } }
@@ -38,9 +54,31 @@ namespace Server
         public static int greyTextHue = 2401;
         public static int orangeTextHue = 149;
 
+        [Constructable]
         public Faction()
         {
-            FactionPersistance.Factions.Add(this);
+            Factions.Add(this);
+        }
+
+        public Faction(Serial serial): base(serial)
+        {
+        }
+
+        public static void OnLogin(PlayerMobile player)
+        {
+            CheckCreateFactionPlayerProfile(player);
+        }
+
+        public static void CheckCreateFactionPlayerProfile(PlayerMobile player)
+        {
+            if (player == null)
+                return;
+
+            if (player.m_FactionPlayerProfile == null)
+                player.m_FactionPlayerProfile = new FactionPlayerProfile(player);
+
+            if (player.m_FactionPlayerProfile.Deleted)
+                player.m_FactionPlayerProfile = new FactionPlayerProfile(player);
         }
 
         public void Audit()
@@ -48,10 +86,22 @@ namespace Server
             if (!Active)
                 Players.Clear();
         }
-        
-        public void Serialize(GenericWriter writer)
+
+        public static Faction GetFaction(FactionTypeValue factionType)
         {
-            writer.WriteEncodedInt(0); //Version
+            foreach(Faction faction in Factions)
+            {
+                if (faction.FactionType == factionType)
+                    return faction;
+            }
+
+            return null;
+        }
+        
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
 
             //Version 0
             writer.Write(Players.Count);
@@ -61,9 +111,10 @@ namespace Server
             }
         }        
 
-        public void Deserialize(GenericReader reader)
+        public override void Deserialize(GenericReader reader)
         {
-            int version = reader.ReadEncodedInt();
+            base.Deserialize(reader);
+            int version = reader.ReadInt();
 
             //Version 0
             if (version >= 0)
@@ -80,7 +131,7 @@ namespace Server
 
             //-----
 
-            FactionPersistance.Factions.Add(this);
+            Factions.Add(this);
         }
     }
 }

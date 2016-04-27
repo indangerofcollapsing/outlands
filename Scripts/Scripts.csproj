@@ -146,7 +146,9 @@
     <Compile Include="CustomAlchemy\CustomAlchemyKit.cs" />
     <Compile Include="CustomAlchemy\CustomAlchemy.cs" />
     <Compile Include="CustomAlchemy\CustomAlchemyPotion.cs" />
-    <Compile Include="Faction\CaptureLocations\PrevaliaCaptureLocations.cs" />
+    <Compile Include="Faction\CaptureLocations\Town\PrevaliaTownsquareAndSlums.cs" />
+    <Compile Include="Faction\CaptureLocations\Town\PrevaliaBankAndShipwright.cs" />
+    <Compile Include="Faction\FactionPlayerProfile.cs" />
     <Compile Include="Faction\FactionCaptureLocation.cs" />
     <Compile Include="Faction\Faction.cs" />
     <Compile Include="Faction\FactionCaptureEvent.cs" />
