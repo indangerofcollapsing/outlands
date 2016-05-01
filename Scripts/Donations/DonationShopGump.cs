@@ -1,62 +1,14 @@
 ﻿using System;
-using Server;
-using Server.Targeting;
+using System.Collections;
+using System.Collections.Generic;
+using Server.Items;
 using Server.Network;
-using Server.Mobiles;
-using Server.Gumps;
 
-namespace Server.Items
+namespace Server.Gumps
 {
-    public class GumpTester : Item
+    public class DonationShopGump : Gump
     {
-        [Constructable]
-        public GumpTester(): base(0x26BC)
-        {
-            Name = "a gump tester"; 
-        }
-
-        public GumpTester(Serial serial): base(serial)
-        {
-        }
-
-
-        public override void OnDoubleClick(Mobile from)
-        {
-            base.OnDoubleClick(from);
-
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
-            {
-                //player.CloseGump(typeof(BoatHotbarGump));
-                //player.SendGump(new BoatHotbarGump(player));
-
-                player.CloseGump(typeof(DonationShopGump));
-                player.SendGump(new DonationShopGump(player));
-            }
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write((int)0); //version         
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            //Version 0
-            if (version >= 0)
-            {         
-            }
-        }
-    }
-
-    public class TestGump : Gump
-    {
-        public TestGump(Mobile from): base(10, 10)
+        public DonationShopGump(Mobile from): base(10, 10)
         {
             Closable = true;
             Disposable = true;
@@ -249,8 +201,8 @@ namespace Server.Items
 
             if (!closeGump)
             {
-                from.CloseGump(typeof(TestGump));
-                from.SendGump(new TestGump(from));
+                from.CloseGump(typeof(DonationShopGump));
+                from.SendGump(new DonationShopGump(from));
             }
         }
     }
