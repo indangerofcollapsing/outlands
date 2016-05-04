@@ -132,12 +132,8 @@ namespace Server.Multis
             else if (((PlayerMobile)from).Young)            
                 from.SendMessage("Young players may not place houses. Renounce your young players status first");
             
-            else if (from.AccessLevel < AccessLevel.GameMaster && BaseHouse.HasAccountHouse(from))            
-                from.SendLocalizedMessage(501271); // You already own a house, you may not place another!
-            
             else
-            {
-                
+            {                
                 //from.SendLocalizedMessage(1010433); //House placement cancellation could result in a 60 second delay in the return of your deed.
 								
                 from.Target = new HousePlacementTarget(this);
@@ -188,9 +184,6 @@ namespace Server.Multis
             if (!IsChildOf(from.Backpack))            
                 from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
             
-            else if (from.AccessLevel < AccessLevel.GameMaster && BaseHouse.HasAccountHouse(from))            
-                from.SendLocalizedMessage(501271); // You already own a house, you may not place another!
-            
             else
             {
                 ArrayList toMove;
@@ -200,29 +193,35 @@ namespace Server.Multis
                 switch (res)
                 {
                     case HousePlacementResult.Valid:
+                    {
+                        if (from.AccessLevel < AccessLevel.GameMaster && BaseHouse.HasAccountHouse(from))
                         {
-                            BaseHouse house = GetHouse(from);
-                            
-                            //For Custom house, drop z-level by -8 <--- May need to revise after we add more custom houses
-                            if (house is SmallStoneTempleHouse || house is MagistrateHouse || house is SandstoneSpaHouse || house is ArbiterEstate)
-                                center.Z -= 8;
-
-                            house.MoveToWorld(center, from.Map);
-                            Delete();
-
-                            for (int i = 0; i < toMove.Count; ++i)
-                            {
-                                object o = toMove[i];
-
-                                if (o is Mobile)
-                                    ((Mobile)o).Location = house.BanLocation;
-
-                                else if (o is Item)
-                                    ((Item)o).Location = house.BanLocation;
-                            }
-
-                            break;
+                            from.SendLocalizedMessage(501271); // You already own a house, you may not place another!
+                            return;
                         }
+
+                        BaseHouse house = GetHouse(from);
+                            
+                        //For Custom house, drop z-level by -8 <--- May need to revise after we add more custom houses
+                        if (house is SmallStoneTempleHouse || house is MagistrateHouse || house is SandstoneSpaHouse || house is ArbiterEstate)
+                            center.Z -= 8;
+
+                        house.MoveToWorld(center, from.Map);
+                        Delete();
+
+                        for (int i = 0; i < toMove.Count; ++i)
+                        {
+                            object o = toMove[i];
+
+                            if (o is Mobile)
+                                ((Mobile)o).Location = house.BanLocation;
+
+                            else if (o is Item)
+                                ((Item)o).Location = house.BanLocation;
+                        }
+
+                        break;
+                    }
 
                     case HousePlacementResult.BadRegionExistingHouse:
                     {

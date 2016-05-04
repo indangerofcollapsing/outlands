@@ -70,9 +70,8 @@ namespace Server.Mobiles
                 currencyPiles = bankBox.FindItemsByType(currencyType);
 
                 for (int i = 0; i < currencyPiles.Length; ++i)
-                {
-                    if (currencyPiles[i].PlayerClassOwner == from)
-                        balance += currencyPiles[i].Amount;
+                {                    
+                    balance += currencyPiles[i].Amount;
                 }
             }
 
@@ -143,30 +142,26 @@ namespace Server.Mobiles
                 currencyPiles = bankBox.FindItemsByType(currencyType);
 
                 for (int i = 0; i < currencyPiles.Length; ++i)
-                {                   
-                    if (currencyPiles[i].PlayerClassOwner == pm_From)
-                        balance += currencyPiles[i].Amount;
+                {   
+                    balance += currencyPiles[i].Amount;
                 }
 
                 if (balance < amount)
                     return false;
 
                 for (int i = 0; amount > 0 && i < currencyPiles.Length; ++i)
-                {
-                    if (currencyPiles[i].PlayerClassOwner == pm_From)
+                {                   
+                    if (currencyPiles[i].Amount <= amount)
                     {
-                        if (currencyPiles[i].Amount <= amount)
-                        {
-                            amount -= currencyPiles[i].Amount;
-                            currencyPiles[i].Delete();
-                        }
-
-                        else
-                        {
-                            currencyPiles[i].Amount -= amount;
-                            amount = 0;
-                        }
+                        amount -= currencyPiles[i].Amount;
+                        currencyPiles[i].Delete();
                     }
+
+                    else
+                    {
+                        currencyPiles[i].Amount -= amount;
+                        amount = 0;
+                    }                    
                 }
             }
 
@@ -236,22 +231,19 @@ namespace Server.Mobiles
             foreach (Item currencyItem in currencyItems)
             {
                 if (amountRemaining <= 0)
-                    break;
+                    break;                
                 
-                if (currencyItem.PlayerClassOwner == from)
-                {
-                    if ((currencyItem.Amount + amountRemaining) <= 60000)
-                    {                        
-                        amountRemaining = 0;
-                        break;
-                    }
-
-                    else
-                    {
-                        int incrementAmount = 60000 - currencyItem.Amount;                        
-                        amountRemaining -= incrementAmount;
-                    }
+                if ((currencyItem.Amount + amountRemaining) <= 60000)
+                {                        
+                    amountRemaining = 0;
+                    break;
                 }
+
+                else
+                {
+                    int incrementAmount = 60000 - currencyItem.Amount;                        
+                    amountRemaining -= incrementAmount;
+                }                
             }
 
             if (amountRemaining > 0)
@@ -265,8 +257,7 @@ namespace Server.Mobiles
 
                 for (int a = 0; a < currencyStacks; a++)
                 {
-                    Item currencyItem = (Item)Activator.CreateInstance(currencyType);
-                    currencyItem.PlayerClassOwner = from;
+                    Item currencyItem = (Item)Activator.CreateInstance(currencyType);                   
 
                     if (currencyStacks == 1)
                         currencyItem.Amount = amountRemaining;
@@ -314,25 +305,24 @@ namespace Server.Mobiles
             {
                 if (amountRemaining <= 0)
                     break;
+
+                //TEST: FIX PLAYERCLASS BINDING FOR CURRENCIES                
                 
-                if (currencyItem.PlayerClassOwner == from)
+                if ((currencyItem.Amount + amountRemaining) <= 60000)
                 {
-                    if ((currencyItem.Amount + amountRemaining) <= 60000)
-                    {
-                        currencyItem.Amount += amountRemaining;
-                        amountRemaining = 0;                        
+                    currencyItem.Amount += amountRemaining;
+                    amountRemaining = 0;                        
 
-                        break;
-                    }
-
-                    else
-                    {
-                        int incrementAmount = 60000 - currencyItem.Amount;
-
-                        currencyItem.Amount += incrementAmount;
-                        amountRemaining -= incrementAmount;
-                    }                                    
+                    break;
                 }
+
+                else
+                {
+                    int incrementAmount = 60000 - currencyItem.Amount;
+
+                    currencyItem.Amount += incrementAmount;
+                    amountRemaining -= incrementAmount;
+                }     
             }
 
             if (amountRemaining > 0)
@@ -344,8 +334,7 @@ namespace Server.Mobiles
 
                 for (int a = 0; a < currencyStacks; a++)
                 {
-                    Item currencyItem = (Item)Activator.CreateInstance(currencyType);
-                    currencyItem.PlayerClassOwner = from;
+                    Item currencyItem = (Item)Activator.CreateInstance(currencyType);                   
 
                     if (currencyStacks <= 1)
                         currencyItem.Amount = amountRemaining;

@@ -213,9 +213,9 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(FemalePlateChest), "Platemail Armor", "Female Plate Chest", 70.0, 120.0, typeof(IronIngot), 1044036, 18, 1044037);
 
             //Helmets
-            AddCraft(1, typeof(Bascinet), "Other Helmets", "Bascinet", 55.0, 105.0, typeof(IronIngot), 1044036, 8, 1044037);
-            AddCraft(1, typeof(CloseHelm), "Other Helmets", "Close Helm", 55.0, 105.0, typeof(IronIngot), 1044036, 10, 1044037);
-            AddCraft(1, typeof(NorseHelm), "Other Helmets", "Norse Helm", 55.0, 105.0, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(Bascinet), "Other Helmets", "Bascinet", 55.0, 105.0, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(CloseHelm), "Other Helmets", "Close Helm", 55.0, 105.0, typeof(IronIngot), 1044036, 12, 1044037);
+            AddCraft(1, typeof(NorseHelm), "Other Helmets", "Norse Helm", 55.0, 105.0, typeof(IronIngot), 1044036, 12, 1044037);
 
             //Shields
             AddCraft(1, typeof(Buckler), "Shields", "Buckler", -10.0, 40.0, typeof(IronIngot), 1044036, 8, 1044037);
@@ -225,7 +225,7 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(HeaterShield), "Shields", "Heater Shield", 70.0, 120.0, typeof(IronIngot), 1044036, 18, 1044037);
 
             //Fencing
-            AddCraft(1, typeof(Dagger), "Fencing Weapons", "Dagger", -10.0, 40.0, typeof(IronIngot), 1044036, 6, 1044037);
+            AddCraft(1, typeof(Dagger), "Fencing Weapons", "Dagger", -10.0, 40.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(Kryss), "Fencing Weapons", "Kryss", 20.0, 70.0, typeof(IronIngot), 1044036, 8, 1044037);
             AddCraft(1, typeof(WarFork), "Fencing Weapons", "War Fork", 20.0, 70.0, typeof(IronIngot), 1044036, 8, 1044037);
             AddCraft(1, typeof(ShortSpear), "Fencing Weapons", "Short Spear", 20.0, 70.0, typeof(IronIngot), 1044036, 8, 1044037);

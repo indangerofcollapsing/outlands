@@ -1632,9 +1632,7 @@ namespace Server.Mobiles
                 m_PirateScore = value;
             }
         }
-
-        public Server.Custom.DonationState DonationPlayerState { get; set; }
-
+        
         private DateTime m_LastTownSquareNotification = DateTime.MinValue;
         public DateTime LastTownSquareNotification
         {
@@ -5109,7 +5107,6 @@ namespace Server.Mobiles
             TitleColorState.Serialize(writer);
             writer.Write(m_UserOptHideFameTitles);
             writer.Write(LoginElapsedTime);
-            Server.Custom.DonationState.Serialize(writer, this);
             writer.Write((DateTime)m_DateTimeDied);
             writer.Write((TimeSpan)m_TimeSpanDied);
             writer.Write((TimeSpan)m_TimeSpanResurrected);
@@ -5215,7 +5212,6 @@ namespace Server.Mobiles
                 TitleColorState.Deserialize(reader);
                 m_UserOptHideFameTitles = reader.ReadBool();
                 LoginElapsedTime = reader.ReadTimeSpan();
-                DonationPlayerState = Server.Custom.DonationState.Deserialize(reader);
                 m_DateTimeDied = reader.ReadDateTime();
                 m_TimeSpanDied = reader.ReadTimeSpan();
                 m_TimeSpanResurrected = reader.ReadTimeSpan();

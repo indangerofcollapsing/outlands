@@ -736,12 +736,14 @@ namespace Server
 
             else
             {
+                /*
                 HalloweenTicket ticket = new HalloweenTicket();
 
                 player.Backpack.DropItem(ticket);
 
                 player.PlaySound(0x5BC);
                 player.SendMessage("You receive a halloween ticket.");
+                */
             }
         }
         

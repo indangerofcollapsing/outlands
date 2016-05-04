@@ -146,6 +146,8 @@
     <Compile Include="CustomAlchemy\CustomAlchemyKit.cs" />
     <Compile Include="CustomAlchemy\CustomAlchemy.cs" />
     <Compile Include="CustomAlchemy\CustomAlchemyPotion.cs" />
+    <Compile Include="Donations\DonationShop.cs" />
+    <Compile Include="Donations\DonationShopGump.cs" />
     <Compile Include="Faction\CaptureLocations\Town\PrevaliaTownsquareAndSlums.cs" />
     <Compile Include="Faction\CaptureLocations\Town\PrevaliaBankAndShipwright.cs" />
     <Compile Include="Faction\FactionPlayerProfile.cs" />
@@ -810,7 +812,6 @@
     <Compile Include="Mobiles\Bosses\Minions\DeepTentacle.cs" />
     <Compile Include="Mobiles\Bosses\Minions\DeepWater.cs" />
     <Compile Include="Mobiles\Bosses\TheDeepOne.cs" />
-    <Compile Include="Donations\DonationShop.cs" />
     <Compile Include="Donations\DragonCoin.cs" />
     <Compile Include="Items\DragonLotteryTicket.cs" />
     <Compile Include="Items\ItemRenameDeed.cs" />
@@ -1738,9 +1739,6 @@
     <Compile Include="CustomRegions\RegionControlGump.cs" />
     <Compile Include="CustomRegions\RemoveAreaGump.cs" />
     <Compile Include="CustomRegions\RestrictGump.cs" />
-    <Compile Include="Donations\DonationAdminGump.cs" />
-    <Compile Include="Donations\Donations.cs" />
-    <Compile Include="Donations\DonationState.cs" />
     <Compile Include="Items\AcidProofChapeau.cs" />
     <Compile Include="Items\AcidProofRobe.cs" />
     <Compile Include="Items\AnniversaryWaterTile.cs" />
@@ -1750,7 +1748,6 @@
     <Compile Include="Items\BlackBearMask.cs" />
     <Compile Include="Items\BlackCatCollar.cs" />
     <Compile Include="Items\ChampagneGrapes.cs" />
-    <Compile Include="Items\ChristmasLottoTicket.cs" />
     <Compile Include="Items\ChristmasLotto\CookiesForSanta.cs" />
     <Compile Include="Items\ChristmasLotto\MilkForSanta.cs" />
     <Compile Include="Items\ChristmasLotto\PolarMask.cs" />
@@ -1780,7 +1777,6 @@
     <Compile Include="Items\HalloweenLotto\TillySandals.cs" />
     <Compile Include="Items\HalloweenLotto\YellowCandy.cs" />
     <Compile Include="Items\HalloweenLotto\ZombieMask.cs" />
-    <Compile Include="Items\HalloweenTicket.cs" />
     <Compile Include="Items\HousePaint\BaseHousePaint.cs" />
     <Compile Include="Items\HousePaint\BaseTowerPlating.cs" />
     <Compile Include="Items\HousePaint\DullCopperTowerPlating.cs" />

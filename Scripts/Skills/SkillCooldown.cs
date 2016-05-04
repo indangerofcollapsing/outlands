@@ -25,7 +25,7 @@ namespace Server
         public static double CarpentryCooldown = DefCarpentry.CraftSystem.Delay;
         public static double CartographyCooldown = DefCartography.CraftSystem.Delay;
         public static double CookingCooldown = DefCooking.CraftSystem.Delay;
-        public static double DetectHiddenCooldown = 5;
+        public static double DetectHiddenCooldown = 10;
         public static double DiscordanceSuccessCooldown = 10;
         public static double DiscordanceFailureCooldown = 5;
         public static double EvalIntCooldown = 2.0;
@@ -55,7 +55,7 @@ namespace Server
         public static double TinkeringCooldown = DefTinkering.CraftSystem.Delay;
         public static double TrackingCooldown = 10.0;
         public static double VeterinarySelfCooldown = 10.0;
-        public static double VeterinaryOtherCooldown = 7.5;
+        public static double VeterinaryOtherCooldown = 8;
         public static double SwordsCooldown = 1.0;
         public static double MacingCooldown = 1.0;
         public static double FencingCooldown = 1.0;

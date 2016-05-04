@@ -25,22 +25,6 @@ namespace Server.Items
         {
             if (Deleted)
                 return;
-
-            if (!IsChildOf(from.Backpack))
-            {
-                from.SendMessage("That must be in your backpack to use.");
-                return;
-            }
-
-            if (CheckLuck()) {
-                from.Backpack.DropItem(new HalloweenTicket());
-                from.PublicOverheadMessage(Network.MessageType.Regular, 0, false, "You win another ticket!"); 
-            }
-            else {
-                from.SendMessage("The feather crumbles in your hands.");
-            }
-
-            Delete();
         }
 
         private bool CheckLuck()
