@@ -1582,28 +1582,16 @@ namespace Server.Mobiles
             {
                 PlayerMobile pm_Controller = SummonMaster as PlayerMobile;
 
-                if (GetDistanceToSqrt(pm_Controller) <= 20)
-                {
-                    if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                        pm_Controller.SendMessage(pm_Controller.PlayerFollowerDamageTextHue, "Follower: " + Name + " attacks " + defender.Name + " for " + damage.ToString() + " damage.");
-
-                    if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                        defender.PrivateOverheadMessage(MessageType.Regular, pm_Controller.PlayerFollowerDamageTextHue, false, "-" + damage.ToString(), pm_Controller.NetState);
-                }
+                if (GetDistanceToSqrt(pm_Controller) <= 20)                
+                    DamageTracker.RecordDamage(pm_Controller, this, defender, DamageTracker.DamageType.FollowerDamage, damage);   
             }
 
             if (Controlled && ControlMaster is PlayerMobile)
             {
                 PlayerMobile pm_Controller = ControlMaster as PlayerMobile;
 
-                if (GetDistanceToSqrt(pm_Controller) <= 20)
-                {
-                    if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                        pm_Controller.SendMessage(pm_Controller.PlayerFollowerDamageTextHue, "Follower: " + Name + " attacks " + defender.Name + " for " + damage.ToString() + " damage.");
-
-                    if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                        defender.PrivateOverheadMessage(MessageType.Regular, pm_Controller.PlayerFollowerDamageTextHue, false, "-" + damage.ToString(), pm_Controller.NetState);
-                }
+                if (GetDistanceToSqrt(pm_Controller) <= 20)                
+                    DamageTracker.RecordDamage(pm_Controller, this, defender, DamageTracker.DamageType.FollowerDamage, damage);                
             }
         }
 
@@ -3080,22 +3068,14 @@ namespace Server.Mobiles
             {
                 PlayerMobile pm_ControlMaster = SummonMaster as PlayerMobile;
 
-                if (pm_ControlMaster.m_ShowFollowerDamageTaken == DamageDisplayMode.PrivateMessage)
-                    pm_ControlMaster.SendMessage(pm_ControlMaster.PlayerFollowerDamageTakenTextHue, "Follower: " + this.Name + " is hit for " + finalDamage.ToString() + " damage.");
-
-                if (pm_ControlMaster.m_ShowFollowerDamageTaken == DamageDisplayMode.PrivateOverhead && pm_ControlMaster.NetState != null)
-                    PrivateOverheadMessage(MessageType.Regular, pm_ControlMaster.PlayerFollowerDamageTakenTextHue, false, "-" + finalDamage.ToString(), pm_ControlMaster.NetState);
+                DamageTracker.RecordDamage(pm_ControlMaster, from, this, DamageTracker.DamageType.FollowerDamageTaken, finalDamage);                
             }
 
             if (Controlled && ControlMaster is PlayerMobile)
             {
                 PlayerMobile pm_ControlMaster = ControlMaster as PlayerMobile;
-
-                if (pm_ControlMaster.m_ShowFollowerDamageTaken == DamageDisplayMode.PrivateMessage)
-                    pm_ControlMaster.SendMessage(pm_ControlMaster.PlayerFollowerDamageTakenTextHue, "Follower: " + this.Name + " is hit for " + finalDamage.ToString() + " damage.");
-
-                if (pm_ControlMaster.m_ShowFollowerDamageTaken == DamageDisplayMode.PrivateOverhead && pm_ControlMaster.NetState != null)
-                    PrivateOverheadMessage(MessageType.Regular, pm_ControlMaster.PlayerFollowerDamageTakenTextHue, false, "-" + finalDamage.ToString(), pm_ControlMaster.NetState);
+                
+                DamageTracker.RecordDamage(pm_ControlMaster, from, this, DamageTracker.DamageType.FollowerDamageTaken, finalDamage);
             }
 
             base.Damage(finalDamage, from);

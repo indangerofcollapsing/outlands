@@ -1467,15 +1467,9 @@ namespace Server.Spells
             int finalAdjustedDamage = AOS.Damage(target, caster, damage, 0, 100, 0, 0, 0);
 
             //Display Player Spell Damage
-            if (pm_Caster != null)
-            {
-                if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateMessage)
-                    pm_Caster.SendMessage(pm_Caster.PlayerSpellDamageTextHue, "Your spell hits " + target.Name + " for " + finalAdjustedDamage.ToString() + " damage.");
-
-                if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateOverhead)
-                    target.PrivateOverheadMessage(MessageType.Regular, pm_Caster.PlayerSpellDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), pm_Caster.NetState);
-            }
-
+            if (pm_Caster != null)            
+                DamageTracker.RecordDamage(pm_Caster, pm_Caster, target, DamageTracker.DamageType.SpellDamage, finalAdjustedDamage);                
+            
             //Display Follower Spell Damage
             if (bc_Caster != null)
             {
@@ -1484,14 +1478,8 @@ namespace Server.Spells
                     PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
 
                     if (target.GetDistanceToSqrt(playerOwner) <= 20)
-                    {
-                        if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                            playerOwner.SendMessage(playerOwner.PlayerFollowerDamageTextHue, "Follower: " + bc_Caster.Name + " casts for " + finalAdjustedDamage.ToString() + " spell damage against " + target.Name + ".");
-
-                        if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                            target.PrivateOverheadMessage(MessageType.Regular, playerOwner.PlayerFollowerDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), playerOwner.NetState);
-                    }
-                }
+                        DamageTracker.RecordDamage(playerOwner, bc_Caster, target, DamageTracker.DamageType.FollowerDamage, finalAdjustedDamage);
+                 }
             }
 
             //Provoked Creature Spell Damage
@@ -1501,14 +1489,8 @@ namespace Server.Spells
                 {
                     PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
 
-                    if (target.GetDistanceToSqrt(playerBard) <= 20)
-                    {
-                        if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateMessage)
-                            playerBard.SendMessage(playerBard.PlayerProvocationDamageTextHue, "Provocation: " + bc_Caster.Name + " casts for " + finalAdjustedDamage.ToString() + " spell damage against " + target.Name + ".");
-
-                        if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateOverhead)
-                            target.PrivateOverheadMessage(MessageType.Regular, playerBard.PlayerProvocationDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), playerBard.NetState);
-                    }
+                    if (target.GetDistanceToSqrt(playerBard) <= 20)                    
+                        DamageTracker.RecordDamage(playerBard, bc_Caster, target, DamageTracker.DamageType.ProvocationDamage, finalAdjustedDamage);
                 }
             }  
 
@@ -1617,14 +1599,8 @@ namespace Server.Spells
                     }
 
                     //Display Player Spell Damage
-                    if (pm_Caster != null)
-                    {
-                        if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateMessage)
-                            pm_Caster.SendMessage(pm_Caster.PlayerSpellDamageTextHue, "Your spell hits " + m_Target.Name + " for " + adjustedDamageDisplayed.ToString() + " damage.");
-
-                        if (pm_Caster.m_ShowSpellDamage == DamageDisplayMode.PrivateOverhead)
-                            m_Target.PrivateOverheadMessage(MessageType.Regular, pm_Caster.PlayerSpellDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), pm_Caster.NetState);
-                    }
+                    if (pm_Caster != null)                    
+                        DamageTracker.RecordDamage(pm_Caster, pm_Caster, m_Target, DamageTracker.DamageType.SpellDamage, adjustedDamageDisplayed);
 
                     //Display Follower Spell Damage
                     if (bc_Caster != null)
@@ -1633,14 +1609,8 @@ namespace Server.Spells
                         {
                             PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
 
-                            if (m_Target.GetDistanceToSqrt(playerOwner) <= 20)
-                            {
-                                if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                                    playerOwner.SendMessage(playerOwner.PlayerFollowerDamageTextHue, "Follower: " + bc_Caster.Name + " casts for " + adjustedDamageDisplayed.ToString() + " spell damage against " + m_Target.Name + ".");
-
-                                if (playerOwner.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                                    m_Target.PrivateOverheadMessage(MessageType.Regular, playerOwner.PlayerFollowerDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), playerOwner.NetState);
-                            }
+                            if (m_Target.GetDistanceToSqrt(playerOwner) <= 20)                            
+                                DamageTracker.RecordDamage(playerOwner, bc_Caster, m_Target, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);
                         }
                     }
 
@@ -1651,14 +1621,8 @@ namespace Server.Spells
                         {
                             PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
 
-                            if (m_Target.GetDistanceToSqrt(playerBard) <= 20)
-                            {
-                                if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateMessage)
-                                    playerBard.SendMessage(playerBard.PlayerProvocationDamageTextHue, "Provocation: " + bc_Caster.Name + " casts for " + adjustedDamageDisplayed.ToString() + " spell damage against " + m_Target.Name + ".");
-
-                                if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateOverhead)
-                                    m_Target.PrivateOverheadMessage(MessageType.Regular, playerBard.PlayerProvocationDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), playerBard.NetState);
-                            }
+                            if (m_Target.GetDistanceToSqrt(playerBard) <= 20)                            
+                                DamageTracker.RecordDamage(playerBard, bc_Caster, m_Target, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
                         }
                     }
 

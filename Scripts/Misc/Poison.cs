@@ -184,15 +184,9 @@ namespace Server
                 }
 
                 //Display Player Poison Damage
-                if (pm_From != null && m_From.GetDistanceToSqrt(m_Mobile) <= 20)
-                {
-                    if (pm_From.m_ShowPoisonDamage == DamageDisplayMode.PrivateMessage)
-                        pm_From.SendMessage(pm_From.PlayerPoisonDamageTextHue, "You inflict " + adjustedDamageDisplayed.ToString() + " poison damage on " + m_Mobile.Name + ".");
-
-                    if (pm_From.m_ShowPoisonDamage == DamageDisplayMode.PrivateOverhead)
-                        m_Mobile.PrivateOverheadMessage(MessageType.Regular, pm_From.PlayerPoisonDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), pm_From.NetState);
-                }
-
+                if (pm_From != null && m_From.GetDistanceToSqrt(m_Mobile) <= 20)                
+                    DamageTracker.RecordDamage(pm_From, pm_From, m_Mobile, DamageTracker.DamageType.PoisonDamage, adjustedDamageDisplayed);                    
+                
                 //Display Follower Poison Damage
                 if (bc_From != null && m_From.GetDistanceToSqrt(m_Mobile) <= 20)
                 {
@@ -200,11 +194,7 @@ namespace Server
                     {
                         PlayerMobile playerOwner = bc_From.ControlMaster as PlayerMobile;
 
-                        if (playerOwner.m_ShowPoisonDamage == DamageDisplayMode.PrivateMessage)
-                            playerOwner.SendMessage(playerOwner.PlayerPoisonDamageTextHue, "Follower: " + bc_From.Name + " inflicts " + adjustedDamageDisplayed.ToString() + " poison damage on " + m_Mobile.Name + ".");
-
-                        if (playerOwner.m_ShowPoisonDamage == DamageDisplayMode.PrivateOverhead)
-                            m_Mobile.PrivateOverheadMessage(MessageType.Regular, playerOwner.PlayerPoisonDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), playerOwner.NetState);
+                        DamageTracker.RecordDamage(playerOwner, bc_From, m_Mobile, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);                        
                     }
                 }
 
@@ -215,11 +205,7 @@ namespace Server
                     {
                         PlayerMobile playerBard = bc_From.BardMaster as PlayerMobile;
 
-                        if (playerBard.m_ShowPoisonDamage == DamageDisplayMode.PrivateMessage)
-                            playerBard.SendMessage(playerBard.PlayerPoisonDamageTextHue, "Provocation: " + bc_From.Name + " inflicts " + adjustedDamageDisplayed.ToString() + " poison damage on " + m_Mobile.Name + ".");
-
-                        if (playerBard.m_ShowPoisonDamage == DamageDisplayMode.PrivateOverhead)
-                            m_Mobile.PrivateOverheadMessage(MessageType.Regular, playerBard.PlayerPoisonDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), playerBard.NetState);
+                        DamageTracker.RecordDamage(playerBard, bc_From, m_Mobile, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
                     }
                 }
 

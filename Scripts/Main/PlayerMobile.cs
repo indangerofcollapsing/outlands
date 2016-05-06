@@ -138,9 +138,7 @@ namespace Server.Mobiles
             {
                 player.MoveToWorld(region.EntranceLocation, Map.Felucca);
             }
-        }
-
-        #region Commands
+        }       
 
         public static void Initialize()
         {
@@ -185,6 +183,8 @@ namespace Server.Mobiles
             CommandSystem.Register("Anim", AccessLevel.GameMaster, new CommandEventHandler(Anim));
             CommandSystem.Register("AnimationTest", AccessLevel.GameMaster, new CommandEventHandler(AnimationTest));
         }
+
+        #region Commands
 
         [Usage("ShowMeleeDamage")]
         [Description("Cycles between Display Modes of Player Melee Damage")]
@@ -781,6 +781,9 @@ namespace Server.Mobiles
                     pm_From.Send(SpeedControl.MountSpeed);
             }
 
+            //Damage Tracker
+            pm_From.m_DamageTracker = new DamageTracker(pm_From);
+
             //Faction
             Faction.OnLogin(pm_From);
 
@@ -1003,6 +1006,8 @@ namespace Server.Mobiles
         public DateTime NextEmoteAllowed = DateTime.UtcNow;
         public static TimeSpan EmoteCooldownLong = TimeSpan.FromSeconds(120);
         public static TimeSpan EmoteCooldownShort = TimeSpan.FromSeconds(30);
+
+        public DamageTracker m_DamageTracker = null;
 
         public FactionPlayerProfile m_FactionPlayerProfile = null;
         public EventCalendarAccount m_EventCalendarAccount = null;
@@ -1986,23 +1991,7 @@ namespace Server.Mobiles
                 if (UOACZSystem.IsUndeadUsableItem(this, item))
                     return false;
             }
-
-            if (Core.AOS)
-            {
-                IPooledEnumerable mobiles = Map.GetMobilesInRange(location, 0);
-
-                foreach (Mobile m in mobiles)
-                {
-                    if (m.Z >= location.Z && m.Z < location.Z + 16 && (!m.Hidden || m.AccessLevel == AccessLevel.Player))
-                    {
-                        mobiles.Free();
-                        return false;
-                    }
-                }
-
-                mobiles.Free();
-            }
-
+            
             BounceInfo bi = item.GetBounce();
 
             if (bi != null)
@@ -2433,7 +2422,6 @@ namespace Server.Mobiles
         }
 
         private bool _Sallos;
-
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Sallos
         {
@@ -4911,11 +4899,7 @@ namespace Server.Mobiles
 
             amount = (int)damage;
 
-            if (from != null && m_ShowDamageTaken == DamageDisplayMode.PrivateMessage)
-                SendMessage(PlayerDamageTakenTextHue, from.Name + " attacks you for " + amount.ToString() + " damage.");
-
-            if (m_ShowDamageTaken == DamageDisplayMode.PrivateOverhead)
-                PrivateOverheadMessage(MessageType.Regular, PlayerDamageTakenTextHue, false, "-" + amount.ToString(), NetState);
+            DamageTracker.RecordDamage(this, from, this, DamageTracker.DamageType.DamageTaken, amount);            
 
             base.Damage(amount, from);
         }
@@ -5297,6 +5281,8 @@ namespace Server.Mobiles
                     m_PlayerCombatTimer.Start();
                 }
             }
+
+            m_DamageTracker = new DamageTracker(this);
         }
 
         public static void CheckAtrophies(Mobile m)

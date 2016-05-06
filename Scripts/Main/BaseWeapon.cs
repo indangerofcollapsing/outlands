@@ -1244,15 +1244,8 @@ namespace Server.Items
             }            
 
             //Display Player Melee Damage
-            if (pm_Attacker != null)
-            {
-                if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
-                    pm_Attacker.SendMessage(pm_Attacker.PlayerMeleeDamageTextHue, "You attack " + defender.Name + " for " + adjustedDamageDisplayed.ToString() + " damage.");
-
-                if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
-                    defender.PrivateOverheadMessage(MessageType.Regular, pm_Attacker.PlayerMeleeDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), pm_Attacker.NetState);
-            }
-
+            DamageTracker.RecordDamage(attacker, attacker, defender, DamageTracker.DamageType.MeleeDamage, adjustedDamageDisplayed);
+            
             //Display Follower Melee Damage
             if (bc_Attacker != null)
             {
@@ -1260,28 +1253,16 @@ namespace Server.Items
                 {
                     PlayerMobile pm_Controller = bc_Attacker.SummonMaster as PlayerMobile;
 
-                    if (bc_Attacker.GetDistanceToSqrt(pm_Controller) <= 20)
-                    {
-                        if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                            pm_Controller.SendMessage(pm_Controller.PlayerFollowerDamageTextHue, "Follower: " + bc_Attacker.Name + " attacks " + defender.Name + " for " + adjustedDamageDisplayed.ToString() + " damage.");
-
-                        if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                            defender.PrivateOverheadMessage(MessageType.Regular, pm_Controller.PlayerFollowerDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), pm_Controller.NetState);
-                    }
+                    if (bc_Attacker.GetDistanceToSqrt(pm_Controller) <= 20)                    
+                        DamageTracker.RecordDamage(pm_Controller, attacker, defender, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);     
                 }
 
                 if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile)
                 {
                     PlayerMobile pm_Controller = bc_Attacker.ControlMaster as PlayerMobile;
 
-                    if (bc_Attacker.GetDistanceToSqrt(pm_Controller) <= 20)
-                    {
-                        if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateMessage)
-                            pm_Controller.SendMessage(pm_Controller.PlayerFollowerDamageTextHue, "Follower: " + bc_Attacker.Name + " attacks " + defender.Name + " for " + adjustedDamageDisplayed.ToString() + " damage.");
-
-                        if (pm_Controller.m_ShowFollowerDamage == DamageDisplayMode.PrivateOverhead)
-                            defender.PrivateOverheadMessage(MessageType.Regular, pm_Controller.PlayerFollowerDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), pm_Controller.NetState);
-                    }
+                    if (bc_Attacker.GetDistanceToSqrt(pm_Controller) <= 20)                    
+                        DamageTracker.RecordDamage(pm_Controller, attacker, defender, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed); 
                 }
             }
 
@@ -1292,14 +1273,8 @@ namespace Server.Items
                 {
                     PlayerMobile playerBard = bc_Attacker.BardMaster as PlayerMobile;
 
-                    if (bc_Attacker.GetDistanceToSqrt(playerBard) <= 20)
-                    {
-                        if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateMessage)
-                            playerBard.SendMessage(playerBard.PlayerProvocationDamageTextHue, "Provocation: " + bc_Attacker.Name + " inflicts " + adjustedDamageDisplayed.ToString() + " damage on " + defender.Name + ".");
-
-                        if (playerBard.m_ShowProvocationDamage == DamageDisplayMode.PrivateOverhead)
-                            defender.PrivateOverheadMessage(MessageType.Regular, playerBard.PlayerProvocationDamageTextHue, false, "-" + adjustedDamageDisplayed.ToString(), playerBard.NetState);
-                    }
+                    if (bc_Attacker.GetDistanceToSqrt(playerBard) <= 20)                   
+                        DamageTracker.RecordDamage(playerBard, attacker, defender, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
                 }
             }
 

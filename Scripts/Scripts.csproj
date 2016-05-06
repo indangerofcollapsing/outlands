@@ -581,6 +581,7 @@
     <Compile Include="Items\Weapons\Other\Wooden\ArcanistsWildStaff.cs" />
     <Compile Include="Items\Weapons\Other\Wooden\HardenedWildStaff.cs" />
     <Compile Include="Items\Weapons\Other\Wooden\ThornedWildStaff.cs" />
+    <Compile Include="Main\DamageTracker.cs" />
     <Compile Include="Mobiles\Bosses\Minions\RockGuar.cs" />
     <Compile Include="Mobiles\Tameables\PackAnimal.cs" />
     <Compile Include="Mobiles\Tameables\TropicalBird.cs" />

@@ -5726,23 +5726,11 @@ namespace Server
 
             //TEST: Figure Out How Much Damage Armor is Reducing for Melee Hits
 
-            if (melee)
-            {
-                if (player.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
-                    player.SendMessage(player.PlayerMeleeDamageTextHue, "You attack " + target.Name + " for " + damageAmount.ToString() + " damage.");
+            if (melee)            
+                DamageTracker.RecordDamage(player, player, target, DamageTracker.DamageType.MeleeDamage, damageAmount);            
 
-                if (player.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
-                    target.PrivateOverheadMessage(MessageType.Regular, player.PlayerMeleeDamageTextHue, false, "-" + damageAmount.ToString(), player.NetState);
-            }
-
-            else
-            {
-                if (player.m_ShowSpellDamage == DamageDisplayMode.PrivateMessage)
-                    player.SendMessage(player.PlayerSpellDamageTextHue, "Your attack hits " + target.Name + " for " + damageAmount.ToString() + " damage.");
-
-                if (player.m_ShowSpellDamage == DamageDisplayMode.PrivateOverhead)
-                    target.PrivateOverheadMessage(MessageType.Regular, player.PlayerSpellDamageTextHue, false, "-" + damageAmount.ToString(), player.NetState);
-            }
+            else            
+                DamageTracker.RecordDamage(player, player, target, DamageTracker.DamageType.SpellDamage, damageAmount);            
         }        
 
         public static int GetWindItemId(Direction direction, bool small)

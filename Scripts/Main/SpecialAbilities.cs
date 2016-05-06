@@ -121,14 +121,8 @@ namespace Server.Mobiles
                         if (bc_Owner != null)
                             bc_Owner.DisplayFollowerDamage(mobile, finalAdjustedDamage);
 
-                        if (pm_Owner != null)
-                        {
-                            if (pm_Owner.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
-                                pm_Owner.SendMessage(pm_Owner.PlayerMeleeDamageTextHue, mobile.Name + " bleeds for " + finalAdjustedDamage.ToString() + " damage.");
-
-                            if (pm_Owner.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
-                                mobile.PrivateOverheadMessage(MessageType.Regular, pm_Owner.PlayerMeleeDamageTextHue, false, "-" + finalAdjustedDamage.ToString(), pm_Owner.NetState);
-                        }
+                        if (pm_Owner != null)                        
+                            DamageTracker.RecordDamage(pm_Owner, pm_Owner, mobile, DamageTracker.DamageType.MeleeDamage, finalAdjustedDamage);
                     }
                 }
 
@@ -283,6 +277,8 @@ namespace Server.Mobiles
 
             if (pm_Healer != null)
             {
+                DamageTracker.RecordDamage(pm_Healer, pm_Healer, patient, DamageTracker.DamageType.HealingDealt, amount);
+
                 if (pm_Healer.m_ShowHealing == DamageDisplayMode.PrivateMessage)
                 {
                     if (healer == patient)
@@ -1069,11 +1065,7 @@ namespace Server.Mobiles
                     {
                         attacker.SendMessage("Your target overpowered your entangle effect, and you instead strike a vicious hit against them.");
 
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
-                            pm_Attacker.SendMessage(pm_Attacker.PlayerMeleeDamageTextHue, "Your vicious hit against " + defender.RawName + " deals " + damage.ToString() + " damage.");
-
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
-                            defender.PrivateOverheadMessage(MessageType.Regular, pm_Attacker.PlayerMeleeDamageTextHue, false, "-" + damage.ToString(), pm_Attacker.NetState);
+                        DamageTracker.RecordDamage(attacker, attacker, defender, DamageTracker.DamageType.MeleeDamage, damage);
                     }
 
                     return;
@@ -1213,11 +1205,7 @@ namespace Server.Mobiles
                     {
                         attacker.SendMessage("Your target overpowered your petrify effect, and you instead strike a vicious hit against them.");
 
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateMessage)
-                            pm_Attacker.SendMessage(pm_Attacker.PlayerMeleeDamageTextHue, "Your vicious hit against " + defender.RawName + " deals " + damage.ToString() + " damage.");
-
-                        if (pm_Attacker.m_ShowMeleeDamage == DamageDisplayMode.PrivateOverhead)
-                            defender.PrivateOverheadMessage(MessageType.Regular, pm_Attacker.PlayerMeleeDamageTextHue, false, "-" + damage.ToString(), pm_Attacker.NetState);
+                        DamageTracker.RecordDamage(attacker, attacker, defender, DamageTracker.DamageType.MeleeDamage, damage);
                     }
 
                     return;
