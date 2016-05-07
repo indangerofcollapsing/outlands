@@ -958,11 +958,11 @@ namespace Server.Mobiles
         public DamageDisplayMode m_ShowFollowerDamageTaken = DamageDisplayMode.None;
         public DamageDisplayMode m_ShowHealing = DamageDisplayMode.None;
 
-        public int PlayerMeleeDamageTextHue = 0x022;
-        public int PlayerSpellDamageTextHue = 0x075;
-        public int PlayerFollowerDamageTextHue = 0x59;
-        public int PlayerProvocationDamageTextHue = 0x90;
-        public int PlayerPoisonDamageTextHue = 0x03F;
+        public int PlayerMeleeDamageTextHue = 34;
+        public int PlayerSpellDamageTextHue = 117;
+        public int PlayerFollowerDamageTextHue = 89;
+        public int PlayerProvocationDamageTextHue = 2417;
+        public int PlayerPoisonDamageTextHue = 63;
         public int PlayerDamageTakenTextHue = 0;
         public int PlayerFollowerDamageTakenTextHue = 0;
         public int PlayerHealingTextHue = 2213;
@@ -4902,14 +4902,43 @@ namespace Server.Mobiles
             DamageTracker.RecordDamage(this, from, this, DamageTracker.DamageType.DamageTaken, amount);            
 
             base.Damage(amount, from);
-        }
+        }        
 
         #region Poison
+
+        public int GetPoisonResistance(Mobile from)
+        {
+            int resistanceLevel = 0;
+
+            if (Skills[SkillName.Poisoning].Value >= 50)
+                resistanceLevel = 1;
+
+            if (Skills[SkillName.Poisoning].Value >= 100)
+                resistanceLevel = 2;
+
+            if (from is BaseCreature && Skills[SkillName.Poisoning].Value >= 120)
+                resistanceLevel = 3;
+
+            return resistanceLevel;
+        }
 
         public override ApplyPoisonResult ApplyPoison(Mobile from, Poison poison)
         {
             if (!Alive)
                 return ApplyPoisonResult.Immune;
+
+            int poisonLevel = poison.Level;
+            int poisonResistance = GetPoisonResistance(from);
+
+            poisonLevel -= PoisonResistance;
+
+            if (PoisonResistance > 0)
+                FixedEffect(0x37B9, 10, 5, 2210, 0);
+
+            if (poisonLevel < 0)
+                poisonLevel = 0;
+
+            poison = Poison.GetPoison(poisonLevel);
             
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 

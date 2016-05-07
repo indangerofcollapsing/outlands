@@ -28,8 +28,8 @@ namespace Server.Items
 
             if (player != null)
             {
-                player.CloseGump(typeof(BoatHotbarGump));
-                player.SendGump(new BoatHotbarGump(player));
+                player.CloseGump(typeof(DamageTrackerGump));
+                player.SendGump(new DamageTrackerGump(player));
             }
         }
 

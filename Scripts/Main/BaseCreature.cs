@@ -3131,6 +3131,9 @@ namespace Server.Mobiles
                 return ApplyPoisonResult.Immune;
 
             poisonLevel -= PoisonResistance;
+            
+            if (PoisonResistance > 0)
+                FixedEffect(0x37B9, 10, 5, 2210, 0);
 
             if (poisonLevel < 0)
                 poisonLevel = 0;

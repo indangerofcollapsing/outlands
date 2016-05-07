@@ -2887,69 +2887,65 @@ namespace Server.Items
 
         public bool AttemptWeaponPoison(Mobile attacker, Mobile defender)
         {
+            if (attacker == null || defender == null)
+                return false;
+
+            PlayerMobile pm_Attacker = attacker as PlayerMobile;
+            BaseCreature bc_Attacker = attacker as BaseCreature;
+
+            PlayerMobile pm_Defender = defender as PlayerMobile;
+            BaseCreature bc_Defender = defender as BaseCreature;
+
             if (Poison != null && PoisonCharges > 0)
             {
                 bool canPoison = true;
+                bool ignoreLosingCharge = false;
 
-                // only prevent charge loss on non players
-                if (defender.Poison != null && defender is BaseCreature)
+                int resistLevel = 0;
+
+                if (bc_Defender != null)
+                    resistLevel = bc_Defender.PoisonResistance;
+
+                else if (pm_Defender != null)
+                    resistLevel = pm_Defender.GetPoisonResistance(attacker);              
+
+                if (defender.Poison != null)
                 {
-                    //Target Already Poisoned with Same Level of Poison or Greater
-                    if (defender.Poison.Level >= Poison.Level)
+                    if (defender.Poison.Level >= Poison.Level - resistLevel)
                         canPoison = false;
                 }
 
                 if (canPoison)
                 {
-                    double poisoningSkill = attacker.Skills[SkillName.Poisoning].Value;
+                    double basePoisonChance = 0.25;
 
-                    double baseChance = 0.25;
-                    double bonusChance = (attacker.Skills.Poisoning.Value / 100) * 0.15;
+                    double poisonSkill = attacker.Skills[SkillName.Poisoning].Value;
 
-                    bool ignoreCharge = false;
+                    if (pm_Attacker != null && pm_Defender != null)
+                    {
+                        if (poisonSkill > 100)
+                            poisonSkill = 100;
+                    }
 
-                    double loseChargeChance = 1 - ((poisoningSkill / 100) * .5);
+                    double ignoreLosingChargeChance = (poisonSkill / 100) * .5;
 
-                    if (loseChargeChance < .25)
-                        loseChargeChance = .25;
+                    if (bc_Attacker != null)
+                        ignoreLosingChargeChance = 0;
 
-                    double chance = baseChance + bonusChance;
+                    if (pm_Attacker != null && pm_Defender != null)
+                        ignoreLosingChargeChance *= .5;
 
-                    int effectHue = 0;
+                    if (Utility.RandomDouble() >= ignoreLosingChargeChance)
+                        ignoreLosingCharge = true;
 
-                    if (Utility.RandomDouble() <= chance)
+                    if (Utility.RandomDouble() <= basePoisonChance)
                     {
                         int poisonLevel = Poison.Level;
-
-                        if (defender is BaseCreature)
-                        {
-                            DungeonArmor.PlayerDungeonArmorProfile attackerDungeonArmor = new DungeonArmor.PlayerDungeonArmorProfile(attacker, null);
-
-                            if (attackerDungeonArmor.MatchingSet && !attackerDungeonArmor.InPlayerCombat)
-                            {
-                                if (Utility.RandomDouble() <= attackerDungeonArmor.DungeonArmorDetail.NoPoisonChargeSpentChance)
-                                {
-                                    ignoreCharge = true;
-                                    effectHue = attackerDungeonArmor.DungeonArmorDetail.EffectHue;
-                                }
-                            }
-
-                            if (poisonLevel < 4)
-                            {
-                                double poisonUpgradeChance = (attacker.Skills.Poisoning.Value / 100) * .25;
-                                double upgradeResult = Utility.RandomDouble();
-
-                                if (upgradeResult <= poisonUpgradeChance)
-                                {
-                                    poisonLevel++;
-                                    attacker.SendMessage("Through your knowledge of poisons you improve the quality of your poison dose.");
-                                }
-                            }
-                        }
+                        int effectHue = 0;
 
                         //Player Enhancement Customization: Venomous
                         bool venomous = PlayerEnhancementPersistance.IsCustomizationEntryActive(attacker, CustomizationType.Venomous);
-
+                        
                         if (venomous)
                             CustomizationAbilities.Venomous(defender);
 
@@ -2957,7 +2953,7 @@ namespace Server.Items
 
                         defender.ApplyPoison(attacker, poison);
 
-                        if (!ignoreCharge)
+                        if (!ignoreLosingCharge)
                         {
                             Effects.PlaySound(attacker.Location, attacker.Map, 0x64B);
                             Effects.SendLocationParticles(EffectItem.Create(attacker.Location, attacker.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, effectHue, 0, 5005, 0);
@@ -2968,7 +2964,7 @@ namespace Server.Items
 
                     else
                     {
-                        if (Utility.RandomDouble() <= loseChargeChance && !ignoreCharge)
+                        if (!ignoreLosingCharge)
                             --PoisonCharges;
                     }
 
