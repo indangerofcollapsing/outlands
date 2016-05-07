@@ -2200,7 +2200,7 @@ namespace Server.Items
         {
             int missingDurability = m_MaxHits - m_Hits;
 
-            double penalty = (double)missingDurability * 10;
+            double penalty = ((double)missingDurability / (double)m_MaxHits) * .10;
 
             if (m_MaxHits == 0)
                 penalty = 0;

@@ -474,6 +474,7 @@ namespace Server
                     //Clear Results
                     case 2:
                         m_Player.m_DamageTracker.ClearResults();
+                        m_Player.SendMessage("Damage Tracker results and time elapsed reset.");
 
                         closeGump = false;
                     break;
@@ -481,10 +482,16 @@ namespace Server
                     //Start and Stop
                     case 3:
                         if (m_Player.m_DamageTracker.m_Running)
+                        {
                             m_Player.m_DamageTracker.StopTimer();
+                            m_Player.SendMessage("Damage Tracker paused.");
+                        }
 
                         else
+                        {
                             m_Player.m_DamageTracker.StartTimer();
+                            m_Player.SendMessage("Damage Tracker started.");
+                        }
 
                         closeGump = false;
                     break;
@@ -492,6 +499,14 @@ namespace Server
                     //Auto-Stop                    
                     case 4:
                         m_Player.m_DamageTracker.AutoStopEnabled = !m_Player.m_DamageTracker.AutoStopEnabled;
+
+                        string autoStopTime = Utility.CreateTimeRemainingString(DateTime.UtcNow, DateTime.UtcNow + m_Player.m_DamageTracker.AutoStopDuration, false, false, true, true, true);
+
+                        if (m_Player.m_DamageTracker.AutoStopEnabled)
+                            m_Player.SendMessage("Damage Tracker will now automatically stop after " + autoStopTime + " has elapsed.");
+
+                        else
+                            m_Player.SendMessage("Damage Tracker will now run freely.");
 
                         closeGump = false;
                     break;
@@ -525,7 +540,7 @@ namespace Server
 
                     //Auto-Stop: Remove 1 Minute                   
                     case 8:
-                        if (m_Player.m_DamageTracker.AutoStopDuration.Minutes > 0)
+                        if (m_Player.m_DamageTracker.AutoStopDuration.Minutes > 0 || m_Player.m_DamageTracker.AutoStopDuration.Hours > 0)
                         {
                             m_Player.m_DamageTracker.AutoStopDuration = m_Player.m_DamageTracker.AutoStopDuration - TimeSpan.FromMinutes(1);
 
@@ -545,7 +560,7 @@ namespace Server
 
                     //Auto-Stop: Remove 5 Seconds                   
                     case 10:
-                        if (m_Player.m_DamageTracker.AutoStopDuration.Seconds > 5)
+                        if (m_Player.m_DamageTracker.AutoStopDuration.Seconds > 5 || m_Player.m_DamageTracker.AutoStopDuration.Minutes > 0 || m_Player.m_DamageTracker.AutoStopDuration.Hours > 0)
                         {
                             m_Player.m_DamageTracker.AutoStopDuration = m_Player.m_DamageTracker.AutoStopDuration - TimeSpan.FromSeconds(5);
 
@@ -560,12 +575,24 @@ namespace Server
                     case 20:
                         m_Player.m_DamageTracker.AddMeleeDamageToTotal = !m_Player.m_DamageTracker.AddMeleeDamageToTotal;
 
+                        if (m_Player.m_DamageTracker.AddMeleeDamageToTotal)
+                            m_Player.SendMessage("Your melee damage inflicted will now be added to Total damage.");
+
+                        else
+                            m_Player.SendMessage("Your melee damage inflicted will no longer be added to Total damage.");
+
                         closeGump = false;
                     break;
 
                     //Add to Total: Spell
                     case 21:
                         m_Player.m_DamageTracker.AddSpellDamageToTotal = !m_Player.m_DamageTracker.AddSpellDamageToTotal;
+
+                        if (m_Player.m_DamageTracker.AddSpellDamageToTotal)
+                            m_Player.SendMessage("Your spell damage inflicted will now be added to Total damage.");
+
+                        else
+                            m_Player.SendMessage("Your spell damage inflicted will no longer be added to Total damage.");
 
                         closeGump = false;
                     break;
@@ -574,6 +601,12 @@ namespace Server
                     case 22:
                         m_Player.m_DamageTracker.AddPoisonDamageToTotal = !m_Player.m_DamageTracker.AddPoisonDamageToTotal;
 
+                        if (m_Player.m_DamageTracker.AddPoisonDamageToTotal)
+                            m_Player.SendMessage("Your poison damage inflicted will now be added to Total damage.");
+
+                        else
+                            m_Player.SendMessage("Your poison damage inflicted will no longer be added to Total damage.");
+
                         closeGump = false;
                     break;
 
@@ -581,12 +614,24 @@ namespace Server
                     case 23:
                         m_Player.m_DamageTracker.AddProvocationDamageToTotal = !m_Player.m_DamageTracker.AddProvocationDamageToTotal;
 
+                        if (m_Player.m_DamageTracker.AddPoisonDamageToTotal)
+                            m_Player.SendMessage("Damage caused by your provoked creatures will now be added to Total damage.");
+
+                        else
+                            m_Player.SendMessage("Damaged caused by your provoked creatures will no longer be added to Total damage.");
+
                         closeGump = false;
                     break;
 
                     //Add to Total: Follower
                     case 24:
                         m_Player.m_DamageTracker.AddFollowerDamageToTotal = !m_Player.m_DamageTracker.AddFollowerDamageToTotal;
+
+                        if (m_Player.m_DamageTracker.AddPoisonDamageToTotal)
+                            m_Player.SendMessage("Damage caused by your followers will now be added to Total damage.");
+
+                        else
+                            m_Player.SendMessage("Damage caused by your followers will no longer be added to Total damage.");
 
                         closeGump = false;
                     break;                    

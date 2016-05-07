@@ -167,6 +167,7 @@ namespace Server.Mobiles
             CommandSystem.Register("ShowAdminTextFilter", AccessLevel.Counselor, new CommandEventHandler(ShowAdminTextFilter));
 
             CommandSystem.Register("AutoStealth", AccessLevel.Player, new CommandEventHandler(ToggleAutoStealth));
+            CommandSystem.Register("DamageTracker", AccessLevel.Player, new CommandEventHandler(ShowDamageTracker));
 
             CommandSystem.Register("GetDifficulty", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.GetDifficulty));
             CommandSystem.Register("Provoke", AccessLevel.Counselor, new CommandEventHandler(BaseCreature.AdminProvoke));
@@ -544,12 +545,27 @@ namespace Server.Mobiles
             }
         }
 
+        [Usage("DamageTracker")]
+        [Description("Displays the Damage Tracker")]
+        public static void ShowDamageTracker(CommandEventArgs e)
+        {
+            PlayerMobile player = e.Mobile as PlayerMobile;
+
+            if (player == null)
+                return;
+
+            if (player.m_DamageTracker == null)
+                player.m_DamageTracker = new DamageTracker(player);
+
+            player.CloseGump(typeof(DamageTrackerGump));
+            player.SendGump(new DamageTrackerGump(player));
+        }
 
         [Usage("CreateTestLoadout")]
         [Description("Sets Character Stats, Skills, and Equipment for TESting")]
-        public static void CreateTestLoadout(CommandEventArgs arg)
+        public static void CreateTestLoadout(CommandEventArgs e)
         {
-            PlayerMobile player = arg.Mobile as PlayerMobile;
+            PlayerMobile player = e.Mobile as PlayerMobile;
 
             if (player == null)
                 return;
