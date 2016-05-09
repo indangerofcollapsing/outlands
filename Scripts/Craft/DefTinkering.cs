@@ -159,54 +159,60 @@ namespace Server.Engines.Craft
             int index = -1;
 
             //Utility            
-            AddCraft(1, typeof(Spyglass), "Utility", 1025365, 60.0, 130.0, typeof(IronIngot), 1044036, 4, 1044037);
-
-            index = AddCraft(1, typeof(PotionKeg), "Utility", "Potion Keg", 75.0, 100.0, typeof(Keg), 1044255, 1, 1044253);
-            AddRes(index, typeof(Bottle), 1044250, 10, 1044253);
+            
+            index = AddCraft(1, typeof(PotionKeg), "Utility", "Potion Keg", 75.0, 100.0, typeof(Keg), 1044255, 1, 1044253);            
             AddRes(index, typeof(BarrelLid), 1044251, 1, 1044253);
             AddRes(index, typeof(BarrelTap), 1044252, 1, 1044253);
 
             AddCraft(1, typeof(Sextant), "Utility", "Sextant", 0.0, 0.0, typeof(SextantParts), 1044175, 1, 1044253);
             AddCraft(1, typeof(Key), "Utility", "Key", 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
             AddCraft(1, typeof(KeyRing), "Utility", "Key Ring", 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(RollingPin), "Utility", "Rolling Pin", 0.0, 50.0, typeof(Board), 1044041, 5, 1044351);
+            
             AddCraft(1, typeof(Lantern), "Utility", "Lantern", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
 
             //Tools
             AddCraft(1, typeof(Lockpick), "Tools", "Lockpick", 45.0, 95.0, typeof(IronIngot), 1044036, 1, 1044037);
+            AddCraft(1, typeof(Scissors), "Tools", "Scissors", 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
+
             AddCraft(1, typeof(Shovel), "Tools", "Shovel", 37.5, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(Pickaxe), "Tools", "Pickaxe", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(1, typeof(Hatchet), "Tools", "Hatchet", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
+
+            AddCraft(1, typeof(Tongs), "Tools", "Tongs", 35.0, 85.0, typeof(IronIngot), 1044036, 1, 1044037);
+            AddCraft(1, typeof(SledgeHammer), "Tools", "Sledgehammer", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(1, typeof(SmithHammer), "Tools", "Smith's Hammer", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
+
             AddCraft(1, typeof(MortarPestle), "Tools", "Mortar and Pestle", 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
             AddCraft(1, typeof(TinkerTools), "Tools", "Tinker Tools", 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(1, typeof(SewingKit), "Tools", "Sewing Kit", 10.0, 70.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(Tongs), "Tools", "Tongs", 35.0, 85.0, typeof(IronIngot), 1044036, 1, 1044037);
+            
             AddCraft(1, typeof(Skillet), "Tools", "Skillet", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(1, typeof(RollingPin), "Tools", "Rolling Pin", 0.0, 50.0, typeof(Board), 1044041, 5, 1044351);
+
             AddCraft(1, typeof(MapmakersPen), "Tools", "Mapmaker's Pen", 25.0, 75.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(ScribesPen), "Tools", "Scribe's Pen", 25.0, 75.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(Scissors), "Tools", "Scissors", 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(Scorp), "Tools", "Scorp", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(Hatchet), "Tools", "Hatchet", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(1, typeof(ScribesPen), "Tools", "Scribe's Pen", 25.0, 75.0, typeof(IronIngot), 1044036, 1, 1044037);            
+
+            AddCraft(1, typeof(Scorp), "Tools", "Scorp", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);            
             AddCraft(1, typeof(DrawKnife), "Tools", "Drawing Knife", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(1, typeof(Saw), "Tools", "Saw", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(DovetailSaw), "Tools", "Dovetail Saw", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(Froe), "Tools", "Froe", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(1, typeof(Hammer), "Tools", "Hammer", 30.0, 80.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(SmithHammer), "Tools", "Smith's Hammer", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(SledgeHammer), "Tools", "Sledge Hammer", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(Inshave), "Tools", "Inshave", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
 
             //Parts
+            AddCraft(1, typeof(BarrelTap), "Parts", "Barrel Tap", 35.0, 85.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(BarrelHoops), "Parts", "Barrel Hoops", -15.0, 35.0, typeof(IronIngot), 1044036, 5, 1044037);
+
             AddCraft(1, typeof(JointingPlane), "Parts", "Jointing Plane", 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);
             AddCraft(1, typeof(MouldingPlane), "Parts", "Moulding Plane", 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);
             AddCraft(1, typeof(SmoothingPlane), "Parts", "Smoothing Plane", 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);
             AddCraft(1, typeof(ClockFrame), "Parts", "Clock Frame", 0.0, 50.0, typeof(Board), 1044041, 6, 1044351);
             AddCraft(1, typeof(Axle), "Parts", "Axle", -25.0, 25.0, typeof(Board), 1044041, 2, 1044351);
             AddCraft(1, typeof(Gears), "Parts", "Gears", 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(ClockParts), "Parts", "Clock Parts", 25.0, 75.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(BarrelTap), "Parts", "Barrel Tap", 35.0, 85.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(ClockParts), "Parts", "Clock Parts", 25.0, 75.0, typeof(IronIngot), 1044036, 1, 1044037);            
             AddCraft(1, typeof(Springs), "Parts", "Springs", 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(SextantParts), "Parts", "Sextant Parts", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(BarrelHoops), "Parts", "Barrel Hoops", -15.0, 35.0, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(SextantParts), "Parts", "Sextant Parts", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);            
             AddCraft(1, typeof(Hinge), "Parts", "Hinge", 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(1, typeof(Nails), "Parts", "Nails", 0.0, 25.0, typeof(IronIngot), 1044036, 2, 1044037);
 
@@ -220,16 +226,16 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Hinge), 1044172, 1, 1044253);
 
             //Decorative
-            index = AddCraft(1, typeof(ClockRight), "Decorative", "Clock Right", 0.0, 0.0, typeof(ClockFrame), 1044174, 1, 1044253);
-            AddRes(index, typeof(ClockParts), 1044173, 1, 1044253);
-
-            index = AddCraft(1, typeof(ClockLeft), "Decorative", "Clock Left", 0.0, 0.0, typeof(ClockFrame), 1044174, 1, 1044253);
-            AddRes(index, typeof(ClockParts), 1044173, 1, 1044253);
-
             AddCraft(1, typeof(Candelabra), "Decorative", "Candelabra", 55.0, 105.0, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(1, typeof(HeatingStand), "Decorative", "Heating Stand", 60.0, 130.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(Scales), "Decorative", "Scales", 60.0, 130.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(1, typeof(Globe), "Decorative", "Globe", 55.0, 105.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(HeatingStand), "Decorative", "Heating Stand", 60.0, 130.0, typeof(IronIngot), 1044036, 4, 1044037);
+
+            index = AddCraft(1, typeof(ClockRight), "Decorative", "Clock", 0.0, 0.0, typeof(ClockFrame), 1044174, 1, 1044253);
+            AddRes(index, typeof(ClockParts), 1044173, 1, 1044253);
+
+            index = AddCraft(1, typeof(ClockLeft), "Decorative", "Clock", 0.0, 0.0, typeof(ClockFrame), 1044174, 1, 1044253);
+            AddRes(index, typeof(ClockParts), 1044173, 1, 1044253);           
 
             //Utensils
             AddCraft(1, typeof(ButcherKnife), "Utensils", "Butcher Knife", 25.0, 75.0, typeof(IronIngot), 1044036, 2, 1044037);
@@ -258,13 +264,13 @@ namespace Server.Engines.Craft
 
             // Traps
             index = AddCraft(1, typeof(DartTrapCraft), "Traps and Bombs", "Dart Trap", 30.0, 80.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddRes(index, typeof(Bolt), 1044570, 1, 1044253);
+            AddRes(index, typeof(Bolt), "Bolt", 1, 1044253);
 
             index = AddCraft(1, typeof(PoisonTrapCraft), "Traps and Bombs", "Poison Trap", 30.0, 80.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddRes(index, typeof(BasePoisonPotion), 1044571, 1, 1044253);
+            AddRes(index, typeof(BasePoisonPotion), "Poison Potion", 1, 1044253);
 
             index = AddCraft(1, typeof(ExplosionTrapCraft), "Traps and Bombs", "Explosion Trap", 55.0, 105.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddRes(index, typeof(BaseExplosionPotion), 1044569, 1, 1044253);
+            AddRes(index, typeof(BaseExplosionPotion), "Explosion Potion", 1, 1044253);
 
             // Set the overridable material
             SetSubRes(typeof(IronIngot), "Iron");
@@ -296,8 +302,7 @@ namespace Server.Engines.Craft
 
         public abstract TrapType TrapType { get; }
 
-        public TrapCraft(Mobile from, CraftItem craftItem, CraftSystem craftSystem, Type typeRes, BaseTool tool, int quality)
-            : base(from, craftItem, craftSystem, typeRes, tool, quality)
+        public TrapCraft(Mobile from, CraftItem craftItem, CraftSystem craftSystem, Type typeRes, BaseTool tool, int quality): base(from, craftItem, craftSystem, typeRes, tool, quality)
         {
         }
 

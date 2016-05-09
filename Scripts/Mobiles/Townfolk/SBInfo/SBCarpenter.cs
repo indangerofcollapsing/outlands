@@ -76,7 +76,7 @@ namespace Server.Mobiles
 				Add( typeof( FootStool ), 6 );
 
 				Add( typeof( FancyWoodenChairCushion ), 12 );
-				Add( typeof( WoodenChairCushion ), 10 );
+				Add( typeof( CushionedWoodenChair ), 10 );
 				Add( typeof( WoodenChair ), 8 );
 				Add( typeof( BambooChair ), 6 );
 				Add( typeof( WoodenBench ), 6 );

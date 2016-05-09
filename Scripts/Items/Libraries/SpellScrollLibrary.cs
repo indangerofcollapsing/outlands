@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Server.Multis;
 using Server.Accounting;
 using Server.Gumps;
+using Server.Spells;
 
 namespace Server.Items
 {
@@ -106,93 +107,7 @@ namespace Server.Items
             typeof(SummonWaterElementalScroll),
 
             #endregion
-        };
-
-        public static string GetSpellName(Type type)
-        {
-            string name = "";
-
-            #region Spells
-
-            switch (type.Name)
-            {             
-                case "ClumsyScroll": name = "Clumsy"; break;
-                case "CreateFoodScroll": name = "Create Food"; break;
-                case "FeeblemindScroll": name = "Feeblemind"; break;
-                case "HealScroll": name = "Heal"; break;
-                case "MagicArrowScroll": name = "Magic Arrow"; break;
-                case "NightSightScroll": name = "Night Sight"; break;
-                case "ReactiveArmorScroll": name = "Reactive Armor"; break;
-                case "WeakenScroll": name = "Weaken"; break;
-
-                case "AgilityScroll": name = "Agility"; break;
-                case "CunningScroll": name = "Cunning"; break;
-                case "CureScroll": name = "Cure"; break;
-                case "HarmScroll": name = "Harm"; break;
-                case "MagicTrapScroll": name = "Magic Trap"; break;
-                case "ProtectionScroll": name = "Protection"; break;
-                case "MagicUnTrapScroll": name = "Unlock"; break;
-                case "StrengthScroll": name = "Strength"; break;
-
-                case "BlessScroll": name = "Bless"; break;
-                case "FireballScroll": name = "Fireball"; break;
-                case "MagicLockScroll": name = "Magic Lock"; break;
-                case "PoisonScroll": name = "Poison"; break;
-                case "TelekinisisScroll": name = "Telekinisis"; break;
-                case "TeleportScroll": name = "Teleport"; break;
-                case "UnlockScroll": name = "Unlock"; break;
-                case "WallOfStoneScroll": name = "Wall of Stone"; break;
-
-                case "ArchCureScroll": name = "Arch Cure"; break;
-                case "ArchProtectionScroll": name = "Arch Protection"; break;
-                case "CurseScroll": name = "Curse"; break;
-                case "FireFieldScroll": name = "Fire Field"; break;
-                case "GreaterHealScroll": name = "Greater Heal"; break;
-                case "LightningScroll": name = "Lightning"; break;
-                case "ManaDrainScroll": name = "Mana Drain"; break;
-                case "RecallScroll": name = "Recall"; break;
-
-                case "BladeSpiritsScroll": name = "Blade Spirits"; break;
-                case "DispelFieldScroll": name = "Dispel Field"; break;
-                case "IncognitoScroll": name = "Incognito"; break;
-                case "MagicReflectScroll": name = "Magic Reflect"; break;
-                case "MindBlastScroll": name = "Mind Blast"; break;
-                case "ParalyzeScroll": name = "Paralyze"; break;
-                case "PoisonFieldScroll": name = "Poison Field"; break;
-                case "SummonCreatureScroll": name = "Summon Creature"; break;
-
-                case "DispelScroll": name = "Blade Spirits"; break;
-                case "EnergyBoltScroll": name = "Energy Bolt"; break;
-                case "ExplosionScroll": name = "Explosion"; break;
-                case "InvisibilityScroll": name = "Invisibility"; break;
-                case "MarkScroll": name = "Mark"; break;
-                case "MassCurseScroll": name = "Mass Curse"; break;
-                case "ParalyzeFieldScroll": name = "Paralyze Field"; break;
-                case "RevealScroll": name = "Reveal"; break;
-
-                case "ChainLightningScroll": name = "Chain Lightning"; break;
-                case "EnergyFieldScroll": name = "Energy Field"; break;
-                case "FlamestrikeScroll": name = "Flamestrike"; break;
-                case "GateTravelScroll": name = "Gate Travel"; break;
-                case "ManaVampireScroll": name = "Mana Vampire"; break;
-                case "MassDispelScroll": name = "Mass Dispel"; break;
-                case "MeteorSwarmScroll": name = "Meteor Swarm"; break;
-                case "PolymorphScroll": name = "Polymorph"; break;
-
-                case "SummonAirElementalScroll": name = "Air Elemental"; break;
-                case "SummonEarthElementalScroll": name = "Earth Elemental"; break;
-                case "EarthquakeScroll": name = "Earthquake"; break;
-                case "EnergyVortexScroll": name = "Energy Vortex"; break;
-                case "SummonFireElementalScroll": name = "Fire Elemental"; break;
-                case "ResurrectionScroll": name = "Resurrection"; break;
-                case "SummonDaemonScroll": name = "Daemon"; break;
-                case "SummonWaterElementalScroll": name = "Water Elemental"; break;
-            }
-
-            #endregion
-
-            return name;
-        }
+        };        
 
         private LockedDownAccessLevelType m_LockedDownAccessLevel = LockedDownAccessLevelType.Owner;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -682,7 +597,7 @@ namespace Server.Items
                     //Left Side
                     if (entryCount < EntriesPerSide)
                     {
-                        AddLabel(60, leftStartY, 2560, SpellScrollLibrary.GetSpellName(entry.SpellType));
+                        AddLabel(60, leftStartY, 2560, MagerySpell.GetSpellName(entry.SpellType));
                         AddButton(231, leftStartY + 3, 2118, 2118, 10 + entryCount, GumpButtonType.Reply, 0);
                         AddLabel(249, leftStartY, WhiteTextHue, entry.Count.ToString());
 
@@ -692,7 +607,7 @@ namespace Server.Items
                     //Right Side
                     else
                     {
-                        AddLabel(317, rightStartY, 2560, SpellScrollLibrary.GetSpellName(entry.SpellType));
+                        AddLabel(317, rightStartY, 2560, MagerySpell.GetSpellName(entry.SpellType));
                         AddButton(488, rightStartY + 3, 2118, 2118, 10 + entryCount, GumpButtonType.Reply, 0);
                         AddLabel(506, rightStartY, WhiteTextHue, entry.Count.ToString());
 

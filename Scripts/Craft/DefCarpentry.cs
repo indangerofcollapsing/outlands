@@ -186,17 +186,15 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(FootStool), "Furniture", "Foot Stool", 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
             AddCraft(1, typeof(Stool), "Furniture", "Stool", 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
             AddCraft(1, typeof(BambooChair), "Furniture", "Bamboo Chair", 21.0, 46.0, typeof(Board), 1044041, 13, 1044351);
-            AddCraft(1, typeof(WoodenChair), "Furniture", "Wooden Chair", 21.0, 46.0, typeof(Board), 1044041, 13, 1044351);
-            AddCraft(1, typeof(FancyWoodenChairCushion), "Furniture", "Fancy Wooden Chair Cushion", 42.1, 67.1, typeof(Board), 1044041, 15, 1044351);
-            AddCraft(1, typeof(WoodenChairCushion), "Furniture", "Wooden Chair Cushion", 42.1, 67.1, typeof(Board), 1044041, 13, 1044351);
+            AddCraft(1, typeof(WoodenChair), "Furniture", "Wooden Chair", 21.0, 46.0, typeof(Board), 1044041, 13, 1044351);            
             AddCraft(1, typeof(WoodenBench), "Furniture", "Wooden Bench", 52.6, 77.6, typeof(Board), 1044041, 17, 1044351);
-            AddCraft(1, typeof(WoodenThrone), "Furniture", "Wooden Throne", 52.6, 77.6, typeof(Board), 1044041, 17, 1044351);
-            AddCraft(1, typeof(Throne), "Furniture", "Throne", 73.6, 98.6, typeof(Board), 1044041, 19, 1044351);
-
             AddCraft(1, typeof(Nightstand), "Furniture", "Nightstand", 42.1, 67.1, typeof(Board), 1044041, 17, 1044351);
-            AddCraft(1, typeof(WritingTable), "Furniture", "Writing Table", 63.1, 88.1, typeof(Board), 1044041, 17, 1044351);
+            AddCraft(1, typeof(WoodenThrone), "Furniture", "Wooden Throne", 52.6, 77.6, typeof(Board), 1044041, 17, 1044351);
             AddCraft(1, typeof(YewWoodTable), "Furniture", "Yew Wood Table", 63.1, 88.1, typeof(Board), 1044041, 23, 1044351);
             AddCraft(1, typeof(LargeTable), "Furniture", "Large Table", 84.2, 109.2, typeof(Board), 1044041, 27, 1044351);
+            AddCraft(1, typeof(CushionedWoodenChair), "Furniture", "Cushioned Wooden Chair", 42.1, 67.1, typeof(Board), 1044041, 13, 1044351);
+            AddCraft(1, typeof(Throne), "Furniture", "Throne", 73.6, 98.6, typeof(Board), 1044041, 19, 1044351);
+            AddCraft(1, typeof(WritingTable), "Furniture", "Writing Table", 63.1, 88.1, typeof(Board), 1044041, 17, 1044351);
 
             //Containers
             index = AddCraft(1, typeof(Keg), "Containers", "Keg", 57.8, 82.8, typeof(BarrelStaves), 1044288, 3, 1044253);
@@ -211,6 +209,12 @@ namespace Server.Engines.Craft
             AddCraft(1, typeof(EmptyBookcase), "Containers", "Empty Bookcase", 31.5, 56.5, typeof(Board), 1044041, 25, 1044351);
             AddCraft(1, typeof(Armoire), "Containers", "Armoire", 84.2, 109.2, typeof(Board), 1044041, 35, 1044351);
             AddCraft(1, typeof(FancyArmoire), "Containers", "Fancy Armoire", 84.2, 109.2, typeof(Board), 1044041, 35, 1044351);
+
+            AddCraft(1, typeof(BarrelStaves), "Misc", "Barrel Staves", 00.0, 25.0, typeof(Board), 1044041, 5, 1044351);
+            AddCraft(1, typeof(BarrelLid), "Misc", "Barrel Lid", 11.0, 36.0, typeof(Board), 1044041, 4, 1044351);
+            AddCraft(1, typeof(ShortMusicStand), "Misc", "Short Music Stand", 78.9, 103.9, typeof(Board), 1044041, 15, 1044351);
+            AddCraft(1, typeof(TallMusicStand), "Misc", "Tall Music Stand", 81.5, 106.5, typeof(Board), 1044041, 20, 1044351);
+            AddCraft(1, typeof(Easle), "Misc", "Easle", 86.8, 111.8, typeof(Board), 1044041, 20, 1044351);
 
             //Add-Ons
             AddCraft(1, typeof(DartBoardSouthDeed), "Add-Ons", "Dartboard South Deed", 15.7, 40.7, typeof(Board), 1044041, 5, 1044351);
@@ -400,12 +404,6 @@ namespace Server.Engines.Craft
             index = AddCraft(1, typeof(CampingFirepit), "Misc", "Camping Firepit", 80.0, 120, typeof(Board), 1044041, 50, 1044351);
             AddRes(index, typeof(IronIngot), "Iron Ingot", 25, 1044037);
             AddRes(index, typeof(TrollFat), "Troll Fat", 1, "You do not have the neccesary crafting component needed to make this");
-
-            AddCraft(1, typeof(BarrelStaves), "Misc", "Barrel Staves", 00.0, 25.0, typeof(Board), 1044041, 5, 1044351);
-            AddCraft(1, typeof(BarrelLid), "Misc", "Barrel Lid", 11.0, 36.0, typeof(Board), 1044041, 4, 1044351);
-            AddCraft(1, typeof(ShortMusicStand), "Misc", "Short Music Stand", 78.9, 103.9, typeof(Board), 1044041, 15, 1044351);
-            AddCraft(1, typeof(TallMusicStand), "Misc", "Tall Music Stand", 81.5, 106.5, typeof(Board), 1044041, 20, 1044351);
-            AddCraft(1, typeof(Easle), "Misc", "Easle", 86.8, 111.8, typeof(Board), 1044041, 20, 1044351);
 
             //Hue Plating
             /*

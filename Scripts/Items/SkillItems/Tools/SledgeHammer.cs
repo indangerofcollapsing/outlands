@@ -12,6 +12,7 @@ namespace Server.Items
 		[Constructable]
 		public SledgeHammer() : base( 0xFB5 )
 		{
+            Name = "sledgehammer";
 			Layer = Layer.OneHanded;
 		}
 

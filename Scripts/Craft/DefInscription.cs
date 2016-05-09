@@ -198,17 +198,18 @@ namespace Server.Engines.Craft
         {
             double minSkill, maxSkill;
 
-            switch (m_Circle)
+            switch (m_Circle + 1)
             {
                 default:
-                case 0: minSkill = -25.0; maxSkill = 25.0; break;
-                case 1: minSkill = -10.8; maxSkill = 39.2; break;
-                case 2: minSkill = 03.5; maxSkill = 53.5; break;
-                case 3: minSkill = 17.8; maxSkill = 67.8; break;
-                case 4: minSkill = 32.1; maxSkill = 82.1; break;
-                case 5: minSkill = 46.4; maxSkill = 96.4; break;
-                case 6: minSkill = 60.7; maxSkill = 110.7; break;
-                case 7: minSkill = 75.0; maxSkill = 125.0; break;
+
+                case 1: minSkill = -10.0; maxSkill = 15; break;
+                case 2: minSkill = 5; maxSkill = 30; break;
+                case 3: minSkill = 20; maxSkill = 45; break;
+                case 4: minSkill = 35; maxSkill = 60; break;
+                case 5: minSkill = 50; maxSkill = 75; break;
+                case 6: minSkill = 65; maxSkill = 90; break;
+                case 7: minSkill = 80; maxSkill = 105; break;
+                case 8: minSkill = 95; maxSkill = 120; break;
             }
 
             string groupName = "Circle 1-6 Spells";
@@ -216,18 +217,18 @@ namespace Server.Engines.Craft
             if (m_Circle >= 6)
                 groupName = "Circle 7-8 Spells";
 
-            int index = AddCraft(1,type, groupName, 1044381 + m_Index++, minSkill, maxSkill, m_RegTypes[(int)regs[0]], 1044353 + (int)regs[0], 1, 1044361 + (int)regs[0]);
+            string spellName = MagerySpell.GetSpellName(type) + " Scroll";
 
-            double ChanceOffset = 20.0, ChanceLength = 100.0 / 7.5;
+            int index = AddCraft(1, type, groupName, spellName, minSkill, maxSkill, m_RegTypes[(int)regs[0]], 1044353 + (int)regs[0], 1, 1044361 + (int)regs[0]);
 
-            double minimumMagery = (m_Circle + 1) * ChanceLength - ChanceOffset;
+            double minimumMagery = MagerySpell.GetCastMinSkills(m_Circle, false);
 
             AddSkill(index, SkillName.Magery, minimumMagery, minimumMagery);
 
             for (int i = 1; i < regs.Length; ++i)
                 AddRes(index, m_RegTypes[(int)regs[i]], 1044353 + (int)regs[i], 1, 1044361 + (int)regs[i]);
 
-            AddRes(index, typeof(BlankScroll), 1044377, 1, 1044378);
+            AddRes(index, typeof(BlankScroll), "Blank Scroll", 1, 1044378);
 
             SetManaReq(index, m_Mana);
         }
@@ -257,15 +258,16 @@ namespace Server.Engines.Craft
             m_Mana = 2;
 
             //Utility
-            index = AddCraft(1, typeof(Spellbook), "Utility", "Spellbook", 25.0, 50.0, typeof(BlankScroll), 1044377, 2, 1044378);
+            index = AddCraft(1, typeof(Spellbook), "Utility", "Spellbook", 25.0, 50.0, typeof(BlankScroll), "Blank Scroll", 2, 1044378);
             ForceNonExceptional(index);
 
-            index = AddCraft(1, typeof(Runebook), "Utility", "Runebook", 45.0, 95.0, typeof(BlankScroll), 1044377, 8, 1044378);
+            index = AddCraft(1, typeof(Runebook), "Utility", "Runebook", 45.0, 95.0, typeof(BlankScroll), "Blank Scroll", 8, 1044378);
             AddRes(index, typeof(RecallScroll), 1044445, 1, 1044253);
             AddRes(index, typeof(ResurrectionScroll), 1044439, 1, 1044253);
-            AddCraft(1, typeof(Engines.BulkOrders.BulkOrderBook), 1044294, 1028793, 65.0, 115.0, typeof(BlankScroll), 1044377, 10, 1044378);
+            
+            AddCraft(1, typeof(Engines.BulkOrders.BulkOrderBook), "Bulk Order", "Bulk Order Book", 65.0, 115.0, typeof(BlankScroll), "Blank Scroll", 10, 1044378);
 
-            index = AddCraft(1, typeof(AncientMystery.AncientMysteryScroll), "Utility", "Ancient Mystery Scroll", 80.0, 120.0, typeof(BlankScroll), 1044377, 25, 1044378);
+            index = AddCraft(1, typeof(AncientMystery.AncientMysteryScroll), "Utility", "Ancient Mystery Scroll", 80.0, 120.0, typeof(BlankScroll), "Blank Scroll", 25, 1044378);
             AddRes(index, typeof(GhoulHide), "Ghoul Hide", 2, "You do not have the neccesary crafting component needed to make this");
 
             //Circle 1-6 Spells
