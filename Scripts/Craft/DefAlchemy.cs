@@ -102,77 +102,80 @@ namespace Server.Engines.Craft
             int index = -1;
 
             //Heal
-            index = AddCraft(1, typeof(LesserHealPotion), "Heal Potions", "Lesser Heal Potion", 10.0, 60.0, typeof(Ginseng), 1044356, 2, 1044364);
+            index = AddCraft(1, typeof(LesserHealPotion), "Heal Potions", "Lesser Heal Potion", 15, 40, typeof(Ginseng), 1044356, 2, 1044364);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(HealPotion), "Heal Potions", "Heal Potion", 30.0, 80.0, typeof(Ginseng), 1044356, 4, 1044364);
+            index = AddCraft(1, typeof(HealPotion), "Heal Potions", "Heal Potion", 40, 65, typeof(Ginseng), 1044356, 4, 1044364);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(GreaterHealPotion), "Heal Potions", "Greater Heal Potion", 50.0, 100.0, typeof(Ginseng), 1044356, 6, 1044364);
+            index = AddCraft(1, typeof(GreaterHealPotion), "Heal Potions", "Greater Heal Potion", 65, 90, typeof(Ginseng), 1044356, 6, 1044364);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Cure Potion
-            index = AddCraft(1, typeof(LesserCurePotion), "Cure Potions", "Lesser Cure Potion", -10.0, 40.0, typeof(Garlic), 1044355, 2, 1044363);
+            index = AddCraft(1, typeof(LesserCurePotion), "Cure Potions", "Lesser Cure Potion", 15, 40, typeof(Garlic), 1044355, 2, 1044363);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(CurePotion), "Cure Potions", "Cure Potion", 10.0, 60.0, typeof(Garlic), 1044355, 4, 1044363);
+            index = AddCraft(1, typeof(CurePotion), "Cure Potions", "Cure Potion", 40, 65, typeof(Garlic), 1044355, 4, 1044363);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(GreaterCurePotion), "Cure Potions", "Greater Cure Potion", 30.0, 80.0, typeof(Garlic), 1044355, 6, 1044363);
+            index = AddCraft(1, typeof(GreaterCurePotion), "Cure Potions", "Greater Cure Potion", 65, 90, typeof(Garlic), 1044355, 6, 1044363);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Refresh Potion
-            index = AddCraft(1, typeof(RefreshPotion), "Refresh Potions", "Refresh Potion", -10, 40.0, typeof(BlackPearl), 1044353, 2, 1044361);
+            index = AddCraft(1, typeof(RefreshPotion), "Refresh Potions", "Refresh Potion", 0, 25, typeof(BlackPearl), 1044353, 2, 1044361);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(TotalRefreshPotion), "Refresh Potions", "Total Refresh Potion", 10.0, 60.0, typeof(BlackPearl), 1044353, 4, 1044361);
+            index = AddCraft(1, typeof(TotalRefreshPotion), "Refresh Potions", "Total Refresh Potion", 20, 45, typeof(BlackPearl), 1044353, 4, 1044361);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Strength Potion
-            index = AddCraft(1, typeof(StrengthPotion), "Strength Potions", "Strength Potion", 10.0, 60.0, typeof(MandrakeRoot), 1044357, 3, 1044365);
+            index = AddCraft(1, typeof(StrengthPotion), "Strength Potions", "Strength Potion", 40, 65, typeof(MandrakeRoot), 1044357, 3, 1044365);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(GreaterStrengthPotion), "Strength Potions", "Greater Strength Potion", 30.0, 80.0, typeof(MandrakeRoot), 1044357, 6, 1044365);
+            index = AddCraft(1, typeof(GreaterStrengthPotion), "Strength Potions", "Greater Strength Potion", 65, 90, typeof(MandrakeRoot), 1044357, 6, 1044365);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Agility Potion
-            index = AddCraft(1, typeof(AgilityPotion), "Agility Potions", "Agility Potion", 10.0, 60.0, typeof(Bloodmoss), 1044354, 3, 1044362);
+            index = AddCraft(1, typeof(AgilityPotion), "Agility Potions", "Agility Potion", 40, 65, typeof(Bloodmoss), 1044354, 3, 1044362);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(GreaterAgilityPotion), "Agility Potions", "Greater Agility Potion", 30.0, 80.0, typeof(Bloodmoss), 1044354, 6, 1044362);
+            index = AddCraft(1, typeof(GreaterAgilityPotion), "Agility Potions", "Greater Agility Potion", 65, 90, typeof(Bloodmoss), 1044354, 6, 1044362);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Magic Resist Potion
-            index = AddCraft(1, typeof(LesserMagicResistPotion), "Magic Resist Potions", "Lesser Magic Resist Potion", 30.0, 80.0, typeof(SpidersSilk), 1044360, 3, 1044368);
+            index = AddCraft(1, typeof(LesserMagicResistPotion), "Magic Resist Potions", "Lesser Magic Resist Potion", 50, 75, typeof(SpidersSilk), 1044360, 3, 1044368);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(MagicResistPotion), "Magic Resist Potions", "Magic Resist Potion", 50.0, 100.0, typeof(SpidersSilk), 1044360, 6, 1044368);
+            index = AddCraft(1, typeof(MagicResistPotion), "Magic Resist Potions", "Magic Resist Potion", 70, 95, typeof(SpidersSilk), 1044360, 6, 1044368);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(GreaterMagicResistPotion), "Magic Resist Potions", "Greater Magic Resist Potion", 70.0, 120.0, typeof(SpidersSilk), 1044360, 9, 1044368);
+            index = AddCraft(1, typeof(GreaterMagicResistPotion), "Magic Resist Potions", "Greater Magic Resist Potion", 90, 115, typeof(SpidersSilk), 1044360, 9, 1044368);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Poison Potion
-            index = AddCraft(1, typeof(LesserPoisonPotion), "Poison Potions", "Lesser Poison Potion", 10.0, 60.0, typeof(Nightshade), 1044358, 2, 1044366);
+            index = AddCraft(1, typeof(LesserPoisonPotion), "Poison Potions", "Lesser Poison Potion", 30, 55, typeof(Nightshade), 1044358, 3, 1044366);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(PoisonPotion), "Poison Potions", "Poison Potion", 30.0, 80.0, typeof(Nightshade), 1044358, 4, 1044366);
+            index = AddCraft(1, typeof(PoisonPotion), "Poison Potions", "Poison Potion", 50, 75, typeof(Nightshade), 1044358, 6, 1044366);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(GreaterPoisonPotion), "Poison Potions", "Greater Poison Potion", 50.0, 100.0, typeof(Nightshade), 1044358, 6, 1044366);
+            index = AddCraft(1, typeof(GreaterPoisonPotion), "Poison Potions", "Greater Poison Potion", 70, 95, typeof(Nightshade), 1044358, 9, 1044366);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(DeadlyPoisonPotion), "Poison Potions", "Deadly Poison Potion", 70.0, 120.0, typeof(Nightshade), 1044358, 8, 1044366);
+            index = AddCraft(1, typeof(DeadlyPoisonPotion), "Poison Potions", "Deadly Poison Potion", 90, 115, typeof(Nightshade), 1044358, 12, 1044366);
+            AddRes(index, typeof(Bottle), 1044529, 1, 500315);
+
+            index = AddCraft(1, typeof(LethalPoisonPotion), "Poison Potions", "Lethal Poison Potion", 110, 135, typeof(Nightshade), 1044358, 15, 1044366);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
             //Explosion Potion
-            index = AddCraft(1, typeof(LesserExplosionPotion), "Explosion Potions", "Lesser Explosion Potion", 10.0, 60.0, typeof(SulfurousAsh), 1044359, 3, 1044367);
+            index = AddCraft(1, typeof(LesserExplosionPotion), "Explosion Potions", "Lesser Explosion Potion", 25, 50, typeof(SulfurousAsh), 1044359, 3, 1044367);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(ExplosionPotion), "Explosion Potions", "Explosion Potion", 30.0, 80.0, typeof(SulfurousAsh), 1044359, 6, 1044367);
+            index = AddCraft(1, typeof(ExplosionPotion), "Explosion Potions", "Explosion Potion", 50, 75, typeof(SulfurousAsh), 1044359, 6, 1044367);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
 
-            index = AddCraft(1, typeof(GreaterExplosionPotion), "Explosion Potions", "Greater Explosion Potion", 50.0, 100.0, typeof(SulfurousAsh), 1044359, 9, 1044367);
+            index = AddCraft(1, typeof(GreaterExplosionPotion), "Explosion Potions", "Greater Explosion Potion", 75, 100, typeof(SulfurousAsh), 1044359, 9, 1044367);
             AddRes(index, typeof(Bottle), 1044529, 1, 500315);
         }
     }

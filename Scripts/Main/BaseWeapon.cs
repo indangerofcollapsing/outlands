@@ -2899,7 +2899,7 @@ namespace Server.Items
             if (Poison != null && PoisonCharges > 0)
             {
                 bool canPoison = true;
-                bool ignoreLosingCharge = false;
+                bool losePoisonCharge = true;
 
                 int resistLevel = 0;
 
@@ -2915,29 +2915,22 @@ namespace Server.Items
                         canPoison = false;
                 }
 
+                double basePoisonChance = 0.25;
+
+                double poisonSkill = attacker.Skills[SkillName.Poisoning].Value;                
+                double ignoreLosingChargeChance = (poisonSkill / 100) * .5;
+
+                if (bc_Attacker != null)
+                    ignoreLosingChargeChance = 0;
+
+                if (pm_Attacker != null && pm_Defender != null)
+                    ignoreLosingChargeChance *= .5;
+
+                if (Utility.RandomDouble() <= ignoreLosingChargeChance)
+                    losePoisonCharge = false;
+
                 if (canPoison)
                 {
-                    double basePoisonChance = 0.25;
-
-                    double poisonSkill = attacker.Skills[SkillName.Poisoning].Value;
-
-                    if (pm_Attacker != null && pm_Defender != null)
-                    {
-                        if (poisonSkill > 100)
-                            poisonSkill = 100;
-                    }
-
-                    double ignoreLosingChargeChance = (poisonSkill / 100) * .5;
-
-                    if (bc_Attacker != null)
-                        ignoreLosingChargeChance = 0;
-
-                    if (pm_Attacker != null && pm_Defender != null)
-                        ignoreLosingChargeChance *= .5;
-
-                    if (Utility.RandomDouble() >= ignoreLosingChargeChance)
-                        ignoreLosingCharge = true;
-
                     if (Utility.RandomDouble() <= basePoisonChance)
                     {
                         int poisonLevel = Poison.Level;
@@ -2945,7 +2938,7 @@ namespace Server.Items
 
                         //Player Enhancement Customization: Venomous
                         bool venomous = PlayerEnhancementPersistance.IsCustomizationEntryActive(attacker, CustomizationType.Venomous);
-                        
+
                         if (venomous)
                             CustomizationAbilities.Venomous(defender);
 
@@ -2953,22 +2946,26 @@ namespace Server.Items
 
                         defender.ApplyPoison(attacker, poison);
 
-                        if (!ignoreLosingCharge)
-                        {
-                            Effects.PlaySound(attacker.Location, attacker.Map, 0x64B);
-                            Effects.SendLocationParticles(EffectItem.Create(attacker.Location, attacker.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, effectHue, 0, 5005, 0);
+                        Effects.PlaySound(attacker.Location, attacker.Map, 0x64B);
+                        Effects.SendLocationParticles(EffectItem.Create(attacker.Location, attacker.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, effectHue, 0, 5005, 0);
 
+                        if (losePoisonCharge)
                             --PoisonCharges;
-                        }
                     }
 
                     else
                     {
-                        if (!ignoreLosingCharge)
+                        if (losePoisonCharge)
                             --PoisonCharges;
                     }
 
                     return true;
+                }
+
+                else if (pm_Attacker != null && pm_Defender != null)
+                {
+                    if (losePoisonCharge)
+                        --PoisonCharges;
                 }
             }
 

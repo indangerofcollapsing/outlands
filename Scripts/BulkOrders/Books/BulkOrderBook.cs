@@ -13,19 +13,19 @@ namespace Server.Engines.BulkOrders
 {
 	public class BulkOrderBook : Item, ISecurable
 	{
-		private ArrayList m_Entries;
-		private BOBFilter m_Filter;
-		private string m_BookName;
-		private SecureLevel m_Level;
-		private int m_ItemCount;
-
+        private string m_BookName;
 		[CommandProperty( AccessLevel.GameMaster )]
 		public string BookName
 		{
-			get{ return m_BookName; }
-			set{ m_BookName = value; InvalidateProperties(); }
+			get { return m_BookName; }
+			set
+            {
+                m_BookName = value;
+                InvalidateProperties();
+            }
 		}
 
+        private SecureLevel m_Level;
 		[CommandProperty( AccessLevel.GameMaster )]
 		public SecureLevel Level
 		{
@@ -33,16 +33,19 @@ namespace Server.Engines.BulkOrders
 			set{ m_Level = value; }
 		}
 
+        private ArrayList m_Entries;
 		public ArrayList Entries
 		{
 			get{ return m_Entries; }
 		}
 
+        private BOBFilter m_Filter;
 		public BOBFilter Filter
 		{
 			get{ return m_Filter; }
 		}
-		
+
+        private int m_ItemCount;
 		public int ItemCount
 		{
 			get{ return m_ItemCount; }
@@ -65,22 +68,22 @@ namespace Server.Engines.BulkOrders
 		{
 			if ( !from.InRange( GetWorldLocation(), 2 ) )
 				from.LocalOverheadMessage( Network.MessageType.Regular, 0x3B2, 1019045 ); // I can't reach that.
+
 			else if ( m_Entries.Count == 0 )
 				from.SendLocalizedMessage( 1062381 ); // The book is empty.
+
 			else if ( from is PlayerMobile )
 				from.SendGump( new BOBGump( (PlayerMobile)from, this ) );
 		}
 
 		public override void OnDoubleClickSecureTrade( Mobile from )
 		{
-			if ( !from.InRange( GetWorldLocation(), 2 ) )
-			{
+			if ( !from.InRange( GetWorldLocation(), 2 ) )			
 				from.SendLocalizedMessage( 500446 ); // That is too far away.
-			}
-			else if ( m_Entries.Count == 0 )
-			{
+			
+			else if ( m_Entries.Count == 0 )			
 				from.SendLocalizedMessage( 1062381 ); // The book is empty.
-			}
+			
 			else
 			{
 				from.SendGump( new BOBGump( (PlayerMobile)from, this ) );
@@ -93,6 +96,7 @@ namespace Server.Engines.BulkOrders
 
 					if ( trade != null && trade.From.Mobile == from )
 						trade.To.Mobile.SendGump( new BOBGump( (PlayerMobile)(trade.To.Mobile), this ) );
+
 					else if ( trade != null && trade.To.Mobile == from )
 						trade.From.Mobile.SendGump( new BOBGump( (PlayerMobile)(trade.From.Mobile), this ) );
 				}
@@ -108,12 +112,15 @@ namespace Server.Engines.BulkOrders
 					from.SendLocalizedMessage( 1062385 ); // You must have the book in your backpack to add deeds to it.
 					return false;
 				}
+
 				else if ( !from.Backpack.CheckHold( from, dropped, true, true ) )
 					return false;
+
 				else if ( m_Entries.Count < 500 )
 				{
 					if ( dropped is LargeBOD )
 						m_Entries.Add( new BOBLargeEntry( (LargeBOD)dropped ) );
+
 					else if ( dropped is SmallBOD ) // Sanity
 						m_Entries.Add( new BOBSmallEntry( (SmallBOD)dropped ) );
 					
@@ -135,6 +142,7 @@ namespace Server.Engines.BulkOrders
 
 					return true;
 				}
+
 				else
 				{
 					from.SendLocalizedMessage( 1062387 ); // The book is full of deeds.
@@ -152,10 +160,8 @@ namespace Server.Engines.BulkOrders
 			
             //Force the total count of the book to 1 regard less of how many deed is in there. 
             //We still restricted to 500 per BOD.
-			if ( type == TotalType.Items) { 
-				//total = m_ItemCount;
-			    return 0;
-			}
+			if ( type == TotalType.Items) 
+			    return 0;			
 
             return total;
 		}
@@ -189,17 +195,12 @@ namespace Server.Engines.BulkOrders
 		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize( writer );
-
-			writer.Write( (int) 2 ); // version
+			writer.Write((int)2); // version
 			
 			writer.Write( (int) m_ItemCount );
-
 			writer.Write( (int) m_Level );
-
 			writer.Write( m_BookName );
-
 			m_Filter.Serialize( writer );
-
 			writer.WriteEncodedInt( (int) m_Entries.Count );
 
 			for ( int i = 0; i < m_Entries.Count; ++i )
@@ -211,22 +212,21 @@ namespace Server.Engines.BulkOrders
 					writer.WriteEncodedInt( 0 );
 					((BOBLargeEntry)obj).Serialize( writer );
 				}
+
 				else if ( obj is BOBSmallEntry )
 				{
 					writer.WriteEncodedInt( 1 );
 					((BOBSmallEntry)obj).Serialize( writer );
 				}
-				else
-				{
-					writer.WriteEncodedInt( -1 );
-				}
+
+				else				
+					writer.WriteEncodedInt( -1 );				
 			}
 		}
 
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );
-
 			int version = reader.ReadInt();
 
 			switch ( version )
@@ -236,11 +236,13 @@ namespace Server.Engines.BulkOrders
 					m_ItemCount = reader.ReadInt();
 					goto case 1;
 				}
+
 				case 1:
 				{
 					m_Level = (SecureLevel)reader.ReadInt();
 					goto case 0;
 				}
+
 				case 0:
 				{
 					m_BookName = reader.ReadString();

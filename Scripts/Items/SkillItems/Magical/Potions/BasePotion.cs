@@ -18,6 +18,7 @@ namespace Server.Items
 		Poison,
 		PoisonGreater,
 		PoisonDeadly,
+        PoisonLethal,
 		Refresh,
 		RefreshTotal,
 		HealLesser,

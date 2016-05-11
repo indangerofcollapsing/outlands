@@ -37,8 +37,7 @@ namespace Server.Engines.Craft
             return 0.0; // 0%
         }
 
-        private DefInscription()
-            : base(1, 1, 1.25)// base( 1, 1, 3.0 )
+        private DefInscription(): base(1, 1, 1.25)// base( 1, 1, 3.0 )
         {
         }
 
@@ -59,40 +58,15 @@ namespace Server.Engines.Craft
                     SpellScroll scroll = (SpellScroll)item;
                     Spellbook book = Spellbook.Find(from, scroll.SpellID);
 
-                    bool hasSpell = (book != null && book.HasSpell(scroll.SpellID));
+                    bool hasSpell = (book != null && book.HasSpell(scroll.SpellID));                    
+                    
+                    scroll.Delete();
 
-                    if (scroll.SpellID >= 48 && scroll.SpellID <= 63)
-                    {
-                        Item[] packScrolls = from.Backpack.FindItemsByType(typeof(SpellScroll));
-
-                        for (int i = 0; i < packScrolls.Length; i++)
-                        {
-                            SpellScroll spellScroll = (SpellScroll)packScrolls[i];
-
-                            if (spellScroll != null && spellScroll.SpellID == scroll.SpellID && spellScroll.MasterStatus > 0)
-                            {
-                                scroll.Delete();
-                                return 0;
-                            }
-                        }
-
-                        scroll.Delete();
-                        from.SendMessage("You must have a master copy of the scroll in your pack in order to inscribe this spell");
-
-                        return 1042404;
-                    }
-
-                    else
-                    {
-                        scroll.Delete();
-                        return (hasSpell ? 0 : 1042404); // null : You don't have that spell!
-                    }
+                    return (hasSpell ? 0 : 1042404); // null : You don't have that spell!                    
                 }
 
-                else if (item is Item)
-                {
-                    ((Item)item).Delete();
-                }
+                else if (item is Item)                
+                    ((Item)item).Delete();                
             }
 
             return 0;
@@ -145,32 +119,9 @@ namespace Server.Engines.Craft
 
             else
             {
-                Type[] types = Loot.RegularScrollTypes;
-                int ID = Array.IndexOf(types, item.ItemType);
-
-                if (ID >= 48 && ID <= 63)
-                {
-                    Item[] packScrolls = from.Backpack.FindItemsByType(typeof(SpellScroll));
-
-                    for (int i = 0; i < packScrolls.Length; i++)
-                    {
-                        SpellScroll ss = (SpellScroll)packScrolls[i];
-
-                        if (ss != null && ss.SpellID == ID && ss.MasterStatus > 0)
-                        {
-                            if (--ss.UsesRemaining <= 0)
-                            {
-                                from.SendMessage("The master scroll is destroyed during the inscription process.");
-                                ss.Delete();
-                            }
-
-                            break;
-                        }
-                    }
-                }
-
                 if (failed)
                     return 501630; // You fail to inscribe the scroll, and the scroll is ruined.
+
                 else                                   
                     return 501629; // You inscribe the spell and put the scroll in your backpack.                
             }
@@ -181,16 +132,16 @@ namespace Server.Engines.Craft
         private enum Reg { BlackPearl, Bloodmoss, Garlic, Ginseng, MandrakeRoot, Nightshade, SulfurousAsh, SpidersSilk }
 
         private Type[] m_RegTypes = new Type[]
-            {
-                typeof( BlackPearl ),
-                typeof( Bloodmoss ),
-                typeof( Garlic ),
-                typeof( Ginseng ),
-                typeof( MandrakeRoot ),
-                typeof( Nightshade ),
-                typeof( SulfurousAsh ),
-                typeof( SpidersSilk )
-            };
+        {
+            typeof( BlackPearl ),
+            typeof( Bloodmoss ),
+            typeof( Garlic ),
+            typeof( Ginseng ),
+            typeof( MandrakeRoot ),
+            typeof( Nightshade ),
+            typeof( SulfurousAsh ),
+            typeof( SpidersSilk )
+        };
 
         private int m_Index;
 
@@ -202,13 +153,13 @@ namespace Server.Engines.Craft
             {
                 default:
 
-                case 1: minSkill = -10.0; maxSkill = 15; break;
-                case 2: minSkill = 5; maxSkill = 30; break;
-                case 3: minSkill = 20; maxSkill = 45; break;
-                case 4: minSkill = 35; maxSkill = 60; break;
-                case 5: minSkill = 50; maxSkill = 75; break;
-                case 6: minSkill = 65; maxSkill = 90; break;
-                case 7: minSkill = 80; maxSkill = 105; break;
+                case 1: minSkill = 25; maxSkill = 50; break;
+                case 2: minSkill = 35; maxSkill = 60; break;
+                case 3: minSkill = 45; maxSkill = 70; break;
+                case 4: minSkill = 55; maxSkill = 80; break;
+                case 5: minSkill = 65; maxSkill = 90; break;
+                case 6: minSkill = 75; maxSkill = 100; break;
+                case 7: minSkill = 85; maxSkill = 110; break;
                 case 8: minSkill = 95; maxSkill = 120; break;
             }
 
@@ -229,6 +180,19 @@ namespace Server.Engines.Craft
                 AddRes(index, m_RegTypes[(int)regs[i]], 1044353 + (int)regs[i], 1, 1044361 + (int)regs[i]);
 
             AddRes(index, typeof(BlankScroll), "Blank Scroll", 1, 1044378);
+
+            int arcaneScrollsCount = 0;
+
+            if (m_Circle >= 6)
+            {
+                if (m_Circle == 6)
+                    arcaneScrollsCount = 1;
+
+                if (m_Circle == 7)
+                    arcaneScrollsCount = 2;
+
+                AddRes(index, typeof(ArcaneScroll), "Arcane Scroll", arcaneScrollsCount, "You do not have the neccessary arcane scrolls needed to craft that.");
+            }
 
             SetManaReq(index, m_Mana);
         }
@@ -258,14 +222,13 @@ namespace Server.Engines.Craft
             m_Mana = 2;
 
             //Utility
-            index = AddCraft(1, typeof(Spellbook), "Utility", "Spellbook", 25.0, 50.0, typeof(BlankScroll), "Blank Scroll", 2, 1044378);
+            index = AddCraft(1, typeof(Spellbook), "Utility", "Spellbook", 0, 25, typeof(BlankScroll), "Blank Scroll", 5, 1044378);
             ForceNonExceptional(index);
 
-            index = AddCraft(1, typeof(Runebook), "Utility", "Runebook", 45.0, 95.0, typeof(BlankScroll), "Blank Scroll", 8, 1044378);
-            AddRes(index, typeof(RecallScroll), 1044445, 1, 1044253);
-            AddRes(index, typeof(ResurrectionScroll), 1044439, 1, 1044253);
+            index = AddCraft(1, typeof(Runebook), "Utility", "Runebook", 75, 100, typeof(BlankScroll), "Blank Scroll", 10, 1044378);
+            AddRes(index, typeof(ArcaneScroll), "Arcane Scroll", 4, "You do not have the neccessary arcane scrolls needed to craft that.");
             
-            AddCraft(1, typeof(Engines.BulkOrders.BulkOrderBook), "Bulk Order", "Bulk Order Book", 65.0, 115.0, typeof(BlankScroll), "Blank Scroll", 10, 1044378);
+            AddCraft(1, typeof(Engines.BulkOrders.BulkOrderBook), "Bulk Order", "Bulk Order Book", 95, 120, typeof(BlankScroll), "Blank Scroll", 10, 1044378);
 
             index = AddCraft(1, typeof(AncientMystery.AncientMysteryScroll), "Utility", "Ancient Mystery Scroll", 80.0, 120.0, typeof(BlankScroll), "Blank Scroll", 25, 1044378);
             AddRes(index, typeof(GhoulHide), "Ghoul Hide", 2, "You do not have the neccesary crafting component needed to make this");

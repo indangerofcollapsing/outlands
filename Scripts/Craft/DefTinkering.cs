@@ -158,98 +158,92 @@ namespace Server.Engines.Craft
         {
             int index = -1;
 
+            //Crafting Tools    
+            AddCraft(1, typeof(Tongs), "Crafting Tools", "Tongs", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(SledgeHammer), "Crafting Tools", "Sledgehammer", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(SmithHammer), "Crafting Tools", "Smith's Hammer", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(MortarPestle), "Crafting Tools", "Mortar and Pestle", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(TinkerTools), "Crafting Tools", "Tinker Tools", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(SewingKit), "Crafting Tools", "Sewing Kit", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Skillet), "Crafting Tools", "Skillet", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(RollingPin), "Crafting Tools", "Rolling Pin", 0, 25, typeof(Board), 1044041, 2, 1044351);
+            AddCraft(1, typeof(MapmakersPen), "Crafting Tools", "Mapmaker's Pen", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(ScribesPen), "Crafting Tools", "Scribe's Pen", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Scorp), "Crafting Tools", "Scorp", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(DrawKnife), "Crafting Tools", "Drawing Knife", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Saw), "Crafting Tools", "Saw", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(DovetailSaw), "Crafting Tools", "Dovetail Saw", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Froe), "Crafting Tools", "Froe", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Hammer), "Crafting Tools", "Hammer", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Inshave), "Crafting Tools", "Inshave", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(JointingPlane), "Crafting Tools", "Jointing Plane", 0, 25, typeof(Board), 1044041, 2, 1044351);
+            AddCraft(1, typeof(MouldingPlane), "Crafting Tools", "Moulding Plane", 0, 25, typeof(Board), 1044041, 2, 1044351);
+            AddCraft(1, typeof(SmoothingPlane), "Crafting Tools", "Smoothing Plane", 0, 25, typeof(Board), 1044041, 2, 1044351);
+
+            //Utensils            
+            AddCraft(1, typeof(SpoonLeft), "Utensils", "Spoon", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(SpoonRight), "Utensils", "Spoon", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(ForkLeft), "Utensils", "Fork", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(ForkRight), "Utensils", "Fork", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(KnifeLeft), "Utensils", "Knife", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(KnifeRight), "Utensils", "Knife", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Plate), "Utensils", "Plate", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Goblet), "Utensils", "Goblet", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(PewterMug), "Utensils", "Pewter Mug", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+
             //Utility            
-            
-            index = AddCraft(1, typeof(PotionKeg), "Utility", "Potion Keg", 75.0, 100.0, typeof(Keg), 1044255, 1, 1044253);            
+            AddCraft(1, typeof(Lockpick), "Utility", "Lockpick", 50, 75, typeof(IronIngot), 1044036, 1, 1044037);
+
+            AddCraft(1, typeof(Pickaxe), "Utility", "Pickaxe", 0, 25, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(1, typeof(Shovel), "Utility", "Shovel", 0, 25, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(1, typeof(Hatchet), "Utility", "Hatchet", 0, 25, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(1, typeof(Scissors), "Utility", "Scissors", 0, 25, typeof(IronIngot), 1044036, 2, 1044037);  
+
+            index = AddCraft(1, typeof(PotionKeg), "Utility", "Potion Keg", 75.0, 100.0, typeof(Keg), 1044255, 1, 1044253);
             AddRes(index, typeof(BarrelLid), 1044251, 1, 1044253);
             AddRes(index, typeof(BarrelTap), 1044252, 1, 1044253);
 
-            AddCraft(1, typeof(Sextant), "Utility", "Sextant", 0.0, 0.0, typeof(SextantParts), 1044175, 1, 1044253);
-            AddCraft(1, typeof(Key), "Utility", "Key", 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
-            AddCraft(1, typeof(KeyRing), "Utility", "Key Ring", 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
-            
-            AddCraft(1, typeof(Lantern), "Utility", "Lantern", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
+            index = AddCraft(1, typeof(Sextant), "Utility", "Sextant", 75, 100, typeof(Gears), "Gears", 1, 1044037);
+            AddRes(index, typeof(Axle), "Axle", 1, 1044351);
+            AddRes(index, typeof(Hinge), "Hinge", 1, 1044037);            
 
-            //Tools
-            AddCraft(1, typeof(Lockpick), "Tools", "Lockpick", 45.0, 95.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(Scissors), "Tools", "Scissors", 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
-
-            AddCraft(1, typeof(Shovel), "Tools", "Shovel", 37.5, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(Pickaxe), "Tools", "Pickaxe", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(Hatchet), "Tools", "Hatchet", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
-
-            AddCraft(1, typeof(Tongs), "Tools", "Tongs", 35.0, 85.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(SledgeHammer), "Tools", "Sledgehammer", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(SmithHammer), "Tools", "Smith's Hammer", 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
-
-            AddCraft(1, typeof(MortarPestle), "Tools", "Mortar and Pestle", 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
-            AddCraft(1, typeof(TinkerTools), "Tools", "Tinker Tools", 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(SewingKit), "Tools", "Sewing Kit", 10.0, 70.0, typeof(IronIngot), 1044036, 2, 1044037);
-            
-            AddCraft(1, typeof(Skillet), "Tools", "Skillet", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(RollingPin), "Tools", "Rolling Pin", 0.0, 50.0, typeof(Board), 1044041, 5, 1044351);
-
-            AddCraft(1, typeof(MapmakersPen), "Tools", "Mapmaker's Pen", 25.0, 75.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(ScribesPen), "Tools", "Scribe's Pen", 25.0, 75.0, typeof(IronIngot), 1044036, 1, 1044037);            
-
-            AddCraft(1, typeof(Scorp), "Tools", "Scorp", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);            
-            AddCraft(1, typeof(DrawKnife), "Tools", "Drawing Knife", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(Saw), "Tools", "Saw", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(DovetailSaw), "Tools", "Dovetail Saw", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(Froe), "Tools", "Froe", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(Hammer), "Tools", "Hammer", 30.0, 80.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(Inshave), "Tools", "Inshave", 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Key), "Utility", "Key", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(KeyRing), "Utility", "Key Ring", 25, 50, typeof(IronIngot), 1044036, 2, 1044037); 
 
             //Parts
-            AddCraft(1, typeof(BarrelTap), "Parts", "Barrel Tap", 35.0, 85.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(BarrelHoops), "Parts", "Barrel Hoops", -15.0, 35.0, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(BarrelHoops), "Parts", "Barrel Hoops", 25, 50, typeof(IronIngot), 1044036, 10, 1044037);
+            AddCraft(1, typeof(BarrelTap), "Parts", "Barrel Tap", 25, 50, typeof(IronIngot), 1044036, 2, 1044037); 
+            AddCraft(1, typeof(Axle), "Parts", "Axle", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Gears), "Parts", "Gears", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);              
+            AddCraft(1, typeof(Springs), "Parts", "Springs", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);                 
+            AddCraft(1, typeof(Hinge), "Parts", "Hinge", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(Nails), "Parts", "Nails", 25, 50, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(1, typeof(ClockFrame), "Parts", "Clock Frame", 25, 50, typeof(Board), 1044041, 5, 1044351);
 
-            AddCraft(1, typeof(JointingPlane), "Parts", "Jointing Plane", 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);
-            AddCraft(1, typeof(MouldingPlane), "Parts", "Moulding Plane", 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);
-            AddCraft(1, typeof(SmoothingPlane), "Parts", "Smoothing Plane", 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);
-            AddCraft(1, typeof(ClockFrame), "Parts", "Clock Frame", 0.0, 50.0, typeof(Board), 1044041, 6, 1044351);
-            AddCraft(1, typeof(Axle), "Parts", "Axle", -25.0, 25.0, typeof(Board), 1044041, 2, 1044351);
-            AddCraft(1, typeof(Gears), "Parts", "Gears", 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(ClockParts), "Parts", "Clock Parts", 25.0, 75.0, typeof(IronIngot), 1044036, 1, 1044037);            
-            AddCraft(1, typeof(Springs), "Parts", "Springs", 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(SextantParts), "Parts", "Sextant Parts", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);            
-            AddCraft(1, typeof(Hinge), "Parts", "Hinge", 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(Nails), "Parts", "Nails", 0.0, 25.0, typeof(IronIngot), 1044036, 2, 1044037);
-
-            index = AddCraft(1, typeof(AxleGears), "Parts", "Axel Gears", 0.0, 0.0, typeof(Axle), 1044169, 1, 1044253);
-            AddRes(index, typeof(Gears), 1044254, 1, 1044253);
-
-            index = AddCraft(1, typeof(ClockParts), "Parts", "Clock Parts", 0.0, 0.0, typeof(AxleGears), 1044170, 1, 1044253);
-            AddRes(index, typeof(Springs), 1044171, 1, 1044253);
-
-            index = AddCraft(1, typeof(SextantParts), "Parts", "Sextant Parts", 0.0, 0.0, typeof(AxleGears), 1044170, 1, 1044253);
-            AddRes(index, typeof(Hinge), 1044172, 1, 1044253);
-
+            //AddCraft(1, typeof(AxleGears), "Parts", "Axel Gears", 0.0, 0.0, typeof(Axle), 1044169, 1, 1044253);
+            //AddCraft(1, typeof(SextantParts), "Parts", "Sextant Parts", 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
+            //AddCraft(1, typeof(ClockParts), "Parts", "Clock Parts", 25.0, 75.0, typeof(IronIngot), 1044036, 1, 1044037);          
+            
             //Decorative
-            AddCraft(1, typeof(Candelabra), "Decorative", "Candelabra", 55.0, 105.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(HeatingStand), "Decorative", "Heating Stand", 60.0, 130.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(Scales), "Decorative", "Scales", 60.0, 130.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(1, typeof(Globe), "Decorative", "Globe", 55.0, 105.0, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(1, typeof(Lantern), "Decorative", "Lantern", 50, 75, typeof(IronIngot), 1044036, 5, 1044037);   
+            AddCraft(1, typeof(Candelabra), "Decorative", "Candelabra", 50, 75, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(HeatingStand), "Decorative", "Heating Stand", 50, 75, typeof(IronIngot), 1044036, 5, 1044037);
+            AddCraft(1, typeof(Scales), "Decorative", "Scales", 50, 75, typeof(IronIngot), 1044036, 5, 1044037);
+            
+            index = AddCraft(1, typeof(Globe), "Decorative", "Globe", 95, 125, typeof(Board), 1044041, 5, 1044351);
+            AddRes(index, typeof(Axle), "Axle", 1, 1044351);
+            AddRes(index, typeof(Hinge), "Hinge", 1, 1044037);
+            AddRes(index, typeof(Springs), "Springs", 1, 1044037);
 
-            index = AddCraft(1, typeof(ClockRight), "Decorative", "Clock", 0.0, 0.0, typeof(ClockFrame), 1044174, 1, 1044253);
-            AddRes(index, typeof(ClockParts), 1044173, 1, 1044253);
+            index = AddCraft(1, typeof(ClockRight), "Decorative", "Clock", 95, 125, typeof(ClockFrame), 1044174, 1, 1044253);
+            AddRes(index, typeof(Gears), "Gears", 1, 1044037);
+            AddRes(index, typeof(Nails), "Nails", 1, 1044037);
+            AddRes(index, typeof(Springs), "Springs", 1, 1044037);            
 
-            index = AddCraft(1, typeof(ClockLeft), "Decorative", "Clock", 0.0, 0.0, typeof(ClockFrame), 1044174, 1, 1044253);
-            AddRes(index, typeof(ClockParts), 1044173, 1, 1044253);           
-
-            //Utensils
-            AddCraft(1, typeof(ButcherKnife), "Utensils", "Butcher Knife", 25.0, 75.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(SkinningKnife), "Utensils", "Skinning Knife", 25.0, 75.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(Cleaver), "Utensils", "Cleaver", 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
-            AddCraft(1, typeof(SpoonLeft), "Utensils", "Spoon Left", 0.0, 50.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(SpoonRight), "Utensils", "Spoon Right", 0.0, 50.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(ForkLeft), "Utensils", "Fork Left", 0.0, 50.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(ForkRight), "Utensils", "Fork Right", 0.0, 50.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(KnifeLeft), "Utensils", "Knife Left", 0.0, 50.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(KnifeRight), "Utensils", "Knife Right", 0.0, 50.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddCraft(1, typeof(Plate), "Utensils", "Plate", 0.0, 50.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(Goblet), "Utensils", "Goblet", 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(1, typeof(PewterMug), "Utensils", "Pewter Mug", 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
+            index = AddCraft(1, typeof(ClockLeft), "Decorative", "Clock", 95, 125, typeof(ClockFrame), 1044174, 1, 1044253);
+            AddRes(index, typeof(Gears), "Gears", 1, 1044037);
+            AddRes(index, typeof(Nails), "Nails", 1, 1044037);
+            AddRes(index, typeof(Springs), "Springs", 1, 1044037);  
 
             //Jewelry
             AddJewelrySet(GemType.StarSapphire, "Star Sapphire", typeof(StarSapphire));
@@ -263,30 +257,84 @@ namespace Server.Engines.Craft
             AddJewelrySet(GemType.Diamond, "Diamond", typeof(Diamond));
 
             // Traps
-            index = AddCraft(1, typeof(DartTrapCraft), "Traps and Bombs", "Dart Trap", 30.0, 80.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddRes(index, typeof(Bolt), "Bolt", 1, 1044253);
+            index = AddCraft(1, typeof(DartTrapCraft), "Container Traps", "Dart Trap", 75, 100, typeof(Bolt), "Bolt", 3, 1044253);
+            AddRes(index, typeof(Hinge), "Hinge", 1, 1044037);
+            AddRes(index, typeof(Springs), "Springs", 1, 1044037);
 
-            index = AddCraft(1, typeof(PoisonTrapCraft), "Traps and Bombs", "Poison Trap", 30.0, 80.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddRes(index, typeof(BasePoisonPotion), "Poison Potion", 1, 1044253);
+            index = AddCraft(1, typeof(PoisonTrapCraft), "Container Traps", "Poison Trap", 75, 100, typeof(BasePoisonPotion), "Poison Potion", 1, 1044253);
+            AddRes(index, typeof(Hinge), "Hinge", 1, 1044037);
+            AddRes(index, typeof(Springs), "Springs", 1, 1044037);
 
-            index = AddCraft(1, typeof(ExplosionTrapCraft), "Traps and Bombs", "Explosion Trap", 55.0, 105.0, typeof(IronIngot), 1044036, 1, 1044037);
-            AddRes(index, typeof(BaseExplosionPotion), "Explosion Potion", 1, 1044253);
+            index = AddCraft(1, typeof(ExplosionTrapCraft), "Container Traps", "Explosion Trap", 75, 100, typeof(BaseExplosionPotion), "Explosion Potion", 1, 1044253);
+            AddRes(index, typeof(Hinge), "Hinge", 1, 1044037);
+            AddRes(index, typeof(Springs), "Springs", 1, 1044037);
 
+            //Spyglasses
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Iron Spyglass", 75, 100, typeof(IronIngot), "Iron Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Dull Copper Spyglass", 75, 100, typeof(DullCopperIngot), "Dull Copper Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Shadow Iron Spyglass", 80, 105, typeof(ShadowIronIngot), "Shadow Iron Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Copper Spyglass", 80, 105, typeof(CopperIngot), "Copper Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Bronze Spyglass", 85, 110, typeof(BronzeIngot), "Bronze Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Gold Spyglass", 85, 110, typeof(GoldIngot), "Gold Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Agapite Spyglass", 90, 115, typeof(AgapiteIngot), "Agapite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Verite Spyglass", 90, 115, typeof(VeriteIngot), "Verite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Valorite Spyglass", 95, 120, typeof(ValoriteIngot), "Valorite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+
+            index = AddCraft(1, typeof(PirateSpyglass), "Spyglasses", "Lunite Spyglass", 95, 120, typeof(LuniteIngot), "Lunite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
+            AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
+            
             // Set the overridable material
             SetSubRes(typeof(IronIngot), "Iron");
 
             // Add every material you want the player to be able to choose from
             // This will override the overridable material
-            AddSubRes(typeof(IronIngot), "Iron", 00.0, 1044268);
-            AddSubRes(typeof(DullCopperIngot), "Dull Copper", 65.0, 1044268);
-            AddSubRes(typeof(ShadowIronIngot), "Shadow Iron", 70.0, 1044268);
-            AddSubRes(typeof(CopperIngot), "Copper", 75.0, 1044268);
-            AddSubRes(typeof(BronzeIngot), "Bronze", 80.0, 1044268);
-            AddSubRes(typeof(GoldIngot), "Gold", 85.0, 1044268);
-            AddSubRes(typeof(AgapiteIngot), "Agapite", 90.0, 1044268);
-            AddSubRes(typeof(VeriteIngot), "Verite", 95.0, 1044268);
-            AddSubRes(typeof(ValoriteIngot), "Valorite", 99.0, 1044268);
-            AddSubRes(typeof(LuniteIngot), "Lunite", 100.0, 1044268);
+            AddSubRes(typeof(IronIngot), "Iron", 0, 1044268);
+            AddSubRes(typeof(DullCopperIngot), "Dull Copper", 50, 1044268);
+            AddSubRes(typeof(ShadowIronIngot), "Shadow Iron", 60, 1044268);
+            AddSubRes(typeof(CopperIngot), "Copper", 70, 1044268);
+            AddSubRes(typeof(BronzeIngot), "Bronze", 80, 1044268);
+            AddSubRes(typeof(GoldIngot), "Gold", 85, 1044268);
+            AddSubRes(typeof(AgapiteIngot), "Agapite", 90, 1044268);
+            AddSubRes(typeof(VeriteIngot), "Verite", 95, 1044268);
+            AddSubRes(typeof(ValoriteIngot), "Valorite", 100, 1044268);
+            AddSubRes(typeof(LuniteIngot), "Lunite", 120, 1044268);
 
             Recycle = true;
             MarkOption = true;
@@ -319,9 +367,8 @@ namespace Server.Engines.Craft
 
             if (container.Locked)
                 return 502943; // You can only trap an unlocked object.
-
-            if (container.TrapType != TrapType.None)
-                return 502945; // You can only place one trap on an object at a time.
+            
+            //return 502945; // You can only place one trap on an object at a time.
 
             return 0;
         }
