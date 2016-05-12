@@ -119,7 +119,7 @@ namespace Server.Mobiles
             UniqueCreatureDifficultyScalar = 1.5;
 
             //Has Manually Performed Melees
-            NextCombatTime = DateTime.UtcNow + TimeSpan.FromDays(365);
+            LastSwingTime = DateTime.UtcNow + TimeSpan.FromDays(365);
 
             damageIntervalThreshold = (int)(Math.Round((double)HitsMax / (double)totalIntervals));
             intervalCount = (int)(Math.Floor((1 - (double)Hits / (double)HitsMax) * (double)totalIntervals));

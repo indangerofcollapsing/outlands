@@ -134,7 +134,7 @@ namespace Server.Mobiles
             if (creature.AIObject != null)
             {
                 creature.AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(actionsCooldown);
-                creature.NextCombatTime = creature.NextCombatTime + TimeSpan.FromSeconds(actionsCooldown);
+                creature.LastSwingTime = creature.LastSwingTime + TimeSpan.FromSeconds(actionsCooldown);
                 creature.NextSpellTime = creature.NextSpellTime + TimeSpan.FromSeconds(actionsCooldown);
                 creature.NextCombatHealActionAllowed = creature.NextCombatHealActionAllowed + TimeSpan.FromSeconds(actionsCooldown);
                 creature.NextCombatSpecialActionAllowed = creature.NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(actionsCooldown);

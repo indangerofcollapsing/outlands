@@ -630,7 +630,7 @@ namespace Server.Spells
                         BaseWeapon weapon = m_Caster.Weapon as BaseWeapon;
 
                         if (weapon != null)                        
-                            m_Caster.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(m_Caster, false) + TimeSpan.FromSeconds((double)count);                        
+                            m_Caster.LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds((double)count);                        
                     }
 
                     m_CastTimer = new CastTimer(this, castDelay);

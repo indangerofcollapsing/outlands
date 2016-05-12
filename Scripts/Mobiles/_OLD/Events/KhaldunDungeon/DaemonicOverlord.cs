@@ -168,7 +168,7 @@ namespace Server.Mobiles
                 PlaySound(GetAngerSound());
 
                 AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(stationaryDelay);
-                NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(stationaryDelay);
+                LastSwingTime = LastSwingTime + TimeSpan.FromSeconds(stationaryDelay);
 
                 NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(stationaryDelay);
                 NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
@@ -309,7 +309,7 @@ namespace Server.Mobiles
                     PlaySound(GetAngerSound());
 
                     AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(effectTime);
-                    NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(effectTime);
+                    LastSwingTime = LastSwingTime + TimeSpan.FromSeconds(effectTime);
 
                     NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(actionsCooldown);
                     NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(actionsCooldown);

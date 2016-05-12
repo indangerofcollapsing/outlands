@@ -152,8 +152,8 @@ namespace Server.Mobiles
             Mobile mobileTarget = m_NearbyMobiles[Utility.RandomMinMax(0, m_NearbyMobiles.Count - 1)];
 
             Combatant = mobileTarget;
-
-            DelayNextCombatTime(NextChargeDelay.TotalSeconds);
+            
+            LastSwingTime = LastSwingTime + TimeSpan.FromSeconds(NextChargeDelay.TotalSeconds);            
 
             m_NextChargeAllowed = DateTime.UtcNow + NextChargeDelay;            
             m_ChargeTimeout = DateTime.UtcNow + MaxChargeDuration;
@@ -256,7 +256,7 @@ namespace Server.Mobiles
 
             m_Trampled.Clear();
 
-            NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+            LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(2);
         }
 
         protected override bool OnMove(Direction d)

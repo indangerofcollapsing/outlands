@@ -187,7 +187,7 @@ namespace Server.Custom
                     SpecialAbilities.FrenzySpecialAbility(1.0, this, defender, 1.0, 5, -1, true, "", "", "*becomes a whirling fury of blades*");
 
                     AIObject.NextMove = DateTime.UtcNow;
-                    NextCombatTime = DateTime.UtcNow;
+                    LastSwingTime = DateTime.UtcNow;
                 }
             }
 

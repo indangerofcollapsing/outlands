@@ -372,6 +372,11 @@ namespace Server.Items
 
         #endregion
 
+        public virtual TimeSpan GetStationaryDelayRequired(Mobile attacker)
+        {
+            return TimeSpan.FromSeconds(0);
+        }
+
         #region OnSwing
 
         public virtual TimeSpan OnSwing(Mobile attacker, Mobile defender)
@@ -1252,17 +1257,15 @@ namespace Server.Items
                 if ((bc_Attacker is BladeSpirits || bc_Attacker is EnergyVortex) && bc_Attacker.SummonMaster is PlayerMobile)
                 {
                     PlayerMobile pm_Controller = bc_Attacker.SummonMaster as PlayerMobile;
-
-                    if (bc_Attacker.GetDistanceToSqrt(pm_Controller) <= 20)                    
-                        DamageTracker.RecordDamage(pm_Controller, attacker, defender, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);     
+                   
+                    DamageTracker.RecordDamage(pm_Controller, attacker, defender, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);     
                 }
 
                 if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile)
                 {
                     PlayerMobile pm_Controller = bc_Attacker.ControlMaster as PlayerMobile;
-
-                    if (bc_Attacker.GetDistanceToSqrt(pm_Controller) <= 20)                    
-                        DamageTracker.RecordDamage(pm_Controller, attacker, defender, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed); 
+                 
+                    DamageTracker.RecordDamage(pm_Controller, attacker, defender, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed); 
                 }
             }
 
@@ -1272,9 +1275,8 @@ namespace Server.Items
                 if (bc_Attacker.BardProvoked && bc_Attacker.BardMaster is PlayerMobile)
                 {
                     PlayerMobile playerBard = bc_Attacker.BardMaster as PlayerMobile;
-
-                    if (bc_Attacker.GetDistanceToSqrt(playerBard) <= 20)                   
-                        DamageTracker.RecordDamage(playerBard, attacker, defender, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
+                
+                    DamageTracker.RecordDamage(playerBard, attacker, defender, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
                 }
             }
 
@@ -1541,22 +1543,8 @@ namespace Server.Items
 
         public override bool OnEquip(Mobile from)
         {
-            BaseWeapon weapon = from.Weapon as BaseWeapon;
-
-            if (weapon != null)
-            {
-                TimeSpan timeDifference = this.GetDelay(from, false) - weapon.GetDelay(from, false);
-                from.NextCombatTime = from.NextCombatTime.AddSeconds(timeDifference.TotalSeconds);
-            }
-
-            if (this is BaseRanged)
-            {
-                DateTime nextFireMinimum = DateTime.UtcNow + TimeSpan.FromMilliseconds((double)BaseRanged.RangedShotDelay(from.Dex));
-
-                if (from.NextCombatTime < nextFireMinimum)
-                    from.NextCombatTime = nextFireMinimum;
-            }
-
+            from.NextSwingDelay = GetDelay(from, false);
+            
             if (UseSkillMod)
             {
                 if (m_SkillMod != null)
@@ -1597,33 +1585,28 @@ namespace Server.Items
         {
             if (parent is Mobile)
             {
-                Mobile m = (Mobile)parent;
-                BaseWeapon weapon = m.Weapon as BaseWeapon;
+                Mobile mobile = (Mobile)parent;               
 
                 string modName = this.Serial.ToString();
 
-                m.RemoveStatMod(modName + "Str");
-                m.RemoveStatMod(modName + "Dex");
-                m.RemoveStatMod(modName + "Int");
-
-                if (weapon != null)
-                {
-                    TimeSpan timeDifference = weapon.GetDelay(m, false) - this.GetDelay(m, false);
-                    m.NextCombatTime = m.NextCombatTime.AddSeconds(timeDifference.TotalSeconds);
-
-                    //TimeSpan t = -this.GetDelay(m) + weapon.GetDelay(m);
-                    //m.NextCombatTime += (int)t.TotalMilliseconds;
-                }
-
+                mobile.RemoveStatMod(modName + "Str");
+                mobile.RemoveStatMod(modName + "Dex");
+                mobile.RemoveStatMod(modName + "Int");
+                
                 if (UseSkillMod && m_SkillMod != null)
                 {
                     m_SkillMod.Remove();
                     m_SkillMod = null;
                 }
 
-                m.CheckStatTimers();
+                mobile.CheckStatTimers();
 
-                m.Delta(MobileDelta.WeaponDamage);
+                mobile.Delta(MobileDelta.WeaponDamage);
+
+                 BaseWeapon weapon = mobile.Weapon as BaseWeapon;
+                
+                 if (weapon != null)                 
+                     mobile.NextSwingDelay = weapon.GetDelay(mobile, false);                                    
             }
         }
 
@@ -2917,7 +2900,11 @@ namespace Server.Items
 
                 double basePoisonChance = 0.25;
 
-                double poisonSkill = attacker.Skills[SkillName.Poisoning].Value;                
+                double poisonSkill = attacker.Skills[SkillName.Poisoning].Value;
+
+                if (poisonSkill > 100 && pm_Attacker != null && pm_Defender != null)
+                    poisonSkill = 100;
+
                 double ignoreLosingChargeChance = (poisonSkill / 100) * .5;
 
                 if (bc_Attacker != null)

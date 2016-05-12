@@ -1677,19 +1677,22 @@ namespace Server
             }
         }
 
+        private DateTime m_LastSwingTime = DateTime.UtcNow;
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime NextCombatTime
+        public DateTime LastSwingTime
         {
-            get
-            {
-                return m_NextCombatTime;
-            }
-            set
-            {
-                m_NextCombatTime = value;
-            }
+            get { return m_LastSwingTime; }
+            set { m_LastSwingTime = value; }
         }
 
+        private TimeSpan m_NextSwingDelay = TimeSpan.FromSeconds(5);
+        [CommandProperty(AccessLevel.GameMaster)]
+        public TimeSpan NextSwingDelay
+        {
+            get { return m_NextSwingDelay; }
+            set { m_NextSwingDelay = value; }
+        }
+        
         public bool BeginAction(object toLock)
         {
             if (_actions == null)
@@ -1700,6 +1703,7 @@ namespace Server
 
                 return true;
             }
+
             else if (!_actions.Contains(toLock))
             {
                 _actions.Add(toLock);
@@ -1774,9 +1778,7 @@ namespace Server
         {
             get { return m_BAC; }
             set { m_BAC = value; }
-        }
-
-        private long m_LastMoveTime;
+        }        
 
         /// <summary>
         /// Gets or sets the number of steps this player may take when hidden before being revealed.
@@ -1854,17 +1856,21 @@ namespace Server
             }
         }
 
+        private long m_LastMoveTime;
         public long LastMoveTime
         {
             get
             {
                 return m_LastMoveTime;
             }
+
             set
             {
                 m_LastMoveTime = value;
             }
         }
+
+        public DateTime LastMovement;
 
         private bool m_RevealImmune = false;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -2386,8 +2392,7 @@ namespace Server
         {
             private Mobile m_Mobile;
 
-            public FrozenTimer(Mobile m, TimeSpan duration)
-                : base(duration)
+            public FrozenTimer(Mobile m, TimeSpan duration): base(duration)
             {
                 this.Priority = TimerPriority.TwentyFiveMS;
                 m_Mobile = m;
@@ -2406,31 +2411,45 @@ namespace Server
             return false;
         }
 
+        public virtual bool ReadyForSwing()
+        {
+            return true;
+        }
+
         private class CombatTimer : Timer
         {
             private Mobile m_Mobile;
 
-            public CombatTimer(Mobile m)
-                : base(TimeSpan.FromSeconds(0.0), TimeSpan.FromSeconds(0.01), 0)
+            public CombatTimer(Mobile mobile): base(TimeSpan.FromSeconds(0.0), TimeSpan.FromSeconds(0.01), 0)
             {
-                m_Mobile = m;
+                if (mobile == null)
+                    return;
 
-                if (!m_Mobile.m_Player && m_Mobile.m_Dex <= 100)
+                m_Mobile = mobile;
+
+                if (!m_Mobile.m_Player)
                     Priority = TimerPriority.FiftyMS;
             }
 
             protected override void OnTick()
             {
-                if (DateTime.UtcNow >= m_Mobile.m_NextCombatTime)
-                {
-                    Mobile combatant = m_Mobile.Combatant;
+                if (m_Mobile == null) 
+                    return;                
 
-                    // If no combatant, wrong map, one of us is a ghost, or cannot see, or deleted, then stop combat
-                    if (combatant == null || combatant.m_Deleted || m_Mobile.m_Deleted || combatant.m_Map != m_Mobile.m_Map || !combatant.Alive || !m_Mobile.Alive || !m_Mobile.CanSee(combatant) || combatant.IsDeadBondedPet || m_Mobile.IsDeadBondedPet)
-                    {
-                        m_Mobile.Combatant = null;
+                if (DateTime.UtcNow < m_Mobile.LastSwingTime + m_Mobile.NextSwingDelay)
+                    return;
+
+                if (m_Mobile.Deleted || !m_Mobile.Alive || m_Mobile.IsDeadBondedPet) return;
+                if (m_Mobile.Combatant == null) return;
+                if (m_Mobile.Combatant.Deleted || !m_Mobile.Combatant.Alive || m_Mobile.Combatant.IsDeadBondedPet) return;
+                if (m_Mobile.Combatant.m_Map != m_Mobile.m_Map) return;
+
+                if (m_Mobile.ReadyForSwing()) 
+                {
+                    if (!m_Mobile.CanSee(m_Mobile.Combatant))
                         return;
-                    }
+
+                    Mobile combatant = m_Mobile.Combatant;                   
 
                     IWeapon weapon = m_Mobile.Weapon;
 
@@ -2439,15 +2458,14 @@ namespace Server
                     if (m_Mobile.AttackRange > 1)
                         attackRange = m_Mobile.AttackRange;
 
-                    if (!m_Mobile.InRange(combatant, attackRange) && !m_Mobile.RangeExemption(combatant))     
-                        return;                    
+                    if (!m_Mobile.InRange(combatant, attackRange) && !m_Mobile.RangeExemption(combatant))
+                        return;
 
                     if (m_Mobile.InLOS(combatant))
                     {
                         if (m_Mobile.IsHindered() && !m_Mobile.IgnoreHinderForSwings)
                             return;
 
-                        //Next Attack Will Be Stealth Attack if Hidden
                         if (m_Mobile.StealthAttackReady)
                         {
                             m_Mobile.StealthAttackActive = true;
@@ -2457,7 +2475,9 @@ namespace Server
                         weapon.OnBeforeSwing(m_Mobile, combatant);
 
                         m_Mobile.RevealingAction();
-                        m_Mobile.m_NextCombatTime = DateTime.UtcNow + TimeSpan.FromMilliseconds((double)weapon.OnSwing(m_Mobile, combatant).TotalMilliseconds);
+                        m_Mobile.LastSwingTime = DateTime.UtcNow;
+
+                        m_Mobile.NextSwingDelay = weapon.OnSwing(m_Mobile, combatant);
                     }
                 }
             }
@@ -2467,8 +2487,7 @@ namespace Server
         {
             private Mobile m_Mobile;
 
-            public ExpireCombatantTimer(Mobile m)
-                : base(TimeSpan.FromMinutes(1.0))
+            public ExpireCombatantTimer(Mobile m): base(TimeSpan.FromMinutes(1.0))
             {
                 this.Priority = TimerPriority.FiveSeconds;
                 m_Mobile = m;
@@ -2526,8 +2545,6 @@ namespace Server
         }
 
         #endregion
-
-        private DateTime m_NextCombatTime = DateTime.UtcNow;
 
         public long NextSkillTime
         {
@@ -3680,11 +3697,11 @@ namespace Server
                     }
 
                     m_LastMoveTime = Core.TickCount;
+                    LastMovement = DateTime.UtcNow;
                 }
-                else
-                {
-                    return false;
-                }
+
+                else                
+                    return false;                
 
                 DisruptiveAction();
             }

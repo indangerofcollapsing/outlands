@@ -2225,8 +2225,8 @@ namespace Server
 
                     else
                         weapon.OnMiss(player, mobileTarget);
-                   
-                    player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
+
+                    player.LastSwingTime = DateTime.UtcNow;
                 });
             }
         }
@@ -3523,7 +3523,7 @@ namespace Server
 
             player.Warmode = false;
             player.Combatant = null;
-            player.NextCombatTime = player.NextCombatTime + TimeSpan.FromSeconds(1);
+            player.LastSwingTime = player.LastSwingTime + TimeSpan.FromSeconds(1);
 
             AbilitySuccessful(player, UOACZUndeadAbilityType.Shadows);
 
@@ -3823,7 +3823,7 @@ namespace Server
                         weapon.OnMiss(player, mobileTarget);
 
                     player.DoHarmful(mobileTarget);
-                    player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);         
+                    player.LastSwingTime = DateTime.UtcNow;  
                 });
             }
         }
@@ -4535,8 +4535,8 @@ namespace Server
 
                     else
                         weapon.OnMiss(player, mobileTarget);
-                    
-                    player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);                    
+
+                    player.LastSwingTime = DateTime.UtcNow;          
                 });
             }
         }
@@ -4761,7 +4761,7 @@ namespace Server
                         weapon.OnMiss(player, mobileTarget);
 
                     player.DoHarmful(mobileTarget);
-                    player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);                                
+                    player.LastSwingTime = DateTime.UtcNow;                           
                         
                     Timer.DelayCall(TimeSpan.FromSeconds(.25), delegate
                     {
@@ -6246,8 +6246,8 @@ namespace Server
                         else
                             weapon.OnMiss(player, mobileTarget);
 
-                        
-                        player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
+
+                        player.LastSwingTime = DateTime.UtcNow;
                     });
                 });
             }

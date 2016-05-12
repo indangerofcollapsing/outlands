@@ -115,7 +115,7 @@ namespace Server.Mobiles
                 Animate(34, 5, 1, true, false, 0);
 
                 AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-                NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(2);
+                LastSwingTime = LastSwingTime + TimeSpan.FromSeconds(2);
 
                 m_NextDrinkAllowed = DateTime.UtcNow + NextDrinkDelay;
             }

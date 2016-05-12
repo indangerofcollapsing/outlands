@@ -183,12 +183,11 @@ namespace Server
                         adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar); 
                 }
 
-                //Display Player Poison Damage
-                if (pm_From != null && m_From.GetDistanceToSqrt(m_Mobile) <= 20)                
-                    DamageTracker.RecordDamage(pm_From, pm_From, m_Mobile, DamageTracker.DamageType.PoisonDamage, adjustedDamageDisplayed);                    
+                //Display Player Poison Damage              
+                DamageTracker.RecordDamage(pm_From, pm_From, m_Mobile, DamageTracker.DamageType.PoisonDamage, adjustedDamageDisplayed);                    
                 
                 //Display Follower Poison Damage
-                if (bc_From != null && m_From.GetDistanceToSqrt(m_Mobile) <= 20)
+                if (bc_From != null)
                 {
                     if (bc_From.Controlled && bc_From.ControlMaster is PlayerMobile)
                     {
@@ -199,7 +198,7 @@ namespace Server
                 }
 
                 //Display Provoked Creature Poison Damage
-                if (bc_From != null && m_From.GetDistanceToSqrt(m_Mobile) <= 20)
+                if (bc_From != null)
                 {
                     if (bc_From.BardProvoked && bc_From.BardMaster is PlayerMobile)
                     {

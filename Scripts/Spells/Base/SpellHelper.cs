@@ -1476,9 +1476,8 @@ namespace Server.Spells
                 if (bc_Caster.Controlled && bc_Caster.ControlMaster is PlayerMobile)
                 {
                     PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
-
-                    if (target.GetDistanceToSqrt(playerOwner) <= 20)
-                        DamageTracker.RecordDamage(playerOwner, bc_Caster, target, DamageTracker.DamageType.FollowerDamage, finalAdjustedDamage);
+                    
+                    DamageTracker.RecordDamage(playerOwner, bc_Caster, target, DamageTracker.DamageType.FollowerDamage, finalAdjustedDamage);
                  }
             }
 
@@ -1488,9 +1487,8 @@ namespace Server.Spells
                 if (bc_Caster.BardProvoked && bc_Caster.BardMaster is PlayerMobile)
                 {
                     PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
-
-                    if (target.GetDistanceToSqrt(playerBard) <= 20)                    
-                        DamageTracker.RecordDamage(playerBard, bc_Caster, target, DamageTracker.DamageType.ProvocationDamage, finalAdjustedDamage);
+                  
+                    DamageTracker.RecordDamage(playerBard, bc_Caster, target, DamageTracker.DamageType.ProvocationDamage, finalAdjustedDamage);
                 }
             }  
 
@@ -1608,9 +1606,8 @@ namespace Server.Spells
                         if (bc_Caster.Controlled && bc_Caster.ControlMaster is PlayerMobile)
                         {
                             PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
-
-                            if (m_Target.GetDistanceToSqrt(playerOwner) <= 20)                            
-                                DamageTracker.RecordDamage(playerOwner, bc_Caster, m_Target, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);
+                        
+                            DamageTracker.RecordDamage(playerOwner, bc_Caster, m_Target, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);
                         }
                     }
 
@@ -1620,9 +1617,8 @@ namespace Server.Spells
                         if (bc_Caster.BardProvoked && bc_Caster.BardMaster is PlayerMobile)
                         {
                             PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
-
-                            if (m_Target.GetDistanceToSqrt(playerBard) <= 20)                            
-                                DamageTracker.RecordDamage(playerBard, bc_Caster, m_Target, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
+                          
+                            DamageTracker.RecordDamage(playerBard, bc_Caster, m_Target, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
                         }
                     }
 

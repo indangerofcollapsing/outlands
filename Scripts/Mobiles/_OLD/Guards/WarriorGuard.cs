@@ -89,7 +89,7 @@ namespace Server.Mobiles
 			Skills[SkillName.MagicResist].Base = 120.0;
 			Skills[SkillName.DetectHidden].Base = 100.0;
 
-            this.NextCombatTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(500); // Core.TickCount + 500;
+            this.LastSwingTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(500); // Core.TickCount + 500;
 			this.Focus = target;
 		}
 

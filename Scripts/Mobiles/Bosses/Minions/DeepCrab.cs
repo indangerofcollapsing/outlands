@@ -87,8 +87,8 @@ namespace Server.Mobiles
                     {
                         if (this == null) return;
                         if (Deleted || !Alive) return;
-
-                        DelayNextCombatTime(1);
+                        
+                        LastCombatTime = LastCombatTime + TimeSpan.FromSeconds(1);
 
                         BoatOccupied.ReceiveDamage(this, null, Utility.RandomMinMax(5, 10), DamageType.Hull);
 

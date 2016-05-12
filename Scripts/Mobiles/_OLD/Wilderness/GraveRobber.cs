@@ -104,7 +104,7 @@ namespace Server.Mobiles
                 Animate(Utility.RandomList(11, 12), 5, 1, true, false, 0);
 
                 AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-                NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(2);
+                LastSwingTime = LastSwingTime + TimeSpan.FromSeconds(2);
 
                 //Dirt
                 for (int a = 0; a < 2; a++)

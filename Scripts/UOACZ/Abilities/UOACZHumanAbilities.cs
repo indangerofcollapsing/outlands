@@ -87,7 +87,7 @@ namespace Server
 
             player.Warmode = false;
             player.Combatant = null;
-            player.NextCombatTime = player.NextCombatTime + TimeSpan.FromSeconds(1);
+            player.LastSwingTime = player.LastSwingTime + TimeSpan.FromSeconds(1);
 
             player.m_UOACZAccountEntry.HumanProfile.NextHideAllowed = DateTime.UtcNow + UOACZSystem.HideCooldown;
 
@@ -620,7 +620,7 @@ namespace Server
                         damageScalar *= UOACZPersistance.HumanBalanceScalar;
 
                         player.DoHarmful(mobileTarget);
-                        player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
+                        player.LastSwingTime = DateTime.UtcNow;
 
                         if (attackHit)
                             weapon.OnHit(player, mobileTarget, damageScalar);
@@ -912,7 +912,7 @@ namespace Server
                             player.PlaySound(0x238);
 
                         player.DoHarmful(mobileTarget);
-                        player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
+                        player.LastSwingTime = DateTime.UtcNow;
                     });
                 });
             }
@@ -1093,7 +1093,7 @@ namespace Server
                         entangleDuration *= UOACZPersistance.HumanBalanceScalar;
 
                         player.DoHarmful(mobileTarget);
-                        player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
+                        player.LastSwingTime = DateTime.UtcNow;
 
                         if (attackHit)
                         {
@@ -1545,7 +1545,7 @@ namespace Server
                     AbilitySuccessful(player, UOACZHumanAbilityType.Shadowstrike);
                     
                     player.DoHarmful(mobileTarget);
-                    player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
+                    player.LastSwingTime = DateTime.UtcNow;
 
                     int projectiles = 6;
                     int particleSpeed = 4;
@@ -1572,7 +1572,7 @@ namespace Server
 
                         player.Warmode = false;
                         player.Combatant = null;
-                        player.NextCombatTime = player.NextCombatTime + TimeSpan.FromSeconds(1);
+                        player.LastSwingTime = player.LastSwingTime + TimeSpan.FromSeconds(1);
 
                         player.SendMessage("You attack your target and dart into the shadows.");
 
@@ -1789,7 +1789,7 @@ namespace Server
                         weapon.OnMiss(player, mobileTarget);
 
                     player.DoHarmful(mobileTarget);
-                    player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
+                    player.LastSwingTime = DateTime.UtcNow;
                 });
             }
         }
@@ -2106,7 +2106,7 @@ namespace Server
 
                 player.Warmode = false;
                 player.Combatant = null;
-                player.NextCombatTime = player.NextCombatTime + TimeSpan.FromSeconds(1);
+                player.LastSwingTime = player.LastSwingTime + TimeSpan.FromSeconds(1);
 
                 player.m_UOACZAccountEntry.HumanProfile.NextHideAllowed = DateTime.UtcNow + UOACZSystem.HideCooldown;
 
@@ -2277,7 +2277,7 @@ namespace Server
                         weapon.OnMiss(player, mobile);
 
                     player.DoHarmful(mobile);
-                    player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
+                    player.LastSwingTime = DateTime.UtcNow;
                 }
             });
         }
@@ -2418,7 +2418,7 @@ namespace Server
                     AbilitySuccessful(player, UOACZHumanAbilityType.Overpower);
                     
                     player.DoHarmful(mobileTarget);
-                    player.NextCombatTime = DateTime.UtcNow + weapon.GetDelay(player, false);
+                    player.LastSwingTime = DateTime.UtcNow;
                 });
             }
         }

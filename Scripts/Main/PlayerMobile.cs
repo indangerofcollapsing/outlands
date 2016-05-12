@@ -593,7 +593,7 @@ namespace Server.Mobiles
                     pm_Target.RawStr = 10000;
                     pm_Target.Hits = pm_Target.HitsMax;
 
-                    pm_Target.RawDex = 200;
+                    pm_Target.RawDex = 100;
                     pm_Target.Stam = pm_Target.StamMax;
 
                     pm_Target.RawInt = 1000;
@@ -608,7 +608,7 @@ namespace Server.Mobiles
 
                     pm_Target.DeleteAllEquipment();
 
-                    pm_Target.Backpack.DropItem(new Arrow(2000));
+                    pm_Target.Backpack.DropItem(new Arrow(1000));
                     pm_Target.AddItem(new Bow());
 
                     TotalRefreshPotion potion = new TotalRefreshPotion();
@@ -1100,90 +1100,7 @@ namespace Server.Mobiles
             get { return m_NumGoldCoinsGenerated; }
             set { m_NumGoldCoinsGenerated = value; }
         }
-
-        #region Insta-Hit
-
-        private DateTime m_NextInstahit;
-        public BaseWeapon m_LastWeaponHeld;
-        private BaseWeapon instahitDefault;
-        public TimeSpan m_InstahitCounter = new TimeSpan();
-        public NewInstahit ni;
-        public bool m_HasTimerRunning;
-        private bool m_NoNewTimer;
-        private DateTime m_LastSwing;
-
-        public DateTime LastSwing
-        {
-            get { return m_LastSwing; }
-            set { m_LastSwing = value; }
-        }
-
-        [CommandProperty(AccessLevel.Administrator)]
-        public bool NoNewTimer
-        {
-            get { return m_NoNewTimer; }
-            set { m_NoNewTimer = value; }
-        }
-
-        public BaseWeapon InstahitDefault
-        {
-            get { return instahitDefault; }
-        }
-
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextInstahit
-        {
-            get
-            {
-                TimeSpan ts = m_NextInstahit - DateTime.UtcNow;
-                if (ts < TimeSpan.Zero)
-                    ts = TimeSpan.Zero;
-                return ts;
-            }
-            set
-            {
-                try { m_NextInstahit = DateTime.UtcNow + value; }
-                catch { }
-            }
-        }
-
-        public static void CompareInstahit(Mobile from)
-        {
-            PlayerMobile pm = from as PlayerMobile;
-            BaseWeapon weapon = from.Weapon as BaseWeapon;
-
-            pm.m_InstahitCounter += TimeSpan.FromSeconds(1);
-        }
-
-        public class NewInstahit : Timer
-        {
-            private Mobile from;
-
-            public NewInstahit(Mobile m)
-                : base(TimeSpan.FromSeconds(0))
-            {
-                Priority = TimerPriority.OneSecond;
-                from = m;
-
-                if (!this.Running)
-                    this.Start();
-            }
-
-            protected override void OnTick()
-            {
-                PlayerMobile pm = from as PlayerMobile;
-
-                this.Start();
-
-                pm.m_HasTimerRunning = true;
-                //pm.Say( "" + pm.m_InstahitCounter.ToString() );
-                CompareInstahit(pm);
-            }
-        }
-
-        #endregion
-
+        
         #region Captcha
 
         private Item m_TempStashedHarvest = null;
@@ -3720,6 +3637,24 @@ namespace Server.Mobiles
             return disrupt;
         }
 
+        public override bool ReadyForSwing()
+        {
+            BaseWeapon weapon = Weapon as BaseWeapon;
+
+            if (weapon == null)
+                return false;
+
+            TimeSpan stationaryDelayRequired = weapon.GetStationaryDelayRequired(this);
+
+            if (DateTime.UtcNow < LastMovement + stationaryDelayRequired)
+                return false;
+
+            if (DateTime.UtcNow < LastSwingTime + NextSwingDelay)
+                return false;
+
+            return true;
+        }
+
         public override void OnDamage(int amount, Mobile from, bool willKill)
         {
             BaseCreature bc_From = from as BaseCreature;
@@ -3751,8 +3686,7 @@ namespace Server.Mobiles
         {
             private PlayerMobile m_Player;
 
-            public PlayerCombatTimer(PlayerMobile player)
-                : base(TimeSpan.Zero, TimeSpan.FromSeconds(1))
+            public PlayerCombatTimer(PlayerMobile player): base(TimeSpan.Zero, TimeSpan.FromSeconds(1))
             {
                 m_Player = player;
                 Priority = TimerPriority.OneSecond;
@@ -5144,7 +5078,6 @@ namespace Server.Mobiles
             writer.Write((Serial)m_LastTarget);
             writer.Write((DateTime)m_LastDeathByPlayer);
             writer.Write(m_LastOnline);
-            writer.Write((bool)m_NoNewTimer); // IPY
             m_BOBFilter.Serialize(writer);
             writer.Write((int)m_NpcGuild);
             writer.Write((DateTime)m_NpcGuildJoinTime);
@@ -5249,7 +5182,6 @@ namespace Server.Mobiles
                 m_LastTarget = (Serial)reader.ReadInt();
                 m_LastDeathByPlayer = reader.ReadDateTime();
                 m_LastOnline = reader.ReadDateTime();
-                m_NoNewTimer = reader.ReadBool();
                 m_BOBFilter = new Engines.BulkOrders.BOBFilter(reader);
                 m_NpcGuild = (NpcGuild)reader.ReadInt();
                 m_NpcGuildJoinTime = reader.ReadDateTime();

@@ -173,7 +173,7 @@ namespace Server.Custom
             double repairInterval = 3.5;
 
             AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(repairInterval);
-            NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(repairInterval);
+            LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(repairInterval);
 
             NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(repairInterval);
             NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(repairInterval);

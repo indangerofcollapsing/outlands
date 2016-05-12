@@ -293,7 +293,7 @@ namespace Server.Mobiles
 
             if (creature.AIObject != null)
                 creature.AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
-            creature.NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
+            creature.LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
 
             if (creature.Body.IsHuman)
                 creature.Animate(17, 7, 1, true, false, 0);
@@ -334,7 +334,7 @@ namespace Server.Mobiles
 
             if (creature.AIObject != null)
                 creature.AIObject.NextMove = creature.AIObject.NextMove + TimeSpan.FromSeconds(actionsCooldown);
-            creature.NextCombatTime = creature.NextCombatTime + TimeSpan.FromSeconds(actionsCooldown);
+            creature.LastSwingTime = creature.LastSwingTime + TimeSpan.FromSeconds(actionsCooldown);
             creature.NextSpellTime = creature.NextSpellTime + TimeSpan.FromSeconds(actionsCooldown);
             creature.NextCombatHealActionAllowed = creature.NextCombatHealActionAllowed + TimeSpan.FromSeconds(actionsCooldown);
             creature.NextCombatSpecialActionAllowed = creature.NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(actionsCooldown);
@@ -565,7 +565,7 @@ namespace Server.Mobiles
             if (creature.AIObject != null)
                 creature.AIObject.NextMove = creature.AIObject.NextMove + TimeSpan.FromSeconds(1.5);
 
-            creature.NextCombatTime = creature.NextCombatTime + TimeSpan.FromSeconds(1.5);
+            creature.LastSwingTime = creature.LastSwingTime + TimeSpan.FromSeconds(1.5);
 
             Effects.PlaySound(creature.Location, creature.Map, 0x4B9);
 

@@ -9,7 +9,7 @@ namespace Server.Items
 		public override TimeSpan Duration{ get{ return TimeSpan.FromMinutes( 2.0 ); } }
 
 		[Constructable]
-		public GreaterMagicResistPotion() : base( PotionEffect.MagicResist )
+		public GreaterMagicResistPotion() : base( PotionEffect.MagicResistance )
 		{
             Name = "Greater Magic Resist potion";
 		}

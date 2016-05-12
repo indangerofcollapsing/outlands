@@ -77,7 +77,7 @@ namespace Server
             base.OnThink();
 
             //Prevent Melee Attacks
-            NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(30);
+            LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(30);
 
             if (DateTime.UtcNow >= m_NextVoidAttackAllowed && AIObject.currentCombatRange != CombatRange.Withdraw && AIObject.Action != ActionType.Flee)
             {

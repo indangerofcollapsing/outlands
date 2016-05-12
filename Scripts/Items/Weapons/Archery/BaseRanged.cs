@@ -30,65 +30,60 @@ namespace Server.Items
         {
         }
 
-        public static int RangedShotDelay(int dex)
+        public override TimeSpan GetStationaryDelayRequired(Mobile attacker)
         {
-            double minDelay = 333;
-            double maxDelay = 666;
+            return TimeSpan.FromSeconds(.5);
+
+            /*
+            if (attacker is BaseCreature)
+                return TimeSpan.FromSeconds(.25);
+             
+            double minDelay = .50;
+            double maxDelay = .75;
 
             double minDex = 25;
-            double maxDex = 100;            
+            double maxDex = 100;
 
-            if (dex > 100)
-                dex = 100;
+            int effectiveDex = attacker.Dex;
 
-            if (dex < 25)
-                dex = 25;
+            if (effectiveDex > 100)
+                effectiveDex = 100;
 
-            double dexScalar = (dex - minDex) / (maxDex - minDex);
+            if (effectiveDex < 25)
+                effectiveDex = 25;
 
-            int delay = (int)(Math.Round(maxDelay - ((maxDelay - minDelay) * dexScalar)));
-                        
-            return delay;
+            double dexScalar = (effectiveDex - minDex) / (maxDex - minDex);
+
+            return TimeSpan.FromSeconds(maxDelay - ((maxDelay - minDelay) * dexScalar));
+            */
         }
 
         public override TimeSpan OnSwing(Mobile attacker, Mobile defender)
-        {   
-            bool still_enough = Core.TickCount - attacker.LastMoveTime >= RangedShotDelay(attacker.Dex);
-
-            if (still_enough)
+        {               
+            if (attacker.HarmfulCheck(defender))
             {
-                if (attacker.HarmfulCheck(defender))
-                {
-                    attacker.DisruptiveAction();
-                    attacker.Send(new Swing(0, attacker, defender));
+                attacker.DisruptiveAction();
+                attacker.Send(new Swing(0, attacker, defender));
                     
-                    if (OnFired(attacker, defender))
+                if (OnFired(attacker, defender))
+                {
+                    if (attacker is BaseCreature)
                     {
-                        if (attacker is BaseCreature)
-                        {
-                            BaseCreature bc_Attacker = attacker as BaseCreature;
-                            bc_Attacker.OnSwing(defender);
-                        }
-
-                        if (CheckHit(attacker, defender))
-                            OnHit(attacker, defender);
-
-                        else
-                            OnMiss(attacker, defender);
+                        BaseCreature bc_Attacker = attacker as BaseCreature;
+                        bc_Attacker.OnSwing(defender);
                     }
+
+                    if (CheckHit(attacker, defender))
+                        OnHit(attacker, defender);
+
+                    else
+                        OnMiss(attacker, defender);
                 }
-
-                attacker.RevealingAction();
-
-                return GetDelay(attacker, false);
             }
 
-            else
-            {
-                attacker.RevealingAction();
+            attacker.RevealingAction();
 
-                return TimeSpan.FromSeconds(0.25);
-            }
+            return GetDelay(attacker, false);            
         }
 
         public override void OnHit(Mobile attacker, Mobile defender, double damageBonus)

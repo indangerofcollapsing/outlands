@@ -221,7 +221,7 @@ namespace Server.Mobiles
                     Frozen = true;
                     
                     AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-                    NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+                    LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(2);
 
                     NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(2);
                     NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(2);

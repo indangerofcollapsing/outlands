@@ -954,7 +954,7 @@ namespace Server.Mobiles
                         bc_Defender.NextDecisionTime = DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds);
 
                         bc_Defender.DelayNextMovement(expirationSeconds);
-                        bc_Defender.DelayNextCombatTime(expirationSeconds);
+                        bc_Defender.LastSwingTime = bc_Defender.LastSwingTime + TimeSpan.FromSeconds(expirationSeconds);
 
                         bc_Defender.NextSpellTime = bc_Defender.NextSpellTime + TimeSpan.FromSeconds(expirationSeconds);
                         bc_Defender.NextCombatSpecialActionAllowed = bc_Defender.NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(expirationSeconds);
@@ -999,7 +999,7 @@ namespace Server.Mobiles
                     pm_Defender.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.Hinder, attacker, value, DateTime.UtcNow + TimeSpan.FromSeconds(expirationSeconds)));
 
                     pm_Defender.Frozen = true;
-                    pm_Defender.NextCombatTime = pm_Defender.NextCombatTime + TimeSpan.FromSeconds(expirationSeconds);
+                    pm_Defender.LastSwingTime = pm_Defender.LastSwingTime + TimeSpan.FromSeconds(expirationSeconds);
                 }
             }
         }
@@ -1244,7 +1244,8 @@ namespace Server.Mobiles
                     {
                         bc_Defender.Frozen = true;
                         bc_Defender.DelayNextMovement(expirationSeconds);
-                        bc_Defender.DelayNextCombatTime(expirationSeconds);
+
+                        bc_Defender.LastSwingTime = bc_Defender.LastSwingTime + TimeSpan.FromSeconds(expirationSeconds);
 
                         if (bc_Defender.HueMod == -1)
                             bc_Defender.HueMod = 911;
@@ -1288,7 +1289,7 @@ namespace Server.Mobiles
                         pm_Defender.HueMod = 911;
 
                     pm_Defender.Frozen = true;
-                    pm_Defender.NextCombatTime = pm_Defender.NextCombatTime + TimeSpan.FromSeconds(expirationSeconds);
+                    pm_Defender.LastSwingTime = pm_Defender.LastSwingTime + TimeSpan.FromSeconds(expirationSeconds);
                 }
             }
         }
@@ -2377,7 +2378,7 @@ namespace Server.Mobiles
                 creature.PlaySound(creature.GetAngerSound());
 
                 creature.AIObject.NextMove = creature.AIObject.NextMove + TimeSpan.FromSeconds(2);
-                creature.NextCombatTime = creature.NextCombatTime + TimeSpan.FromSeconds(2);
+                creature.LastSwingTime = creature.LastSwingTime + TimeSpan.FromSeconds(2);
 
                 if (creature.Body.IsHuman)
                     creature.Animate(31, 7, 1, true, false, 0);

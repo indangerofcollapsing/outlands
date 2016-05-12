@@ -90,7 +90,7 @@ namespace Server.Mobiles
         {
             base.OnThink();
 
-            NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(30);
+            LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(30);
 
             Mobile combatant = Combatant;
 

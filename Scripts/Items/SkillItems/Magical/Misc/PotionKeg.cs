@@ -149,17 +149,6 @@ namespace Server.Items
             }
         }
 
-        public override int LabelNumber
-        {
-            get
-            {
-                if (m_Held > 0 && (int)m_Type >= (int)PotionEffect.Conflagration)
-                    return 1072658 + (int)m_Type - (int)PotionEffect.Conflagration;
-
-                return (m_Held > 0 ? 1041620 + (int)m_Type : 1041641);
-            }
-        }
-
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -207,11 +196,14 @@ namespace Server.Items
         }
 
         public override void OnSingleClick(Mobile from)
-        {
-            base.OnSingleClick(from);
+        {            
+            if (m_Held == 0)
+                LabelTo(from, "a potion keg");
+            else
+                LabelTo(from, "a potion keg: " + BasePotion.GetName(m_Type));
 
             if (m_MaxHeld > 100)
-                LabelTo(from, "Capacity: " + m_Held.ToString() + " / " + m_MaxHeld.ToString() + "");
+                LabelTo(from, "(Capacity: " + m_Held.ToString() + " / " + m_MaxHeld.ToString() + ")");
 
             else
             {
@@ -422,9 +414,9 @@ namespace Server.Items
             switch (m_Type)
             {
                 default:
-                case PotionEffect.LesserMagicResist: return new LesserMagicResistPotion();
-                case PotionEffect.MagicResist: return new MagicResistPotion();
-                case PotionEffect.GreaterMagicResist: return new GreaterMagicResistPotion();
+                case PotionEffect.LesserMagicResistance: return new LesserMagicResistPotion();
+                case PotionEffect.MagicResistance: return new MagicResistPotion();
+                case PotionEffect.GreaterMagicResistance: return new GreaterMagicResistPotion();
 
                 case PotionEffect.CureLesser: return new LesserCurePotion();
                 case PotionEffect.Cure: return new CurePotion();
@@ -440,6 +432,7 @@ namespace Server.Items
                 case PotionEffect.Poison: return new PoisonPotion();
                 case PotionEffect.PoisonGreater: return new GreaterPoisonPotion();
                 case PotionEffect.PoisonDeadly: return new DeadlyPoisonPotion();
+                case PotionEffect.PoisonLethal: return new LethalPoisonPotion();
 
                 case PotionEffect.Refresh: return new RefreshPotion();
                 case PotionEffect.RefreshTotal: return new TotalRefreshPotion();

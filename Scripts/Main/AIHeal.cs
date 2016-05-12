@@ -308,7 +308,7 @@ namespace Server.Mobiles
             creature.Emote("*begins bandaging*");
 
             creature.AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
-            creature.NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
+            creature.LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
 
             //Targeting Self
             if (creature == creature.HealTarget)
@@ -426,7 +426,7 @@ namespace Server.Mobiles
         public static bool DoPotionHeal(BaseCreature creature)
         {
             creature.AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
-            creature.NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
+            creature.LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
 
             if (creature.Body.IsHuman)
                 creature.Animate(34, 5, 1, true, false, 0);
@@ -458,7 +458,7 @@ namespace Server.Mobiles
                 return false;
 
             creature.AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
-            creature.NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
+            creature.LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
 
             if (creature.Poisoned)
             {

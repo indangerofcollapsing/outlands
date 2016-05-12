@@ -221,7 +221,7 @@ namespace Server.Mobiles
                     creature.Frozen = true;
 
                     creature.AIObject.NextMove = creature.AIObject.NextMove + TimeSpan.FromSeconds(stationaryDuration);
-                    creature.NextCombatTime = creature.NextCombatTime + TimeSpan.FromSeconds(stationaryDuration);
+                    creature.LastSwingTime = creature.LastSwingTime + TimeSpan.FromSeconds(stationaryDuration);
                     creature.NextSpellTime = creature.NextSpellTime + TimeSpan.FromSeconds(stationaryDuration);
                     creature.NextCombatHealActionAllowed = creature.NextCombatHealActionAllowed + TimeSpan.FromSeconds(stationaryDuration);
                     creature.NextCombatSpecialActionAllowed = creature.NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDuration);
@@ -328,7 +328,7 @@ namespace Server.Mobiles
             creature.CantWalk = true;
 
             creature.AIObject.NextMove = creature.AIObject.NextMove + TimeSpan.FromSeconds(stationaryDuration);
-            creature.NextCombatTime = creature.NextCombatTime + TimeSpan.FromSeconds(stationaryDuration);
+            creature.LastSwingTime = creature.LastSwingTime + TimeSpan.FromSeconds(stationaryDuration);
             creature.NextSpellTime = creature.NextSpellTime + TimeSpan.FromSeconds(stationaryDuration);
             creature.NextCombatHealActionAllowed = creature.NextCombatHealActionAllowed + TimeSpan.FromSeconds(stationaryDuration);
             creature.NextCombatSpecialActionAllowed = creature.NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDuration);

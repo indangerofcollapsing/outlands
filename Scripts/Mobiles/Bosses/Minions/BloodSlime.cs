@@ -60,7 +60,7 @@ namespace Server.Mobiles
             base.OnThink();
 
             //Prevent Melee Attacks
-            NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(30);
+            LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(30);
 
             Mobile combatant = Combatant;
 

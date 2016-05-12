@@ -11,7 +11,7 @@ namespace Server.Items
 		public override double MaxPoisoningSkill{ get{ return 120; } }
 
 		[Constructable]
-		public LethalPoisonPotion() : base( PotionEffect.PoisonDeadly )
+		public LethalPoisonPotion() : base( PotionEffect.PoisonLethal )
 		{
             Name = "Lethal Poison potion";
 		}

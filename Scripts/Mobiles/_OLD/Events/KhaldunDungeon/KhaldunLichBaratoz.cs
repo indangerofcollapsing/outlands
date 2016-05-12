@@ -212,7 +212,7 @@ namespace Server.Mobiles
             NextDecisionTime = DateTime.UtcNow + TimeSpan.FromSeconds(stationaryDelay);
 
             AIObject.NextMove = AIObject.NextMove + TimeSpan.FromSeconds(stationaryDelay);
-            NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(stationaryDelay);
+            LastSwingTime = LastSwingTime + TimeSpan.FromSeconds(stationaryDelay);
             NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(stationaryDelay);
             NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(stationaryDelay);
             NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(stationaryDelay);

@@ -256,7 +256,7 @@ namespace Server.Mobiles
                     if (AIObject != null)
                     {
                         AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(actionsCooldown);
-                        NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(actionsCooldown);
+                        LastSwingTime = LastSwingTime + TimeSpan.FromSeconds(actionsCooldown);
                         NextSpellTime = NextSpellTime + TimeSpan.FromSeconds(actionsCooldown);
                         NextCombatHealActionAllowed = NextCombatHealActionAllowed + TimeSpan.FromSeconds(actionsCooldown);
                         NextCombatSpecialActionAllowed = NextCombatSpecialActionAllowed + TimeSpan.FromSeconds(actionsCooldown);
@@ -409,7 +409,7 @@ namespace Server.Mobiles
                     int maxDamage = DamageMax;
 
                     AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
-                    NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(3);
+                    LastSwingTime = LastSwingTime + TimeSpan.FromSeconds(3);
 
                     m_NextArrowAllowed = DateTime.UtcNow + NextArrowDelay;
 

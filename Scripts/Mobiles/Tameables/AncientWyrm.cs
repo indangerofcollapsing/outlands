@@ -113,7 +113,7 @@ namespace Server.Mobiles
                     m_NextMassiveBreathAllowed = DateTime.UtcNow + NextMassiveBreathDelay + TimeSpan.FromSeconds(totalDelay);
                     m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay + TimeSpan.FromSeconds(totalDelay);
 
-                    NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(totalDelay + 2);
+                    LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(totalDelay + 2);
                     NextSpellTime = DateTime.UtcNow + TimeSpan.FromSeconds(totalDelay + 2);
 
                     return;
@@ -126,7 +126,7 @@ namespace Server.Mobiles
                     m_NextBreathAllowed = DateTime.UtcNow + NextBreathDelay;
                     m_NextAbilityAllowed = DateTime.UtcNow + NextAbilityDelay;
 
-                    NextCombatTime = DateTime.UtcNow + TimeSpan.FromSeconds(4);
+                    LastSwingTime = DateTime.UtcNow + TimeSpan.FromSeconds(4);
                     NextSpellTime = DateTime.UtcNow + TimeSpan.FromSeconds(4);
 
                     return;

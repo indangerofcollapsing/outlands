@@ -1581,17 +1581,15 @@ namespace Server.Mobiles
             if ((this is BladeSpirits || this is EnergyVortex) && SummonMaster is PlayerMobile)
             {
                 PlayerMobile pm_Controller = SummonMaster as PlayerMobile;
-
-                if (GetDistanceToSqrt(pm_Controller) <= 20)                
-                    DamageTracker.RecordDamage(pm_Controller, this, defender, DamageTracker.DamageType.FollowerDamage, damage);   
+          
+                DamageTracker.RecordDamage(pm_Controller, this, defender, DamageTracker.DamageType.FollowerDamage, damage);   
             }
 
             if (Controlled && ControlMaster is PlayerMobile)
             {
                 PlayerMobile pm_Controller = ControlMaster as PlayerMobile;
-
-                if (GetDistanceToSqrt(pm_Controller) <= 20)                
-                    DamageTracker.RecordDamage(pm_Controller, this, defender, DamageTracker.DamageType.FollowerDamage, damage);                
+              
+                DamageTracker.RecordDamage(pm_Controller, this, defender, DamageTracker.DamageType.FollowerDamage, damage);                
             }
         }
 
@@ -2801,17 +2799,7 @@ namespace Server.Mobiles
             }
 
             AIObject.NextMove = AIObject.NextMove + TimeSpan.FromSeconds(seconds);
-        }
-
-        public void DelayNextCombatTime(double seconds)
-        {
-            if (NextCombatTime < DateTime.UtcNow)
-            {
-                NextCombatTime = DateTime.UtcNow;
-            }
-
-            NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(seconds);
-        }
+        }        
 
         public virtual bool CanFlee { get { return !m_Paragon; } }
 
@@ -3442,7 +3430,7 @@ namespace Server.Mobiles
             BardPacified = false;
 
             BardEndTime = DateTime.UtcNow;
-            NextCombatTime = DateTime.UtcNow;
+            LastSwingTime = DateTime.UtcNow;
 
             PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "*breaks from trance*");
         }
@@ -3634,6 +3622,24 @@ namespace Server.Mobiles
             }
         }
 
+        public override bool ReadyForSwing()
+        {
+            BaseWeapon weapon = Weapon as BaseWeapon;
+
+            if (weapon == null)
+                return false;
+
+            TimeSpan stationaryDelayRequired = weapon.GetStationaryDelayRequired(this);
+
+            if (DateTime.UtcNow < LastMovement + stationaryDelayRequired)
+                return false;
+
+            if (DateTime.UtcNow < LastSwingTime + NextSwingDelay)
+                return false;
+
+            return true;
+        }
+        
         public virtual void OnSwing(Mobile defender)
         {
             if (AcquireNewTargetEveryCombatAction)
@@ -8711,7 +8717,7 @@ namespace Server.Mobiles
             Combatant = null;
 
             BardEndTime = DateTime.UtcNow + duration;
-            NextCombatTime = DateTime.UtcNow + duration;
+            LastSwingTime = DateTime.UtcNow + duration;
 
             if (message)
                 PublicOverheadMessage(MessageType.Emote, EmoteHue, false, "*looks calmed*");

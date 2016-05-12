@@ -7,6 +7,7 @@ namespace Server.Items
 {
 	public enum PotionEffect
 	{
+        Custom,
 		CureLesser,
 		Cure,
 		CureGreater,
@@ -26,22 +27,13 @@ namespace Server.Items
 		HealGreater,
 		ExplosionLesser,
 		Explosion,
-		ExplosionGreater,
-		Custom,
-		Conflagration,
-		ConflagrationGreater,
-		MaskOfDeath,		// Mask of Death is not available in OSI but does exist in cliloc files
-		MaskOfDeathGreater,	// included in enumeration for compatability if later enabled by OSI
-		ConfusionBlast,
-		ConfusionBlastGreater,
-		Invisibility,
-		Parasitic,
-		Darkglow,
-        LesserMagicResist,
-        MagicResist,
-        GreaterMagicResist
+		ExplosionGreater,	
+        LesserMagicResistance,
+        MagicResistance,
+        GreaterMagicResistance,
+        Invisibility
 	}
-
+    
 	public abstract class BasePotion : Item, ICraftable, ICommodity
 	{
 		private PotionEffect m_PotionEffect;
@@ -50,13 +42,14 @@ namespace Server.Items
 		{
 			get { return 10; }
 		}
-
+        
 		public PotionEffect PotionEffect
 		{
 			get
 			{
 				return m_PotionEffect;
 			}
+
 			set
 			{
 				m_PotionEffect = value;
@@ -78,6 +71,51 @@ namespace Server.Items
 		public BasePotion( Serial serial ) : base( serial )
 		{
 		}
+
+        public static string GetName(PotionEffect potionEffect)
+        {
+            string potionName = "";
+
+            switch (potionEffect)
+            {
+                case PotionEffect.Custom: potionName = "Custom"; break;
+
+                case PotionEffect.CureLesser: potionName = "Lesser Cure"; break;
+                case PotionEffect.Cure: potionName = "Cure"; break;
+                case PotionEffect.CureGreater: potionName = "Greater Cure"; break;
+
+                case PotionEffect.Agility: potionName = "Agility"; break;
+                case PotionEffect.AgilityGreater: potionName = "Greater Agility"; break;
+
+                case PotionEffect.Strength: potionName = "Strength"; break;
+                case PotionEffect.StrengthGreater: potionName = "Greater Strength"; break;
+
+                case PotionEffect.PoisonLesser: potionName = "Lesser Poison"; break;
+                case PotionEffect.Poison: potionName = "Poison"; break;
+                case PotionEffect.PoisonGreater: potionName = "Greater Poison"; break;
+                case PotionEffect.PoisonDeadly: potionName = "Deadly Poison"; break;
+                case PotionEffect.PoisonLethal: potionName = "Lethal Poison"; break;
+
+                case PotionEffect.Refresh: potionName = "Refresh"; break;
+                case PotionEffect.RefreshTotal: potionName = "Total Refresh"; break;
+
+                case PotionEffect.HealLesser: potionName = "Lesser Heal"; break;
+                case PotionEffect.Heal: potionName = "Heal"; break;
+                case PotionEffect.HealGreater: potionName = "Greater Heal"; break;
+
+                case PotionEffect.ExplosionLesser: potionName = "Lesser Explosion"; break;
+                case PotionEffect.Explosion: potionName = "Explosion"; break;
+                case PotionEffect.ExplosionGreater: potionName = "Greater Explosion"; break;
+
+                case PotionEffect.LesserMagicResistance: potionName = "Lesser Magic Resistance"; break;
+                case PotionEffect.MagicResistance: potionName = "Magic Resistance"; break;
+                case PotionEffect.GreaterMagicResistance: potionName = "Greater Magic Resistance"; break;
+
+                case PotionEffect.Invisibility: potionName = "Invisibility"; break;
+            }
+
+            return potionName;
+        }
 
 		public virtual bool RequireFreeHand{ get{ return true; } }
 

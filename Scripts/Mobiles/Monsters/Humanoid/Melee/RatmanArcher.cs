@@ -65,7 +65,7 @@ namespace Server.Mobiles
                         int maxDamage = DamageMax;
 
                         AIObject.NextMove = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
-                        NextCombatTime = NextCombatTime + TimeSpan.FromSeconds(3);
+                        LastSwingTime = LastSwingTime + TimeSpan.FromSeconds(3);
 
                         m_NextArrowAllowed = DateTime.UtcNow + NextArrowDelay;
 
