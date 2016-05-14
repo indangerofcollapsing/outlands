@@ -138,8 +138,6 @@ namespace Server.Mobiles
                 damage *= 1.5;
 
             int finalAdjustedDamage = AOS.Damage(target, (int)damage, 0, 100, 0, 0, 0);
-
-            DisplayFollowerDamage(target, finalAdjustedDamage);
         }
 
         public override void OnThink()

@@ -4799,29 +4799,32 @@ namespace Server.Mobiles
         {
             double damage = (double)amount;
 
+            BaseCreature bc_Source = from as BaseCreature;
+            PlayerMobile pm_Source = from as PlayerMobile;
+
+            PlayerMobile pm_SourceMaster = null;
+
             if (from != null)
             {
-                if (from != this)
+                if (from != null && from != this)
                 {
-                    BaseCreature bc_Source = from as BaseCreature;
-                    PlayerMobile pm_Source = from as PlayerMobile;
-
                     LastCombatTime = DateTime.UtcNow;
                     from.LastCombatTime = DateTime.UtcNow;
 
                     if (bc_Source != null)
                     {
-                        if (bc_Source.Controlled && bc_Source.ControlMaster is PlayerMobile && bc_Source.ControlMaster != this)
+                        pm_SourceMaster = bc_Source.GetPlayerMaster() as PlayerMobile;
+
+                        if (pm_SourceMaster != null && pm_SourceMaster != this)
                         {
-                            PlayerMobile pm_SourceController = bc_Source.ControlMaster as PlayerMobile;
+                            pm_SourceMaster.LastCombatTime = DateTime.UtcNow;
 
-                            bc_Source.LastPlayerCombatTime = DateTime.UtcNow;
-
-                            PlayerVsPlayerCombatOccured(pm_SourceController);
+                            PlayerVsPlayerCombatOccured(pm_SourceMaster);
+                            pm_SourceMaster.PlayerVsPlayerCombatOccured(this);                            
                         }
                     }
 
-                    if (pm_Source != null && pm_Source != this)
+                    if (pm_Source != null)
                     {
                         PlayerVsPlayerCombatOccured(pm_Source);
                         pm_Source.PlayerVsPlayerCombatOccured(this);
@@ -4829,15 +4832,8 @@ namespace Server.Mobiles
                 }
 
                 //Discordance
-                int discordancePenalty = 0;
-
-                BaseCreature bc_From = from as BaseCreature;
-
-                if (bc_From != null)
-                {
-                    //Damage is Coming from a Creature that is Discorded
-                    damage *= (1 - bc_From.DiscordEffect);
-                }
+                if (bc_Source != null)
+                    damage *= (1 - bc_Source.DiscordEffect);                
             }
 
             //Ship-Based Combat
@@ -4847,11 +4843,34 @@ namespace Server.Mobiles
             if (damage < 1)
                 damage = 1;
 
-            amount = (int)damage;
+            int finalDamage = (int)damage;
 
-            DamageTracker.RecordDamage(this, from, this, DamageTracker.DamageType.DamageTaken, amount);            
+            pm_SourceMaster = null;
 
-            base.Damage(amount, from);
+            if (bc_Source != null)
+            {
+                if (bc_Source.ControlMaster is PlayerMobile)
+                {
+                    pm_SourceMaster = bc_Source.ControlMaster as PlayerMobile;
+                    DamageTracker.RecordDamage(pm_SourceMaster, from, this, DamageTracker.DamageType.FollowerDamage, finalDamage);
+                }
+
+                else if (bc_Source.SummonMaster is PlayerMobile)
+                {
+                    pm_SourceMaster = bc_Source.SummonMaster as PlayerMobile;
+                    DamageTracker.RecordDamage(pm_SourceMaster, from, this, DamageTracker.DamageType.FollowerDamage, finalDamage);
+                }
+
+                else if (bc_Source.BardProvoked && bc_Source.BardMaster is PlayerMobile)
+                {
+                    pm_SourceMaster = bc_Source.BardMaster as PlayerMobile;
+                    DamageTracker.RecordDamage(pm_SourceMaster, from, this, DamageTracker.DamageType.ProvocationDamage, finalDamage);
+                }
+            }
+
+            DamageTracker.RecordDamage(this, from, this, DamageTracker.DamageType.DamageTaken, finalDamage);
+
+            base.Damage(finalDamage, from);
         }        
 
         #region Poison

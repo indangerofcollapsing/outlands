@@ -1470,28 +1470,6 @@ namespace Server.Spells
             if (pm_Caster != null)            
                 DamageTracker.RecordDamage(pm_Caster, pm_Caster, target, DamageTracker.DamageType.SpellDamage, finalAdjustedDamage);                
             
-            //Display Follower Spell Damage
-            if (bc_Caster != null)
-            {
-                if (bc_Caster.Controlled && bc_Caster.ControlMaster is PlayerMobile)
-                {
-                    PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
-                    
-                    DamageTracker.RecordDamage(playerOwner, bc_Caster, target, DamageTracker.DamageType.FollowerDamage, finalAdjustedDamage);
-                 }
-            }
-
-            //Provoked Creature Spell Damage
-            if (bc_Caster != null)
-            {
-                if (bc_Caster.BardProvoked && bc_Caster.BardMaster is PlayerMobile)
-                {
-                    PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
-                  
-                    DamageTracker.RecordDamage(playerBard, bc_Caster, target, DamageTracker.DamageType.ProvocationDamage, finalAdjustedDamage);
-                }
-            }  
-
             if (bc_Target != null)
             {
                 bc_Target.OnHarmfulSpell(caster);
@@ -1599,29 +1577,7 @@ namespace Server.Spells
                     //Display Player Spell Damage
                     if (pm_Caster != null)                    
                         DamageTracker.RecordDamage(pm_Caster, pm_Caster, m_Target, DamageTracker.DamageType.SpellDamage, adjustedDamageDisplayed);
-
-                    //Display Follower Spell Damage
-                    if (bc_Caster != null)
-                    {
-                        if (bc_Caster.Controlled && bc_Caster.ControlMaster is PlayerMobile)
-                        {
-                            PlayerMobile playerOwner = bc_Caster.ControlMaster as PlayerMobile;
-                        
-                            DamageTracker.RecordDamage(playerOwner, bc_Caster, m_Target, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);
-                        }
-                    }
-
-                    //Provoked Creature Spell Damage
-                    if (bc_Caster != null)
-                    {
-                        if (bc_Caster.BardProvoked && bc_Caster.BardMaster is PlayerMobile)
-                        {
-                            PlayerMobile playerBard = bc_Caster.BardMaster as PlayerMobile;
-                          
-                            DamageTracker.RecordDamage(playerBard, bc_Caster, m_Target, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
-                        }
-                    }
-
+                    
                     if (m_From != null)
                         m_Target.RegisterDamage(m_Damage, m_From);
 

@@ -135,72 +135,6 @@ namespace Server.Items
             return detail;
         }
 
-        public static void CreatureKilled(BaseCreature creature, DungeonWeaponDamageEntry dungeonWeaponDamageEntry)
-        {
-            if (creature == null || dungeonWeaponDamageEntry == null)
-                return;
-
-            PlayerMobile player = dungeonWeaponDamageEntry.Player;
-            BaseWeapon weapon = dungeonWeaponDamageEntry.Weapon;
-            int damage = dungeonWeaponDamageEntry.Damage;
-
-            if (player == null || weapon == null || damage == 0) return;
-            if (weapon.Deleted) return;
-
-            if (weapon.Experience == MaxDungeonExperience)
-                return;
-
-            double baseGainChance = BaseXPGainScalar * creature.InitialDifficulty;           
-            double contributionScalar = 1;
-
-            if (((double)dungeonWeaponDamageEntry.Damage / (double)creature.HitsMax) < LowContributionThreshold)
-                contributionScalar = LowContributionScalar;
-
-            double finalChance = baseGainChance * contributionScalar;
-
-            int xpGain = NormalGain;
-
-            if (creature.IsChamp())
-            {
-                xpGain = ChampGain;
-                finalChance = 1.0;
-            }
-
-            if (creature.IsBoss())
-            {
-                xpGain = BossGain;
-                finalChance = 1.0;
-            }
-
-            if (creature.IsLoHBoss())
-            {
-                xpGain = LoHGain;
-                finalChance = 1.0;
-            }
-
-            if (creature.IsEventBoss())
-            {
-                xpGain = EventBossGain;
-                finalChance = 1.0;
-            }
-
-            if (Utility.RandomDouble() <= finalChance)
-            {
-                weapon.Experience += xpGain;
-
-                player.SendMessage("Your dungeon weapon has gained " + xpGain.ToString() + " experience.");
-
-                if (weapon.Experience > MaxDungeonExperience)
-                    weapon.Experience = MaxDungeonExperience;
-
-                if (weapon.Experience == MaxDungeonExperience && weapon.TierLevel < MaxDungeonTier)
-                {
-                    player.SendMessage(0x3F, "Your dungeon weapon has acquired enough experience to increase it's tier.");
-                    player.SendSound(0x5A7);
-                }
-            }
-        }
-
         public static void CheckResolveSpecialEffect(BaseWeapon weapon, PlayerMobile attacker, BaseCreature defender)
         {
             if (weapon == null || attacker == null || defender == null) return;
@@ -363,12 +297,5 @@ namespace Server.Items
         public DungeonWeapon.SpecialEffectType m_SpecialEffect = DungeonWeapon.SpecialEffectType.ArcaneSurge;
         public string m_EffectDisplayName = "";    
         public string m_EffectDescription = "";       
-    }
-
-    public class DungeonWeaponDamageEntry
-    {
-        public PlayerMobile Player;
-        public BaseWeapon Weapon;
-        public int Damage;
-    }
+    }    
 }

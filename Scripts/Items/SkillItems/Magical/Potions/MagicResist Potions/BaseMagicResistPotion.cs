@@ -38,10 +38,17 @@ namespace Server.Items
                 from.PlaySound(0x20F);  //0x3BD              
 
                 from.AddSpecialAbilityEffectEntry(new SpecialAbilityEffectEntry(SpecialAbilityEffect.MagicResist, from, MagicResist, DateTime.UtcNow + Duration));
-                from.SendMessage("Your magic resist against creatures has increased by " + MagicResist.ToString() + ".");
+                
+                double playerVsPlayerMagicResist = MagicResist * .5;
+
+                if (from.Skills[SkillName.MagicResist].Value < playerVsPlayerMagicResist)                
+                    from.SendMessage("Your magical resistance has increased by " + MagicResist.ToString() + " and is now set to " + playerVsPlayerMagicResist.ToString() + " against other players."); 
+                
+                else                
+                    from.SendMessage("Your magical resistance has increased by " + MagicResist.ToString() + "."); 
 
 				return true;
-			}
+			}            
 
 			from.SendLocalizedMessage( 502173 ); // You are already under a similar effect.
 			return false;

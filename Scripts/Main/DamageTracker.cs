@@ -14,9 +14,9 @@ namespace Server
         {
             MeleeDamage,
             SpellDamage,
-            FollowerDamage,
-            ProvocationDamage,
             PoisonDamage,
+            FollowerDamage,
+            ProvocationDamage,            
             DamageTaken,
             FollowerDamageTaken,
             HealingDealt
@@ -71,9 +71,9 @@ namespace Server
             HealingDealt = 0;
         }
 
-        public static void RecordDamage(Mobile mobile, Mobile from, Mobile target, DamageType damageType, int amount)
+        public static void RecordDamage(Mobile owner, Mobile from, Mobile target, DamageType damageType, int amount)
         {
-            PlayerMobile player = mobile as PlayerMobile;
+            PlayerMobile player = owner as PlayerMobile;
 
             if (player == null)
                 return;

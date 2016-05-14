@@ -67,8 +67,8 @@ namespace Server.SkillHandlers
                         
                         if ( weapon.Layer == Layer.OneHanded || weapon.Layer == Layer.TwoHanded )
 						{
-							//Ranged, One-Hand Swords, Fencing
-							startTimer = (weapon.Type == WeaponType.Ranged || weapon.Type == WeaponType.Slashing || weapon.Type == WeaponType.Piercing );
+							//One-Hand Swords, Fencing
+							startTimer = (weapon.Type == WeaponType.Slashing || weapon.Type == WeaponType.Piercing );
 						}
 					}
 

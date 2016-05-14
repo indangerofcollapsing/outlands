@@ -515,6 +515,9 @@ namespace Server.Mobiles
 
         public static double ForensicEvalCarveResourceScalarBonus = .5;
 
+        public List<Item> ArcaneItems = new List<Item>();
+        public List<ArcaneItemExperienceEntry> ArcaneItemExperienceEntries = new List<ArcaneItemExperienceEntry>();
+
         public virtual void SetRare()
         {
         }
@@ -1571,27 +1574,7 @@ namespace Server.Mobiles
 
             player.SendMessage("Which creature would you like to evaluate?");
             player.Target = new GetDifficultyTarget(player);
-        }
-
-        public void DisplayFollowerDamage(Mobile defender, int damage)
-        {
-            if (defender == null || damage <= 0)
-                return;
-
-            if ((this is BladeSpirits || this is EnergyVortex) && SummonMaster is PlayerMobile)
-            {
-                PlayerMobile pm_Controller = SummonMaster as PlayerMobile;
-          
-                DamageTracker.RecordDamage(pm_Controller, this, defender, DamageTracker.DamageType.FollowerDamage, damage);   
-            }
-
-            if (Controlled && ControlMaster is PlayerMobile)
-            {
-                PlayerMobile pm_Controller = ControlMaster as PlayerMobile;
-              
-                DamageTracker.RecordDamage(pm_Controller, this, defender, DamageTracker.DamageType.FollowerDamage, damage);                
-            }
-        }
+        }        
 
         public class GetDifficultyTarget : Target
         {
@@ -1908,8 +1891,6 @@ namespace Server.Mobiles
 
             VirtualArmor = newVirtualArmor;
         }
-
-        public List<DungeonWeaponDamageEntry> DungeonWeaponDamageEntries = new List<DungeonWeaponDamageEntry>();
 
         public override void SpecialAbilityTimerTick()
         {
@@ -2974,68 +2955,51 @@ namespace Server.Mobiles
         {
             double damage = (double)amount;
 
+            PlayerMobile pm_Master = null;
+
+            BaseCreature bc_Source = from as BaseCreature;
+            PlayerMobile pm_Source = from as PlayerMobile;
+
             if (from != null)
             {
-                BaseCreature bc_Source = from as BaseCreature;
-                PlayerMobile pm_Source = from as PlayerMobile;
-                PlayerMobile pm_Controller = ControlMaster as PlayerMobile;
+                pm_Master = GetPlayerMaster() as PlayerMobile;
 
-                if (from != null)
+                if (from != null && from != this)
                 {
                     LastCombatTime = DateTime.UtcNow;
                     from.LastCombatTime = DateTime.UtcNow;
 
                     if (bc_Source != null)
                     {
-                        if (bc_Source.IsBarded() || (bc_Source.Controlled && bc_Source.ControlMaster is PlayerMobile))
-                            m_TakenDamageFromCreature = true;
+                        PlayerMobile pm_SourceMaster = bc_Source.GetPlayerMaster() as PlayerMobile;
 
-                        if (bc_Source.Controlled && bc_Source.ControlMaster is PlayerMobile && bc_Source.ControlMaster != ControlMaster)
+                        if (pm_SourceMaster != null)
                         {
-                            PlayerMobile pm_SourceController = bc_Source.ControlMaster as PlayerMobile;
+                            pm_SourceMaster.LastCombatTime = DateTime.UtcNow;
 
-                            if (pm_SourceController != null)
-                                pm_SourceController.LastCombatTime = DateTime.UtcNow;
-
-                            if (pm_Controller != null)
-                                pm_Controller.LastCombatTime = DateTime.UtcNow;
-
-                            if (pm_SourceController != null && pm_Controller != null && pm_SourceController != pm_Controller)
+                            if (pm_Master != null && pm_SourceMaster != pm_Master)
                             {
-                                LastPlayerCombatTime = DateTime.UtcNow;
-
-                                bc_Source.LastCombatTime = DateTime.UtcNow;
-                                bc_Source.LastPlayerCombatTime = DateTime.UtcNow;
-
-                                pm_SourceController.PlayerVsPlayerCombatOccured(pm_Controller);
-                                pm_Controller.PlayerVsPlayerCombatOccured(pm_SourceController);
+                                pm_SourceMaster.PlayerVsPlayerCombatOccured(pm_Master);
+                                pm_Master.PlayerVsPlayerCombatOccured(pm_SourceMaster);
                             }
                         }
                     }
 
                     if (pm_Source != null)
                     {
-                        if (pm_Controller != null && pm_Source != pm_Controller)
+                        pm_Source.LastCombatTime = DateTime.UtcNow;
+
+                        if (pm_Master != null && pm_Source != pm_Master)
                         {
-                            pm_Source.PlayerVsPlayerCombatOccured(pm_Controller);
-                            pm_Controller.PlayerVsPlayerCombatOccured(pm_Source);
+                            pm_Master.PlayerVsPlayerCombatOccured(pm_Source);
+                            pm_Source.PlayerVsPlayerCombatOccured(pm_Master);
                         }
                     }
                 }
-
-                //--------
-
-                PlayerMobile pm_From = from as PlayerMobile;
-                BaseCreature bc_From = from as BaseCreature;
-
+                
                 //Discordance
-                int discordancePenalty = 0;
-
-                if (bc_From != null)
-                {
-                    //Damage is Coming from a Creature That is Discorded
-                    damage *= 1 - bc_From.DiscordEffect;
-                }
+                if (bc_Source != null)                
+                    damage *= 1 - bc_Source.DiscordEffect;                
 
                 //This Creature is Discorded
                 damage *= 1 + DiscordEffect;
@@ -3052,19 +3016,40 @@ namespace Server.Mobiles
 
             int finalDamage = (int)damage;
 
-            if ((this is BladeSpirits || this is EnergyVortex) && SummonMaster is PlayerMobile)
-            {
-                PlayerMobile pm_ControlMaster = SummonMaster as PlayerMobile;
+            pm_Master = null;
 
-                DamageTracker.RecordDamage(pm_ControlMaster, from, this, DamageTracker.DamageType.FollowerDamageTaken, finalDamage);                
+            if (ControlMaster is PlayerMobile)
+            {
+                pm_Master = ControlMaster as PlayerMobile;
+                DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.FollowerDamageTaken, finalDamage);  
             }
 
-            if (Controlled && ControlMaster is PlayerMobile)
+            else if (SummonMaster is PlayerMobile)
             {
-                PlayerMobile pm_ControlMaster = ControlMaster as PlayerMobile;
-                
-                DamageTracker.RecordDamage(pm_ControlMaster, from, this, DamageTracker.DamageType.FollowerDamageTaken, finalDamage);
+                pm_Master = SummonMaster as PlayerMobile;
+                DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.FollowerDamageTaken, finalDamage);  
             }
+
+            if (bc_Source != null)
+            {
+                if (bc_Source.ControlMaster is PlayerMobile)
+                {
+                    pm_Master = bc_Source.ControlMaster as PlayerMobile;
+                    DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.FollowerDamage, finalDamage);
+                }
+
+                else if (bc_Source.SummonMaster is PlayerMobile)
+                {
+                    pm_Master = bc_Source.SummonMaster as PlayerMobile;
+                    DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.FollowerDamage, finalDamage);
+                }
+
+                else if (bc_Source.BardProvoked && bc_Source.BardMaster is PlayerMobile)
+                {
+                    pm_Master = bc_Source.BardMaster as PlayerMobile;
+                    DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.ProvocationDamage, finalDamage);  
+                }
+            }            
 
             base.Damage(finalDamage, from);
 
@@ -5022,20 +5007,23 @@ namespace Server.Mobiles
             if (m_ControlMaster != null)
             {
                 m_ControlMaster.Followers += ControlSlots;
+
                 if (m_ControlMaster is PlayerMobile)
                 {
                     ((PlayerMobile)m_ControlMaster).AllFollowers.Add(this);
                 }
             }
+
             else if (m_SummonMaster != null)
             {
                 m_SummonMaster.Followers += ControlSlots;
+
                 if (m_SummonMaster is PlayerMobile)
                 {
                     ((PlayerMobile)m_SummonMaster).AllFollowers.Add(this);
                 }
             }
-        }
+        }        
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile ControlMaster
@@ -7550,17 +7538,7 @@ namespace Server.Mobiles
 
             return bonus;
         }
-
-        public Mobile GetMaster()
-        {
-            if (Controlled && ControlMaster != null)
-                return ControlMaster;
-            else if (Summoned && SummonMaster != null)
-                return SummonMaster;
-
-            return null;
-        }
-
+        
         private class FKEntry
         {
             public Mobile m_Mobile;
@@ -7707,13 +7685,8 @@ namespace Server.Mobiles
         public override void OnDeath(Container c)
         {
             if (ResurrectionsRemaining == 0)
-            {
-                //Creature Death is Now Final
-                IsBonded = false;
-            }
-
-            MeerMage.StopEffect(this, false);
-            
+                IsBonded = false;            
+                        
             BandageContext bandageContext = BandageContext.GetContext(this);
 
             if (bandageContext != null)
@@ -7871,30 +7844,9 @@ namespace Server.Mobiles
                     }
                 }
 
-                //Special Rewards
+                //Rewards
                 if (!(ControlMaster is PlayerMobile) && !DiedByShipSinking)
-                {
-                    //Dungeon Weapon Experience
-                    DungeonWeaponDamageEntry bestDungeonWeaponDamageEntry = null;
-                    int bestDungeonWeaponDamage = 0;
-
-                    foreach (DungeonWeaponDamageEntry dungeonWeaponDamageEntry in DungeonWeaponDamageEntries)
-                    {
-                        if (dungeonWeaponDamageEntry == null) continue;
-                        if (dungeonWeaponDamageEntry.Weapon == null) continue;
-                        if (dungeonWeaponDamageEntry.Weapon.Deleted) continue;
-
-                        if (dungeonWeaponDamageEntry.Damage > bestDungeonWeaponDamage)
-                        {
-                            bestDungeonWeaponDamageEntry = dungeonWeaponDamageEntry;
-                            bestDungeonWeaponDamage = dungeonWeaponDamageEntry.Damage;
-                        }
-                    }
-
-                    if (bestDungeonWeaponDamageEntry != null)
-                        DungeonWeapon.CreatureKilled(this, bestDungeonWeaponDamageEntry);
-
-                    //Monster Hunter Society
+                {        
                     foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
                     {
                         PlayerMobile playerDamager = pair.Key;
@@ -7904,50 +7856,16 @@ namespace Server.Mobiles
 
                         double damagePercent = (double)pair.Value / (double)totalDamage;
 
+                        //Arcane Item Experience Handling
+
+                        //Monster Hunter Society
                         MHSCreatures.CreatureKilled(this, playerDamager, damagePercent, TakenDamageFromPoison, TakenDamageFromCreature);
-                    }
-
-                    //Title Rewards
-                    if (TitleReward != null && TitleReward != "")
-                    {
-                        foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
+                        
+                        //Doubloons
+                        if (OceanDoubloonValue > 0 || LandDoubloonValue > 0)
                         {
-                            PlayerMobile playerDamager = pair.Key;
-
-                            if (playerDamager == null) continue;
-                            if (playerDamager.Deleted) continue;
-
-                            double damagePercent = (double)pair.Value / (double)totalDamage;
-
-                            /*
-                            if (Utility.RandomDouble() < damagePercent && !playerDamager.TitlesPrefix.Contains(TitleReward))
-                            {
-                                playerDamager.TitlesPrefix.Add(TitleReward);
-                                playerDamager.SendMessage("The title of " + TitleReward + " has now been added to your list of selectable titles.");
-
-                                playerDamager.FixedParticles(0x375A, 9, 40, 5027, EffectLayer.Waist);
-                                playerDamager.PlaySound(0x1F7);
-                            }
-                            */
-                        }
-                    }
-
-                    //Doubloons
-                    if (OceanDoubloonValue > 0 || LandDoubloonValue > 0)
-                    {
-                        foreach (KeyValuePair<PlayerMobile, int> pair in damageInflicted)
-                        {
-                            PlayerMobile playerDamager = pair.Key;
-
-                            if (playerDamager == null)
-                                continue;
-
-                            if (DiedByShipSinking)
-                                continue;
-
-                            bool doubloonsValid = false;
                             double doubloonAmount = 0;
-                            double damagePercent = (double)pair.Value / (double)totalDamage;
+                            bool doubloonsValid = false;
 
                             bool validBoat = false;
 
@@ -8008,6 +7926,21 @@ namespace Server.Mobiles
                                     playerDamager.SendMessage("You've earned doubloons but there was no available space to place them in your bank box.");
                             }
                         }
+
+                        //Title Rewards
+                        if (TitleReward != null && TitleReward != "")
+                        {
+                            /*
+                            if (Utility.RandomDouble() < damagePercent && !playerDamager.TitlesPrefix.Contains(TitleReward))
+                            {
+                                playerDamager.TitlesPrefix.Add(TitleReward);
+                                playerDamager.SendMessage("The title of " + TitleReward + " has now been added to your list of selectable titles.");
+
+                                playerDamager.FixedParticles(0x375A, 9, 40, 5027, EffectLayer.Waist);
+                                playerDamager.PlaySound(0x1F7);
+                            }
+                            */
+                        }
                     }
                 }
 
@@ -8019,10 +7952,8 @@ namespace Server.Mobiles
 
                 base.OnDeath(c);
 
-                if (DeleteCorpseOnDeath)
-                {
-                    c.Delete();
-                }
+                if (DeleteCorpseOnDeath)                
+                    c.Delete();                
             }
         }
 
@@ -8689,12 +8620,39 @@ namespace Server.Mobiles
             return false;
         }
 
+        public Mobile GetMaster()
+        {
+            if (Controlled && ControlMaster != null)
+                return ControlMaster;
+
+            else if (Summoned && SummonMaster != null)
+                return SummonMaster;
+
+            return null;
+        }
+
+        public PlayerMobile GetPlayerMaster()
+        {
+            if (BardProvoked && BardMaster != null && BardMaster is PlayerMobile)
+                return BardMaster as PlayerMobile;
+
+            if (Summoned && SummonMaster != null && SummonMaster is PlayerMobile)
+                return SummonMaster as PlayerMobile;
+
+            if (Controlled && ControlMaster != null && ControlMaster is PlayerMobile)
+                return ControlMaster as PlayerMobile;
+
+            return null;        
+        }
+
         public override Mobile GetDamageMaster(Mobile damagee)
         {
             if (m_bBardProvoked && damagee == m_bBardTarget)
                 return m_bBardMaster;
+
             else if (m_bControlled && m_ControlMaster != null)
                 return m_ControlMaster;
+
             else if (m_Summoned && m_SummonMaster != null)
                 return m_SummonMaster;
 

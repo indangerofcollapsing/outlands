@@ -28,74 +28,90 @@ namespace Server.Spells.Third
 
             if (casterCreature != null)
             {
-                if (casterCreature.SpellTarget != null)                
-                    this.Target(casterCreature.SpellTarget);                
+                if (casterCreature.SpellTarget != null)
+                    this.Target(casterCreature.SpellTarget);
             }
 
-            else            
-                Caster.Target = new InternalTarget(this);            
+            else
+                Caster.Target = new InternalTarget(this);
         }
 
-        public static void ApplyEffect(Mobile Caster, Mobile m)
+        public static void ApplyEffect(Mobile Caster, Mobile target)
         {
-            if (m.Spell != null)
-                m.Spell.OnCasterHurt();
+            if (target.Spell != null)
+                target.Spell.OnCasterHurt();
 
             double magerySkill = Caster.Skills[SkillName.Magery].Value;
             double poisoningSkill = Caster.Skills[SkillName.Poisoning].Value;
 
-            //Poisoning Skill is Capped by Magery
             if (poisoningSkill > magerySkill)
-                poisoningSkill = magerySkill;
+            {
+                if (!(poisoningSkill > 100 && magerySkill == 100))
+                    poisoningSkill = magerySkill;
+            }
 
-            //Defaults to Regular Poison
+            if (poisoningSkill > 100 && Caster is PlayerMobile && target is PlayerMobile)
+                poisoningSkill = 100;
+
             int poisonLevel = 0;
 
-            //Player Caster
             if (Caster is PlayerMobile)
                 poisonLevel = 1;
 
-            //Against Non-Players
-            if (m is BaseCreature)
+            double greaterPoisonChance = (poisoningSkill / 100) * .5;
+            double deadlyPoisonChance = (poisoningSkill / 100) * .2;
+
+            double creaturePoisonUpgradeChanceScalar = 1.0;
+            double playerPoisonUpgradeChanceScalar = 1.0;
+
+            double greaterPoisonSkillMinimum = 50;
+            double deadlyPoisonSkillMinimum = 75;
+
+            double enhancedChanceScalar = 1.5;
+            bool enhanceChargeUsed = false;
+
+            //Against Players            
+            if (target is PlayerMobile)
             {
-                double poisonResult = Utility.RandomDouble();
+                if (poisoningSkill >= greaterPoisonSkillMinimum)
+                {
+                    if (Utility.RandomDouble() <= greaterPoisonChance * playerPoisonUpgradeChanceScalar)
+                        poisonLevel = 2;
+                }
 
-                double greaterUpgradeChance = 1.0 * (poisoningSkill / 100);
-                double deadlyUpgradeChance = .30 * (poisoningSkill / 100);
-                double lethalUpgradeChance = .10 * (poisoningSkill / 100);
+                if (poisoningSkill >= deadlyPoisonSkillMinimum)
+                {
+                    if (Utility.RandomDouble() <= deadlyPoisonChance * playerPoisonUpgradeChanceScalar)
+                        poisonLevel = 3;
+                }
+            }
 
-                bool chargeUsed = false;
-
+            //Against Creatures
+            if (target is BaseCreature)
+            {
                 bool enhancedSpellcast = SpellHelper.IsEnhancedSpell(Caster, null, EnhancedSpellbookType.Warlock, true, false);
 
                 if (enhancedSpellcast)
                 {
-                    chargeUsed = true;
+                    enhanceChargeUsed = true;
 
-                    greaterUpgradeChance *= 1.5;
-                    deadlyUpgradeChance *= 1.5;
-                    lethalUpgradeChance *= 1.5;
+                    greaterPoisonChance *= enhancedChanceScalar;
+                    deadlyPoisonChance *= enhancedChanceScalar;
                 }
 
-                if (poisonResult <= greaterUpgradeChance && poisoningSkill >= 25)
+                if (poisoningSkill >= greaterPoisonSkillMinimum)
                 {
-                    if (poisonLevel < 2)
+                    if (Utility.RandomDouble() <= greaterPoisonChance * creaturePoisonUpgradeChanceScalar)
                         poisonLevel = 2;
                 }
 
-                if (poisonResult <= deadlyUpgradeChance && poisoningSkill >= 50)
+                if (poisoningSkill >= deadlyPoisonSkillMinimum)
                 {
-                    if (poisonLevel < 3)
+                    if (Utility.RandomDouble() <= deadlyPoisonChance * creaturePoisonUpgradeChanceScalar)
                         poisonLevel = 3;
                 }
 
-                if (poisonResult <= lethalUpgradeChance && poisoningSkill >= 75)
-                {
-                    if (poisonLevel < 4)
-                        poisonLevel = 4;
-                }
-
-                if (chargeUsed && poisonLevel > 1)
+                if (enhanceChargeUsed && poisonLevel > 1)
                 {
                     if (Caster.FindItemOnLayer(Layer.OneHanded) is EnhancedSpellbook)
                     {
@@ -105,19 +121,19 @@ namespace Server.Spells.Third
                             spellbook.OnSpellCast(Caster);
                     }
                 }
-            }
+            }            
 
-            m.ApplyPoison(Caster, Poison.GetPoison(poisonLevel));
+            target.ApplyPoison(Caster, Poison.GetPoison(poisonLevel));
         }
 
         public void Target(Mobile mobile)
         {
-            if (!Caster.CanSee(mobile) || mobile.Hidden)            
+            if (!Caster.CanSee(mobile) || mobile.Hidden)
                 Caster.SendLocalizedMessage(500237); // Target can not be seen.            
 
             else if (CheckHSequence(mobile))
             {
-                SpellHelper.Turn(Caster, mobile);                
+                SpellHelper.Turn(Caster, mobile);
                 SpellHelper.CheckReflect((int)this.Circle, Caster, ref mobile);
 
                 if (mobile.Spell != null)
@@ -141,8 +157,8 @@ namespace Server.Spells.Third
 
                 if (venomous)
                 {
-                    if (success)                    
-                        CustomizationAbilities.Venomous(mobile);                     
+                    if (success)
+                        CustomizationAbilities.Venomous(mobile);
 
                     else
                     {
@@ -166,9 +182,9 @@ namespace Server.Spells.Third
                     {
                         Caster.Mana += 9;
                         Caster.SendMessage("You feel a rush of energy from your armor, fueling mana into the spell.");
-                        
+
                         Effects.PlaySound(Caster.Location, Caster.Map, 0x64B);
-                        Effects.SendLocationParticles(EffectItem.Create(Caster.Location, Caster.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, casterDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);                        
+                        Effects.SendLocationParticles(EffectItem.Create(Caster.Location, Caster.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, casterDungeonArmor.DungeonArmorDetail.EffectHue, 0, 5005, 0);
                     }
                 }
             }
@@ -180,15 +196,16 @@ namespace Server.Spells.Third
         {
             private PoisonSpell m_Owner;
 
-            public InternalTarget(PoisonSpell owner): base(12, false, TargetFlags.Harmful)
+            public InternalTarget(PoisonSpell owner)
+                : base(12, false, TargetFlags.Harmful)
             {
                 m_Owner = owner;
             }
 
             protected override void OnTarget(Mobile from, object o)
             {
-                if (o is Mobile)                
-                    m_Owner.Target((Mobile)o);                
+                if (o is Mobile)
+                    m_Owner.Target((Mobile)o);
             }
 
             protected override void OnTargetFinish(Mobile from)

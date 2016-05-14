@@ -213,8 +213,6 @@ namespace Server.Custom
 
                                 int finalAdjustedDamage = AOS.Damage(combatant, this, finalDamage, 100, 0, 0, 0, 0);
                                 new Blood().MoveToWorld(combatant.Location, combatant.Map);
-
-                                DisplayFollowerDamage(combatant, finalAdjustedDamage);
                             });
                         });
                     }

@@ -501,13 +501,8 @@ namespace Server.Mobiles
 
                         int finalDamage = (int)baseDamage;
 
-                        if (target != null)
-                        {
-                            int finalAdjustedDamage = AOS.Damage(target, creature, finalDamage, 100, 0, 0, 0, 0);
-
-                            if (creature != null)
-                                creature.DisplayFollowerDamage(target, finalAdjustedDamage);
-                        }
+                        if (target != null)                        
+                            AOS.Damage(target, creature, finalDamage, 100, 0, 0, 0, 0);      
                     }
                 });
             });

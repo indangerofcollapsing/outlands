@@ -202,46 +202,70 @@ namespace Server.Spells.Fifth
                 double magerySkill = m_Caster.Skills[SkillName.Magery].Value;
                 double poisoningSkill = m_Caster.Skills[SkillName.Poisoning].Value;
 
-                //Poisoning Skill is Capped by Magery
                 if (poisoningSkill > magerySkill)
-                    poisoningSkill = magerySkill;
-
-                //Defaults to Regular Poison
-                int poisonLevel = 1;
-
-                //Against Non-Players
-                if (!(mobile is PlayerMobile))
                 {
-                    double poisonResult = Utility.RandomDouble();
+                    if (!(poisoningSkill > 100 && magerySkill == 100))
+                        poisoningSkill = magerySkill;
+                }
 
-                    double greaterUpgradeChance = 1.0 * (poisoningSkill / 100 / 5);
-                    double deadlyUpgradeChance = .30 * (poisoningSkill / 100 / 5);
-                    double lethalUpgradeChance = .10 * (poisoningSkill / 100 / 5);
+                if (poisoningSkill > 100 && m_Caster is PlayerMobile && mobile is PlayerMobile)
+                    poisoningSkill = 100;
 
-                    if (m_Enhanced)
+                int poisonLevel = 0;
+
+                if (m_Caster is PlayerMobile)
+                    poisonLevel = 1;
+
+                double greaterPoisonChance = (poisoningSkill / 100) * .1;
+                double deadlyPoisonChance = (poisoningSkill / 100) * .04;
+
+                double creaturePoisonUpgradeChanceScalar = 1.0;
+                double playerPoisonUpgradeChanceScalar = 1.0;
+
+                double greaterPoisonSkillMinimum = 75;
+                double deadlyPoisonSkillMinimum = 100;
+
+                double enhancedChanceScalar = 1.5;
+                bool enhanceChargeUsed = false;
+
+                //Against Players
+                if (mobile is PlayerMobile)
+                {
+                    if (poisoningSkill >= greaterPoisonSkillMinimum)
                     {
-                        greaterUpgradeChance *= 1.5;
-                        deadlyUpgradeChance *= 1.5;
-                        lethalUpgradeChance *= 1.5;
-                    }
-
-                    if (poisonResult <= greaterUpgradeChance && poisoningSkill >= 25)
-                    {
-                        if (poisonLevel < 2)
+                        if (Utility.RandomDouble() <= greaterPoisonChance * playerPoisonUpgradeChanceScalar)
                             poisonLevel = 2;
                     }
 
-                    if (poisonResult <= deadlyUpgradeChance && poisoningSkill >= 50)
+                    if (poisoningSkill >= deadlyPoisonSkillMinimum)
                     {
-                        if (poisonLevel < 3)
+                        if (Utility.RandomDouble() <= deadlyPoisonChance * playerPoisonUpgradeChanceScalar)
                             poisonLevel = 3;
                     }
+                }
 
-                    if (poisonResult <= lethalUpgradeChance && poisoningSkill >= 75)
+                //Against Creatures
+                if (mobile is BaseCreature)
+                {
+                    if (m_Enhanced)
                     {
-                        if (poisonLevel < 4)
-                            poisonLevel = 4;
+                        enhanceChargeUsed = true;
+
+                        greaterPoisonChance *= enhancedChanceScalar;
+                        deadlyPoisonChance *= enhancedChanceScalar;
                     }
+
+                    if (poisoningSkill >= greaterPoisonSkillMinimum)
+                    {
+                        if (Utility.RandomDouble() <= greaterPoisonChance * creaturePoisonUpgradeChanceScalar)
+                            poisonLevel = 2;
+                    }
+
+                    if (poisoningSkill >= deadlyPoisonSkillMinimum)
+                    {
+                        if (Utility.RandomDouble() <= deadlyPoisonChance * creaturePoisonUpgradeChanceScalar)
+                            poisonLevel = 3;
+                    }                    
                 }
 
                 if (mobile.ApplyPoison(m_Caster, Poison.GetPoison(poisonLevel)) == ApplyPoisonResult.Poisoned)

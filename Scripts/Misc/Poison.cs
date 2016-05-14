@@ -186,28 +186,6 @@ namespace Server
                 //Display Player Poison Damage              
                 DamageTracker.RecordDamage(pm_From, pm_From, m_Mobile, DamageTracker.DamageType.PoisonDamage, adjustedDamageDisplayed);                    
                 
-                //Display Follower Poison Damage
-                if (bc_From != null)
-                {
-                    if (bc_From.Controlled && bc_From.ControlMaster is PlayerMobile)
-                    {
-                        PlayerMobile playerOwner = bc_From.ControlMaster as PlayerMobile;
-
-                        DamageTracker.RecordDamage(playerOwner, bc_From, m_Mobile, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);                        
-                    }
-                }
-
-                //Display Provoked Creature Poison Damage
-                if (bc_From != null)
-                {
-                    if (bc_From.BardProvoked && bc_From.BardMaster is PlayerMobile)
-                    {
-                        PlayerMobile playerBard = bc_From.BardMaster as PlayerMobile;
-
-                        DamageTracker.RecordDamage(playerBard, bc_From, m_Mobile, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
-                    }
-                }
-
                 AOS.Damage(m_Mobile, m_From, finalDamage, 0, 0, 0, 100, 0);
 
 				if ( (m_Index % m_Poison.m_MessageInterval) == 0 )

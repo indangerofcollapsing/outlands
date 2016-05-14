@@ -117,10 +117,7 @@ namespace Server.Mobiles
 
                         BaseCreature bc_Owner = entry.m_Owner as BaseCreature;
                         PlayerMobile pm_Owner = entry.m_Owner as PlayerMobile;
-
-                        if (bc_Owner != null)
-                            bc_Owner.DisplayFollowerDamage(mobile, finalAdjustedDamage);
-
+                        
                         if (pm_Owner != null)                        
                             DamageTracker.RecordDamage(pm_Owner, pm_Owner, mobile, DamageTracker.DamageType.MeleeDamage, finalAdjustedDamage);
                     }
@@ -158,12 +155,6 @@ namespace Server.Mobiles
                         }
 
                         int finalAdjustedDamage = AOS.Damage(mobile, entry.m_Owner, damage, 0, 100, 0, 0, 0);
-
-                        BaseCreature bc_Owner = entry.m_Owner as BaseCreature;
-                        PlayerMobile pm_Owner = entry.m_Owner as PlayerMobile;
-
-                        if (bc_Owner != null)
-                            bc_Owner.DisplayFollowerDamage(mobile, finalAdjustedDamage);
                     }
                 }
 
@@ -2207,9 +2198,6 @@ namespace Server.Mobiles
                         {
                             new Blood().MoveToWorld(mobile.Location, mobile.Map);
                             int finalAdjustedDamage = AOS.Damage(mobile, finalDamage, 100, 0, 0, 0, 0);
-
-                            if (creature != null)
-                                creature.DisplayFollowerDamage(mobile, finalAdjustedDamage);
                         }
                     }
                 });

@@ -1251,35 +1251,6 @@ namespace Server.Items
             //Display Player Melee Damage
             DamageTracker.RecordDamage(attacker, attacker, defender, DamageTracker.DamageType.MeleeDamage, adjustedDamageDisplayed);
             
-            //Display Follower Melee Damage
-            if (bc_Attacker != null)
-            {
-                if ((bc_Attacker is BladeSpirits || bc_Attacker is EnergyVortex) && bc_Attacker.SummonMaster is PlayerMobile)
-                {
-                    PlayerMobile pm_Controller = bc_Attacker.SummonMaster as PlayerMobile;
-                   
-                    DamageTracker.RecordDamage(pm_Controller, attacker, defender, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed);     
-                }
-
-                if (bc_Attacker.Controlled && bc_Attacker.ControlMaster is PlayerMobile)
-                {
-                    PlayerMobile pm_Controller = bc_Attacker.ControlMaster as PlayerMobile;
-                 
-                    DamageTracker.RecordDamage(pm_Controller, attacker, defender, DamageTracker.DamageType.FollowerDamage, adjustedDamageDisplayed); 
-                }
-            }
-
-            //Provoked Creature Melee Damage
-            if (bc_Attacker != null)
-            {
-                if (bc_Attacker.BardProvoked && bc_Attacker.BardMaster is PlayerMobile)
-                {
-                    PlayerMobile playerBard = bc_Attacker.BardMaster as PlayerMobile;
-                
-                    DamageTracker.RecordDamage(playerBard, attacker, defender, DamageTracker.DamageType.ProvocationDamage, adjustedDamageDisplayed);
-                }
-            }
-
             #endregion            
 
             #region Bleed Effect
@@ -1295,42 +1266,7 @@ namespace Server.Items
                 SpecialAbilities.BleedSpecialAbility(1, attacker, defender, value, expirationSeconds, 0x51e, true, "Your attack causes your target to bleed!", "Their attack causes you to bleed!", "-1");
             }            
 
-            #endregion
-
-            #region Dungeon Weapon Resolution
-
-            if ((Dungeon != DungeonEnum.None && TierLevel > 0) && allowDungeonBonuses && pm_Attacker != null && bc_Defender != null)
-            {
-                //Damage Tracking: Used for Experience Gains
-                bool entryFound = false;
-
-                foreach (DungeonWeaponDamageEntry dungeonWeaponDamageEntry in bc_Defender.DungeonWeaponDamageEntries)
-                {
-                    if (dungeonWeaponDamageEntry.Weapon == this)
-                    {
-                        dungeonWeaponDamageEntry.Damage += damageGiven;
-                        entryFound = true;
-
-                        break;
-                    }
-                }
-
-                if (!entryFound)
-                {
-                    DungeonWeaponDamageEntry dungeonWeaponDamageEntry = new DungeonWeaponDamageEntry();
-                    dungeonWeaponDamageEntry.Player = pm_Attacker;
-                    dungeonWeaponDamageEntry.Weapon = this;
-                    dungeonWeaponDamageEntry.Damage = damageGiven;
-
-                    bc_Defender.DungeonWeaponDamageEntries.Add(dungeonWeaponDamageEntry);
-                }
-
-                //Effect Chance
-                if (allowDungeonAttack)
-                    DungeonWeapon.CheckResolveSpecialEffect(this, pm_Attacker, bc_Defender);
-            }
-
-            #endregion
+            #endregion            
 
             #region Weapon Durability
 
