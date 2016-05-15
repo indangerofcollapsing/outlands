@@ -983,7 +983,7 @@ namespace Server.Mobiles
                         BaseArmor armor = Loot.RandomArmorOrShield();
 
                         armor.ProtectionLevel = (ArmorProtectionLevel)Utility.RandomMinMax(1, 2);
-                        armor.Durability = (ArmorDurabilityLevel)Utility.RandomMinMax(1, 2);
+                        armor.DurabilityLevel = (ArmorDurabilityLevel)Utility.RandomMinMax(1, 2);
 
                         armor.Identified = true;
 

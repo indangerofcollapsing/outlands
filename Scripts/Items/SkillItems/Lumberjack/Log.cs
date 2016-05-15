@@ -16,26 +16,23 @@ namespace Server.Items
 
         int ICommodity.DescriptionNumber { get { return CraftResources.IsStandard(m_Resource) ? LabelNumber : 1075062 + ((int)m_Resource - (int)CraftResource.RegularWood); } }
         bool ICommodity.IsDeedable { get { return true; } }
+        
         [Constructable]
-        public BaseLog()
-            : this(1)
+        public BaseLog(): this(1)
         {
         }
 
         [Constructable]
-        public BaseLog(int amount)
-            : this(CraftResource.RegularWood, amount)
+        public BaseLog(int amount): this(CraftResource.RegularWood, amount)
         {
         }
 
         [Constructable]
-        public BaseLog(CraftResource resource)
-            : this(resource, 1)
+        public BaseLog(CraftResource resource): this(resource, 1)
         {
         }
         [Constructable]
-        public BaseLog(CraftResource resource, int amount)
-            : base(0x1BDD)
+        public BaseLog(CraftResource resource, int amount): base(0x1BDD)
         {
             Stackable = true;
             Weight = 2.0;
@@ -55,51 +52,65 @@ namespace Server.Items
 
                 if (num > 0)
                     list.Add(num);
+
                 else
                     list.Add(CraftResources.GetName(m_Resource));
             }
         }
-        public BaseLog(Serial serial)
-            : base(serial)
+
+        public BaseLog(Serial serial): base(serial)
         {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-
-            writer.Write((int)2); // version
-
-            writer.Write((int)m_Resource);
-        }
+        }       
 
         public static bool UpdatingBaseLogClass;
-        public override void Deserialize(GenericReader reader)
+
+        public override void OnDoubleClick(Mobile from)
         {
-            base.Deserialize(reader);
+            base.OnDoubleClick(from);
 
-            int version = reader.ReadInt();
+            BaseAxe axeFound = null;
 
-            if (version == 1)
-                UpdatingBaseLogClass = true;
-            m_Resource = (CraftResource)reader.ReadInt();
+            Item oneHand = from.FindItemOnLayer(Layer.OneHanded);
+            Item twoHand = from.FindItemOnLayer(Layer.TwoHanded);
 
-            if (version == 0)
-                m_Resource = CraftResource.RegularWood;
-        }
+            if (oneHand is BaseAxe)
+                axeFound = oneHand as BaseAxe;
+
+            if (twoHand is BaseAxe)
+                axeFound = twoHand as BaseAxe;
+
+            if (axeFound == null && from.Backpack != null)
+            {
+                BaseAxe axe = from.Backpack.FindItemByType(typeof(BaseAxe)) as BaseAxe;
+
+                if (axe != null)
+                    axeFound = axe;
+            }
+
+            if (axeFound != null)
+            {
+                from.PlaySound(0x13E);
+
+                if (Amount > 1)
+                    from.SendMessage("You shape the logs into boards."); 
+
+                else
+                    from.SendMessage("You shape the log into a board.");
+
+                Axe(from, axeFound);
+            }
+
+            else
+                from.SendMessage("You must have an axe equipped or in your backpack to create boards.");
+        }       
 
         public virtual bool TryCreateBoards(Mobile from, double skill, Item item)
         {
             if (Deleted || !from.CanSee(this))
                 return false;
-            //else if (from.Skills.Carpentry.Value < skill &&
-            //    from.Skills.Lumberjacking.Value < skill)
-            //{
-            //    item.Delete();
-            //    from.SendLocalizedMessage(1072652); // You cannot work this strange and unusual wood.
-            //    return false;
-            //}
+
             base.ScissorHelper(from, item, 1, false);
+
             return true;
         }
 
@@ -109,6 +120,29 @@ namespace Server.Items
                 return false;
 
             return true;
+        }
+        
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+
+            writer.Write((int)2); // version
+            writer.Write((int)m_Resource);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+
+            int version = reader.ReadInt();
+
+            if (version == 1)
+                UpdatingBaseLogClass = true;
+
+            m_Resource = (CraftResource)reader.ReadInt();
+
+            if (version == 0)
+                m_Resource = CraftResource.RegularWood;
         }
     }
 
@@ -126,8 +160,7 @@ namespace Server.Items
             Name = "log";
         }
 
-        public Log(Serial serial)
-            : base(serial)
+        public Log(Serial serial): base(serial)
         {
             Name = "log";
         }
@@ -141,7 +174,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            //don't deserialize anything on update
+          
             if (BaseLog.UpdatingBaseLogClass)
                 return;
 
@@ -160,21 +193,18 @@ namespace Server.Items
     public class HeartwoodLog : BaseLog
     {
         [Constructable]
-        public HeartwoodLog()
-            : this(1)
+        public HeartwoodLog() : this(1)
         {
             Name = "heartwood log";
         }
 
         [Constructable]
-        public HeartwoodLog(int amount)
-            : base(CraftResource.Heartwood, amount)
+        public HeartwoodLog(int amount): base(CraftResource.Heartwood, amount)
         {
             Name = "heartwood log";
         }
 
-        public HeartwoodLog(Serial serial)
-            : base(serial)
+        public HeartwoodLog(Serial serial): base(serial)
         {
             Name = "heartwood log";
         }
@@ -182,14 +212,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
 
@@ -205,21 +233,18 @@ namespace Server.Items
     public class BloodwoodLog : BaseLog
     {
         [Constructable]
-        public BloodwoodLog()
-            : this(1)
+        public BloodwoodLog(): this(1)
         {
             Name = "bloodwood log";
         }
 
         [Constructable]
-        public BloodwoodLog(int amount)
-            : base(CraftResource.Bloodwood, amount)
+        public BloodwoodLog(int amount): base(CraftResource.Bloodwood, amount)
         {
             Name = "bloodwood log";
         }
 
-        public BloodwoodLog(Serial serial)
-            : base(serial)
+        public BloodwoodLog(Serial serial): base(serial)
         {
             Name = "bloodwood log";
         }
@@ -227,14 +252,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
 
@@ -250,15 +273,13 @@ namespace Server.Items
     public class FrostwoodLog : BaseLog
     {
         [Constructable]
-        public FrostwoodLog()
-            : this(1)
+        public FrostwoodLog(): this(1)
         {
             Name = "frostwood log";
         }
 
         [Constructable]
-        public FrostwoodLog(int amount)
-            : base(CraftResource.Frostwood, amount)
+        public FrostwoodLog(int amount): base(CraftResource.Frostwood, amount)
         {
             Name = "frostwood log";
         }
@@ -272,14 +293,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
 
@@ -295,21 +314,18 @@ namespace Server.Items
     public class OakLog : BaseLog
     {
         [Constructable]
-        public OakLog()
-            : this(1)
+        public OakLog(): this(1)
         {
             Name = "oak log";
         }
 
         [Constructable]
-        public OakLog(int amount)
-            : base(CraftResource.OakWood, amount)
+        public OakLog(int amount): base(CraftResource.OakWood, amount)
         {
             Name = "oak log";
         }
 
-        public OakLog(Serial serial)
-            : base(serial)
+        public OakLog(Serial serial): base(serial)
         {
             Name = "oak log";
         }
@@ -317,14 +333,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
 
@@ -340,21 +354,18 @@ namespace Server.Items
     public class AshLog : BaseLog
     {
         [Constructable]
-        public AshLog()
-            : this(1)
+        public AshLog(): this(1)
         {
             Name = "ash log";
         }
 
         [Constructable]
-        public AshLog(int amount)
-            : base(CraftResource.AshWood, amount)
+        public AshLog(int amount): base(CraftResource.AshWood, amount)
         {
             Name = "ash log";
         }
 
-        public AshLog(Serial serial)
-            : base(serial)
+        public AshLog(Serial serial): base(serial)
         {
             Name = "ash log";
         }
@@ -362,14 +373,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
 
@@ -385,21 +394,18 @@ namespace Server.Items
     public class YewLog : BaseLog
     {
         [Constructable]
-        public YewLog()
-            : this(1)
+        public YewLog(): this(1)
         {
             Name = "yew log";
         }
 
         [Constructable]
-        public YewLog(int amount)
-            : base(CraftResource.YewWood, amount)
+        public YewLog(int amount): base(CraftResource.YewWood, amount)
         {
             Name = "yew log";
         }
 
-        public YewLog(Serial serial)
-            : base(serial)
+        public YewLog(Serial serial): base(serial)
         {
             Name = "yew log";
         }
@@ -407,14 +413,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
 

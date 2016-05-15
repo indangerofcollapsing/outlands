@@ -7820,7 +7820,7 @@ namespace Server.Mobiles
                 return null;
 
             armor.ProtectionLevel = (ArmorProtectionLevel)BaseCreature.RandomMinMaxScaled(minLevel, maxLevel);
-            armor.Durability = (ArmorDurabilityLevel)BaseCreature.RandomMinMaxScaled(minLevel, maxLevel);
+            armor.DurabilityLevel = (ArmorDurabilityLevel)BaseCreature.RandomMinMaxScaled(minLevel, maxLevel);
 
             return armor;
         }
@@ -7836,7 +7836,7 @@ namespace Server.Mobiles
                 return null;
 
             armor.ProtectionLevel = (ArmorProtectionLevel)BaseCreature.RandomMinMaxScaled(minLevel, maxLevel);
-            armor.Durability = (ArmorDurabilityLevel)BaseCreature.RandomMinMaxScaled(minLevel, maxLevel);
+            armor.DurabilityLevel = (ArmorDurabilityLevel)BaseCreature.RandomMinMaxScaled(minLevel, maxLevel);
 
             return armor;
         }

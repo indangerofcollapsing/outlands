@@ -3634,6 +3634,9 @@ namespace Server.Mobiles
                 }
             }
 
+            if (BoatOccupied != null)
+                return false;
+
             return disrupt;
         }
 

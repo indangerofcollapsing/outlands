@@ -1030,6 +1030,11 @@ namespace Server
         {
         }
 
+        public virtual int GetArcaneEssenceValue()
+        {
+            return 0;
+        }
+
         public virtual double GetSellValueScalar()
         {
             return 1.0;

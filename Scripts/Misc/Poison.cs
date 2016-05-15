@@ -161,32 +161,13 @@ namespace Server
                 m_LastDamage = finalDamage;				
 
 				if ( m_From != null )
-					m_From.DoHarmful( m_Mobile, true );				
+					m_From.DoHarmful( m_Mobile, true );
 
-                int adjustedDamageDisplayed = finalDamage;
-                int discordancePenalty = 0;                
-                
-                if (bc_Target != null)
-                {    
-                    //Discordance                    
-                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect)); 
+                int finalAdjustedDamage = AOS.Damage(m_Mobile, m_From, finalDamage, 0, 0, 0, 100, 0);
+                int displayedDamage = DamageTracker.AdjustDisplayedDamage(m_From, m_Mobile, finalAdjustedDamage);
 
-                    //Ship Combat
-                    if (BaseBoat.UseShipBasedDamageModifer(m_From, bc_Target))
-                        adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToCreatureScalar); 
-                }
-
-                if (pm_Target != null)
-                {
-                    //Ship Combat
-                    if (BaseBoat.UseShipBasedDamageModifer(m_From, pm_Target))
-                        adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar); 
-                }
-
-                //Display Player Poison Damage              
-                DamageTracker.RecordDamage(pm_From, pm_From, m_Mobile, DamageTracker.DamageType.PoisonDamage, adjustedDamageDisplayed);                    
-                
-                AOS.Damage(m_Mobile, m_From, finalDamage, 0, 0, 0, 100, 0);
+                if (pm_From != null)
+                    DamageTracker.RecordDamage(pm_From, pm_From, m_Mobile, DamageTracker.DamageType.PoisonDamage, displayedDamage); 
 
 				if ( (m_Index % m_Poison.m_MessageInterval) == 0 )
 					m_Mobile.OnPoisoned( m_From, m_Poison, m_Poison );

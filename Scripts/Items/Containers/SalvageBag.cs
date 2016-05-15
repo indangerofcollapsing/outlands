@@ -79,7 +79,7 @@ namespace Server.Items
 							if( CraftResources.GetType( ( (BaseArmor)i ).Resource ) == CraftResourceType.Leather )
 							return true;
 						}
-						if( ( i is Cloth ) || ( i is BoltOfCloth ) || ( i is Hides ) || ( i is BonePile ) )
+						if( ( i is Cloth ) || ( i is BoltOfCloth ) || ( i is BonePile ) )
 							return true;
 					}
 				}

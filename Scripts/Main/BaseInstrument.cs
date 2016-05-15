@@ -128,6 +128,34 @@ namespace Server.Items
             UnscaleUses();
             ScaleUses();
         }
+        
+        public override int GetArcaneEssenceValue()
+        {
+            int arcaneEssenceValue = 0;
+            
+            switch (DurabilityLevel)
+            {
+                case InstrumentDurabilityLevel.Durable: arcaneEssenceValue += 1; break;
+                case InstrumentDurabilityLevel.Substantial: arcaneEssenceValue += 2; break;
+                case InstrumentDurabilityLevel.Massive: arcaneEssenceValue += 3; break;
+                case InstrumentDurabilityLevel.Fortified: arcaneEssenceValue += 4; break;
+                case InstrumentDurabilityLevel.Indestructible: arcaneEssenceValue += 5; break;
+            }
+            
+            switch (ArtistryLevel)
+            {
+                case InstrumentArtistryLevel.Melodist: arcaneEssenceValue += 2; break;
+                case InstrumentArtistryLevel.Jongleur: arcaneEssenceValue += 4; break;
+                case InstrumentArtistryLevel.Minstrel: arcaneEssenceValue += 6; break;
+                case InstrumentArtistryLevel.Troubadour: arcaneEssenceValue += 8; break;
+                case InstrumentArtistryLevel.Balladeer: arcaneEssenceValue += 10; break;
+            }
+
+            if (SlayerGroup != SlayerGroupType.None)
+                arcaneEssenceValue += 10;
+            
+            return arcaneEssenceValue;
+        }
 
         public override double GetSellValueScalar()
         {

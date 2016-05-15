@@ -141,6 +141,54 @@ namespace Server.Items
             Hue = CraftResources.GetHue(Resource);
             InvalidateProperties();
             ScaleDurability();
+        }        
+
+        public override void DungeonChange()
+        {
+            if (Dungeon != DungeonEnum.None)
+            {
+                DungeonArmor.DungeonArmorDetail detail = new DungeonArmor.DungeonArmorDetail(Dungeon, TierLevel);
+
+                if (detail != null)
+                    Hue = detail.Hue;
+            }
+        }
+        
+        public override int GetArcaneEssenceValue()
+        {
+            int arcaneEssenceValue = 0;
+            
+            switch (DurabilityLevel)
+            {
+                case WeaponDurabilityLevel.Durable: arcaneEssenceValue += 1; break;
+                case WeaponDurabilityLevel.Substantial: arcaneEssenceValue += 2; break;
+                case WeaponDurabilityLevel.Massive: arcaneEssenceValue += 3; break;
+                case WeaponDurabilityLevel.Fortified: arcaneEssenceValue += 4; break;
+                case WeaponDurabilityLevel.Indestructible: arcaneEssenceValue += 5; break;
+            }
+
+            switch (AccuracyLevel)
+            {
+                case WeaponAccuracyLevel.Accurate: arcaneEssenceValue += 2; break;
+                case WeaponAccuracyLevel.Surpassingly: arcaneEssenceValue += 4; break;
+                case WeaponAccuracyLevel.Eminently: arcaneEssenceValue += 6; break;
+                case WeaponAccuracyLevel.Exceedingly: arcaneEssenceValue += 8; break;
+                case WeaponAccuracyLevel.Supremely: arcaneEssenceValue += 10; break;
+            }
+            
+            switch (DamageLevel)
+            {
+                case WeaponDamageLevel.Ruin: arcaneEssenceValue += 2; break;
+                case WeaponDamageLevel.Might: arcaneEssenceValue += 4; break;
+                case WeaponDamageLevel.Force: arcaneEssenceValue += 6; break;
+                case WeaponDamageLevel.Power: arcaneEssenceValue += 8; break;
+                case WeaponDamageLevel.Vanq: arcaneEssenceValue += 10; break;
+            }
+
+            if (SlayerGroup != SlayerGroupType.None)
+                arcaneEssenceValue += 10;
+
+            return arcaneEssenceValue;
         }
 
         public override double GetSellValueScalar()
@@ -161,17 +209,6 @@ namespace Server.Items
                 scalar += .25;
 
             return scalar;
-        }
-
-        public override void DungeonChange()
-        {
-            if (Dungeon != DungeonEnum.None)
-            {
-                DungeonArmor.DungeonArmorDetail detail = new DungeonArmor.DungeonArmorDetail(Dungeon, TierLevel);
-
-                if (detail != null)
-                    Hue = detail.Hue;
-            }
         }
 
         private WeaponDurabilityLevel m_DurabilityLevel;
@@ -1179,8 +1216,7 @@ namespace Server.Items
             }
 
             #endregion            
-
-            int damageGiven = finalDamage;            
+                   
 
             #region Reactive Armor
 
@@ -1223,42 +1259,19 @@ namespace Server.Items
                 finalDamage = 1;
 
             AddBlood(attacker, defender, finalDamage);
-
-            //Assign Final Damage to Target
-            damageGiven = AOS.Damage(defender, attacker, finalDamage, false, 100, 0, 0, 0, 0);
             
-            #region Display Damage Text
-
-            int adjustedDamageDisplayed = damageGiven;
-                        
-            if (bc_Defender != null)
-            {
-                //Discordance
-                adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Defender.DiscordEffect));
-
-                //Ship Combat
-                if (BaseBoat.UseShipBasedDamageModifer(attacker, bc_Defender))
-                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToCreatureScalar);
-            }
-
-            if (pm_Defender != null)
-            {
-                //Ship Combat
-                if (BaseBoat.UseShipBasedDamageModifer(attacker, pm_Defender))
-                   adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar);
-            }            
+            int finalAdjustedDamage = AOS.Damage(defender, attacker, finalDamage, false, 100, 0, 0, 0, 0);
+            int displayedDamage = DamageTracker.AdjustDisplayedDamage(attacker, defender, finalAdjustedDamage);          
 
             //Display Player Melee Damage
-            DamageTracker.RecordDamage(attacker, attacker, defender, DamageTracker.DamageType.MeleeDamage, adjustedDamageDisplayed);
-            
-            #endregion            
+            DamageTracker.RecordDamage(attacker, attacker, defender, DamageTracker.DamageType.MeleeDamage, displayedDamage);
 
             #region Bleed Effect
 
             if (doBleedEffect)
             {
                 double expirationSeconds = 10;
-                double value = (double)damageGiven * .5;
+                double value = (double)finalAdjustedDamage * .5;
 
                 if (doStealthAttack)
                     value *= .33;

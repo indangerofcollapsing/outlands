@@ -32,7 +32,7 @@ namespace Server.Engines.Craft
             }
         }
 
-        public override CraftECA ECA { get { return CraftECA.ChanceMinusSixtyToFourtyFive; } }
+        public override CraftExceptionalChanceMode ECA { get { return CraftExceptionalChanceMode.SuccessChanceDivideByFive; } }
 
         public override double GetChanceAtMin(CraftItem item)
         {

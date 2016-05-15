@@ -293,7 +293,7 @@ namespace Server.Items
                     {
                         BaseArmor armor = Loot.RandomArmorOrShield();
                         armor.ProtectionLevel = (ArmorProtectionLevel)Utility.RandomMinMax(minimumMod, maximumMod);
-                        armor.Durability = (ArmorDurabilityLevel)Utility.RandomMinMax(minimumMod, maximumMod);
+                        armor.DurabilityLevel = (ArmorDurabilityLevel)Utility.RandomMinMax(minimumMod, maximumMod);
 
                         cont.DropItem(armor);
                     }

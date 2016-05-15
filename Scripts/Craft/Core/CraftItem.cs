@@ -5,11 +5,7 @@ using Server;
 using Server.Items;
 using Server.Mobiles;
 using Server.Commands;
-using Server.Custom.Pirates;
-
 using Server.Multis;
-
-
 using System.Reflection;
 
 namespace Server.Engines.Craft
@@ -361,17 +357,17 @@ namespace Server.Engines.Craft
 
         private static Type[][] m_TypesTable = new Type[][]
 			{
-				new Type[]{ typeof( Log ), typeof( Board ) },
-				new Type[]{ typeof( HeartwoodLog ), typeof( HeartwoodBoard ) },
-				new Type[]{ typeof( BloodwoodLog ), typeof( BloodwoodBoard ) },
-				new Type[]{ typeof( FrostwoodLog ), typeof( FrostwoodBoard ) },
-				new Type[]{ typeof( OakLog ), typeof( OakBoard ) },
-				new Type[]{ typeof( AshLog ), typeof( AshBoard ) },
-				new Type[]{ typeof( YewLog ), typeof( YewBoard ) },
-				new Type[]{ typeof( Leather ), typeof( Hides ) },
-				new Type[]{ typeof( SpinedLeather ), typeof( SpinedHides ) },
-				new Type[]{ typeof( HornedLeather ), typeof( HornedHides ) },
-				new Type[]{ typeof( BarbedLeather ), typeof( BarbedHides ) },
+				new Type[]{ typeof( Board ) },
+				new Type[]{ typeof( HeartwoodBoard ) },
+				new Type[]{ typeof( BloodwoodBoard ) },
+				new Type[]{ typeof( FrostwoodBoard ) },
+				new Type[]{ typeof( OakBoard ) },
+				new Type[]{ typeof( AshBoard ) },
+				new Type[]{ typeof( YewBoard ) },
+				new Type[]{ typeof( Leather ) },
+				new Type[]{ typeof( SpinedLeather )},
+				new Type[]{ typeof( HornedLeather )},
+				new Type[]{ typeof( BarbedLeather )},
 				new Type[]{ typeof( BlankMap ), typeof( BlankScroll ) },
 				new Type[]{ typeof( Cloth ), typeof( UncutCloth ) },
 			};
@@ -392,7 +388,6 @@ namespace Server.Engines.Craft
 			typeof( BaseIngot ),
             typeof( BaseOre ),
 			typeof( BaseLeather ),
-            typeof( BaseHides ),
 			typeof( UncutCloth ), 
             typeof( Cloth ),
 			typeof( BaseGranite ),
@@ -899,38 +894,12 @@ namespace Server.Engines.Craft
                 return 0.0;
 
             double bonus = 0.0;
-
-            if (from.Talisman is BaseTalisman)
-            {
-                BaseTalisman talisman = (BaseTalisman)from.Talisman;
-
-                if (talisman.Skill == system.MainSkill)
-                {
-                    chance -= talisman.SuccessBonus / 100.0;
-                    bonus = talisman.ExceptionalBonus / 100.0;
-                }
-            }
-
+            
             switch (system.ECA)
             {
-                default:
-
-                case CraftECA.ChanceMinusSixty: chance -= 0.6; break;
-                case CraftECA.FiftyPercentChanceMinusTenPercent: chance = chance * 0.5 - 0.1; break;
-                case CraftECA.ChanceMinusSixtyToFourtyFive:
-                {
-                    double offset = 0.60 - ((from.Skills[system.MainSkill].Value - 95.0) * 0.03);
-
-                    if (offset < 0.45)
-                        offset = 0.45;
-
-                    else if (offset > 0.60)
-                        offset = 0.60;
-
-                    chance -= offset;
-
-                    break;
-                }
+                case CraftExceptionalChanceMode.SuccessChanceDivideByFive:
+                    chance *= .2;
+                break;
             }
 
             PlayerMobile player = from as PlayerMobile;
@@ -993,6 +962,7 @@ namespace Server.Engines.Craft
 
                 double minSkill = craftSkill.MinSkill;
                 double maxSkill = craftSkill.MaxSkill;
+
                 double valSkill = from.Skills[craftSkill.SkillToMake].Value;
 
                 if (valSkill < minSkill)
@@ -1012,19 +982,16 @@ namespace Server.Engines.Craft
             double chance;
 
             if (allRequiredSkills)
-                chance = craftSystem.GetChanceAtMin(this) + ((valMainSkill - minMainSkill) / (maxMainSkill - minMainSkill) * (1.0 - craftSystem.GetChanceAtMin(this)));
-            
-            else
-                chance = 0.0;
-
-            if (allRequiredSkills && from.Talisman is BaseTalisman)
             {
-                BaseTalisman talisman = (BaseTalisman)from.Talisman;
+                chance = craftSystem.GetChanceAtMin(this) + ((valMainSkill - minMainSkill) / (maxMainSkill - minMainSkill) * (1.0 - craftSystem.GetChanceAtMin(this)));
 
-                if (talisman.Skill == craftSystem.MainSkill)
-                    chance += talisman.SuccessBonus / 100.0;
+                if (chance <= 0.0)
+                    chance = 0.01;
             }
 
+            else
+                chance = 0.0;
+            
             if (allRequiredSkills && valMainSkill == maxMainSkill)
                 chance = 1.0;
 

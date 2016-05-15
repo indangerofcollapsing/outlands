@@ -349,72 +349,14 @@ namespace Server.Items
 
         public virtual int OnHit(BaseWeapon weapon, int damageTaken)
         {
-            int Absorbed = Utility.RandomMinMax(1, 4);
-
-            damageTaken -= Absorbed;
-
-            if (damageTaken < 0)
-                damageTaken = 0;
-
-            if (Parent is Mobile && CheckBlessed(((Mobile)Parent)))
-                return damageTaken;
-
-            if (25 > Utility.Random(100)) // 25% chance to lower durability
-            {
-                if (Core.AOS && m_AosClothingAttributes.SelfRepair > Utility.Random(10))
-                {
-                    HitPoints += 2;
-                }
-                else
-                {
-                    int wear;
-
-                    if (weapon.Type == WeaponType.Bashing)
-                        wear = Absorbed / 2;
-                    else
-                        wear = Utility.Random(2);
-
-                    if (wear > 0 && m_MaxHitPoints > 0)
-                    {
-                        if (m_HitPoints >= wear)
-                        {
-                            HitPoints -= wear;
-                            wear = 0;
-                        }
-                        else
-                        {
-                            wear -= HitPoints;
-                            HitPoints = 0;
-                        }
-
-                        if (wear > 0)
-                        {
-                            if (m_MaxHitPoints > wear)
-                            {
-                                MaxHitPoints -= wear;
-
-                                if (Parent is Mobile)
-                                    ((Mobile)Parent).LocalOverheadMessage(MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
-                            }
-                            else
-                            {
-                                Delete();
-                            }
-                        }
-                    }
-                }
-            }
-
             return damageTaken;
         }
 
-        public BaseClothing(int itemID, Layer layer)
-            : this(itemID, layer, 0)
+        public BaseClothing(int itemID, Layer layer): this(itemID, layer, 0)
         {
         }
 
-        public BaseClothing(int itemID, Layer layer, int hue)
-            : base(itemID)
+        public BaseClothing(int itemID, Layer layer, int hue): base(itemID)
         {
             Layer = layer;
             Hue = hue;

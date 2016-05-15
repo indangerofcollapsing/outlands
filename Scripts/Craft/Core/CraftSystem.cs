@@ -4,11 +4,9 @@ using Server.Items;
 
 namespace Server.Engines.Craft
 {
-	public enum CraftECA
+	public enum CraftExceptionalChanceMode
 	{
-		ChanceMinusSixty,
-		FiftyPercentChanceMinusTenPercent,
-		ChanceMinusSixtyToFourtyFive
+		SuccessChanceDivideByFive
 	}
 
 	public abstract class CraftSystem
@@ -43,7 +41,7 @@ namespace Server.Engines.Craft
 		public virtual int GumpTitleNumber{ get{ return 0; } }
 		public virtual string GumpTitleString{ get{ return ""; } }
 
-		public virtual CraftECA ECA{ get{ return CraftECA.ChanceMinusSixty; } }
+		public virtual CraftExceptionalChanceMode ECA { get{ return CraftExceptionalChanceMode.SuccessChanceDivideByFive; } }
 
 		private Dictionary<Mobile, CraftContext> m_ContextTable = new Dictionary<Mobile, CraftContext>();
 

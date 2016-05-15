@@ -491,7 +491,7 @@ namespace Server
                             armor.ProtectionLevel = (ArmorProtectionLevel)GetRandomBonus(luckChance);
 
                         if (0.40 > Utility.RandomDouble() + (luckChance / 10000))
-                            armor.Durability = (ArmorDurabilityLevel)GetRandomBonus(luckChance);
+                            armor.DurabilityLevel = (ArmorDurabilityLevel)GetRandomBonus(luckChance);
                     }
                 }              
 

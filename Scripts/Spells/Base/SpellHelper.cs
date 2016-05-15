@@ -1420,55 +1420,18 @@ namespace Server.Spells
             BaseCreature bc_Target = target as BaseCreature;
             PlayerMobile pm_Target = target as PlayerMobile;
 
-            /*            
-            if (bc_Target != null)
-            {
-                //Discordance
-                adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect));
-
-                //Ship Combat
-                if (BaseBoat.UseShipBasedDamageModifer(from, bc_Target))
-                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToCreatureScalar);
-            }
-
-            if (pm_Target != null)
-            {
-                //Ship Combat
-                if (BaseBoat.UseShipBasedDamageModifer(from, pm_Target))
-                    adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar);
-                            }
-            if (from != null)
-                target.RegisterDamage(amount, from);
-
-            target.Paralyzed = false;
-
-            target.OnDamage(amount, from, newHits < 0);
-
-            IMount m = target.Mount;
-
-            if (m != null)
-                m.OnRiderDamaged(amount, from, newHits < 0);
-
-            if (newHits < 0)
-            {
-                target.LastKiller = from;
-                target.Hits = 0;
-
-                if (oldHits >= 0)
-                    target.Kill();
-            }
-
-            else
-                target.Hits = newHits;
-            */
-
             target.Paralyzed = false;
 
             int finalAdjustedDamage = AOS.Damage(target, caster, damage, 0, 100, 0, 0, 0);
+            int displayedDamage = DamageTracker.AdjustDisplayedDamage(caster, target, finalAdjustedDamage);
+            
+            //TEST: Check if Neccessary
+            if (caster != null)
+                target.RegisterDamage(displayedDamage, caster);
 
             //Display Player Spell Damage
-            if (pm_Caster != null)            
-                DamageTracker.RecordDamage(pm_Caster, pm_Caster, target, DamageTracker.DamageType.SpellDamage, finalAdjustedDamage);                
+            if (pm_Caster != null)
+                DamageTracker.RecordDamage(pm_Caster, pm_Caster, target, DamageTracker.DamageType.SpellDamage, displayedDamage);                
             
             if (bc_Target != null)
             {
@@ -1509,102 +1472,7 @@ namespace Server.Spells
                
                 m_Target.Damage(m_Damage);
             }
-        }
-
-        private class SpellDamageNoDisturbTimer : Timer
-        {
-            private Mobile m_Target, m_From;
-            private int m_Damage;
-            private Spell m_Spell;
-
-            public SpellDamageNoDisturbTimer(Spell s, Mobile target, Mobile from, int damage, TimeSpan delay): base(delay)
-            {
-                m_Target = target;
-                m_From = from;
-                m_Damage = damage;
-                m_Spell = s;
-                Priority = TimerPriority.TwentyFiveMS;
-            }
-
-            protected override void OnTick()
-            {
-                PlayerMobile pm_Caster = m_From as PlayerMobile;
-                BaseCreature bc_Caster = m_From as BaseCreature;
-
-                BaseCreature bc_Target = m_Target as BaseCreature;
-                PlayerMobile pm_Target = m_Target as PlayerMobile;
-                
-                if (m_From is BaseCreature)
-                    ((BaseCreature)m_From).AlterSpellDamageTo(m_Target, ref m_Damage);
-
-                if (m_Target is BaseCreature)
-                    ((BaseCreature)m_Target).AlterSpellDamageFrom(m_From, ref m_Damage);
-
-                if (m_Target is BaseCreature && m_From != null)
-                    ((BaseCreature)m_Target).OnDamagedBySpell(m_From);
-
-                if (!m_Target.CanBeDamaged() || m_Target.Deleted)
-                    return;
-
-                if (!m_Target.Region.OnDamage(m_Target, ref m_Damage))
-                    return;
-
-                if (m_Damage > 0)
-                {
-                    int oldHits = m_Target.Hits;
-                    int newHits = oldHits - m_Damage;
-
-                    int discordancePenalty = 0;
-                    int adjustedDamageDisplayed = m_Damage;
-
-                    if (bc_Target != null)
-                    {                        
-                        //Discordance
-                        adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * (1 + bc_Target.DiscordEffect));
-
-                        //Ship Combat
-                        if (BaseBoat.UseShipBasedDamageModifer(m_From, bc_Target))
-                            adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToCreatureScalar);
-                    }
-
-                    if (pm_Target != null)
-                    {
-                        //Ship Combat
-                        if (BaseBoat.UseShipBasedDamageModifer(m_From, pm_Target))
-                            adjustedDamageDisplayed = (int)((double)adjustedDamageDisplayed * BaseBoat.shipBasedDamageToPlayerScalar);
-                    }
-
-                    //Display Player Spell Damage
-                    if (pm_Caster != null)                    
-                        DamageTracker.RecordDamage(pm_Caster, pm_Caster, m_Target, DamageTracker.DamageType.SpellDamage, adjustedDamageDisplayed);
-                    
-                    if (m_From != null)
-                        m_Target.RegisterDamage(m_Damage, m_From);
-
-                    m_Target.Paralyzed = false;
-
-                    m_Target.OnDamage(m_Damage, m_From, newHits < 0);
-
-                    IMount m = m_Target.Mount;
-
-                    if (m != null)
-                        m.OnRiderDamaged(m_Damage, m_From, newHits < 0);
-
-                    if (newHits < 0)
-                    {
-                        m_Target.LastKiller = m_From;
-
-                        m_Target.Hits = 0;
-
-                        if (oldHits >= 0)
-                            m_Target.Kill();
-                    }
-
-                    else
-                        m_Target.Hits = newHits;
-                }
-            }
-        }        
+        }      
     }
 
     public class TransformationSpellHelper

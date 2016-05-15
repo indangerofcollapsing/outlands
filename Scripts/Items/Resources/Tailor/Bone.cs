@@ -23,9 +23,7 @@ namespace Server.Items
 
 		public Bone( Serial serial ) : base( serial )
 		{
-		}
-
-		
+		}		
 
 		public override void Serialize( GenericWriter writer )
 		{

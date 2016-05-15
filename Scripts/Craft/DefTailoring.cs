@@ -29,11 +29,11 @@ namespace Server.Engines.Craft
             }
         }
 
-        public override CraftECA ECA { get { return CraftECA.ChanceMinusSixtyToFourtyFive; } }
+        public override CraftExceptionalChanceMode ECA { get { return CraftExceptionalChanceMode.SuccessChanceDivideByFive; } }
 
         public override double GetChanceAtMin(CraftItem item)
         {
-            return 0.5; // 50%
+            return 0.0;
         }
 
         private DefTailoring(): base(1, 1, 1.25)// base( 1, 1, 4.5 )

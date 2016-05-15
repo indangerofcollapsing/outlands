@@ -11,13 +11,23 @@ namespace Server.Items
 
         public override double DefaultWeight
         {
-            get { return 1.0; }
+            get { return 0.1; }
         }
 
         [Constructable]
-        public OilCloth()
-            : base(0x175D)
+        public OilCloth(int amount): base(0x175D)
         {
+            Stackable = true;
+            Hue = 2001;
+
+            Amount = amount;
+        }
+
+        [Constructable]
+        public OilCloth(): base(0x175D)
+        {
+            Stackable = true;
+
             Hue = 2001;
         }
 
@@ -108,8 +118,7 @@ namespace Server.Items
                 from.SendLocalizedMessage(1005426); // The cloth will not work on that.			
         }
 
-        public OilCloth(Serial serial)
-            : base(serial)
+        public OilCloth(Serial serial): base(serial)
         {
         }
 

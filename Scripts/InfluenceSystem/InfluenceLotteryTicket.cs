@@ -328,7 +328,7 @@ namespace Server.Items
                             if (armor != null)
                             {
                                 armor.ProtectionLevel = (ArmorProtectionLevel)Utility.RandomMinMax(4, 5);
-                                armor.Durability = (ArmorDurabilityLevel)Utility.RandomMinMax(4, 5);
+                                armor.DurabilityLevel = (ArmorDurabilityLevel)Utility.RandomMinMax(4, 5);
                             }
 
                             item = armor;

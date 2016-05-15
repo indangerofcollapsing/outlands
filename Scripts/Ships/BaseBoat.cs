@@ -850,6 +850,9 @@ namespace Server
         public static double shipBasedDamageToPlayerScalar = 0.5;
         public static double shipBasedDamageToCreatureScalar = 0.5;
 
+        public static double shipBasedAoESpellDamageToPlayerScalar = 0.5;
+        public static double shipBasedAoESpellDamageToCreatureScalar = 0.5;
+
         public TimeSpan TimeNeededToBeOutOfCombat = TimeSpan.FromSeconds(60); //Time Needed to Be Out of Combat For Fast Ship Repair and Dry Docking
         public TimeSpan DryDockMinimumLastMovement = TimeSpan.FromSeconds(10); //Minimum Time Needed Since Last Movement for Ship Docking
 

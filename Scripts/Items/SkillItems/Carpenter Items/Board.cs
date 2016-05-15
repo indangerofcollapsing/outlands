@@ -14,6 +14,11 @@ namespace Server.Items
             set { m_Resource = value; InvalidateProperties(); }
         }
 
+        public override double DefaultWeight
+        {
+            get { return 0.1; }
+        }
+
         int ICommodity.DescriptionNumber
         {
             get
@@ -35,31 +40,26 @@ namespace Server.Items
         bool ICommodity.IsDeedable { get { return true; } }
 
         [Constructable]
-        public BaseResourceBoard()
-            : this(1)
+        public BaseResourceBoard(): this(1)
         {
         }
 
         [Constructable]
-        public BaseResourceBoard(int amount)
-            : this(CraftResource.RegularWood, amount)
+        public BaseResourceBoard(int amount): this(CraftResource.RegularWood, amount)
         {
         }
 
-        public BaseResourceBoard(Serial serial)
-            : base(serial)
-        {
-        }
-
-        [Constructable]
-        public BaseResourceBoard(CraftResource resource)
-            : this(resource, 1)
+        public BaseResourceBoard(Serial serial): base(serial)
         {
         }
 
         [Constructable]
-        public BaseResourceBoard(CraftResource resource, int amount)
-            : base(0x1BD7)
+        public BaseResourceBoard(CraftResource resource): this(resource, 1)
+        {
+        }
+
+        [Constructable]
+        public BaseResourceBoard(CraftResource resource, int amount): base(0x1BD7)
         {
             Stackable = true;
             Amount = amount;
@@ -78,17 +78,15 @@ namespace Server.Items
 
                 if (num > 0)
                     list.Add(num);
+
                 else
                     list.Add(CraftResources.GetName(m_Resource));
             }
         }
 
-
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)4);
 
             writer.Write((int)m_Resource);
@@ -124,21 +122,18 @@ namespace Server.Items
     public class Board : BaseResourceBoard
     {
         [Constructable]
-        public Board()
-            : this(1)
+        public Board(): this(1)
         {
             Name = "board";
         }
 
         [Constructable]
-        public Board(int amount)
-            : base(CraftResource.RegularWood, amount)
+        public Board(int amount): base(CraftResource.RegularWood, amount)
         {
             Name = "board";
         }
 
-        public Board(Serial serial)
-            : base(serial)
+        public Board(Serial serial): base(serial)
         {
             Name = "board";
         }
@@ -146,15 +141,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+
             if (BaseResourceBoard.UpdatingBaseClass)
                 return;
+
             int version = reader.ReadInt();
         }
     }
@@ -162,21 +158,18 @@ namespace Server.Items
     public class HeartwoodBoard : BaseResourceBoard
     {
         [Constructable]
-        public HeartwoodBoard()
-            : this(1)
+        public HeartwoodBoard(): this(1)
         {
             Name = "heartwood board";
         }
 
         [Constructable]
-        public HeartwoodBoard(int amount)
-            : base(CraftResource.Heartwood, amount)
+        public HeartwoodBoard(int amount): base(CraftResource.Heartwood, amount)
         {
             Name = "heartwood board";
         }
 
-        public HeartwoodBoard(Serial serial)
-            : base(serial)
+        public HeartwoodBoard(Serial serial): base(serial)
         {
             Name = "heartwood board";
         }
@@ -184,14 +177,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
     }
@@ -199,8 +190,7 @@ namespace Server.Items
     public class BloodwoodBoard : BaseResourceBoard
     {
         [Constructable]
-        public BloodwoodBoard()
-            : this(1)
+        public BloodwoodBoard(): this(1)
         {
             Name = "bloodwood board";
         }
@@ -212,8 +202,7 @@ namespace Server.Items
             Name = "bloodwood board";
         }
 
-        public BloodwoodBoard(Serial serial)
-            : base(serial)
+        public BloodwoodBoard(Serial serial): base(serial)
         {
             Name = "bloodwood board";
         }
@@ -221,14 +210,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
     }
@@ -236,21 +223,18 @@ namespace Server.Items
     public class FrostwoodBoard : BaseResourceBoard
     {
         [Constructable]
-        public FrostwoodBoard()
-            : this(1)
+        public FrostwoodBoard(): this(1)
         {
             Name = "frostwood board";
         }
 
         [Constructable]
-        public FrostwoodBoard(int amount)
-            : base(CraftResource.Frostwood, amount)
+        public FrostwoodBoard(int amount): base(CraftResource.Frostwood, amount)
         {
             Name = "frostwood board";
         }
 
-        public FrostwoodBoard(Serial serial)
-            : base(serial)
+        public FrostwoodBoard(Serial serial): base(serial)
         {
             Name = "frostwood board";
         }
@@ -258,14 +242,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
     }
@@ -273,21 +255,18 @@ namespace Server.Items
     public class OakBoard : BaseResourceBoard
     {
         [Constructable]
-        public OakBoard()
-            : this(1)
+        public OakBoard(): this(1)
         {
             Name = "oak board";
         }
 
         [Constructable]
-        public OakBoard(int amount)
-            : base(CraftResource.OakWood, amount)
+        public OakBoard(int amount): base(CraftResource.OakWood, amount)
         {
             Name = "oak board";
         }
 
-        public OakBoard(Serial serial)
-            : base(serial)
+        public OakBoard(Serial serial): base(serial)
         {
             Name = "oak board";
         }
@@ -295,14 +274,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
     }
@@ -310,21 +287,18 @@ namespace Server.Items
     public class AshBoard : BaseResourceBoard
     {
         [Constructable]
-        public AshBoard()
-            : this(1)
+        public AshBoard(): this(1)
         {
             Name = "ash board";
         }
 
         [Constructable]
-        public AshBoard(int amount)
-            : base(CraftResource.AshWood, amount)
+        public AshBoard(int amount): base(CraftResource.AshWood, amount)
         {
             Name = "ash board";
         }
 
-        public AshBoard(Serial serial)
-            : base(serial)
+        public AshBoard(Serial serial): base(serial)
         {
             Name = "ash board";
         }
@@ -332,14 +306,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
     }
@@ -347,21 +319,18 @@ namespace Server.Items
     public class YewBoard : BaseResourceBoard
     {
         [Constructable]
-        public YewBoard()
-            : this(1)
+        public YewBoard(): this(1)
         {
             Name = "yew board";
         }
 
         [Constructable]
-        public YewBoard(int amount)
-            : base(CraftResource.YewWood, amount)
+        public YewBoard(int amount): base(CraftResource.YewWood, amount)
         {
             Name = "yew board";
         }
 
-        public YewBoard(Serial serial)
-            : base(serial)
+        public YewBoard(Serial serial): base(serial)
         {
             Name = "yew board";
         }
@@ -369,14 +338,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((int)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
     }

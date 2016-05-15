@@ -93,21 +93,8 @@ namespace Server.Mobiles
                         case CombatSpecialAction.IceBreathAttack: AICombatSpecialAction.DoIceBreathAttack(creature, creature.Combatant); break;
                         case CombatSpecialAction.PoisonBreathAttack: AICombatSpecialAction.DoPoisonBreathAttack(creature, creature.Combatant); break;
                     }
-
-                    //Specia Increasing Delay
-                    double speedScalar = 1;
-                    double crippleModifier = 0;
-                    double discordModifier = 0;
-
-                    //Cripple Effect on Creature
-                    crippleModifier = creature.GetSpecialAbilityEntryValue(SpecialAbilityEffect.Cripple);
-
-                    //Discordance Effect on Creature                   
-                    discordModifier = creature.DiscordEffect;
-
-                    speedScalar += crippleModifier + discordModifier;
-
-                    int specialActionDelay = (int)((double)Utility.RandomMinMax(creature.CombatSpecialActionMinDelay, creature.CombatSpecialActionMaxDelay) * speedScalar); 
+                    
+                    int specialActionDelay = (int)((double)Utility.RandomMinMax(creature.CombatSpecialActionMinDelay, creature.CombatSpecialActionMaxDelay)); 
 
                     creature.NextCombatSpecialActionAllowed = DateTime.UtcNow + TimeSpan.FromSeconds(specialActionDelay);
                     creature.NextCombatEpicActionAllowed = creature.NextCombatEpicActionAllowed.AddSeconds(5);

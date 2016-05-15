@@ -18,7 +18,7 @@ namespace Server.Engines.Craft
 
 		public override double GetChanceAtMin( CraftItem item )
 		{
-			return 0.0; // 0%
+			return 0.0;
 		}
 
 		private static CraftSystem m_CraftSystem;

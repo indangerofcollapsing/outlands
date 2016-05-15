@@ -48,7 +48,7 @@ namespace Server
         
         public bool AutoStopEnabled = false;
         public TimeSpan AutoStopDuration = AutoStopMinimumDuration;
-        public static TimeSpan AutoStopMinimumDuration = TimeSpan.FromSeconds(5);
+        public static TimeSpan AutoStopMinimumDuration = TimeSpan.FromSeconds(60);
 
         public static TimeSpan TickSpeed = TimeSpan.FromSeconds(1);
 
@@ -69,6 +69,33 @@ namespace Server
             DamageTaken = 0;
             FollowerDamageTaken = 0;
             HealingDealt = 0;
+        }
+
+        public static int AdjustDisplayedDamage(Mobile from, Mobile target, int amount)
+        {
+            BaseCreature bc_Target = target as BaseCreature;
+            PlayerMobile pm_Target = target as PlayerMobile;            
+
+            double displayedDamage = amount;
+
+            if (bc_Target != null)
+            {
+                //Discordance
+                displayedDamage *= 1 + bc_Target.DiscordEffect;
+
+                //Ship Combat
+                if (BaseBoat.UseShipBasedDamageModifer(from, bc_Target))
+                    displayedDamage *= BaseBoat.shipBasedDamageToCreatureScalar;
+            }
+
+            //Ship Combat
+            if (pm_Target != null)
+            {
+                if (BaseBoat.UseShipBasedDamageModifer(from, pm_Target))
+                    displayedDamage *= BaseBoat.shipBasedDamageToPlayerScalar;
+            }
+
+            return (int)(Math.Round(displayedDamage));
         }
 
         public static void RecordDamage(Mobile owner, Mobile from, Mobile target, DamageType damageType, int amount)

@@ -436,7 +436,7 @@ namespace Server.Items
 					{
 						BaseArmor armor = (BaseArmor)item;
 						armor.ProtectionLevel = (ArmorProtectionLevel)Utility.Random(level);
-						armor.Durability = (ArmorDurabilityLevel)Utility.Random(level);
+						armor.DurabilityLevel = (ArmorDurabilityLevel)Utility.Random(level);
                         armor.Quality = Quality.Regular;
 					}
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Server.Items;
 using Server.Multis;
-using Server.Custom.Pirates;
 
 namespace Server.Mobiles
 {

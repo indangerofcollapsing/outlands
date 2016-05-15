@@ -19,8 +19,7 @@ namespace Server.Mobiles
 		public class InternalBuyInfo : List<GenericBuyInfo> 
 		{ 
 			public InternalBuyInfo() 
-			{ 
-				Add( new GenericBuyInfo( typeof( Hides ), 25, 999, 0x1078, 0 ) ); 
+			{ 				
 				Add( new GenericBuyInfo( typeof( ThighBoots ), 56, 10, 0x1711, 0 ) ); 
 			} 
 		} 

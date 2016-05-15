@@ -143,6 +143,21 @@ namespace Server.Spells.Seventh
                     else                    
                         mobile.BoltEffect(0);
 
+                    BaseCreature bc_Target = mobile as BaseCreature;
+                    PlayerMobile pm_Target = mobile as PlayerMobile;
+
+                    if (bc_Target != null)
+                    {
+                        if (bc_Target.BoatOccupied != null)
+                            damage *= BaseBoat.shipBasedAoESpellDamageToCreatureScalar;
+                    }
+
+                    if (pm_Target != null)
+                    {
+                        if (pm_Target.BoatOccupied != null)
+                            damage *= BaseBoat.shipBasedAoESpellDamageToPlayerScalar;
+                    }
+
                     damage *= GetDamageScalar(mobile, damageBonus);
 
                     SpellHelper.Damage(this, Caster, mobile, damage);

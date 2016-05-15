@@ -32,10 +32,7 @@ namespace Server.Engines.Craft
 
 		public override double GetChanceAtMin( CraftItem item )
 		{
-			if( item.ItemType == typeof( HollowPrism ) )
-				return 0.5; // 50%
-
-			return 0.0; // 0%
+			return 0.0;
 		}
 
 		private DefGlassblowing() : base( 1, 1, 1.25 )// base( 1, 2, 1.7 )

@@ -31,17 +31,13 @@ namespace Server.Engines.Craft
             }
         }
 
-        private DefTinkering()
-            : base(1, 1, 1.25)// base( 1, 1, 3.0 )
+        private DefTinkering(): base(1, 1, 1.25)// base( 1, 1, 3.0 )
         {
         }
 
         public override double GetChanceAtMin(CraftItem item)
         {
-            if (item.NameNumber == 1044258 || item.NameNumber == 1046445) // potion keg and faction trap removal kit
-                return 0.5; // 50%
-
-            return 0.0; // 0%
+            return 0.0;
         }
 
         public override int CanCraft(Mobile from, BaseTool tool, Type itemType)

@@ -1,7 +1,6 @@
 using System;
 using Server.Items;
 using Server.Multis;
-using Server.Custom.Pirates;
 using Server.Multis.Deeds;
 using Server.Custom.Items;
 using Server.Multis;
@@ -38,7 +37,7 @@ namespace Server.Engines.Craft
 
         public override double GetChanceAtMin(CraftItem item)
         {
-            return 0.5; // 50%
+            return 0.0;
         }
 
         public UOACZDefCarpentry()

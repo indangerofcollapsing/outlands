@@ -18,9 +18,7 @@ namespace Server.Items
 {
     public abstract class BaseArmor : Item, IScissorable, ICraftable, IWearableDurability
     {        
-        private int m_HitPoints;
-        private ArmorDurabilityLevel m_Durability = ArmorDurabilityLevel.Regular;
-        private ArmorProtectionLevel m_Protection;   
+        private int m_HitPoints;        
         private int m_PhysicalBonus, m_FireBonus, m_ColdBonus, m_PoisonBonus, m_EnergyBonus;
 
         private AosAttributes m_AosAttributes;
@@ -129,8 +127,8 @@ namespace Server.Items
 
                 if (Layer != Server.Layer.TwoHanded)
                 {
-                    if (m_Protection != ArmorProtectionLevel.Regular)
-                        ar += 5 * (int)m_Protection;
+                    if (m_ProtectionLevel != ArmorProtectionLevel.Regular)
+                        ar += 5 * (int)m_ProtectionLevel;
 
                     bool coloredOre = false;
 
@@ -278,6 +276,31 @@ namespace Server.Items
                     Hue = detail.Hue;
             }
         }
+        
+        public override int GetArcaneEssenceValue()
+        {
+            int arcaneEssenceValue = 0;
+            
+            switch (DurabilityLevel)
+            {
+                case ArmorDurabilityLevel.Durable: arcaneEssenceValue += 1; break;
+                case ArmorDurabilityLevel.Substantial: arcaneEssenceValue += 2; break;
+                case ArmorDurabilityLevel.Massive: arcaneEssenceValue += 3; break;
+                case ArmorDurabilityLevel.Fortified: arcaneEssenceValue += 4; break;
+                case ArmorDurabilityLevel.Indestructible: arcaneEssenceValue += 5; break;
+            }
+
+            switch (ProtectionLevel)
+            {
+                case ArmorProtectionLevel.Defense: arcaneEssenceValue += 2; break;
+                case ArmorProtectionLevel.Guarding: arcaneEssenceValue += 4; break;
+                case ArmorProtectionLevel.Hardening: arcaneEssenceValue += 6; break;
+                case ArmorProtectionLevel.Fortification: arcaneEssenceValue += 8; break;
+                case ArmorProtectionLevel.Invulnerability: arcaneEssenceValue += 10; break;
+            }
+            
+            return arcaneEssenceValue;
+        }
 
         public override double GetSellValueScalar()
         {
@@ -289,20 +312,21 @@ namespace Server.Items
             if (Quality == Server.Quality.Exceptional)
                 scalar += .1;
 
-            scalar += (double)((int)Durability) * .02;
+            scalar += (double)((int)DurabilityLevel) * .02;
             scalar += (double)((int)ProtectionLevel) * .05;
 
             return scalar;
         }
 
+        private ArmorDurabilityLevel m_DurabilityLevel;
         [CommandProperty(AccessLevel.GameMaster)]
-        public ArmorDurabilityLevel Durability
+        public ArmorDurabilityLevel DurabilityLevel
         {
-            get { return m_Durability; }
+            get { return m_DurabilityLevel; }
             set 
             {
                 UnscaleDurability();
-                m_Durability = value; 
+                m_DurabilityLevel = value; 
                 ScaleDurability(); 
                 InvalidateProperties();
             }
@@ -313,18 +337,19 @@ namespace Server.Items
             get { return 0; }
         }
 
+        private ArmorProtectionLevel m_ProtectionLevel;
         [CommandProperty(AccessLevel.GameMaster)]
         public ArmorProtectionLevel ProtectionLevel
         {
             get
             {
-                return m_Protection;
+                return m_ProtectionLevel;
             }
             set
             {
-                if (m_Protection != value)
+                if (m_ProtectionLevel != value)
                 {
-                    m_Protection = value;
+                    m_ProtectionLevel = value;
 
                     Invalidate();
                     InvalidateProperties();
@@ -466,7 +491,7 @@ namespace Server.Items
 
         public int GetProtOffset()
         {
-            switch (m_Protection)
+            switch (m_ProtectionLevel)
             {
                 case ArmorProtectionLevel.Guarding: return 1;
                 case ArmorProtectionLevel.Hardening: return 2;
@@ -500,7 +525,7 @@ namespace Server.Items
         {
             int bonus = 0;
 
-            switch (m_Durability)
+            switch (m_DurabilityLevel)
             {
                 case ArmorDurabilityLevel.Durable: bonus += 20; break;
                 case ArmorDurabilityLevel.Substantial: bonus += 40; break;
@@ -738,8 +763,8 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.EnergyBonus, m_EnergyBonus != 0);
             SetSaveFlag(ref flags, SaveFlag.MaxHitPoints, m_MaxHitPoints != 0);
             SetSaveFlag(ref flags, SaveFlag.HitPoints, m_HitPoints != 0);
-            SetSaveFlag(ref flags, SaveFlag.Durability, m_Durability != ArmorDurabilityLevel.Regular);
-            SetSaveFlag(ref flags, SaveFlag.Protection, m_Protection != ArmorProtectionLevel.Regular);
+            SetSaveFlag(ref flags, SaveFlag.Durability, m_DurabilityLevel != ArmorDurabilityLevel.Regular);
+            SetSaveFlag(ref flags, SaveFlag.Protection, m_ProtectionLevel != ArmorProtectionLevel.Regular);
             SetSaveFlag(ref flags, SaveFlag.BaseArmor, m_ArmorBase != -1);
             SetSaveFlag(ref flags, SaveFlag.StrBonus, m_StrBonus != -1);
             SetSaveFlag(ref flags, SaveFlag.DexBonus, m_DexBonus != -1);
@@ -780,10 +805,10 @@ namespace Server.Items
                 writer.WriteEncodedInt((int)m_HitPoints);
             
             if (GetSaveFlag(flags, SaveFlag.Durability))
-                writer.WriteEncodedInt((int)m_Durability);
+                writer.WriteEncodedInt((int)m_DurabilityLevel);
 
             if (GetSaveFlag(flags, SaveFlag.Protection))
-                writer.WriteEncodedInt((int)m_Protection);
+                writer.WriteEncodedInt((int)m_ProtectionLevel);
             
             if (GetSaveFlag(flags, SaveFlag.BaseArmor))
                 writer.WriteEncodedInt((int)m_ArmorBase);
@@ -869,10 +894,10 @@ namespace Server.Items
                             m_HitPoints = reader.ReadEncodedInt();
                         
                         if (GetSaveFlag(flags, SaveFlag.Durability))                        
-                            m_Durability = (ArmorDurabilityLevel)reader.ReadEncodedInt();                        
+                            m_DurabilityLevel = (ArmorDurabilityLevel)reader.ReadEncodedInt();                        
 
                         if (GetSaveFlag(flags, SaveFlag.Protection))                        
-                            m_Protection = (ArmorProtectionLevel)reader.ReadEncodedInt();  
+                            m_ProtectionLevel = (ArmorProtectionLevel)reader.ReadEncodedInt();  
 
                         if (GetSaveFlag(flags, SaveFlag.BaseArmor))
                             m_ArmorBase = reader.ReadEncodedInt();
@@ -943,8 +968,8 @@ namespace Server.Items
                         m_ArmorBase = reader.ReadInt();
                         m_MaxHitPoints = reader.ReadInt();
                         m_HitPoints = reader.ReadInt();
-                        m_Durability = (ArmorDurabilityLevel)reader.ReadInt();
-                        m_Protection = (ArmorProtectionLevel)reader.ReadInt();
+                        m_DurabilityLevel = (ArmorDurabilityLevel)reader.ReadInt();
+                        m_ProtectionLevel = (ArmorProtectionLevel)reader.ReadInt();
 
                         AMT mat = (AMT)reader.ReadInt();
 
@@ -1507,7 +1532,7 @@ namespace Server.Items
             if (m_HitPoints >= 0 && m_MaxHitPoints > 0)
                 list.Add(1060639, "{0}\t{1}", m_HitPoints, m_MaxHitPoints); // durability ~1_val~ / ~2_val~
         }
-
+        
         public override void DisplayLabelName(Mobile from)
         {
             if (from == null)
@@ -1529,7 +1554,7 @@ namespace Server.Items
                 return;
             }
 
-            bool isMagical = Durability != ArmorDurabilityLevel.Regular || ProtectionLevel != ArmorProtectionLevel.Regular;
+            bool isMagical = DurabilityLevel != ArmorDurabilityLevel.Regular || ProtectionLevel != ArmorProtectionLevel.Regular;
 
             string displayName = "";
 
@@ -1541,8 +1566,8 @@ namespace Server.Items
                 if (Quality == Quality.Exceptional)
                     displayName += "exceptional ";
 
-                if (Durability != ArmorDurabilityLevel.Regular)
-                    displayName += Durability.ToString().ToLower() + " ";
+                if (DurabilityLevel != ArmorDurabilityLevel.Regular)
+                    displayName += DurabilityLevel.ToString().ToLower() + " ";
 
                 if (ProtectionLevel != ArmorProtectionLevel.Regular)
                     displayName += ProtectionLevel.ToString().ToLower() + " ";

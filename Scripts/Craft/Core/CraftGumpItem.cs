@@ -200,37 +200,43 @@ namespace Server.Engines.Craft
 
 			bool allRequiredSkills = true;
 			
-            double chance = m_CraftItem.GetSuccessChance( m_From, resIndex > -1 ? res.GetAt( resIndex ).ItemType : null, m_CraftSystem, false, ref allRequiredSkills );
-			double excepChance = m_CraftItem.GetExceptionalChance( m_CraftSystem, chance, m_From );
+            double successChance = m_CraftItem.GetSuccessChance( m_From, resIndex > -1 ? res.GetAt( resIndex ).ItemType : null, m_CraftSystem, false, ref allRequiredSkills );
+			double exceptionalChance = m_CraftItem.GetExceptionalChance( m_CraftSystem, successChance, m_From );
             
             bool skillGainPossible = false;
 
-			if ( chance < 0.0 )
-				chance = 0.0;
+			if ( successChance < 0.0 )
+				successChance = 0.0;
 
-			else if ( chance > 1.0 )
-				chance = 1.0;
+			else if ( successChance > 1.0 )
+				successChance = 1.0;
 
-            if (chance > 0 && chance < 1.0)
+            if (exceptionalChance < 0.0)
+                exceptionalChance = 0.0;
+
+            else if (exceptionalChance > 1.0)
+                exceptionalChance = 1.0;
+
+            if (successChance > 0 && successChance < 1.0)
                 skillGainPossible = true;
 
             int startY = 80;
 
             AddHtmlLocalized(170, startY, 250, 18, 1044057, LabelColor, false, false); // Success Chance:
-            AddLabel(430, startY, LabelHue, String.Format("{0:F1}%", chance * 100));
+            AddLabel(430, startY, LabelHue, String.Format("{0:F1}%", successChance * 100));
 
             startY += 20;
 
 			if ( m_ShowExceptionalChance )
 			{
-				if( excepChance < 0.0 )
-					excepChance = 0.0;
+				if( exceptionalChance < 0.0 )
+					exceptionalChance = 0.0;
 
-				else if( excepChance > 1.0 )
-					excepChance = 1.0;               
+				else if( exceptionalChance > 1.0 )
+					exceptionalChance = 1.0;               
 
                 AddHtmlLocalized(170, startY, 250, 18, 1044058, 32767, false, false); // Exceptional Chance:
-                AddLabel(430, startY, LabelHue, String.Format("{0:F1}%", excepChance * 100));
+                AddLabel(430, startY, LabelHue, String.Format("{0:F1}%", exceptionalChance * 100));
 
                 startY += 20;
 			}

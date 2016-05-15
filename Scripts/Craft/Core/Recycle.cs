@@ -256,6 +256,14 @@ namespace Server.Engines.Craft
                         from.AddToBackpack(newResource);
                     }
 
+                    int arcaneEssenceValue = recycleItem.GetArcaneEssenceValue();
+
+                    if (arcaneEssenceValue > 0)
+                    {
+                        ArcaneEssence arcaneEssenceItem = new ArcaneEssence(arcaneEssenceValue);
+                        from.AddToBackpack(arcaneEssenceItem);
+                    }
+
                     if (deleteItem)
                         recycleItem.Delete();
                 }
@@ -285,7 +293,9 @@ namespace Server.Engines.Craft
                 }                 
 
                 RecycleResult result = RecycleResult.Invalid;
+
                 string message;
+
                 Item item = targeted as Item;
 
                 if (item == null)

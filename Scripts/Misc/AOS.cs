@@ -60,23 +60,17 @@ namespace Server
 		public static int Damage( Mobile m, Mobile from, int damage, bool ignoreArmor, int phys, int fire, int cold, int pois, int nrgy, int chaos, int direct, bool keepAlive, bool archer, bool deathStrike )
 		{
 			if( m == null || m.Deleted || !m.Alive || damage <= 0 )
-				return 0;
+				return 0;     
+			
+            if (phys > 0)
+                damage = m.AbsorbDamage(from, m, damage, true, false);
 
-			if( phys == 0 && fire == 100 && cold == 0 && pois == 0 && nrgy == 0 )
-				Mobiles.MeerMage.StopEffect( m, true );            
-                                    
-			if( !Core.AOS )
-			{
-                if (phys > 0)
-                    damage = m.AbsorbDamage(from, m, damage, true, false);
+            if (damage < 1)
+                damage = 1;
 
-                if (damage < 1)
-                    damage = 1;
+			m.Damage( damage, from );
 
-				m.Damage( damage, from );
-
-				return damage;
-			}
+			return damage;			
 
 			Fix( ref phys );
 			Fix( ref fire );
@@ -85,19 +79,7 @@ namespace Server
 			Fix( ref nrgy );
 			Fix( ref chaos );
 			Fix( ref direct );
-
-			if ( Core.ML && chaos > 0 )
-			{
-				switch ( Utility.Random( 5 ) )
-				{
-					case 0: phys += chaos; break;
-					case 1: fire += chaos; break;
-					case 2: cold += chaos; break;
-					case 3: pois += chaos; break;
-					case 4: nrgy += chaos; break;
-				}
-			}
-
+            
 			BaseQuiver quiver = null;
 			
 			if ( archer && from != null )

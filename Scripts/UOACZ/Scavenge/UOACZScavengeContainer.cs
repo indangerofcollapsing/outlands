@@ -252,7 +252,7 @@ namespace Server.Custom
                                 BaseArmor armor = Loot.RandomArmorOrShield();
 
                                 armor.ProtectionLevel = (ArmorProtectionLevel)Utility.RandomMinMax(1, 3);
-                                armor.Durability = (ArmorDurabilityLevel)Utility.RandomMinMax(1, 3);
+                                armor.DurabilityLevel = (ArmorDurabilityLevel)Utility.RandomMinMax(1, 3);
 
                                 armor.Identified = true;
 

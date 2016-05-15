@@ -3021,12 +3021,14 @@ namespace Server.Mobiles
             if (ControlMaster is PlayerMobile)
             {
                 pm_Master = ControlMaster as PlayerMobile;
+
                 DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.FollowerDamageTaken, finalDamage);  
             }
 
             else if (SummonMaster is PlayerMobile)
             {
                 pm_Master = SummonMaster as PlayerMobile;
+
                 DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.FollowerDamageTaken, finalDamage);  
             }
 
@@ -3035,18 +3037,21 @@ namespace Server.Mobiles
                 if (bc_Source.ControlMaster is PlayerMobile)
                 {
                     pm_Master = bc_Source.ControlMaster as PlayerMobile;
+
                     DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.FollowerDamage, finalDamage);
                 }
 
                 else if (bc_Source.SummonMaster is PlayerMobile)
                 {
                     pm_Master = bc_Source.SummonMaster as PlayerMobile;
+
                     DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.FollowerDamage, finalDamage);
                 }
 
                 else if (bc_Source.BardProvoked && bc_Source.BardMaster is PlayerMobile)
                 {
                     pm_Master = bc_Source.BardMaster as PlayerMobile;
+
                     DamageTracker.RecordDamage(pm_Master, from, this, DamageTracker.DamageType.ProvocationDamage, finalDamage);  
                 }
             }            
@@ -6887,7 +6892,7 @@ namespace Server.Mobiles
                 return false;
 
             armor.ProtectionLevel = (ArmorProtectionLevel)RandomMinMaxScaled(minLevel, maxLevel);
-            armor.Durability = (ArmorDurabilityLevel)RandomMinMaxScaled(minLevel, maxLevel);
+            armor.DurabilityLevel = (ArmorDurabilityLevel)RandomMinMaxScaled(minLevel, maxLevel);
             PackItem(armor);
 
             return true;

@@ -40,7 +40,7 @@ namespace Server.Engines.Harvest
                     from.SendMessage("This item must be in your backpack or bankbox to be used.");
 
                 else if (obj.Axe(from, (BaseAxe)m_Tool))
-                    from.PlaySound(0x13E);
+                    from.PlaySound(0x13E);                
             }
 
             else if (m_System is Lumberjacking && targeted is ICarvable)
