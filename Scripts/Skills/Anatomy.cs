@@ -30,6 +30,11 @@ namespace Server.SkillHandlers
 
 			protected override void OnTarget( Mobile from, object targeted )
 			{
+                PlayerMobile player = from as PlayerMobile;
+
+                if (player == null)
+                    return;
+
 				if ( from == targeted )				           
                     from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 500324); // You know yourself quite well enough already.				
 
@@ -98,7 +103,7 @@ namespace Server.SkillHandlers
 						targ.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1042666, from.NetState ); // You can not quite get a sense of their physical characteristics.		
 			
                     if (gumpSuccess)
-                        from.SendGump(new AnimalLoreGump(bc_Creature));
+                        from.SendGump(new AnimalLoreGump(player, bc_Creature, AnimalLoreGump.AnimalLoreGumpPage.Stats));
 				}
 
 				else if ( targeted is Item )				

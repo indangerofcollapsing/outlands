@@ -7,10 +7,10 @@ namespace Server.Mobiles
     public class Guar : BaseCreature
     {        
         [Constructable]
-        public Guar()
-            : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
+        public Guar(): base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "a guar";
+
             Body = 270;
             Hue = 0;
             BaseSoundID = 0x63A;
