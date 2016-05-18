@@ -3,6 +3,8 @@ using Server;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Server.SkillHandlers
 {
@@ -101,10 +103,13 @@ namespace Server.SkillHandlers
 
 					else if (!gumpSuccess)
 						targ.PrivateOverheadMessage( MessageType.Regular, 0x3B2, 1042666, from.NetState ); // You can not quite get a sense of their physical characteristics.		
-			
+
                     if (gumpSuccess)
-                        from.SendGump(new AnimalLoreGump(player, bc_Creature, AnimalLoreGump.AnimalLoreGumpPage.Stats));
-				}
+                    {
+                        from.SendGump(new AnimalLoreGump(player, bc_Creature, AnimalLoreGump.AnimalLoreGumpPage.Stats, new List<AnimalLoreGump.TraitSelectionType>()));
+                        from.SendSound(0x055);
+                    }
+                }
 
 				else if ( targeted is Item )				
 					((Item)targeted).SendLocalizedMessageTo( from, 500323, "" ); // Only living things have anatomies!				

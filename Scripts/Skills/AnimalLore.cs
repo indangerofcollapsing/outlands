@@ -3,6 +3,8 @@ using Server;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Targeting;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Server.SkillHandlers
@@ -64,7 +66,8 @@ namespace Server.SkillHandlers
                         return;
                     }
 
-                    from.SendGump(new AnimalLoreGump(player, bc_Creature, AnimalLoreGump.AnimalLoreGumpPage.Stats));
+                    from.SendGump(new AnimalLoreGump(player, bc_Creature, AnimalLoreGump.AnimalLoreGumpPage.Stats, new List<AnimalLoreGump.TraitSelectionType>()));
+                    from.PlaySound(0x055);
                 }
 
                 else
@@ -78,6 +81,13 @@ namespace Server.SkillHandlers
         public PlayerMobile pm_Player;
         public BaseCreature bc_Creature;
         public AnimalLoreGumpPage m_Page;
+        public List<TraitSelectionType> m_TraitGumpSelections = new List<TraitSelectionType>();
+        
+        public int openGumpSound = 0x055;
+        public int changeGumpSound = 0x057;
+        public int closeGumpSound = 0x058;
+        public int selectionSound = 0x4D2;
+        public int traitAssignedSound = 0x5BC; //0x5C9; //0x5BC //0x5BD //0x650 //0x655
 
         public enum AnimalLoreGumpPage
         {
@@ -86,7 +96,14 @@ namespace Server.SkillHandlers
             Info
         }
 
-        public AnimalLoreGump(PlayerMobile player, BaseCreature creature, AnimalLoreGumpPage page): base(50, 50)
+        public enum TraitSelectionType
+        {
+            None,
+            Left,
+            Right
+        }
+
+        public AnimalLoreGump(PlayerMobile player, BaseCreature creature, AnimalLoreGumpPage page, List<TraitSelectionType> traitSelections): base(50, 50)
         {
             if (player == null || creature == null)
                 return;
@@ -94,6 +111,25 @@ namespace Server.SkillHandlers
             pm_Player = player;
             bc_Creature = creature;
             m_Page = page;
+
+            m_TraitGumpSelections.Clear();
+
+            //Populate Trait Gump Selections
+            if (traitSelections.Count == 0)
+            {
+                for (int a = 0; a < BaseCreature.MaxExperienceLevel; a++)
+                {
+                    m_TraitGumpSelections.Add(TraitSelectionType.None);
+                }
+            }
+
+            else
+            {
+                for (int a = 0; a < traitSelections.Count; a++)
+                {
+                    m_TraitGumpSelections.Add(traitSelections[a]);
+                }
+            }
 
             Closable = true;
             Disposable = true;
@@ -103,11 +139,13 @@ namespace Server.SkillHandlers
             AddPage(0);
 
             int HeaderTextHue = 2603;
-            int WhiteTextHue = 2036;
-            int MainTextHue = 149; // 149; //2036          
+            int WhiteTextHue = 2655; //2036;
+            int GreyTextHue = 2036;
+            int MainTextHue = 149; // 149; //2036      
+            int BlueTextHue = 2603;
             int GreenTextHue = 0x3F;
             int RedTextHue = 0x22;
-            int ValueTextHue = 2036; //2610
+            int ValueTextHue = 2655; // 2036; //2610
             int DifficultyTextHue = 2114;
             int SlayerGroupTextHue = 2606;
 
@@ -166,7 +204,7 @@ namespace Server.SkillHandlers
 
             AddLabel(Utility.CenteredTextOffset(170, creatureDisplayName), 15, HeaderTextHue, creatureDisplayName);
 
-            int traitsAvailable = 0;
+            int traitsAvailable = FollowerTraits.GetFollowerTraitsAvailable(bc_Creature);
 
             AddLabel(10, 0, 149, "Guide");
             AddButton(14, 15, 2094, 2095, 1, GumpButtonType.Reply, 0);
@@ -175,14 +213,17 @@ namespace Server.SkillHandlers
             {
                 //Main
                 case AnimalLoreGumpPage.Stats:
-                    AddLabel(78, 370, WhiteTextHue, "Traits");
-                    AddButton(45, 369, 4011, 4013, 2, GumpButtonType.Reply, 0);
+                    if (bc_Creature.Tameable)
+                    {
+                        AddLabel(78, 370, WhiteTextHue, "Traits");
+                        AddButton(45, 369, 4011, 4013, 2, GumpButtonType.Reply, 0);
 
-                    if (traitsAvailable > 0)            
-                        AddLabel(123, 370, GreenTextHue, "(" + traitsAvailable.ToString() + " Available)");
+                        if (traitsAvailable > 0)
+                            AddLabel(123, 370, GreenTextHue, "(" + traitsAvailable.ToString() + " Available)");                    
                     
-                    AddButton(221, 369, 4029, 4031, 3, GumpButtonType.Reply, 0);
-                    AddLabel(259, 370, WhiteTextHue, "Info");
+                        AddButton(221, 369, 4029, 4031, 3, GumpButtonType.Reply, 0);
+                        AddLabel(259, 370, WhiteTextHue, "Info");
+                    }
 
                     #region Main
 
@@ -222,9 +263,12 @@ namespace Server.SkillHandlers
                     string creatureDifficulty = Utility.CreateDecimalString(bc_Creature.InitialDifficulty, 1);
                     string slayerGroup = bc_Creature.SlayerGroup.ToString();
 
-                    int level = 2;
+                    int level = bc_Creature.ExperienceLevel;
                     int experience = bc_Creature.Experience;
-                    int maxExperience = bc_Creature.MaxExperience;
+                    int maxExperience = 0;
+
+                    if (bc_Creature.ExperienceLevel < BaseCreature.MaxExperienceLevel)
+                        maxExperience = BaseCreature.ExperiencePerLevel[bc_Creature.ExperienceLevel];
 
                     double passiveTamingSkillGainRemaining = 2.5;
                     string passiveTamingSkillGainRemainingText = Utility.CreateDecimalString(passiveTamingSkillGainRemaining, 1);
@@ -353,18 +397,30 @@ namespace Server.SkillHandlers
                     if (bc_Creature.Controlled && bc_Creature.ControlMaster is PlayerMobile)
                     {
 
-                        AddLabel(160, 50, MainTextHue, "Level:");
-                        AddLabel(205, 50, GreenTextHue, level.ToString());
-
-                        AddLabel(170, 70, MainTextHue, "Exp:");
-                        AddLabel(205, 70, ValueTextHue, experience.ToString() + " / " + maxExperience.ToString());
-
-                        AddLabel(155, 90, MainTextHue, "Passive Taming");
-                        AddLabel(125, 105, MainTextHue, "Skill Gain Remaining");
-                        if (passiveTamingSkillGainRemaining > 0)
-                            AddLabel(255, 100, GreenTextHue, passiveTamingSkillGainRemainingText);
+                        AddLabel(166, 50, MainTextHue, "Level:");                        
+                        if (traitsAvailable > 0)
+                            AddLabel(210, 50, GreenTextHue, level.ToString());
                         else
-                            AddLabel(255, 100, RedTextHue, passiveTamingSkillGainRemainingText);
+                            AddLabel(210, 50, ValueTextHue, level.ToString());
+
+                        if (bc_Creature.ExperienceLevel < BaseCreature.MaxExperienceLevel)
+                        {
+                            AddLabel(175, 70, MainTextHue, "Exp:");
+                            AddLabel(210, 70, ValueTextHue, experience.ToString() + " / " + maxExperience.ToString());
+                        }
+
+                        else
+                        {
+                            AddLabel(175, 70, MainTextHue, "Exp:");
+                            AddLabel(210, 70, ValueTextHue, "Maxed");
+                        }
+
+                        AddLabel(160, 90, MainTextHue, "Passive Taming");
+                        AddLabel(130, 105, MainTextHue, "Skill Gain Remaining");
+                        if (passiveTamingSkillGainRemaining > 0)
+                            AddLabel(260, 100, GreenTextHue, passiveTamingSkillGainRemainingText);
+                        else
+                            AddLabel(260, 100, WhiteTextHue, passiveTamingSkillGainRemainingText);
                     }
 
                     else
@@ -546,26 +602,139 @@ namespace Server.SkillHandlers
 
                     #region Traits
 
-                    AddLabel(145, 45, 2606, "Traits");
+                    string traitsText = "Traits";
 
-                    //Loop
-                    AddLabel(Utility.CenteredTextOffset(80, "Sturdy"), 60, GreenTextHue, "Sturdy");
-                    AddItem(28, 83, 7028, 0);
-                    AddButton(80, 93, 2118, 2117, 10 + 0, GumpButtonType.Reply, 0);
-                    AddLabel(100, 90, 2550, "Info");                    
+                    if (bc_Creature.Controlled && bc_Creature.ControlMaster == pm_Player && traitsAvailable > 0)
+                    {
+                        if (traitsAvailable == 1)
+                            traitsText = traitsAvailable.ToString() + " Trait Available";
 
-                    AddLabel(Utility.CenteredTextOffset(230, "Mender"), 60, WhiteTextHue, "Mender");
-                    AddItem(195, 90, 3618, 0);
-                    AddButton(240, 93, 2118, 2117, 10 + 1, GumpButtonType.Reply, 0);
-                    AddLabel(260, 90, 2550, "Info");
+                        else
+                            traitsText = traitsAvailable.ToString() + " Traits Available";
 
-                    AddButton(141, 89, 9909, 9909, 10 + 2, GumpButtonType.Reply, 0); //Select Left
-			        AddButton(167, 90, 9903, 9903, 10 + 3, GumpButtonType.Reply, 0); //Select Right
+                        AddLabel(Utility.CenteredTextOffset(175, traitsText), 45, 2606, traitsText);
+                    }
+                    else
+                        AddLabel(145, 45, 2606, traitsText);
+
+                    int traitIndex = 0;
+
+                    int iStartY = 60;
+                    int rowSpacing = 57;  
                     
+                    for (int a = 0; a < bc_Creature.TraitsSelectionsAvailable.Count; a++)
+                    {
+                        int traitLevel = (int)(Math.Floor((double)a / 2)) + 1;
+                        int buttonIndex = (10 * traitLevel);
+
+                        bool traitAvailable = false;
+
+                        TraitSelectionType gumpSelection = TraitSelectionType.None;
+                        
+                        if (traitLevel <= m_TraitGumpSelections.Count)
+                            gumpSelection = m_TraitGumpSelections[traitLevel - 1];
+
+                        FollowerTraitType levelTraitChosen = FollowerTraitType.None;
+
+                        if (traitLevel <= bc_Creature.m_FollowerTraitSelections.Count)
+                        {
+                            levelTraitChosen = bc_Creature.m_FollowerTraitSelections[traitLevel - 1];
+
+                            if (bc_Creature.ExperienceLevel >= traitLevel && levelTraitChosen == FollowerTraitType.None)
+                                traitAvailable = true;
+                        }
+
+                        FollowerTraitType traitOption = bc_Creature.TraitsSelectionsAvailable[a];
+                        FollowerTraitDetail followerTraitDetail = FollowerTraits.GetFollowerTraitDetail(traitOption);
+
+                        if (followerTraitDetail != null)
+                        {
+                            switch (traitIndex)
+                            {
+                                //Left
+                                case 0:
+                                    bool leftSelected = false;
+                                    int leftTextHue = GreyTextHue;
+
+                                    if (traitAvailable)
+                                        leftTextHue = WhiteTextHue;
+
+                                    if (gumpSelection == TraitSelectionType.Left || levelTraitChosen == traitOption)
+                                    {
+                                        leftSelected = true;
+                                        leftTextHue = GreenTextHue;
+                                    }
+
+                                    AddLabel(Utility.CenteredTextOffset(85, followerTraitDetail.Name), iStartY, leftTextHue, followerTraitDetail.Name);
+                                    AddItem(33 + followerTraitDetail.IconOffsetX, iStartY + 20 + followerTraitDetail.IconOffsetY, followerTraitDetail.IconItemId, followerTraitDetail.IconHue);
+
+                                    AddButton(85, iStartY + 33, 2118, 2117, buttonIndex, GumpButtonType.Reply, 0);
+                                    AddLabel(105, iStartY + 30, 2550, "Info");
+
+                                    if (traitAvailable && bc_Creature.Controlled && bc_Creature.ControlMaster == pm_Player)
+                                    {
+                                        if (leftSelected)
+                                            AddButton(145, iStartY + 30, 9909, 9910, buttonIndex + 1, GumpButtonType.Reply, 0);
+                                        else
+                                            AddButton(145, iStartY + 30, 9910, 9909, buttonIndex + 1, GumpButtonType.Reply, 0);
+                                    }
+                                break;
+
+                                //Right
+                                case 1:
+                                    bool rightSelected = false;
+                                    int rightTextHue = GreyTextHue;
+
+                                    if (traitAvailable)
+                                        rightTextHue = WhiteTextHue;
+
+                                    if (gumpSelection == TraitSelectionType.Right || levelTraitChosen == traitOption)
+                                    {
+                                        rightSelected = true;
+                                        rightTextHue = GreenTextHue;
+                                    }
+
+                                    AddLabel(Utility.CenteredTextOffset(240, followerTraitDetail.Name), iStartY, rightTextHue, followerTraitDetail.Name);
+                                    AddItem(195 + followerTraitDetail.IconOffsetX, iStartY + 20 + followerTraitDetail.IconOffsetY, followerTraitDetail.IconItemId, followerTraitDetail.IconHue);
+
+                                    AddButton(240, iStartY + 33, 2118, 2117, buttonIndex + 2, GumpButtonType.Reply, 0);
+                                    AddLabel(260, iStartY + 30, 2550, "Info");
+
+                                    if (traitAvailable && bc_Creature.Controlled && bc_Creature.ControlMaster == pm_Player)
+                                    {
+                                        if (rightSelected)
+                                            AddButton(172, iStartY + 30, 9903, 9904, buttonIndex + 3, GumpButtonType.Reply, 0);
+                                        else
+                                            AddButton(172, iStartY + 30, 9904, 9903, buttonIndex + 3, GumpButtonType.Reply, 0);
+                                    }
+                                break;
+                            }
+                        }                        
+
+                        traitIndex++;
+
+                        if (traitIndex >= BaseCreature.TraitsAvailablePerLevel)
+                        {
+                            traitIndex = 0;
+                            iStartY += rowSpacing;
+                        }
+                    }
+
                     //-----
 
-                    AddLabel(92, 334, 68, "Confirm Trait Selection");
-			        AddButton(137, 357, 2076, 2075, 9, GumpButtonType.Reply, 0);
+                    bool selectionsMade = false;
+
+                    for (int a = 0; a < m_TraitGumpSelections.Count; a++)
+                    {
+                        if (m_TraitGumpSelections[a] != TraitSelectionType.None)
+                            selectionsMade = true;
+                    }
+
+                    if (selectionsMade && traitsAvailable > 0 && bc_Creature.Controlled && bc_Creature.ControlMaster == pm_Player)
+                    {
+                        AddLabel(90, 345, 68, "Confirm Trait Selection");
+                        AddButton(140, 370, 2076, 2075, 9, GumpButtonType.Reply, 0);
+                    }
 
                     #endregion
                 break;
@@ -578,7 +747,7 @@ namespace Server.SkillHandlers
                     if (traitsAvailable > 0)            
                         AddLabel(123, 370, GreenTextHue, "(" + traitsAvailable.ToString() + " Available)");
                     
-                    AddButton(221, 369, 4029, 4033, 3, GumpButtonType.Reply, 0);
+                    AddButton(221, 369, 4029, 4031, 3, GumpButtonType.Reply, 0);
                     AddLabel(259, 370, WhiteTextHue, "Stats");
 
                     #region Info
@@ -589,8 +758,8 @@ namespace Server.SkillHandlers
 
         public override void OnResponse(Network.NetState sender, RelayInfo info)
         {
-            if (pm_Player == null || bc_Creature == null)
-                return;
+            if (pm_Player == null || bc_Creature == null) return;
+            if (bc_Creature.Deleted) return;
 
             bool closeGump = true;
 
@@ -606,50 +775,199 @@ namespace Server.SkillHandlers
 
                         //Traits
                         case 2:
-                            m_Page = AnimalLoreGumpPage.Traits;
+                            if (bc_Creature.Tameable)                            
+                                m_Page = AnimalLoreGumpPage.Traits;
+
+                            pm_Player.SendSound(changeGumpSound);
                             closeGump = false;
                         break;
 
-                        //Traits
+                        //Info
                         case 3:
-                            m_Page = AnimalLoreGumpPage.Info;
+                            if (bc_Creature.Tameable)
+                                m_Page = AnimalLoreGumpPage.Info;
+
+                            pm_Player.SendSound(changeGumpSound);
                             closeGump = false;
                         break;
                     }
                 break;
 
                 case AnimalLoreGumpPage.Traits:
+                    bool selectionsMade = false;
+
+                    for (int a = 0; a < m_TraitGumpSelections.Count; a++)
+                    {
+                        if (m_TraitGumpSelections[a] != TraitSelectionType.None)
+                            selectionsMade = true;
+                    }
+
                     switch (info.ButtonID)
                     {
                         //Guide
                         case 1:
                             closeGump = false;
-                            break;
+                        break;
 
                         //Stats
                         case 2:
                             m_Page = AnimalLoreGumpPage.Stats;
+
+                            pm_Player.SendSound(changeGumpSound);
                             closeGump = false;
-                            break;
+                        break;
 
                         //Info
                         case 3:
                             m_Page = AnimalLoreGumpPage.Info;
+
+                            pm_Player.SendSound(changeGumpSound);
                             closeGump = false;
                         break;
 
                         //Confirm Selection
                         case 9:
+                            int traitsChanged = 0;
+
+                            if (selectionsMade && bc_Creature.Controlled && bc_Creature.ControlMaster == pm_Player)
+                            {
+                                for (int a = 0; a < m_TraitGumpSelections.Count; a++)
+                                {
+                                    TraitSelectionType traitSelection = m_TraitGumpSelections[a];
+
+                                    //No Trait Chosen
+                                    if (traitSelection == TraitSelectionType.None)
+                                        continue;
+
+                                    int traitLevel = a + 1;
+
+                                    //Haven't Reached This Level Yet
+                                    if (bc_Creature.ExperienceLevel < traitLevel)
+                                        continue;
+
+                                    FollowerTraitType levelTraitChosen = bc_Creature.m_FollowerTraitSelections[traitLevel - 1];
+
+                                    //Already Chose Trait for this Level
+                                    if (levelTraitChosen != FollowerTraitType.None)
+                                        continue;
+
+                                    FollowerTraitType newTraitChosen = FollowerTraitType.None;
+
+                                    int traitSelectionIndex = (traitLevel - 1) * 2;
+
+                                    switch (traitSelection)
+                                    {
+                                        case TraitSelectionType.Left: newTraitChosen = bc_Creature.TraitsSelectionsAvailable[traitSelectionIndex]; break;
+                                        case TraitSelectionType.Right: newTraitChosen = bc_Creature.TraitsSelectionsAvailable[traitSelectionIndex + 1]; break;
+                                    }
+
+                                    bc_Creature.m_FollowerTraitSelections[traitLevel - 1] = newTraitChosen;
+
+                                    traitsChanged++;
+                                }
+
+                                if (traitsChanged > 0)
+                                {
+                                    if (traitsChanged == 1)
+                                        pm_Player.SendMessage(0x3F, "Your creature gained a new trait.");
+
+                                    else
+                                        pm_Player.SendMessage(0x3F, "Your creature has gained new traits.");
+
+                                    m_TraitGumpSelections.Clear();
+
+                                    pm_Player.SendSound(traitAssignedSound);
+                                }
+
+                                else
+                                    pm_Player.SendMessage("You have not made any trait selections for your creature.");
+                            }
+
+                            else                            
+                                pm_Player.SendMessage("You have not made any trait selections for your creature.");                            
+
                             closeGump = false;
                         break;
                     }
 
-                    if (info.ButtonID >= 10)
+                    if (info.ButtonID >= 10)         
                     {
-                        //TEST: Finish
+                        int traitLevel = (int)(Math.Floor((double)info.ButtonID / 10));
+
+                        if (traitLevel > 0 && traitLevel <= BaseCreature.MaxExperienceLevel)
+                        {
+                            FollowerTraitType levelTraitChosen = FollowerTraitType.None;
+
+                            bool traitAvailable = false;
+
+                            if (traitLevel <= bc_Creature.m_FollowerTraitSelections.Count)
+                            {
+                                levelTraitChosen = bc_Creature.m_FollowerTraitSelections[traitLevel - 1];
+
+                                if (bc_Creature.ExperienceLevel >= traitLevel && levelTraitChosen == FollowerTraitType.None)
+                                    traitAvailable = true;
+                            }
+
+                            int buttonIndex = info.ButtonID % 10;
+
+                            int selectionAvailableIndex = 0; 
+                                                                                    
+                            switch (buttonIndex)
+                            {
+                                //Left Info
+                                case 0:
+                                    selectionAvailableIndex = (traitLevel - 1) * 2;
+
+                                    FollowerTraitType traitOption = bc_Creature.TraitsSelectionsAvailable[selectionAvailableIndex];
+                                    FollowerTraitDetail followerTraitDetail = FollowerTraits.GetFollowerTraitDetail(traitOption);
+
+                                    if (followerTraitDetail != null)
+                                        pm_Player.SendMessage(followerTraitDetail.Description + ".");
+                                break;
+
+                                //Left Selection
+                                case 1:
+                                    if (traitAvailable && bc_Creature.Controlled && bc_Creature.ControlMaster == pm_Player)
+                                    {
+                                        if (m_TraitGumpSelections[traitLevel - 1] != TraitSelectionType.Left)
+                                            m_TraitGumpSelections[traitLevel - 1] = TraitSelectionType.Left;
+
+                                        else
+                                            m_TraitGumpSelections[traitLevel - 1] = TraitSelectionType.None;
+
+                                        pm_Player.SendSound(selectionSound);
+                                    }
+                                break;
+
+                                //Right Info
+                                case 2:
+                                    selectionAvailableIndex = (traitLevel - 1) * 2 + 1;
+
+                                    traitOption = bc_Creature.TraitsSelectionsAvailable[selectionAvailableIndex];
+                                    followerTraitDetail = FollowerTraits.GetFollowerTraitDetail(traitOption);
+
+                                    if (followerTraitDetail != null)
+                                        pm_Player.SendMessage(followerTraitDetail.Description + ".");
+                                break;
+
+                                //Right Selection
+                                case 3:
+                                    if (traitAvailable && bc_Creature.Controlled && bc_Creature.ControlMaster == pm_Player)
+                                    {
+                                        if (m_TraitGumpSelections[traitLevel - 1] != TraitSelectionType.Right)
+                                            m_TraitGumpSelections[traitLevel - 1] = TraitSelectionType.Right;
+
+                                        else
+                                            m_TraitGumpSelections[traitLevel - 1] = TraitSelectionType.None;
+
+                                        pm_Player.SendSound(selectionSound);
+                                    }
+                                break;
+                            }                            
+                        }
 
                         closeGump = false;
-                    }
+                    }                   
                 break;
 
                 case AnimalLoreGumpPage.Info:
@@ -662,13 +980,16 @@ namespace Server.SkillHandlers
 
                         //Traits
                         case 2:
-                            m_Page = AnimalLoreGumpPage.Traits;
+                            if (bc_Creature.Tameable)
+                                m_Page = AnimalLoreGumpPage.Traits;
+
                             closeGump = false;
                         break;
 
                         //Stats
                         case 3:
                             m_Page = AnimalLoreGumpPage.Stats;
+
                             closeGump = false;
                         break;
                     }
@@ -678,8 +999,11 @@ namespace Server.SkillHandlers
             if (!closeGump)
             {
                 pm_Player.CloseGump(typeof(AnimalLoreGump));
-                pm_Player.SendGump(new AnimalLoreGump(pm_Player, bc_Creature, m_Page));
+                pm_Player.SendGump(new AnimalLoreGump(pm_Player, bc_Creature, m_Page, m_TraitGumpSelections));
             }
+
+            else
+                pm_Player.SendSound(closeGumpSound);                
         }
 
         public double RoundToTenth(double skillValue)

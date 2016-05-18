@@ -557,25 +557,7 @@ namespace Server.Mobiles
 
         #endregion
 
-        #region Tamed Creature Base Values
-
-        //Static Stats and Skills (Scale Up With Creature XP)
-        private int m_Experience = 0;
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int Experience
-        {
-            get { return m_Experience; }
-            set
-            {
-                if (value > MaxExperience)
-                    m_Experience = MaxExperience;
-
-                else
-                    m_Experience = value;
-
-                ApplyExperience();
-            }
-        }
+        #region Tamed Creature Base Values        
 
         private bool m_GeneratedTamedStats = false;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -694,10 +676,7 @@ namespace Server.Mobiles
                 if (changedValues)
                     ApplyExperience();
             }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public virtual int MaxExperience { get { return 250; } }
+        }        
 
         private int m_CreaturesKilled = 0;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -705,12 +684,7 @@ namespace Server.Mobiles
         {
             get { return m_CreaturesKilled; }
             set { m_CreaturesKilled = value; }
-        }
-
-        public DateTime m_NextExperienceGain = DateTime.UtcNow;
-
-        public static int MinExpGainActiveDelay = 5; //Minimum Delay in Minutes Before Next Check For Creature XP Gain: Actively Playing (Fighting Many Creatures)
-        public static int MinExpGainMacroDelay = 30; //Minimum Delay in Minutes Before Next Check For Creature XP Gain: Macroing (Against One Creature)
+        }               
 
         //Base Creature Stats/Skill Tamed Adjustment: Generated Upon Creature Spawn
         public double m_MinTamedStatSkillScalar = .90;
@@ -755,7 +729,6 @@ namespace Server.Mobiles
 
         public virtual int TamedBaseVirtualArmor { get { return VirtualArmor; } }
 
-        //Static Stats and Skills (Do Not Scale Up With Creature XP)
         public virtual int TamedBaseStr { get { return RawStr; } }
         public virtual int TamedBaseDex { get { return RawDex; } }
         public virtual int TamedBaseInt { get { return RawInt; } }
@@ -860,6 +833,193 @@ namespace Server.Mobiles
             get { return m_TamedBaseVirtualArmorCreationScalar; }
             set { m_TamedBaseVirtualArmorCreationScalar = value; }
         }
+
+        public DateTime m_NextExperienceGain = DateTime.UtcNow;
+
+        public static int MinExpGainActiveDelay = 5; //Minimum Delay in Minutes Before Next Check For Creature XP Gain: Actively Playing (Fighting Many Creatures)
+        public static int MinExpGainMacroDelay = 30; //Minimum Delay in Minutes Before Next Check For Creature XP Gain: Macroing (Against One Creature)
+
+        private int m_Experience = 0;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int Experience
+        {
+            get { return m_Experience; }
+            set
+            {
+                int experienceLeftToAssign = value;
+
+                if (experienceLeftToAssign < 0)
+                    experienceLeftToAssign = 0;
+
+                PlayerMobile pm_Controller = ControlMaster as PlayerMobile;
+
+                int oldExperience = m_Experience;
+                int oldLevel = ExperienceLevel;                
+
+                int newLevel = 0;
+                int newExperience = 0;                
+
+                for (int a = 0; a < ExperiencePerLevel.Length; a++)
+                {
+                    if (experienceLeftToAssign == 0)
+                        continue;
+
+                    int experienceForLevel = ExperiencePerLevel[a];
+
+                    if (experienceLeftToAssign < experienceForLevel)
+                    {
+                        newExperience = experienceLeftToAssign;
+                        experienceLeftToAssign = 0;
+                    }
+
+                    else
+                    {
+                        experienceLeftToAssign -= experienceForLevel;
+                        newExperience = 0;
+                        newLevel++;
+                    }
+
+                    if (newLevel == ExperiencePerLevel.Length)
+                        experienceLeftToAssign = 0;
+                }
+
+                ExperienceLevel = newLevel;
+                m_Experience = newExperience;
+
+                if (newLevel < oldLevel)
+                {
+                    for (int a = 0; a < m_FollowerTraitSelections.Count; a++)
+                    {
+                        if (newLevel < a + 1)
+                            m_FollowerTraitSelections[a] = FollowerTraitType.None;
+                    }
+                }
+
+                if (newLevel > oldLevel)
+                {
+                    PlaySound(GetIdleSound());
+                    AnimateIdle();
+
+                    if (pm_Controller != null)
+                        pm_Controller.SendMessage(0x3F, RawName + " has acquired enough experience to reach level " + ExperienceLevel.ToString() + "!");                          
+                }                
+
+                if (m_ExperienceLevel < BaseCreature.RequiredLevelForBonding && IsBonded)
+                    IsBonded = false;
+
+                else if (oldLevel < BaseCreature.RequiredLevelForBonding && m_ExperienceLevel >= BaseCreature.RequiredLevelForBonding)
+                {
+                    if (pm_Controller != null)                       
+                        pm_Controller.SendMessage(0x3F, RawName + " has bonded to you permanently.");
+
+                    IsBonded = true;
+                }
+
+                ApplyExperience();
+            }
+        }
+
+        public static int GetMaxLevelExperience(int level)
+        {
+            if (level > ExperiencePerLevel.Length)
+                return 0;
+
+            else if (level < 0)
+                return 0;
+
+            else
+                return ExperiencePerLevel[level];
+        }
+
+        public int GetCumulativeExperience()
+        {
+            int total = 0;
+
+            for (int a = 0; a < ExperiencePerLevel.Length; a++)
+            {
+                if (ExperienceLevel == a)
+                    total += Experience;
+
+                else if (ExperienceLevel > a)
+                    total += ExperiencePerLevel[a];
+            }
+
+            return total;
+        }
+
+        public int GetMaxCumulativeExperience()
+        {           
+            int total = 0;
+
+            for (int a = 0; a < ExperiencePerLevel.Length; a++)
+            {
+                total += ExperiencePerLevel[a];
+            }
+
+            return total;            
+        }
+
+        public double GetExperienceScalar()
+        {
+            if (!Tameable)
+                return 0;
+
+            if (Controlled && ControlMaster is PlayerMobile)
+                return (double)GetCumulativeExperience() / (double)GetMaxCumulativeExperience();            
+
+            else return 0;
+        }
+
+        private int m_ExperienceLevel = 0;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int ExperienceLevel
+        {
+            get { return m_ExperienceLevel; }
+            set 
+            { 
+                m_ExperienceLevel = value;
+
+                if (m_ExperienceLevel < 0)
+                    m_ExperienceLevel = 0;
+
+                if (m_ExperienceLevel > ExperiencePerLevel.Length)
+                    m_ExperienceLevel = ExperiencePerLevel.Length;
+            }
+        }
+
+        public static int RequiredLevelForBonding = 1;
+        public static int[] ExperiencePerLevel = new int[] { 50, 100, 150, 200, 250 };
+
+        public static int MaxExperienceLevel
+        {
+            get { return ExperiencePerLevel.Length; }
+        }
+
+        public static int TraitsAvailablePerLevel = 2;
+
+        public List<FollowerTraitType> m_FollowerTraitSelections = new List<FollowerTraitType>()
+        {
+            FollowerTraitType.None,
+            FollowerTraitType.None,
+            FollowerTraitType.None,
+            FollowerTraitType.None,
+            FollowerTraitType.None
+        };
+
+        public virtual List<FollowerTraitType> TraitsSelectionsAvailable         
+        { 
+           get 
+           { 
+                return new List<FollowerTraitType>()
+                {
+                    FollowerTraitType.Sturdy, FollowerTraitType.Mender,
+                    FollowerTraitType.Sturdy, FollowerTraitType.Mender,
+                    FollowerTraitType.Sturdy, FollowerTraitType.Mender,
+                    FollowerTraitType.Sturdy, FollowerTraitType.Mender,
+                    FollowerTraitType.Sturdy, FollowerTraitType.Mender
+                }
+           ;} 
+        }        
 
         #endregion
 
@@ -1853,7 +2013,7 @@ namespace Server.Mobiles
 
             SetTamedBaseStats();
 
-            double experienceScalar = (double)m_Experience / (double)250;
+            double experienceScalar = GetExperienceScalar();
 
             int newHitsMax = (int)(Math.Round((double)HitsMax * (1 + (HitsExperienceScalar * experienceScalar))));
             int newManaMax = (int)(Math.Round((double)ManaMax * (1 + (ManaExperienceScalar * experienceScalar))));
@@ -3254,7 +3414,7 @@ namespace Server.Mobiles
                 //Tamed Creature Damage Boosts
                 if (Controlled && ControlMaster is PlayerMobile)
                 {
-                    double experienceScalar = (double)Experience / (double)MaxExperience;
+                    double experienceScalar = GetExperienceScalar();
 
                     double damage = (double)m_DamageMin;
 
@@ -3280,7 +3440,8 @@ namespace Server.Mobiles
                 //Tamed Creature Damage Boosts
                 if (Controlled && ControlMaster is PlayerMobile)
                 {
-                    double experienceScalar = (double)Experience / (double)MaxExperience;
+                    double experienceScalar = GetExperienceScalar();
+
                     double damage = (double)m_DamageMax;
 
                     damage *= (1 + (BaseCreature.DamageExperienceScalar * experienceScalar));
@@ -3780,8 +3941,10 @@ namespace Server.Mobiles
             //NPCs can use bandages too!
             if (!Core.AOS)
                 disruptThreshold = 0;
+
             else if (from != null && from.Player)
                 disruptThreshold = 18;
+
             else
                 disruptThreshold = 25;
 
@@ -3859,32 +4022,24 @@ namespace Server.Mobiles
                     //Experience Gain                    
                     if (pm_Tamer.GetDistanceToSqrt(Location) <= experienceDistance && !pm_Tamer.Hidden && !(Region is UOACZRegion))
                     {
-                        //Actively Playing (New Non-Summoned, Non-Player Tamed Creature Being Damaged)
-                        if (pm_Tamer.m_LastPassiveTamingSkillAttacked != this && !(Controlled && ControlMaster is PlayerMobile) && !Summoned && !NoKillAwards && bc_TamedCreature.m_NextExperienceGain < DateTime.UtcNow && bc_TamedCreature.Experience < bc_TamedCreature.MaxExperience)
+                        //Active Experience Gain: Different Creatures
+                        if (pm_Tamer.m_LastPassiveTamingSkillAttacked != this && !(Controlled && ControlMaster is PlayerMobile) && !Summoned && !NoKillAwards && bc_TamedCreature.m_NextExperienceGain < DateTime.UtcNow && bc_TamedCreature.ExperienceLevel < BaseCreature.MaxExperienceLevel)
                         {
-                            bool boostedRate = false;
-
-                            bool petInSkillGainRange = pm_Tamer.Skills[Server.SkillName.AnimalTaming].Base < bc_TamedCreature.MinTameSkill + 25.0;
-
                             double nextExperienceGain = (double)MinExpGainActiveDelay;
-
-                            if (boostedRate)
-                                nextExperienceGain *= .5;
-
+                            
                             double gainChance = .2;
 
                             if (randomResult <= gainChance)
                             {
                                 bc_TamedCreature.Experience++;
                                 bc_TamedCreature.m_NextExperienceGain = DateTime.UtcNow + TimeSpan.FromMinutes(nextExperienceGain);
-
-                                pm_Tamer.SendMessage(bc_TamedCreature.RawName + " has gained experience! (" + bc_TamedCreature.Experience.ToString() + " / " + bc_TamedCreature.MaxExperience.ToString() + ")");
+                                
                                 pm_Tamer.m_LastPassiveExpAttacked = this;
                             }
                         }
 
-                        //Macroing (Attacking Same Creature)
-                        else if (bc_TamedCreature.m_NextExperienceGain < DateTime.UtcNow && !NoKillAwards && bc_TamedCreature.Experience < bc_TamedCreature.MaxExperience)
+                        //Passive Experience Gain: Same Creature
+                        else if (bc_TamedCreature.m_NextExperienceGain < DateTime.UtcNow && !NoKillAwards && bc_TamedCreature.ExperienceLevel < BaseCreature.MaxExperienceLevel)
                         {
                             double gainChance = .01;
 
@@ -3892,8 +4047,7 @@ namespace Server.Mobiles
                             {
                                 bc_TamedCreature.Experience++;
                                 bc_TamedCreature.m_NextExperienceGain = DateTime.UtcNow + TimeSpan.FromMinutes(MinExpGainMacroDelay);
-
-                                pm_Tamer.SendMessage(bc_TamedCreature.RawName + " has gained experience! (" + bc_TamedCreature.Experience.ToString() + " / " + bc_TamedCreature.MaxExperience.ToString() + ")");
+                                
                                 pm_Tamer.m_LastPassiveExpAttacked = this;
                             }
                         }
@@ -4381,6 +4535,13 @@ namespace Server.Mobiles
             writer.Write(m_LastActivated);
             writer.Write(m_BoatOccupied);
             writer.Write(m_XMLSpawner);
+            writer.Write(m_ExperienceLevel);
+
+            writer.Write(m_FollowerTraitSelections.Count);
+            for (int a = 0; a < m_FollowerTraitSelections.Count; a++)
+            {
+                writer.Write((int)m_FollowerTraitSelections[a]);
+            }            
 
             if (m_Summoned)
                 writer.WriteDeltaTime(m_SummonEnd);
@@ -4509,6 +4670,13 @@ namespace Server.Mobiles
                 m_LastActivated = reader.ReadDateTime();
                 m_BoatOccupied = reader.ReadItem() as BaseBoat;
                 m_XMLSpawner = reader.ReadItem() as XmlSpawner;
+                m_ExperienceLevel = reader.ReadInt();
+
+                int followerTraitSelectionCount = reader.ReadInt();
+                for (int a = 0; a < followerTraitSelectionCount; a++)
+                {
+                    m_FollowerTraitSelections.Add((FollowerTraitType)reader.ReadInt());
+                }
 
                 if (m_Summoned)
                 {

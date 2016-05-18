@@ -608,7 +608,7 @@ namespace Server.Spells
                             if (creature.Controlled && creature.ControlMaster is PlayerMobile)
                             {
                                 mageryModifier = 1 / creature.TamedBaseMageryCreationScalar;
-                                experienceModifier = 1 - (.20 * (double)creature.Experience / (double)creature.MaxExperience);                               
+                                experienceModifier = 1 - (.20 * creature.GetExperienceScalar());                               
                             }
                             
                             double SpellDelay = (creature.SpellDelayMin + ((creature.SpellDelayMax - creature.SpellDelayMin) * Utility.RandomDouble())) * speedScalar * mageryModifier * experienceModifier;

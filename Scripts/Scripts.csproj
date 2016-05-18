@@ -587,6 +587,7 @@
     <Compile Include="Items\Weapons\Other\Wooden\ThornedWildStaff.cs" />
     <Compile Include="Main\ArcaneItem.cs" />
     <Compile Include="Main\DamageTracker.cs" />
+    <Compile Include="Main\FollowerTraits.cs" />
     <Compile Include="Mobiles\Bosses\Minions\RockGuar.cs" />
     <Compile Include="Mobiles\Tameables\PackAnimal.cs" />
     <Compile Include="Mobiles\Tameables\TropicalBird.cs" />

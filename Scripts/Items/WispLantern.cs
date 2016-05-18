@@ -186,10 +186,7 @@ namespace Server.Items
             BardImmune = true;
         }
 
-        public override int MaxExperience { get { return 0; } }
-
-        public PetWisp(Serial serial)
-            : base(serial)
+        public PetWisp(Serial serial): base(serial)
         {
         }
 

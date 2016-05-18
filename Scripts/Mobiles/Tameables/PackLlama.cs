@@ -90,8 +90,6 @@ namespace Server.Mobiles
             base.OnThink();
         }
 
-        public override int MaxExperience { get { return 50; } }		
-
 		public override DeathMoveResult GetInventoryMoveResultFor( Item item )
 		{
 			return DeathMoveResult.MoveToCorpse;

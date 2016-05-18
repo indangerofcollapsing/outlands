@@ -191,9 +191,7 @@ namespace Server.Items
             MinTameSkill = 0;
             BardImmune = true;
         }
-
-        public override int MaxExperience { get { return 0; } }
-
+        
         public PetCat(Serial serial)
             : base(serial)
         {
