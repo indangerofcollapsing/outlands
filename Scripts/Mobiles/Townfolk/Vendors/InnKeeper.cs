@@ -203,8 +203,7 @@ namespace Server.Mobiles
 
                 if (pet == null || pet.Deleted)
                 {
-                    pet.IsStabled = false;
-                    pet.StabledBy = null;
+                    pet.IsStabled = false;                    
 
                     pet.OwnerAbandonTime = DateTime.UtcNow + pet.AbandonDelay;
 
@@ -306,8 +305,7 @@ namespace Server.Mobiles
                     pet.SetControlMaster(null);
                     pet.SummonMaster = null;
 
-                    pet.IsStabled = true;
-                    pet.StabledBy = from;
+                    pet.IsStabled = true;                    
 
                     pet.OwnerAbandonTime = DateTime.UtcNow + TimeSpan.FromDays(1000);
                     
@@ -343,7 +341,6 @@ namespace Server.Mobiles
                 if (pet == null || pet.Deleted)
                 {
                     pet.IsStabled = false;
-                    pet.StabledBy = null;
 
                     pet.OwnerAbandonTime = DateTime.UtcNow + pet.AbandonDelay;
 
@@ -409,7 +406,6 @@ namespace Server.Mobiles
             pet.MoveToWorld(from.Location, from.Map);
 
             pet.IsStabled = false;
-            pet.StabledBy = null;
 
             pet.ApplyExperience();
 

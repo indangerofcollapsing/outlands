@@ -791,7 +791,8 @@ namespace Server.Mobiles
                 if ((pm_From.Young || pm_From.Companion) && !YoungChatListeners.Contains(pm_From))
                     YoungChatListeners.Add(pm_From);
                 
-                pm_From.ClaimAutoStabledPets();
+                //TEST: Implement Fix for this?
+                //pm_From.ClaimAutoStabledPets();
 
                 if (pm_From.AccessLevel > AccessLevel.Player)
                     pm_From.Send(SpeedControl.MountSpeed);
@@ -848,8 +849,6 @@ namespace Server.Mobiles
 
             if (player == null)
                 return;
-
-            player.AutoStablePets();
         }
 
         private static void EventSink_Connected(ConnectedEventArgs e)
@@ -2017,24 +2016,7 @@ namespace Server.Mobiles
             get { return m_DesignContext; }
             set { m_DesignContext = value; }
         }
-
-        private static void CheckPets()
-        {
-            foreach (Mobile m in World.Mobiles.Values)
-            {
-                if (m is PlayerMobile)
-                {
-                    PlayerMobile pm = (PlayerMobile)m;
-
-                    if (((!pm.Mounted || (pm.Mount != null && pm.Mount is EtherealMount)) && (pm.AllFollowers.Count > pm.AutoStabled.Count)) ||
-                        (pm.Mounted && (pm.AllFollowers.Count > (pm.AutoStabled.Count + 1))))
-                    {
-                        pm.AutoStablePets(); /* autostable checks summons, et al: no need here */
-                    }
-                }
-            }
-        }
-
+        
         private MountBlock m_MountBlock;
 
         public BlockMountType MountBlockReason
@@ -5247,7 +5229,6 @@ namespace Server.Mobiles
                 if (bc != null)
                 {
                     bc.IsStabled = true;
-                    bc.StabledBy = this;
 
                     bc.OwnerAbandonTime = DateTime.UtcNow + TimeSpan.FromDays(1000);
                 }
@@ -6445,116 +6426,6 @@ namespace Server.Mobiles
                 m_BuffTable = null;
         }
         #endregion
-
-        public void AutoStablePets()
-        {
-            if (Core.SE && AllFollowers.Count > 0)
-            {
-                for (int i = m_AllFollowers.Count - 1; i >= 0; --i)
-                {
-                    BaseCreature pet = AllFollowers[i] as BaseCreature;
-
-                    if (pet == null || pet.ControlMaster == null)
-                        continue;
-
-                    if (pet.Summoned)
-                    {
-                        if (pet.Map != Map)
-                        {
-                            pet.PlaySound(pet.GetAngerSound());
-                            Timer.DelayCall(TimeSpan.Zero, new TimerCallback(pet.Delete));
-                        }
-                        continue;
-                    }
-
-                    if (pet is IMount && ((IMount)pet).Rider != null)
-                        continue;
-
-                    if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && (pet.Backpack != null && pet.Backpack.Items.Count > 0))
-                        continue;
-
-                    if (pet is BaseEscortable)
-                        continue;
-
-                    pet.ControlTarget = null;
-                    pet.ControlOrder = OrderType.Stay;
-                    pet.Internalize();
-
-                    pet.SetControlMaster(null);
-                    pet.SummonMaster = null;
-
-                    pet.IsStabled = true;
-                    pet.StabledBy = this;
-
-                    pet.OwnerAbandonTime = DateTime.UtcNow + TimeSpan.FromDays(1000);
-
-                    pet.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully happy
-
-                    Stabled.Add(pet);
-                    m_AutoStabled.Add(pet);
-                }
-            }
-        }
-
-        public void ClaimAutoStabledPets()
-        {
-            if (!Core.SE || m_AutoStabled.Count <= 0)
-                return;
-
-            if (!Alive)
-            {
-                SendLocalizedMessage(1076251); // Your pet was unable to join you while you are a ghost.  Please re-login once you have ressurected to claim your pets.				
-                return;
-            }
-
-            for (int i = m_AutoStabled.Count - 1; i >= 0; --i)
-            {
-                BaseCreature pet = m_AutoStabled[i] as BaseCreature;
-
-                if (pet == null || pet.Deleted)
-                {
-                    pet.IsStabled = false;
-                    pet.StabledBy = null;
-
-                    pet.OwnerAbandonTime = DateTime.UtcNow + pet.AbandonDelay;
-
-                    if (Stabled.Contains(pet))
-                        Stabled.Remove(pet);
-
-                    continue;
-                }
-
-                if ((Followers + pet.ControlSlots) <= FollowersMax)
-                {
-                    pet.SetControlMaster(this);
-
-                    if (pet.Summoned)
-                        pet.SummonMaster = this;
-
-                    pet.ControlTarget = this;
-                    pet.ControlOrder = OrderType.Follow;
-
-                    pet.MoveToWorld(Location, Map);
-
-                    pet.IsStabled = false;
-                    pet.StabledBy = null;
-
-                    pet.OwnerAbandonTime = DateTime.UtcNow + pet.AbandonDelay;
-
-                    pet.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully Happy
-
-                    if (Stabled.Contains(pet))
-                        Stabled.Remove(pet);
-                }
-
-                else
-                {
-                    SendLocalizedMessage(1049612, pet.Name); // ~1_NAME~ remained in the stables because you have too many followers.
-                }
-            }
-
-            m_AutoStabled.Clear();
-        }
 
         public override void SpecialAbilityTimerTick()
         {

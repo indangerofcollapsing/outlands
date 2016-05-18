@@ -481,9 +481,6 @@ namespace Server.Mobiles
 
         private List<Mobile> m_Owners;
 
-        private bool m_IsStabled;
-        private Mobile m_StabledBy;
-
         private bool m_Paragon;
 
         private bool m_IsPrisoner;
@@ -846,7 +843,21 @@ namespace Server.Mobiles
             get { return m_Experience; }
             set
             {
-                int experienceLeftToAssign = value;
+                int cumulativeExperience = GetCumulativeExperience();
+                int maxCumulativeExperience = GetMaxCumulativeExperience();
+
+                int incomingValue = value;
+
+                if (incomingValue > maxCumulativeExperience)
+                    incomingValue = maxCumulativeExperience;
+
+                if (incomingValue < 0)
+                    incomingValue = 0;
+
+                if (incomingValue == cumulativeExperience)
+                    return;
+
+                int experienceLeftToAssign = incomingValue;
 
                 if (experienceLeftToAssign < 0)
                     experienceLeftToAssign = 0;
@@ -885,6 +896,9 @@ namespace Server.Mobiles
 
                 ExperienceLevel = newLevel;
                 m_Experience = newExperience;
+
+                if (ExperienceLevel == ExperiencePerLevel.Length)
+                    m_Experience = 0;
 
                 if (newLevel < oldLevel)
                 {
@@ -983,7 +997,7 @@ namespace Server.Mobiles
                     m_ExperienceLevel = 0;
 
                 if (m_ExperienceLevel > ExperiencePerLevel.Length)
-                    m_ExperienceLevel = ExperiencePerLevel.Length;
+                    m_ExperienceLevel = ExperiencePerLevel.Length;               
             }
         }
 
@@ -2254,6 +2268,7 @@ namespace Server.Mobiles
             set { m_CorpseNameOverride = value; }
         }
 
+        private bool m_IsStabled;
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
         public bool IsStabled
         {
@@ -2266,12 +2281,13 @@ namespace Server.Mobiles
                     StopDeleteTimer();
             }
         }
-
+        
+        private DateTime m_TimeStabled;
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.GameMaster)]
-        public Mobile StabledBy
+        public DateTime TimeStabled
         {
-            get { return m_StabledBy; }
-            set { m_StabledBy = value; }
+            get { return m_TimeStabled; }
+            set { m_TimeStabled = value; }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -2288,11 +2304,11 @@ namespace Server.Mobiles
         }
         
         #region Bonding
+
         public const bool BondingEnabled = true;
 
         public virtual bool IsBondable { get { return (BondingEnabled && !Summoned); } }
 
-        public virtual TimeSpan BondingDelay { get { return TimeSpan.FromDays(7.0); } }
         public virtual TimeSpan AbandonDelay { get { return TimeSpan.FromHours(72); } }
         public virtual TimeSpan DeleteDelay { get { return TimeSpan.FromHours(6); } }
 
@@ -4536,6 +4552,7 @@ namespace Server.Mobiles
             writer.Write(m_BoatOccupied);
             writer.Write(m_XMLSpawner);
             writer.Write(m_ExperienceLevel);
+            writer.Write(m_TimeStabled);
 
             writer.Write(m_FollowerTraitSelections.Count);
             for (int a = 0; a < m_FollowerTraitSelections.Count; a++)
@@ -4671,6 +4688,7 @@ namespace Server.Mobiles
                 m_BoatOccupied = reader.ReadItem() as BaseBoat;
                 m_XMLSpawner = reader.ReadItem() as XmlSpawner;
                 m_ExperienceLevel = reader.ReadInt();
+                m_TimeStabled = reader.ReadDateTime();
 
                 int followerTraitSelectionCount = reader.ReadInt();
                 for (int a = 0; a < followerTraitSelectionCount; a++)
