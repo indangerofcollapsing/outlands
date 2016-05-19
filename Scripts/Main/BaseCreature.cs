@@ -1026,11 +1026,11 @@ namespace Server.Mobiles
            { 
                 return new List<FollowerTraitType>()
                 {
-                    FollowerTraitType.Sturdy, FollowerTraitType.Mender,
-                    FollowerTraitType.Sturdy, FollowerTraitType.Mender,
-                    FollowerTraitType.Sturdy, FollowerTraitType.Mender,
-                    FollowerTraitType.Sturdy, FollowerTraitType.Mender,
-                    FollowerTraitType.Sturdy, FollowerTraitType.Mender
+                    FollowerTraitType.Toughness, FollowerTraitType.Quickness,
+                    FollowerTraitType.Hardness, FollowerTraitType.Charged,
+                    FollowerTraitType.Mender, FollowerTraitType.Potency,
+                    FollowerTraitType.Immunity, FollowerTraitType.Vicious,
+                    FollowerTraitType.Shadows, FollowerTraitType.Toxicity
                 }
            ;} 
         }        
