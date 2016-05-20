@@ -36,6 +36,8 @@ namespace Server.Mobiles
             Fame = 1000;
             Karma = -1000;
         }
+
+        public override string TamedDisplayName { get { return "Sphinx"; } }
         
         public override int TamedItemId { get { return 8471; } }
         public override int TamedItemHue { get { return 0; } }

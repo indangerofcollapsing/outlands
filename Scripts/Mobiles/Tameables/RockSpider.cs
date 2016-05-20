@@ -38,6 +38,8 @@ namespace Server.Mobiles
             Karma = -500;
         }
 
+        public override string TamedDisplayName { get { return "Rock Spider"; } }
+
         public override int TamedItemId { get { return 17060; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }

@@ -67,12 +67,47 @@ namespace Server.Mobiles
                     player.CloseGump(typeof(StableGump));
                     player.SendGump(new StableGump(this, player, 0));
 
+                    player.SendSound(0x055);
+
                     return;
                 }
             }
 
             else
                 base.OnSpeech(e);
+        }
+
+        private class StableEntry : ContextMenuEntry
+        {
+            private Mobile m_Vendor;
+            private Mobile m_From;
+
+            public StableEntry(Mobile vendor, Mobile from): base(6126, 12)
+            {
+                m_Vendor = vendor;
+                m_From = from;
+            }
+
+            public override void OnClick()
+            {
+                PlayerMobile player = m_From as PlayerMobile;
+
+                if (player == null)
+                    return;
+
+                player.CloseGump(typeof(StableGump));
+                player.SendGump(new StableGump(m_Vendor, player, 0));
+
+                player.SendSound(0x055);
+            }
+        }
+
+        public override void AddCustomContextEntries(Mobile from, List<ContextMenuEntry> list)
+        {
+            if (from.Alive)
+                list.Add(new StableEntry(this, from));
+
+            base.AddCustomContextEntries(from, list);
         }
 
         public AnimalTrainer(Serial serial): base(serial)

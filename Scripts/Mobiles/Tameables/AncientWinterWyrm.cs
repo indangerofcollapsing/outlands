@@ -43,6 +43,8 @@ namespace Server.Mobiles
             ControlSlots = 5;
             MinTameSkill = 115.1;
 		}
+
+        public override string TamedDisplayName { get { return "Ancient Winter Wyrm"; } }
         
         public override int TamedItemId { get { return 17062; } }
         public override int TamedItemHue { get { return Hue; } }

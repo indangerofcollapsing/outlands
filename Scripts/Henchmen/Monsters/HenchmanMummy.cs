@@ -70,7 +70,8 @@ namespace Server.Custom
             MinTameSkill = 120;
 		}
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
+        public override string TamedDisplayName { get { return "Mummy"; } }
+
         public override int TamedItemId { get { return 9639; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 10; } }

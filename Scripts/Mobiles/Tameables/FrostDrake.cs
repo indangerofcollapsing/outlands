@@ -39,6 +39,8 @@ namespace Server.Mobiles
             MinTameSkill = 85;
         }
 
+        public override string TamedDisplayName { get { return "Frost Drake"; } }
+
         public override int TamedItemId { get { return 8406; } }
         public override int TamedItemHue { get { return 1150; } }
         public override int TamedItemXOffset { get { return 10; } }

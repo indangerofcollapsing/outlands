@@ -75,7 +75,8 @@ namespace Server.Custom
             MinTameSkill = 110;
 		}
 
-        //Animal Lore Display Info
+        public override string TamedDisplayName { get { return "Vampire Thrall"; } }
+
         public override int TamedItemId { get { return 9614; } }
         public override int TamedItemHue { get { return 2500; } }
         public override int TamedItemXOffset { get { return 0; } }

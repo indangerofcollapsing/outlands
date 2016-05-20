@@ -70,7 +70,8 @@ namespace Server.Custom
             MinTameSkill = 75;
 		}
 
-        //Animal Lore Display Info
+        public override string TamedDisplayName { get { return "Spectre"; } }
+
         public override int TamedItemId { get { return 8457; } }
         public override int TamedItemHue { get { return 2949; } }
         public override int TamedItemXOffset { get { return 5; } }

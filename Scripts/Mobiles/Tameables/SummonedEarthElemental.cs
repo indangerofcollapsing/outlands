@@ -39,6 +39,8 @@ namespace Server.Mobiles
         {
         }
 
+        public override string TamedDisplayName { get { return "Earth Elemental"; } }
+
         public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Elemental; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Medium; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }

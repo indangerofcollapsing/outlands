@@ -39,6 +39,8 @@ namespace Server.Mobiles
             MinTameSkill = 115.1;
         }
 
+        public override string TamedDisplayName { get { return "Rotworm Larva"; } }
+
         public override int TamedItemId { get { return 17053; } }
         public override int TamedItemHue { get { return 2501; } }
         public override int TamedItemXOffset { get { return 0; } }

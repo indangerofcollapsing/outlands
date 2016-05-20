@@ -67,7 +67,8 @@ namespace Server.Custom
             MinTameSkill = 100;
 		}
 
-        //Animal Lore Display Info
+        public override string TamedDisplayName { get { return "Skeletal Knight"; } }
+
         public override int TamedItemId { get { return 8423; } }
         public override int TamedItemHue { get { return 2610; } }
         public override int TamedItemXOffset { get { return 5; } }

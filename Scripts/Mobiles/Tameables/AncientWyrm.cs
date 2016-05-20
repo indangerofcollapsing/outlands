@@ -42,6 +42,8 @@ namespace Server.Mobiles
             MinTameSkill = 115.1;
         }
 
+        public override string TamedDisplayName { get { return "Ancient Wyrm"; } }
+
         public override int TamedItemId { get { return 17062; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 10; } }

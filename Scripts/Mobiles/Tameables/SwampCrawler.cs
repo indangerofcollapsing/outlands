@@ -40,6 +40,8 @@ namespace Server.Mobiles
             Karma = -1000;
         }
 
+        public override string TamedDisplayName { get { return "Swamp Crawler"; } }
+
         public override int TamedItemId { get { return 8469; } }
         public override int TamedItemHue { get { return 870; } }
         public override int TamedItemXOffset { get { return 10; } }

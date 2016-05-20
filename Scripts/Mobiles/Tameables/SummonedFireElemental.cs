@@ -47,6 +47,8 @@ namespace Server.Mobiles
             UpdateAI(false);
         }
 
+        public override string TamedDisplayName { get { return "Fire Elemental"; } }
+
         public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.Elemental; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }

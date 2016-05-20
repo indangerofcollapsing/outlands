@@ -44,6 +44,8 @@ namespace Server.Mobiles
             AddItem(new LightSource());
         }
 
+        public override string TamedDisplayName { get { return "Wisp"; } }
+
         public override int TamedItemId { get { return 8448; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }

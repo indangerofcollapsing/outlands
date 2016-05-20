@@ -151,56 +151,7 @@ namespace Server.SkillHandlers
 
             AddImage(8, 4, 1250, 2499); //Background
 
-            string creatureDisplayName = "";
-
-            if (bc_Creature.IsHenchman)
-            {
-                string rawName = bc_Creature.RawName;
-                string title = bc_Creature.Title;
-
-                if (title.Contains(" the "))
-                    title.Replace(" the ", "");
-
-                rawName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(rawName);
-
-                if (title != "")
-                    title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(title);
-
-                creatureDisplayName = rawName + " the " + title;
-            }
-
-            else
-            {
-                BaseCreature creatureInstance = (BaseCreature)Activator.CreateInstance(bc_Creature.GetType());
-
-                if (bc_Creature.Controlled)
-                {
-                    //Renamed Creature
-                    if (creature.Name != bc_Creature.RawName)
-                    {
-                        string sName = creature.Name;
-
-                        if (sName.IndexOf("an ") > -1)
-                            sName = sName.Substring(2, sName.Length - 2);
-
-                        else if (sName.IndexOf("a ") > -1)
-                            sName = sName.Substring(1, sName.Length - 1);
-
-                        sName = sName.Trim();
-
-                        creatureDisplayName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(bc_Creature.RawName) + " the " + CultureInfo.CurrentCulture.TextInfo.ToTitleCase(sName);
-                    }
-
-                    else
-                        creatureDisplayName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(bc_Creature.RawName);
-                }
-
-                else
-                    creatureDisplayName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(bc_Creature.RawName);
-
-                if (creatureInstance != null)
-                    creatureInstance.Delete();
-            }
+            string creatureDisplayName = bc_Creature.GetTamedDisplayName();
 
             AddLabel(Utility.CenteredTextOffset(170, creatureDisplayName), 15, HeaderTextHue, creatureDisplayName);
 

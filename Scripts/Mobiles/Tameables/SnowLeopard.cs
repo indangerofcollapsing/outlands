@@ -36,6 +36,8 @@ namespace Server.Mobiles
             ControlSlots = 1;
             MinTameSkill = 45;
         }
+
+        public override string TamedDisplayName { get { return "Snow Leopard"; } }
         
         public override int TamedItemId { get { return 8450; } }
         public override int TamedItemHue { get { return 971; } }

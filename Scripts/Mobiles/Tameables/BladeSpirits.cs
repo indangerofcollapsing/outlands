@@ -40,6 +40,8 @@ namespace Server.Mobiles
             ReturnsHome = false;
         }
 
+        public override string TamedDisplayName { get { return "Blade Spirit"; } }
+
         public override SlayerGroupType SlayerGroup { get { return SlayerGroupType.None; } }
         public override SpeedGroupType BaseSpeedGroup { get { return SpeedGroupType.Fast; } }
         public override AIGroupType AIBaseGroup { get { return AIGroupType.Summoned; } }

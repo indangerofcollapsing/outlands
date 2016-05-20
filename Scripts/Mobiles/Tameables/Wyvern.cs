@@ -38,6 +38,8 @@ namespace Server.Mobiles
             MinTameSkill = 90;
         }
 
+        public override string TamedDisplayName { get { return "Wyvern"; } }
+
         public override int TamedItemId { get { return 9684; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return -37; } }

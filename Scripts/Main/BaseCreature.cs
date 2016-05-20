@@ -688,7 +688,6 @@ namespace Server.Mobiles
         public double m_RareMinTamedStatSkillScalar = 1.0;
         public double m_MaxTamedStatSkillScalar = 1.10;
 
-        //Maximum Stat + Skill Increase Via XP
         public static double HitsExperienceScalar = .50;
         public static double ManaExperienceScalar = .50;
         public static double DamageExperienceScalar = .33;
@@ -700,7 +699,25 @@ namespace Server.Mobiles
         public static double PoisoningExperienceScalar = .10;
         public static double VirtualArmorExperienceScalar = .5;
 
-        //Dynamic Stats and Skills (Scale Up With Creature XP)
+        private string m_InitialName = "";
+        [CommandProperty(AccessLevel.GameMaster)]
+        public string InitialName
+        {
+            get { return m_InitialName; }
+            set { m_InitialName = value; }
+        }
+
+        public string GetTamedDisplayName()
+        {
+            if (RawName == InitialName)
+                return Utility.Capitalize(RawName);
+
+            else            
+                return Utility.Capitalize(RawName) + " the " + Utility.Capitalize(TamedDisplayName);        
+        }
+        
+        public virtual string TamedDisplayName { get { return RawName; } }
+
         public virtual int TamedItemId { get { return -1; } }
         public virtual int TamedItemHue { get { return 0; } }
         public virtual int TamedItemXOffset { get { return 0; } }
@@ -1136,10 +1153,15 @@ namespace Server.Mobiles
 
             if (Controlled && ControlMaster is PlayerMobile)
                 ApplyExperience();
+
+            Timer.DelayCall(TimeSpan.FromMilliseconds(100), delegate
+            {
+                if (this != null)                
+                    InitialName = RawName;
+            });            
         }
 
-        public BaseCreature(Serial serial)
-            : base(serial)
+        public BaseCreature(Serial serial): base(serial)
         {
             m_bDebugAI = false;
 
@@ -4553,6 +4575,7 @@ namespace Server.Mobiles
             writer.Write(m_XMLSpawner);
             writer.Write(m_ExperienceLevel);
             writer.Write(m_TimeStabled);
+            writer.Write(m_InitialName);
 
             writer.Write(m_FollowerTraitSelections.Count);
             for (int a = 0; a < m_FollowerTraitSelections.Count; a++)
@@ -4689,6 +4712,7 @@ namespace Server.Mobiles
                 m_XMLSpawner = reader.ReadItem() as XmlSpawner;
                 m_ExperienceLevel = reader.ReadInt();
                 m_TimeStabled = reader.ReadDateTime();
+                m_InitialName = reader.ReadString();
 
                 int followerTraitSelectionCount = reader.ReadInt();
                 for (int a = 0; a < followerTraitSelectionCount; a++)

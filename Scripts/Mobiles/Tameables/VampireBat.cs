@@ -37,6 +37,8 @@ namespace Server.Mobiles
             Karma = -500;
         }
 
+        public override string TamedDisplayName { get { return "Vampire Bat"; } }
+
         public override int TamedItemId { get { return 9777; } }
         public override int TamedItemHue { get { return 2105; } }
         public override int TamedItemXOffset { get { return 5; } }

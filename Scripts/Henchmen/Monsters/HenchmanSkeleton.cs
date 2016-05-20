@@ -69,9 +69,8 @@ namespace Server.Custom
             MinTameSkill = 50;
 		}
 
-        public override int PoisonResistance { get { return 5; } }
+        public override string TamedDisplayName { get { return "Skeleton"; } }
 
-        //Animal Lore Display Info
         public override int TamedItemId { get { return 8423; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }
@@ -95,6 +94,8 @@ namespace Server.Custom
         public override double TamedBaseTactics { get { return 100; } }
         public override double TamedBaseMeditation { get { return 0; } }
         public override int TamedBaseVirtualArmor { get { return 50; } }
+
+        public override int PoisonResistance { get { return 5; } }
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {

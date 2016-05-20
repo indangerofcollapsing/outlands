@@ -36,6 +36,8 @@ namespace Server.Mobiles
             ControlSlots = 1;
             MinTameSkill = 75;
         }
+
+        public override string TamedDisplayName { get { return "Drake Whelp"; } }
         
         public override int TamedItemId { get { return 8467; } }
         public override int TamedItemHue { get { return 1005; } }

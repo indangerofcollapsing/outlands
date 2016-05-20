@@ -40,7 +40,9 @@ namespace Server.Mobiles
             Tameable = true;
             ControlSlots = 1;
             MinTameSkill = 85;
-        }        
+        }
+
+        public override string TamedDisplayName { get { return "Dragon Whelp"; } }
 
         public override int TamedItemId { get { return 8467; } }
         public override int TamedItemHue { get { return 1205; } }

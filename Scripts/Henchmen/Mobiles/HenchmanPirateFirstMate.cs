@@ -77,9 +77,10 @@ namespace Server.Custom
             Tameable = true;
             ControlSlots = 5;
             MinTameSkill = 120;
-		}        
+		}
 
-        //Animal Lore Display Info
+        public override string TamedDisplayName { get { return "First Mate"; } }
+
         public override int TamedItemId { get { return 8454; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }

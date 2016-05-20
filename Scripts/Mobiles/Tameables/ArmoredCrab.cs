@@ -37,6 +37,8 @@ namespace Server.Mobiles
             Fame = 500;
             Karma = 0;
         }
+
+        public override string TamedDisplayName { get { return "Armored Crab"; } }
         
         public override int TamedItemId { get { return 8463; } }
         public override int TamedItemHue { get { return 0; } }

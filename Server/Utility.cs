@@ -997,6 +997,14 @@ namespace Server
             return sTimeRemaining;
         }
 
+        public static string Capitalize(string text)
+        {
+            if (text == null || text == "")
+                return text;
+
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(text);
+        }
+
         public static string CreateDecimalString(double value, int decimalPlaces)
         {
             double factor = Math.Pow(10, decimalPlaces);

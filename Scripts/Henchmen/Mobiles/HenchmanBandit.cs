@@ -70,7 +70,8 @@ namespace Server.Custom
             MinTameSkill = 100;
 		}
 
-        //Animal Lore Display Info
+        public override string TamedDisplayName { get { return "Bandit"; } }
+
         public override int TamedItemId { get { return 8454; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }

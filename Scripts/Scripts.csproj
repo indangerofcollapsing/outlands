@@ -586,7 +586,7 @@
     <Compile Include="Items\Weapons\Other\Wooden\HardenedWildStaff.cs" />
     <Compile Include="Items\Weapons\Other\Wooden\ThornedWildStaff.cs" />
     <Compile Include="Main\ArcaneItem.cs" />
-    <Compile Include="Main\StableGump.cs" />
+    <Compile Include="Main\Stables.cs" />
     <Compile Include="Main\DamageTracker.cs" />
     <Compile Include="Main\FollowerTraits.cs" />
     <Compile Include="Mobiles\Bosses\Minions\RockGuar.cs" />

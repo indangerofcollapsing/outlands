@@ -72,7 +72,8 @@ namespace Server.Custom
             MinTameSkill = 75;
 		}
 
-        //Animal Lore Display Info
+        public override string TamedDisplayName { get { return "Bone Magi"; } }
+
         public override int TamedItemId { get { return 9660; } }
         public override int TamedItemHue { get { return 2501; } }
         public override int TamedItemXOffset { get { return 15; } }

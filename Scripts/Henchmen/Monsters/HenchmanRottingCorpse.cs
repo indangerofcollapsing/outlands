@@ -66,9 +66,10 @@ namespace Server.Custom
             Tameable = true;
             ControlSlots = 2;
             MinTameSkill = 110;
-		}        
+		}
 
-        //Animal Lore Display Info
+        public override string TamedDisplayName { get { return "Rotting Corpse"; } }
+
         public override int TamedItemId { get { return 8428; } }
         public override int TamedItemHue { get { return 165; } }
         public override int TamedItemXOffset { get { return 5; } }

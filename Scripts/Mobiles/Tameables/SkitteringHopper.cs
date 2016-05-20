@@ -36,6 +36,8 @@ namespace Server.Mobiles
             MinTameSkill = 35;
         }
 
+        public override string TamedDisplayName { get { return "Skittering Hopper"; } }
+
         public override int TamedItemId { get { return 9762; } }
         public override int TamedItemHue { get { return 0; } }
         public override int TamedItemXOffset { get { return 5; } }
