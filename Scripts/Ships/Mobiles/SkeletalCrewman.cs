@@ -85,7 +85,7 @@ namespace Server.Custom.Pirates
             PackItem(new Bow() { Movable = true, Hue = 0 });
 		}
 
-        public override int OceanDoubloonValue { get { return 10; } }
+        public override int DoubloonValue { get { return 10; } }
         public override bool CanSwitchWeapons { get { return true; } }
         public override bool AlwaysMurderer { get { return true; } }
 

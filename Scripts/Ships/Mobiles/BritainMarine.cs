@@ -96,7 +96,7 @@ namespace Server.Custom.Pirates
         {
         }
 
-        public override int OceanDoubloonValue { get { return 8; } }
+        public override int DoubloonValue { get { return 8; } }
         public override bool CanSwitchWeapons { get { return true; } }
 
         public BritainMarine(Serial serial): base(serial)

@@ -101,7 +101,7 @@ namespace Server.Custom.Pirates
         {
         }
         
-        public override int OceanDoubloonValue { get { return 10; } }
+        public override int DoubloonValue { get { return 10; } }
         public override bool CanSwitchWeapons { get { return true; } }
 
         public BritainShipCaptain(Serial serial): base(serial)

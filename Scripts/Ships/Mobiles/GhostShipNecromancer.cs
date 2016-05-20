@@ -91,7 +91,7 @@ namespace Server.Custom.Pirates
             DictCombatSpecialAction[CombatSpecialAction.ThrowShipBomb] = 1;
         }
 
-        public override int OceanDoubloonValue { get { return 8; } }
+        public override int DoubloonValue { get { return 8; } }
         public override bool AlwaysMurderer { get { return true; } }
 
         public override void OnThink()

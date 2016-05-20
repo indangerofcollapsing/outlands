@@ -1054,8 +1054,7 @@ namespace Server.Mobiles
 
         #endregion
 
-        public virtual int OceanDoubloonValue { get { return 0; } }
-        public virtual int LandDoubloonValue { get { return 0; } }
+        public virtual int DoubloonValue { get { return 0; } }
 
         public virtual bool IsOceanCreature { get { return false; } }
 
@@ -3992,106 +3991,7 @@ namespace Server.Mobiles
 
                 if (c != null)
                     c.Slip();
-            }
-
-            //Passive Taming Skill Gain and Creature Experience in Combat
-            BaseCreature bc_TamedCreature = from as BaseCreature;
-
-            if (bc_TamedCreature != null)
-            {
-                PlayerMobile pm_Tamer = bc_TamedCreature.ControlMaster as PlayerMobile;
-
-                if (pm_Tamer != null && bc_TamedCreature.Controlled && !bc_TamedCreature.Summoned)
-                {
-                    /*
-                    //Passive Taming Gain
-                    if (!bc_TamedCreature.IsHenchman && pm_Tamer.m_LastPassiveTamingSkillAttacked != this && !Summoned && !(Controlled && ControlMaster is PlayerMobile))
-                    {
-                        double timespan = 5.0;
-
-                        if (!(Region is DungeonRegion))
-                            timespan *= 2;
-
-                        if (pm_Tamer.Skills[Server.SkillName.AnimalTaming].Base < 50.0)
-                            timespan *= .5;
-
-                        if (pm_Tamer.Skills[Server.SkillName.AnimalTaming].Base >= 75.0)
-                            timespan += pm_Tamer.Skills[Server.SkillName.AnimalTaming].Base - 75.0; // linearly going from 5 to 25 minutes from 75.0 to 99.9 skill.
-
-                        timespan = Math.Min(timespan, 30);
-                        
-                        // Basically once every X minutes your pet attacking a monster in dungeon will gain you taming skill.
-                        TimeSpan timeBetween = TimeSpan.FromMinutes(timespan); // 0.6% per hour if maxed
-
-                        if (DateTime.UtcNow > pm_Tamer.m_LastPassiveTamingSkillGain + timeBetween)
-                        {
-                            // skillscroll level check, prevent player from simply hitting a skeleton once ever X minutes all the way to GM.
-                            // taming level check (tamed pet), prevent player from gaining taming with a very low level monster)
-                            bool petInSkillGainRange = pm_Tamer.Skills[Server.SkillName.AnimalTaming].Base < bc_TamedCreature.MinTameSkill + 25.0;
-                            bool tamerInRange = pm_Tamer.GetDistanceToSqrt(Location) < 10;
-
-                            // skillscroll level check (target monster), prevent player from simply hitting a skeleton once ever X minutes all the way to GM.
-                            if (MaxSkillScrollWorth >= pm_Tamer.Skills[Server.SkillName.AnimalTaming].Base && petInSkillGainRange && tamerInRange)
-                            {
-                                SkillCheck.Gain(pm_Tamer, pm_Tamer.Skills[Server.SkillName.AnimalTaming]);
-
-                                bc_TamedCreature.PlaySound(bc_TamedCreature.BaseSoundID);
-
-                                pm_Tamer.m_LastPassiveTamingSkillGain = DateTime.UtcNow;
-                                pm_Tamer.m_LastPassiveTamingSkillAttacked = this;
-                            }
-                        }
-
-                        else
-                        {
-                            if (pm_Tamer.AccessLevel >= AccessLevel.GameMaster)
-                                pm_Tamer.SendMessage("Passive taming gain in {0} seconds", (int)((pm_Tamer.m_LastPassiveTamingSkillGain + timeBetween) - DateTime.UtcNow).TotalSeconds);
-                        }
-                    }
-                    */
-
-                    double randomResult = Utility.RandomDouble();
-
-                    int experienceDistance = 12;
-
-                    if (BoatOccupied != null)
-                        experienceDistance = 24;
-
-                    //Experience Gain                    
-                    if (pm_Tamer.GetDistanceToSqrt(Location) <= experienceDistance && !pm_Tamer.Hidden && !(Region is UOACZRegion))
-                    {
-                        //Active Experience Gain: Different Creatures
-                        if (pm_Tamer.m_LastPassiveTamingSkillAttacked != this && !(Controlled && ControlMaster is PlayerMobile) && !Summoned && !NoKillAwards && bc_TamedCreature.m_NextExperienceGain < DateTime.UtcNow && bc_TamedCreature.ExperienceLevel < BaseCreature.MaxExperienceLevel)
-                        {
-                            double nextExperienceGain = (double)MinExpGainActiveDelay;
-                            
-                            double gainChance = .2;
-
-                            if (randomResult <= gainChance)
-                            {
-                                bc_TamedCreature.Experience++;
-                                bc_TamedCreature.m_NextExperienceGain = DateTime.UtcNow + TimeSpan.FromMinutes(nextExperienceGain);
-                                
-                                pm_Tamer.m_LastPassiveExpAttacked = this;
-                            }
-                        }
-
-                        //Passive Experience Gain: Same Creature
-                        else if (bc_TamedCreature.m_NextExperienceGain < DateTime.UtcNow && !NoKillAwards && bc_TamedCreature.ExperienceLevel < BaseCreature.MaxExperienceLevel)
-                        {
-                            double gainChance = .01;
-
-                            if (randomResult <= gainChance)
-                            {
-                                bc_TamedCreature.Experience++;
-                                bc_TamedCreature.m_NextExperienceGain = DateTime.UtcNow + TimeSpan.FromMinutes(MinExpGainMacroDelay);
-                                
-                                pm_Tamer.m_LastPassiveExpAttacked = this;
-                            }
-                        }
-                    }
-                }
-            }
+            }            
 
             if (from != this && from != null)
                 WeightOverloading.FatigueOnDamage(this, amount, 0.5);
@@ -4133,6 +4033,208 @@ namespace Server.Mobiles
                 }
             }
         }
+
+        public bool InPassiveTamingSkillGainRange(PlayerMobile player)
+        {
+            if (player == null)
+                return false;
+
+            double animalTaming = player.Skills[SkillName.AnimalTaming].Value;
+
+            if (MinTameSkill <= animalTaming && animalTaming < MinTameSkill + SkillCheck.SkillRangeIncrement)
+                return true;
+
+            return false;
+        }
+
+        public bool AllowPassiveTamingSkillGain(BaseCreature defender, PlayerMobile player)
+        {
+            if (defender == null || player == null)
+                return false;
+
+            if (!(Controlled && ControlMaster == player))
+                return false;
+
+            if (IsHenchman || Summoned)
+                return false;
+
+            if (defender.NoKillAwards || defender.Summoned || defender.ControlMaster is PlayerMobile)
+                return false;
+
+            if (player.m_PassiveSkillGainRemaining == 0)
+                return false;
+
+            double passiveTamingGainScalar = GetPassiveTamingGainScalar(player.Skills[SkillName.AnimalTaming].Value);
+
+            if (passiveTamingGainScalar <= 0)
+                passiveTamingGainScalar = 0.1;
+
+            TimeSpan PassiveTamingSkillGainDelay = TimeSpan.FromMinutes(60 / passiveTamingGainScalar);
+
+            if (DateTime.UtcNow < player.m_LastPassiveTamingSkillGain + PassiveTamingSkillGainDelay)
+                return false;
+
+            if (InPassiveTamingSkillGainRange(player))
+                return true;
+
+            return false;
+        }
+
+        public bool AllowExperienceGain(BaseCreature defender, PlayerMobile player)
+        {
+            if (defender == null || player == null)
+                return false;
+
+            if (!(Controlled && ControlMaster == player))
+                return false;
+
+            if (IsHenchman || Summoned)
+                return false;
+
+            if (defender.NoKillAwards || defender.Summoned || defender.ControlMaster is PlayerMobile)
+                return false;
+
+            return true;
+        }
+
+        public virtual double ExperienceChance()
+        {
+            double minTamingExpGainScalar = GetCreatureMinTamingExpGainScalar(MinTameSkill); 
+            double experienceChance = (InitialDifficulty * .01) * minTamingExpGainScalar;
+
+            if (experienceChance < .01)
+                experienceChance = .01;
+
+            if (Rare)
+                experienceChance = 1;
+
+            if (IsChamp())
+                experienceChance = 1;
+
+            if (IsLoHBoss())
+                experienceChance = 1;
+
+            if (IsBoss())
+                experienceChance = 1;
+
+            if (IsEventBoss())
+                experienceChance = 1;
+
+            return experienceChance;
+        }
+
+        public static double GetCreatureMinTamingExpGainScalar(double minTaming)
+        {
+            double minTamingExpGainScalar = 1.0;      
+
+            for (int a = 0; a < CreatureMinTamingExpGainScalar.Length; a++)
+            {
+                double rangeBottom = a * SkillCheck.SkillRangeIncrement;
+                double rangeTop = (a * SkillCheck.SkillRangeIncrement) + SkillCheck.SkillRangeIncrement;
+
+                if (minTaming >= rangeBottom && minTaming < rangeTop)
+                {
+                    minTamingExpGainScalar = CreatureMinTamingExpGainScalar[a];
+                    break;
+                }
+            }
+
+            return minTamingExpGainScalar;
+        }
+
+        public static double[] CreatureMinTamingExpGainScalar = new double[] {          
+                                                        40.0, 38.0,    //0-5, 5-10
+                                                        36.0, 34.0,    //10-15, 15-20
+                                                        32.0, 30.0,    //20-25, 25-30
+                                                        28.0, 26.0,    //30-35, 30-40
+                                                        24.0, 22.0,    //40-45, 45-50
+                                                        20.0, 18.0,    //50-55, 55-60
+                                                        16.0, 14.0,    //60-65, 65-70
+                                                        12.0, 10.0,    //70-75, 75-80
+                                                        8.0, 6.0,    //80-85, 85-90
+                                                        4.0, 2.0,    //90-95, 95-100
+                                                        1.75, 1.5,    //100-105, 105-110
+                                                        1.25, 1.0};   //110-115, 115-120
+
+        public virtual int ExperienceValue()
+        {
+            int experienceValue = 1;
+
+            if (Rare)
+                experienceValue = 10;
+
+            if (IsChamp())
+                experienceValue = 10;
+
+            if (IsLoHBoss())
+                experienceValue = 15;
+
+            if (IsBoss())
+                experienceValue = 25;            
+
+            if (IsEventBoss())
+                experienceValue = 40;
+
+            return experienceValue;
+        }
+
+        public double PassiveTamingSkillGainChance(PlayerMobile player)
+        {
+            double tamingSkill = player.Skills[SkillName.AnimalTaming].Value;
+
+            double passiveTamingGainScalar = GetPassiveTamingGainScalar(tamingSkill);
+            double passiveTamingGainChance = (InitialDifficulty * .01) * passiveTamingGainScalar;            
+
+            if (Rare)
+                passiveTamingGainChance = .1 * passiveTamingGainScalar;
+
+            if (IsChamp())
+                passiveTamingGainChance = .1 * passiveTamingGainScalar;
+
+            if (IsLoHBoss())
+                passiveTamingGainChance = .15 * passiveTamingGainScalar;
+
+            if (IsBoss())
+                passiveTamingGainChance = .25 * passiveTamingGainScalar;
+
+            if (IsEventBoss())
+                passiveTamingGainChance = .40 * passiveTamingGainScalar;
+
+            return passiveTamingGainChance;
+        }
+
+        public static double GetPassiveTamingGainScalar(double tamingSkill)
+        {
+            double passiveTamingGainScalar = 1.0;
+
+            for (int a = 0; a < PassiveTamingGainScalar.Length; a++)
+            {
+                double rangeBottom = a * SkillCheck.SkillRangeIncrement;
+                double rangeTop = (a * SkillCheck.SkillRangeIncrement) + SkillCheck.SkillRangeIncrement;
+
+                if (tamingSkill >= rangeBottom && tamingSkill < rangeTop)
+                {
+                    passiveTamingGainScalar = PassiveTamingGainScalar[a];
+                    break;
+                }
+            }
+
+            return passiveTamingGainScalar;
+        }
+
+        public static double[] PassiveTamingGainScalar = new double[] {          
+                                                        10.0, 9.5,    //0-5, 5-10
+                                                        9.0, 8.5,    //10-15, 15-20
+                                                        8.0, 7.5,    //20-25, 25-30
+                                                        7.0, 6.5,    //30-35, 30-40
+                                                        6.0, 5.5,    //40-45, 45-50
+                                                        5.0, 4.0,    //50-55, 55-60
+                                                        3.0, 2.0,    //60-65, 65-70
+                                                        1.5, 1.25,    //70-75, 75-80
+                                                        1.15, 1.10,     //80-85, 85-90
+                                                        1.05, 1.0,     //90-95, 95-100
+                                                        1.0, 1.0,    //100-105, 105-110
+                                                        1.0, 1.0};   //110-115, 115-120
 
         public virtual void CheckAutoDispel(BaseCreature bc_Target)
         {
@@ -7911,21 +8013,44 @@ namespace Server.Mobiles
 
             Dictionary<PlayerMobile, int> damageInflicted = new Dictionary<PlayerMobile, int>();
 
+            List<PlayerMobile> passiveTamingSkillGainPlayers = new List<PlayerMobile>();
+
             //Determine Total Damaged Inflicted and Per Player
             foreach (DamageEntry entry in DamageEntries)
             {
                 if (!entry.HasExpired)
-                {
-                    //Tracking For Tamed Creature Kills
-                    Mobile damager = entry.Damager;
+                {                    
                     BaseCreature bc_Creature = entry.Damager as BaseCreature;
                     PlayerMobile playerDamager = entry.Damager as PlayerMobile;
                     PlayerMobile creatureOwner = null;
 
+                    bool passiveTamingSkillGainValid = false;
+                   
                     if (bc_Creature != null)
                     {
                         if (bc_Creature.Controlled && bc_Creature.ControlMaster is PlayerMobile && bc_Creature.Tameable)
+                        {
+                            creatureOwner = bc_Creature.ControlMaster as PlayerMobile;
+
+                            //Experience Gain
+                            if (bc_Creature.AllowExperienceGain(this, creatureOwner))
+                            {
+                                double experienceChance = ExperienceChance();
+                                int experienceValue = ExperienceValue();
+
+                                if (Utility.RandomDouble() <= experienceChance)
+                                    bc_Creature.Experience += experienceValue;
+                            }                               
+
+                            //Passive Taming Skill Gain Allowed
+                            if (bc_Creature.AllowPassiveTamingSkillGain(this, creatureOwner))
+                            {
+                                if (!passiveTamingSkillGainPlayers.Contains(creatureOwner))
+                                    passiveTamingSkillGainPlayers.Add(creatureOwner);
+                            }
+
                             bc_Creature.CreaturesKilled++;
+                        }
                     }
 
                     totalDamage += entry.DamageGiven;
@@ -8059,6 +8184,83 @@ namespace Server.Mobiles
                     }
                 }
 
+                //Passive Taming
+                /*
+                BaseCreature bc_TamedCreature = from as BaseCreature;
+
+                if (bc_TamedCreature != null && !(Region is UOACZRegion))
+                {
+                    PlayerMobile pm_Tamer = bc_TamedCreature.ControlMaster as PlayerMobile;
+
+                    if (pm_Tamer != null && bc_TamedCreature.Controlled && !bc_TamedCreature.Summoned)
+                    {
+                        bool passiveTamingValid = true;
+
+                        if (bc_TamedCreature.IsHenchman)
+                            passiveTamingValid = false;
+
+                        if (NoKillAwards || Summoned || ControlMaster is PlayerMobile)
+                            passiveTamingValid = false;
+
+                        if (!bc_TamedCreature.AllowPassiveTamingSkillGain(pm_Tamer))
+                            passiveTamingValid = false;
+
+                        if (pm_Tamer.m_PassiveSkillGainRemaining <= 0)
+                            passiveTamingValid = false;
+
+                        TimeSpan PassiveTamingSkillGainDelay = TimeSpan.FromMinutes(pm_Tamer.Skills[SkillName.AnimalTaming].Value / 2);
+
+                        if (DateTime.UtcNow < pm_Tamer.m_LastPassiveTamingSkillGain + PassiveTamingSkillGainDelay)
+                            passiveTamingValid = false;
+
+                        if (passiveTamingValid)
+                        {
+                            Skill skill = from.Skills[SkillName.AnimalTaming];
+
+                            pm_Tamer.m_PassiveSkillGainRemaining -= .1;
+
+                            SkillCheck.GainSkill(pm_Tamer, skill, 1);
+
+                            pm_Tamer.m_LastPassiveTamingSkillGain = DateTime.UtcNow;
+                            pm_Tamer.m_LastPassiveTamingSkillAttacked = this;
+                        }
+
+                        double randomResult = Utility.RandomDouble();
+
+                        //Experience Gain                   
+                        if (pm_Tamer.m_LastPassiveTamingSkillAttacked != this && !(Controlled && ControlMaster is PlayerMobile) && !Summoned && !NoKillAwards && bc_TamedCreature.m_NextExperienceGain < DateTime.UtcNow && bc_TamedCreature.ExperienceLevel < BaseCreature.MaxExperienceLevel)
+                        {
+                            double nextExperienceGain = (double)MinExpGainActiveDelay;
+
+                            double gainChance = .2;
+
+                            if (randomResult <= gainChance)
+                            {
+                                bc_TamedCreature.Experience++;
+                                bc_TamedCreature.m_NextExperienceGain = DateTime.UtcNow + TimeSpan.FromMinutes(nextExperienceGain);
+
+                                pm_Tamer.m_LastPassiveExpAttacked = this;
+                            }
+                        }
+
+                        //Passive Experience Gain: Same Creature
+                        else if (bc_TamedCreature.m_NextExperienceGain < DateTime.UtcNow && !NoKillAwards && bc_TamedCreature.ExperienceLevel < BaseCreature.MaxExperienceLevel)
+                        {
+                            double gainChance = .01;
+
+                            if (randomResult <= gainChance)
+                            {
+                                bc_TamedCreature.Experience++;
+                                bc_TamedCreature.m_NextExperienceGain = DateTime.UtcNow + TimeSpan.FromMinutes(MinExpGainMacroDelay);
+
+                                pm_Tamer.m_LastPassiveExpAttacked = this;
+                            }
+                        }
+
+                    }
+                }
+                */
+
                 //Rewards
                 if (!(ControlMaster is PlayerMobile) && !DiedByShipSinking)
                 {        
@@ -8071,13 +8273,30 @@ namespace Server.Mobiles
 
                         double damagePercent = (double)pair.Value / (double)totalDamage;
 
+                        //Passive Taming Skill Gain
+                        if (passiveTamingSkillGainPlayers.Contains(playerDamager))
+                        {
+                            double passiveTamingSkillGainChance = PassiveTamingSkillGainChance(playerDamager);
+
+                            if (Utility.RandomDouble() <= passiveTamingSkillGainChance)
+                            {                               
+                                Skill skill = playerDamager.Skills[SkillName.AnimalTaming];
+
+                                playerDamager.m_PassiveSkillGainRemaining -= .1;
+
+                                SkillCheck.GainSkill(playerDamager, skill, 1);
+
+                                playerDamager.m_LastPassiveTamingSkillGain = DateTime.UtcNow;
+                            }
+                        }
+
                         //Arcane Item Experience Handling
 
                         //Monster Hunter Society
                         MHSCreatures.CreatureKilled(this, playerDamager, damagePercent, TakenDamageFromPoison, TakenDamageFromCreature);
                         
                         //Doubloons
-                        if (OceanDoubloonValue > 0 || LandDoubloonValue > 0)
+                        if (DoubloonValue > 0)
                         {
                             double doubloonAmount = 0;
                             bool doubloonsValid = false;
@@ -8092,22 +8311,9 @@ namespace Server.Mobiles
 
                             if (validBoat || IsOceanCreature)
                             {
-                                if (OceanDoubloonValue > 0)
+                                if (DoubloonValue > 0)
                                 {
-                                    doubloonAmount = (double)OceanDoubloonValue;
-
-                                    if (damagePercent < .5)
-                                        doubloonAmount *= .5;
-
-                                    doubloonsValid = true;
-                                }
-                            }
-
-                            else
-                            {
-                                if (LandDoubloonValue > 0)
-                                {
-                                    doubloonAmount = (double)LandDoubloonValue;
+                                    doubloonAmount = (double)DoubloonValue;
 
                                     if (damagePercent < .5)
                                         doubloonAmount *= .5;

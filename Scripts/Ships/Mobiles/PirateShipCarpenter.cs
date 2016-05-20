@@ -95,7 +95,7 @@ namespace Server.Custom.Pirates
             DictCombatRange[CombatRange.Withdraw] = 10;
         }
 
-        public override int OceanDoubloonValue { get { return 6; } }
+        public override int DoubloonValue { get { return 6; } }
         public override bool AlwaysMurderer { get { return true; } }
 
         public override void OnThink()

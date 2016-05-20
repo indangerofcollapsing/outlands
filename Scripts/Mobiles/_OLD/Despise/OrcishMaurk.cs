@@ -53,7 +53,7 @@ namespace Server.Mobiles
             PackItem(new Arrow(20));
         }
 
-        public override int OceanDoubloonValue { get { return 10; } }
+        public override int DoubloonValue { get { return 10; } }
 
         public override void SetUniqueAI()
         {

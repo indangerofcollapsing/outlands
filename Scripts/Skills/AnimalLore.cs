@@ -221,9 +221,16 @@ namespace Server.SkillHandlers
                     if (bc_Creature.ExperienceLevel < BaseCreature.MaxExperienceLevel)
                         maxExperience = BaseCreature.ExperiencePerLevel[bc_Creature.ExperienceLevel];
 
-                    double passiveTamingSkillGainRemaining = 2.5;
+                    double passiveTamingSkillGainRemaining = player.m_PassiveSkillGainRemaining;
+
+                    if (!bc_Creature.InPassiveTamingSkillGainRange(player))
+                        passiveTamingSkillGainRemaining = 0;
+
                     string passiveTamingSkillGainRemainingText = Utility.CreateDecimalString(passiveTamingSkillGainRemaining, 1);
-                    
+
+                    if (!(bc_Creature.Controlled && bc_Creature.ControlMaster == player))
+                        passiveTamingSkillGainRemainingText = "-";
+                                        
                     int hitsAdjusted = bc_Creature.Hits;
                     int hitsMaxAdjusted = bc_Creature.HitsMax;
 

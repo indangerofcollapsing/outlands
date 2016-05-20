@@ -56,7 +56,7 @@ namespace Server.Mobiles
             UniqueCreatureDifficultyScalar = 1.5;
         }
 
-        public override int OceanDoubloonValue { get { return 10; } }
+        public override int DoubloonValue { get { return 10; } }
         public override bool IsOceanCreature { get { return true; } }
 
         protected override bool OnMove(Direction d)

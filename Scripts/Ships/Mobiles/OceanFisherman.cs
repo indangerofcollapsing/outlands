@@ -21,7 +21,7 @@ namespace Server.Custom.Pirates
                                                                                 "*Leave me be!*"
                                                                                 };}}
 
-        public override int OceanDoubloonValue { get { return 4; } }
+        public override int DoubloonValue { get { return 4; } }
 
         public DateTime m_NextCastAllowed;
         public TimeSpan NextCastDelay = TimeSpan.FromSeconds(10);

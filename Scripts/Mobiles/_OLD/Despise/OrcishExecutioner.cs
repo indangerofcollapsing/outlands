@@ -54,7 +54,7 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.ThrowShipBomb] = 1;
         }
 
-        public override int OceanDoubloonValue { get { return 10; } }
+        public override int DoubloonValue { get { return 10; } }
         public override bool CanSwitchWeapons { get { return true; } }
         
         public override void OnDamage(int amount, Mobile from, bool willKill)

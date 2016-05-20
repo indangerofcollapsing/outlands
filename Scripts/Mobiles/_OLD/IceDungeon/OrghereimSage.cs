@@ -55,7 +55,7 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.ThrowShipBomb] = 1;
         }
 
-        public override int OceanDoubloonValue { get { return 6; } }
+        public override int DoubloonValue { get { return 6; } }
 
 		public OrghereimSage( Serial serial ) : base( serial )
 		{

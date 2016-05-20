@@ -949,8 +949,48 @@ namespace Server.Mobiles
         public DateTime m_LastTrapPouchUse = DateTime.UtcNow;
 
         public DateTime m_LastPassiveTamingSkillGain = DateTime.MinValue;
-        public BaseCreature m_LastPassiveTamingSkillAttacked; // the controlled pets last target
-        public BaseCreature m_LastPassiveExpAttacked; // the controlled pets last target for XP Gain Purposes
+        public DateTime m_LastExperienceGain = DateTime.MinValue; 
+
+        public double m_PassiveSkillGainRemaining = MaxPassiveSkillgainAllowed[0];
+
+        public static double[] MaxPassiveSkillgainAllowed = new double[] {          
+                                                        2.5, 2.5,    //0-5, 5-10
+                                                        2.5, 2.5,    //10-15, 15-20
+                                                        2.5, 2.5,    //20-25, 25-30
+                                                        2.5, 2.5,    //30-35, 30-40
+                                                        2.5, 2.5,    //40-45, 45-50
+                                                        2.5, 2.5,    //50-55, 55-60
+                                                        2.5, 2.5,    //60-65, 65-70
+                                                        2.5, 2.5,    //70-75, 75-80
+                                                        2.5, 2.5,    //80-85, 85-90
+                                                        2.5, 2.5,    //90-95, 95-100
+                                                        2.5, 2.5,    //100-105, 105-110
+                                                        2.5, 2.5};   //110-115, 115-120
+
+        public void CheckPassiveTamingReset(double oldSkillBase)
+        {
+            double animalTaming = Skills.AnimalTaming.Value;
+
+            int oldRangeIndex = (int)(Math.Floor(oldSkillBase / SkillCheck.SkillRangeIncrement));
+            int newRangeIndex = (int)(Math.Floor(animalTaming / SkillCheck.SkillRangeIncrement));
+
+            if (oldRangeIndex == newRangeIndex)
+                return;
+
+            m_PassiveSkillGainRemaining = 0;
+
+            for (int a = 0; a < MaxPassiveSkillgainAllowed.Length; a++)
+            {
+                double rangeBottom = a * SkillCheck.SkillRangeIncrement;
+                double rangeTop = (a * SkillCheck.SkillRangeIncrement) + SkillCheck.SkillRangeIncrement;
+
+                if (animalTaming >= rangeBottom && animalTaming < rangeTop)
+                {
+                    m_PassiveSkillGainRemaining = MaxPassiveSkillgainAllowed[a];
+                    break;
+                }
+            }
+        }
 
         public int MurderCountDecayHours = 48;
 
@@ -5032,6 +5072,7 @@ namespace Server.Mobiles
 
             writer.WriteEncodedInt(m_GuildRank.Rank);
 
+            writer.Write(m_PassiveSkillGainRemaining);
             writer.Write((int)m_SatisfactionLevel);
             writer.Write(m_SatisfactionExpiration);
             writer.Write(m_FactionPlayerProfile);
@@ -5135,6 +5176,7 @@ namespace Server.Mobiles
 
                 m_GuildRank = Guilds.RankDefinition.Ranks[rank];
 
+                m_PassiveSkillGainRemaining = reader.ReadDouble();
                 m_SatisfactionLevel = (Food.SatisfactionLevelType)reader.ReadInt();
                 m_SatisfactionExpiration = reader.ReadDateTime();
                 m_FactionPlayerProfile = (FactionPlayerProfile)reader.ReadItem() as FactionPlayerProfile;
@@ -5792,13 +5834,16 @@ namespace Server.Mobiles
 
         public override void OnSkillChange(SkillName skill, double oldBase)
         {
-            if (this.Young && this.SkillsTotal >= 5000)
+            if (Young && SkillsTotal >= 5000)
             {
                 Account acc = this.Account as Account;
 
                 if (acc != null)
                     acc.RemoveYoungStatus(1019036); // You have successfully obtained a respectable skill level, and have outgrown your status as a young player!
             }
+
+            if (skill == SkillName.AnimalTaming)            
+                CheckPassiveTamingReset(oldBase);
         }
 
         public override void OnAccessLevelChanged(AccessLevel oldLevel)

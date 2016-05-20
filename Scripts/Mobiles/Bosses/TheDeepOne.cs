@@ -101,7 +101,7 @@ namespace Server.Mobiles
             CanSwim = true;
         }
 
-        public override int OceanDoubloonValue { get { return 2000; } }
+        public override int DoubloonValue { get { return 2000; } }
         public override bool IsOceanCreature { get { return true; } }
 
         public override int AttackRange { get { return 3; } }

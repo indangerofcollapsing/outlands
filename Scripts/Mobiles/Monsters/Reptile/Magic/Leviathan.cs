@@ -59,7 +59,7 @@ namespace Server.Mobiles
 			CantWalk = true;
 		}
 
-        public override int OceanDoubloonValue { get { return 150; } }
+        public override int DoubloonValue { get { return 150; } }
         public override bool IsOceanCreature { get { return true; } }
             
         public override void SetUniqueAI()

@@ -65,7 +65,7 @@ namespace Server.Mobiles
             base.OnDeath( c );
         }
 
-        public override int OceanDoubloonValue { get { return 4; } }
+        public override int DoubloonValue { get { return 4; } }
         public override bool CanSwitchWeapons { get { return true; } }
 
         public override void SetUniqueAI()

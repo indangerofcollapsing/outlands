@@ -53,7 +53,7 @@ namespace Server.Mobiles
 
         public override int AttackRange { get { return 3; } }
 
-        public override int OceanDoubloonValue { get { return 10; } }
+        public override int DoubloonValue { get { return 10; } }
         public override bool IsOceanCreature { get { return true; } }
 
         public override bool AlwaysBossMinion { get { return true; } }

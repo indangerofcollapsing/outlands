@@ -37,7 +37,7 @@ namespace Server.Mobiles
 			CantWalk = true;
 		}
 
-        public override int OceanDoubloonValue { get { return 50; } }
+        public override int DoubloonValue { get { return 50; } }
         public override bool IsOceanCreature { get { return true; } }  
 
 		public Kraken( Serial serial ) : base( serial )

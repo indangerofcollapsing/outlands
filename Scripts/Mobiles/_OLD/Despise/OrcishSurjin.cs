@@ -53,7 +53,7 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.ThrowShipBomb] = 1;
         }
 
-        public override int OceanDoubloonValue { get { return 8; } }
+        public override int DoubloonValue { get { return 8; } }
         public override bool CanSwitchWeapons { get { return true; } }
 
         public override bool OnBeforeDeath()

@@ -65,7 +65,7 @@ namespace Server.Mobiles
             DictCombatSpecialAction[CombatSpecialAction.ThrowShipBomb] = 1;
         }
 
-        public override int OceanDoubloonValue { get { return 5; } }        
+        public override int DoubloonValue { get { return 5; } }        
 
         public override void OnDelete()
         {
