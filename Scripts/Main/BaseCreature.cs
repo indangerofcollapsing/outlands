@@ -1043,15 +1043,15 @@ namespace Server.Mobiles
            { 
                 return new List<FollowerTraitType>()
                 {
-                    FollowerTraitType.Toughness, FollowerTraitType.Quickness,
-                    FollowerTraitType.Hardness, FollowerTraitType.Charged,
-                    FollowerTraitType.Mender, FollowerTraitType.Potency,
-                    FollowerTraitType.Immunity, FollowerTraitType.Vicious,
-                    FollowerTraitType.Shadows, FollowerTraitType.Toxicity
+                    FollowerTraitType.Debilitate, FollowerTraitType.Entangle,
+                    FollowerTraitType.Cripple, FollowerTraitType.Hinder,
+                    FollowerTraitType.Pierce, FollowerTraitType.Rend,
+                    FollowerTraitType.Frenzy, FollowerTraitType.Contagion,
+                    FollowerTraitType.Enrage, FollowerTraitType.Contagion
                 }
            ;} 
-        }        
-
+        }    
+        
         #endregion
 
         public virtual int DoubloonValue { get { return 0; } }

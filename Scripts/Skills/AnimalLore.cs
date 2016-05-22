@@ -623,9 +623,9 @@ namespace Server.SkillHandlers
                                         leftTextHue = GreenTextHue;
                                     }
 
+                                    AddItem(40 + followerTraitDetail.IconOffsetX, iStartY + 20 + followerTraitDetail.IconOffsetY, followerTraitDetail.IconItemId, followerTraitDetail.IconHue);
                                     AddLabel(Utility.CenteredTextOffset(85, followerTraitDetail.Name), iStartY, leftTextHue, followerTraitDetail.Name);
-                                    AddItem(33 + followerTraitDetail.IconOffsetX, iStartY + 20 + followerTraitDetail.IconOffsetY, followerTraitDetail.IconItemId, followerTraitDetail.IconHue);
-
+                                    
                                     AddButton(85, iStartY + 33, 2118, 2117, buttonIndex, GumpButtonType.Reply, 0);
                                     AddLabel(105, iStartY + 30, 2550, "Info");
 
@@ -652,9 +652,9 @@ namespace Server.SkillHandlers
                                         rightTextHue = GreenTextHue;
                                     }
 
-                                    AddLabel(Utility.CenteredTextOffset(240, followerTraitDetail.Name), iStartY, rightTextHue, followerTraitDetail.Name);
                                     AddItem(195 + followerTraitDetail.IconOffsetX, iStartY + 20 + followerTraitDetail.IconOffsetY, followerTraitDetail.IconItemId, followerTraitDetail.IconHue);
-
+                                    AddLabel(Utility.CenteredTextOffset(240, followerTraitDetail.Name), iStartY, rightTextHue, followerTraitDetail.Name);
+                                    
                                     AddButton(240, iStartY + 33, 2118, 2117, buttonIndex + 2, GumpButtonType.Reply, 0);
                                     AddLabel(260, iStartY + 30, 2550, "Info");
 

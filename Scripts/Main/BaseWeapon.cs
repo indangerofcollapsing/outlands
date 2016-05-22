@@ -480,30 +480,15 @@ namespace Server.Items
 
             int v;
 
-            //Normal Creature Formula Override
+            //Creature
             if (bc_Creature != null)
             {
                 double dexBase = bc_Creature.RawDex;
-                double stamBase = bc_Creature.Stam;
 
                 if (dexBase > 125)
                     dexBase = 125;
-
-                if (stamBase > 125)
-                    stamBase = 125;
-
-                dexBase /= 2;
-                stamBase /= 2;
-
-                if (useRawValues)
-                    v = (int)(((double)bc_Creature.RawDex + 100) * speed);
-
-                else
-                    v = (int)(((double)dexBase + (double)stamBase + 100) * speed);
-
-                //Tamed Creature
-                if (bc_Creature.Controlled && bc_Creature.ControlMaster is PlayerMobile)
-                    v = (int)(((double)bc_Creature.RawDex + 100) * speed);
+               
+                v = (int)(((double)bc_Creature.RawDex + 100) * speed);
             }
 
             //Player
