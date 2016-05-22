@@ -825,7 +825,7 @@
     <Compile Include="Items\ItemRenameDeed.cs" />
     <Compile Include="Items\MaskDye.cs" />
     <Compile Include="Items\PetDye.cs" />
-    <Compile Include="Ships\Items\PirateSpyglass.cs" />
+    <Compile Include="Items\Spyglass.cs" />
     <Compile Include="Ships\Items\SpyglassMapViewItem.cs" />
     <Compile Include="Mobiles\_OLD\Events\Easter 2015\DecoyEasterEgg.cs" />
     <Compile Include="Mobiles\_OLD\Events\Easter 2015\EasterBasket.cs" />
@@ -3327,7 +3327,6 @@
     <Compile Include="Items\SkillItems\Tinkering\Hinge.cs" />
     <Compile Include="Items\SkillItems\Tinkering\SextantParts.cs" />
     <Compile Include="Items\SkillItems\Tinkering\Springs.cs" />
-    <Compile Include="Items\SkillItems\Tinkering\Spyglass.cs" />
     <Compile Include="Items\SkillItems\Tinkering\Utensils.cs" />
     <Compile Include="Items\SkillItems\Tools\BaseTool.cs" />
     <Compile Include="Items\SkillItems\Tools\Blowpipe.cs" />

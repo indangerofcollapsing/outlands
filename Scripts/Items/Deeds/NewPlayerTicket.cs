@@ -177,9 +177,8 @@ namespace Server.Items
 					case 1: item = new Sextant(); number = 1010494; break; // A sextant has been placed in your backpack.
 					//case 2: item = new HairRestylingDeed(); number = 501933; break; // A coupon for a free hair restyling has been placed in your backpack.
 					case 3: item = new Spellbook( 0xFFFFFFFF ); number = 1010495; break; // A spellbook with all 1st to 4th circle spells has been placed in your backpack.
-					case 4: item = new FireworksWand(); number = 501935; break; // A wand of fireworks has been placed in your backpack.
-					case 5: item = new Spyglass(); number = 501936; break; // A spyglass has been placed in your backpack.
-					case 6: item = new DyeTub(); item2 = new Dyes(); number = 501937; break; // The dyes and dye tub have been placed in your backpack.
+					case 4: item = new FireworksWand(); number = 501935; break; // A wand of fireworks has been placed in your backpack.					
+					case 5: item = new DyeTub(); item2 = new Dyes(); number = 501937; break; // The dyes and dye tub have been placed in your backpack.
 				}
 
 				if ( item != null )

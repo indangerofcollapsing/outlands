@@ -66,7 +66,7 @@ namespace Server.Engines.Craft
 				typeof( KeyRing ),
 				typeof( Candelabra ), typeof( Scales ),
 				typeof( Key ), typeof( Globe ),
-				typeof( Spyglass ), typeof( Lantern ),
+				typeof( Lantern ),
 				typeof( HeatingStand )
 			};
 
