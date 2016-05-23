@@ -8,6 +8,7 @@ using System.Linq;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Custom;
+using Server.Engines.Craft;
 
 namespace Server.Items
 {
@@ -81,18 +82,53 @@ namespace Server.Items
         {
         }
 
+        public void DetermineUses()
+        {
+            int uses = 50;
+
+            if (Quality == Quality.Exceptional)
+                uses += 25;
+
+            if (DisplayCrafter)
+                uses += 25;
+
+            switch (Resource)
+            {
+                case CraftResource.DullCopper: uses += 25; break;
+                case CraftResource.ShadowIron: uses += 25; break;
+                case CraftResource.Copper: uses += 25; break;
+                case CraftResource.Bronze: uses += 25; break;
+                case CraftResource.Gold: uses += 25; break;
+                case CraftResource.Agapite: uses += 25; break;
+                case CraftResource.Verite: uses += 25; break;
+                case CraftResource.Valorite: uses += 25; break;
+                case CraftResource.Lunite: uses += 25; break;
+            }
+
+            MaxCharges = uses;
+            Charges = uses;
+        }
+
         public override void QualityChange()
         {
+            DetermineUses();
         }
 
         public override void ResourceChange()
         {
+            Hue = CraftResources.GetCraftResourceHue(Resource);
+
+            DetermineUses();
         }  
 
         public override void OnSingleClick(Mobile from)
         {
-            base.OnSingleClick(from);
+            string spyglassName = "a spyglass";
 
+            if (Resource != CraftResource.None)
+                spyglassName = "a " + CraftResources.GetCraftResourceName(Resource).ToLower() + " spyglass";
+
+            LabelTo(from, spyglassName);
             LabelTo(from, "(" + m_Charges.ToString() + " Uses Remaining)");
         }
 
@@ -102,6 +138,12 @@ namespace Server.Items
 
             if (player == null)
                 return;
+
+            if (!IsChildOf(from.Backpack))
+            {
+                from.SendMessage("That item must be in your pack in order to use it.");
+                return;
+            }
 
             if (DateTime.UtcNow < NextUsageAllowed)
             {
@@ -194,6 +236,16 @@ namespace Server.Items
                 Delete();
         }
 
+        public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool, CraftItem craftItem, int resHue)
+        {
+            Quality = (Quality)quality;
+
+            if (makersMark)
+                DisplayCrafter = true;
+
+            return quality;
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -248,26 +300,123 @@ namespace Server.Items
 
             int WhiteTextHue = 2655;
 
-            AddPage(0);
+            AddImage(3, 3, 1248);               
 
-            AddImage(3, 3, 1247);
+            string spyglassName = "Spyglass";
 
-            AddLabel(173, 27, 2603, "Spyglass");
+            if (spyglass.Resource != CraftResource.None)            
+                spyglassName = CraftResources.GetCraftResourceName(spyglass.Resource) + " Spyglass";
 
             string usesText = spyglass.Charges.ToString() + " Uses Remaining";
+            int spyglassHue = spyglass.Hue;
+            
+            double spyglassQualityRangeBonus = 0;
+            double spyglassQualityAccuracyBonus = 0;
 
-            AddLabel(Utility.CenteredTextOffset(200, usesText), 47, WhiteTextHue, usesText);
+            double trackingSkillRangeBonus = 0;
+            double trackingSkillAccuracyBonus = 0;
 
+            double cartographySkillRangeBonus = 0;
+            double cartographySkillAccuracyBonus = 0;
+
+            double searchLengthRangeBonus = 0;
+            double searchLengthAccuracyBonus = 0;
+
+            double totalRangeModifiers = 0;
+            double totalAccuracyModifiers = 0;
+
+            if (spyglass.Quality == Quality.Exceptional)
+            {
+                spyglassQualityRangeBonus += .05;
+                spyglassQualityAccuracyBonus += .05;
+            }
+
+            switch (spyglass.Resource)
+            {
+                case CraftResource.DullCopper: 
+                    spyglassQualityRangeBonus += .05;
+                    spyglassQualityAccuracyBonus += .05;
+                break;
+
+                case CraftResource.ShadowIron:
+                    spyglassQualityRangeBonus += .10;
+                    spyglassQualityAccuracyBonus += .10;
+                break;
+
+                case CraftResource.Copper:
+                    spyglassQualityRangeBonus += .15;
+                    spyglassQualityAccuracyBonus += .15;
+                break;
+
+                case CraftResource.Bronze:
+                    spyglassQualityRangeBonus += .20;
+                    spyglassQualityAccuracyBonus += .20;
+                break;
+
+                case CraftResource.Gold:
+                    spyglassQualityRangeBonus += .25;
+                    spyglassQualityAccuracyBonus += .25;
+                break;
+
+                case CraftResource.Agapite:
+                    spyglassQualityRangeBonus += .30;
+                    spyglassQualityAccuracyBonus += .30;
+                break;
+
+                case CraftResource.Verite:
+                    spyglassQualityRangeBonus += .35;
+                    spyglassQualityAccuracyBonus += .35;
+                break;
+
+                case CraftResource.Valorite:
+                    spyglassQualityRangeBonus += .40;
+                    spyglassQualityAccuracyBonus += .40;
+                break;
+
+                case CraftResource.Lunite:
+                    spyglassQualityRangeBonus += .45;
+                    spyglassQualityAccuracyBonus += .45;
+                break; 
+            }
+
+            trackingSkillRangeBonus = (player.Skills[SkillName.Tracking].Value / 100) * .25;
+            trackingSkillAccuracyBonus = (player.Skills[SkillName.Tracking].Value / 100) * .25;
+
+            cartographySkillRangeBonus = (player.Skills[SkillName.Cartography].Value / 100) * .25;
+            cartographySkillAccuracyBonus = (player.Skills[SkillName.Cartography].Value / 100) * .25;
+
+            switch (searchLengthType)
+            {
+                case Spyglass.SearchLengthType.Short:
+                    searchLengthRangeBonus = 0;
+                    searchLengthAccuracyBonus = -.25;
+                break;
+
+                case Spyglass.SearchLengthType.Medium:
+                    searchLengthRangeBonus = .25;
+                    searchLengthAccuracyBonus = -.50;
+                break;
+
+                case Spyglass.SearchLengthType.Long:
+                    searchLengthRangeBonus = .50;
+                    searchLengthAccuracyBonus = -.75;
+                break;
+            }
+
+            //Guide
+            AddButton(14, 9, 2094, 2095, 1, GumpButtonType.Reply, 0);
+            AddLabel(40, 11, 149, "Guide");
+
+            AddLabel(Utility.CenteredTextOffset(165, spyglassName), 15, spyglassHue, spyglassName);
+            AddLabel(Utility.CenteredTextOffset(165, usesText), 40, WhiteTextHue, usesText);
+
+            //Search Type
             string searchText = "";
 
             int iconItemId = 0;
             int iconHue = 0;
             int iconOffsetX = 0;
             int iconOffsetY = 0;
-
-            //Guide
-            AddButton(14, 9, 2094, 2095, 1, GumpButtonType.Reply, 0);
-            AddLabel(40, 11, 149, "Guide");           
 
             //Search Type
             switch (m_SearchModeType)
@@ -300,13 +449,13 @@ namespace Server.Items
                 break;
             }
 
-            AddLabel(Utility.CenteredTextOffset(205, searchText), 79, 2550, searchText);
-            AddButton(114, 122, 4014, 4016, 2, GumpButtonType.Reply, 0);
-            AddItem(186 + iconOffsetX, 110 + iconOffsetY, iconItemId, iconHue);
-            AddButton(245, 122, 4005, 4007, 3, GumpButtonType.Reply, 0);
+            AddLabel(Utility.CenteredTextOffset(165, searchText), 70, 2550, searchText);
+            AddButton(70, 105, 4014, 4016, 2, GumpButtonType.Reply, 0);
+            AddItem(145 + iconOffsetX, 95 + iconOffsetY, iconItemId, iconHue);
+            AddButton(210, 105, 4005, 4007, 3, GumpButtonType.Reply, 0);
 
-            //Search Length
-            AddButton(138, 201, 2223, 2223, 4, GumpButtonType.Reply, 0);
+            //Search Variable
+            AddButton(95, 185, 2223, 2223, 4, GumpButtonType.Reply, 0);
 
             string lengthText = "";
 
@@ -315,42 +464,123 @@ namespace Server.Items
                 case Spyglass.SearchLengthType.Short:
                     lengthText = "Short Search";
 
-                    AddLabel(Utility.CenteredTextOffset(200, lengthText), 176, 2599, lengthText);
+                    AddLabel(Utility.CenteredTextOffset(160, lengthText), 157, 2599, lengthText);
 
-                    AddItem(172, 198, 5365);
+                    AddItem(130, 182, 5365);
                 break;
 
                 case Spyglass.SearchLengthType.Medium:
                     lengthText = "Medium Search";
 
-                    AddLabel(Utility.CenteredTextOffset(200, lengthText), 176, 2599, lengthText);
+                    AddLabel(Utility.CenteredTextOffset(160, lengthText), 157, 2599, lengthText);
 
-                    AddItem(165, 198, 5365);
-                    AddItem(178, 198, 5365);
+                    AddItem(122, 182, 5365);
+                    AddItem(137, 182, 5365);
                 break;
 
                 case Spyglass.SearchLengthType.Long:
-                    lengthText = "Long Search";
+                    lengthText = "Large Search";
 
-                    AddLabel(Utility.CenteredTextOffset(200, lengthText), 176, 2599, lengthText);
+                    AddLabel(Utility.CenteredTextOffset(160, lengthText), 157, 2599, lengthText);
 
-                    AddItem(159, 198, 5365);
-                    AddItem(172, 198, 5365);
-                    AddItem(185, 198, 5365);
+                    AddItem(115, 182, 5365);
+                    AddItem(130, 182, 5365);
+                    AddItem(145, 182, 5365);
                 break;
             }
 
-            AddButton(232, 201, 2224, 2224, 5, GumpButtonType.Reply, 0);
+            AddButton(195, 185, 2224, 2224, 5, GumpButtonType.Reply, 0);
+
+            //Modifiers Text
+            AddLabel(41, 230, 149, "Spyglass Quality");  
+            AddLabel(58, 250, 149, "Tracking Skill");
+            AddLabel(34, 270, 149, "Cartography Skill");
+            AddLabel(51, 290, 149, "Search Length");
+            AddLabel(45, 310, 52, "Total Modifiers");
+
+            AddLabel(169, 210, 2114, "Range");
+            AddLabel(225, 210, 2577, "Accuracy");
+
+            totalRangeModifiers = spyglassQualityRangeBonus + trackingSkillRangeBonus + cartographySkillRangeBonus + searchLengthRangeBonus;
+            totalAccuracyModifiers = spyglassQualityAccuracyBonus + trackingSkillAccuracyBonus + cartographySkillAccuracyBonus + searchLengthAccuracyBonus;
+
+            string spyglassQualityRangeBonusText = "";
+            if (spyglassQualityRangeBonus >= 0)
+                spyglassQualityRangeBonusText = "+";           
+            spyglassQualityRangeBonusText += Utility.CreateDecimalPercentageString(spyglassQualityRangeBonus, 1);
+
+            string spyglassQualityAccuracyBonusText = "";
+            if (spyglassQualityAccuracyBonus >= 0)
+                spyglassQualityAccuracyBonusText = "+";
+            spyglassQualityAccuracyBonusText += Utility.CreateDecimalPercentageString(spyglassQualityAccuracyBonus, 1);
+
+            string trackingSkillRangeBonusText = "";
+            if (trackingSkillRangeBonus >= 0)
+                trackingSkillRangeBonusText = "+";
+            trackingSkillRangeBonusText += Utility.CreateDecimalPercentageString(trackingSkillRangeBonus, 1);
+
+            string trackingSkillAccuracyBonusText = "";
+            if (trackingSkillAccuracyBonus >= 0)
+                trackingSkillAccuracyBonusText = "+";
+            trackingSkillAccuracyBonusText += Utility.CreateDecimalPercentageString(trackingSkillAccuracyBonus, 1);
+
+            string cartographySkillRangeBonusText = "";
+            if (cartographySkillRangeBonus >= 0)
+                cartographySkillRangeBonusText = "+";
+            cartographySkillRangeBonusText += Utility.CreateDecimalPercentageString(cartographySkillRangeBonus, 1);
+
+            string cartographySkillAccuracyBonusText = "";
+            if (cartographySkillAccuracyBonus >= 0)
+                cartographySkillAccuracyBonusText = "+";
+            cartographySkillAccuracyBonusText += Utility.CreateDecimalPercentageString(cartographySkillAccuracyBonus, 1);
+
+            string searchLengthRangeBonusText = "";
+            if (searchLengthRangeBonus >= 0)
+                searchLengthRangeBonusText = "+";
+            searchLengthRangeBonusText += Utility.CreateDecimalPercentageString(searchLengthRangeBonus, 1);
+
+            string searchLengthAccuracyBonusText = "";
+            if (searchLengthAccuracyBonus >= 0)
+                searchLengthAccuracyBonusText = "+";
+            searchLengthAccuracyBonusText += Utility.CreateDecimalPercentageString(searchLengthAccuracyBonus, 1);
+
+            //Total
+            string totalRangeModifiersText = "";
+            if (totalRangeModifiers >= 0)
+                totalRangeModifiersText = "+";
+            totalRangeModifiersText += Utility.CreateDecimalPercentageString(totalRangeModifiers, 1);
+
+            string totalAccuracyModifiersText = "";
+            if (totalAccuracyModifiers >= 0)
+                totalAccuracyModifiersText = "+";
+            totalAccuracyModifiersText += Utility.CreateDecimalPercentageString(totalAccuracyModifiers, 1);
+
+            AddLabel(168, 230, WhiteTextHue, spyglassQualityRangeBonusText);
+            AddLabel(233, 230, WhiteTextHue, spyglassQualityAccuracyBonusText);
+
+            AddLabel(168, 250, WhiteTextHue, trackingSkillRangeBonusText);
+            AddLabel(233, 250, WhiteTextHue, trackingSkillAccuracyBonusText);
+
+            AddLabel(168, 270, WhiteTextHue, cartographySkillRangeBonusText);
+            AddLabel(233, 270, WhiteTextHue, cartographySkillAccuracyBonusText);
+
+            AddLabel(168, 290, WhiteTextHue, searchLengthRangeBonusText);
+            AddLabel(233, 290, WhiteTextHue, searchLengthAccuracyBonusText);
+
+            AddLabel(168, 310, 52, totalRangeModifiersText);
+            AddLabel(233, 310, 52, totalAccuracyModifiersText);
 
             //Begin Search
-            AddLabel(173, 234, 2600, "Search");
-            AddButton(180, 252, 2151, 2151, 6, GumpButtonType.Reply, 0);
+            AddLabel(115, 344, 169, "Begin Search");
+            AddItem(101, 371, 5365, 0);           
+            AddButton(140, 366, 2151, 2151, 6, GumpButtonType.Reply, 0);
         }
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
             if (m_Spyglass == null || m_Player == null) return;
             if (m_Spyglass.Deleted) return;
+            if (!m_Player.Alive) return;
 
             bool closeGump = true;
 
@@ -419,10 +649,23 @@ namespace Server.Items
 
                 //Begin Search
                 case 6:
-                    m_Spyglass.LastSearchMode = m_SearchModeType;
-                    m_Spyglass.LastSearchLength = m_SearchLengthType;
+                    if (m_Player.Backpack != null)
+                    {
+                        if (!m_Spyglass.IsChildOf(m_Player.Backpack))
+                        {
+                            m_Player.SendMessage("That item must be in your pack in order to use it.");
 
-                    m_Spyglass.StartSearch(m_Player, m_SearchModeType, m_SearchLengthType);                    
+                            closeGump = false;
+                        }
+
+                        else
+                        {
+                            m_Spyglass.LastSearchMode = m_SearchModeType;
+                            m_Spyglass.LastSearchLength = m_SearchLengthType;
+
+                            m_Spyglass.StartSearch(m_Player, m_SearchModeType, m_SearchLengthType);
+                        }
+                    }
                 break;
             }
 

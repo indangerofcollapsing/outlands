@@ -497,6 +497,15 @@
     <Compile Include="Items\Special\Veteran Rewards\TreeStump.cs" />
     <Compile Include="Items\Special\Veteran Rewards\WallBanner.cs" />
     <Compile Include="Items\Special\Veteran Rewards\WeaponEngravingTool.cs" />
+    <Compile Include="Items\Spyglasses\CopperSpyglass.cs" />
+    <Compile Include="Items\Spyglasses\BronzeSpyglass.cs" />
+    <Compile Include="Items\Spyglasses\AgapiteSpyglass.cs" />
+    <Compile Include="Items\Spyglasses\LuniteSpyglass.cs" />
+    <Compile Include="Items\Spyglasses\ValoriteSpyglass.cs" />
+    <Compile Include="Items\Spyglasses\VeriteSpyglass.cs" />
+    <Compile Include="Items\Spyglasses\GoldSpyglass.cs" />
+    <Compile Include="Items\Spyglasses\ShadowIronSpyglass.cs" />
+    <Compile Include="Items\Spyglasses\DullCopperSpyglass.cs" />
     <Compile Include="Items\ValentinesGift.cs" />
     <Compile Include="Items\ValentinesGift1.cs" />
     <Compile Include="Items\Weapons\Harvest\DiamondPickaxe.cs" />
@@ -825,7 +834,7 @@
     <Compile Include="Items\ItemRenameDeed.cs" />
     <Compile Include="Items\MaskDye.cs" />
     <Compile Include="Items\PetDye.cs" />
-    <Compile Include="Items\Spyglass.cs" />
+    <Compile Include="Items\Spyglasses\Spyglass.cs" />
     <Compile Include="Ships\Items\SpyglassMapViewItem.cs" />
     <Compile Include="Mobiles\_OLD\Events\Easter 2015\DecoyEasterEgg.cs" />
     <Compile Include="Mobiles\_OLD\Events\Easter 2015\EasterBasket.cs" />

@@ -437,35 +437,54 @@ namespace Server.Items
 
         public static string GetCraftResourceName(CraftResource craftResource)
         {
-            switch (craftResource)
+            string resourceName = "";
+
+            foreach (CraftResourceInfo craftResourceInfo in m_MetalInfo)
             {
-                case CraftResource.Iron: return "Iron"; break;
-                case CraftResource.DullCopper: return "Dull Copper"; break;
-                case CraftResource.ShadowIron: return "Shadow Iron"; break;
-                case CraftResource.Copper: return "Copper"; break;
-                case CraftResource.Bronze: return "Bronze"; break;
-                case CraftResource.Gold: return "Gold"; break;
-                case CraftResource.Agapite: return "Agapite"; break;
-                case CraftResource.Verite: return "Verite"; break;
-                case CraftResource.Valorite: return "Valorite"; break;
-                case CraftResource.Lunite: return "Lunite"; break;
-
-                case CraftResource.RegularLeather: return "Leather"; break;
-                case CraftResource.SpinedLeather: return "Spined"; break;
-                case CraftResource.HornedLeather: return "Horned"; break;
-                case CraftResource.BarbedLeather: return "Barbed"; break;
-
-                case CraftResource.RegularWood: return "Wood"; break;
-                case CraftResource.OakWood: return "Oak"; break;
-                case CraftResource.AshWood: return "Ash"; break;
-                case CraftResource.YewWood: return "Yew"; break;
-                case CraftResource.Heartwood: return "Heartwood"; break;
-                case CraftResource.Bloodwood: return "Bloodwood"; break;
-                case CraftResource.Frostwood: return "Frostwood"; break;
+                if (craftResourceInfo.Resource == craftResource)
+                    return craftResourceInfo.Name;
             }
 
-            return null;
+            foreach (CraftResourceInfo craftResourceInfo in m_LeatherInfo)
+            {
+                if (craftResourceInfo.Resource == craftResource)
+                    return craftResourceInfo.Name;
+            }
+
+            foreach (CraftResourceInfo craftResourceInfo in m_WoodInfo)
+            {
+                if (craftResourceInfo.Resource == craftResource)
+                    return craftResourceInfo.Name;
+            }
+
+            return resourceName;
         }
+
+        public static int GetCraftResourceHue(CraftResource craftResource)
+        {
+            int resourceHue = 0;
+
+            foreach (CraftResourceInfo craftResourceInfo in m_MetalInfo)
+            {
+                if (craftResourceInfo.Resource == craftResource)
+                    return craftResourceInfo.Hue;
+            }
+
+            foreach (CraftResourceInfo craftResourceInfo in m_LeatherInfo)
+            {
+                if (craftResourceInfo.Resource == craftResource)
+                    return craftResourceInfo.Hue;
+            }
+
+            foreach (CraftResourceInfo craftResourceInfo in m_WoodInfo)
+            {
+                if (craftResourceInfo.Resource == craftResource)
+                    return craftResourceInfo.Hue;
+            }
+
+            return resourceHue;
+        }
+
 
 		private static CraftResourceInfo[] m_MetalInfo = new CraftResourceInfo[]
 			{
@@ -487,15 +506,7 @@ namespace Server.Items
 				new CraftResourceInfo( 2124,  1049354, "Spined",		CraftAttributeInfo.Spined,		CraftResource.SpinedLeather,	typeof( SpinedLeather )),
 				new CraftResourceInfo( 1779,  1049355, "Horned",		CraftAttributeInfo.Horned,		CraftResource.HornedLeather,	typeof( HornedLeather )),
 				new CraftResourceInfo( 1443,  1049356, "Barbed",		CraftAttributeInfo.Barbed,		CraftResource.BarbedLeather,	typeof( BarbedLeather ))
-			};
-
-		private static CraftResourceInfo[] m_AOSLeatherInfo = new CraftResourceInfo[]
-			{
-				new CraftResourceInfo( 0x000, 1049353, "Normal",		CraftAttributeInfo.Blank,		CraftResource.RegularLeather,	typeof( Leather )),
-				new CraftResourceInfo( 0x8AC, 1049354, "Spined",		CraftAttributeInfo.Spined,		CraftResource.SpinedLeather,	typeof( SpinedLeather )),
-				new CraftResourceInfo( 0x845, 1049355, "Horned",		CraftAttributeInfo.Horned,		CraftResource.HornedLeather,	typeof( HornedLeather )),
-				new CraftResourceInfo( 0x851, 1049356, "Barbed",		CraftAttributeInfo.Barbed,		CraftResource.BarbedLeather,	typeof( BarbedLeather )),
-			};
+			};		
 
 		private static CraftResourceInfo[] m_WoodInfo = new CraftResourceInfo[]
 			{
@@ -506,6 +517,14 @@ namespace Server.Items
 				new CraftResourceInfo( 0x4A9, 1072536, "Heartwood",		CraftAttributeInfo.Heartwood,	CraftResource.Heartwood,	typeof( HeartwoodLog ),	typeof( HeartwoodBoard ) ),
 				new CraftResourceInfo( 0x4AA, 1072538, "Bloodwood",		CraftAttributeInfo.Bloodwood,	CraftResource.Bloodwood,	typeof( BloodwoodLog ),	typeof( BloodwoodBoard ) ),
 				new CraftResourceInfo( 0x47F, 1072539, "Frostwood",		CraftAttributeInfo.Frostwood,	CraftResource.Frostwood,	typeof( FrostwoodLog ),	typeof( FrostwoodBoard ) )
+			};
+
+        private static CraftResourceInfo[] m_AOSLeatherInfo = new CraftResourceInfo[]
+			{
+				new CraftResourceInfo( 0x000, 1049353, "Normal",		CraftAttributeInfo.Blank,		CraftResource.RegularLeather,	typeof( Leather )),
+				new CraftResourceInfo( 0x8AC, 1049354, "Spined",		CraftAttributeInfo.Spined,		CraftResource.SpinedLeather,	typeof( SpinedLeather )),
+				new CraftResourceInfo( 0x845, 1049355, "Horned",		CraftAttributeInfo.Horned,		CraftResource.HornedLeather,	typeof( HornedLeather )),
+				new CraftResourceInfo( 0x851, 1049356, "Barbed",		CraftAttributeInfo.Barbed,		CraftResource.BarbedLeather,	typeof( BarbedLeather )),
 			};
 
 		/// <summary>

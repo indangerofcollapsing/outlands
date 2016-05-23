@@ -53,14 +53,20 @@ namespace Server.Engines.Craft
 
         private static Type[] m_TinkerColorables = new Type[]
 		{
-			typeof( ForkLeft ), typeof( ForkRight ),
-			typeof( SpoonLeft ), typeof( SpoonRight ),
-			typeof( KnifeLeft ), typeof( KnifeRight ),
+			typeof( ForkLeft ), 
+            typeof( ForkRight ),
+			typeof( SpoonLeft ), 
+            typeof( SpoonRight ),
+			typeof( KnifeLeft ),
+            typeof( KnifeRight ),
 			typeof( Plate ),
-			typeof( Goblet ), typeof( PewterMug ),
+			typeof( Goblet ),
+            typeof( PewterMug ),
 			typeof( KeyRing ),
-			typeof( Candelabra ), typeof( Scales ),
-			typeof( Key ), typeof( Globe ),
+			typeof( Candelabra ),
+            typeof( Scales ),
+			typeof( Key ), 
+            typeof( Globe ),
 			typeof( Lantern ),
 			typeof( HeatingStand )
 		};
@@ -271,47 +277,47 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
 
-            index = AddCraft(1, typeof(Spyglass), "Spyglasses", "Dull Copper Spyglass", 75, 100, typeof(DullCopperIngot), "Dull Copper Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            index = AddCraft(1, typeof(DullCopperSpyglass), "Spyglasses", "Dull Copper Spyglass", 75, 100, typeof(DullCopperIngot), "Dull Copper Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
 
-            index = AddCraft(1, typeof(Spyglass), "Spyglasses", "Shadow Iron Spyglass", 80, 105, typeof(ShadowIronIngot), "Shadow Iron Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            index = AddCraft(1, typeof(ShadowIronSpyglass), "Spyglasses", "Shadow Iron Spyglass", 80, 105, typeof(ShadowIronIngot), "Shadow Iron Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
 
-            index = AddCraft(1, typeof(Spyglass), "Spyglasses", "Copper Spyglass", 80, 105, typeof(CopperIngot), "Copper Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            index = AddCraft(1, typeof(CopperSpyglass), "Spyglasses", "Copper Spyglass", 80, 105, typeof(CopperIngot), "Copper Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
 
-            index = AddCraft(1, typeof(Spyglass), "Spyglasses", "Bronze Spyglass", 85, 110, typeof(BronzeIngot), "Bronze Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            index = AddCraft(1, typeof(BronzeSpyglass), "Spyglasses", "Bronze Spyglass", 85, 110, typeof(BronzeIngot), "Bronze Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
 
-            index = AddCraft(1, typeof(Spyglass), "Spyglasses", "Gold Spyglass", 85, 110, typeof(GoldIngot), "Gold Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            index = AddCraft(1, typeof(GoldSpyglass), "Spyglasses", "Gold Spyglass", 85, 110, typeof(GoldIngot), "Gold Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
 
-            index = AddCraft(1, typeof(Spyglass), "Spyglasses", "Agapite Spyglass", 90, 115, typeof(AgapiteIngot), "Agapite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            index = AddCraft(1, typeof(AgapiteSpyglass), "Spyglasses", "Agapite Spyglass", 90, 115, typeof(AgapiteIngot), "Agapite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
 
-            index = AddCraft(1, typeof(Spyglass), "Spyglasses", "Verite Spyglass", 90, 115, typeof(VeriteIngot), "Verite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            index = AddCraft(1, typeof(VeriteSpyglass), "Spyglasses", "Verite Spyglass", 90, 115, typeof(VeriteIngot), "Verite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
 
-            index = AddCraft(1, typeof(Spyglass), "Spyglasses", "Valorite Spyglass", 95, 120, typeof(ValoriteIngot), "Valorite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            index = AddCraft(1, typeof(ValoriteSpyglass), "Spyglasses", "Valorite Spyglass", 95, 120, typeof(ValoriteIngot), "Valorite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
 
-            index = AddCraft(1, typeof(Spyglass), "Spyglasses", "Lunite Spyglass", 95, 120, typeof(LuniteIngot), "Lunite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
+            index = AddCraft(1, typeof(LuniteSpyglass), "Spyglasses", "Lunite Spyglass", 95, 120, typeof(LuniteIngot), "Lunite Ingot", 10, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Hinge), "Hinge", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(Springs), "Springs", 1, "You do not have the neccessary ingredients needed to craft that.");
             AddRes(index, typeof(ShatteredCrystal), "Shattered Crystal", 1, "You do not have the neccessary ingredients needed to craft that.");
