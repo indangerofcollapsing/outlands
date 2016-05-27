@@ -651,8 +651,6 @@ namespace Server
 
     public class Item : IEntity, IHued, IComparable<Item>, ISerializable, ISpawnable
     {
-        public static int Instances = 0;
-
         // IPY ARENA HUE
         [Hue, CommandProperty(AccessLevel.GameMaster)]
         public int OriginalHue { set; get; }
@@ -3983,7 +3981,6 @@ namespace Server
             }
 
             World.RemoveItem(this);
-            Instances--;
 
             OnAfterDelete();
 
@@ -5353,7 +5350,6 @@ namespace Server
             SetLastMoved();
 
             World.AddItem(this);
-            Instances++;
 
             Type ourType = this.GetType();
             m_TypeRef = World.m_ItemTypes.IndexOf(ourType);
