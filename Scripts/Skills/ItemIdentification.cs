@@ -2,6 +2,7 @@ using System;
 using Server;
 using Server.Targeting;
 using Server.Mobiles;
+using Server.Gumps;
 
 namespace Server.Items
 {
@@ -72,6 +73,50 @@ namespace Server.Items
                 else                
                     from.SendLocalizedMessage(500353); // You are not certain...                
             }
+        }
+    }
+
+    public class ItemIdGump : Gump
+    {
+        PlayerMobile m_Player;
+        Item m_Item;
+
+        public ItemIdGump(PlayerMobile player, Item item): base(50, 50)
+        {
+            if (player == null || item == null) return;
+            if (item.Deleted) return;
+
+            m_Player = player;
+            m_Item = item;
+
+            Closable = true;
+            Disposable = true;
+            Dragable = true;
+            Resizable = false;
+
+            AddPage(0);
+
+            AddPage(0);
+            AddImage(135, 12, 103, 2401);
+            AddImage(7, 12, 103, 2401);
+            AddBackground(19, 21, 246, 78, 9270);
+            AddLabel(316, 18, 2401, @"Basic");
+            AddLabel(160, 39, 0, @"Item Rarity");
+            AddLabel(162, 59, 1259, @"Ultra Rare");
+            AddLabel(71, 92, 0, @"Total in World:");
+            AddLabel(171, 92, 149, @"50");
+            AddLabel(69, 4, 149, @"Emperor Dragon Trophy");
+            AddLabel(316, 43, 0, @"Common");
+            AddLabel(315, 67, 169, @"Uncommon");
+            AddLabel(316, 93, 2603, @"Rare");
+            AddLabel(316, 118, 2594, @"Very Rare");
+            AddLabel(316, 142, 1259, @"Ultra Rare");
+            AddLabel(56, 39, 0, @"Item Type");
+            AddLabel(63, 59, 149, @"Reward");
+        }
+
+        public override void OnResponse(Network.NetState sender, RelayInfo info)
+        {           
         }
     }
 }
