@@ -60,7 +60,7 @@ namespace Server.Mobiles
 
 		protected abstract List<SBInfo> SBInfos { get; }
 
-        public override bool HasNormalLoot { get { return false; } }
+        public override LootDropModeType LootDropMode { get { return LootDropModeType.None; } }
         public override bool AllowParagon { get { return false; } }
 
 		private Dictionary<Serial, Budget> m_Budgets = new Dictionary<Serial,Budget>();

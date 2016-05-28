@@ -13,7 +13,6 @@ namespace Server.Mobiles
 		public Furtrader() : base( "the furtrader" )
 		{
 			SetSkill( SkillName.Camping, 55.0, 78.0 );
-			//SetSkill( SkillName.Alchemy, 60.0, 83.0 );
 			SetSkill( SkillName.AnimalLore, 85.0, 100.0 );
 			SetSkill( SkillName.Cooking, 45.0, 68.0 );
 			SetSkill( SkillName.Tracking, 36.0, 68.0 );

@@ -19,14 +19,16 @@ namespace Server.Mobiles
 		public class InternalBuyInfo : List<GenericBuyInfo> 
 		{ 
 			public InternalBuyInfo() 
-			{ 
+			{
+                Add(new GenericBuyInfo(typeof(SkinningKnife), 14, 20, 0xEC4, 0));
 			} 
 		} 
 
 		public class InternalSellInfo : GenericSellInfo 
 		{ 
 			public InternalSellInfo() 
-			{ 
+			{
+                Add(typeof(Hide), Hide.GoldValue); 
 			} 
 		} 
 	} 

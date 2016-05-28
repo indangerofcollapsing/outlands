@@ -19,7 +19,8 @@ namespace Server.Mobiles
 		public class InternalBuyInfo : List<GenericBuyInfo> 
 		{ 
 			public InternalBuyInfo() 
-			{ 				
+			{
+                Add(new GenericBuyInfo(typeof(SkinningKnife), 14, 20, 0xEC4, 0));
 				Add( new GenericBuyInfo( typeof( ThighBoots ), 56, 10, 0x1711, 0 ) ); 
 			} 
 		} 
@@ -27,9 +28,9 @@ namespace Server.Mobiles
 		public class InternalSellInfo : GenericSellInfo 
 		{ 
 			public InternalSellInfo() 
-			{ 
-                //Add( typeof( Hides ), 2 ); 
-				Add( typeof( ThighBoots ), 28 ); 
+			{
+                Add(typeof(ThighBoots), 28); 
+                Add(typeof( Hide ), Hide.GoldValue ); 				
 			} 
 		} 
 	} 

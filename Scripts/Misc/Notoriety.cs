@@ -370,7 +370,7 @@ namespace Server.Misc
                 if (Custom.Hotspot.InHotspotArea(target.Location, target.Map, true))
                     return Notoriety.CanBeAttacked;
 
-                if (target.m_IsBones)
+                if (target.IsBones)
                     return Notoriety.CanBeAttacked;
 
                 return Notoriety.Innocent;

@@ -76,7 +76,7 @@ namespace Server.Mobiles
         public override AISubGroupType AIBaseSubGroup { get { return AISubGroupType.Melee; } }
         public override double BaseUniqueDifficultyScalar { get { return 1.0; } }
 
-        public override bool HasNormalLoot { get { return false; } }
+        public override LootDropModeType LootDropMode { get { return LootDropModeType.Hides; } }
         public override MeatType MeatType { get { return MeatType.Meat; } }
         public override int MeatAmount { get { return 5; } }
         public override int ResourceAmount { get { return 10; } }

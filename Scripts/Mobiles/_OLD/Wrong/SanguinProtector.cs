@@ -74,8 +74,8 @@ namespace Server.Mobiles
 
             Effects.SendLocationEffect(Location, Map, 0x376A, 10, 1);
 
-            var goldItem = new Gold(ModifiedGoldWorth());
-            goldItem.MoveToWorld(Location, Map);
+            Gold gold = new Gold(GoldWorth);
+            gold.MoveToWorld(Location, Map);
 
             Delete();            
 

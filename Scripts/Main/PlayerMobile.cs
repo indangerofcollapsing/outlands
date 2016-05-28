@@ -948,6 +948,10 @@ namespace Server.Mobiles
 
         public DateTime m_LastTrapPouchUse = DateTime.UtcNow;
 
+        public Type m_LastItemIdWorldItemCountSearchType = null;
+        public DateTime m_LastItemIdWorldItemCountSearch = DateTime.UtcNow;
+        public int m_LastItemIdWorldItemCountSearchCount = 0;
+
         public DateTime m_LastPassiveTamingSkillGain = DateTime.MinValue;
         public DateTime m_LastExperienceGain = DateTime.MinValue; 
 

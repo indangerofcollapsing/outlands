@@ -6,7 +6,7 @@ namespace Server.Mobiles
 {
 	public class Ninja : BaseCreature
 	{
-        public override bool HasNormalLoot { get { return false; } }
+        public override LootDropModeType LootDropMode { get { return LootDropModeType.None; } }
         public override bool AllowParagon { get { return false; } }
 		public override bool CanTeach{ get{ return true; } }
 		public override bool ClickTitle{ get{ return false; } }

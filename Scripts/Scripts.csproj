@@ -3123,8 +3123,8 @@
     <Compile Include="Items\Resources\Tailor\Cloth.cs" />
     <Compile Include="Items\Resources\Tailor\Cotton.cs" />
     <Compile Include="Items\Resources\Tailor\Flax.cs" />
-    <Compile Include="Items\Resources\Tailor\Hides.cs" />
-    <Compile Include="Items\Resources\Tailor\Leathers.cs" />
+    <Compile Include="Items\Hide.cs" />
+    <Compile Include="Items\Resources\Tailor\Leather.cs" />
     <Compile Include="Items\Resources\Tailor\UncutCloth.cs" />
     <Compile Include="Items\Resources\Tailor\Wool.cs" />
     <Compile Include="Items\Resources\Tailor\YarnsAndThreads.cs" />

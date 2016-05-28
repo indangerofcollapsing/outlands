@@ -822,6 +822,9 @@ namespace Server
 
         public static int CenteredTextOffset(int textCenterX, string text)
         {
+            if (text == null)
+                text = "";
+
             int textOffsetX = (int)(Math.Round(textCenterX - ((double)text.Length * 3.6)));
 
             return textOffsetX;

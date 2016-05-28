@@ -7,9 +7,9 @@ namespace Server.Mobiles
 {
 	public class Gypsy : BaseCreature
 	{
-
-        public override bool HasNormalLoot { get { return false; } }
+        public override LootDropModeType LootDropMode { get { return LootDropModeType.None; } }
         public override bool AllowParagon { get { return false; } }
+
 		[Constructable]
 		public Gypsy()
 			: base( AIType.AI_Animal, FightMode.None, 10, 1, 0.2, 0.4 )

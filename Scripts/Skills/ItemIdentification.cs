@@ -3,6 +3,7 @@ using Server;
 using Server.Targeting;
 using Server.Mobiles;
 using Server.Gumps;
+using System.Globalization;
 
 namespace Server.Items
 {
@@ -29,59 +30,88 @@ namespace Server.Items
                 AllowNonlocal = true;
             }
 
-            protected override void OnTarget(Mobile from, object o)
+            protected override void OnTarget(Mobile from, object target)
             {
-                if (o is Container && from.Skills.ItemID.Base >= 100.0)
+                PlayerMobile player = from as PlayerMobile;
+
+                if (player == null)
+                    return;
+
+                if (target is Item)
                 {
-                    var container = o as Container;
+                    Item item = target as Item;
 
-                    foreach (var item in container.Items)
-                    {
-                        if (item is BaseWeapon)
-                            ((BaseWeapon)item).Identified = true;
-
-                        else if (item is BaseArmor)
-                            ((BaseArmor)item).Identified = true;
-                    }
-
-                    from.SendMessage("You identify the bag of goods.");
-                }
-
-                else if (o is Item)
-                {
                     from.NextSkillTime = Core.TickCount + (int)(SkillCooldown.ItemIDCooldown * 1000);
 
-                    if (from.CheckTargetSkill(SkillName.ItemID, o, 0, 100, 1.0))
+                    bool useGump = true;
+                    bool success = false;
+
+                    /*
+                    if (item is BaseWeapon || item is BaseArmor || item is BaseInstrument)
                     {
-                        if (o is BaseWeapon)
-                            ((BaseWeapon)o).Identified = true;
+                        if (!item.DecorativeEquipment)
+                            useGump = false;
+                    }
+                    */
 
-                        else if (o is BaseArmor)
-                            ((BaseArmor)o).Identified = true;
+                    if (from.CheckTargetSkill(SkillName.ItemID, 0, 120, 1.0))
+                        success = true;
 
-                        if (!Core.AOS)
-                            ((Item)o).OnSingleClick(from);
+                    if (success)
+                    {
+                        if (item is Container)
+                        {
+                            Container container = item as Container;
+
+                            if (player.Skills[SkillName.ItemID].Value >= 105 || player.AccessLevel > AccessLevel.Player)
+                            {
+                                foreach (Item containerItem in container.Items)
+                                {
+                                    containerItem.Identified = true;
+                                }
+                            }
+
+                            else                            
+                                player.SendMessage("An Item Identification skill of 105 or higher is required to identify all items held within a container.");                                                   
+                        }
+                        
+                        item.Identified = true;
                     }
 
-                    else                    
-                        from.SendLocalizedMessage(500353); // You are not certain...                    
+                    else
+                    {
+                        player.SendMessage("You are not certain.");
+                        return;
+                    }
+
+                    if (useGump)
+                    {
+                        player.SendSound(0x055);
+                        player.CloseGump(typeof(ItemIdGump));
+                        player.SendGump(new ItemIdGump(player, item, success, false, false));
+                    }
                 }
 
-                else if (o is Mobile)                
-                    ((Mobile)o).OnSingleClick(from);
-                
-                else                
-                    from.SendLocalizedMessage(500353); // You are not certain...                
+                else
+                {
+                    from.SendMessage("That is not an item.");
+                    return;
+                }
             }
         }
     }
 
     public class ItemIdGump : Gump
     {
-        PlayerMobile m_Player;
-        Item m_Item;
+        public PlayerMobile m_Player;
+        public Item m_Item;
 
-        public ItemIdGump(PlayerMobile player, Item item): base(50, 50)
+        public bool m_Success;
+
+        public bool m_ShowRarity;
+        public bool m_ShowWorldItemCount;
+
+        public ItemIdGump(PlayerMobile player, Item item, bool success, bool overrideShowRarity, bool overrideShowWorldItemCount): base(200, 25)
         {
             if (player == null || item == null) return;
             if (item.Deleted) return;
@@ -89,34 +119,130 @@ namespace Server.Items
             m_Player = player;
             m_Item = item;
 
+            m_Success = success;
+
+            m_ShowRarity = overrideShowRarity;
+            m_ShowWorldItemCount = overrideShowWorldItemCount;
+            
             Closable = true;
             Disposable = true;
             Dragable = true;
             Resizable = false;
 
-            AddPage(0);
+            int worldItemCount = 0;
+
+            bool showRarity = false;
+            bool showWorldItemCount = false;
+
+            bool conductWorldItemQuery = true;
+
+            double itemIDSkill = m_Player.Skills[SkillName.ItemID].Value;
+
+            Type itemType = m_Item.GetType();
+
+            if ((success && itemIDSkill >= 110) || m_ShowRarity || m_Player.AccessLevel > AccessLevel.Player)
+                showRarity = true;
+
+            if ((success && itemIDSkill >= 120) || m_ShowWorldItemCount || m_Player.AccessLevel > AccessLevel.Player)
+            {
+                showWorldItemCount = true;
+
+                if (m_Player.AccessLevel == AccessLevel.Player && itemType == m_Player.m_LastItemIdWorldItemCountSearchType && itemType != null)                
+                {
+                    if (DateTime.UtcNow < m_Player.m_LastItemIdWorldItemCountSearch + TimeSpan.FromSeconds(10))
+                        conductWorldItemQuery = false;
+                }               
+
+                if (conductWorldItemQuery)
+                {
+                    foreach (Item worldItem in World.Items.Values)
+                    {
+                        if (worldItem.GetType() == itemType)
+                            worldItemCount++;
+                    }
+
+                    m_Player.m_LastItemIdWorldItemCountSearchCount = worldItemCount;
+                    m_Player.m_LastItemIdWorldItemCountSearchType = itemType;
+                    m_Player.m_LastItemIdWorldItemCountSearch = DateTime.UtcNow;
+                }
+
+                else
+                    worldItemCount = m_Player.m_LastItemIdWorldItemCountSearchCount;
+            }
+
+            string itemName = m_Item.Name;
+
+            if (itemName == null || itemName == "")
+            {
+                itemName = "Item Details";
+
+                m_Item.OnSingleClick(m_Player);
+            }
+
+            if (itemName != "")
+                itemName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(itemName);
+
+            string typeText = Item.GetItemGroupTypeName(m_Item.ItemGroup);
+            string rarityText = Item.GetItemRarityName(m_Item.ItemRarity);
+            int rarityHue = Item.GetItemRarityTextHue(m_Item.ItemRarity);
+
+            string totalCountText = Utility.CreateCurrencyString(worldItemCount);
+
+            if (!showRarity)
+                rarityText = "?";
+     
+            if (!showWorldItemCount)
+                totalCountText = "?";
+
+            m_ShowRarity = showRarity;
+            m_ShowWorldItemCount = showWorldItemCount;
+
+            int WhiteTextHue = 2655;
 
             AddPage(0);
+
             AddImage(135, 12, 103, 2401);
             AddImage(7, 12, 103, 2401);
             AddBackground(19, 21, 246, 78, 9270);
-            AddLabel(316, 18, 2401, @"Basic");
-            AddLabel(160, 39, 0, @"Item Rarity");
-            AddLabel(162, 59, 1259, @"Ultra Rare");
-            AddLabel(71, 92, 0, @"Total in World:");
-            AddLabel(171, 92, 149, @"50");
-            AddLabel(69, 4, 149, @"Emperor Dragon Trophy");
-            AddLabel(316, 43, 0, @"Common");
-            AddLabel(315, 67, 169, @"Uncommon");
-            AddLabel(316, 93, 2603, @"Rare");
-            AddLabel(316, 118, 2594, @"Very Rare");
-            AddLabel(316, 142, 1259, @"Ultra Rare");
-            AddLabel(56, 39, 0, @"Item Type");
-            AddLabel(63, 59, 149, @"Reward");
+
+            AddButton(6, 98, 2094, 2095, 1, GumpButtonType.Reply, 0);
+            AddLabel(2, 86, 149, "Guide");
+
+            AddLabel(Utility.CenteredTextOffset(145, itemName), 4, 149, itemName);
+
+            AddLabel(56, 39, WhiteTextHue, "Item Type");
+            AddLabel(Utility.CenteredTextOffset(90, typeText), 59, 2599, typeText);
+
+            AddLabel(160, 39, WhiteTextHue, "Item Rarity");
+            AddLabel(Utility.CenteredTextOffset(197, rarityText), 59, rarityHue, rarityText);
+           
+            AddLabel(71, 92, WhiteTextHue, "Total in World:");
+            AddLabel(171, 92, 149, totalCountText);            
         }
 
         public override void OnResponse(Network.NetState sender, RelayInfo info)
-        {           
+        {
+            if (m_Player == null || m_Item == null) return;
+            if (m_Item.Deleted) return;
+
+            bool closeGump = true;
+
+            switch (info.ButtonID)
+            {
+                // Guide
+                case 1:
+                    closeGump = false;
+                break;
+            }
+
+            if (!closeGump)
+            {
+                m_Player.CloseGump(typeof(ItemIdGump));
+                m_Player.SendGump(new ItemIdGump(m_Player, m_Item, m_Success, m_ShowRarity, m_ShowWorldItemCount));
+            }
+
+            else            
+                m_Player.SendSound(0x058);            
         }
     }
 }

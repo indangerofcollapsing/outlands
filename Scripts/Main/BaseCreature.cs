@@ -49,6 +49,13 @@ namespace Server.Mobiles
         Undead
     }
 
+    public enum LootDropModeType
+    {
+        Gold,
+        Hides,
+        None
+    }
+
     public enum FightMode
     {
         None,           // Never focus on others
@@ -186,7 +193,7 @@ namespace Server.Mobiles
         public delegate void OnBeforeDeathCB();
         public OnBeforeDeathCB m_OnBeforeDeathCallback;
 
-        public virtual bool HasNormalLoot { get { return true; } }
+        public virtual LootDropModeType LootDropMode { get { return LootDropModeType.Gold; } }
 
         private bool m_FreelyLootable = false;
         public bool FreelyLootable
@@ -260,40 +267,7 @@ namespace Server.Mobiles
             }
 
             return base.Paralyze(from, duration);
-        }
-
-        [CommandProperty(AccessLevel.Counselor)]
-        public virtual int GoldWorth
-        {
-            get
-            {
-                if (!HasNormalLoot)
-                    return 0;
-
-                int max = 10000;
-                double value = Difficulty + 1;
-
-                value *= 10 + ((value / 5) * 1.75);
-
-                double bonusScalar = 1.0;
-
-                if (Difficulty < 7)
-                    bonusScalar = 1.25;
-
-                if (Difficulty < 20)
-                    bonusScalar = 1.15;
-
-                if (Difficulty < 30)
-                    bonusScalar = 1.10;
-
-                value *= bonusScalar;
-
-                int seed = Utility.Random(10);
-                double scale = 0.95 + (seed / 100.0);
-
-                return (int)(Math.Min(value * scale, max));
-            }
-        }
+        }        
 
         public int m_ResurrectionsRemaining = -1; //-1 is Unlimited
         [CommandProperty(AccessLevel.Counselor)]
@@ -511,6 +485,9 @@ namespace Server.Mobiles
         public static double HerdingFocusedAggressionPvPDamageScalar = .50;
 
         public static double ForensicEvalCarveResourceScalarBonus = .5;
+
+        public static double GoldDropVariation = .10;
+        public static double NewbieRegionGoldDropScalar = .5;
 
         public List<Item> ArcaneItems = new List<Item>();
         public List<ArcaneItemExperienceEntry> ArcaneItemExperienceEntries = new List<ArcaneItemExperienceEntry>();
@@ -7081,43 +7058,38 @@ namespace Server.Mobiles
         protected bool m_Spawning;
         protected int m_KillersLuck = -1;
 
-        protected virtual int ModifiedGoldWorth()
-        {
-            if (!m_Spawning)
-            {
-                int gold = GoldWorth;
-
-                double regionMod = 1 + Server.Commands.RegionGoldMod.GetModifier(Region);
-
-                gold = (int)Math.Ceiling(((double)gold * regionMod));
-
-                if (Region is NewbieDungeonRegion)
-                {
-                    gold /= 2;
-                }
-
-                return gold;
-            }
-
-            else
-            {
-                return GoldWorth;
-            }
-        }
-
         public virtual void GenerateLoot(bool spawning)
         {
             m_Spawning = spawning;
 
             if (!spawning)
             {
-                int gold = ModifiedGoldWorth();
+                int gold = GoldWorth;                
 
                 if (gold > 0)
                 {
-                    PackGold(gold);
-                    Server.Custom.GoldCoinTracker.TrackGoldCoinLoot(gold, LastPlayerKiller);
-                    Loot.AddTieredLoot(this);
+                    if (LootDropMode != LootDropModeType.None)
+                    {
+                        switch (LootDropMode)
+                        {
+                            case LootDropModeType.Gold:
+                                PackGold(gold);
+                            break;
+
+                            case LootDropModeType.Hides:
+                                int hideAmount = (int)(Math.Round((double)gold / (double)Hide.GoldValue));
+
+                                if (hideAmount < 1)
+                                    hideAmount = 1;
+
+                                PackItem(new Hide(hideAmount));
+                            break;
+                        }
+
+                        Custom.GoldCoinTracker.TrackGoldCoinLoot(gold, LastPlayerKiller);
+
+                        Loot.AddTieredLoot(this);
+                    }
                 }
             }
 
@@ -7125,6 +7097,40 @@ namespace Server.Mobiles
                 GenerateLoot();
 
             m_Spawning = false;
+        }
+
+        [CommandProperty(AccessLevel.Counselor)]
+        public virtual int GoldWorth
+        {
+            get
+            {
+                double goldValue = 5;
+
+                goldValue = InitialDifficulty * 12.5;
+
+                if (goldValue < 5)
+                    goldValue = 5;
+
+                double goldScalar = 1.0 + RegionGoldMod.GetModifier(Region);
+
+                if (Region is NewbieDungeonRegion)
+                    goldScalar -= NewbieRegionGoldDropScalar;
+
+                goldValue *= goldScalar;
+                
+                int minGold = (int)(Math.Round((1 - GoldDropVariation) * goldValue));
+                int maxGold = (int)(Math.Round((1 + GoldDropVariation) * goldValue));
+
+                if (minGold < 1)
+                    minGold = 1;
+
+                if (maxGold < 1)
+                    maxGold = 1;
+
+                int finalGoldAmount = Utility.RandomMinMax(minGold, maxGold);
+
+                return finalGoldAmount;
+            }
         }
 
         public virtual void GenerateLoot()

@@ -253,6 +253,7 @@ namespace Server
     public enum ItemRarityType
     {
         None,
+        Basic,
         Common,
         Uncommon,
         Rare,
@@ -535,7 +536,7 @@ namespace Server
         /// <summary>
         /// Stealable. Lootable, always.
         /// </summary>
-        Cursed = 3
+        Cursed = 3,
     }
 
     public class BounceInfo
@@ -785,7 +786,7 @@ namespace Server
             set { m_ItemGroup = value; }
         }
 
-        public virtual ItemRarityType BaseItemRarity { get { return ItemRarityType.Common; } }
+        public virtual ItemRarityType BaseItemRarity { get { return ItemRarityType.Basic; } }
 
         private ItemRarityType m_ItemRarity = ItemRarityType.None;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -1039,6 +1040,53 @@ namespace Server
         public virtual double GetSellValueScalar()
         {
             return 1.0;
+        }
+
+        public static string GetItemGroupTypeName(ItemGroupType groupType)
+        {
+            switch(groupType)
+            {
+                case ItemGroupType.Regular: return "Regular";
+                case ItemGroupType.Crafted: return "Crafted";
+                case ItemGroupType.Donation: return "Donation";
+                case ItemGroupType.Achievement: return "Achievement";
+                case ItemGroupType.Loot: return "Loot";
+                case ItemGroupType.EventLoot: return "Event Loot";
+                case ItemGroupType.EventReward: return "Event Reward";
+                case ItemGroupType.PurchasedReward: return "Purchased Reward";
+            }
+
+            return "";
+        }
+
+        public static string GetItemRarityName(ItemRarityType rarityType)
+        {
+            switch (rarityType)
+            {
+                case ItemRarityType.Basic: return "Basic";
+                case ItemRarityType.Common: return "Common";
+                case ItemRarityType.Uncommon: return "Uncommon";
+                case ItemRarityType.Rare: return "Rare";
+                case ItemRarityType.VeryRare: return "Very Rare";
+                case ItemRarityType.UltraRare: return "Ultra Rare";
+            }
+
+            return "";
+        }
+
+        public static int GetItemRarityTextHue(ItemRarityType rarityType)
+        {
+            switch (rarityType)
+            {
+                case ItemRarityType.Basic: return 2401;
+                case ItemRarityType.Common: return 2655;
+                case ItemRarityType.Uncommon: return 169;
+                case ItemRarityType.Rare: return 2603;
+                case ItemRarityType.VeryRare: return 2606;
+                case ItemRarityType.UltraRare: return 1259;
+            }
+
+            return 0;
         }
 
         public static string GetDungeonName(DungeonEnum dungeon)
@@ -3660,13 +3708,13 @@ namespace Server
             m_DeltaFlags = ItemDelta.None;
 
             Map map = m_Map;
-
+            
             if (map != null && !Deleted)
             {
                 bool sendOPLUpdate = ObjectPropertyList.Enabled && (flags & ItemDelta.Properties) != 0;
-
+                
                 Container contParent = m_Parent as Container;
-
+                                
                 if (contParent != null && !contParent.IsPublicContainer)
                 {
                     if ((flags & ItemDelta.Update) != 0)
@@ -3750,6 +3798,7 @@ namespace Server
                                     {
                                         openers.RemoveAt(i--);
                                     }
+
                                     else
                                     {
                                         if (mob == rootParent || mob == tradeRecip)
@@ -3835,6 +3884,7 @@ namespace Server
                     eable.Free();
                     sendOPLUpdate = false;
                 }
+
                 else if ((flags & ItemDelta.EquipOnly) != 0)
                 {
                     if (m_Parent is Mobile)
