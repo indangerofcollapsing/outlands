@@ -1605,7 +1605,6 @@ namespace Server.Items
 		}
 
 		private List<Mobile> m_Openers;
-
 		public List<Mobile> Openers
 		{
 			get{ return m_Openers; }
@@ -1640,6 +1639,15 @@ namespace Server.Items
 			else
 				to.Send( new ContainerContent( to, this ) );
 
+            if (to.Player && to.NetState != null)
+            {
+                foreach (Item item in Items)
+                {
+                    if (item.LootType == Server.LootType.Unlootable)
+                        to.NetState.Send(item.RemovePacket);                    
+                }
+            }
+
 			if ( ObjectPropertyList.Enabled )
 			{
 				List<Item> items = this.Items;
@@ -1668,12 +1676,13 @@ namespace Server.Items
 						{
 							contains = true;
 						}
+
 						else
 						{
 							int range = GetUpdateRange( mob );
 
-							if ( mob.Map != map || !mob.InRange( worldLoc, range ) )
-								m_Openers.RemoveAt( i-- );
+                            if (mob.Map != map || !mob.InRange(worldLoc, range))                            
+                                m_Openers.RemoveAt(i--); 
 						}
 					}
 				}
@@ -1687,10 +1696,13 @@ namespace Server.Items
 
 					m_Openers.Add( opener );
 				}
+
 				else if ( m_Openers != null && m_Openers.Count == 0 )
 				{
 					m_Openers = null;
 				}
+
+
 			}
 		}
 
@@ -1720,6 +1732,7 @@ namespace Server.Items
 		{
 			if ( from.AccessLevel > AccessLevel.Player || from.InRange( this.GetWorldLocation(), 2 ) )
 				DisplayTo( from );
+
 			else
 				from.SendLocalizedMessage( 500446 ); // That is too far away.
 		}

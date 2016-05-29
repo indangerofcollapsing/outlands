@@ -1961,6 +1961,10 @@ namespace Server.Network
 
 			m_Stream.Seek( pos, SeekOrigin.Begin );
 			m_Stream.Write( (ushort) written );
+
+            for (int i = 0; i < count; ++i)
+            {
+            }
 		}
 	}
 

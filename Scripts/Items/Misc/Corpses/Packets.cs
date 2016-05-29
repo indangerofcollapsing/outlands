@@ -11,11 +11,18 @@ namespace Server.Network
 	{
 		public CorpseEquip( Mobile beholder, Corpse beheld ) : base( 0x89 )
 		{
-			List<Item> list = beheld.EquipItems;
+            List<Item> list = new List<Item>();
+
+            for (int a = 0; a < beheld.EquipItems.Count; a++)
+            {  
+                list.Add(beheld.EquipItems[a]);
+            }
 
 			int count = list.Count;
+
 			if( beheld.Hair != null && beheld.Hair.ItemID > 0 )
 				count++;
+
 			if( beheld.FacialHair != null && beheld.FacialHair.ItemID > 0 )
 				count++;
 
@@ -27,7 +34,7 @@ namespace Server.Network
 			{
 				Item item = list[i];
 
-				if ( !item.Deleted && beholder.CanSee( item ) && item.Parent == beheld )
+				if ( !item.Deleted && beholder.CanSee( item ) && item.Parent == beheld)
 				{
 					m_Stream.Write( (byte) (item.Layer + 1) );
 					m_Stream.Write( (int) item.Serial );
@@ -52,14 +59,15 @@ namespace Server.Network
 
 	public sealed class CorpseContent : Packet
 	{
-		public CorpseContent( Mobile beholder, Corpse beheld )
-			: base( 0x3C )
+		public CorpseContent( Mobile beholder, Corpse beheld ): base( 0x3C )
 		{
 			List<Item> items = beheld.EquipItems;
+
 			int count = items.Count;
 
 			if( beheld.Hair != null && beheld.Hair.ItemID > 0 )
 				count++;
+
 			if( beheld.FacialHair != null && beheld.FacialHair.ItemID > 0 )
 				count++;
 
@@ -75,7 +83,7 @@ namespace Server.Network
 			{
 				Item child = items[i];
 
-				if( !child.Deleted && child.Parent == beheld && beholder.CanSee( child ) )
+                if (!child.Deleted && child.Parent == beheld && beholder.CanSee(child))
 				{
 					m_Stream.Write( (int)child.Serial );
 					m_Stream.Write( (ushort)child.ItemID );
@@ -125,14 +133,15 @@ namespace Server.Network
 
 	public sealed class CorpseContent6017 : Packet
 	{
-		public CorpseContent6017(Mobile beholder, Corpse beheld)
-			: base(0x3C)
+		public CorpseContent6017(Mobile beholder, Corpse beheld): base(0x3C)
 		{
 			List<Item> items = beheld.EquipItems;
+
 			int count = items.Count;
 
 			if (beheld.Hair != null && beheld.Hair.ItemID > 0)
 				count++;
+
 			if (beheld.FacialHair != null && beheld.FacialHair.ItemID > 0)
 				count++;
 

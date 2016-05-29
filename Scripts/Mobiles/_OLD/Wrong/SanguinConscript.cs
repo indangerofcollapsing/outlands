@@ -38,20 +38,20 @@ namespace Server.Mobiles
 
             Utility.AssignRandomHair(this, hairHue);
 
-            AddItem(new LeatherGorget() { Movable = false, Hue = weaponHue });
-            AddItem(new ChainmailChest() { Movable = false, Hue = itemHue });
-            AddItem(new RingmailArms() { Movable = false, Hue = itemHue });
-            AddItem(new BodySash() { Movable = false, Hue = weaponHue });
-            AddItem(new LeatherGloves() { Movable = false, Hue = itemHue });
-            AddItem(new Kilt() { Movable = false, Hue = weaponHue });
-            AddItem(new Sandals() { Movable = false, Hue = itemHue });          
+            AddItem(new ChainmailChest() { LootType = Server.LootType.Unlootable, Hue = itemHue });
+            AddItem(new LeatherGorget() { LootType = Server.LootType.Unlootable, Hue = weaponHue });
+            AddItem(new RingmailArms() { LootType = Server.LootType.Unlootable, Hue = itemHue });
+            AddItem(new BodySash() { LootType = Server.LootType.Unlootable, Hue = weaponHue });
+            AddItem(new LeatherGloves() { LootType = Server.LootType.Unlootable, Hue = itemHue });
+            AddItem(new Kilt() { LootType = Server.LootType.Unlootable, Hue = weaponHue });
+            AddItem(new Sandals() { LootType = Server.LootType.Unlootable, Hue = itemHue });          
 		
 			switch ( Utility.RandomMinMax( 1, 4 ))
 			{
-                case 1: AddItem(new Club() { Movable = false, Hue = weaponHue }); break;
-                case 2: AddItem(new Axe() { Movable = false, Hue = weaponHue }); break;
-                case 3: AddItem(new Pitchfork() { Movable = false, Hue = weaponHue }); break;
-                case 4: AddItem(new GnarledStaff() { Movable = false, Hue = weaponHue }); break;
+                case 1: AddItem(new Club() { LootType = Server.LootType.Unlootable, Hue = weaponHue }); break;
+                case 2: AddItem(new Axe() { LootType = Server.LootType.Unlootable, Hue = weaponHue }); break;
+                case 3: AddItem(new Pitchfork() { LootType = Server.LootType.Unlootable, Hue = weaponHue }); break;
+                case 4: AddItem(new GnarledStaff() { LootType = Server.LootType.Unlootable, Hue = weaponHue }); break;
 			}			
 		}
 

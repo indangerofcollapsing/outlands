@@ -652,6 +652,9 @@ namespace Server.Items
             if (!base.CheckItemUse(from, item))
                 return false;
 
+            if (item.LootType == Server.LootType.Unlootable)
+                return false;
+
             if (item != this)
                 return CanLoot(from, item);
 
@@ -663,11 +666,15 @@ namespace Server.Items
             if (!base.CheckLift(from, item, ref reject))
                 return false;
 
+            if (item.LootType == Server.LootType.Unlootable)
+                return false;
+
             TimeSpan lootTime = DateTime.UtcNow - m_TimeOfDeath;
 
             if (lootTime.TotalSeconds < 0.75)
             {
                 Custom.AntiFastLoot.RegisterFastloot(from, lootTime);
+
                 return false;
             }
 
@@ -901,6 +908,7 @@ namespace Server.Items
                             pack.AddItem(item);
                             gathered = true;
                         }
+
                         else
                         {
                             didntFit = true;

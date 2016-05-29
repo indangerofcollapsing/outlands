@@ -5388,7 +5388,6 @@ namespace Server.Mobiles
                 ((CharacterStatue)m).OnRequestedAnimation(this);
 
             BaseCreature bc_Creature = m as BaseCreature;
-            //PlayerMobile pm_Player = m as PlayerMobile;
 
             if (bc_Creature != null)
             {
@@ -5396,21 +5395,13 @@ namespace Server.Mobiles
                 {
                     if (bc_Creature.ControlMaster == this)
                         return true;
-
-                    //if (SameParty(bc_Creature.ControlMaster) || SameGuild(bc_Creature.ControlMaster))
-                    //    return true;
                 }
             }
-
-            //if (pm_Player != null)
-            //{
-            //    if (SameParty(pm_Player) || SameGuild(pm_Player))
-            //        return true;
-            //}
 
             if (m != this && !Alive && !Warmode && !m.Hidden && m is PlayerMobile && AccessLevel == AccessLevel.Player && m.AccessLevel == AccessLevel.Player)
             {
                 Send(m.RemovePacket);
+
                 return false;
             }
 

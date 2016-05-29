@@ -537,6 +537,7 @@ namespace Server
         /// Stealable. Lootable, always.
         /// </summary>
         Cursed = 3,
+        Unlootable = 4
     }
 
     public class BounceInfo
@@ -1592,6 +1593,7 @@ namespace Server
         {
             if (m_Parent is Item)
                 ((Item)m_Parent).RemoveItem(this);
+
             else if (m_Parent is Mobile)
                 ((Mobile)m_Parent).RemoveItem(this);
 

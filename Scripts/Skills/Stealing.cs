@@ -117,7 +117,7 @@ namespace Server.SkillHandlers
                         from.SendLocalizedMessage(502723); // You fail to steal the item.                    
                 }
 
-                else if (!item.Movable || item.LootType == LootType.Newbied || item.CheckBlessed(root) || item.DonationItem)                
+                else if (!item.Movable || item.LootType == LootType.Unlootable || item.LootType == LootType.Newbied || item.CheckBlessed(root) || item.DonationItem)                
                     from.SendLocalizedMessage(502710); // You can't steal that!
                 
                 else
