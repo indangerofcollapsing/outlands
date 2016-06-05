@@ -9,8 +9,20 @@ namespace Server
 {
     public enum AchievementCategory
     {
-        Misc,
+        Warfare,
+        Seafaring,
+        AnimalTaming,
         Crafting,
+
+        Adventuring,
+        Luxury,
+        Harvesting,
+        SkillMastery,
+
+        Slaying,
+        Competition,
+        Virtue,
+        Vice
     }
     
     public enum Achievement
@@ -154,7 +166,7 @@ namespace Server
         public bool Enabled = true;
 
         public Achievement m_Achievement;
-        public AchievementCategory m_AchievementGroup = AchievementCategory.Misc;
+        public AchievementCategory m_AchievementGroup = AchievementCategory.Adventuring;
 
         public Achievement[] m_Stages = new Achievement[] { };
 
