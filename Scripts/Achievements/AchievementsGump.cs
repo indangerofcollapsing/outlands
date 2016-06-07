@@ -120,7 +120,7 @@ namespace Server
                     AddImage(409, 370, 3604, 2052);
                     AddImage(144, -2, 1143, 2499);
 
-                    AddLabel(235, 0, 2606, "Achievements");    
+                    AddLabel(235, 0, Achievements.AchievementTextHue, "Achievements");    
                    
                     int categoriesPerPage = categoryRows * categoryColumns;
                     int totalCategories = Enum.GetNames(typeof(AchievementCategory)).Length;
@@ -457,7 +457,7 @@ namespace Server
 			        AddImage(409, 370, 3604, 2052);
 			        AddImage(144, -2, 1143, 2499);
 
-                    AddLabel(235, 0, 2606, "Achievements");
+                    AddLabel(235, 0, Achievements.AchievementTextHue, "Achievements");
 
                     List<Achievement> m_AchievementsInCategory = Achievements.GetCategoryAchievements(m_AchievementCategory);
 
@@ -1021,6 +1021,111 @@ namespace Server
                 break;
 
                 case PageType.Settings:
+                    switch (info.ButtonID)
+                    {
+                        //Guide
+                        case 1:
+                            closeGump = false;
+                        break;
+
+                       //Return
+                        case 2:
+                            m_SelectedPageType = PageType.Main;
+
+                            closeGump = false;
+                        break;
+
+                        //On Login Show Unclaimed Achievements
+                        case 3:
+                            m_Player.m_AchievementAccountEntry.OnLoginShowUnclaimedRewards = !m_Player.m_AchievementAccountEntry.OnLoginShowUnclaimedRewards;
+
+                            if (m_Player.m_AchievementAccountEntry.OnLoginShowUnclaimedRewards)
+                                m_Player.SendMessage("You will now be notified upon login of unclaimed achievement rewards.");
+
+                            else
+                                m_Player.SendMessage("You will no longer be notified of unclaimed achievement rewards.");
+
+                            closeGump = false;
+                        break;
+
+                        //Announce Completed Achievements to Guild Members
+                        case 4:
+                        m_Player.m_AchievementAccountEntry.AnnounceAchievementsToGuildMembers = !m_Player.m_AchievementAccountEntry.AnnounceAchievementsToGuildMembers;
+
+                            if (m_Player.m_AchievementAccountEntry.AnnounceAchievementsToGuildMembers)
+                                m_Player.SendMessage("Your completion of achievements will now be announced to fellow guildmembers.");
+
+                            else
+                                m_Player.SendMessage("Your completion of achievements will now be kept private from other guildmembers.");
+
+                            closeGump = false;
+                        break;
+
+                        //Announce Completed Achievements to Non-Guild Members
+                        case 5:
+                            m_Player.m_AchievementAccountEntry.AnnounceAchievementsToNonGuildMembers = !m_Player.m_AchievementAccountEntry.AnnounceAchievementsToNonGuildMembers;
+
+                            if (m_Player.m_AchievementAccountEntry.AnnounceAchievementsToNonGuildMembers)
+                                m_Player.SendMessage("Your completion of achievements will now be announced to non-guild members.");
+
+                            else
+                                m_Player.SendMessage("Your completion of achievements will now be kept private from non-guild members.");
+
+                            closeGump = false;
+                        break;
+
+                        //Show Achievements Completed by Other Guild Members
+                        case 6:
+                            m_Player.m_AchievementAccountEntry.ShowGuildMemberAchievementAnnoucements = !m_Player.m_AchievementAccountEntry.ShowGuildMemberAchievementAnnoucements;
+
+                            if (m_Player.m_AchievementAccountEntry.ShowGuildMemberAchievementAnnoucements)
+                                m_Player.SendMessage("You will now be notified when guildmembers complete achievements.");
+
+                            else
+                                m_Player.SendMessage("You will no longer be notified when guildmembers complete achievements.");
+
+                            closeGump = false;
+                        break;
+
+                        //Show Achievements Completed by Non-Guild Members
+                        case 7:
+                        m_Player.m_AchievementAccountEntry.ShowNonGuildMemberAchievementAnnoucements = !m_Player.m_AchievementAccountEntry.ShowNonGuildMemberAchievementAnnoucements;
+
+                            if (m_Player.m_AchievementAccountEntry.ShowNonGuildMemberAchievementAnnoucements)
+                                m_Player.SendMessage("You will now be notified when non-guild members complete achievements.");
+
+                            else
+                                m_Player.SendMessage("You will no longer be notified when non-guild members complete achievements.");
+
+                            closeGump = false;
+                        break;
+
+                        //On Completed Achievement Perform Audio
+                        case 8:
+                            m_Player.m_AchievementAccountEntry.AudioEnabled = !m_Player.m_AchievementAccountEntry.AudioEnabled;
+
+                            if (m_Player.m_AchievementAccountEntry.AudioEnabled)
+                                m_Player.SendMessage("Audio is now enabled for your completion of achievements.");
+
+                            else
+                                m_Player.SendMessage("Audio is now disabled for your completion of achievements.");
+
+                            closeGump = false;
+                        break;
+
+                        //On Completed Achievement Display Pop-Up
+                        case 9:
+                            m_Player.m_AchievementAccountEntry.PopupEnabled = !m_Player.m_AchievementAccountEntry.PopupEnabled;
+
+                            if (m_Player.m_AchievementAccountEntry.PopupEnabled)
+                                m_Player.SendMessage("Pop-Ups will display for your completion of achievements.");
+
+                            else
+                                m_Player.SendMessage("Pop-Ups will no longer display for your completion of achievements.");
+
+                            closeGump = false;
+                        break;
+                    }
                 break;
             }
 

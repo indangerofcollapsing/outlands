@@ -4832,7 +4832,7 @@ namespace Server.Mobiles
             PlayerMobile pm_Source = from as PlayerMobile;
 
             PlayerMobile pm_SourceMaster = null;
-
+            
             if (from != null)
             {
                 if (from != null && from != this)
@@ -4859,15 +4859,21 @@ namespace Server.Mobiles
                         pm_Source.PlayerVsPlayerCombatOccured(this);
                     }
                 }
-
-                //Discordance
+                               
                 if (bc_Source != null)
-                    damage *= (1 - bc_Source.DiscordEffect);                
+                {
+                    //Discord
+                    damage *= (1 - bc_Source.DiscordEffect);
+
+                    //Herding
+                    if (bc_Source.FocusedAggressionTarget == this && bc_Source.FocusedAggressionExpiration > DateTime.UtcNow)
+                        damage *= 1 + (bc_Source.FocusedAggresionValue * BaseCreature.HerdingFocusedAggressionPvPDamageScalar);
+                }
             }
 
             //Ship-Based Combat
             if (BaseBoat.UseShipBasedDamageModifer(from, this))
-                damage *= BaseBoat.shipBasedDamageToPlayerScalar;
+                damage *= BaseBoat.shipBasedDamageToPlayerScalar;            
 
             if (damage < 1)
                 damage = 1;

@@ -3169,11 +3169,17 @@ namespace Server.Mobiles
                             pm_Source.PlayerVsPlayerCombatOccured(pm_Master);
                         }
                     }
-                }
+                }                
                 
-                //Discordance
-                if (bc_Source != null)                
-                    damage *= 1 - bc_Source.DiscordEffect;                
+                if (bc_Source != null)
+                {
+                    //Discordance
+                    damage *= 1 - bc_Source.DiscordEffect;
+
+                    //Herding
+                    if (bc_Source.FocusedAggressionTarget == this && bc_Source.FocusedAggressionExpiration > DateTime.UtcNow)
+                        damage *= 1 + (bc_Source.FocusedAggresionValue);
+                }
 
                 //This Creature is Discorded
                 damage *= 1 + DiscordEffect;

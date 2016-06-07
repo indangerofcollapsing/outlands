@@ -28,6 +28,14 @@ namespace Server.Items
         public static void OnLogin(PlayerMobile player)
         {
             CheckAndCreateAchievementAccountEntry(player);
+
+            if (player.m_AchievementAccountEntry.OnLoginShowUnclaimedRewards)
+            {
+                int unclaimedRewardCount = Achievements.GetUnclaimedAchievementRewards(player);
+
+                if (unclaimedRewardCount > 0)
+                    player.SendMessage(Achievements.AchievementTextHue, "You have " + unclaimedRewardCount.ToString() + " unclaimed achievement rewards.");
+            }
         }
         
         public static void CheckAndCreateAchievementAccountEntry(PlayerMobile player)
@@ -141,6 +149,14 @@ namespace Server.Items
         public string m_AccountUsername = "";
 
         public List<AchievementEntry> m_Achievements = new List<AchievementEntry>();
+
+        public bool OnLoginShowUnclaimedRewards = true;
+        public bool AnnounceAchievementsToGuildMembers = true;
+        public bool AnnounceAchievementsToNonGuildMembers = true;
+        public bool ShowGuildMemberAchievementAnnoucements = true;
+        public bool ShowNonGuildMemberAchievementAnnoucements = true;
+        public bool AudioEnabled = true;
+        public bool PopupEnabled = true;
         
         [Constructable]
         public AchievementAccountEntry(string accountName): base(0x0)
@@ -166,6 +182,14 @@ namespace Server.Items
 
             //Version 0
             writer.Write(m_AccountUsername);
+
+            writer.Write(OnLoginShowUnclaimedRewards);
+            writer.Write(AnnounceAchievementsToGuildMembers);
+            writer.Write(AnnounceAchievementsToNonGuildMembers);
+            writer.Write(ShowGuildMemberAchievementAnnoucements);
+            writer.Write(ShowNonGuildMemberAchievementAnnoucements);
+            writer.Write(AudioEnabled);
+            writer.Write(PopupEnabled);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -177,6 +201,14 @@ namespace Server.Items
             if (version >= 0)
             {
                 m_AccountUsername = reader.ReadString();
+
+                OnLoginShowUnclaimedRewards = reader.ReadBool();
+                AnnounceAchievementsToGuildMembers = reader.ReadBool();
+                AnnounceAchievementsToNonGuildMembers = reader.ReadBool();
+                ShowGuildMemberAchievementAnnoucements = reader.ReadBool();
+                ShowNonGuildMemberAchievementAnnoucements = reader.ReadBool();
+                AudioEnabled = reader.ReadBool();
+                PopupEnabled = reader.ReadBool();
             }
 
             //-----
