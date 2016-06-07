@@ -30,32 +30,39 @@ namespace Server
         //Achievement Category Page
         public AchievementCategory m_AchievementCategory = AchievementCategory.Warfare;
         public int m_AchievementListPage = 0;
-        public int m_AchievementSelected = 0;         
+        public int m_AchievementSelectedIndex = 0;         
 
-        public AchievementsGump(Mobile from, PageType selectedPageType, int mainPage, AchievementCategory achievementCategory, int achievementListPage, int achievementSelected): base(10, 10)
+        public AchievementsGump(Mobile from, PageType selectedPageType, int mainPage, AchievementCategory achievementCategory, int achievementListPage, int achievementSelectedIndex): base(10, 10)
         {
             m_Player = from as PlayerMobile;
 
             if (m_Player == null)
                 return;
 
+            AchievementsPersistance.CheckAndCreateAchievementAccountEntry(m_Player);
+
             m_SelectedPageType = selectedPageType;
             m_MainPage = mainPage;
             m_AchievementCategory = achievementCategory;
             m_AchievementListPage = achievementListPage;
-            m_AchievementSelected = achievementSelected;
+            m_AchievementSelectedIndex = achievementSelectedIndex;
 
             Closable = true;
             Disposable = true;
             Dragable = true;
             Resizable = false;
 
-            int WhiteTextHue = 2036;
+            int WhiteTextHue = 2655;
+            int GreenTextHue = 63;
+            int YellowTextHue = 2550;
+            int GreyTextHue = 2401;
 
             int startX = 0;
             int startY = 0;
 
             AddPage(0);
+
+            int totalPages;
 
             switch (m_SelectedPageType)
             {
@@ -117,9 +124,9 @@ namespace Server
                    
                     int categoriesPerPage = categoryRows * categoryColumns;
                     int totalCategories = Enum.GetNames(typeof(AchievementCategory)).Length;
-                    int totalPages = (int)(Math.Ceiling((double)totalCategories / (double)categoriesPerPage));
+                    int totalCategoryPages = (int)(Math.Ceiling((double)totalCategories / (double)categoriesPerPage));
 
-                    if (m_MainPage >= totalPages)
+                    if (m_MainPage >= totalCategoryPages)
                         m_MainPage = 0;
 
                     if (m_MainPage < 0)
@@ -130,6 +137,9 @@ namespace Server
 
                     if (categoryEndIndex >= totalCategories)
                         categoryEndIndex = totalCategories - 1;
+
+                    int totalCompletedAchievements = Achievements.GetCompletedAchievementCount(m_Player);
+                    int totalAchievementsAvailable = Achievements.GetTotalAchievementsCount();
 
                     //Guild
                     AddButton(7, 4, 2094, 2095, 1, GumpButtonType.Reply, 0);
@@ -143,7 +153,7 @@ namespace Server
                     }
 
                     //Next
-                    if (m_MainPage < totalPages - 1)
+                    if (m_MainPage < totalCategoryPages - 1)
                     {
                         AddButton(502, 471, 4005, 4019, 3, GumpButtonType.Reply, 0);
                         AddLabel(432, 472, WhiteTextHue, "Next Page");
@@ -153,12 +163,22 @@ namespace Server
                     AddButton(243, 471, 4029, 4019, 4, GumpButtonType.Reply, 0);
                     AddLabel(277, 472, 63, "Settings");
 
-                    //Progress
-                    AddImage(216, 446, 2057);
-                    AddLabel(332, 441, WhiteTextHue, "500/1000");
-                    AddImageTiled(283, 449, 39, 7, 2488);
-                    AddLabel(175, 440, 149, "Total");                    
+                    int textHue = GreyTextHue;
 
+                    if (totalCompletedAchievements > 0)
+                        textHue = YellowTextHue;
+
+                    if (totalCompletedAchievements == totalAchievementsAvailable)
+                        textHue = GreenTextHue;
+
+                    AddLabel(175, 447, 149, "Total");
+                    AddLabel(332, 447, textHue, totalCompletedAchievements.ToString() + "/" + totalAchievementsAvailable.ToString());
+                                        
+                    double totalAchievementProgress = (double)totalCompletedAchievements / (double)totalAchievementsAvailable;
+                    
+                    AddImage(216, 452, Achievements.GetProgressBarBackground(totalAchievementProgress));
+                    AddImageTiled(216 + Utility.ProgressBarX(totalAchievementProgress), 455, Utility.ProgressBarWidth(totalAchievementProgress), 7, 2488);
+                    
                     int iBaseX = 25;
                     int iBaseY = 30;
 
@@ -348,6 +368,26 @@ namespace Server
 
                         #endregion
 
+                        //Category Progress
+                        int completedAchievementsInCategory = Achievements.GetCompletedCategoryAchievements(m_Player, category);
+                        int achievementsInCategory = Achievements.GetCategoryAchievements(category).Count;
+
+                        textHue = GreyTextHue;
+
+                        if (completedAchievementsInCategory > 0)
+                            textHue = YellowTextHue;
+
+                        if (completedAchievementsInCategory == achievementsInCategory)
+                            textHue = GreenTextHue;
+
+                        double categoryAchievementProgress = (double)completedAchievementsInCategory / (double)achievementsInCategory;
+
+                        string progressText = completedAchievementsInCategory.ToString() + "/" + achievementsInCategory.ToString();
+
+                        AddImage(startX + 10, startY + 99, Achievements.GetProgressBarBackground(totalAchievementProgress));
+                        AddImageTiled(startX + 10 + Utility.ProgressBarX(totalAchievementProgress), startY + 102, Utility.ProgressBarWidth(totalAchievementProgress), 7, 2488);
+                        AddLabel(Utility.CenteredTextOffset(startX + 60, progressText), startY + 113, textHue, progressText);
+
                         startX += columnSpacing;
                         columnIndex++;
 
@@ -419,18 +459,48 @@ namespace Server
 
                     AddLabel(235, 0, 2606, "Achievements");
 
+                    List<Achievement> m_AchievementsInCategory = Achievements.GetCategoryAchievements(m_AchievementCategory);
+
+                    if (m_AchievementsInCategory.Count == 0)
+                        return;
+
+                    if (m_AchievementSelectedIndex >= m_AchievementsInCategory.Count)
+                        m_AchievementSelectedIndex = 0;
+
+                    Achievement achievementSelected = m_AchievementsInCategory[m_AchievementSelectedIndex];                    
+
+                    int achievementsPerPage = 12;
+                    int totalAchievements = m_AchievementsInCategory.Count;
+                    int totalAchievementPages = (int)(Math.Ceiling((double)totalAchievements / (double)achievementsPerPage));
+
+                    if (m_AchievementListPage >= totalAchievementPages)
+                        m_AchievementListPage = 0;
+
+                    if (m_AchievementListPage < 0)
+                        m_AchievementListPage = 0;
+
+                    int achievementStartIndex = m_AchievementListPage * achievementsPerPage;
+                    int achievementEndIndex = (m_AchievementListPage * achievementsPerPage) + (achievementsPerPage - 1);
+
+                    if (achievementEndIndex >= totalAchievements)
+                        achievementEndIndex = totalAchievements - 1;
+                                
+                    int achievementCount = achievementEndIndex - achievementStartIndex;
+
                     //Guide
                     AddButton(7, 4, 2094, 2095, 1, GumpButtonType.Reply, 0);
 			        AddLabel(30, 4, 149, "Guide");
 
                     //Previous List Page
-                    AddButton(69, 470, 9909, 2151, 3, GumpButtonType.Reply, 0); 
+                    if (m_AchievementListPage > 0)
+                        AddButton(69, 470, 9909, 9909, 3, GumpButtonType.Reply, 0); 
 
                     //Next List Page
-                    AddButton(115, 470, 9903, 2151, 4, GumpButtonType.Reply, 0);
+                    if (m_AchievementListPage < totalAchievementPages - 1)
+                        AddButton(115, 470, 9903, 9903, 4, GumpButtonType.Reply, 0);                    
 
                     //Return
-                    AddButton(243, 471, 4014, 4019, 5, GumpButtonType.Reply, 0);
+                    AddButton(243, 471, 4014, 4016, 5, GumpButtonType.Reply, 0);
                     AddLabel(277, 472, WhiteTextHue, "Return");
 
                     //Category
@@ -600,13 +670,93 @@ namespace Server
                         break;
                     }
 
-                    #endregion
+                    #endregion                    
 
-                    //Achievement List
-                    AddItem(3, 170, 572); //Green Orb
-                    AddButton(36, 165, 4030, 4029, 0, GumpButtonType.Reply, 0);
-                    AddLabel(71, 166, 63, "100%");
-			        AddLabel(113, 166, 63, "Sink or Swim");
+                    int playerCompletedAchievementsInCategory = Achievements.GetCompletedCategoryAchievements(m_Player, m_AchievementCategory);
+                    int totalAchievementsInCategory = m_AchievementsInCategory.Count;
+
+                    textHue = GreyTextHue;
+
+                    if (playerCompletedAchievementsInCategory > 0)
+                        textHue = YellowTextHue;
+
+                    if (playerCompletedAchievementsInCategory == m_AchievementsInCategory.Count)
+                        textHue = GreenTextHue;
+
+                    double playerCategoryAchievementProgress = (double)playerCompletedAchievementsInCategory / (double)totalAchievementsInCategory;
+
+                    string categoryProgressText = playerCompletedAchievementsInCategory.ToString() + "/" + totalAchievementsInCategory.ToString();
+
+                    AddImage(startX + 10, startY + 99, Achievements.GetProgressBarBackground(playerCategoryAchievementProgress));
+                    AddImageTiled(startX + 10 + Utility.ProgressBarX(playerCategoryAchievementProgress), startY + 102, Utility.ProgressBarWidth(playerCategoryAchievementProgress), 7, 2488);
+                    AddLabel(Utility.CenteredTextOffset(startX + 60, categoryProgressText), startY + 113, textHue, categoryProgressText);
+
+                    startX = 3;
+                    startY = 165;
+
+                    int achievementSpacing = 25;
+
+                    for (int a = 0; a < achievementCount + 1; a++)
+                    {
+                        int achievementIndex = achievementStartIndex + a;
+                        int buttonIndex = 10 + achievementIndex;
+
+                        if (achievementStartIndex >= totalAchievements)
+                            continue;
+
+                        Achievement achievement = m_AchievementsInCategory[achievementIndex];
+
+                        AchievementDetail achievementDetail = Achievements.GetAchievementDetail(achievement);
+                        AchievementEntry achievementEntry = Achievements.GetAchievementEntry(m_Player, achievement);
+
+                        if (achievementDetail != null && achievementEntry != null)
+                        {
+                            textHue = WhiteTextHue;
+                            string completionPercentageText = "0%";
+                            
+                            if (achievementEntry.m_Completed)
+                            {
+                                textHue = GreenTextHue;
+
+                                if (!achievementEntry.m_Claimed)
+                                    AddItem(startX, startY + 5, 572); //Green Orb
+
+                                completionPercentageText = "100%";                                
+                            }
+
+                            else
+                            {
+                                double completionPercentage = (double)achievementEntry.m_Progress / (double)achievementDetail.m_ProgressNeeded;
+
+                                completionPercentageText = Utility.CreateDecimalPercentageString(completionPercentage, 0);
+
+                                if (completionPercentage > 0 && completionPercentage < .01)
+                                    completionPercentageText = "1%";
+
+                                if (completionPercentage >= .99 && completionPercentage < 1.0)
+                                    completionPercentageText = "99%";
+
+                                if (completionPercentage > 0)
+                                    textHue = YellowTextHue;
+                            }
+
+                            if (!achievementEntry.m_Unlocked)
+                            {
+                                textHue = GreyTextHue;
+                                AddItem(startX, startY + 5, 573); //Orange Orb
+                            }
+
+                            if (achievementSelected == achievement)
+                                AddButton(startX + 33, startY, 4030, 4030, buttonIndex, GumpButtonType.Reply, 0);
+                            else
+                                AddButton(startX + 33, startY, 4029, 4031, buttonIndex, GumpButtonType.Reply, 0);
+
+                            AddLabel(startX + 68, startY + 1, textHue, completionPercentageText);
+                            AddLabel(startX + 110, startY + 1, textHue, achievementDetail.m_DisplayName);
+                        }
+
+                        startY += achievementSpacing;
+                    }
 
                     //Achivement Window
                     AddImage(383, 233, 103, 2401);
@@ -628,22 +778,71 @@ namespace Server
 			        AddImage(278, 363, 103, 2401);
 			        AddImage(291, 324, 3604, 2052);
 			        AddImage(386, 324, 3604, 2052);
+                    
+                    AchievementDetail selectedAchievementDetail = Achievements.GetAchievementDetail(achievementSelected);
+                    AchievementEntry selectedAchievementEntry = Achievements.GetAchievementEntry(m_Player, achievementSelected);
 
-                    AddLabel(356, 73, 2603, "Walk the Plank");
-                    AddLabel(320, 93, 149, "Stage 2 (Not Yet Unlocked)");
-			        AddLabel(305, 113, WhiteTextHue, "Kill 1000 enemy ship combatants");
-                    AddLabel(400, 133, WhiteTextHue, "-");
-                    AddLabel(400, 153, WhiteTextHue, "-");
-			        AddLabel(373, 184, 2599, "Progress");
-                    AddLabel(375, 219, WhiteTextHue, "0/1000");
-			        AddLabel(375, 253, 63, "Reward");
-                    AddLabel(367, 273, WhiteTextHue, "Driftwood");
-			        AddItem(355, 316, 3387);			        
-			        AddImage(346, 205, 2053);
-			        AddImageTiled(360, 208, 92, 7, 2488);
+                    int centerTextX = 400;
 
-                    AddLabel(418, 420, 63, "Claim");
-			        AddButton(384, 416, 2151, 2151, 6, GumpButtonType.Reply, 0);
+                    if (selectedAchievementDetail != null && selectedAchievementEntry != null)
+                    {
+                        AddLabel(Utility.CenteredTextOffset(centerTextX + 5, selectedAchievementDetail.m_DisplayName), 73, 2603, selectedAchievementDetail.m_DisplayName);
+
+                        if (!selectedAchievementEntry.m_Unlocked)
+                        {
+                            string unlockedText = "Stage " + selectedAchievementDetail.m_Stage.ToString() + " (Not Yet Unlocked)";
+
+                            AddLabel(Utility.CenteredTextOffset(centerTextX + 10, unlockedText), 93, 149, unlockedText);
+                        }
+
+                        int selectedAchievementDescriptionY = 113;
+
+                        if (selectedAchievementDetail.m_Description != null)
+                        {
+                            for (int a = 0; a < selectedAchievementDetail.m_Description.Length; a++)
+                            {
+                                AddLabel(Utility.CenteredTextOffset(centerTextX + 15, selectedAchievementDetail.m_Description[a]), selectedAchievementDescriptionY, WhiteTextHue, selectedAchievementDetail.m_Description[a]);
+
+                                selectedAchievementDescriptionY += 20;
+                            }
+                        }
+
+                        AddLabel(373, 184, 2599, "Progress");                        
+
+                        double selectedAchievementProgress = (double)selectedAchievementEntry.m_Progress / (double)selectedAchievementDetail.m_ProgressNeeded;
+                        
+                        textHue = GreyTextHue;
+
+                        if (selectedAchievementEntry.m_Progress > 0)
+                            textHue = YellowTextHue;
+
+                        if (selectedAchievementEntry.m_Progress == selectedAchievementDetail.m_ProgressNeeded)
+                            textHue = GreenTextHue;
+
+                        AddImage(345, 205, Achievements.GetProgressBarBackground(selectedAchievementProgress));
+                        AddImageTiled(345 + Utility.ProgressBarX(selectedAchievementProgress), 208, Utility.ProgressBarWidth(selectedAchievementProgress), 7, 2488);
+
+                        string progressText = selectedAchievementEntry.m_Progress.ToString() + "/" + selectedAchievementDetail.m_ProgressNeeded.ToString();
+
+                        AddLabel(Utility.CenteredTextOffset(centerTextX, progressText), 219, textHue, progressText);
+
+                        AddLabel(375, 253, 63, "Reward");
+                        AddLabel(Utility.CenteredTextOffset(centerTextX, selectedAchievementDetail.m_RewardName), 273, WhiteTextHue, selectedAchievementDetail.m_RewardName);
+
+                        AddItem(355 + selectedAchievementDetail.m_RewardItemOffsetX, 316 + selectedAchievementDetail.m_RewardItemOffsetY, selectedAchievementDetail.m_RewardItemID, selectedAchievementDetail.m_RewardItemHue);
+
+                        if (selectedAchievementEntry.m_Completed)     
+                        {
+                            if (selectedAchievementEntry.m_Claimed)
+                            {
+                                AddLabel(418, 420, 63, "Claim");
+                                AddButton(384, 416, 2151, 2151, 6, GumpButtonType.Reply, 0);
+                            }
+
+                            else
+                                AddLabel(413, 420, 149, "Claimed");
+                        }
+                    }
                 break;
 
                 case PageType.Settings:
@@ -661,7 +860,6 @@ namespace Server
             switch (m_SelectedPageType)
             {
                 case PageType.Main:
-
                     int categoriesPerPage = categoryRows * categoryColumns;
                     int totalCategories = Enum.GetNames(typeof(AchievementCategory)).Length;
                     int totalPages = (int)(Math.Ceiling((double)totalCategories / (double)categoriesPerPage));
@@ -713,22 +911,52 @@ namespace Server
                     if (info.ButtonID >= 10)
                     {
                         int categorySelectionIndex = info.ButtonID - 10;
-                        int categorySelected = (m_MainPage * categoriesPerPage) + categorySelectionIndex;
 
-                        if (categorySelected >= totalCategories)
-                            categorySelected = 0;
+                        if (categorySelectionIndex >= totalCategories)
+                            categorySelectionIndex = 0;
 
                         m_SelectedPageType = PageType.Category;
 
-                        m_AchievementCategory = (AchievementCategory)categorySelected;
+                        m_AchievementCategory = (AchievementCategory)categorySelectionIndex;
                         m_AchievementListPage = 0;
-                        m_AchievementSelected = 0;
-                    }
+                        m_AchievementSelectedIndex = 0;
 
-                    closeGump = false;
+                        closeGump = false;
+                    }
                 break;
 
                 case PageType.Category:
+                    List<Achievement> m_AchievementsInCategory = Achievements.GetCategoryAchievements(m_AchievementCategory);
+
+                    if (m_AchievementsInCategory.Count == 0)
+                        return;
+
+                    if (m_AchievementSelectedIndex >= m_AchievementsInCategory.Count)
+                        m_AchievementSelectedIndex = 0;
+
+                    Achievement achievementSelected = m_AchievementsInCategory[m_AchievementSelectedIndex];                    
+
+                    int achievementsPerPage = 12;
+                    int totalAchievements = m_AchievementsInCategory.Count;
+                    int totalAchievementPages = (int)(Math.Ceiling((double)totalAchievements / (double)achievementsPerPage));
+
+                    if (m_AchievementListPage >= totalAchievementPages)
+                        m_AchievementListPage = 0;
+
+                    if (m_AchievementListPage < 0)
+                        m_AchievementListPage = 0;
+
+                    int achievementStartIndex = m_AchievementListPage * achievementsPerPage;
+                    int achievementEndIndex = (m_AchievementListPage * achievementsPerPage) + (achievementsPerPage - 1);
+
+                    if (achievementEndIndex >= totalAchievements)
+                        achievementEndIndex = totalAchievements - 1;
+                                
+                    int achievementCount = achievementEndIndex - achievementStartIndex;
+
+                    AchievementDetail selectedAchievementDetail = Achievements.GetAchievementDetail(achievementSelected);
+                    AchievementEntry selectedAchievementEntry = Achievements.GetAchievementEntry(m_Player, achievementSelected);                    
+
                     switch (info.ButtonID)
                     {
                         //Guide
@@ -743,11 +971,17 @@ namespace Server
 
                         //Previous List Page
                         case 3:
+                            if (m_AchievementListPage > 0)
+                                m_AchievementListPage--;
+
                             closeGump = false;
                         break;
 
                         //Next List Page
                         case 4:
+                            if (m_AchievementListPage < totalAchievementPages - 1)
+                                m_AchievementListPage++;
+
                             closeGump = false;
                         break;
 
@@ -760,6 +994,12 @@ namespace Server
 
                         //Claim Reward
                         case 6:
+                            if (selectedAchievementDetail != null && selectedAchievementEntry != null)
+                            {
+                                if (selectedAchievementEntry.m_Completed && !selectedAchievementEntry.m_Claimed)                                
+                                    Achievements.ClaimAchievement(m_Player, achievementSelected);
+                            }
+
                             closeGump = false;
                         break;
                     }
@@ -767,6 +1007,16 @@ namespace Server
                     //Achievement Selection
                     if (info.ButtonID >= 10)
                     {
+                        int achievementSelectionIndex = info.ButtonID - 10;
+
+                        if (achievementSelectionIndex >= totalAchievements)
+                            achievementSelectionIndex = 0;
+
+                        m_AchievementSelectedIndex = achievementSelectionIndex;
+
+                        Achievement testAchievement = m_AchievementsInCategory[achievementSelectionIndex];    
+
+                        closeGump = false;
                     }
                 break;
 
@@ -777,7 +1027,7 @@ namespace Server
             if (!closeGump)
             {
                 m_Player.CloseGump(typeof(AchievementsGump));
-                m_Player.SendGump(new AchievementsGump(m_Player, m_SelectedPageType, m_MainPage, m_AchievementCategory, m_AchievementListPage, m_AchievementSelected));
+                m_Player.SendGump(new AchievementsGump(m_Player, m_SelectedPageType, m_MainPage, m_AchievementCategory, m_AchievementListPage, m_AchievementSelectedIndex));
             }
         }
     }
