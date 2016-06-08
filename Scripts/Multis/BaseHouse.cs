@@ -12,7 +12,6 @@ using Server.Targeting;
 using Server.Accounting;
 using Server.ContextMenus;
 using Server.Gumps;
-using Server.Guilds;
 using Server.Engines.BulkOrders;
 using Server.Custom.Items;
 
@@ -2115,11 +2114,14 @@ namespace Server.Multis
 			{
 				AggressorInfo info = m.Aggressed[i];
 
-				Guild attackerGuild = m.Guild as Guild;
-				Guild defenderGuild = info.Defender.Guild as Guild;
+                //TEST: GUILD
+                /*
+                Guild attackerGuild = null; // m.Guild as Guild;
+                Guild defenderGuild = null; // info.Defender.Guild as Guild;
 
 				if ( info.Defender.Player && info.Defender.Alive && (DateTime.UtcNow - info.LastCombatTime) < HouseRegion.CombatHeatDelay && (attackerGuild == null || defenderGuild == null || defenderGuild != attackerGuild && !defenderGuild.IsEnemy( attackerGuild )) )
 					return true;
+                */
 			}
 
 			return false;
@@ -3420,10 +3422,14 @@ namespace Server.Multis
 
 		public bool IsGuildMember( Mobile m )
 		{
+            //TEST: GUILD
+            /*
 			if( m == null || Owner == null || Owner.Guild == null )
 				return false;
 
 			return ( m.Guild == Owner.Guild );
+             * */
+            return false;
 		}
 
 		public void RemoveKeys( Mobile m )
@@ -3583,6 +3589,8 @@ namespace Server.Multis
 			return contains;
 		}        
 
+        //TEST: GUILD
+        /*
 		public virtual Guildstone FindGuildstone()
 		{
 			Map map = this.Map;
@@ -3605,6 +3613,7 @@ namespace Server.Multis
 			eable.Free();
 			return null;
 		}
+        */
 	}
 
 	public enum DecayType

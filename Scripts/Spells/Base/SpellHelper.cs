@@ -1,7 +1,7 @@
 using System;
 using Server;
 using Server.Items;
-using Server.Guilds;
+
 using Server.Multis;
 using Server.Regions;
 using Server.Mobiles;
@@ -635,6 +635,9 @@ namespace Server.Spells
 
         public static Guild GetGuildFor(Mobile m)
         {
+            return null;
+            //TEST: GUILD
+            /*
             Guild g = m.Guild as Guild;
 
             if (g == null && m is BaseCreature)
@@ -655,6 +658,7 @@ namespace Server.Spells
             }
 
             return g;
+            */
         }
 
         public static bool ValidIndirectTarget(Mobile from, Mobile to)

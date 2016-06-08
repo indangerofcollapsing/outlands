@@ -3139,7 +3139,8 @@ namespace Server.Network
 				m_Stream.Write( (short) min ); // Damage min
 				m_Stream.Write( (short) max ); // Damage max
 
-				m_Stream.Write( (int) m.TithingPoints );
+                m_Stream.Write(0);
+				//m_Stream.Write( (int) m.TithingPoints );
 			}
 
 			if ( type >= 6 )
@@ -3241,7 +3242,8 @@ namespace Server.Network
 					m_Stream.Write( (short) min ); // Damage min
 					m_Stream.Write( (short) max ); // Damage max
 
-					m_Stream.Write( (int) beheld.TithingPoints );
+                    m_Stream.Write( 0 );
+					//m_Stream.Write( (int) beheld.TithingPoints );
 				}
 
 				if ( type >= 6 )

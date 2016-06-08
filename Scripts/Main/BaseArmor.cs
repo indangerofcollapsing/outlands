@@ -11,7 +11,7 @@ using ABT = Server.Items.ArmorBodyType;
 using Server.Custom;
 using Server.Spells;
 using Server.Mobiles;
-using Server.Guilds;
+
 using System.Globalization;
 
 namespace Server.Items
@@ -1320,24 +1320,6 @@ namespace Server.Items
             }
 
             return damageTaken;
-        }
-
-        protected int GetGuildReducedDamage(int wear)
-        {
-            if (wear < 1) return wear;
-            int reduced = wear;
-
-            var parent = this.Parent as Mobile;
-            if (parent != null)
-            {
-                if (parent.Guild != null && parent.Guild is Guild)
-                {
-                    var guild = parent.Guild as Guild;
-                    if (guild.HasBonus(GuildBonus.LessArmorDamage) && Utility.RandomDouble() <= guild.BonusChance(GuildBonus.LessArmorDamage))
-                        reduced--;
-                }
-            }
-            return reduced;
         }
 
         private string GetNameString()

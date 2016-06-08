@@ -463,7 +463,8 @@ namespace Server.Engines.XmlSpawner2
 
 		private static bool SameGuild(Mobile killed, Mobile killer)
 		{
-			return ( killer.Guild == killed.Guild && killer.Guild != null && killed.Guild != null);
+			//return ( killer.Guild == killed.Guild && killer.Guild != null && killed.Guild != null);
+            return false;
 		}
 
 		private static void RefreshRankList()
@@ -738,8 +739,8 @@ namespace Server.Engines.XmlSpawner2
 				{
 					string guildname = null;
 
-					if(r.Killer.Guild != null) 
-						guildname = r.Killer.Guild.Abbreviation;
+					//if(r.Killer.Guild != null) 
+						//guildname = r.Killer.Guild.Abbreviation;
                     
 					// check for any ranking change and update rank date
 					if(r.Rank != a.Rank)
@@ -863,8 +864,8 @@ namespace Server.Engines.XmlSpawner2
 				{
 					string guildname = null;
 
-					if(r.Killer.Guild != null)
-						guildname = HtmlSpecialEncoding(r.Killer.Guild.Abbreviation);
+					//if(r.Killer.Guild != null)
+						//guildname = HtmlSpecialEncoding(r.Killer.Guild.Abbreviation);
 
                     #if(FACTIONS)
 					string factionname = null;					
@@ -2699,7 +2700,8 @@ namespace Server.Engines.XmlSpawner2
 					{
 						string guildname = null;
 
-						if(r.Killer.Guild != null) guildname = r.Killer.Guild.Abbreviation;
+						//if(r.Killer.Guild != null)
+                            //guildname = r.Killer.Guild.Abbreviation;
 
 #if(FACTIONS)
 						string factionname = null;

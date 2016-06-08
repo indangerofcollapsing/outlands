@@ -3,6 +3,7 @@ using System.Collections;
 using Server;
 using Server.Gumps;
 using Server.Network;
+using Server.Mobiles;
 
 namespace Server.Engines.ConPVP
 {
@@ -203,8 +204,13 @@ namespace Server.Engines.ConPVP
 
 				Mobile mob = entry.Mobile;
 
-				if ( mob.Guild != null )
-					AddBorderedText( x, y, 50, Center( mob.Guild.Abbreviation ), 0xFFFFFF, 0 );
+                PlayerMobile player = mob as PlayerMobile;
+
+                if (player != null)
+                {
+                    if (player.Guild != null)
+                        AddBorderedText(x, y, 50, Center(player.Guild.m_Abbreviation), 0xFFFFFF, 0);
+                }
 
 				x += 50;
 

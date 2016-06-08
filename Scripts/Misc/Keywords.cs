@@ -1,7 +1,7 @@
 using System;
 using Server;
 using Server.Items;
-using Server.Guilds;
+
 using Server.Mobiles;
 using Server.Gumps;
 
@@ -26,8 +26,9 @@ namespace Server.Misc
 				{
 					case 0x002A: // *i resign from my guild*
 					{
-						if ( from.Guild != null )
-							((Guild)from.Guild).RemoveMember( from );
+                        //TEST: GUILD
+						//if ( from.Guild != null )
+							//((Guild)from.Guild).RemoveMember( from );
 
 						break;
 					}

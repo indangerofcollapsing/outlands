@@ -5,7 +5,7 @@ using Server.Items;
 using Server.Multis;
 using Server.Spells;
 using Server.Spells.Sixth;
-using Server.Guilds;
+
 using Server.Gumps;
 
 namespace Server.Regions

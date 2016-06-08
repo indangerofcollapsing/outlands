@@ -1,5 +1,5 @@
 ﻿using Server.Commands;
-using Server.Guilds;
+
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
@@ -20,6 +20,8 @@ namespace Server.Custom.Commands
             var pm = e.Mobile as PlayerMobile;
             string message = String.Join(" ", e.Arguments);
 
+            //TEST: GUILD
+            /*
             Guild g = pm.Guild as Guild;
 
             if (g != null && g.Alliance != null) 
@@ -32,6 +34,7 @@ namespace Server.Custom.Commands
             {
                 pm.SendLocalizedMessage(1071020); // You are not in an alliance!
             }
+            */
         }
     }
 }

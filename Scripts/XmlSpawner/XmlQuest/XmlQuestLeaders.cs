@@ -202,13 +202,12 @@ namespace Server.Engines.XmlSpawner2
 				QuestRankEntry r = QuestRankList[i];
 				XmlQuestPoints a = r.QuestPointsAttachment;
 
-
 				if(r.Quester != null && !r.Quester.Deleted && r.Rank > 0 && a != null && !a.Deleted)
 				{
 					string guildname = null;
 
-					if(r.Quester.Guild != null)
-						guildname = r.Quester.Guild.Abbreviation;
+					//if(r.Quester.Guild != null)
+						//guildname = r.Quester.Guild.Abbreviation;
 
                     #if(FACTIONS)
 					string factionname = null;					
@@ -311,8 +310,8 @@ namespace Server.Engines.XmlSpawner2
 				{
 					string guildname = null;
 
-					if(r.Quester.Guild != null)
-						guildname = r.Quester.Guild.Abbreviation;
+					//if(r.Quester.Guild != null)
+						//guildname = r.Quester.Guild.Abbreviation;
 
 					// check for any ranking change and update rank date
 					if(r.Rank != a.Rank)
@@ -571,7 +570,8 @@ namespace Server.Engines.XmlSpawner2
 					{
 						string guildname = null;
 
-						if(r.Quester.Guild != null) guildname = r.Quester.Guild.Abbreviation;
+						//if(r.Quester.Guild != null) 
+                            //guildname = r.Quester.Guild.Abbreviation;
 
 						// check for any ranking change and update rank date
 						if(r.Rank != a.Rank)

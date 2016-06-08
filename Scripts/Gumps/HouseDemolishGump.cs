@@ -62,11 +62,6 @@ namespace Server.Gumps
 					{
 						return;
 					}
-					else if( !Guilds.Guild.NewGuildSystem && m_House.FindGuildstone() != null )
-					{
-						m_Mobile.SendLocalizedMessage( 501389 ); // You cannot redeed a house with a guildstone inside.
-						return;
-					}
 					/*else if ( m_House.PlayerVendors.Count > 0 )
 					{
 						m_Mobile.SendLocalizedMessage( 503236 ); // You need to collect your vendor's belongings before moving.

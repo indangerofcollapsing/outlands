@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Server;
 using Server.Items;
-using Server.Guilds;
+
 using Server.Multis;
 using Server.Mobiles;
 using Server.Engines.PartySystem;
@@ -30,14 +30,23 @@ namespace Server.Misc
             Mobile.AllowHarmfulHandler = new AllowHarmfulHandler(Mobile_AllowHarmful);
         }
 
-        private enum GuildStatus { None, Peaceful, Waring }
+        private enum GuildStatus 
+        { 
+            None,
+            Peaceful,
+            Waring 
+        }
 
         private static GuildStatus GetGuildStatus(Mobile m)
         {
+            //TEST: GUILD
+            /*
             if (m.Guild == null)
                 return GuildStatus.None;
+            
             else if (((Guild)m.Guild).Enemies.Count == 0 && m.Guild.Type == GuildType.Regular)
                 return GuildStatus.Peaceful;
+            */
 
             return GuildStatus.Waring;
         }
@@ -147,11 +156,14 @@ namespace Server.Misc
             if (target is BaseCreature && !((BaseCreature)target).Controlled)
                 return false; // Players cannot heal uncontrolled mobiles
 
+            //TEST: GUILD
+            /*
             Guild fromGuild = from.Guild as Guild;
             Guild targetGuild = target.Guild as Guild;
 
             if (fromGuild != null && targetGuild != null && (targetGuild == fromGuild || fromGuild.IsAlly(targetGuild)))
                 return true; // Guild members can be beneficial
+            */
 
             return CheckBeneficialStatus(GetGuildStatus(from), GetGuildStatus(target));
         }
@@ -185,11 +197,14 @@ namespace Server.Misc
                 return true; // Uncontrolled NPCs are only restricted by the young system
             }
 
+            //TEST: GUILD
+            /*
             Guild fromGuild = GetGuildFor(from.Guild as Guild, from);
             Guild targetGuild = GetGuildFor(target.Guild as Guild, target);
 
             if (fromGuild != null && targetGuild != null && (fromGuild == targetGuild || fromGuild.IsAlly(targetGuild) || fromGuild.IsEnemy(targetGuild)))
-                return true; // Guild allies or enemies can be harmful                      
+                return true; // Guild allies or enemies can be harmful  
+            */        
 
             if (target is BaseCreature && (((BaseCreature)target).Controlled || (((BaseCreature)target).Summoned && from != ((BaseCreature)target).SummonMaster)))
                 return false; // Cannot harm other controlled mobiles
@@ -204,26 +219,7 @@ namespace Server.Misc
             }
 
             return true;
-        }
-
-        public static Guild GetGuildFor(Guild def, Mobile m)
-        {
-            Guild g = def;
-
-            BaseCreature c = m as BaseCreature;
-
-            if (c != null && c.Controlled && c.ControlMaster != null)
-            {
-                c.DisplayGuildTitle = false;
-
-                if (c.Map != Map.Internal && (Core.AOS || Guild.NewGuildSystem || c.ControlOrder == OrderType.Attack || c.ControlOrder == OrderType.Guard))
-                    g = (Guild)(c.Guild = c.ControlMaster.Guild);
-                else if (c.Map == Map.Internal || c.ControlMaster.Guild == null)
-                    g = (Guild)(c.Guild = null);
-            }
-
-            return g;
-        }
+        }        
 
         public static int CorpseNotoriety(Mobile source, Corpse target)
         {
@@ -284,6 +280,8 @@ namespace Server.Misc
 
             if (cretOwner != null)
             {
+                //TEST: GUILD
+                /*
                 Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
                 Guild targetGuild = GetGuildFor(target.Guild as Guild, target.Owner);
 
@@ -295,6 +293,7 @@ namespace Server.Misc
                     else if (sourceGuild.IsEnemy(targetGuild))
                         return Notoriety.Enemy;
                 }
+                 */
 
                 if (cretOwner.IsLoHBoss() || cretOwner.FreelyLootable)
                     return Notoriety.CanBeAttacked;
@@ -331,6 +330,8 @@ namespace Server.Misc
                 if (target.Criminal)
                     return Notoriety.Criminal;
                 
+                //TEST: GUILD
+                /*
                 Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
                 Guild targetGuild = GetGuildFor(target.Guild as Guild, target.Owner);
 
@@ -342,6 +343,7 @@ namespace Server.Misc
                     else if (sourceGuild.IsEnemy(targetGuild))
                         return Notoriety.Enemy;
                 }
+                */
 
                 if (target.Owner != null && target.Owner is BaseCreature && ((BaseCreature)target.Owner).AlwaysAttackable)
                     return Notoriety.CanBeAttacked;
@@ -598,6 +600,8 @@ namespace Server.Misc
             }
 
             //Guilds
+            //TEST: GUILD
+            /*
             Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
             Guild targetGuild = GetGuildFor(target.Guild as Guild, target);
 
@@ -609,6 +613,7 @@ namespace Server.Misc
                 else if (sourceGuild.IsEnemy(targetGuild))
                     return Notoriety.Enemy;
             }
+            */
 
             //Creature Notoriety
             if (bc_Target != null)

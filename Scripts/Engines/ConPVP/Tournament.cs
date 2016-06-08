@@ -3276,7 +3276,7 @@ namespace Server.Engines.ConPVP
                         AddLeftArrow(25, 11, ToButtonID(0, 3));
                         AddHtml(25, 35, 250, 20, Center("Participants"), false, false);
 
-                        Mobile mob = obj as Mobile;
+                        PlayerMobile mob = obj as PlayerMobile;
 
                         if (mob == null)
                             break;
@@ -3285,7 +3285,7 @@ namespace Server.Engines.ConPVP
                         LadderEntry entry = (ladder == null ? null : ladder.Find(mob));
 
                         AddHtml(25, 53, 250, 20, String.Format("Name: {0}", mob.RawName), false, false);
-                        AddHtml(25, 73, 250, 20, String.Format("Guild: {0}", mob.Guild == null ? "None" : mob.Guild.Name + " [" + mob.Guild.Abbreviation + "]"), false, false);
+                        AddHtml(25, 73, 250, 20, String.Format("Guild: {0}", mob.Guild == null ? "None" : mob.Guild.Name + " [" + mob.Guild.m_Abbreviation + "]"), false, false);
                         AddHtml(25, 93, 250, 20, String.Format("Rank: {0}", entry == null ? "N/A" : LadderGump.Rank(entry.Index + 1)), false, false);
                         AddHtml(25, 113, 250, 20, String.Format("Level: {0}", entry == null ? 0 : Ladder.GetLevel(entry.Experience)), false, false);
                         AddHtml(25, 133, 250, 20, String.Format("Wins: {0:N0}", entry == null ? 0 : entry.Wins), false, false);

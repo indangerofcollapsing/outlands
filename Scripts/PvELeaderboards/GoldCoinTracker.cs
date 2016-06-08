@@ -87,7 +87,7 @@ namespace Server.Custom
 
                 if (pm.NumGoldCoinsGenerated > 0)
                 {
-                    string guildabbrev = pm.Guild != null ? pm.Guild.Abbreviation : " ";
+                    string guildabbrev = pm.Guild != null ? pm.Guild.m_Abbreviation : "";
                     allentries.Add(new Entry() { name = pm.Name, count = pm.NumGoldCoinsGenerated, guild = guildabbrev });
                 }
             }

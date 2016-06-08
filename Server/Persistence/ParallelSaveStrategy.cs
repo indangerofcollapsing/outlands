@@ -27,7 +27,6 @@ using System.Threading;
 using System.Diagnostics;
 
 using Server;
-using Server.Guilds;
 
 namespace Server {
 	public sealed class ParallelSaveStrategy : SaveStrategy {
@@ -51,7 +50,6 @@ namespace Server {
 
 		private SequentialFileWriter itemData, itemIndex;
 		private SequentialFileWriter mobileData, mobileIndex;
-		private SequentialFileWriter guildData, guildIndex;
 
 		private Queue<Item> _decayQueue;
 
@@ -136,12 +134,8 @@ namespace Server {
 			mobileData = new SequentialFileWriter( World.MobileDataPath, metrics );
 			mobileIndex = new SequentialFileWriter( World.MobileIndexPath, metrics );
 
-			guildData = new SequentialFileWriter( World.GuildDataPath, metrics );
-			guildIndex = new SequentialFileWriter( World.GuildIndexPath, metrics );
-
 			WriteCount( itemIndex, World.Items.Count );
-			WriteCount( mobileIndex, World.Mobiles.Count );
-			WriteCount( guildIndex, BaseGuild.List.Count );
+			WriteCount( mobileIndex, World.Mobiles.Count );			
 		}
 
 		private void WriteCount( SequentialFileWriter indexFile, int count ) {
@@ -162,9 +156,6 @@ namespace Server {
 			mobileData.Close();
 			mobileIndex.Close();
 
-			guildData.Close();
-			guildIndex.Close();
-
 			World.NotifyDiskWriteComplete();
 		}
 
@@ -174,19 +165,21 @@ namespace Server {
 
 			Item item = value as Item;
 
-			if ( item != null ) {
+			if ( item != null ) 
+            {
 				Save( item, writer );
-			} else {
+			} 
+            else
+            {
 				Mobile mob = value as Mobile;
 
-				if ( mob != null ) {
+				if ( mob != null )
+                {
 					Save( mob, writer );
-				} else {
-					BaseGuild guild = value as BaseGuild;
+				} 
 
-					if ( guild != null ) {
-						Save( guild, writer );
-					}
+                else 
+                {					
 				}
 			}
 		}
@@ -211,15 +204,7 @@ namespace Server {
 				metrics.OnMobileSaved( length );
 			}
 		}
-
-		private void Save( BaseGuild guild, BinaryMemoryWriter writer ) {
-			int length = writer.CommitTo( guildData, guildIndex, 0, guild.Id );
-
-			if ( metrics != null ) {
-				metrics.OnGuildSaved( length );
-			}
-		}
-
+        
 		private bool Enqueue( ISerializable value ) {
 			for ( int i = 0; i < consumers.Length; ++i ) {
 				Consumer consumer = consumers[cycle++ % consumers.Length];
@@ -252,37 +237,36 @@ namespace Server {
 			return committed;
 		}
 
-		private sealed class Producer : IEnumerable<ISerializable> {
+		private sealed class Producer : IEnumerable<ISerializable>
+        {
 			private IEnumerable<Item> items;
-			private IEnumerable<Mobile> mobiles;
-			private IEnumerable<BaseGuild> guilds;
+			private IEnumerable<Mobile> mobiles;			
 
-			public Producer() {
+			public Producer() 
+            {
 				items = World.Items.Values;
-				mobiles = World.Mobiles.Values;
-				guilds = BaseGuild.List.Values;
+				mobiles = World.Mobiles.Values;				
 			}
 
-			public IEnumerator<ISerializable> GetEnumerator() {
+			public IEnumerator<ISerializable> GetEnumerator() 
+            {
 				foreach ( Item item in items ) {
 					yield return item;
 				}
 
 				foreach ( Mobile mob in mobiles ) {
 					yield return mob;
-				}
-
-				foreach ( BaseGuild guild in guilds ) {
-					yield return guild;
-				}
+				}				
 			}
 
-			IEnumerator IEnumerable.GetEnumerator() {
+			IEnumerator IEnumerable.GetEnumerator() 
+            {
 				throw new NotImplementedException();
 			}
 		}
 
-		private struct ConsumableEntry {
+		private struct ConsumableEntry 
+        {
 			public ISerializable value;
 			public BinaryMemoryWriter writer;
 		}

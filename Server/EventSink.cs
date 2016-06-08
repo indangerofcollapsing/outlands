@@ -27,7 +27,6 @@ using Server;
 using Server.Items;
 using Server.Accounting;
 using Server.Network;
-using Server.Guilds;
 using Server.Commands;
 
 namespace Server
@@ -70,8 +69,6 @@ namespace Server
 	public delegate void SetAbilityEventHandler( SetAbilityEventArgs e );
 	public delegate void FastWalkEventHandler( FastWalkEventArgs e );
 	public delegate void ServerStartedEventHandler();
-	public delegate void CreateGuildHandler( CreateGuildEventArgs e );
-	public delegate void GuildGumpRequestHandler( GuildGumpRequestArgs e );
 	public delegate void QuestGumpRequestHandler( QuestGumpRequestArgs e );
 	public delegate void ClientVersionReceivedHandler( ClientVersionReceivedArgs e );
 
@@ -87,32 +84,6 @@ namespace Server
 		{
 			m_State = state;
 			m_Version = cv;
-		}
-	}
-
-	public class CreateGuildEventArgs : EventArgs
-	{
-		private int m_Id;
-		public int Id { get { return m_Id; } set { m_Id = value; } }
-
-		private BaseGuild m_Guild;
-		public BaseGuild Guild { get { return m_Guild; } set { m_Guild = value; } }
-
-		public CreateGuildEventArgs( int id )
-		{
-			m_Id = id;
-		}
-	}
-
-	public class GuildGumpRequestArgs : EventArgs
-	{
-		private Mobile m_Mobile;
-
-		public Mobile Mobile{ get{ return m_Mobile; } }
-
-		public GuildGumpRequestArgs( Mobile mobile )
-		{
-			m_Mobile = mobile;
 		}
 	}
 
@@ -853,9 +824,7 @@ namespace Server
 		public static event WorldSaveEventHandler WorldSave;
 		public static event SetAbilityEventHandler SetAbility;
 		public static event FastWalkEventHandler FastWalk;
-		public static event CreateGuildHandler CreateGuild;
 		public static event ServerStartedEventHandler ServerStarted;
-		public static event GuildGumpRequestHandler GuildGumpRequest;
 		public static event QuestGumpRequestHandler QuestGumpRequest;
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 
@@ -922,25 +891,13 @@ namespace Server
 			if ( ServerStarted != null )
 				ServerStarted();
 		}
-
-		public static void InvokeCreateGuild( CreateGuildEventArgs e )
-		{
-			if ( CreateGuild != null )
-				CreateGuild( e );
-		}
-
+        
 		public static void InvokeSetAbility( SetAbilityEventArgs e )
 		{
 			if ( SetAbility != null )
 				SetAbility( e );
 		}
-
-		public static void InvokeGuildGumpRequest( GuildGumpRequestArgs e )
-		{
-			if( GuildGumpRequest != null )
-				GuildGumpRequest( e );
-		}
-
+        
 		public static void InvokeQuestGumpRequest( QuestGumpRequestArgs e )
 		{
 			if( QuestGumpRequest != null )
@@ -1208,7 +1165,6 @@ namespace Server
 			WorldLoad = null;
 			WorldSave = null;
 			SetAbility = null;
-			GuildGumpRequest = null;
 			QuestGumpRequest = null;
 		}
 	}

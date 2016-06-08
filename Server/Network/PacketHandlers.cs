@@ -173,7 +173,6 @@ namespace Server.Network
 			RegisterExtended( 0x2C,  true, new OnPacketReceive( BandageTarget ) );
 
 			RegisterEncoded( 0x19, true, new OnEncodedPacketReceive( SetAbility ) );
-			RegisterEncoded( 0x28, true, new OnEncodedPacketReceive( GuildGumpRequest ) );
 
 			RegisterEncoded( 0x32, true, new OnEncodedPacketReceive( QuestGumpRequest ) );
 		}
@@ -282,12 +281,7 @@ namespace Server.Network
 		{
 			EventSink.InvokeSetAbility( new SetAbilityEventArgs( state.Mobile, reader.ReadInt32() ) );
 		}
-
-		public static void GuildGumpRequest( NetState state, IEntity e, EncodedReader reader )
-		{
-			EventSink.InvokeGuildGumpRequest( new GuildGumpRequestArgs( state.Mobile ) );
-		}
-
+        
 		public static void QuestGumpRequest( NetState state, IEntity e, EncodedReader reader )
 		{
 			EventSink.InvokeQuestGumpRequest( new QuestGumpRequestArgs( state.Mobile ) );

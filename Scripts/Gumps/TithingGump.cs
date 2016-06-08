@@ -87,11 +87,9 @@ namespace Server.Gumps
 
 					if ( m_Offer > totalGold )
 						m_Offer = totalGold;
-					else if ( m_Offer < 0 )
-						m_Offer = 0;
 
-					if ( (m_From.TithingPoints + m_Offer) > 100000 ) // TODO: What's the maximum?
-						m_Offer = (100000 - m_From.TithingPoints);
+					else if ( m_Offer < 0 )
+						m_Offer = 0;					
 
 					if ( m_Offer <= 0 )
 					{
@@ -105,8 +103,7 @@ namespace Server.Gumps
 					if ( pack != null && pack.ConsumeTotal( typeof( Gold ), m_Offer ) )
 					{
 						// You tithe gold to the shrine as a sign of devotion.
-						m_From.LocalOverheadMessage( MessageType.Regular, 0x3B2, 1060195 );
-						m_From.TithingPoints += m_Offer;
+						m_From.LocalOverheadMessage( MessageType.Regular, 0x3B2, 1060195 );						
 
 						m_From.PlaySound( 0x243 );
 						m_From.PlaySound( 0x2E6 );

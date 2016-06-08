@@ -29,9 +29,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Linq;
-
 using Server;
-using Server.Guilds;
 
 namespace Server
 {
@@ -43,7 +41,6 @@ namespace Server
 
 		private SequentialFileWriter _itemData, _itemIndex;
 		private SequentialFileWriter _mobileData, _mobileIndex;
-		private SequentialFileWriter _guildData, _guildIndex;
 
 		private ConcurrentBag<Item> _decayBag;
 
@@ -65,11 +62,10 @@ namespace Server
 
 			OpenFiles();
 
-			Task[] saveTasks = new Task[3];
+			Task[] saveTasks = new Task[2];
 
 			saveTasks[0] = SaveItems();
 			saveTasks[1] = SaveMobiles();
-			saveTasks[2] = SaveGuilds();
 
 			SaveTypeDatabases();
 
@@ -196,45 +192,7 @@ namespace Server
 			_mobileThreadWriters.CompleteAdding();	//We only get here after the Parallel.ForEach completes.  Lets our task tell the consumer that we're done
 
 			return commitTask;
-		}
-
-		private Task SaveGuilds()
-		{
-			//Start the blocking consumer; this runs in background.
-			Task commitTask = StartCommitTask(_guildThreadWriters, _guildData, _guildIndex);
-
-			IEnumerable<BaseGuild> guilds = BaseGuild.List.Values;
-
-			//Start the producer.
-			Parallel.ForEach(guilds, () => new QueuedMemoryWriter(),
-				(BaseGuild guild, ParallelLoopState state, QueuedMemoryWriter writer) =>
-				{
-					long startPosition = writer.Position;
-
-					guild.Serialize(writer);
-
-					int size = (int)(writer.Position - startPosition );
-
-					writer.QueueForIndex(guild, size);
-
-					if (_metrics != null)
-					{
-						_metrics.OnGuildSaved(size);
-					}
-
-					return writer;
-				},
-				(writer) =>
-				{
-					writer.Flush();
-
-					_guildThreadWriters.Add(writer);
-				});
-
-			_guildThreadWriters.CompleteAdding();	//We only get here after the Parallel.ForEach completes.  Lets our task 
-
-			return commitTask;
-		}
+		}		
 
 		public override void ProcessDecay()
 		{
@@ -257,12 +215,8 @@ namespace Server
 			_mobileData = new SequentialFileWriter(World.MobileDataPath, _metrics);
 			_mobileIndex = new SequentialFileWriter(World.MobileIndexPath, _metrics);
 
-			_guildData = new SequentialFileWriter(World.GuildDataPath, _metrics);
-			_guildIndex = new SequentialFileWriter(World.GuildIndexPath, _metrics);
-
 			WriteCount(_itemIndex, World.Items.Count);
 			WriteCount(_mobileIndex, World.Mobiles.Count);
-			WriteCount(_guildIndex, BaseGuild.List.Count);
 		}
 
 		private void CloseFiles()
@@ -272,9 +226,6 @@ namespace Server
 
 			_mobileData.Close();
 			_mobileIndex.Close();
-
-			_guildData.Close();
-			_guildIndex.Close();
 		}
 
 		private void WriteCount(SequentialFileWriter indexFile, int count)

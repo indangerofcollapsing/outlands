@@ -3,7 +3,7 @@ using Server.Targeting;
 using Server.Network;
 using Server.Mobiles;
 using Server.Items;
-using Server.Guilds;
+
 using Server.Misc;
 using Server.Multis;
 

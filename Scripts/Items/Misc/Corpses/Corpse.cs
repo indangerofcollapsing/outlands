@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Server;
 using Server.ContextMenus;
 using Server.Engines.PartySystem;
-using Server.Guilds;
+
 using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
@@ -367,7 +367,10 @@ namespace Server.Items
             TimeOfDeath = DateTime.UtcNow;
 
             AccessLevel = owner.AccessLevel;
-            Guild = owner.Guild as Guild;
+
+            //TEST: GUILD
+            //Guild = owner.Guild as Guild;
+
             Kills = owner.ShortTermMurders;
             Criminal = owner.Criminal;
 
@@ -602,7 +605,7 @@ namespace Server.Items
                             m_Aggressors = new List<Mobile>();
 
                         AccessLevel = (AccessLevel)reader.ReadInt();
-                        Guild = (Guild)reader.ReadGuild();
+                        Guild = reader.ReadItem() as Guild;
                         Kills = reader.ReadInt();
                         Criminal = reader.ReadBool();
 

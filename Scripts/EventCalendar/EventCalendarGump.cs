@@ -6,7 +6,7 @@ using Server.Mobiles;
 using System.Collections;
 using System.Collections.Generic;
 using Server.Gumps;
-using Server.Guilds;
+
 
 namespace Server.Items
 {    
@@ -431,7 +431,7 @@ namespace Server.Items
                     string guildAbbreviation = "";
 
                     if (selectedEvent.Guild != null)
-                        creator += "(" + selectedEvent.Guild.Abbreviation + ")";                   
+                        creator += "(" + selectedEvent.Guild.m_Abbreviation + ")";                   
                 }
 
                 if (selectedEvent.Creator == m_Player)
@@ -1299,7 +1299,7 @@ namespace Server.Items
                 AddLabel(613, 446, 149, "Guild");
 
                 if (player.m_EventCalendarAccount.StoredValuesEvent.Guild != null)
-                    AddLabel(652, 446, WhiteTextHue, player.m_EventCalendarAccount.StoredValuesEvent.Guild.Abbreviation);
+                    AddLabel(652, 446, WhiteTextHue, player.m_EventCalendarAccount.StoredValuesEvent.Guild.m_Abbreviation);
                 else
                     AddLabel(652, 446, WhiteTextHue, "-");
             }

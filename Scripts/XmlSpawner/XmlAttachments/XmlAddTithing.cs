@@ -57,7 +57,7 @@ namespace Server.Engines.XmlSpawner2
 			if(AttachedTo is PlayerMobile)
 			{
 				// for players just add it immediately
-				((Mobile)AttachedTo).TithingPoints += Value;
+				//((Mobile)AttachedTo).TithingPoints += Value;
 
 				((Mobile)AttachedTo).SendMessage("Receive {0}",OnIdentify((Mobile)AttachedTo));
 
@@ -65,6 +65,7 @@ namespace Server.Engines.XmlSpawner2
 				Timer.DelayCall(TimeSpan.Zero, new TimerCallback(Delete));
 				//Delete();
 			} 
+
 			else
 				if(AttachedTo is Item)
 			{
@@ -81,16 +82,12 @@ namespace Server.Engines.XmlSpawner2
 			base.OnKilled(killed, killer);
 
 			if(killer == null) return;
-		    
-			killer.TithingPoints += Value;
 
 			killer.SendMessage("Receive {0}",OnIdentify(killer));
 		}
 
-
 		public override string OnIdentify(Mobile from)
 		{
-
 			return String.Format("{0} TithingPoints", Value);
 
 		}

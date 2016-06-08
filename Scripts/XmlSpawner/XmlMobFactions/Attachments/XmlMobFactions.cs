@@ -746,7 +746,8 @@ namespace Server.Engines.XmlSpawner2
 
 		private bool SameGuild(Mobile killed, Mobile killer)
 		{
-			return ( killer.Guild == killed.Guild && killer.Guild != null && killed.Guild != null);
+			//return ( killer.Guild == killed.Guild && killer.Guild != null && killed.Guild != null);
+            return false;
 		}
 
 		public override bool HandlesOnKill { get { return true; } }

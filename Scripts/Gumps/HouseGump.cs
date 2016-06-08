@@ -634,16 +634,10 @@ namespace Server.Gumps
 				{
 					if ( isOwner )
 					{
-						if ( !Guilds.Guild.NewGuildSystem && m_House.FindGuildstone() != null )
-						{
-							from.SendLocalizedMessage( 501389 ); // You cannot redeed a house with a guildstone inside.
-						}
-						else
-						{
-							from.CloseGump( typeof( HouseDemolishGump ) );
-							from.SendGump( new HouseDemolishGump( from, m_House ) );
-						}
+						from.CloseGump( typeof( HouseDemolishGump ) );
+						from.SendGump( new HouseDemolishGump( from, m_House ) );						
 					}
+
 					else
 					{
 						from.SendLocalizedMessage( 501320 ); // Only the house owner may do this.

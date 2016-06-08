@@ -14,7 +14,6 @@ using Server;
 using Server.Accounting;
 using Server.Commands;
 using Server.ContextMenus;
-using Server.Guilds;
 using Server.Gumps;
 using Server.HuePickers;
 using Server.Items;
@@ -755,7 +754,6 @@ namespace Server
         private int m_Hue;
         private Poison m_Poison;
         private Timer m_PoisonTimer;
-        private BaseGuild m_Guild;
         private string m_GuildTitle;
         private bool m_Criminal;
         private string m_Name;
@@ -789,9 +787,6 @@ namespace Server
         private bool m_Meditating;
         private bool m_CanHearGhosts;
         private bool m_CanSwim, m_CantWalk;
-        private int m_TithingPoints;
-        private bool m_DisplayGuildTitle;
-        private Mobile m_GuildFealty;
         private DateTime m_NextSpellTime = DateTime.UtcNow;
         private DateTime[] m_StuckMenuUses;
         private Timer m_ExpireCombatant;
@@ -1277,48 +1272,9 @@ namespace Server
             if (PropertyTitle && Title != null && Title.Length > 0)
                 suffix = Title;
 
-            BaseGuild guild = m_Guild;
-
-            if (guild != null && (m_Player || m_DisplayGuildTitle))
-            {
-                if (suffix.Length > 0)
-                    suffix = String.Format("{0} [{1}]", suffix, Utility.FixHtml(guild.Abbreviation));
-                else
-                    suffix = String.Format("[{0}]", Utility.FixHtml(guild.Abbreviation));
-            }
-
             suffix = ApplyNameSuffix(suffix);
 
             list.Add(1050045, "{0} \t{1}\t {2}", prefix, name, suffix); // ~1_PREFIX~~2_NAME~~3_SUFFIX~
-
-            if (guild != null && (m_DisplayGuildTitle || (m_Player && guild.Type != GuildType.Regular)))
-            {
-                string type;
-
-                if (guild.Type >= 0 && (int)guild.Type < m_GuildTypes.Length)
-                    type = m_GuildTypes[(int)guild.Type];
-                else
-                    type = "";
-
-                string title = GuildTitle;
-
-                if (title == null)
-                    title = "";
-                else
-                    title = title.Trim();
-
-                if (NewGuildDisplay && title.Length > 0)
-                {
-                    list.Add("{0}, {1}", Utility.FixHtml(title), Utility.FixHtml(guild.Name));
-                }
-                else
-                {
-                    if (title.Length > 0)
-                        list.Add("{0}, {1} Guild{2}", Utility.FixHtml(title), Utility.FixHtml(guild.Name), type);
-                    else
-                        list.Add(Utility.FixHtml(guild.Name));
-                }
-            }
         }
 
         public virtual bool NewGuildDisplay { get { return false; } }
@@ -2917,25 +2873,7 @@ namespace Server
         public int TotalWeight
         {
             get { return GetTotal(TotalType.Weight); }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int TithingPoints
-        {
-            get
-            {
-                return m_TithingPoints;
-            }
-            set
-            {
-                if (m_TithingPoints != value)
-                {
-                    m_TithingPoints = value;
-
-                    Delta(MobileDelta.TithingPoints);
-                }
-            }
-        }
+        }        
 
         private int m_Followers;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -4154,9 +4092,6 @@ namespace Server
                 m_Stabled[i].Delete();
 
             SendRemovePacket();
-
-            if (m_Guild != null)
-                m_Guild.OnDelete(this);
 
             m_Deleted = true;
 
@@ -6129,7 +6064,6 @@ namespace Server
                     goto case 35;
 
                 case 35:
-                    m_GuildJoinTime = reader.ReadDateTime();
                     goto case 34;
                 case 34:
                     {
@@ -6176,8 +6110,6 @@ namespace Server
                     }
                 case 27:
                     {
-                        m_TithingPoints = reader.ReadInt();
-
                         goto case 26;
                     }
                 case 26:
@@ -6250,20 +6182,14 @@ namespace Server
                     }
                 case 13:
                     {
-                        m_GuildFealty = reader.ReadMobile();
-
                         goto case 12;
                     }
                 case 12:
                     {
-                        m_Guild = reader.ReadGuild();
-
                         goto case 11;
                     }
                 case 11:
                     {
-                        m_DisplayGuildTitle = reader.ReadBool();
-
                         goto case 10;
                     }
                 case 10:
@@ -6337,10 +6263,7 @@ namespace Server
 
                         if (version < 18)
                             m_Virtues = new VirtueInfo();
-
-                        if (version < 11)
-                            m_DisplayGuildTitle = true;
-
+                        
                         if (version < 3)
                             m_StatCap = 225;
 
@@ -6605,8 +6528,6 @@ namespace Server
             //version 36
 
             //version 35
-            writer.Write(m_GuildJoinTime);
-
             //version 34
             writer.Write(m_Frozen);
 
@@ -6634,8 +6555,6 @@ namespace Server
 
             writer.Write(this.Race);
 
-            writer.Write((int)m_TithingPoints);
-
             writer.Write(m_Corpse);
 
             writer.Write(m_CreationTime);
@@ -6658,12 +6577,6 @@ namespace Server
             writer.Write(m_FollowersMax);
 
             writer.Write(m_MagicDamageAbsorb);
-
-            writer.Write(m_GuildFealty);
-
-            writer.Write(m_Guild);
-
-            writer.Write(m_DisplayGuildTitle);
 
             writer.Write(m_CanSwim);
 
@@ -9129,63 +9042,7 @@ namespace Server
                 m_YellHue = value;
             }
         }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string GuildTitle
-        {
-            get
-            {
-                return m_GuildTitle;
-            }
-            set
-            {
-                string old = m_GuildTitle;
-
-                if (old != value)
-                {
-                    m_GuildTitle = value;
-
-                    if (m_Guild != null && !m_Guild.Disbanded && m_GuildTitle != null)
-                        this.SendLocalizedMessage(1018026, true, m_GuildTitle); // Your guild title has changed :
-
-                    InvalidateProperties();
-
-                    OnGuildTitleChange(old);
-                }
-            }
-        }
-
-        public virtual void OnGuildTitleChange(string oldTitle)
-        {
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool DisplayGuildTitle
-        {
-            get
-            {
-                return m_DisplayGuildTitle;
-            }
-            set
-            {
-                m_DisplayGuildTitle = value;
-                InvalidateProperties();
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile GuildFealty
-        {
-            get
-            {
-                return m_GuildFealty;
-            }
-            set
-            {
-                m_GuildFealty = value;
-            }
-        }
-
+        
         private string m_NameMod;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -9253,39 +9110,6 @@ namespace Server
         }
 
         public virtual void OnAfterNameChange(string oldName, string newName)
-        {
-        }
-        
-        public BaseGuild Guild
-        {
-            get
-            {
-                return m_Guild;
-            }
-            set
-            {
-                BaseGuild old = m_Guild;
-
-                if (old != value)
-                {
-                    if (value == null)
-                        GuildTitle = null;
-
-                    m_Guild = value;
-                    m_GuildJoinTime = DateTime.UtcNow;
-                    Delta(MobileDelta.Noto);
-                    InvalidateProperties();
-
-                    OnGuildChange(old);
-                }
-            }
-        }
-
-        private DateTime m_GuildJoinTime = DateTime.MinValue;
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public DateTime GuildJoinTime { get { return m_GuildJoinTime; } set { m_GuildJoinTime = value; } }
-
-        public virtual void OnGuildChange(BaseGuild oldGuild)
         {
         }
 
@@ -11961,6 +11785,8 @@ namespace Server
             else if (AccessLevel == AccessLevel.Player && DisableHiddenSelfClick && Hidden && from == this)
                 return;
 
+            //TEST: GUILD
+            /*
             if (m_GuildClickMessage)
             {
                 BaseGuild guild = m_Guild;
@@ -11985,6 +11811,7 @@ namespace Server
                     PrivateOverheadMessage(MessageType.Regular, SpeechHue, true, text, from.NetState);
                 }
             }
+            */
 
             int hue;
 

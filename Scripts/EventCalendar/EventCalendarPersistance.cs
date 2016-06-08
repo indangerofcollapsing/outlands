@@ -14,7 +14,7 @@ using Server.Accounting;
 using System.Linq;
 using Server.Custom;
 using System.Text;
-using Server.Guilds;
+
 
 namespace Server
 {
@@ -1056,7 +1056,7 @@ namespace Server
 
         public PlayerMobile Creator = null;
         public string CreatorName = "";
-        public BaseGuild Guild = null;
+        public Guild Guild = null;
         public DateTime CreationDate = DateTime.UtcNow;
         public DateTime LastUpdated = DateTime.UtcNow;
 
@@ -1212,7 +1212,7 @@ namespace Server
 
                 Creator = (PlayerMobile)reader.ReadMobile();
                 CreatorName = reader.ReadString();
-                Guild = reader.ReadGuild();
+                Guild = reader.ReadItem() as Guild;
                 CreationDate = reader.ReadDateTime();
                 LastUpdated = reader.ReadDateTime();
 

@@ -88,7 +88,6 @@
     <Compile Include="EventSink.cs" />
     <Compile Include="ExpansionInfo.cs" />
     <Compile Include="Geometry.cs" />
-    <Compile Include="Guild.cs" />
     <Compile Include="Gumps\Gump.cs" />
     <Compile Include="Gumps\GumpAlphaRegion.cs" />
     <Compile Include="Gumps\GumpBackground.cs" />

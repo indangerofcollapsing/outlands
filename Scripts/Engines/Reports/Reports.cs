@@ -180,8 +180,13 @@ namespace Server.Engines.Reports
 					int level = Ladder.GetLevel( entry.Experience );
 					string guild = "";
 
-					if ( entry.Mobile.Guild != null )
-						guild = entry.Mobile.Guild.Abbreviation;
+                    PlayerMobile player = entry.Mobile as PlayerMobile;
+
+                    if (player != null)
+                    {
+                        if (player.Guild != null)
+                            guild = player.Guild.m_Abbreviation;
+                    }					
 
 					ReportItem item = new ReportItem();
 

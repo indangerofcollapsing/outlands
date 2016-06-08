@@ -24,7 +24,7 @@ using Server.Engines.PartySystem;
 using Server.Commands;
 using Server.Custom;
 using Server.SkillHandlers;
-using Server.Guilds;
+
 using Server.Regions;
 using Server.Poker;
 using System.Text;
@@ -1059,6 +1059,7 @@ namespace Server.Mobiles
         public PlayerEnhancementAccountEntry m_PlayerEnhancementAccountEntry = null;
         public InfluenceAccountEntry m_InfluenceAccountEntry = null;
         public UOACZAccountEntry m_UOACZAccountEntry = null;
+        public Guild Guild = null;
 
         public override bool KeepsItemsOnDeath { get { return (AccessLevel > AccessLevel.Player || Region is UOACZRegion); } }
 
@@ -1380,60 +1381,6 @@ namespace Server.Mobiles
             set { SetFlag(PlayerFlag.BoatMovement, value); }
         }
 
-        public bool CheckPlayerAccountsForCommonGuild(PlayerMobile player2)
-        {
-            bool foundSameGuild = false;
-
-            List<Guilds.BaseGuild> m_Guilds = new List<Guilds.BaseGuild>();
-            List<Guilds.BaseGuild> secondPlayerGuilds = new List<Guilds.BaseGuild>();
-
-            Account account = Account as Account;
-
-            if (account != null)
-            {
-                for (int a = 0; a < (account.Length - 1); a++)
-                {
-                    Mobile m_Mobile = account.accountMobiles[a] as Mobile;
-
-                    if (m_Mobile != null)
-                    {
-                        if (!m_Mobile.Deleted && m_Mobile.Guild != null)
-                            m_Guilds.Add(m_Mobile.Guild);
-                    }
-                }
-            }
-
-            Account secondPlayerAccount = player2.Account as Account;
-
-            if (secondPlayerAccount != null)
-            {
-                for (int a = 0; a < (secondPlayerAccount.Length - 1); a++)
-                {
-                    Mobile m_Mobile = secondPlayerAccount.accountMobiles[a] as Mobile;
-
-                    if (m_Mobile != null)
-                    {
-                        if (!m_Mobile.Deleted && m_Mobile.Guild != null)
-                            secondPlayerGuilds.Add(m_Mobile.Guild);
-                    }
-                }
-            }
-
-            foreach (Guilds.BaseGuild player1Guild in m_Guilds)
-            {
-                foreach (Guilds.BaseGuild player2Guild in secondPlayerGuilds)
-                {
-                    if (player1Guild == player2Guild)
-                    {
-                        return true;
-                        break;
-                    }
-                }
-            }
-
-            return false;
-        }
-
         public PlayerTitleColors TitleColorState { get; set; }
         public int SelectedTitleColorIndex;
         public EColorRarity SelectedTitleColorRarity;
@@ -1657,8 +1604,7 @@ namespace Server.Mobiles
         private bool m_IgnoreMobiles; // IgnoreMobiles should be moved to Server.Mobiles        
         private int m_NonAutoreinsuredItems; // number of items that could not be automatically reinsured because gold in bank was not enough
 
-        private DateTime m_LastOnline;
-        private Server.Guilds.RankDefinition m_GuildRank = Server.Guilds.RankDefinition.Lowest;
+        private DateTime m_LastOnline;       
 
         private bool m_Companion;
         [CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
@@ -1731,19 +1677,7 @@ namespace Server.Mobiles
 
                 return m_AllFollowers;
             }
-        }
-
-        public Server.Guilds.RankDefinition GuildRank
-        {
-            get
-            {
-                if (this.AccessLevel >= AccessLevel.GameMaster)
-                    return Server.Guilds.RankDefinition.Leader;
-                else
-                    return m_GuildRank;
-            }
-            set { m_GuildRank = value; }
-        }
+        }        
 
         private int m_Profession;
         [CommandProperty(AccessLevel.GameMaster)]
@@ -4170,7 +4104,8 @@ namespace Server.Mobiles
 
             int totalDamage = 0;
 
-            bool playerInGuild = Guild != null;
+            //TEST: GUILD
+            bool playerInGuild = false; //Guild != null;
 
             Dictionary<PlayerMobile, int> damageInflicted = new Dictionary<PlayerMobile, int>();
 
@@ -4588,6 +4523,8 @@ namespace Server.Mobiles
         {
             if (type == MessageType.Guild) //Guilds.Guild.NewGuildSystem && ( || type == MessageType.Alliance
             {
+                //TEST: GUILD
+                /*
                 Guilds.Guild g = this.Guild as Guilds.Guild;
 
                 if (g == null)
@@ -4598,8 +4535,10 @@ namespace Server.Mobiles
                     //m_GuildMessageHue = hue;
 
                     g.GuildChat(this, text);
+
                     SendToStaffMessage(this, "[Guild]: {0}", text);
                 }
+                */
             }
 
             else if (type == MessageType.Alliance)
@@ -5079,9 +5018,7 @@ namespace Server.Mobiles
             {
                 writer.Write(PreviousNames[a]);
             }
-
-            writer.WriteEncodedInt(m_GuildRank.Rank);
-
+            
             writer.Write(m_PassiveSkillGainRemaining);
             writer.Write((int)m_SatisfactionLevel);
             writer.Write(m_SatisfactionExpiration);
@@ -5177,15 +5114,7 @@ namespace Server.Mobiles
                 {
                     PreviousNames.Add(reader.ReadString());
                 }
-
-                int rank = reader.ReadEncodedInt();
-                int maxRank = Guilds.RankDefinition.Ranks.Length - 1;
-
-                if (rank > maxRank)
-                    rank = maxRank;
-
-                m_GuildRank = Guilds.RankDefinition.Ranks[rank];
-
+                
                 m_PassiveSkillGainRemaining = reader.ReadDouble();
                 m_SatisfactionLevel = (Food.SatisfactionLevelType)reader.ReadInt();
                 m_SatisfactionExpiration = reader.ReadDateTime();
@@ -5377,17 +5306,6 @@ namespace Server.Mobiles
             return sameParty;
         }
 
-        private bool SameGuild(Mobile target)
-        {
-            bool sameGuild = false;
-            if (Guild != null && target.Guild != null)
-            {
-                if (Guild == target.Guild)
-                    sameGuild = true;
-            }
-            return sameGuild;
-        }
-
         public override bool CanSee(Mobile m)
         {
             if (m is CharacterStatue)
@@ -5446,9 +5364,7 @@ namespace Server.Mobiles
 
             DisguiseTimers.RemoveTimer(this);
         }
-
-        public override bool NewGuildDisplay { get { return Server.Guilds.Guild.NewGuildSystem; } }
-
+        
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);            
@@ -5488,15 +5404,10 @@ namespace Server.Mobiles
 
             try
             {
-                bool show_guild = GuildClickMessage && Guild != null && (DisplayGuildTitle || (Player && Guild.Type != Guilds.GuildType.Regular));
+                //TEST: GUILD
+                //bool show_guild = GuildClickMessage && Guild != null && (DisplayGuildTitle || (Player && Guild.Type != Guilds.GuildType.Regular));
                 bool show_other_titles = true;
-
-                if (from.Region is UOACZRegion)
-                {
-                    show_guild = false;
-                    show_other_titles = false;
-                }
-
+                
                 int newhue;
 
                 if (NameHue != -1)
@@ -5508,6 +5419,8 @@ namespace Server.Mobiles
                 else
                     newhue = Notoriety.GetHue(Notoriety.Compute(from, this));
 
+                //TEST: GUILD
+                /*
                 if (show_guild) // GUILD NO FACTION
                 {
                     string title = GuildTitle;
@@ -5526,6 +5439,7 @@ namespace Server.Mobiles
                     string text = String.Format(title.Length <= 0 ? "[{1}]{2}" : "[{0}, {1}]{2}", title, Guild.Abbreviation, type);
                     PrivateOverheadMessage(MessageType.Regular, SpeechHue, true, text, from.NetState);
                 }
+                */
 
                 if (show_other_titles)
                 {
@@ -5814,14 +5728,6 @@ namespace Server.Mobiles
         }
 
         public override void OnGenderChanged(bool oldFemale)
-        {
-        }
-
-        public override void OnGuildChange(Server.Guilds.BaseGuild oldGuild)
-        {
-        }
-
-        public override void OnGuildTitleChange(string oldTitle)
         {
         }
 

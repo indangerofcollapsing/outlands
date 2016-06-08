@@ -12,7 +12,7 @@ using Server.Mobiles;
 using Server.Targeting;
 using Server.Spells;
 using Server.Commands;
-using Server.Guilds;
+
 
 namespace Server
 {
@@ -2463,8 +2463,9 @@ namespace Server
             //Same Guild And Auto-Guild Friendship Turned On
             if (GuildAsFriends)
             {
-                if (m.Guild != null && Owner.Guild != null && m.Guild == Owner.Guild)
-                    return true;
+                //TEST: GUILD
+                //if (m.Guild != null && Owner.Guild != null && m.Guild == Owner.Guild)
+                    //return true;
             }
 
             if (m_Friends == null)

@@ -19,7 +19,7 @@ using Server.Engines.PartySystem;
 
 using Server.SkillHandlers;
 
-using Server.Guilds;
+
 using Server.Commands;
 using System.Linq;
 using Server.Engines.Craft;
@@ -7687,7 +7687,6 @@ namespace Server.Mobiles
                 PackSpellHueDeed(1, .15);
 
                 PackItem(new TreasureMap(RandomMinMaxScaled(3, 6)));
-                AwardGuildExperience();
             }
 
             else if (IsChamp() && !(Region is NewbieDungeonRegion) && !DiedByShipSinking && !(Region is UOACZRegion))
@@ -7714,7 +7713,6 @@ namespace Server.Mobiles
                 PackSpellHueDeed(1, .03);
 
                 PackItem(new TreasureMap(RandomMinMaxScaled(2, 6)));
-                AwardGuildExperience();
             }
 
             if (m_Paragon && !NoKillAwards && !DiedByShipSinking && !(Region is UOACZRegion))
@@ -7824,26 +7822,7 @@ namespace Server.Mobiles
                     }
                 }
             }
-        }
-
-        protected void AwardGuildExperience()
-        {
-            List<DamageStore> damagers = GetLootingRights(DamageEntries, HitsMax);
-            var guilds = new List<Guild>();
-            foreach (var damage in damagers)
-            {
-                // make sure they did at least some damage more than a spell
-                if (damage.m_HasRight && damage.m_Mobile.Guild != null && damage.m_Mobile.Guild is Guild)
-                {
-                    var playerGuild = damage.m_Mobile.Guild as Guild;
-                    if (!guilds.Contains(playerGuild))
-                        guilds.Add(playerGuild);
-
-                }
-            }
-
-            guilds.ForEach(g => g.TickExperience());
-        }
+        }       
 
         public int ComputeBonusDamage(List<DamageEntry> list, Mobile m)
         {
@@ -8174,16 +8153,6 @@ namespace Server.Mobiles
                         if (!ds.m_HasRight)
                             continue;
 
-                        if (ds.m_Mobile.Guild != null && ds.m_Mobile.Guild is Guild)
-                        {
-                            var guild = ds.m_Mobile.Guild as Guild;
-                            if (guild.HasBonus(GuildBonus.IncreasedFameKarma))
-                            {
-                                totalFame = (int)(totalFame * 1.1);
-                                totalKarma = (int)(totalKarma * 1.1);
-                            }
-                        }
-
                         FameKarmaTitles.AwardFame(ds.m_Mobile, totalFame, true);
                         FameKarmaTitles.AwardKarma(ds.m_Mobile, totalKarma, true);
 
@@ -8506,7 +8475,9 @@ namespace Server.Mobiles
                 Controlled = false;
                 ControlTarget = null;
                 ControlOrder = OrderType.None;
-                Guild = null;
+                
+                //TEST: GUILD
+                //Guild = null;
 
                 Delta(MobileDelta.Noto);
             }
@@ -8567,7 +8538,8 @@ namespace Server.Mobiles
                     }
                 }
 
-                Guild = null;
+                //TEST: GUILD
+                //Guild = null;
 
                 if (m_DeleteTimer != null)
                 {

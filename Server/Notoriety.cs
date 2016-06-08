@@ -21,7 +21,6 @@
 using System;
 using System.Collections;
 using Server;
-using Server.Guilds;
 using Server.Items;
 
 namespace Server

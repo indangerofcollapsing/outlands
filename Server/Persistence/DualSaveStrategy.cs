@@ -24,9 +24,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
-
 using Server;
-using Server.Guilds;
 
 namespace Server {
 	public sealed class DualSaveStrategy : StandardSaveStrategy {
@@ -49,7 +47,6 @@ namespace Server {
 			saveThread.Start();
 
 			SaveMobiles(metrics);
-			SaveGuilds(metrics);
 
 			saveThread.Join();
 

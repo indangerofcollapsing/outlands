@@ -24,9 +24,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
-
 using Server;
-using Server.Guilds;
 
 namespace Server {
 	public class StandardSaveStrategy : SaveStrategy {
@@ -59,7 +57,6 @@ namespace Server {
 
 			SaveMobiles(metrics);
 			SaveItems(metrics);
-			SaveGuilds(metrics);
 
 			if (permitBackgroundWrite && UseSequentialWriters)	//If we're permitted to write in the background, but we don't anyways, then notify.
 				World.NotifyDiskWriteComplete();
@@ -163,42 +160,7 @@ namespace Server {
 			idx.Close();
 			tdb.Close();
 			bin.Close();
-		}
-
-		protected void SaveGuilds(SaveMetrics metrics)
-		{
-			GenericWriter idx;
-			GenericWriter bin;
-
-			if (UseSequentialWriters)
-			{
-				idx = new BinaryFileWriter( World.GuildIndexPath, false );
-				bin = new BinaryFileWriter( World.GuildDataPath, true );
-			} else {
-				idx = new AsyncWriter( World.GuildIndexPath, false );
-				bin = new AsyncWriter( World.GuildDataPath, true );
-			}
-
-			idx.Write( ( int ) BaseGuild.List.Count );
-			foreach ( BaseGuild guild in BaseGuild.List.Values ) {
-				long start = bin.Position;
-
-				idx.Write( ( int ) 0 );//guilds have no typeid
-				idx.Write( ( int ) guild.Id );
-				idx.Write( ( long ) start );
-
-				guild.Serialize( bin );
-
-				if ( metrics != null ) {
-					metrics.OnGuildSaved( ( int ) ( bin.Position - start ) );
-				}
-
-				idx.Write( ( int ) ( bin.Position - start ) );
-			}
-
-			idx.Close();
-			bin.Close();
-		}
+		}		
 
 		public override void ProcessDecay() {
 			while ( _decayQueue.Count > 0 ) {

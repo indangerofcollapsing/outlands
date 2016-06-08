@@ -2,7 +2,7 @@ using System;
 using Server;
 using Server.Multis;
 using Server.Network;
-using Server.Guilds;
+
 using Server.Items;
 
 namespace Server.Gumps
@@ -22,7 +22,9 @@ namespace Server.Gumps
 
 			AddPage( 0 );
 
-			int offset = ( Guild.NewGuildSystem )? 20 : 0;
+            //TEST: GUILD
+			//int offset = ( Guild.NewGuildSystem )? 20 : 0;
+            int offset = 0;
 
 			AddBackground( 0, 0, 220, 160 + offset, 5054 );
 
@@ -47,11 +49,15 @@ namespace Server.Gumps
             AddHtmlLocalized(45, 110, 150, 20, 1061279, GetColor(SecureLevel.Friends), false, false); // Friends
 
             Mobile houseOwner = house.Owner;
+
+            //TEST: GUILD
+            /*
             if (Guild.NewGuildSystem && house != null && houseOwner != null && houseOwner.Guild != null && ((Guild)houseOwner.Guild).Leader == houseOwner)	//Only the actual House owner AND guild master can set guild secures
             {
                 AddButton(10, 130, GetFirstID(SecureLevel.Guild), 4007, 5, GumpButtonType.Reply, 0);
                 AddHtmlLocalized(45, 130, 150, 20, 1063455, GetColor(SecureLevel.Guild), false, false); // Guild Members
             }
+            */
 
 			AddButton( 10, 130 + offset, GetFirstID( SecureLevel.Anyone ), 4007, 4, GumpButtonType.Reply, 0 );
 			AddHtmlLocalized( 45, 130 + offset, 150, 20, 1061626, GetColor( SecureLevel.Anyone ), false, false ); // Anyone

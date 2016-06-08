@@ -1,6 +1,6 @@
 using System;
 using Server;
-using Server.Guilds;
+
 using Server.Gumps;
 
 namespace Server.Items
