@@ -893,6 +893,7 @@ namespace Server.Mobiles
                 if (pm.m_PokerGame != null)
                 {
                     PokerPlayer player = pm.m_PokerGame.GetPlayer(pm);
+
                     if (player != null)
                     {
                         if (pm.m_PokerGame.Players != null && pm.m_PokerGame.Players.Contains(player))
@@ -1060,6 +1061,7 @@ namespace Server.Mobiles
         public InfluenceAccountEntry m_InfluenceAccountEntry = null;
         public UOACZAccountEntry m_UOACZAccountEntry = null;
         public Guild Guild = null;
+        public GuildMemberEntry m_GuildMemberEntry = null;
 
         public override bool KeepsItemsOnDeath { get { return (AccessLevel > AccessLevel.Player || Region is UOACZRegion); } }
 
@@ -1391,7 +1393,7 @@ namespace Server.Mobiles
         public TimeSpan m_TimeSpanResurrected;
         public List<string> PreviousNames = new List<string>();
         public DateTime HueModEnd { get; set; }
-        public TimeSpan LoginElapsedTime { get; set; }
+        public TimeSpan LoginElapsedTime { get; set; }        
 
         private DateTime m_Created = DateTime.UtcNow;
         public DateTime CreatedOn { set { m_Created = value; } get { return m_Created; } }
@@ -1603,9 +1605,7 @@ namespace Server.Mobiles
 
         private bool m_IgnoreMobiles; // IgnoreMobiles should be moved to Server.Mobiles        
         private int m_NonAutoreinsuredItems; // number of items that could not be automatically reinsured because gold in bank was not enough
-
-        private DateTime m_LastOnline;       
-
+        
         private bool m_Companion;
         [CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
         public bool Companion
@@ -1741,10 +1741,18 @@ namespace Server.Mobiles
             set { m_NextBODTurnInTime = value; }
         }
 
+        private DateTime m_LastOnline;   
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime LastOnline
         {
-            get { return m_LastOnline; }
+            get
+            {
+                if (NetState != null)
+                    return DateTime.UtcNow;
+
+                return m_LastOnline; 
+            }
+
             set { m_LastOnline = value; }
         }
 
@@ -5789,6 +5797,10 @@ namespace Server.Mobiles
         public override void OnDelete()
         {
             ReleaseAllFollowers();
+
+            //Guild
+            if (Guild != null)
+                Guild.OnPlayerDeleted(this);
 
             #region UOACZ
 
