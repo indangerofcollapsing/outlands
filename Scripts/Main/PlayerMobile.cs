@@ -797,9 +797,12 @@ namespace Server.Mobiles
                 if (pm_From.AccessLevel > AccessLevel.Player)
                     pm_From.Send(SpeedControl.MountSpeed);
             }
-
+            
             //Damage Tracker
             pm_From.m_DamageTracker = new DamageTracker(pm_From);
+
+            //Guild
+            GuildPersistance.OnLogin(pm_From);
 
             //Faction
             Faction.OnLogin(pm_From);
@@ -1062,6 +1065,7 @@ namespace Server.Mobiles
         public UOACZAccountEntry m_UOACZAccountEntry = null;
         public Guild Guild = null;
         public GuildMemberEntry m_GuildMemberEntry = null;
+        public GuildGumpSettings m_GuildGumpSettings = null;
 
         public override bool KeepsItemsOnDeath { get { return (AccessLevel > AccessLevel.Player || Region is UOACZRegion); } }
 

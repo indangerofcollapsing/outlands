@@ -19,7 +19,6 @@ namespace Server.Items
         {
         }
 
-
         public override void OnDoubleClick(Mobile from)
         {
             base.OnDoubleClick(from);
@@ -28,11 +27,11 @@ namespace Server.Items
 
             if (player != null)
             {
-                player.CloseGump(typeof(AchievementsGump));
-                player.SendGump(new AchievementsGump(player, AchievementsGump.PageType.Main, 0, AchievementCategory.Warfare, 0, 0));
+                //player.CloseGump(typeof(AchievementsGump));
+                //player.SendGump(new AchievementsGump(player, AchievementsGump.PageType.Main, 0, AchievementCategory.Warfare, 0, 0));
 
-                //player.CloseGump(typeof(TestGump));
-                //player.SendGump(new TestGump(player));
+                player.CloseGump(typeof(GuildDiplomacyGump));
+                player.SendGump(new GuildDiplomacyGump(player));
             }
         }
 

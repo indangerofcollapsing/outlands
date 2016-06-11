@@ -23,6 +23,11 @@ namespace Server.Items
 
     public static class GuildPersistance
     {
+        public static int GuildNameCharacterLimit = 35;
+        public static int GuildAbbreviationCharacterLimit = 3;
+
+        public static int GuildRegistrationFee = 50000;
+
         public static int GuildTextHue = 63;
         public static TimeSpan InactivityThreshold = TimeSpan.FromDays(60);
 
@@ -39,6 +44,18 @@ namespace Server.Items
                 if (PersistanceItem == null)
                     PersistanceItem = new GuildPersistanceItem();               
             });
+        }
+
+        public static void OnLogin(PlayerMobile player)
+        {
+            if (player == null)
+                return;
+
+            if (player.m_GuildGumpSettings == null)
+                player.m_GuildGumpSettings = new GuildGumpSettings(player);
+
+            else if (player.m_GuildGumpSettings.Deleted)
+                player.m_GuildGumpSettings = new GuildGumpSettings(player);
         }
         
         public static void Serialize(GenericWriter writer)
@@ -90,7 +107,59 @@ namespace Server.Items
             GuildPersistance.PersistanceItem = this;
             GuildPersistance.Deserialize(reader);
         }
-    }    
+    }
+
+    public class GuildGumpSettings: Item
+    {
+        public PlayerMobile m_Player;
+        public GuildGumpPage m_GuildGumpPage = GuildGumpPage.CreateGuild;
+
+        [Constructable]
+        public GuildGumpSettings(PlayerMobile player): base(0x0)
+        {
+            Visible = false;
+            Movable = false;
+
+            m_Player = player;
+
+            if (player == null)
+                Delete();
+
+            else
+                m_Player.m_GuildGumpSettings = this;
+        }
+
+        public GuildGumpSettings(Serial serial): base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write((int)0); //Version
+
+            //Version 0
+            writer.Write(m_Player);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            int version = reader.ReadInt();
+
+            //Version 0
+            if (version >= 0)
+            {
+                m_Player = reader.ReadMobile() as PlayerMobile;
+            }
+
+            if (m_Player == null)
+                Delete();
+
+            else
+                m_Player.m_GuildGumpSettings = this;
+        }
+    }
 
     public class GuildMemberEntry
     {

@@ -158,6 +158,7 @@
     <Compile Include="Faction\FactionPersistance.cs" />
     <Compile Include="Faction\Factions\Unity.cs" />
     <Compile Include="Faction\Factions\Freedom.cs" />
+    <Compile Include="Guilds\GuildGump.cs" />
     <Compile Include="Guilds\GuildPersistance.cs" />
     <Compile Include="Gumps\ConfirmBreakCrystalGump.cs" />
     <Compile Include="Gumps\ConfirmHeritageGump.cs" />
