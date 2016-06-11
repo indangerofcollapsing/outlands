@@ -408,7 +408,7 @@ namespace Server
                             break;
 
                             case AchievementCategory.Candidates:
-                                AddLabel(startX + 27, startY + 4, 2564, "Candidates");
+                                AddLabel(startX + 27, startY + 4, 2553, "Candidates");
                                 AddImage(startX + 60, startY + 32, 10550, 2566);
                                 AddImage(startX + 88, startY + 32, 10552, 2566);
                                 AddButton(startX + 74, startY + 45, 9721, 9721, buttonIndex, GumpButtonType.Reply, 0);
@@ -804,7 +804,7 @@ namespace Server
                         break;
 
                         case AchievementCategory.Candidates:
-                            AddLabel(startX + 27, startY + 4, 2564, "Candidates");
+                            AddLabel(startX + 27, startY + 4, 2553, "Candidates");
                             AddImage(startX + 60, startY + 32, 10550, 2566);
                             AddImage(startX + 88, startY + 32, 10552, 2566);
                             AddButton(startX + 74, startY + 45, 9721, 9721, 2, GumpButtonType.Reply, 0);

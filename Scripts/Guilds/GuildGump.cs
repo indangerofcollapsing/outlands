@@ -9,15 +9,17 @@ using Server.Network;
 
 namespace Server
 {
-    public enum GuildGumpPage
+    public enum GuildGumpPageType
     {
-        None,
         CreateGuild,
         Invitations,
+
         Overview,
         Members,
         Candidates,
-        Diplomacy
+        Diplomacy,
+        Faction,
+        Messages
     }
         
     #region Create Guild
@@ -25,18 +27,22 @@ namespace Server
     public class CreateGuildGump : Gump
     {
         public PlayerMobile m_Player;
+        public int m_GuildTabPage = 0;
 
         public string GuildName = "Guild Name";
         public string GuildAbbreviation = "ABC";
         public int GuildSymbolIcon = 2500;
         public int GuildSymbolHue = 0;
 
-        public CreateGuildGump(Mobile from): base(10, 10)
+        public CreateGuildGump(Mobile from, int guildTabPage): base(10, 10)
         {
             m_Player = from as PlayerMobile;
+            m_GuildTabPage = guildTabPage;
 
             if (m_Player == null) 
                 return;
+
+            Guilds.CheckCreateGuildGuildSettings(m_Player);
 
             Closable = true;
             Disposable = true;
@@ -101,14 +107,156 @@ namespace Server
             AddImage(184, 330, 3604, 2052);
 
             #endregion
-            
+
+            #region Sidebar
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.CreateGuild)) return;
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
+            int startX = 12;
+            int startY = 50;
+
+            int tabSpacing = 90;
+
+            for (int a = 0; a < guildTabCount + 1; a++)
+            {
+                int guildTabIndex = guildTabStartIndex + a;
+                int buttonIndex = 20 + guildTabIndex;
+
+                GuildGumpPageType gumpPageType = m_GuildTabs[guildTabIndex];
+
+                #region Guild Tab Images
+
+                int pressedId = 9721;
+                int releaseId = 9724;
+
+                if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                {
+                    pressedId = 9724;
+                    releaseId = 9721;
+                }
+
+                switch (gumpPageType)
+                {
+                    case GuildGumpPageType.Messages:
+                        AddLabel(startX + 36, startY + 5, 2526, "Messages");
+                        AddImage(startX + 60, startY + 32, 10550, 55);
+                        AddImage(startX + 88, startY + 32, 10552, 55);
+                        if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                            AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        else
+
+                            AddItem(startX + -1, startY + 18, 7774);
+                        break;
+
+                    case GuildGumpPageType.Overview:
+                        AddLabel(startX + 34, startY + 5, 2401, "Overview");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddImage(startX + 13, startY + 35, 11016);
+                        break;
+
+                    case GuildGumpPageType.Invitations:
+                        AddItem(startX + 21, startY + 41, 2942);
+                        AddItem(startX + -3, startY + 25, 2943);
+                        AddLabel(startX + 12, startY + 5, 2564, "Guild Invitations");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 9, startY + 31, 5359);
+                        AddItem(startX + 23, startY + 24, 4031);
+                        AddItem(startX + 23, startY + 50, 5357);
+                        AddItem(startX + 27, startY + 52, 5357);
+                        break;
+
+                    case GuildGumpPageType.Members:
+                        AddLabel(startX + 35, startY + 5, 64, "Members");
+                        AddItem(startX + 69, startY + 46, 6877);
+                        AddImage(startX + 60, startY + 32, 10550, 2551);
+                        AddImage(startX + 88, startY + 32, 10552, 2551);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 20, startY + 29, 10905);
+                        AddItem(startX + 19, startY + 33, 3746);
+                        break;
+
+                    case GuildGumpPageType.Candidates:
+                        AddLabel(startX + 27, startY + 4, 2553, "Candidates");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 45, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 28, startY + 45, 4647, 2563);
+                        AddItem(startX + 11, startY + 36, 4645, 2563);
+                        AddItem(startX + -5, startY + 42, 5018, 2563);
+                        break;
+
+                    case GuildGumpPageType.CreateGuild:
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddLabel(startX + 25, startY + 5, 2401, "Create Guild");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 15, startY + 29, 3796);
+                        break;
+
+                    case GuildGumpPageType.Faction:
+                        AddLabel(startX + 44, startY + 5, 1256, "Faction");
+                        AddItem(startX + -15, startY + 20, 3936);
+                        AddItem(startX + 18, startY + 21, 18194);
+                        AddItem(startX + 10, startY + 13, 5129);
+                        AddItem(startX + 32, startY + 31, 18196);
+                        AddItem(startX + 9, startY + 30, 5050);
+                        AddItem(startX + 26, startY + 22, 5135, 2500);
+                        AddImage(startX + 60, startY + 32, 10550, 1256);
+                        AddImage(startX + 88, startY + 32, 10552, 1256);
+                        AddItem(startX + 26, startY + 47, 7034);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + -4, startY + 33, 543);
+                        AddItem(startX + 14, startY + 45, 543);
+                        break;
+
+                    case GuildGumpPageType.Diplomacy:
+                        AddItem(startX + 21, startY + 42, 2942);
+                        AddItem(startX + -4, startY + 28, 2943);
+                        AddItem(startX + 11, startY + 20, 4031);
+                        AddItem(startX + 13, startY + 38, 4030);
+                        AddItem(startX + 20, startY + 59, 2507);
+                        AddItem(startX + 22, startY + 44, 2459);
+                        AddLabel(startX + 35, startY + 5, 2606, "Diplomacy");
+                        AddImage(startX + 60, startY + 32, 10550, 2606);
+                        AddImage(startX + 88, startY + 32, 10552, 2606);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        break;
+                }
+
+                #endregion
+
+                startY += tabSpacing;
+            }
+
             AddButton(3, 3, 2094, 2095, 1, GumpButtonType.Reply, 0);
             AddLabel(24, -2, 149, "Guide");
 
-            AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
-            AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+            if (m_GuildTabPage > 0)
+                AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
 
-            //-----
+            if (m_GuildTabPage < TotalGuildTabPages - 1)
+                AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+
+            #endregion
 
             #region Images
 
@@ -305,19 +453,81 @@ namespace Server
             if (m_Player == null)
                 return;
 
+            Guilds.GuildGumpCheckGuild(m_Player);
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.CreateGuild)) return;
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            int m_GuildTabIndex = m_GuildTabs.IndexOf(m_Player.m_GuildGumpSettings.m_GuildGumpPage);
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
             bool closeGump = true;
 
             switch (info.ButtonID)
             {
                 //Guide
                 case 1:
-                break;
+                    closeGump = false;
+                    break;
+
+                //Previous Guild Page
+                case 2:
+                    if (m_GuildTabPage > 0)
+                    {
+                        m_GuildTabPage--;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+
+                //Next Guild Page
+                case 3:
+                    if (m_GuildTabPage < TotalGuildTabPages - 1)
+                    {
+                        m_GuildTabPage++;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+            }
+
+            //Change Guild Page Tab
+            if (info.ButtonID >= 20 && info.ButtonID <= 50)
+            {
+                int buttonIndex = info.ButtonID - 20;
+
+                if (buttonIndex < m_GuildTabs.Count)
+                {
+                    m_Player.m_GuildGumpSettings.m_GuildGumpPage = m_GuildTabs[buttonIndex];
+                    m_Player.SendSound(Guilds.GuildGumpOpenGumpSound);
+
+                    Guilds.SendGuildGump(m_Player);
+
+                    return;
+                }
+
+                closeGump = false;
             }
 
             if (!closeGump)
             {
                 m_Player.CloseGump(typeof(CreateGuildGump));
-                m_Player.SendGump(new CreateGuildGump(m_Player));
+                m_Player.SendGump(new CreateGuildGump(m_Player, m_GuildTabPage));
             }
         }
     }
@@ -335,6 +545,7 @@ namespace Server
         }
 
         public PlayerMobile m_Player;
+        public int m_GuildTabPage = 0;
 
         public string m_SearchText = "Guild Name";
         public int m_SearchIndex = 0;
@@ -344,12 +555,15 @@ namespace Server
 
         public int m_Page = 0;
 
-        public GuildInvitationsGump(Mobile from): base(10, 10)
+        public GuildInvitationsGump(Mobile from, int guildTabPage): base(10, 10)
         {
             m_Player = from as PlayerMobile;
+            m_GuildTabPage = guildTabPage;
 
             if (m_Player == null)
                 return;
+
+            Guilds.CheckCreateGuildGuildSettings(m_Player);
 
             Closable = true;
             Disposable = true;
@@ -415,13 +629,155 @@ namespace Server
 
             #endregion
 
+            #region Sidebar
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Invitations)) return;
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
+            int startX = 12;
+            int startY = 50;
+
+            int tabSpacing = 90;
+
+            for (int a = 0; a < guildTabCount + 1; a++)
+            {
+                int guildTabIndex = guildTabStartIndex + a;
+                int buttonIndex = 20 + guildTabIndex;
+
+                GuildGumpPageType gumpPageType = m_GuildTabs[guildTabIndex];
+
+                #region Guild Tab Images
+
+                int pressedId = 9721;
+                int releaseId = 9724;
+
+                if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                {
+                    pressedId = 9724;
+                    releaseId = 9721;
+                }
+
+                switch (gumpPageType)
+                {
+                    case GuildGumpPageType.Messages:
+                        AddLabel(startX + 36, startY + 5, 2526, "Messages");
+                        AddImage(startX + 60, startY + 32, 10550, 55);
+                        AddImage(startX + 88, startY + 32, 10552, 55);
+                        if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                            AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        else
+
+                            AddItem(startX + -1, startY + 18, 7774);
+                        break;
+
+                    case GuildGumpPageType.Overview:
+                        AddLabel(startX + 34, startY + 5, 2401, "Overview");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddImage(startX + 13, startY + 35, 11016);
+                        break;
+
+                    case GuildGumpPageType.Invitations:
+                        AddItem(startX + 21, startY + 41, 2942);
+                        AddItem(startX + -3, startY + 25, 2943);
+                        AddLabel(startX + 12, startY + 5, 2564, "Guild Invitations");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 9, startY + 31, 5359);
+                        AddItem(startX + 23, startY + 24, 4031);
+                        AddItem(startX + 23, startY + 50, 5357);
+                        AddItem(startX + 27, startY + 52, 5357);
+                        break;
+
+                    case GuildGumpPageType.Members:
+                        AddLabel(startX + 35, startY + 5, 64, "Members");
+                        AddItem(startX + 69, startY + 46, 6877);
+                        AddImage(startX + 60, startY + 32, 10550, 2551);
+                        AddImage(startX + 88, startY + 32, 10552, 2551);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 20, startY + 29, 10905);
+                        AddItem(startX + 19, startY + 33, 3746);
+                        break;
+
+                    case GuildGumpPageType.Candidates:
+                        AddLabel(startX + 27, startY + 4, 2553, "Candidates");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 45, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 28, startY + 45, 4647, 2563);
+                        AddItem(startX + 11, startY + 36, 4645, 2563);
+                        AddItem(startX + -5, startY + 42, 5018, 2563);
+                        break;
+
+                    case GuildGumpPageType.CreateGuild:
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddLabel(startX + 25, startY + 5, 2401, "Create Guild");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 15, startY + 29, 3796);
+                        break;
+
+                    case GuildGumpPageType.Faction:
+                        AddLabel(startX + 44, startY + 5, 1256, "Faction");
+                        AddItem(startX + -15, startY + 20, 3936);
+                        AddItem(startX + 18, startY + 21, 18194);
+                        AddItem(startX + 10, startY + 13, 5129);
+                        AddItem(startX + 32, startY + 31, 18196);
+                        AddItem(startX + 9, startY + 30, 5050);
+                        AddItem(startX + 26, startY + 22, 5135, 2500);
+                        AddImage(startX + 60, startY + 32, 10550, 1256);
+                        AddImage(startX + 88, startY + 32, 10552, 1256);
+                        AddItem(startX + 26, startY + 47, 7034);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + -4, startY + 33, 543);
+                        AddItem(startX + 14, startY + 45, 543);
+                        break;
+
+                    case GuildGumpPageType.Diplomacy:
+                        AddItem(startX + 21, startY + 42, 2942);
+                        AddItem(startX + -4, startY + 28, 2943);
+                        AddItem(startX + 11, startY + 20, 4031);
+                        AddItem(startX + 13, startY + 38, 4030);
+                        AddItem(startX + 20, startY + 59, 2507);
+                        AddItem(startX + 22, startY + 44, 2459);
+                        AddLabel(startX + 35, startY + 5, 2606, "Diplomacy");
+                        AddImage(startX + 60, startY + 32, 10550, 2606);
+                        AddImage(startX + 88, startY + 32, 10552, 2606);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        break;
+                }
+
+                #endregion
+
+                startY += tabSpacing;
+            }
+
             AddButton(3, 3, 2094, 2095, 1, GumpButtonType.Reply, 0);
             AddLabel(24, -2, 149, "Guide");
 
-            AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
-            AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+            if (m_GuildTabPage > 0)
+                AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
 
-            //-----
+            if (m_GuildTabPage < TotalGuildTabPages - 1)
+                AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+
+            #endregion
 
             AddLabel(345, 15, 2563, "Guild Invitations");            
             AddLabel(188, 429, WhiteTextHue, "Previous Page");
@@ -438,7 +794,7 @@ namespace Server
             AddLabel(458, 70, 149, "Expires In");
 
             AddButton(271, 40, 9909, 9909, 3, GumpButtonType.Reply, 0); //Search Left
-            AddTextEntry(308, 40, 158, 10, WhiteTextHue, 0, "Guild Name", Guilds.GuildNameCharacterLimit);
+            AddTextEntry(308, 40, 158, 20, WhiteTextHue, 10, "Guild Name", Guilds.GuildNameCharacterLimit);
             AddButton(483, 39, 9903, 9903, 4, GumpButtonType.Reply, 0); //Search Right
 
             AddButton(268, 73, 2117, 2118, 5, GumpButtonType.Reply, 0); //Guild Name Sort
@@ -466,19 +822,82 @@ namespace Server
             if (m_Player == null)
                 return;
 
+            Guilds.GuildGumpCheckGuild(m_Player);
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Invitations)) return;
+
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            int m_GuildTabIndex = m_GuildTabs.IndexOf(m_Player.m_GuildGumpSettings.m_GuildGumpPage);
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
             bool closeGump = true;
 
             switch (info.ButtonID)
             {
                 //Guide
                 case 1:
+                    closeGump = false;
                     break;
+
+                //Previous Guild Page
+                case 2:
+                    if (m_GuildTabPage > 0)
+                    {
+                        m_GuildTabPage--;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+
+                //Next Guild Page
+                case 3:
+                    if (m_GuildTabPage < TotalGuildTabPages - 1)
+                    {
+                        m_GuildTabPage++;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+            }
+
+            //Change Guild Page Tab
+            if (info.ButtonID >= 20 && info.ButtonID <= 50)
+            {
+                int buttonIndex = info.ButtonID - 20;
+
+                if (buttonIndex < m_GuildTabs.Count)
+                {
+                    m_Player.m_GuildGumpSettings.m_GuildGumpPage = m_GuildTabs[buttonIndex];
+                    m_Player.SendSound(Guilds.GuildGumpOpenGumpSound);
+
+                    Guilds.SendGuildGump(m_Player);
+
+                    return;
+                }
+
+                closeGump = false;
             }
 
             if (!closeGump)
             {
                 m_Player.CloseGump(typeof(GuildInvitationsGump));
-                m_Player.SendGump(new GuildInvitationsGump(m_Player));
+                m_Player.SendGump(new GuildInvitationsGump(m_Player, m_GuildTabPage));
             }
         }
     }
@@ -490,13 +909,17 @@ namespace Server
     public class GuildOverviewGump : Gump
     {
         public PlayerMobile m_Player;
+        public int m_GuildTabPage = 0;
 
-        public GuildOverviewGump(Mobile from): base(10, 10)
+        public GuildOverviewGump(Mobile from, int guildTabPage): base(10, 10)
         {
             m_Player = from as PlayerMobile;
+            m_GuildTabPage = guildTabPage;
 
             if (m_Player == null)
                 return;
+
+            Guilds.CheckCreateGuildGuildSettings(m_Player);
 
             Closable = true;
             Disposable = true;
@@ -561,15 +984,157 @@ namespace Server
             AddImage(184, 330, 3604, 2052);
 
             #endregion
-                        
+
+            #region Sidebar
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Overview)) return;
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
+            int startX = 12;
+            int startY = 50;
+
+            int tabSpacing = 90;
+
+            for (int a = 0; a < guildTabCount + 1; a++)
+            {
+                int guildTabIndex = guildTabStartIndex + a;
+                int buttonIndex = 20 + guildTabIndex;
+
+                GuildGumpPageType gumpPageType = m_GuildTabs[guildTabIndex];
+
+                #region Guild Tab Images
+
+                int pressedId = 9721;
+                int releaseId = 9724;
+
+                if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                {
+                    pressedId = 9724;
+                    releaseId = 9721;
+                }
+
+                switch (gumpPageType)
+                {
+                    case GuildGumpPageType.Messages:
+                        AddLabel(startX + 36, startY + 5, 2526, "Messages");
+                        AddImage(startX + 60, startY + 32, 10550, 55);
+                        AddImage(startX + 88, startY + 32, 10552, 55);
+                        if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                            AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        else
+
+                            AddItem(startX + -1, startY + 18, 7774);
+                        break;
+
+                    case GuildGumpPageType.Overview:
+                        AddLabel(startX + 34, startY + 5, 2401, "Overview");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddImage(startX + 13, startY + 35, 11016);
+                        break;
+
+                    case GuildGumpPageType.Invitations:
+                        AddItem(startX + 21, startY + 41, 2942);
+                        AddItem(startX + -3, startY + 25, 2943);
+                        AddLabel(startX + 12, startY + 5, 2564, "Guild Invitations");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 9, startY + 31, 5359);
+                        AddItem(startX + 23, startY + 24, 4031);
+                        AddItem(startX + 23, startY + 50, 5357);
+                        AddItem(startX + 27, startY + 52, 5357);
+                        break;
+
+                    case GuildGumpPageType.Members:
+                        AddLabel(startX + 35, startY + 5, 64, "Members");
+                        AddItem(startX + 69, startY + 46, 6877);
+                        AddImage(startX + 60, startY + 32, 10550, 2551);
+                        AddImage(startX + 88, startY + 32, 10552, 2551);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 20, startY + 29, 10905);
+                        AddItem(startX + 19, startY + 33, 3746);
+                        break;
+
+                    case GuildGumpPageType.Candidates:
+                        AddLabel(startX + 27, startY + 4, 2553, "Candidates");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 45, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 28, startY + 45, 4647, 2563);
+                        AddItem(startX + 11, startY + 36, 4645, 2563);
+                        AddItem(startX + -5, startY + 42, 5018, 2563);
+                        break;
+
+                    case GuildGumpPageType.CreateGuild:
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddLabel(startX + 25, startY + 5, 2401, "Create Guild");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 15, startY + 29, 3796);
+                        break;
+
+                    case GuildGumpPageType.Faction:
+                        AddLabel(startX + 44, startY + 5, 1256, "Faction");
+                        AddItem(startX + -15, startY + 20, 3936);
+                        AddItem(startX + 18, startY + 21, 18194);
+                        AddItem(startX + 10, startY + 13, 5129);
+                        AddItem(startX + 32, startY + 31, 18196);
+                        AddItem(startX + 9, startY + 30, 5050);
+                        AddItem(startX + 26, startY + 22, 5135, 2500);
+                        AddImage(startX + 60, startY + 32, 10550, 1256);
+                        AddImage(startX + 88, startY + 32, 10552, 1256);
+                        AddItem(startX + 26, startY + 47, 7034);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + -4, startY + 33, 543);
+                        AddItem(startX + 14, startY + 45, 543);
+                        break;
+
+                    case GuildGumpPageType.Diplomacy:
+                        AddItem(startX + 21, startY + 42, 2942);
+                        AddItem(startX + -4, startY + 28, 2943);
+                        AddItem(startX + 11, startY + 20, 4031);
+                        AddItem(startX + 13, startY + 38, 4030);
+                        AddItem(startX + 20, startY + 59, 2507);
+                        AddItem(startX + 22, startY + 44, 2459);
+                        AddLabel(startX + 35, startY + 5, 2606, "Diplomacy");
+                        AddImage(startX + 60, startY + 32, 10550, 2606);
+                        AddImage(startX + 88, startY + 32, 10552, 2606);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        break;
+                }
+
+                #endregion
+
+                startY += tabSpacing;
+            }
+
             AddButton(3, 3, 2094, 2095, 1, GumpButtonType.Reply, 0);
             AddLabel(24, -2, 149, "Guide");
 
-            AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
-            AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+            if (m_GuildTabPage > 0)
+                AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
 
-            //-----
+            if (m_GuildTabPage < TotalGuildTabPages - 1)
+                AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
 
+            #endregion
+            
             #region Images
 
             AddImage(285, 90, 2328, 0);
@@ -655,19 +1220,82 @@ namespace Server
             if (m_Player == null)
                 return;
 
+            Guilds.GuildGumpCheckGuild(m_Player);
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Overview)) return;
+
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            int m_GuildTabIndex = m_GuildTabs.IndexOf(m_Player.m_GuildGumpSettings.m_GuildGumpPage);
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
             bool closeGump = true;
 
             switch (info.ButtonID)
             {
                 //Guide
                 case 1:
+                    closeGump = false;
                     break;
+
+                //Previous Guild Page
+                case 2:
+                    if (m_GuildTabPage > 0)
+                    {
+                        m_GuildTabPage--;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+
+                //Next Guild Page
+                case 3:
+                    if (m_GuildTabPage < TotalGuildTabPages - 1)
+                    {
+                        m_GuildTabPage++;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+            }
+
+            //Change Guild Page Tab
+            if (info.ButtonID >= 20 && info.ButtonID <= 50)
+            {
+                int buttonIndex = info.ButtonID - 20;
+
+                if (buttonIndex < m_GuildTabs.Count)
+                {
+                    m_Player.m_GuildGumpSettings.m_GuildGumpPage = m_GuildTabs[buttonIndex];
+                    m_Player.SendSound(Guilds.GuildGumpOpenGumpSound);
+
+                    Guilds.SendGuildGump(m_Player);
+
+                    return;
+                }
+
+                closeGump = false;
             }
 
             if (!closeGump)
             {
                 m_Player.CloseGump(typeof(GuildOverviewGump));
-                m_Player.SendGump(new GuildOverviewGump(m_Player));
+                m_Player.SendGump(new GuildOverviewGump(m_Player, m_GuildTabPage));
             }
         }
     }
@@ -685,6 +1313,7 @@ namespace Server
         }
 
         public PlayerMobile m_Player;
+        public int m_GuildTabPage = 0;
 
         public string m_SearchText = "Player Name";
         public int m_SearchIndex = 0;
@@ -694,12 +1323,15 @@ namespace Server
 
         public int m_Page = 0;
 
-        public GuildCandidatesGump(Mobile from): base(10, 10)
+        public GuildCandidatesGump(Mobile from, int guildTabPage): base(10, 10)
         {
             m_Player = from as PlayerMobile;
+            m_GuildTabPage = guildTabPage;
 
             if (m_Player == null)
                 return;
+
+            Guilds.CheckCreateGuildGuildSettings(m_Player);
 
             Closable = true;
             Disposable = true;
@@ -764,14 +1396,156 @@ namespace Server
             AddImage(184, 330, 3604, 2052);
 
             #endregion
-                        
+
+            #region Sidebar
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Candidates)) return;
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
+            int startX = 12;
+            int startY = 50;
+
+            int tabSpacing = 90;
+
+            for (int a = 0; a < guildTabCount + 1; a++)
+            {
+                int guildTabIndex = guildTabStartIndex + a;
+                int buttonIndex = 20 + guildTabIndex;
+
+                GuildGumpPageType gumpPageType = m_GuildTabs[guildTabIndex];
+
+                #region Guild Tab Images
+
+                int pressedId = 9721;
+                int releaseId = 9724;
+
+                if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                {
+                    pressedId = 9724;
+                    releaseId = 9721;
+                }
+
+                switch (gumpPageType)
+                {
+                    case GuildGumpPageType.Messages:
+                        AddLabel(startX + 36, startY + 5, 2526, "Messages");
+                        AddImage(startX + 60, startY + 32, 10550, 55);
+                        AddImage(startX + 88, startY + 32, 10552, 55);
+                        if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                            AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        else
+
+                            AddItem(startX + -1, startY + 18, 7774);
+                        break;
+
+                    case GuildGumpPageType.Overview:
+                        AddLabel(startX + 34, startY + 5, 2401, "Overview");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddImage(startX + 13, startY + 35, 11016);
+                        break;
+
+                    case GuildGumpPageType.Invitations:
+                        AddItem(startX + 21, startY + 41, 2942);
+                        AddItem(startX + -3, startY + 25, 2943);
+                        AddLabel(startX + 12, startY + 5, 2564, "Guild Invitations");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 9, startY + 31, 5359);
+                        AddItem(startX + 23, startY + 24, 4031);
+                        AddItem(startX + 23, startY + 50, 5357);
+                        AddItem(startX + 27, startY + 52, 5357);
+                        break;
+
+                    case GuildGumpPageType.Members:
+                        AddLabel(startX + 35, startY + 5, 64, "Members");
+                        AddItem(startX + 69, startY + 46, 6877);
+                        AddImage(startX + 60, startY + 32, 10550, 2551);
+                        AddImage(startX + 88, startY + 32, 10552, 2551);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 20, startY + 29, 10905);
+                        AddItem(startX + 19, startY + 33, 3746);
+                        break;
+
+                    case GuildGumpPageType.Candidates:
+                        AddLabel(startX + 27, startY + 4, 2553, "Candidates");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 45, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 28, startY + 45, 4647, 2563);
+                        AddItem(startX + 11, startY + 36, 4645, 2563);
+                        AddItem(startX + -5, startY + 42, 5018, 2563);
+                        break;
+
+                    case GuildGumpPageType.CreateGuild:
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddLabel(startX + 25, startY + 5, 2401, "Create Guild");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 15, startY + 29, 3796);
+                        break;
+
+                    case GuildGumpPageType.Faction:
+                        AddLabel(startX + 44, startY + 5, 1256, "Faction");
+                        AddItem(startX + -15, startY + 20, 3936);
+                        AddItem(startX + 18, startY + 21, 18194);
+                        AddItem(startX + 10, startY + 13, 5129);
+                        AddItem(startX + 32, startY + 31, 18196);
+                        AddItem(startX + 9, startY + 30, 5050);
+                        AddItem(startX + 26, startY + 22, 5135, 2500);
+                        AddImage(startX + 60, startY + 32, 10550, 1256);
+                        AddImage(startX + 88, startY + 32, 10552, 1256);
+                        AddItem(startX + 26, startY + 47, 7034);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + -4, startY + 33, 543);
+                        AddItem(startX + 14, startY + 45, 543);
+                        break;
+
+                    case GuildGumpPageType.Diplomacy:
+                        AddItem(startX + 21, startY + 42, 2942);
+                        AddItem(startX + -4, startY + 28, 2943);
+                        AddItem(startX + 11, startY + 20, 4031);
+                        AddItem(startX + 13, startY + 38, 4030);
+                        AddItem(startX + 20, startY + 59, 2507);
+                        AddItem(startX + 22, startY + 44, 2459);
+                        AddLabel(startX + 35, startY + 5, 2606, "Diplomacy");
+                        AddImage(startX + 60, startY + 32, 10550, 2606);
+                        AddImage(startX + 88, startY + 32, 10552, 2606);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        break;
+                }
+
+                #endregion
+
+                startY += tabSpacing;
+            }
+
             AddButton(3, 3, 2094, 2095, 1, GumpButtonType.Reply, 0);
             AddLabel(24, -2, 149, "Guide");
 
-            AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
-            AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+            if (m_GuildTabPage > 0)
+                AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
 
-            //-----
+            if (m_GuildTabPage < TotalGuildTabPages - 1)
+                AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+
+            #endregion
             
             AddLabel(365, 15, 2563, "Candidates");
             AddLabel(267, 70, 149, "Player Name");
@@ -790,7 +1564,7 @@ namespace Server
             AddLabel(157, 400, 2599, "Total Accepted");
 
             AddButton(271, 40, 9909, 9909, 4, GumpButtonType.Reply, 0); //Search Left
-            AddTextEntry(308, 40, 158, 12, WhiteTextHue, 12, "Player Name", Guilds.GuildNameCharacterLimit);
+            AddTextEntry(308, 40, 158, 20, WhiteTextHue, 12, "Player Name", Guilds.GuildNameCharacterLimit);
             AddButton(483, 39, 9903, 9903, 5, GumpButtonType.Reply, 0); //Search Right
 
             AddButton(154, 73, 2117, 2118, 6, GumpButtonType.Reply, 0); //Sort Accepted
@@ -820,19 +1594,82 @@ namespace Server
             if (m_Player == null)
                 return;
 
+            Guilds.GuildGumpCheckGuild(m_Player);
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Candidates)) return;
+
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            int m_GuildTabIndex = m_GuildTabs.IndexOf(m_Player.m_GuildGumpSettings.m_GuildGumpPage);
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
             bool closeGump = true;
 
             switch (info.ButtonID)
             {
                 //Guide
                 case 1:
+                    closeGump = false;
                     break;
+
+                //Previous Guild Page
+                case 2:
+                    if (m_GuildTabPage > 0)
+                    {
+                        m_GuildTabPage--;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+
+                //Next Guild Page
+                case 3:
+                    if (m_GuildTabPage < TotalGuildTabPages - 1)
+                    {
+                        m_GuildTabPage++;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+            }
+
+            //Change Guild Page Tab
+            if (info.ButtonID >= 20 && info.ButtonID <= 50)
+            {
+                int buttonIndex = info.ButtonID - 20;
+
+                if (buttonIndex < m_GuildTabs.Count)
+                {
+                    m_Player.m_GuildGumpSettings.m_GuildGumpPage = m_GuildTabs[buttonIndex];
+                    m_Player.SendSound(Guilds.GuildGumpOpenGumpSound);
+
+                    Guilds.SendGuildGump(m_Player);
+
+                    return;
+                }
+
+                closeGump = false;
             }
 
             if (!closeGump)
             {
                 m_Player.CloseGump(typeof(GuildCandidatesGump));
-                m_Player.SendGump(new GuildCandidatesGump(m_Player));
+                m_Player.SendGump(new GuildCandidatesGump(m_Player, m_GuildTabPage));
             }
         }
     }
@@ -851,6 +1688,7 @@ namespace Server
         }
 
         public PlayerMobile m_Player;
+        public int m_GuildTabPage = 0;
 
         public string m_SearchText = "Player Name";
         public int m_SearchIndex = 0;
@@ -860,12 +1698,15 @@ namespace Server
 
         public int m_Page = 0;
 
-        public GuildMembersGump(Mobile from): base(10, 10)
+        public GuildMembersGump(Mobile from, int guildTabPage): base(10, 10)
         {
             m_Player = from as PlayerMobile;
+            m_GuildTabPage = guildTabPage;
 
             if (m_Player == null)
                 return;
+
+            Guilds.CheckCreateGuildGuildSettings(m_Player);
 
             Closable = true;
             Disposable = true;
@@ -930,14 +1771,156 @@ namespace Server
             AddImage(184, 330, 3604, 2052);
 
             #endregion
-            
+
+            #region Sidebar
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Members)) return;
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
+            int startX = 12;
+            int startY = 50;
+
+            int tabSpacing = 90;
+
+            for (int a = 0; a < guildTabCount + 1; a++)
+            {
+                int guildTabIndex = guildTabStartIndex + a;
+                int buttonIndex = 20 + guildTabIndex;
+
+                GuildGumpPageType gumpPageType = m_GuildTabs[guildTabIndex];
+
+                #region Guild Tab Images
+
+                int pressedId = 9721;
+                int releaseId = 9724;
+
+                if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                {
+                    pressedId = 9724;
+                    releaseId = 9721;
+                }
+
+                switch (gumpPageType)
+                {
+                    case GuildGumpPageType.Messages:
+                        AddLabel(startX + 36, startY + 5, 2526, "Messages");
+                        AddImage(startX + 60, startY + 32, 10550, 55);
+                        AddImage(startX + 88, startY + 32, 10552, 55);
+                        if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                            AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        else
+
+                            AddItem(startX + -1, startY + 18, 7774);
+                        break;
+
+                    case GuildGumpPageType.Overview:
+                        AddLabel(startX + 34, startY + 5, 2401, "Overview");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddImage(startX + 13, startY + 35, 11016);
+                        break;
+
+                    case GuildGumpPageType.Invitations:
+                        AddItem(startX + 21, startY + 41, 2942);
+                        AddItem(startX + -3, startY + 25, 2943);
+                        AddLabel(startX + 12, startY + 5, 2564, "Guild Invitations");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 9, startY + 31, 5359);
+                        AddItem(startX + 23, startY + 24, 4031);
+                        AddItem(startX + 23, startY + 50, 5357);
+                        AddItem(startX + 27, startY + 52, 5357);
+                        break;
+
+                    case GuildGumpPageType.Members:
+                        AddLabel(startX + 35, startY + 5, 64, "Members");
+                        AddItem(startX + 69, startY + 46, 6877);
+                        AddImage(startX + 60, startY + 32, 10550, 2551);
+                        AddImage(startX + 88, startY + 32, 10552, 2551);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 20, startY + 29, 10905);
+                        AddItem(startX + 19, startY + 33, 3746);
+                        break;
+
+                    case GuildGumpPageType.Candidates:
+                        AddLabel(startX + 27, startY + 4, 2553, "Candidates");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 45, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 28, startY + 45, 4647, 2563);
+                        AddItem(startX + 11, startY + 36, 4645, 2563);
+                        AddItem(startX + -5, startY + 42, 5018, 2563);
+                        break;
+
+                    case GuildGumpPageType.CreateGuild:
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddLabel(startX + 25, startY + 5, 2401, "Create Guild");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 15, startY + 29, 3796);
+                        break;
+
+                    case GuildGumpPageType.Faction:
+                        AddLabel(startX + 44, startY + 5, 1256, "Faction");
+                        AddItem(startX + -15, startY + 20, 3936);
+                        AddItem(startX + 18, startY + 21, 18194);
+                        AddItem(startX + 10, startY + 13, 5129);
+                        AddItem(startX + 32, startY + 31, 18196);
+                        AddItem(startX + 9, startY + 30, 5050);
+                        AddItem(startX + 26, startY + 22, 5135, 2500);
+                        AddImage(startX + 60, startY + 32, 10550, 1256);
+                        AddImage(startX + 88, startY + 32, 10552, 1256);
+                        AddItem(startX + 26, startY + 47, 7034);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + -4, startY + 33, 543);
+                        AddItem(startX + 14, startY + 45, 543);
+                        break;
+
+                    case GuildGumpPageType.Diplomacy:
+                        AddItem(startX + 21, startY + 42, 2942);
+                        AddItem(startX + -4, startY + 28, 2943);
+                        AddItem(startX + 11, startY + 20, 4031);
+                        AddItem(startX + 13, startY + 38, 4030);
+                        AddItem(startX + 20, startY + 59, 2507);
+                        AddItem(startX + 22, startY + 44, 2459);
+                        AddLabel(startX + 35, startY + 5, 2606, "Diplomacy");
+                        AddImage(startX + 60, startY + 32, 10550, 2606);
+                        AddImage(startX + 88, startY + 32, 10552, 2606);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        break;
+                }
+
+                #endregion
+
+                startY += tabSpacing;
+            }
+
             AddButton(3, 3, 2094, 2095, 1, GumpButtonType.Reply, 0);
             AddLabel(24, -2, 149, "Guide");
 
-            AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
-            AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+            if (m_GuildTabPage > 0)
+                AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
 
-            //-----           
+            if (m_GuildTabPage < TotalGuildTabPages - 1)
+                AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+
+            #endregion
             
             AddLabel(365, 15, 2563, "Members");
             AddLabel(280, 70, 149, "Player Name");          
@@ -956,7 +1939,7 @@ namespace Server
             AddLabel(157, 400, 2599, "Online Members");
 
             AddButton(271, 40, 9909, 9909, 4, GumpButtonType.Reply, 0); //Search Left
-            AddTextEntry(308, 40, 158, 12, WhiteTextHue, 0, "Player Name", Guilds.GuildNameCharacterLimit);
+            AddTextEntry(308, 40, 158, 20, WhiteTextHue, 12, "Player Name", Guilds.GuildNameCharacterLimit);
             AddButton(483, 39, 9903, 9903, 5, GumpButtonType.Reply, 0); //Search Right
 
             AddButton(151, 73, 5602, 5606, 6, GumpButtonType.Reply, 0); //Sort Last Online
@@ -987,19 +1970,81 @@ namespace Server
             if (m_Player == null)
                 return;
 
+            Guilds.GuildGumpCheckGuild(m_Player);
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Members)) return;            
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));            
+
+            int m_GuildTabIndex = m_GuildTabs.IndexOf(m_Player.m_GuildGumpSettings.m_GuildGumpPage);
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
             bool closeGump = true;
 
             switch (info.ButtonID)
             {
                 //Guide
                 case 1:
+                    closeGump = false;
                     break;
+
+                //Previous Guild Page
+                case 2:
+                    if (m_GuildTabPage > 0)
+                    {
+                        m_GuildTabPage--;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+
+                //Next Guild Page
+                case 3:
+                    if (m_GuildTabPage < TotalGuildTabPages - 1)
+                    {
+                        m_GuildTabPage++;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+            }
+
+            //Change Guild Page Tab
+            if (info.ButtonID >= 20 && info.ButtonID <= 50)
+            {
+                int buttonIndex = info.ButtonID - 20;
+
+                if (buttonIndex < m_GuildTabs.Count)
+                {
+                    m_Player.m_GuildGumpSettings.m_GuildGumpPage = m_GuildTabs[buttonIndex];
+                    m_Player.SendSound(Guilds.GuildGumpOpenGumpSound);
+
+                    Guilds.SendGuildGump(m_Player);
+
+                    return;
+                }
+
+                closeGump = false;
             }
 
             if (!closeGump)
             {
                 m_Player.CloseGump(typeof(GuildMembersGump));
-                m_Player.SendGump(new GuildMembersGump(m_Player));
+                m_Player.SendGump(new GuildMembersGump(m_Player, m_GuildTabPage));
             }
         }
     }
@@ -1026,6 +2071,7 @@ namespace Server
         }
 
         public PlayerMobile m_Player;
+        public int m_GuildTabPage = 0;
 
         public string m_SearchText = "Guild Name";
         public int m_SearchIndex = 0;
@@ -1033,16 +2079,19 @@ namespace Server
         public SortColumn m_SortColumn = SortColumn.Relationship;
         public bool m_SortDescending = true;
 
-        public FilterMode m_FilterMode = FilterMode.ShowAll;
-
         public int m_Page = 0;
 
-        public GuildDiplomacyGump(Mobile from): base(10, 10)
+        public FilterMode m_FilterMode = FilterMode.ShowAll;
+
+        public GuildDiplomacyGump(Mobile from, int guildTabPage): base(10, 10)
         {
             m_Player = from as PlayerMobile;
+            m_GuildTabPage = guildTabPage;
 
             if (m_Player == null)
                 return;
+
+            Guilds.CheckCreateGuildGuildSettings(m_Player);
 
             Closable = true;
             Disposable = true;
@@ -1107,14 +2156,156 @@ namespace Server
             AddImage(184, 330, 3604, 2052);
 
             #endregion
-                        
+
+            #region Sidebar
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Diplomacy)) return;            
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+            
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
+            int startX = 12;
+            int startY = 50;
+
+            int tabSpacing = 90;
+
+            for (int a = 0; a < guildTabCount + 1; a++)
+            {
+                int guildTabIndex = guildTabStartIndex + a;
+                int buttonIndex = 20 + guildTabIndex;
+
+                GuildGumpPageType gumpPageType = m_GuildTabs[guildTabIndex];
+
+                #region Guild Tab Images
+
+                int pressedId = 9721;
+                int releaseId = 9724;
+
+                if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                {
+                    pressedId = 9724;
+                    releaseId = 9721;
+                }
+
+                switch (gumpPageType)
+                {
+                    case GuildGumpPageType.Messages:
+                        AddLabel(startX + 36, startY + 5, 2526, "Messages");
+                        AddImage(startX + 60, startY + 32, 10550, 55);
+                        AddImage(startX + 88, startY + 32, 10552, 55);
+                        if (gumpPageType == m_Player.m_GuildGumpSettings.m_GuildGumpPage)
+                            AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        else
+
+                            AddItem(startX + -1, startY + 18, 7774);
+                        break;
+
+                    case GuildGumpPageType.Overview:
+                        AddLabel(startX + 34, startY + 5, 2401, "Overview");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddImage(startX + 13, startY + 35, 11016);
+                        break;
+
+                    case GuildGumpPageType.Invitations:
+                        AddItem(startX + 21, startY + 41, 2942);
+                        AddItem(startX + -3, startY + 25, 2943);
+                        AddLabel(startX + 12, startY + 5, 2564, "Guild Invitations");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 9, startY + 31, 5359);
+                        AddItem(startX + 23, startY + 24, 4031);
+                        AddItem(startX + 23, startY + 50, 5357);
+                        AddItem(startX + 27, startY + 52, 5357);
+                        break;
+
+                    case GuildGumpPageType.Members:
+                        AddLabel(startX + 35, startY + 5, 64, "Members");
+                        AddItem(startX + 69, startY + 46, 6877);
+                        AddImage(startX + 60, startY + 32, 10550, 2551);
+                        AddImage(startX + 88, startY + 32, 10552, 2551);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 20, startY + 29, 10905);
+                        AddItem(startX + 19, startY + 33, 3746);
+                        break;
+
+                    case GuildGumpPageType.Candidates:
+                        AddLabel(startX + 27, startY + 4, 2553, "Candidates");
+                        AddImage(startX + 60, startY + 32, 10550, 2566);
+                        AddImage(startX + 88, startY + 32, 10552, 2566);
+                        AddButton(startX + 74, startY + 45, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 28, startY + 45, 4647, 2563);
+                        AddItem(startX + 11, startY + 36, 4645, 2563);
+                        AddItem(startX + -5, startY + 42, 5018, 2563);
+                        break;
+
+                    case GuildGumpPageType.CreateGuild:
+                        AddImage(startX + 88, startY + 32, 10552, 2401);
+                        AddLabel(startX + 25, startY + 5, 2401, "Create Guild");
+                        AddImage(startX + 60, startY + 32, 10550, 2401);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + 15, startY + 29, 3796);
+                        break;
+
+                    case GuildGumpPageType.Faction:
+                        AddLabel(startX + 44, startY + 5, 1256, "Faction");
+                        AddItem(startX + -15, startY + 20, 3936);
+                        AddItem(startX + 18, startY + 21, 18194);
+                        AddItem(startX + 10, startY + 13, 5129);
+                        AddItem(startX + 32, startY + 31, 18196);
+                        AddItem(startX + 9, startY + 30, 5050);
+                        AddItem(startX + 26, startY + 22, 5135, 2500);
+                        AddImage(startX + 60, startY + 32, 10550, 1256);
+                        AddImage(startX + 88, startY + 32, 10552, 1256);
+                        AddItem(startX + 26, startY + 47, 7034);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        AddItem(startX + -4, startY + 33, 543);
+                        AddItem(startX + 14, startY + 45, 543);
+                        break;
+
+                    case GuildGumpPageType.Diplomacy:
+                        AddItem(startX + 21, startY + 42, 2942);
+                        AddItem(startX + -4, startY + 28, 2943);
+                        AddItem(startX + 11, startY + 20, 4031);
+                        AddItem(startX + 13, startY + 38, 4030);
+                        AddItem(startX + 20, startY + 59, 2507);
+                        AddItem(startX + 22, startY + 44, 2459);
+                        AddLabel(startX + 35, startY + 5, 2606, "Diplomacy");
+                        AddImage(startX + 60, startY + 32, 10550, 2606);
+                        AddImage(startX + 88, startY + 32, 10552, 2606);
+                        AddButton(startX + 74, startY + 46, pressedId, releaseId, buttonIndex, GumpButtonType.Reply, 0);
+                        break;
+                }
+
+                #endregion
+
+                startY += tabSpacing;
+            }
+
             AddButton(3, 3, 2094, 2095, 1, GumpButtonType.Reply, 0);
             AddLabel(24, -2, 149, "Guide");
 
-            AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
-            AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+            if (m_GuildTabPage > 0)
+                AddButton(65, 22, 9900, 9900, 2, GumpButtonType.Reply, 0);
 
-            //-----
+            if (m_GuildTabPage < TotalGuildTabPages - 1)
+                AddButton(65, 432, 9906, 9906, 3, GumpButtonType.Reply, 0);
+
+            #endregion
             
             AddLabel(365, 15, 2606, "Diplomacy");
             AddLabel(244, 70, 149, "Guild Name");           
@@ -1129,7 +2320,7 @@ namespace Server
             AddLabel(546, 70, 149, "Players");
 
             AddButton(271, 40, 9909, 9909, 4, GumpButtonType.Reply, 0); //Search Left
-            AddTextEntry(308, 40, 158, 14, WhiteTextHue, 0, "Guild Name", Guilds.GuildNameCharacterLimit);
+            AddTextEntry(308, 40, 158, 20, WhiteTextHue, 14, "Guild Name", Guilds.GuildNameCharacterLimit);
             AddButton(483, 39, 9903, 9903, 5, GumpButtonType.Reply, 0); //Search Right
 
             AddButton(223, 73, 2117, 2118, 6, GumpButtonType.Reply, 0); //Sort Guild Name
@@ -1165,19 +2356,81 @@ namespace Server
             if (m_Player == null)
                 return;
 
+            Guilds.GuildGumpCheckGuild(m_Player);
+
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(m_Player);
+
+            if (m_GuildTabs.Count == 0) return;
+            if (!m_GuildTabs.Contains(GuildGumpPageType.Diplomacy)) return;            
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));            
+
+            int m_GuildTabIndex = m_GuildTabs.IndexOf(m_Player.m_GuildGumpSettings.m_GuildGumpPage);
+
+            int guildTabStartIndex = m_GuildTabPage * GuildTabsPerPage;
+            int guildTabEndIndex = (m_GuildTabPage * GuildTabsPerPage) + (GuildTabsPerPage - 1);
+
+            if (guildTabEndIndex >= TotalGuildTabs)
+                guildTabEndIndex = TotalGuildTabs - 1;
+
+            int guildTabCount = guildTabEndIndex - guildTabStartIndex;
+
             bool closeGump = true;
 
             switch (info.ButtonID)
             {
                 //Guide
                 case 1:
-                break;
+                    closeGump = false;
+                    break;
+
+                //Previous Guild Page
+                case 2:
+                    if (m_GuildTabPage > 0)
+                    {
+                        m_GuildTabPage--;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+
+                //Next Guild Page
+                case 3:
+                    if (m_GuildTabPage < TotalGuildTabPages - 1)
+                    {
+                        m_GuildTabPage++;
+                        m_Player.SendSound(Guilds.GuildGumpChangePageSound);
+                    }
+
+                    closeGump = false;
+                    break;
+            }
+
+            //Change Guild Page Tab
+            if (info.ButtonID >= 20 && info.ButtonID <= 50)
+            {
+                int buttonIndex = info.ButtonID - 20;
+
+                if (buttonIndex < m_GuildTabs.Count)
+                {
+                    m_Player.m_GuildGumpSettings.m_GuildGumpPage = m_GuildTabs[buttonIndex];
+                    m_Player.SendSound(Guilds.GuildGumpOpenGumpSound);
+
+                    Guilds.SendGuildGump(m_Player);
+
+                    return;
+                }
+
+                closeGump = false;
             }
 
             if (!closeGump)
             {
                 m_Player.CloseGump(typeof(GuildDiplomacyGump));
-                m_Player.SendGump(new GuildDiplomacyGump(m_Player));
+                m_Player.SendGump(new GuildDiplomacyGump(m_Player, m_GuildTabPage));
             }
         }
     }

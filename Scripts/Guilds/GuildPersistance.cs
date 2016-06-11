@@ -31,6 +31,9 @@ namespace Server.Items
         public static int GuildTextHue = 63;
         public static TimeSpan InactivityThreshold = TimeSpan.FromDays(60);
 
+        public static int GuildGumpChangePageSound = 0x057;
+        public static int GuildGumpOpenGumpSound = 0x055;
+
         public static string[] GuildRankNames = new string[] { "Recruit", "Initiate", "Veteran", "Officer", "Guildmaster" };
 
         public static GuildPersistanceItem PersistanceItem;
@@ -63,7 +66,34 @@ namespace Server.Items
                 player.m_GuildGumpSettings = new GuildGumpSettings(player);
         }
 
-        public static void SendGuildGump(PlayerMobile player)
+        public static List<GuildGumpPageType> GetGuildPageTypeList(PlayerMobile player)
+        {
+            List<GuildGumpPageType> guildPageTypes = new List<GuildGumpPageType>();
+
+            if (player == null)
+                return guildPageTypes;
+
+            CheckCreateGuildGuildSettings(player);
+
+            if (player.Guild == null)
+            {
+                guildPageTypes.Add(GuildGumpPageType.CreateGuild);
+                guildPageTypes.Add(GuildGumpPageType.Invitations);
+            }
+
+            else
+            {
+                guildPageTypes.Add(GuildGumpPageType.Overview);
+                guildPageTypes.Add(GuildGumpPageType.Members);
+                guildPageTypes.Add(GuildGumpPageType.Candidates);
+                guildPageTypes.Add(GuildGumpPageType.Diplomacy);
+                guildPageTypes.Add(GuildGumpPageType.Faction);
+            }            
+
+            return guildPageTypes;
+        }
+
+        public static void GuildGumpCheckGuild(PlayerMobile player)
         {
             if (player == null)
                 return;
@@ -72,27 +102,55 @@ namespace Server.Items
 
             if (player.Guild != null)
             {
-                if (player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPage.CreateGuild || player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPage.Invitations)
-                    player.m_GuildGumpSettings.m_GuildGumpPage = GuildGumpPage.Overview;
+                if (player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPageType.CreateGuild || player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPageType.Invitations)
+                    player.m_GuildGumpSettings.m_GuildGumpPage = GuildGumpPageType.Overview;
             }
 
             else
             {
-                if (!(player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPage.CreateGuild || player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPage.Invitations))
-                    player.m_GuildGumpSettings.m_GuildGumpPage = GuildGumpPage.CreateGuild;
+                if (!(player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPageType.CreateGuild || player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPageType.Invitations))
+                    player.m_GuildGumpSettings.m_GuildGumpPage = GuildGumpPageType.CreateGuild;
             }
+        }
+
+        public static void SendGuildGump(PlayerMobile player)
+        {
+            if (player == null)
+                return;
+
+            CheckCreateGuildGuildSettings(player);
+
+            GuildGumpCheckGuild(player);
+            
+            List<GuildGumpPageType> m_GuildTabs = Guilds.GetGuildPageTypeList(player);
+
+            if (m_GuildTabs.Count == 0)
+                return;
+
+            int GuildTabsPerPage = 4;
+            int TotalGuildTabs = m_GuildTabs.Count;
+            int TotalGuildTabPages = (int)(Math.Ceiling((double)TotalGuildTabs / (double)GuildTabsPerPage));
+
+            if (!m_GuildTabs.Contains(player.m_GuildGumpSettings.m_GuildGumpPage))
+                player.m_GuildGumpSettings.m_GuildGumpPage = m_GuildTabs[0];
+
+            //Find Last Selected Guild Tab and Navigate to Page
+            int m_GuildTabIndex = m_GuildTabs.IndexOf(player.m_GuildGumpSettings.m_GuildGumpPage);
+            int m_GuildTabPage = (int)(Math.Floor((double)m_GuildTabIndex / (double)GuildTabsPerPage));
 
             CloseAllGuildGumps(player);
 
+            player.SendSound(GuildGumpOpenGumpSound);
+                                    
             switch (player.m_GuildGumpSettings.m_GuildGumpPage)
             {
-                case GuildGumpPage.CreateGuild: player.SendGump(new CreateGuildGump(player)); break;
-                case GuildGumpPage.Invitations: player.SendGump(new GuildInvitationsGump(player)); break;
+                case GuildGumpPageType.CreateGuild: player.SendGump(new CreateGuildGump(player, m_GuildTabPage)); break;
+                case GuildGumpPageType.Invitations: player.SendGump(new GuildInvitationsGump(player, m_GuildTabPage)); break;
 
-                case GuildGumpPage.Overview: player.SendGump(new GuildOverviewGump(player)); break;
-                case GuildGumpPage.Members: player.SendGump(new GuildMembersGump(player)); break;
-                case GuildGumpPage.Candidates: player.SendGump(new GuildCandidatesGump(player)); break;
-                case GuildGumpPage.Diplomacy: player.SendGump(new GuildDiplomacyGump(player)); break;
+                case GuildGumpPageType.Overview: player.SendGump(new GuildOverviewGump(player, m_GuildTabPage)); break;
+                case GuildGumpPageType.Members: player.SendGump(new GuildMembersGump(player, m_GuildTabPage)); break;
+                case GuildGumpPageType.Candidates: player.SendGump(new GuildCandidatesGump(player, m_GuildTabPage)); break;
+                case GuildGumpPageType.Diplomacy: player.SendGump(new GuildDiplomacyGump(player, m_GuildTabPage)); break;
             }
         }
 
@@ -177,7 +235,7 @@ namespace Server.Items
     public class GuildGumpSettings: Item
     {
         public PlayerMobile m_Player;
-        public GuildGumpPage m_GuildGumpPage = GuildGumpPage.CreateGuild;
+        public GuildGumpPageType m_GuildGumpPage = GuildGumpPageType.CreateGuild;
 
         [Constructable]
         public GuildGumpSettings(PlayerMobile player): base(0x0)

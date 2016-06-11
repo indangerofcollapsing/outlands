@@ -30,10 +30,10 @@ namespace Server.Items
                 //player.CloseGump(typeof(AchievementsGump));
                 //player.SendGump(new AchievementsGump(player, AchievementsGump.PageType.Main, 0, AchievementCategory.Battle, 0, 0));
 
-                //Guilds.SendGuildGump(player);
+                Guilds.SendGuildGump(player);
 
-                player.CloseGump(typeof(TestGump));
-                player.SendGump(new TestGump(player));
+                //player.CloseGump(typeof(TestGump));
+                //player.SendGump(new TestGump(player));
             }
         }
 
