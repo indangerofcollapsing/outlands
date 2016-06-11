@@ -802,7 +802,7 @@ namespace Server.Mobiles
             pm_From.m_DamageTracker = new DamageTracker(pm_From);
 
             //Guild
-            GuildPersistance.OnLogin(pm_From);
+            Guilds.OnLogin(pm_From);
 
             //Faction
             Faction.OnLogin(pm_From);

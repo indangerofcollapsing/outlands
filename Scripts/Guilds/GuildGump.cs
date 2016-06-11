@@ -19,7 +19,7 @@ namespace Server
         Candidates,
         Diplomacy
     }
-
+        
     #region Create Guild
 
     public class CreateGuildGump : Gump
@@ -288,14 +288,14 @@ namespace Server
 
             #endregion
 
-            AddTextEntry(295, 46, 248, 20, WhiteTextHue, 7, "Guild Name", GuildPersistance.GuildNameCharacterLimit);
-            AddTextEntry(355, 86, 47, 20, WhiteTextHue, 8, "ABC", GuildPersistance.GuildNameCharacterLimit);           
+            AddTextEntry(295, 46, 248, 20, WhiteTextHue, 7, "Guild Name", Guilds.GuildNameCharacterLimit);
+            AddTextEntry(355, 86, 47, 20, WhiteTextHue, 8, "ABC", Guilds.GuildNameCharacterLimit);           
 
             AddButton(300, 137, 2223, 2223, 4, GumpButtonType.Reply, 0);
             AddItem(341, 123, 4014); // Symbol
             AddButton(413, 137, 2224, 2224, 5, GumpButtonType.Reply, 0);
            
-            AddLabel(341, 185, GreenTextHue, Utility.CreateCurrencyString(GuildPersistance.GuildRegistrationFee));
+            AddLabel(341, 185, GreenTextHue, Utility.CreateCurrencyString(Guilds.GuildRegistrationFee));
 
             AddButton(366, 429, 247, 249, 6, GumpButtonType.Reply, 0);
         }
@@ -438,7 +438,7 @@ namespace Server
             AddLabel(458, 70, 149, "Expires In");
 
             AddButton(271, 40, 9909, 9909, 3, GumpButtonType.Reply, 0); //Search Left
-            AddTextEntry(308, 40, 158, 10, WhiteTextHue, 0, "Guild Name", GuildPersistance.GuildNameCharacterLimit);
+            AddTextEntry(308, 40, 158, 10, WhiteTextHue, 0, "Guild Name", Guilds.GuildNameCharacterLimit);
             AddButton(483, 39, 9903, 9903, 4, GumpButtonType.Reply, 0); //Search Right
 
             AddButton(268, 73, 2117, 2118, 5, GumpButtonType.Reply, 0); //Guild Name Sort
@@ -790,7 +790,7 @@ namespace Server
             AddLabel(157, 400, 2599, "Total Accepted");
 
             AddButton(271, 40, 9909, 9909, 4, GumpButtonType.Reply, 0); //Search Left
-            AddTextEntry(308, 40, 158, 12, WhiteTextHue, 12, "Player Name", GuildPersistance.GuildNameCharacterLimit);
+            AddTextEntry(308, 40, 158, 12, WhiteTextHue, 12, "Player Name", Guilds.GuildNameCharacterLimit);
             AddButton(483, 39, 9903, 9903, 5, GumpButtonType.Reply, 0); //Search Right
 
             AddButton(154, 73, 2117, 2118, 6, GumpButtonType.Reply, 0); //Sort Accepted
@@ -956,7 +956,7 @@ namespace Server
             AddLabel(157, 400, 2599, "Online Members");
 
             AddButton(271, 40, 9909, 9909, 4, GumpButtonType.Reply, 0); //Search Left
-            AddTextEntry(308, 40, 158, 12, WhiteTextHue, 0, "Player Name", GuildPersistance.GuildNameCharacterLimit);
+            AddTextEntry(308, 40, 158, 12, WhiteTextHue, 0, "Player Name", Guilds.GuildNameCharacterLimit);
             AddButton(483, 39, 9903, 9903, 5, GumpButtonType.Reply, 0); //Search Right
 
             AddButton(151, 73, 5602, 5606, 6, GumpButtonType.Reply, 0); //Sort Last Online
@@ -1129,7 +1129,7 @@ namespace Server
             AddLabel(546, 70, 149, "Players");
 
             AddButton(271, 40, 9909, 9909, 4, GumpButtonType.Reply, 0); //Search Left
-            AddTextEntry(308, 40, 158, 14, WhiteTextHue, 0, "Guild Name", GuildPersistance.GuildNameCharacterLimit);
+            AddTextEntry(308, 40, 158, 14, WhiteTextHue, 0, "Guild Name", Guilds.GuildNameCharacterLimit);
             AddButton(483, 39, 9903, 9903, 5, GumpButtonType.Reply, 0); //Search Right
 
             AddButton(223, 73, 2117, 2118, 6, GumpButtonType.Reply, 0); //Sort Guild Name

@@ -10,7 +10,7 @@ namespace Server
 {
     public enum AchievementCategory
     {
-        Warfare,
+        Battle,
         Seafaring,
         AnimalTaming,
         Crafting,
@@ -23,9 +23,9 @@ namespace Server
         Slaying,
         Competition,
         Virtue,
-        Vice
+        Vice,
     }
-    
+
     public enum Achievement
     {
         SinkOrSwim,

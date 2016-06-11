@@ -21,7 +21,7 @@ namespace Server.Items
         Guildmaster
     }
 
-    public static class GuildPersistance
+    public static class Guilds
     {
         public static int GuildNameCharacterLimit = 35;
         public static int GuildAbbreviationCharacterLimit = 3;
@@ -48,6 +48,11 @@ namespace Server.Items
 
         public static void OnLogin(PlayerMobile player)
         {
+            CheckCreateGuildGuildSettings(player);
+        }
+
+        public static void CheckCreateGuildGuildSettings(PlayerMobile player)
+        {
             if (player == null)
                 return;
 
@@ -57,7 +62,67 @@ namespace Server.Items
             else if (player.m_GuildGumpSettings.Deleted)
                 player.m_GuildGumpSettings = new GuildGumpSettings(player);
         }
-        
+
+        public static void SendGuildGump(PlayerMobile player)
+        {
+            if (player == null)
+                return;
+
+            CheckCreateGuildGuildSettings(player);
+
+            if (player.Guild != null)
+            {
+                if (player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPage.CreateGuild || player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPage.Invitations)
+                    player.m_GuildGumpSettings.m_GuildGumpPage = GuildGumpPage.Overview;
+            }
+
+            else
+            {
+                if (!(player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPage.CreateGuild || player.m_GuildGumpSettings.m_GuildGumpPage == GuildGumpPage.Invitations))
+                    player.m_GuildGumpSettings.m_GuildGumpPage = GuildGumpPage.CreateGuild;
+            }
+
+            CloseAllGuildGumps(player);
+
+            switch (player.m_GuildGumpSettings.m_GuildGumpPage)
+            {
+                case GuildGumpPage.CreateGuild: player.SendGump(new CreateGuildGump(player)); break;
+                case GuildGumpPage.Invitations: player.SendGump(new GuildInvitationsGump(player)); break;
+
+                case GuildGumpPage.Overview: player.SendGump(new GuildOverviewGump(player)); break;
+                case GuildGumpPage.Members: player.SendGump(new GuildMembersGump(player)); break;
+                case GuildGumpPage.Candidates: player.SendGump(new GuildCandidatesGump(player)); break;
+                case GuildGumpPage.Diplomacy: player.SendGump(new GuildDiplomacyGump(player)); break;
+            }
+        }
+
+        public static void CloseAllGuildGumps(PlayerMobile player)
+        {
+            if (player.HasGump(typeof(CreateGuildGump)))
+                player.CloseGump(typeof(CreateGuildGump));
+
+            if (player.HasGump(typeof(GuildInvitationsGump)))
+                player.CloseGump(typeof(GuildInvitationsGump));
+           
+            if (player.HasGump(typeof(GuildOverviewGump)))
+                player.CloseGump(typeof(GuildOverviewGump));           
+
+            if (player.HasGump(typeof(GuildMembersGump)))
+                player.CloseGump(typeof(GuildMembersGump));
+
+            if (player.HasGump(typeof(GuildCandidatesGump)))
+                player.CloseGump(typeof(GuildCandidatesGump));
+
+            if (player.HasGump(typeof(GuildDiplomacyGump)))
+                player.CloseGump(typeof(GuildDiplomacyGump));
+        }
+
+        public static void StandaloneGuildGump(PlayerMobile player, Guild guild)
+        {
+            if (player == null) return;
+            if (guild == null) return;
+        }
+
         public static void Serialize(GenericWriter writer)
         {
             writer.WriteEncodedInt(0); //Version
@@ -94,7 +159,7 @@ namespace Server.Items
             base.Serialize(writer);
             writer.Write((int)0); //Version
 
-            GuildPersistance.Serialize(writer);
+            Guilds.Serialize(writer);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -104,8 +169,8 @@ namespace Server.Items
 
             Movable = false;
 
-            GuildPersistance.PersistanceItem = this;
-            GuildPersistance.Deserialize(reader);
+            Guilds.PersistanceItem = this;
+            Guilds.Deserialize(reader);
         }
     }
 
@@ -208,7 +273,7 @@ namespace Server.Items
 
         public Faction m_Faction = null;
 
-        public string[] m_RankNames = new string[] { GuildPersistance.GuildRankNames[0], GuildPersistance.GuildRankNames[1], GuildPersistance.GuildRankNames[2], GuildPersistance.GuildRankNames[3], GuildPersistance.GuildRankNames[4] };
+        public string[] m_RankNames = new string[] { Guilds.GuildRankNames[0], Guilds.GuildRankNames[1], Guilds.GuildRankNames[2], Guilds.GuildRankNames[3], Guilds.GuildRankNames[4] };
 
         public List<GuildMemberEntry> m_Members = new List<GuildMemberEntry>(); 
        
@@ -230,7 +295,7 @@ namespace Server.Items
 
             Name = name;
 
-            GuildPersistance.m_Guilds.Add(this);
+            Guilds.m_Guilds.Add(this);
         }
 
         public Guild(Serial serial): base(serial)
@@ -276,7 +341,7 @@ namespace Server.Items
                 if (ignoredPlayers.Contains(entry.m_Player)) continue;
                 if (((int)entry.m_Rank < (int)minimumGuildRank)) continue;
 
-                entry.m_Player.SendMessage(GuildPersistance.GuildTextHue, message);                
+                entry.m_Player.SendMessage(Guilds.GuildTextHue, message);                
             }
         }
 
@@ -301,7 +366,7 @@ namespace Server.Items
 
             if (IsMember(player))
             {
-                if (player.LastOnline + GuildPersistance.InactivityThreshold >= DateTime.UtcNow)
+                if (player.LastOnline + Guilds.InactivityThreshold >= DateTime.UtcNow)
                     return true;
             }
 
@@ -416,10 +481,10 @@ namespace Server.Items
                 player.m_GuildMemberEntry = null;
 
                 if (forced)
-                    player.SendMessage(GuildPersistance.GuildTextHue, "You have been removed from " + guildText + ".");
+                    player.SendMessage(Guilds.GuildTextHue, "You have been removed from " + guildText + ".");
 
                 else
-                    player.SendMessage(GuildPersistance.GuildTextHue, "You leave the guild.");
+                    player.SendMessage(Guilds.GuildTextHue, "You leave the guild.");
 
                 if (announce)
                 {
@@ -444,7 +509,7 @@ namespace Server.Items
             if (members.Count == 0)
             {
                 if (previousGuildmaster != null)
-                    previousGuildmaster.SendMessage(GuildPersistance.GuildTextHue, guildText + " has disbanded.");
+                    previousGuildmaster.SendMessage(Guilds.GuildTextHue, guildText + " has disbanded.");
 
                 DisbandGuild();
 
@@ -622,7 +687,7 @@ namespace Server.Items
 
                         m_Guild.GuildAnnouncement(playerTarget.RawName + " has been made a member of the guild.", new List<PlayerMobile>() { playerTarget }, GuildMemberRank.Recruit);  
 
-                        playerTarget.SendMessage(GuildPersistance.GuildTextHue, "You have been made a guild member of " + guildText + ".");
+                        playerTarget.SendMessage(Guilds.GuildTextHue, "You have been made a guild member of " + guildText + ".");
 
                         return;
                     }
@@ -647,8 +712,8 @@ namespace Server.Items
                     {
                         m_Guild.m_Candidates.Add(playerTarget);
 
-                        m_Player.SendMessage(GuildPersistance.GuildTextHue, playerTarget.RawName + " has been made a candidate for guild membership." );
-                        playerTarget.SendMessage(GuildPersistance.GuildTextHue, "You have been made a candidate for guild membership.");
+                        m_Player.SendMessage(Guilds.GuildTextHue, playerTarget.RawName + " has been made a candidate for guild membership." );
+                        playerTarget.SendMessage(Guilds.GuildTextHue, "You have been made a candidate for guild membership.");
 
                         string message = playerTarget.RawName + " has been made a candidate for membership in the guild.";
 
@@ -682,7 +747,7 @@ namespace Server.Items
                     m_Members.Remove(entry);
             }
 
-            foreach (Guild guild in GuildPersistance.m_Guilds)
+            foreach (Guild guild in Guilds.m_Guilds)
             {
                 if (guild == null) continue;
                 if (guild.Deleted) continue;
@@ -706,8 +771,8 @@ namespace Server.Items
                     guild.m_EnemiesRequestsReceived.Remove(this);
             }
 
-            if (GuildPersistance.m_Guilds.Contains(this))
-                GuildPersistance.m_Guilds.Remove(this);
+            if (Guilds.m_Guilds.Contains(this))
+                Guilds.m_Guilds.Remove(this);
 
             base.OnDelete();
         }
@@ -918,7 +983,7 @@ namespace Server.Items
 
             //-----
 
-            GuildPersistance.m_Guilds.Add(this);
+            Guilds.m_Guilds.Add(this);
 
             AuditGuild();
         }
