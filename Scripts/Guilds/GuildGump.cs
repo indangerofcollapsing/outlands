@@ -31,7 +31,7 @@ namespace Server
 
         public string GuildName = "Guild Name";
         public string GuildAbbreviation = "ABC";
-        public int GuildSymbolIcon = 2500;
+        public int GuildSymbolIcon = 4014;
         public int GuildSymbolHue = 0;
 
         public CreateGuildGump(Mobile from, int guildTabPage): base(10, 10)
@@ -439,13 +439,13 @@ namespace Server
             AddTextEntry(295, 46, 248, 20, WhiteTextHue, 7, "Guild Name", Guilds.GuildNameCharacterLimit);
             AddTextEntry(355, 86, 47, 20, WhiteTextHue, 8, "ABC", Guilds.GuildNameCharacterLimit);           
 
-            AddButton(300, 137, 2223, 2223, 4, GumpButtonType.Reply, 0);
+            AddButton(300, 137, 2223, 2223, 4, GumpButtonType.Reply, 0); //Previous Symbol
             AddItem(341, 123, 4014); // Symbol
-            AddButton(413, 137, 2224, 2224, 5, GumpButtonType.Reply, 0);
+            AddButton(413, 137, 2224, 2224, 5, GumpButtonType.Reply, 0); //Next Symbol
            
             AddLabel(341, 185, GreenTextHue, Utility.CreateCurrencyString(Guilds.GuildRegistrationFee));
 
-            AddButton(366, 429, 247, 249, 6, GumpButtonType.Reply, 0);
+            AddButton(366, 429, 247, 249, 6, GumpButtonType.Reply, 0); //Create Guild
         }
 
         public override void OnResponse(NetState sender, RelayInfo info)
@@ -476,6 +476,23 @@ namespace Server
 
             bool closeGump = true;
 
+            TextRelay guildNameTextRelay = info.GetTextEntry(7);
+            TextRelay guildAbbreviationTextRelay = info.GetTextEntry(8);
+
+            string guildNameText = "";
+
+            if (guildNameTextRelay != null)
+                guildNameText = guildNameTextRelay.Text;
+
+            guildNameText.Trim();
+
+            string guildAbbreviationText = "";
+
+            if (guildAbbreviationTextRelay != null)
+                guildAbbreviationText = guildAbbreviationTextRelay.Text;
+
+            guildAbbreviationText.Trim();
+
             switch (info.ButtonID)
             {
                 //Guide
@@ -503,7 +520,75 @@ namespace Server
                     }
 
                     closeGump = false;
-                    break;
+                break;
+
+                //Previous Symbol
+                case 4:
+                    closeGump = false;
+                break;
+
+                //Next Symbol
+                case 5:
+                    closeGump = false;
+                break;
+
+                //Create Guild
+                case 6:
+                    if (m_Player.Guild != null)
+                        m_Player.SendMessage("You are already in a guild.");
+
+                    else if (guildNameText.Length == 0)
+                        m_Player.SendMessage("Guild names must be at least 1 character.");
+
+                    else if (guildAbbreviationText.Length == 0)
+                        m_Player.SendMessage("Guild abbreviations must be at least 1 character.");
+
+                    else if (guildNameText.Length > Guilds.GuildNameCharacterLimit)
+                        m_Player.SendMessage("Guild names may be no longer than " + Guilds.GuildNameCharacterLimit.ToString() + " characters.");
+
+                    else if (guildAbbreviationText.Length > Guilds.GuildAbbreviationCharacterLimit)
+                        m_Player.SendMessage("Guild abbreviations may be no longer than " + Guilds.GuildAbbreviationCharacterLimit.ToString() + " characters.");
+
+                    else if (!Guilds.CheckProfanity(guildNameText))
+                        m_Player.SendMessage("That guild name is not allowed.");
+
+                    else if (!Guilds.CheckProfanity(guildAbbreviationText))
+                        m_Player.SendMessage("That guild abbreviation is not allowed.");
+
+                    else if (Guilds.GuildNameExists(guildNameText))
+                        m_Player.SendMessage("That guild name is already in use.");
+
+                    else if (Guilds.GuildAbbreviationExists(guildAbbreviationText))
+                        m_Player.SendMessage("That guild abbreviation is already in use.");
+
+                    else if (Banker.GetBalance(m_Player) < Guilds.GuildRegistrationFee)
+                        m_Player.SendMessage("You do not have the gold neccessary in your bank to pay the guild registration fee.");
+
+                    else
+                    {
+                        Banker.Withdraw(m_Player, Guilds.GuildRegistrationFee);
+                        m_Player.SendSound(0x2E6);
+
+                        Guild newGuild = new Guild(guildNameText, guildAbbreviationText);
+
+                        newGuild.m_Icon = GuildSymbolIcon;
+                        newGuild.m_IconHue = GuildSymbolHue;
+
+                        newGuild.m_Guildmaster = m_Player;
+                        newGuild.AddMember(m_Player);
+
+                        m_Player.SendMessage("You are now the founding member of " + guildNameText + " [" + guildAbbreviationText + "].");
+
+                        m_Player.m_GuildGumpSettings.m_GuildGumpPage = GuildGumpPageType.Overview;
+
+                        Guilds.CloseAllGuildGumps(m_Player);
+                        Guilds.SendGuildGump(m_Player);
+
+                        return;
+                    }
+
+                    closeGump = false;
+                break;
             }
 
             //Change Guild Page Tab
@@ -910,7 +995,7 @@ namespace Server
     {
         public PlayerMobile m_Player;
         public int m_GuildTabPage = 0;
-
+        
         public GuildOverviewGump(Mobile from, int guildTabPage): base(10, 10)
         {
             m_Player = from as PlayerMobile;
@@ -920,6 +1005,11 @@ namespace Server
                 return;
 
             Guilds.CheckCreateGuildGuildSettings(m_Player);
+
+            Guild guild = m_Player.Guild;
+
+            if (guild == null)
+                return;
 
             Closable = true;
             Disposable = true;
@@ -1151,8 +1241,7 @@ namespace Server
             AddLabel(197, 109, 149, "Guild Symbol");
             AddItem(144, 98, 7776);
             AddLabel(197, 203, 149, "Guildhouse");
-            AddImage(269, 202, 2446, 2401);
-            AddLabel(473, 203, 2550, "Show Location");            
+            AddImage(269, 202, 2446, 2401);                    
             AddLabel(515, 109, 149, "Faction");
             AddBackground(158, 347, 493, 23, 5100);
             
@@ -1185,32 +1274,103 @@ namespace Server
 
             #endregion
 
-            AddLabel(323, 25, WhiteTextHue, "Outlands Shipping Company");
-            AddLabel(337, 61, WhiteTextHue, "OSC");
-            AddItem(300, 97, 4014); //Symbol
+            AddLabel(Utility.CenteredTextOffset(405, guild.Name), 25, WhiteTextHue, guild.Name);
+            AddLabel(Utility.CenteredTextOffset(354, guild.m_Abbreviation), 61, WhiteTextHue, guild.m_Abbreviation);
 
+            //Get Guild Symbol Detail
+            int guildIcon = guild.m_Icon;
+            int guildIconHue = guild.m_IconHue;
+            int guildIconOffsetX = 0;
+            int guildIconOffsetY = 0;
+
+            AddItem(300 + guildIconOffsetX, 97 + guildIconOffsetY, guildIcon, guildIconHue); //Guild Symbol            
+
+            //Faction
             AddItem(555, 58, 17099, 2603); //Flag
             AddItem(600, 91, 11009, 2603); //Shield
             AddLabel(586, 144, 2603, "Order");
 
-            AddLabel(322, 161, WhiteTextHue, "Merrill Calder");
+            string guildmasterName = "";
 
-            AddLabel(285, 203, WhiteTextHue, "Owned by Merrill Calder");
-            AddLabel(282, 226, 2599, "(located at 2500, 2500)");
-            AddButton(453, 206, 2117, 2118, 4, GumpButtonType.Reply, 0); //Show Guildhouse Location
+            if (guild.m_Guildmaster != null)
+                guildmasterName = guild.m_Guildmaster.RawName;
 
-            AddLabel(196, 282, WhiteTextHue, "795 Days"); //Guild Age
-            AddLabel(332, 296, WhiteTextHue, "25"); //Players
-            AddLabel(443, 297, WhiteTextHue, "125"); //Characters
-            AddLabel(529, 297, WhiteTextHue, "1"); //Wars
-            AddLabel(599, 297, WhiteTextHue, "0"); //Alliances
+            AddLabel(Utility.CenteredTextOffset(365, guildmasterName) , 161, WhiteTextHue, guildmasterName);
+
+            string guildHouseOwner = "";
+            string guildHouseLocation = "";
+
+            bool guildHouseExists = false;
+
+            if (guild.m_Guildhouse != null)
+            {
+                guildHouseExists = true;
+
+                if (guild.m_Guildhouse.Owner != null)
+                    guildHouseOwner = "Owned by " + guild.m_Guildhouse.Owner.RawName;
+
+                else
+                    guildHouseOwner = "Unknown Owner";
+
+                guildHouseLocation = "(Located at " + guild.m_Guildhouse.Location.X.ToString() + "," + guild.m_Guildhouse.Location.Y.ToString() + ")";
+            }
+
+            else
+                guildHouseOwner = "-";
+
+            AddLabel(Utility.CenteredTextOffset(358, guildHouseOwner), 203, WhiteTextHue, guildHouseOwner);
+            if (guildHouseLocation != "")
+                AddLabel(282, 226, 2599, "(located at 2500, 2500)");
+
+            if (guild.m_Guildhouse != null)
+            {
+                AddLabel(473, 203, 2550, "Show Location");    
+                AddButton(453, 206, 2117, 2118, 4, GumpButtonType.Reply, 0); //Show Guildhouse Location
+            }
+
+            int guildAge = (int)(Math.Floor((DateTime.UtcNow - guild.m_CreationTime).TotalDays));
+
+            string guildAgeText = "";
+
+            if (guildAge > 1)
+                guildAgeText = guildAge.ToString() + " Days";
+
+            else if (guildAge == 1)
+                guildAgeText = "1 Day";
+
+            else
+                guildAgeText = "Brand New";
+
+            int activePlayers = 25;
+            int activeCharacters = 125;
+            int wars = 1;
+            int alliances = 1;
+
+            AddLabel(196, 282, WhiteTextHue, guildAgeText); //Guild Age
+            AddLabel(332, 296, WhiteTextHue, activePlayers.ToString()); //Players
+            AddLabel(443, 297, WhiteTextHue, activeCharacters.ToString()); //Characters
+            AddLabel(529, 297, WhiteTextHue, wars.ToString()); //Wars
+            AddLabel(599, 297, WhiteTextHue, alliances.ToString()); //Alliances
 
             AddButton(165, 327, 30008, 30009, 5, GumpButtonType.Reply, 0); //Launch Website
-            AddLabel(167, 348, WhiteTextHue, "http://www.outlandsuo.com/TheRebellionGuild/index.htm"); //Website
+            AddLabel(167, 348, WhiteTextHue, guild.m_Website); //Website
 
-            AddLabel(317, 392, WhiteTextHue, "Veteran"); //Guild Rank
+            string rankName = "";
 
-            AddButton(611, 389, 9724, 9721, 6, GumpButtonType.Reply, 0); //Show Guild Title
+            int rankHue = WhiteTextHue; 
+            
+            if (m_Player.m_GuildMemberEntry != null)
+            {
+                rankName = guild.GetRankName(m_Player.m_GuildMemberEntry.m_Rank);
+                rankHue = guild.GetRankHue(m_Player.m_GuildMemberEntry.m_Rank);
+            }
+
+            AddLabel(Utility.CenteredTextOffset(347, rankName), 392, rankHue, rankName); //Guild Rank
+
+            if (m_Player.m_GuildGumpSettings.m_ShowGuildTitle)
+                AddButton(611, 389, 9724, 9721, 6, GumpButtonType.Reply, 0); //Show Guild Title
+            else
+                AddButton(611, 389, 9721, 9724, 6, GumpButtonType.Reply, 0); //Show Guild Title
 
             AddButton(425, 425, 2472, 2473, 7, GumpButtonType.Reply, 0); //Resign from Guild
         }
@@ -1226,7 +1386,6 @@ namespace Server
 
             if (m_GuildTabs.Count == 0) return;
             if (!m_GuildTabs.Contains(GuildGumpPageType.Overview)) return;
-
 
             int GuildTabsPerPage = 4;
             int TotalGuildTabs = m_GuildTabs.Count;

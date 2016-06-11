@@ -181,6 +181,72 @@ namespace Server.Items
             if (guild == null) return;
         }
 
+        public static bool GuildNameExists(string guildName)
+        {
+            foreach (Guild guild in m_Guilds)
+            {
+                if (guild == null) continue;
+                if (guild.Name.ToLower() == guildName.ToLower())
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool GuildAbbreviationExists(string guildAbbreviation)
+        {
+            foreach (Guild guild in m_Guilds)
+            {
+                if (guild == null) continue;
+                if (guild.m_Abbreviation.ToLower() == guildAbbreviation.ToLower())
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool CheckProfanity(string s)
+        {
+            return CheckProfanity(s, 50);
+        }
+
+        public static bool CheckProfanity(string s, int maxLength)
+        {
+            if (s.Length < 1 || s.Length > maxLength)
+                return false;
+
+            char[] exceptions = ProfanityProtection.Exceptions;
+
+            s = s.ToLower();
+
+            for (int i = 0; i < s.Length; ++i)
+            {
+                char c = s[i];
+
+                if ((c < 'a' || c > 'z') && (c < '0' || c > '9'))
+                {
+                    bool except = false;
+
+                    for (int j = 0; !except && j < exceptions.Length; j++)
+                        if (c == exceptions[j])
+                            except = true;
+
+                    if (!except)
+                        return false;
+                }
+            }
+
+            string[] disallowed = ProfanityProtection.Disallowed;
+
+            for (int i = 0; i < disallowed.Length; i++)
+            {
+                if (s.IndexOf(disallowed[i]) != -1)
+                    return false;
+            }
+
+            return true;
+        }
+
         public static void Serialize(GenericWriter writer)
         {
             writer.WriteEncodedInt(0); //Version
@@ -235,7 +301,9 @@ namespace Server.Items
     public class GuildGumpSettings: Item
     {
         public PlayerMobile m_Player;
+
         public GuildGumpPageType m_GuildGumpPage = GuildGumpPageType.CreateGuild;
+        public bool m_ShowGuildTitle = true;
 
         [Constructable]
         public GuildGumpSettings(PlayerMobile player): base(0x0)
@@ -263,6 +331,8 @@ namespace Server.Items
 
             //Version 0
             writer.Write(m_Player);
+            writer.Write((int)m_GuildGumpPage);
+            writer.Write(m_ShowGuildTitle);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -274,6 +344,8 @@ namespace Server.Items
             if (version >= 0)
             {
                 m_Player = reader.ReadMobile() as PlayerMobile;
+                m_GuildGumpPage = (GuildGumpPageType)reader.ReadInt();
+                m_ShowGuildTitle = reader.ReadBool();
             }
 
             if (m_Player == null)
@@ -318,14 +390,15 @@ namespace Server.Items
 
     public class Guild : Item
     {
-        PlayerMobile m_Guildmaster;
+        public PlayerMobile m_Guildmaster;
 
         public string m_Abbreviation = "";
+        public DateTime m_CreationTime;
 
-        public int m_Icon = 2583;
+        public int m_Icon = 4014;
         public int m_IconHue = 0;
 
-        public string m_Website = "";
+        public string m_Website = "http://www.outlandsuo.com/index.html";
 
         public BaseHouse m_Guildhouse;
 
@@ -346,18 +419,49 @@ namespace Server.Items
         public List<PlayerMobile> m_Candidates = new List<PlayerMobile>();    
 
         [Constructable]
-        public Guild(string name): base(0x0)
+        public Guild(string name, string abbreviation): base(0x0)
         {
             Visible = false;
             Movable = false;
 
             Name = name;
+            m_Abbreviation = abbreviation;
+
+            m_CreationTime = DateTime.UtcNow;
 
             Guilds.m_Guilds.Add(this);
         }
 
         public Guild(Serial serial): base(serial)
         {
+        }
+
+        public string GetRankName(GuildMemberRank rank)
+        {
+            string rankName = "";
+
+            int rankIndex = (int)rank;
+
+            if (rankIndex < m_RankNames.Length)
+                rankName = m_RankNames[rankIndex];
+
+            return rankName;
+        }
+
+        public int GetRankHue(GuildMemberRank rank)
+        {
+            int rankHue = 0;
+
+            switch (rank)
+            {
+                case GuildMemberRank.Recruit: rankHue = 2655; break;
+                case GuildMemberRank.Initiate: rankHue = 2599; break;
+                case GuildMemberRank.Veteran: rankHue = 169; break;
+                case GuildMemberRank.Officer: rankHue = 2603; break;
+                case GuildMemberRank.Guildmaster: rankHue = 1259; break;
+            }
+
+            return rankHue;
         }
 
         public bool CanAddCandidates(GuildMemberRank rank)
@@ -842,6 +946,7 @@ namespace Server.Items
 
             //Version 0
             writer.Write(m_Abbreviation);
+            writer.Write(m_CreationTime);
             writer.Write(m_Icon);
             writer.Write(m_IconHue);
             writer.Write(m_Website);
@@ -918,6 +1023,7 @@ namespace Server.Items
             if (version >= 0)
             {
                 m_Abbreviation = reader.ReadString();
+                m_CreationTime = reader.ReadDateTime();
                 m_Icon = reader.ReadInt();
                 m_IconHue = reader.ReadInt();
                 m_Website = reader.ReadString();
