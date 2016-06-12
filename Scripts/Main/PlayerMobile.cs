@@ -5093,6 +5093,7 @@ namespace Server.Mobiles
             writer.Write(m_LongTermElapse);
             writer.Write(m_ShortTermElapse);
             writer.Write(GameTime);
+            writer.Write(m_GuildGumpSettings);
 
             writer.Write((int)m_HairModID);
             writer.Write((int)m_HairModHue);
@@ -5190,6 +5191,7 @@ namespace Server.Mobiles
                 m_LongTermElapse = reader.ReadTimeSpan();
                 m_ShortTermElapse = reader.ReadTimeSpan();
                 m_GameTime = reader.ReadTimeSpan();
+                m_GuildGumpSettings = (GuildGumpSettings)reader.ReadItem();
 
                 m_HairModID = reader.ReadInt();
                 m_HairModHue = reader.ReadInt();
